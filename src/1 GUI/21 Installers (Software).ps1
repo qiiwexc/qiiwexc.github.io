@@ -50,5 +50,5 @@ $ButtonDownloadOffice.Height = $_BUTTON_HEIGHT
 $ButtonDownloadOffice.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadOffice.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadOffice, $ButtonDownloadOfficeToolTipText)
-$ButtonDownloadOffice.Add_Click( {DownloadFile 'qiiwexc.github.io/Office_2013-2019.zip'} )
+$ButtonDownloadOffice.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Office_2013-2019.zip'} )
 $GroupDownloadsInstallersSoftware.Controls.Add($ButtonDownloadOffice)

@@ -14,7 +14,7 @@ $ButtonDownloadKMS.Height = $_BUTTON_HEIGHT
 $ButtonDownloadKMS.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadKMS.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadKMS, $ButtonDownloadKMSToolTipText)
-$ButtonDownloadKMS.Add_Click( {DownloadFile 'qiiwexc.github.io/KMSAuto_Lite.zip'} )
+$ButtonDownloadKMS.Add_Click( {DownloadFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip'} )
 $GroupDownloadsActivators.Controls.Add($ButtonDownloadKMS)
 
 $ButtonDownloadChew = New-Object System.Windows.Forms.Button
@@ -25,5 +25,5 @@ $ButtonDownloadChew.Height = $_BUTTON_HEIGHT
 $ButtonDownloadChew.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadChew.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadChew, $ButtonDownloadChewToolTipText)
-$ButtonDownloadChew.Add_Click( {DownloadFile 'qiiwexc.github.io/ChewWGA.zip'} )
+$ButtonDownloadChew.Add_Click( {DownloadFile 'qiiwexc.github.io/d/ChewWGA.zip'} )
 $GroupDownloadsActivators.Controls.Add($ButtonDownloadChew)

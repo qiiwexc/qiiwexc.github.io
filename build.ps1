@@ -1,7 +1,7 @@
 $SourcePath = '.\src'
 $DistPath = '.\d'
 $DistFileName = 'qiiwexc.ps1'
-$VersionFile = 'version'
+$VersionFile = "$DistPath\version"
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
@@ -23,11 +23,12 @@ function Build {
     Write-Log $_INF "Target file = $TargetFile"
     Write-Log $_INF "Version     = $Version"
 
-    Remove-Item $DistPath -Recurse -Force -ErrorAction Ignore
+    Remove-Item $TargetFile -Force -ErrorAction Ignore
+    Remove-Item $VersionFile -Force -ErrorAction Ignore
     New-Item $DistPath -ItemType Directory -Force | Out-Null
 
     Write-Log $_INF 'Writing version file'
-    Add-Content "$DistPath\$VersionFile" $Version
+    Add-Content $VersionFile $Version
 
     Write-Log $_INF 'Building...'
     Add-Content $TargetFile "`$_VERSION = `"$Version`""

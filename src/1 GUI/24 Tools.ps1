@@ -5,8 +5,6 @@ $GroupDownloadsTools.Width = $GroupDownloadsInstallersTools.Width
 $GroupDownloadsTools.Location = $GroupDownloadsInstallersTools.Location + "0, $($GroupDownloadsInstallersTools.Height + $_INTERVAL_NORMAL)"
 $_TAB_DOWNLOADS.Controls.Add($GroupDownloadsTools)
 
-$_TAB_CONTROL.SelectedTab = $_TAB_DOWNLOADS
-
 
 $ButtonDownloadSDI = New-Object System.Windows.Forms.Button
 $ButtonDownloadSDI.Text = 'Snappy Driver Installer'
@@ -28,7 +26,7 @@ $ButtonDownloadVictoria.Height = $_BUTTON_HEIGHT
 $ButtonDownloadVictoria.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadVictoria.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadVictoria, $ButtonDownloadVictoriaToolTipText)
-$ButtonDownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/Victoria_4.47.zip'} )
+$ButtonDownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Victoria_4.47.zip'} )
 $GroupDownloadsTools.Controls.Add($ButtonDownloadVictoria)
 
 
