@@ -1,5 +1,5 @@
 function CheckForUpdates ($ManualCheck) {
-    $VersionURL = 'https://qiiwexc.github.io/version'
+    $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $_INF 'Checking for updates...'
 
     try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString()}
@@ -17,7 +17,7 @@ function CheckForUpdates ($ManualCheck) {
 }
 
 function DownloadUpdate {
-    $DownloadURL = 'https://qiiwexc.github.io/qiiwexc.ps1'
+    $DownloadURL = 'https://qiiwexc.github.io/d/qiiwexc.ps1'
     $TargetFile = $MyInvocation.ScriptName
 
     Write-Log $_WRN 'Downloading new version...'
