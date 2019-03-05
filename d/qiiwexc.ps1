@@ -1,4 +1,4 @@
-$_VERSION = "19.3.4"
+$_VERSION = "19.3.5"
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -463,7 +463,7 @@ function CheckForUpdates ($ManualCheck) {
     try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString()}
     catch [Exception] {Write-Log $_ERR "Failed to check for update: $($_.Exception.Message)"}
 
-    $UpdateAvailable = (Get-Date $LatestVersion) -gt (Get-Date $_VERSION)
+    $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($_VERSION, 'yy.M.d', $null)
 
     if ($UpdateAvailable) {
         Write-Log $_WRN "Newer version available: v$LatestVersion"

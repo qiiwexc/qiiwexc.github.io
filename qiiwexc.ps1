@@ -1,4 +1,4 @@
-$_VERSION = "19.3.4"
+$_VERSION = "19.3.5"
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -463,7 +463,7 @@ function CheckForUpdates ($ManualCheck) {
     try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString()}
     catch [Exception] {Write-Log $_ERR "Failed to check for update: $($_.Exception.Message)"}
 
-    $UpdateAvailable = (Get-Date $LatestVersion) -gt (Get-Date $_VERSION)
+    $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($_VERSION, 'yy.M.d', $null)
 
     if ($UpdateAvailable) {
         Write-Log $_WRN "Newer version available: v$LatestVersion"
@@ -612,18 +612,3 @@ function DownloadFile ($URL, $FileName) {
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Draw Form #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $_FORM.ShowDialog() | Out-Null
-
-# powershell.exe -Version 2
-# $psversiontable
-
-# Clear-Host
-# Write-Host -NoNewLine 'Press any key to continue...';
-# $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
-
-# Optimize `GatherSystemInformation`
-
-# Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
-
-# New-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Internet Explorer\Main' -Name 'DisableFirstRunCustomize' -Value 2 -PropertyType DWORD -Force | Out-Null
-
-# $_TAB_CONTROL.SelectedTab = $_TAB_DOWNLOADS
