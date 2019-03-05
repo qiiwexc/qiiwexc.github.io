@@ -456,11 +456,11 @@ function Write-Log($Level, $Message) {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Self-Update #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function CheckForUpdates ($ManualCheck) {
+function CheckForUpdates ($IsManualCheck) {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $_INF 'Checking for updates...'
 
-    try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString()}
+    try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString() -Replace "`n",''}
     catch [Exception] {Write-Log $_ERR "Failed to check for update: $($_.Exception.Message)"}
 
     $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($_VERSION, 'yy.M.d', $null)
@@ -469,7 +469,7 @@ function CheckForUpdates ($ManualCheck) {
         Write-Log $_WRN "Newer version available: v$LatestVersion"
         $ButtonCheckForUpdates.Visible = $False
         $ButtonDownloadUpdate.Visible = $True
-        if (!$ManualCheck) {DownloadUpdate}
+        if (!$IsManualCheck) {DownloadUpdate}
     }
     else {Write-Log $_INF 'Currently running the latest version'}
 }
