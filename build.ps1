@@ -31,7 +31,7 @@ function Build {
     Add-Content $VersionFile $Version
 
     Write-Log $_INF 'Building...'
-    Add-Content $TargetFile "`$_VERSION = `"$Version`""
+    Add-Content $TargetFile "`$_VERSION = '$Version'"
 
     foreach ($File in Get-ChildItem -Path $SourcePath -Recurse -File) {
         $FileName = $File.ToString().Replace('.ps1', '')
