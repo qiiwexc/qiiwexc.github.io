@@ -1,4 +1,4 @@
-$_VERSION = "19.2.28"
+$_VERSION = '19.2.28'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -199,7 +199,7 @@ $GroupDownloadsInstallersSoftware.Controls.Add($ButtonDownloadUnchecky)
 
 $ButtonDownloadOffice = New-Object System.Windows.Forms.Button
 $ButtonDownloadOffice.Text = 'Office 2013 - 2019'
-$ButtonDownloadOfficeToolTipText = "Download Microsoft Office 2013 - 2019 installer and activator"
+$ButtonDownloadOfficeToolTipText = 'Download Microsoft Office 2013 - 2019 installer and activator'
 $ButtonDownloadOffice.Location = $ButtonDownloadUnchecky.Location + "0, $_BUTTON_INTERVAL_NORMAL"
 $ButtonDownloadOffice.Height = $_BUTTON_HEIGHT
 $ButtonDownloadOffice.Width = $_BUTTON_WIDTH_DOWNLOAD
@@ -221,7 +221,7 @@ $_TAB_DOWNLOADS.Controls.Add($GroupDownloadsInstallersTools)
 
 $ButtonDownloadCCleaner = New-Object System.Windows.Forms.Button
 $ButtonDownloadCCleaner.Text = 'CCleaner'
-$ButtonDownloadCCleanerToolTipText = "Download CCleaner installer"
+$ButtonDownloadCCleanerToolTipText = 'Download CCleaner installer'
 $ButtonDownloadCCleaner.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
 $ButtonDownloadCCleaner.Height = $_BUTTON_HEIGHT
 $ButtonDownloadCCleaner.Width = $_BUTTON_WIDTH_DOWNLOAD
@@ -232,7 +232,7 @@ $GroupDownloadsInstallersTools.Controls.Add($ButtonDownloadCCleaner)
 
 $ButtonDownloadDefraggler = New-Object System.Windows.Forms.Button
 $ButtonDownloadDefraggler.Text = 'Defraggler'
-$ButtonDownloadDefragglerToolTipText = "Download Defraggler installer"
+$ButtonDownloadDefragglerToolTipText = 'Download Defraggler installer'
 $ButtonDownloadDefraggler.Location = $ButtonDownloadCCleaner.Location + "0, $_BUTTON_INTERVAL_SHORT"
 $ButtonDownloadDefraggler.Height = $_BUTTON_HEIGHT
 $ButtonDownloadDefraggler.Width = $_BUTTON_WIDTH_DOWNLOAD
@@ -310,7 +310,7 @@ $_TAB_DOWNLOADS.Controls.Add($GroupDownloadsTools)
 
 $ButtonDownloadSDI = New-Object System.Windows.Forms.Button
 $ButtonDownloadSDI.Text = 'Snappy Driver Installer'
-$ButtonDownloadSDIToolTipText = "Download Snappy Driver Installer"
+$ButtonDownloadSDIToolTipText = 'Download Snappy Driver Installer'
 $ButtonDownloadSDI.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
 $ButtonDownloadSDI.Height = $_BUTTON_HEIGHT
 $ButtonDownloadSDI.Width = $_BUTTON_WIDTH_DOWNLOAD
@@ -322,7 +322,7 @@ $GroupDownloadsTools.Controls.Add($ButtonDownloadSDI)
 
 $ButtonDownloadVictoria = New-Object System.Windows.Forms.Button
 $ButtonDownloadVictoria.Text = 'Victoria'
-$ButtonDownloadVictoriaToolTipText = "Download Victoria HDD scanner"
+$ButtonDownloadVictoriaToolTipText = 'Download Victoria HDD scanner'
 $ButtonDownloadVictoria.Location = $ButtonDownloadSDI.Location + "0, $_BUTTON_INTERVAL_SHORT"
 $ButtonDownloadVictoria.Height = $_BUTTON_HEIGHT
 $ButtonDownloadVictoria.Width = $_BUTTON_WIDTH_DOWNLOAD
@@ -334,7 +334,7 @@ $GroupDownloadsTools.Controls.Add($ButtonDownloadVictoria)
 
 $ButtonDownloadRufus = New-Object System.Windows.Forms.Button
 $ButtonDownloadRufus.Text = 'Rufus'
-$ButtonDownloadRufusToolTipText = "Download Rufus - a bootable USB creator"
+$ButtonDownloadRufusToolTipText = 'Download Rufus - a bootable USB creator'
 $ButtonDownloadRufus.Location = $ButtonDownloadVictoria.Location + "0, $_BUTTON_INTERVAL_SHORT"
 $ButtonDownloadRufus.Height = $_BUTTON_HEIGHT
 $ButtonDownloadRufus.Width = $_BUTTON_WIDTH_DOWNLOAD
@@ -460,7 +460,7 @@ function CheckForUpdates ($IsManualCheck) {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $_INF 'Checking for updates...'
 
-    try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString() -Replace "`n",''}
+    try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString() -Replace "`n", ''}
     catch [Exception] {Write-Log $_ERR "Failed to check for update: $($_.Exception.Message)"}
 
     $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($_VERSION, 'yy.M.d', $null)
