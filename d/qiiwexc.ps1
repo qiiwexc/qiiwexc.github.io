@@ -1,4 +1,4 @@
-$_VERSION = "19.3.5"
+$_VERSION = '19.3.17'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -33,24 +33,35 @@ Add-Type -AssemblyName System.Windows.Forms
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Form #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Constants #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$_FORM_FONT_TYPE = 'Microsoft Sans Serif'
+$_BUTTON_FONT = "$_FORM_FONT_TYPE, 10"
 
 $_FORM_HEIGHT = 580
 $_FORM_WIDTH = 650
-$_FORM_FONT_TYPE = 'Microsoft Sans Serif'
 
 $_INTERVAL_SHORT = 5
 $_INTERVAL_NORMAL = 15
 $_INTERVAL_LONG = 40
-
 $_INTERVAL_TAB_ADJUSTMENT = 4
 $_INTERVAL_GROUP_TOP = 20
 
 $_BUTTON_HEIGHT = 28
 $_BUTTON_INTERVAL_SHORT = $_BUTTON_HEIGHT + $_INTERVAL_SHORT
 $_BUTTON_INTERVAL_NORMAL = $_BUTTON_HEIGHT + $_INTERVAL_NORMAL
-$_BUTTON_FONT = "$_FORM_FONT_TYPE, 10"
+$_BUTTON_SHIFT_VERTICAL_SHORT = "0, $_BUTTON_INTERVAL_SHORT"
+$_BUTTON_SHIFT_HORIZONTAL_SHORT = "$_BUTTON_INTERVAL_SHORT, 0"
+$_BUTTON_SHIFT_VERTICAL_NORMAL = "0, $_BUTTON_INTERVAL_NORMAL"
+$_BUTTON_SHIFT_HORIZONTAL_NORMAL = "$_BUTTON_INTERVAL_NORMAL, 0"
 
+$_CHECK_BOX_HEIGHT = 20
+$_CHECK_BOX_INTERVAL_SHORT = $_CHECK_BOX_HEIGHT + $_INTERVAL_SHORT
+$_CHECK_BOX_SHIFT_VERTICAL_SHORT = "0, $_CHECK_BOX_INTERVAL_SHORT"
+$_CHECK_BOX_SHIFT_HORIZONTAL_SHORT = "$_CHECK_BOX_INTERVAL_SHORT, 0"
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Form #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $_FORM = New-Object System.Windows.Forms.Form
 $_FORM.Text = "qiiwexc v$_VERSION"
@@ -69,13 +80,14 @@ $_LOG.Width = - $_INTERVAL_SHORT + $_FORM_WIDTH - $_INTERVAL_SHORT
 $_LOG.Location = "$_INTERVAL_SHORT, $($_FORM_HEIGHT - $_LOG.Height - $_INTERVAL_SHORT)"
 $_LOG.Font = "$_FORM_FONT_TYPE, 9"
 $_LOG.ReadOnly = $True
-$_FORM.Controls.Add($_LOG)
 
 
 $_TAB_CONTROL = New-Object System.Windows.Forms.TabControl
-$_TAB_CONTROL.Size = "$($_FORM_WIDTH - $_INTERVAL_SHORT - $_INTERVAL_TAB_ADJUSTMENT), $($_FORM_HEIGHT - $_LOG.Height - $_INTERVAL_SHORT - $_INTERVAL_TAB_ADJUSTMENT)"
+$_TAB_CONTROL.Size = "$($_LOG.Width + $_INTERVAL_SHORT - $_INTERVAL_TAB_ADJUSTMENT), $($_FORM_HEIGHT - $_LOG.Height - $_INTERVAL_SHORT - $_INTERVAL_TAB_ADJUSTMENT)"
 $_TAB_CONTROL.Location = "$_INTERVAL_SHORT, $_INTERVAL_SHORT"
-$_FORM.Controls.Add($_TAB_CONTROL)
+
+
+$_FORM.Controls.AddRange(@($_LOG, $_TAB_CONTROL))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -85,7 +97,6 @@ $_BUTTON_WIDTH_HOME = 180
 $_TAB_HOME = New-Object System.Windows.Forms.TabPage
 $_TAB_HOME.Text = 'Home'
 $_TAB_HOME.UseVisualStyleBackColor = $True
-$_TAB_CONTROL.Controls.Add($_TAB_HOME)
 
 $ButtonSystemInformation = New-Object System.Windows.Forms.Button
 $ButtonSystemInformation.Text = 'Show system information'
@@ -95,17 +106,18 @@ $ButtonSystemInformation.Location = "$($_INTERVAL_NORMAL + $_INTERVAL_SHORT), $(
 $ButtonSystemInformation.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonSystemInformation, 'Print system information to the log')
 $ButtonSystemInformation.Add_Click( {PrintSystemInformation} )
-$_TAB_HOME.Controls.Add($ButtonSystemInformation)
+
+$_TAB_CONTROL.Controls.AddRange(@($_TAB_HOME))
+$_TAB_HOME.Controls.AddRange(@($ButtonSystemInformation))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# This Utility #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GroupHomeThisUtility = New-Object System.Windows.Forms.GroupBox
 $GroupHomeThisUtility.Text = 'This utility'
-$GroupHomeThisUtility.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL + $_BUTTON_INTERVAL_NORMAL
+$GroupHomeThisUtility.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 2
 $GroupHomeThisUtility.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_HOME + $_INTERVAL_NORMAL
 $GroupHomeThisUtility.Location = "$($_TAB_CONTROL.Width - $GroupHomeThisUtility.Width - $_INTERVAL_NORMAL - $_INTERVAL_TAB_ADJUSTMENT), $_INTERVAL_NORMAL"
-$_TAB_HOME.Controls.Add($GroupHomeThisUtility)
 
 
 $ButtonBrowserHome = New-Object System.Windows.Forms.Button
@@ -116,18 +128,16 @@ $ButtonBrowserHome.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
 $ButtonBrowserHome.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonBrowserHome, 'Open utility web page in the default browser')
 $ButtonBrowserHome.Add_Click( {OpenInBrowser 'qiiwexc.github.io'} )
-$GroupHomeThisUtility.Controls.Add($ButtonBrowserHome)
 
 
 $ButtonCheckForUpdates = New-Object System.Windows.Forms.Button
 $ButtonCheckForUpdates.Text = 'Check for updates'
 $ButtonCheckForUpdates.Height = $_BUTTON_HEIGHT
 $ButtonCheckForUpdates.Width = $_BUTTON_WIDTH_HOME
-$ButtonCheckForUpdates.Location = $ButtonBrowserHome.Location + "0, $_BUTTON_INTERVAL_NORMAL"
+$ButtonCheckForUpdates.Location = $ButtonBrowserHome.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonCheckForUpdates.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonCheckForUpdates, 'Check if new version of this utility is available')
-$ButtonCheckForUpdates.Add_Click( {CheckForUpdates $True} )
-$GroupHomeThisUtility.Controls.Add($ButtonCheckForUpdates)
+$ButtonCheckForUpdates.Add_Click( {CheckForUpdates 'Manual'} )
 
 $ButtonDownloadUpdate = New-Object System.Windows.Forms.Button
 $ButtonDownloadUpdate.Text = 'Download new version'
@@ -138,131 +148,238 @@ $ButtonDownloadUpdate.Font = $_BUTTON_FONT
 $ButtonDownloadUpdate.Visible = $False
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadUpdate, 'Download the new version of this utility')
 $ButtonDownloadUpdate.Add_Click( {DownloadUpdate} )
-$GroupHomeThisUtility.Controls.Add($ButtonDownloadUpdate)
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+$_TAB_HOME.Controls.AddRange(@($GroupHomeThisUtility))
+$GroupHomeThisUtility.Controls.AddRange(@($ButtonBrowserHome, $ButtonCheckForUpdates, $ButtonDownloadUpdate))
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads (Installers) #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $_BUTTON_WIDTH_DOWNLOAD = 160
+$_CHECK_BOX_SIZE_DOWNLOAD = "$($_BUTTON_WIDTH_DOWNLOAD), $($_CHECK_BOX_HEIGHT)"
 
-$_TAB_DOWNLOADS = New-Object System.Windows.Forms.TabPage
-$_TAB_DOWNLOADS.Text = 'Downloads'
-$_TAB_DOWNLOADS.UseVisualStyleBackColor = $True
-$_TAB_CONTROL.Controls.Add($_TAB_DOWNLOADS)
+$_AV_WARNING_MESSAGE = "!! THIS FILE MAY TRIGGER ANTI-VIRUS FALSE POSITIVE !!`n!! IT IS RECOMMENDED TO DISABLE A/V SOFTWARE FOR DOWNLOAD AND SUBESEQUENT USE OF THIS FILE !!"
 
+$_TAB_DOWNLOADS_INSTALLERS = New-Object System.Windows.Forms.TabPage
+$_TAB_DOWNLOADS_INSTALLERS.Text = 'Downloads: Installers'
+$_TAB_DOWNLOADS_INSTALLERS.UseVisualStyleBackColor = $True
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Installers (Software) #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-
-$GroupDownloadsInstallersSoftware = New-Object System.Windows.Forms.GroupBox
-$GroupDownloadsInstallersSoftware.Text = 'Installers: Software'
-$GroupDownloadsInstallersSoftware.Height = $_INTERVAL_NORMAL + $_BUTTON_INTERVAL_NORMAL * 4 + $_INTERVAL_SHORT
-$GroupDownloadsInstallersSoftware.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_DOWNLOAD + $_INTERVAL_NORMAL
-$GroupDownloadsInstallersSoftware.Location = "$_INTERVAL_NORMAL, $_INTERVAL_NORMAL"
-$_TAB_DOWNLOADS.Controls.Add($GroupDownloadsInstallersSoftware)
+$_TAB_CONTROL.Controls.AddRange(@($_TAB_DOWNLOADS_INSTALLERS))
 
 
-$ButtonDownloadNinite = New-Object System.Windows.Forms.Button
-$ButtonDownloadNinite.Text = 'Ninite'
-$ButtonDownloadNiniteToolTipText = "Open Ninite universal installer web page`r(Opens in browser)"
-$ButtonDownloadNinite.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonDownloadNinite.Height = $_BUTTON_HEIGHT
-$ButtonDownloadNinite.Width = $_BUTTON_WIDTH_DOWNLOAD
-$ButtonDownloadNinite.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadNinite, $ButtonDownloadNiniteToolTipText)
-$ButtonDownloadNinite.Add_Click( {OpenInBrowser 'ninite.com/?select=7zip-vlc-teamviewer14-skype-chrome'} )
-$GroupDownloadsInstallersSoftware.Controls.Add($ButtonDownloadNinite)
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Ninite #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$GroupNinite = New-Object System.Windows.Forms.GroupBox
+$GroupNinite.Text = 'Ninite'
+$GroupNinite.Height = $_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT * 8 + $_BUTTON_INTERVAL_NORMAL * 2 + $_INTERVAL_SHORT
+$GroupNinite.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_DOWNLOAD + $_INTERVAL_NORMAL
+$GroupNinite.Location = "$_INTERVAL_NORMAL, $_INTERVAL_NORMAL"
+
+
+$CheckBoxNinite7zip = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNinite7zip.Text = "7-Zip"
+$CheckBoxNinite7zip.Name = "7zip"
+$CheckBoxNinite7zip.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
+$CheckBoxNinite7zip.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNinite7zip.Checked = $True
+$CheckBoxNinite7zip.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+
+$CheckBoxNiniteVLC = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteVLC.Text = "VLC"
+$CheckBoxNiniteVLC.Name = "vlc"
+$CheckBoxNiniteVLC.Location = $CheckBoxNinite7zip.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$CheckBoxNiniteVLC.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNiniteVLC.Checked = $True
+$CheckBoxNiniteVLC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+
+$CheckBoxNiniteTeamViewer = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteTeamViewer.Text = "TeamViewer"
+$CheckBoxNiniteTeamViewer.Name = "teamviewer14"
+$CheckBoxNiniteTeamViewer.Location = $CheckBoxNiniteVLC.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$CheckBoxNiniteTeamViewer.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNiniteTeamViewer.Checked = $True
+$CheckBoxNiniteTeamViewer.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+
+$CheckBoxNiniteSkype = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteSkype.Text = "Skype"
+$CheckBoxNiniteSkype.Name = "skype"
+$CheckBoxNiniteSkype.Location = $CheckBoxNiniteTeamViewer.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$CheckBoxNiniteSkype.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNiniteSkype.Checked = $True
+$CheckBoxNiniteSkype.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+
+$CheckBoxNiniteChrome = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteChrome.Text = "Google Chrome"
+$CheckBoxNiniteChrome.Name = "chrome"
+$CheckBoxNiniteChrome.Location = $CheckBoxNiniteSkype.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$CheckBoxNiniteChrome.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNiniteChrome.Checked = $True
+$CheckBoxNiniteChrome.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+
+$CheckBoxNiniteqBittorrent = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteqBittorrent.Text = "qBittorrent"
+$CheckBoxNiniteqBittorrent.Name = "qbittorrent"
+$CheckBoxNiniteqBittorrent.Location = $CheckBoxNiniteChrome.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$CheckBoxNiniteqBittorrent.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNiniteqBittorrent.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+
+$CheckBoxNiniteGoogleDrive = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteGoogleDrive.Text = "Google Drive"
+$CheckBoxNiniteGoogleDrive.Name = "googlebackupandsync"
+$CheckBoxNiniteGoogleDrive.Location = $CheckBoxNiniteqBittorrent.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$CheckBoxNiniteGoogleDrive.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNiniteGoogleDrive.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+
+$CheckBoxNiniteVSC = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteVSC.Text = "Visual Studio Code"
+$CheckBoxNiniteVSC.Name = "vscode"
+$CheckBoxNiniteVSC.Location = $CheckBoxNiniteGoogleDrive.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$CheckBoxNiniteVSC.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNiniteVSC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+
+
+$ButtonNiniteDownload = New-Object System.Windows.Forms.Button
+$ButtonNiniteDownload.Text = 'Download selected'
+$ButtonNiniteDownloadToolTipText = 'Download Ninite universal installer for selected applications'
+$ButtonNiniteDownload.Location = $CheckBoxNiniteVSC.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$ButtonNiniteDownload.Height = $_BUTTON_HEIGHT
+$ButtonNiniteDownload.Width = $_BUTTON_WIDTH_DOWNLOAD
+$ButtonNiniteDownload.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonNiniteDownload, $ButtonNiniteDownloadToolTipText)
+$ButtonNiniteDownload.Add_Click( {DownloadFile "https://ninite.com/$(NiniteQueryBuilder)/ninite.exe" $(NiniteNameBuilder)} )
+
+
+$ButtonNiniteOpenInBrowser = New-Object System.Windows.Forms.Button
+$ButtonNiniteOpenInBrowser.Text = 'View other'
+$ButtonNiniteOpenInBrowserToolTipText = 'Open Ninite universal installer web page in browser'
+$ButtonNiniteOpenInBrowser.Location = $ButtonNiniteDownload.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
+$ButtonNiniteOpenInBrowser.Height = $_BUTTON_HEIGHT
+$ButtonNiniteOpenInBrowser.Width = $_BUTTON_WIDTH_DOWNLOAD
+$ButtonNiniteOpenInBrowser.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonNiniteOpenInBrowser, $ButtonNiniteOpenInBrowserToolTipText)
+$ButtonNiniteOpenInBrowser.Add_Click( {
+        $Query = NiniteQueryBuilder
+        OpenInBrowser $(if ($Query) {"ninite.com/?select=$($Query)"} else {'ninite.com'})
+    } )
+
+
+$_TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GroupNinite))
+$GroupNinite.Controls.AddRange(@($ButtonNiniteDownload, $ButtonNiniteOpenInBrowser))
+$GroupNinite.Controls.AddRange(@($CheckBoxNinite7zip, $CheckBoxNiniteVLC, $CheckBoxNiniteTeamViewer, $CheckBoxNiniteSkype))
+$GroupNinite.Controls.AddRange(@($CheckBoxNiniteChrome, $CheckBoxNiniteqBittorrent, $CheckBoxNiniteGoogleDrive, $CheckBoxNiniteVSC))
+
+$_TAB_CONTROL.SelectedTab = $_TAB_DOWNLOADS_INSTALLERS
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Software Installers #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$GroupEssentials = New-Object System.Windows.Forms.GroupBox
+$GroupEssentials.Text = 'Essentials'
+$GroupEssentials.Height = $_INTERVAL_NORMAL + $_BUTTON_INTERVAL_NORMAL * 3 + $_INTERVAL_SHORT
+$GroupEssentials.Width = $GroupNinite.Width
+$GroupEssentials.Location = $GroupNinite.Location + "$($GroupNinite.Width + $_INTERVAL_NORMAL), 0"
 
 
 $ButtonDownloadChrome = New-Object System.Windows.Forms.Button
 $ButtonDownloadChrome.Text = 'Chrome Beta'
 $ButtonDownloadChromeToolTipText = "Download Google Chrome Beta installer`r(Opens in browser)"
-$ButtonDownloadChrome.Location = $ButtonDownloadNinite.Location + "0, $_BUTTON_INTERVAL_NORMAL"
+$ButtonDownloadChrome.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
 $ButtonDownloadChrome.Height = $_BUTTON_HEIGHT
 $ButtonDownloadChrome.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadChrome.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadChrome, $ButtonDownloadChromeToolTipText)
 $ButtonDownloadChrome.Add_Click( {OpenInBrowser 'google.com/chrome/beta'} )
-$GroupDownloadsInstallersSoftware.Controls.Add($ButtonDownloadChrome)
-
 
 $ButtonDownloadUnchecky = New-Object System.Windows.Forms.Button
 $ButtonDownloadUnchecky.Text = 'Unchecky'
 $ButtonDownloadUncheckyToolTipText = "Download Unchecky installer`rUnchecky clears adware checkboxes when installing software"
-$ButtonDownloadUnchecky.Location = $ButtonDownloadChrome.Location + "0, $_BUTTON_INTERVAL_NORMAL"
+$ButtonDownloadUnchecky.Location = $ButtonDownloadChrome.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonDownloadUnchecky.Height = $_BUTTON_HEIGHT
 $ButtonDownloadUnchecky.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadUnchecky.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadUnchecky, $ButtonDownloadUncheckyToolTipText)
 $ButtonDownloadUnchecky.Add_Click( {DownloadFile 'unchecky.com/files/unchecky_setup.exe'} )
-$GroupDownloadsInstallersSoftware.Controls.Add($ButtonDownloadUnchecky)
-
 
 $ButtonDownloadOffice = New-Object System.Windows.Forms.Button
 $ButtonDownloadOffice.Text = 'Office 2013 - 2019'
-$ButtonDownloadOfficeToolTipText = "Download Microsoft Office 2013 - 2019 installer and activator"
-$ButtonDownloadOffice.Location = $ButtonDownloadUnchecky.Location + "0, $_BUTTON_INTERVAL_NORMAL"
+$ButtonDownloadOfficeToolTipText = "Download Microsoft Office 2013 - 2019 installer and activator`n`n$_AV_WARNING_MESSAGE"
+$ButtonDownloadOffice.Location = $ButtonDownloadUnchecky.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonDownloadOffice.Height = $_BUTTON_HEIGHT
 $ButtonDownloadOffice.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadOffice.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadOffice, $ButtonDownloadOfficeToolTipText)
-$ButtonDownloadOffice.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Office_2013-2019.zip'} )
-$GroupDownloadsInstallersSoftware.Controls.Add($ButtonDownloadOffice)
+$ButtonDownloadOffice.Add_Click( {
+        Write-Log $_WRN $_AV_WARNING_MESSAGE
+        DownloadFile 'qiiwexc.github.io/d/Office_2013-2019.zip'
+    } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Installers (Tools) #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+$_TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GroupEssentials))
+$GroupEssentials.Controls.AddRange(@($ButtonDownloadUnchecky, $ButtonDownloadOffice, $ButtonDownloadChrome))
 
-$GroupDownloadsInstallersTools = New-Object System.Windows.Forms.GroupBox
-$GroupDownloadsInstallersTools.Text = 'Installers: Tools'
-$GroupDownloadsInstallersTools.Height = $_INTERVAL_NORMAL + $_BUTTON_INTERVAL_NORMAL * 2 + $_BUTTON_INTERVAL_SHORT * 2 + $_INTERVAL_SHORT
-$GroupDownloadsInstallersTools.Width = $GroupDownloadsInstallersSoftware.Width
-$GroupDownloadsInstallersTools.Location = $GroupDownloadsInstallersSoftware.Location + "$($GroupDownloadsInstallersSoftware.Width + $_INTERVAL_NORMAL), 0"
-$_TAB_DOWNLOADS.Controls.Add($GroupDownloadsInstallersTools)
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Tool Installers #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$GroupInstallersTools = New-Object System.Windows.Forms.GroupBox
+$GroupInstallersTools.Text = 'Tools'
+$GroupInstallersTools.Height = $_INTERVAL_NORMAL + $_BUTTON_INTERVAL_NORMAL * 2 + $_BUTTON_INTERVAL_SHORT * 2 + $_INTERVAL_SHORT
+$GroupInstallersTools.Width = $GroupEssentials.Width
+$GroupInstallersTools.Location = $GroupEssentials.Location + "$($GroupEssentials.Width + $_INTERVAL_NORMAL), 0"
 
 
 $ButtonDownloadCCleaner = New-Object System.Windows.Forms.Button
 $ButtonDownloadCCleaner.Text = 'CCleaner'
-$ButtonDownloadCCleanerToolTipText = "Download CCleaner installer"
+$ButtonDownloadCCleanerToolTipText = 'Download CCleaner installer'
 $ButtonDownloadCCleaner.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
 $ButtonDownloadCCleaner.Height = $_BUTTON_HEIGHT
 $ButtonDownloadCCleaner.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadCCleaner.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadCCleaner, $ButtonDownloadCCleanerToolTipText)
 $ButtonDownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe'} )
-$GroupDownloadsInstallersTools.Controls.Add($ButtonDownloadCCleaner)
 
 $ButtonDownloadDefraggler = New-Object System.Windows.Forms.Button
 $ButtonDownloadDefraggler.Text = 'Defraggler'
-$ButtonDownloadDefragglerToolTipText = "Download Defraggler installer"
-$ButtonDownloadDefraggler.Location = $ButtonDownloadCCleaner.Location + "0, $_BUTTON_INTERVAL_SHORT"
+$ButtonDownloadDefragglerToolTipText = 'Download Defraggler installer'
+$ButtonDownloadDefraggler.Location = $ButtonDownloadCCleaner.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
 $ButtonDownloadDefraggler.Height = $_BUTTON_HEIGHT
 $ButtonDownloadDefraggler.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadDefraggler.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadDefraggler, $ButtonDownloadDefragglerToolTipText)
 $ButtonDownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe'} )
-$GroupDownloadsInstallersTools.Controls.Add($ButtonDownloadDefraggler)
 
 $ButtonDownloadRecuva = New-Object System.Windows.Forms.Button
 $ButtonDownloadRecuva.Text = 'Recuva'
 $ButtonDownloadRecuvaToolTipText = "Download Recuva installer`rRecuva helps restore deleted files"
-$ButtonDownloadRecuva.Location = $ButtonDownloadDefraggler.Location + "0, $_BUTTON_INTERVAL_SHORT"
+$ButtonDownloadRecuva.Location = $ButtonDownloadDefraggler.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
 $ButtonDownloadRecuva.Height = $_BUTTON_HEIGHT
 $ButtonDownloadRecuva.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadRecuva.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadRecuva, $ButtonDownloadRecuvaToolTipText)
 $ButtonDownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe'} )
-$GroupDownloadsInstallersTools.Controls.Add($ButtonDownloadRecuva)
-
 
 $ButtonDownloadMalwarebytes = New-Object System.Windows.Forms.Button
 $ButtonDownloadMalwarebytes.Text = 'Malwarebytes'
 $ButtonDownloadMalwarebytesToolTipText = "Download Malwarebytes installer`rMalwarebytes helps remove malware and adware"
-$ButtonDownloadMalwarebytes.Location = $ButtonDownloadRecuva.Location + "0, $_BUTTON_INTERVAL_NORMAL"
+$ButtonDownloadMalwarebytes.Location = $ButtonDownloadRecuva.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonDownloadMalwarebytes.Height = $_BUTTON_HEIGHT
 $ButtonDownloadMalwarebytes.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadMalwarebytes.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadMalwarebytes, $ButtonDownloadMalwarebytesToolTipText)
 $ButtonDownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'ninite_malwarebytes_setup.exe'} )
-$GroupDownloadsInstallersTools.Controls.Add($ButtonDownloadMalwarebytes)
+
+
+$_TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GroupInstallersTools))
+$GroupInstallersTools.Controls.AddRange(@($ButtonDownloadCCleaner, $ButtonDownloadDefraggler, $ButtonDownloadRecuva, $ButtonDownloadMalwarebytes))
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads (ISO and Tools) #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$_TAB_DOWNLOADS_TOOLS = New-Object System.Windows.Forms.TabPage
+$_TAB_DOWNLOADS_TOOLS.Text = 'Downloads: ISO and Tools'
+$_TAB_DOWNLOADS_TOOLS.UseVisualStyleBackColor = $True
+
+$_TAB_CONTROL.Controls.AddRange(@($_TAB_DOWNLOADS_TOOLS))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Activators #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -270,32 +387,39 @@ $GroupDownloadsInstallersTools.Controls.Add($ButtonDownloadMalwarebytes)
 $GroupDownloadsActivators = New-Object System.Windows.Forms.GroupBox
 $GroupDownloadsActivators.Text = 'Activators'
 $GroupDownloadsActivators.Height = $_INTERVAL_NORMAL + $_BUTTON_INTERVAL_NORMAL * 2 + $_INTERVAL_SHORT
-$GroupDownloadsActivators.Width = $GroupDownloadsInstallersSoftware.Width
-$GroupDownloadsActivators.Location = $GroupDownloadsInstallersSoftware.Location + "0, $($GroupDownloadsInstallersSoftware.Height + $_INTERVAL_NORMAL + 2)"
-$_TAB_DOWNLOADS.Controls.Add($GroupDownloadsActivators)
+$GroupDownloadsActivators.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_DOWNLOAD + $_INTERVAL_NORMAL
+$GroupDownloadsActivators.Location = "$_INTERVAL_NORMAL, $_INTERVAL_NORMAL"
 
 
 $ButtonDownloadKMS = New-Object System.Windows.Forms.Button
 $ButtonDownloadKMS.Text = 'KMSAuto Lite'
-$ButtonDownloadKMSToolTipText = "Download KMSAuto Lite`rActivates Windows 7 - 10 and Office 2010 - 2019"
+$ButtonDownloadKMSToolTipText = "Download KMSAuto Lite`rActivates Windows 7 - 10 and Office 2010 - 2019`n`n$_AV_WARNING_MESSAGE"
 $ButtonDownloadKMS.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
 $ButtonDownloadKMS.Height = $_BUTTON_HEIGHT
 $ButtonDownloadKMS.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadKMS.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadKMS, $ButtonDownloadKMSToolTipText)
-$ButtonDownloadKMS.Add_Click( {DownloadFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip'} )
-$GroupDownloadsActivators.Controls.Add($ButtonDownloadKMS)
+$ButtonDownloadKMS.Add_Click( {
+        Write-Log $_WRN $_AV_WARNING_MESSAGE
+        DownloadFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip'
+    } )
 
 $ButtonDownloadChew = New-Object System.Windows.Forms.Button
 $ButtonDownloadChew.Text = 'ChewWGA'
-$ButtonDownloadChewToolTipText = "Download ChewWGA`rFor activating hopeless Windows 7 installations"
-$ButtonDownloadChew.Location = $ButtonDownloadKMS.Location + "0, $_BUTTON_INTERVAL_NORMAL"
+$ButtonDownloadChewToolTipText = "Download ChewWGA`rFor activating hopeless Windows 7 installations`n`n$_AV_WARNING_MESSAGE"
+$ButtonDownloadChew.Location = $ButtonDownloadKMS.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonDownloadChew.Height = $_BUTTON_HEIGHT
 $ButtonDownloadChew.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadChew.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadChew, $ButtonDownloadChewToolTipText)
-$ButtonDownloadChew.Add_Click( {DownloadFile 'qiiwexc.github.io/d/ChewWGA.zip'} )
-$GroupDownloadsActivators.Controls.Add($ButtonDownloadChew)
+$ButtonDownloadChew.Add_Click( {
+        Write-Log $_WRN $_AV_WARNING_MESSAGE
+        DownloadFile 'qiiwexc.github.io/d/ChewWGA.zip'
+    } )
+
+
+$_TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GroupDownloadsActivators))
+$GroupDownloadsActivators.Controls.AddRange(@($ButtonDownloadKMS, $ButtonDownloadChew))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Tools #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -303,45 +427,43 @@ $GroupDownloadsActivators.Controls.Add($ButtonDownloadChew)
 $GroupDownloadsTools = New-Object System.Windows.Forms.GroupBox
 $GroupDownloadsTools.Text = 'Tools'
 $GroupDownloadsTools.Height = $_INTERVAL_NORMAL + $_BUTTON_INTERVAL_SHORT * 3 + $_INTERVAL_NORMAL
-$GroupDownloadsTools.Width = $GroupDownloadsInstallersTools.Width
-$GroupDownloadsTools.Location = $GroupDownloadsInstallersTools.Location + "0, $($GroupDownloadsInstallersTools.Height + $_INTERVAL_NORMAL)"
-$_TAB_DOWNLOADS.Controls.Add($GroupDownloadsTools)
+$GroupDownloadsTools.Width = $GroupDownloadsActivators.Width
+$GroupDownloadsTools.Location = $GroupDownloadsActivators.Location + "0, $($GroupDownloadsActivators.Height + $_INTERVAL_NORMAL)"
 
 
 $ButtonDownloadSDI = New-Object System.Windows.Forms.Button
 $ButtonDownloadSDI.Text = 'Snappy Driver Installer'
-$ButtonDownloadSDIToolTipText = "Download Snappy Driver Installer"
+$ButtonDownloadSDIToolTipText = 'Download Snappy Driver Installer'
 $ButtonDownloadSDI.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
 $ButtonDownloadSDI.Height = $_BUTTON_HEIGHT
 $ButtonDownloadSDI.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadSDI.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadSDI, $ButtonDownloadSDIToolTipText)
 $ButtonDownloadSDI.Add_Click( {DownloadFile 'sdi-tool.org/releases/SDI_R1811.zip'} )
-$GroupDownloadsTools.Controls.Add($ButtonDownloadSDI)
-
 
 $ButtonDownloadVictoria = New-Object System.Windows.Forms.Button
 $ButtonDownloadVictoria.Text = 'Victoria'
-$ButtonDownloadVictoriaToolTipText = "Download Victoria HDD scanner"
-$ButtonDownloadVictoria.Location = $ButtonDownloadSDI.Location + "0, $_BUTTON_INTERVAL_SHORT"
+$ButtonDownloadVictoriaToolTipText = 'Download Victoria HDD scanner'
+$ButtonDownloadVictoria.Location = $ButtonDownloadSDI.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
 $ButtonDownloadVictoria.Height = $_BUTTON_HEIGHT
 $ButtonDownloadVictoria.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadVictoria.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadVictoria, $ButtonDownloadVictoriaToolTipText)
 $ButtonDownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Victoria_4.47.zip'} )
-$GroupDownloadsTools.Controls.Add($ButtonDownloadVictoria)
-
 
 $ButtonDownloadRufus = New-Object System.Windows.Forms.Button
 $ButtonDownloadRufus.Text = 'Rufus'
-$ButtonDownloadRufusToolTipText = "Download Rufus - a bootable USB creator"
-$ButtonDownloadRufus.Location = $ButtonDownloadVictoria.Location + "0, $_BUTTON_INTERVAL_SHORT"
+$ButtonDownloadRufusToolTipText = 'Download Rufus - a bootable USB creator'
+$ButtonDownloadRufus.Location = $ButtonDownloadVictoria.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
 $ButtonDownloadRufus.Height = $_BUTTON_HEIGHT
 $ButtonDownloadRufus.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadRufus.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadRufus, $ButtonDownloadRufusToolTipText)
 $ButtonDownloadRufus.Add_Click( {DownloadFile 'github.com/pbatard/rufus/releases/download/v3.4/rufus-3.4p.exe'} )
-$GroupDownloadsTools.Controls.Add($ButtonDownloadRufus)
+
+
+$_TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GroupDownloadsTools))
+$GroupDownloadsTools.Controls.AddRange(@($ButtonDownloadSDI, $ButtonDownloadVictoria, $ButtonDownloadRufus))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Windows Images #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -349,9 +471,8 @@ $GroupDownloadsTools.Controls.Add($ButtonDownloadRufus)
 $GroupDownloadsWindows = New-Object System.Windows.Forms.GroupBox
 $GroupDownloadsWindows.Text = 'Windows ISO Images'
 $GroupDownloadsWindows.Height = $_INTERVAL_NORMAL + $_BUTTON_INTERVAL_NORMAL * 3 + $_BUTTON_INTERVAL_SHORT * 3 + $_INTERVAL_SHORT
-$GroupDownloadsWindows.Width = $GroupDownloadsInstallersTools.Width
-$GroupDownloadsWindows.Location = $GroupDownloadsInstallersTools.Location + "$($GroupDownloadsInstallersTools.Width + $_INTERVAL_NORMAL), 0"
-$_TAB_DOWNLOADS.Controls.Add($GroupDownloadsWindows)
+$GroupDownloadsWindows.Width = $GroupDownloadsActivators.Width
+$GroupDownloadsWindows.Location = $GroupDownloadsActivators.Location + "$($GroupDownloadsActivators.Width + $_INTERVAL_NORMAL), 0"
 
 
 $ButtonDownloadWindows10 = New-Object System.Windows.Forms.Button
@@ -363,64 +484,62 @@ $ButtonDownloadWindows10.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadWindows10.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindows10, $ButtonDownloadWindows10ToolTipText)
 $ButtonDownloadWindows10.Add_Click( {OpenInBrowser 'http://monkrus.ws/2019/01/windows-10-v1809-jan-rus-eng-x86-x64.html'} )
-$GroupDownloadsWindows.Controls.Add($ButtonDownloadWindows10)
 
 $ButtonDownloadWindows8 = New-Object System.Windows.Forms.Button
 $ButtonDownloadWindows8.Text = 'Windows 8.1'
 $ButtonDownloadWindows8ToolTipText = "Download $($ButtonDownloadWindows8.Text) with Update 3 RUS-ENG x86-x64 -16in1- Activated (AIO) ISO image`r(Opens in browser)"
-$ButtonDownloadWindows8.Location = $ButtonDownloadWindows10.Location + "0, $_BUTTON_INTERVAL_SHORT"
+$ButtonDownloadWindows8.Location = $ButtonDownloadWindows10.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
 $ButtonDownloadWindows8.Height = $_BUTTON_HEIGHT
 $ButtonDownloadWindows8.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadWindows8.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindows8, $ButtonDownloadWindows8ToolTipText)
 $ButtonDownloadWindows8.Add_Click( {OpenInBrowser 'rutracker.org/forum/viewtopic.php?t=5109222'} )
-$GroupDownloadsWindows.Controls.Add($ButtonDownloadWindows8)
 
 $ButtonDownloadWindows7 = New-Object System.Windows.Forms.Button
 $ButtonDownloadWindows7.Text = 'Windows 7'
 $ButtonDownloadWindows7ToolTipText = "Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v5 (AIO) ISO image`r(Opens in browser)"
-$ButtonDownloadWindows7.Location = $ButtonDownloadWindows8.Location + "0, $_BUTTON_INTERVAL_SHORT"
+$ButtonDownloadWindows7.Location = $ButtonDownloadWindows8.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
 $ButtonDownloadWindows7.Height = $_BUTTON_HEIGHT
 $ButtonDownloadWindows7.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadWindows7.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindows7, $ButtonDownloadWindows7ToolTipText)
 $ButtonDownloadWindows7.Add_Click( {OpenInBrowser 'http://monkrus.ws/2018/03/windows-7-sp1-ie11-rus-eng-x86-x64.html'} )
-$GroupDownloadsWindows.Controls.Add($ButtonDownloadWindows7)
-
 
 $ButtonDownloadWindowsXPENG = New-Object System.Windows.Forms.Button
 $ButtonDownloadWindowsXPENG.Text = 'Windows XP (ENG)'
 $ButtonDownloadWindowsXPENGToolTipText = "Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image`r(Opens in browser)"
-$ButtonDownloadWindowsXPENG.Location = $ButtonDownloadWindows7.Location + "0, $_BUTTON_INTERVAL_NORMAL"
+$ButtonDownloadWindowsXPENG.Location = $ButtonDownloadWindows7.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonDownloadWindowsXPENG.Height = $_BUTTON_HEIGHT
 $ButtonDownloadWindowsXPENG.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadWindowsXPENG.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindowsXPENG, $ButtonDownloadWindowsXPENGToolTipText)
 $ButtonDownloadWindowsXPENG.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'} )
-$GroupDownloadsWindows.Controls.Add($ButtonDownloadWindowsXPENG)
 
 $ButtonDownloadWindowsXPRUS = New-Object System.Windows.Forms.Button
 $ButtonDownloadWindowsXPRUS.Text = 'Windows XP (RUS)'
 $ButtonDownloadWindowsXPRUSToolTipText = "Download Windows XP SP3 (RUS) + Office 2010 SP2 (RUS) [v17.5.6] ISO image`r(Opens in browser)"
-$ButtonDownloadWindowsXPRUS.Location = $ButtonDownloadWindowsXPENG.Location + "0, $_BUTTON_INTERVAL_SHORT"
+$ButtonDownloadWindowsXPRUS.Location = $ButtonDownloadWindowsXPENG.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
 $ButtonDownloadWindowsXPRUS.Height = $_BUTTON_HEIGHT
 $ButtonDownloadWindowsXPRUS.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadWindowsXPRUS.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindowsXPRUS, $ButtonDownloadWindowsXPRUSToolTipText)
 $ButtonDownloadWindowsXPRUS.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1mgs56mX2-dQMk9e5KaXhODLBWXipmLCR'} )
-$GroupDownloadsWindows.Controls.Add($ButtonDownloadWindowsXPRUS)
-
 
 $ButtonDownloadWindowsPE = New-Object System.Windows.Forms.Button
 $ButtonDownloadWindowsPE.Text = 'Windows PE'
 $ButtonDownloadWindowsPEToolTipText = "Download Windows PE (Live CD) ISO image`r(Opens in browser)"
-$ButtonDownloadWindowsPE.Location = $ButtonDownloadWindowsXPRUS.Location + "0, $_BUTTON_INTERVAL_NORMAL"
+$ButtonDownloadWindowsPE.Location = $ButtonDownloadWindowsXPRUS.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonDownloadWindowsPE.Height = $_BUTTON_HEIGHT
 $ButtonDownloadWindowsPE.Width = $_BUTTON_WIDTH_DOWNLOAD
 $ButtonDownloadWindowsPE.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindowsPE, $ButtonDownloadWindowsPEToolTipText)
 $ButtonDownloadWindowsPE.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'} )
-$GroupDownloadsWindows.Controls.Add($ButtonDownloadWindowsPE)
+
+
+$_TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GroupDownloadsWindows))
+$GroupDownloadsWindows.Controls.AddRange(
+    @($ButtonDownloadWindows10, $ButtonDownloadWindows8, $ButtonDownloadWindows7, $ButtonDownloadWindowsXPENG, $ButtonDownloadWindowsXPRUS, $ButtonDownloadWindowsPE)
+)
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Startup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -456,7 +575,7 @@ function Write-Log($Level, $Message) {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Self-Update #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function CheckForUpdates ($IsManualCheck) {
+function CheckForUpdates ($Mode) {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $_INF 'Checking for updates...'
 
@@ -469,7 +588,7 @@ function CheckForUpdates ($IsManualCheck) {
         Write-Log $_WRN "Newer version available: v$LatestVersion"
         $ButtonCheckForUpdates.Visible = $False
         $ButtonDownloadUpdate.Visible = $True
-        if (!$IsManualCheck) {DownloadUpdate}
+        if ($Mode -ne 'Manual') {DownloadUpdate}
     }
     else {Write-Log $_INF 'Currently running the latest version'}
 }
@@ -588,7 +707,7 @@ function OpenInBrowser ($URL) {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Download File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function DownloadFile ($URL, $FileName) {
+function DownloadFile ($URL, $FileName, $Execute) {
     if ($URL.length -lt 1) {
         Write-Log $_ERR 'No URL specified'
         return
@@ -606,6 +725,41 @@ function DownloadFile ($URL, $FileName) {
         else {throw 'Possibly computer is offline or disk is full'}
     }
     catch [Exception] {Write-Log $_ERR "Download failed: $($_.Exception.Message)"}
+}
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Ninite Downloader #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+function HandleNiniteCheckBoxStateChange () {
+    $ButtonNiniteDownload.Enabled = $CheckBoxNinite7zip.Checked -or $CheckBoxNiniteVLC.Checked -or `
+        $CheckBoxNiniteTeamViewer.Checked -or $CheckBoxNiniteSkype.Checked -or $CheckBoxNiniteChrome.Checked -or `
+        $CheckBoxNiniteqBittorrent.Checked -or $CheckBoxNiniteGoogleDrive.Checked -or $CheckBoxNiniteVSC.Checked
+}
+
+function NiniteQueryBuilder () {
+    $Array = @()
+    if ($CheckBoxNinite7zip.Checked) {$Array += $CheckBoxNinite7zip.Name}
+    if ($CheckBoxNiniteVLC.Checked) {$Array += $CheckBoxNiniteVLC.Name}
+    if ($CheckBoxNiniteTeamViewer.Checked) {$Array += $CheckBoxNiniteTeamViewer.Name}
+    if ($CheckBoxNiniteSkype.Checked) {$Array += $CheckBoxNiniteSkype.Name}
+    if ($CheckBoxNiniteChrome.Checked) {$Array += $CheckBoxNiniteChrome.Name}
+    if ($CheckBoxNiniteqBittorrent.Checked) {$Array += $CheckBoxNiniteqBittorrent.Name}
+    if ($CheckBoxNiniteGoogleDrive.Checked) {$Array += $CheckBoxNiniteGoogleDrive.Name}
+    if ($CheckBoxNiniteVSC.Checked) {$Array += $CheckBoxNiniteVSC.Name}
+    return $Array -join '-'
+}
+
+function NiniteNameBuilder () {
+    $Array = @()
+    if ($CheckBoxNinite7zip.Checked) {$Array += $CheckBoxNinite7zip.Text}
+    if ($CheckBoxNiniteVLC.Checked) {$Array += $CheckBoxNiniteVLC.Text}
+    if ($CheckBoxNiniteTeamViewer.Checked) {$Array += $CheckBoxNiniteTeamViewer.Text}
+    if ($CheckBoxNiniteSkype.Checked) {$Array += $CheckBoxNiniteSkype.Text}
+    if ($CheckBoxNiniteChrome.Checked) {$Array += $CheckBoxNiniteChrome.Text}
+    if ($CheckBoxNiniteqBittorrent.Checked) {$Array += $CheckBoxNiniteqBittorrent.Text}
+    if ($CheckBoxNiniteGoogleDrive.Checked) {$Array += $CheckBoxNiniteGoogleDrive.Text}
+    if ($CheckBoxNiniteVSC.Checked) {$Array += $CheckBoxNiniteVSC.Text}
+    return "Ninite $($Array -join ' ') Installer.exe"
 }
 
 

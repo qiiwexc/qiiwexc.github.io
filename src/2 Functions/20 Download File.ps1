@@ -1,4 +1,4 @@
-function DownloadFile ($URL, $FileName) {
+function DownloadFile ($URL, $FileName, $Execute) {
     if ($URL.length -lt 1) {
         Write-Log $_ERR 'No URL specified'
         return
