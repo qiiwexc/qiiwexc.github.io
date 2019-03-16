@@ -1,4 +1,4 @@
-function CheckForUpdates ($IsManualCheck) {
+function CheckForUpdates ($Mode) {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $_INF 'Checking for updates...'
 
@@ -11,7 +11,7 @@ function CheckForUpdates ($IsManualCheck) {
         Write-Log $_WRN "Newer version available: v$LatestVersion"
         $ButtonCheckForUpdates.Visible = $False
         $ButtonDownloadUpdate.Visible = $True
-        if (!$IsManualCheck) {DownloadUpdate}
+        if ($Mode -ne 'Manual') {DownloadUpdate}
     }
     else {Write-Log $_INF 'Currently running the latest version'}
 }
