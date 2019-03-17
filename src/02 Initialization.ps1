@@ -14,5 +14,6 @@ public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
 [Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0) | Out-Null
 
 Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 [System.Windows.Forms.Application]::EnableVisualStyles()
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12

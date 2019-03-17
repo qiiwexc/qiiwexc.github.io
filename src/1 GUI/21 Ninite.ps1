@@ -1,14 +1,22 @@
 $GroupNinite = New-Object System.Windows.Forms.GroupBox
 $GroupNinite.Text = 'Ninite'
-$GroupNinite.Height = $_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT * 8 + $_BUTTON_INTERVAL_NORMAL * 2 + $_INTERVAL_SHORT
-$GroupNinite.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_DOWNLOAD + $_INTERVAL_NORMAL
+$GroupNinite.Height = $_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT * 10 + $_BUTTON_INTERVAL_NORMAL * 2
+$GroupNinite.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
 $GroupNinite.Location = "$_INTERVAL_NORMAL, $_INTERVAL_NORMAL"
 
+
+$CheckBoxNiniteChrome = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteChrome.Text = "Google Chrome"
+$CheckBoxNiniteChrome.Name = "chrome"
+$CheckBoxNiniteChrome.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
+$CheckBoxNiniteChrome.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxNiniteChrome.Checked = $True
+$CheckBoxNiniteChrome.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
 $CheckBoxNinite7zip = New-Object System.Windows.Forms.CheckBox
 $CheckBoxNinite7zip.Text = "7-Zip"
 $CheckBoxNinite7zip.Name = "7zip"
-$CheckBoxNinite7zip.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
+$CheckBoxNinite7zip.Location = $CheckBoxNiniteChrome.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
 $CheckBoxNinite7zip.Size = $_CHECK_BOX_SIZE_DOWNLOAD
 $CheckBoxNinite7zip.Checked = $True
 $CheckBoxNinite7zip.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
@@ -37,18 +45,10 @@ $CheckBoxNiniteSkype.Size = $_CHECK_BOX_SIZE_DOWNLOAD
 $CheckBoxNiniteSkype.Checked = $True
 $CheckBoxNiniteSkype.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CheckBoxNiniteChrome = New-Object System.Windows.Forms.CheckBox
-$CheckBoxNiniteChrome.Text = "Google Chrome"
-$CheckBoxNiniteChrome.Name = "chrome"
-$CheckBoxNiniteChrome.Location = $CheckBoxNiniteSkype.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$CheckBoxNiniteChrome.Size = $_CHECK_BOX_SIZE_DOWNLOAD
-$CheckBoxNiniteChrome.Checked = $True
-$CheckBoxNiniteChrome.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
-
 $CheckBoxNiniteqBittorrent = New-Object System.Windows.Forms.CheckBox
 $CheckBoxNiniteqBittorrent.Text = "qBittorrent"
 $CheckBoxNiniteqBittorrent.Name = "qbittorrent"
-$CheckBoxNiniteqBittorrent.Location = $CheckBoxNiniteChrome.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$CheckBoxNiniteqBittorrent.Location = $CheckBoxNiniteSkype.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
 $CheckBoxNiniteqBittorrent.Size = $_CHECK_BOX_SIZE_DOWNLOAD
 $CheckBoxNiniteqBittorrent.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
@@ -70,20 +70,26 @@ $CheckBoxNiniteVSC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 $ButtonNiniteDownload = New-Object System.Windows.Forms.Button
 $ButtonNiniteDownload.Text = 'Download selected'
 $ButtonNiniteDownloadToolTipText = 'Download Ninite universal installer for selected applications'
-$ButtonNiniteDownload.Location = $CheckBoxNiniteVSC.Location + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$ButtonNiniteDownload.Location = $CheckBoxNiniteVSC.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
 $ButtonNiniteDownload.Height = $_BUTTON_HEIGHT
-$ButtonNiniteDownload.Width = $_BUTTON_WIDTH_DOWNLOAD
+$ButtonNiniteDownload.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonNiniteDownload.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonNiniteDownload, $ButtonNiniteDownloadToolTipText)
-$ButtonNiniteDownload.Add_Click( {DownloadFile "https://ninite.com/$(NiniteQueryBuilder)/ninite.exe" $(NiniteNameBuilder)} )
+$ButtonNiniteDownload.Add_Click( {DownloadFile "https://ninite.com/$(NiniteQueryBuilder)/ninite.exe" $(NiniteNameBuilder) $CheckBoxNiniteExecute.Checked} )
+
+$CheckBoxNiniteExecute = New-Object System.Windows.Forms.CheckBox
+$CheckBoxNiniteExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
+$CheckBoxNiniteExecute.Location = $ButtonNiniteDownload.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxNiniteExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
+$CheckBoxNiniteExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
 
 
 $ButtonNiniteOpenInBrowser = New-Object System.Windows.Forms.Button
 $ButtonNiniteOpenInBrowser.Text = 'View other'
-$ButtonNiniteOpenInBrowserToolTipText = 'Open Ninite universal installer web page in browser'
-$ButtonNiniteOpenInBrowser.Location = $ButtonNiniteDownload.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
+$ButtonNiniteOpenInBrowserToolTipText = 'Open Ninite universal installer web page'
+$ButtonNiniteOpenInBrowser.Location = $ButtonNiniteDownload.Location + $_CHECK_BOX_SHIFT_VERTICAL_NORMAL + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
 $ButtonNiniteOpenInBrowser.Height = $_BUTTON_HEIGHT
-$ButtonNiniteOpenInBrowser.Width = $_BUTTON_WIDTH_DOWNLOAD
+$ButtonNiniteOpenInBrowser.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonNiniteOpenInBrowser.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonNiniteOpenInBrowser, $ButtonNiniteOpenInBrowserToolTipText)
 $ButtonNiniteOpenInBrowser.Add_Click( {
@@ -91,10 +97,15 @@ $ButtonNiniteOpenInBrowser.Add_Click( {
         OpenInBrowser $(if ($Query) {"ninite.com/?select=$($Query)"} else {'ninite.com'})
     } )
 
+$LabelNiniteOpenInBrowser = New-Object System.Windows.Forms.Label
+$LabelNiniteOpenInBrowser.Text = $_TEXT_OPENS_IN_BROWSER
+$LabelNiniteOpenInBrowser.Location = $ButtonNiniteOpenInBrowser.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_LABEL_SHIFT_BROWSER
+$LabelNiniteOpenInBrowser.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+
 
 $_TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GroupNinite))
-$GroupNinite.Controls.AddRange(@($ButtonNiniteDownload, $ButtonNiniteOpenInBrowser))
-$GroupNinite.Controls.AddRange(@($CheckBoxNinite7zip, $CheckBoxNiniteVLC, $CheckBoxNiniteTeamViewer, $CheckBoxNiniteSkype))
-$GroupNinite.Controls.AddRange(@($CheckBoxNiniteChrome, $CheckBoxNiniteqBittorrent, $CheckBoxNiniteGoogleDrive, $CheckBoxNiniteVSC))
-
-$_TAB_CONTROL.SelectedTab = $_TAB_DOWNLOADS_INSTALLERS
+$GroupNinite.Controls.AddRange(@(
+        $ButtonNiniteDownload, $ButtonNiniteOpenInBrowser, $CheckBoxNiniteExecute, $LabelNiniteOpenInBrowser,
+        $CheckBoxNinite7zip, $CheckBoxNiniteVLC, $CheckBoxNiniteTeamViewer, $CheckBoxNiniteSkype,
+        $CheckBoxNiniteChrome, $CheckBoxNiniteqBittorrent, $CheckBoxNiniteGoogleDrive, $CheckBoxNiniteVSC
+    ))
