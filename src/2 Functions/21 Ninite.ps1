@@ -2,6 +2,7 @@ function HandleNiniteCheckBoxStateChange () {
     $ButtonNiniteDownload.Enabled = $CheckBoxNinite7zip.Checked -or $CheckBoxNiniteVLC.Checked -or `
         $CheckBoxNiniteTeamViewer.Checked -or $CheckBoxNiniteSkype.Checked -or $CheckBoxNiniteChrome.Checked -or `
         $CheckBoxNiniteqBittorrent.Checked -or $CheckBoxNiniteGoogleDrive.Checked -or $CheckBoxNiniteVSC.Checked
+    $CheckBoxNiniteExecute.Enabled = $ButtonNiniteDownload.Enabled
 }
 
 function NiniteQueryBuilder () {
