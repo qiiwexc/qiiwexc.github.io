@@ -1,5 +1,7 @@
 $_HOST = Get-Host
-$_HOST.UI.RawUI.WindowTitle = "qiiwexc v$_VERSION"
+$_IS_ELEVATED = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+$_HOST.UI.RawUI.WindowTitle = "qiiwexc v$_VERSION$(if ($_IS_ELEVATED) {': Administrator'})"
 
 Write-Host 'Initializing...'
 

@@ -1,4 +1,4 @@
-$_VERSION = '19.3.18'
+$_VERSION = '19.3.19'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -14,7 +14,9 @@ Double click will simply open the file in Notepad.
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Initialization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $_HOST = Get-Host
-$_HOST.UI.RawUI.WindowTitle = "qiiwexc v$_VERSION"
+$_IS_ELEVATED = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+$_HOST.UI.RawUI.WindowTitle = "qiiwexc v$_VERSION$(if ($_IS_ELEVATED) {': Administrator'})"
 
 Write-Host 'Initializing...'
 
@@ -50,6 +52,7 @@ $_INTERVAL_GROUP_TOP = 20
 
 $_BUTTON_HEIGHT = 28
 $_BUTTON_WIDTH_NORMAL = 160
+$_BUTTON_WIDTH_LARGE = 165
 $_BUTTON_INTERVAL_SHORT = $_BUTTON_HEIGHT + $_INTERVAL_SHORT
 $_BUTTON_INTERVAL_NORMAL = $_BUTTON_HEIGHT + $_INTERVAL_NORMAL
 $_BUTTON_SHIFT_VERTICAL_SHORT = "0, $_BUTTON_INTERVAL_SHORT"
@@ -681,11 +684,25 @@ $GroupDownloadsWindows.Controls.AddRange(@(
 
 function Startup {
     $_FORM.Activate()
-    $Timestamp = (Get-Date).ToString()
-    $_LOG.AppendText("[$Timestamp] Initializing...")
+    $_LOG.AppendText("[$((Get-Date).ToString())] Initializing...")
+
     GatherSystemInformation
     CheckForUpdates
+
+    $script:WorkingDirectory = (Split-Path ($MyInvocation.ScriptName))
+
+    if ($_IS_ELEVATED) {
+        $_FORM.Text = "$($_FORM.Text): Administrator"
+        $ButtonElevate.Text = 'Already elevated'
+        $ButtonElevate.Enabled = $False
+    }
+
+    $script:GoogleUpdatePath = "C:\Program Files$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {' (x86)'})\Google\Update\GoogleUpdate.exe"
+    $ButtonGoogleUpdate.Enabled = Test-Path $GoogleUpdatePath
 }
+
+
+function ExitScript {$_FORM.Close()}
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Logger #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -695,8 +712,7 @@ $_WRN = 'WRN'
 $_ERR = 'ERR'
 
 function Write-Log($Level, $Message) {
-    $Timestamp = (Get-Date).ToString()
-    $Text = "[$Timestamp] $Message"
+    $Text = "[$((Get-Date).ToString())] $Message"
     $_LOG.SelectionStart = $_LOG.TextLength
 
     switch ($Level) { $_WRN {$_LOG.SelectionColor = 'blue'} $_ERR {$_LOG.SelectionColor = 'red'} }
@@ -756,7 +772,7 @@ function RestartAfterUpdate {
         return
     }
 
-    $_FORM.Close()
+    ExitScript
 }
 
 
@@ -851,21 +867,23 @@ function OpenInBrowser ($URL) {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Download File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function DownloadFile ($URL, $FileName, $Execute) {
+function DownloadFile ($URL, $SaveAs, $Execute) {
     if ($URL.length -lt 1) {
         Write-Log $_ERR 'No URL specified'
         return
     }
 
     $DownloadURL = if ($URL -like 'http*') {$URL} else {'https://' + $URL}
-    $SavePath = if ($FileName) {$FileName} else {$DownloadURL | Split-Path -Leaf}
+    $FileName = if ($SaveAs) {$SaveAs} else {$DownloadURL | Split-Path -Leaf}
+    $SavePath = "$WorkingDirectory\$FileName"
 
     Write-Log $_INF "Downloading from $DownloadURL"
+    Write-Log $_INF "SavePath = $SavePath"
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
 
-        if (Test-Path "$SavePath") {Write-Log $_WRN 'Download complete'}
+        if (Test-Path $SavePath) {Write-Log $_WRN 'Download complete'}
         else {throw 'Possibly computer is offline or disk is full'}
     }
     catch [Exception] {
@@ -873,47 +891,48 @@ function DownloadFile ($URL, $FileName, $Execute) {
         return
     }
 
-    if ($Execute) {ExtractAndExecute $SavePath}
+    if ($Execute) {Execute $FileName}
 }
 
-function ExtractAndExecute ($FileName) {
+function Extract ($FileName) {
     Write-Log $_INF "Extracting $FileName"
 
     switch -wildcard ($FileName) {
         'ChewWGA.zip' {
-            $TargetDirName = '.'
+            $ExtractionPath = '.'
             $Executable = 'CW.eXe'
         }
         'Office_2013-2019.zip' {
-            $TargetDirName = '.'
+            $ExtractionPath = '.'
             $Executable = 'OInstall.exe'
         }
         'Victoria_4.47.zip' {
-            $TargetDirName = '.'
+            $ExtractionPath = '.'
             $Executable = 'Victoria 4.47.exe'
         }
         'KMSAuto_Lite.zip' {
-            $TargetDirName = $FileName.trimend('.zip')
+            $ExtractionPath = $FileName.trimend('.zip')
             $Executable = if ($_SYSTEM_INFO.Architecture -eq '64-bit') {'KMSAuto x64.exe'} else {'KMSAuto.exe'}
         }
         "SDI_R*" {
-            $TargetDirName = $FileName.trimend('.zip')
-            $Executable = "$TargetDirName\SDI_auto.bat"
+            $ExtractionPath = $FileName.trimend('.zip')
+            $Executable = "$ExtractionPath\SDI_auto.bat"
         }
-        Default {$TargetDirName = $FileName.trimend('.zip')}
+        Default {$ExtractionPath = $FileName.trimend('.zip')}
     }
 
-    if ($TargetDirName -ne '.') {Remove-Item $TargetDirName -Recurse -ErrorAction Ignore}
+    $TargetDirName = "$WorkingDirectory\$ExtractionPath"
+    if ($ExtractionPath -ne '.') {Remove-Item $TargetDirName -Recurse -ErrorAction Ignore}
 
-    try {[System.IO.Compression.ZipFile]::ExtractToDirectory($FileName, $TargetDirName)}
+    try {[System.IO.Compression.ZipFile]::ExtractToDirectory("$WorkingDirectory\$FileName", $TargetDirName)}
     catch [Exception] {
         Write-Log $_ERR "Extraction failed: $($_.Exception.Message)"
         return
     }
 
-    if ($TargetDirName -eq 'KMSAuto_Lite') {
+    if ($ExtractionPath -eq 'KMSAuto_Lite') {
         $TempDir = $TargetDirName
-        $TargetDirName = '.'
+        $TargetDirName = $WorkingDirectory
 
         Move-Item -Path "$TempDir\$Executable" -Destination "$TargetDirName\$Executable"
         Remove-Item $TempDir -Recurse -ErrorAction Ignore
@@ -922,12 +941,18 @@ function ExtractAndExecute ($FileName) {
     Write-Log $_INF "Files extracted to $TargetDirName"
 
     Write-Log $_INF "Removing $FileName"
-    Remove-Item $FileName -ErrorAction Ignore
+    Remove-Item "$WorkingDirectory\$FileName" -ErrorAction Ignore
 
     Write-Log $_WRN 'Extraction finished'
 
+    return $Executable
+}
+
+function Execute ($FileName) {
+    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {Extract $FileName} else {$FileName}
+
     Write-Log $_INF "Executing '$Executable'"
-    & ".\$Executable"
+    & "$WorkingDirectory\$Executable"
 }
 
 
