@@ -44,5 +44,5 @@ function RestartAfterUpdate {
         return
     }
 
-    $_FORM.Close()
+    ExitScript
 }

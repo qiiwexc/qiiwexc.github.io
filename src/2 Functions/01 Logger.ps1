@@ -3,8 +3,7 @@ $_WRN = 'WRN'
 $_ERR = 'ERR'
 
 function Write-Log($Level, $Message) {
-    $Timestamp = (Get-Date).ToString()
-    $Text = "[$Timestamp] $Message"
+    $Text = "[$((Get-Date).ToString())] $Message"
     $_LOG.SelectionStart = $_LOG.TextLength
 
     switch ($Level) { $_WRN {$_LOG.SelectionColor = 'blue'} $_ERR {$_LOG.SelectionColor = 'red'} }
