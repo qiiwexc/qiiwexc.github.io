@@ -1,4 +1,4 @@
-function CheckForUpdates ($Mode) {
+function CheckForUpdates {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $_INF 'Checking for updates...'
 
@@ -12,12 +12,11 @@ function CheckForUpdates ($Mode) {
 
     if ($UpdateAvailable) {
         Write-Log $_WRN "Newer version available: v$LatestVersion"
-        $ButtonCheckForUpdates.Visible = $False
-        $ButtonDownloadUpdate.Visible = $True
-        if ($Mode -ne 'Manual') {DownloadUpdate}
+        DownloadUpdate
     }
     else {Write-Log $_INF 'Currently running the latest version'}
 }
+
 
 function DownloadUpdate {
     $DownloadURL = 'https://qiiwexc.github.io/d/qiiwexc.ps1'
@@ -31,11 +30,6 @@ function DownloadUpdate {
         return
     }
 
-    RestartAfterUpdate
-}
-
-
-function RestartAfterUpdate {
     Write-Log $_WRN 'Restarting...'
 
     try {Start-Process -FilePath 'powershell' -ArgumentList $TargetFile}

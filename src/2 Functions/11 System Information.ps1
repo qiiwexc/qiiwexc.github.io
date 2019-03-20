@@ -10,6 +10,7 @@ function GatherSystemInformation {
     $SystemPartition = $SystemLogicalDisk | Select-Object -Property @{L = 'FreeSpaceGB'; E = {'{0:N2}' -f ($_.FreeSpace / 1GB)}}, @{L = 'SizeGB'; E = {'{0:N2}' -f ($_.Size / 1GB)}}
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
+    $PSVersion = $PSVersionTable.PSVersion.Major
     $SystemType = switch ($ComputerSystem.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} }
     $SystemManufacturer = $ComputerSystem.Manufacturer
     $SystemModel = $ComputerSystem.Model
@@ -30,6 +31,7 @@ function GatherSystemInformation {
     $OSRelease = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId
     $OSVersion = $OperatingSystem.Version
 
+    $_SYSTEM_INFO | Add-Member -MemberType NoteProperty -Name 'PSVersion' -Value "$PSVersion" -Force
     $_SYSTEM_INFO | Add-Member -MemberType NoteProperty -Name 'Type' -Value "$SystemType" -Force
     $_SYSTEM_INFO | Add-Member -MemberType NoteProperty -Name 'Manufacturer' -Value "$SystemManufacturer" -Force
     $_SYSTEM_INFO | Add-Member -MemberType NoteProperty -Name 'Model' -Value "$SystemModel" -Force
@@ -53,8 +55,10 @@ function GatherSystemInformation {
     $_LOG.AppendText(' Done')
 }
 
+
 function PrintSystemInformation {
     Write-Log $_INF 'Current system information:'
+    Write-Log $_INF "   PowerShell version: $($_SYSTEM_INFO.PSVersion)"
     Write-Log $_INF "   Computer model: $($_SYSTEM_INFO.Manufacturer), $($_SYSTEM_INFO.Model)"
     Write-Log $_INF "   BIOS version: $($_SYSTEM_INFO.BIOSVersion)"
     Write-Log $_INF "   CPU name: $($_SYSTEM_INFO.CPU)"

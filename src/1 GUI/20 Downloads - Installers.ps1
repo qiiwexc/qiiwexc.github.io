@@ -1,3 +1,9 @@
+$_TAB_DOWNLOADS_INSTALLERS = New-Object System.Windows.Forms.TabPage
+$_TAB_DOWNLOADS_INSTALLERS.Text = 'Downloads: Installers'
+$_TAB_DOWNLOADS_INSTALLERS.UseVisualStyleBackColor = $True
+$_TAB_CONTROL.Controls.Add($_TAB_DOWNLOADS_INSTALLERS)
+
+
 $_CHECK_BOX_WIDTH_DOWNLOAD = 145
 $_CHECK_BOX_SIZE_DOWNLOAD = "$($_CHECK_BOX_WIDTH_DOWNLOAD), $($_CHECK_BOX_HEIGHT)"
 $_CHECK_BOX_SHIFT_EXECUTE = '12, -5'
@@ -5,11 +11,7 @@ $_LABEL_SHIFT_BROWSER = '22, -3'
 
 $_AV_WARNING_MESSAGE = "!! THIS FILE MAY TRIGGER ANTI-VIRUS FALSE POSITIVE !!`n!! IT IS RECOMMENDED TO DISABLE A/V SOFTWARE FOR DOWNLOAD AND SUBESEQUENT USE OF THIS FILE !!"
 $_TEXT_EXECUTE_AFTER_DOWNLOAD = 'Execute after download'
-$_TOOLTIP_EXECUTE_AFTER_DOWNLOAD = "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
 $_TEXT_OPENS_IN_BROWSER = 'Opens in the browser'
-
-$_TAB_DOWNLOADS_INSTALLERS = New-Object System.Windows.Forms.TabPage
-$_TAB_DOWNLOADS_INSTALLERS.Text = 'Downloads: Installers'
-$_TAB_DOWNLOADS_INSTALLERS.UseVisualStyleBackColor = $True
-
-$_TAB_CONTROL.Controls.AddRange(@($_TAB_DOWNLOADS_INSTALLERS))
+$_TEXT_INSTALL_SILENTLY = 'Install silently'
+$_TOOLTIP_EXECUTE_AFTER_DOWNLOAD = "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
+$_TOOLTIP_INSTALL_SILENTLY = 'Perform silent installation with no prompts'

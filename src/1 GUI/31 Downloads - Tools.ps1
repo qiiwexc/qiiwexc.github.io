@@ -3,6 +3,7 @@ $GroupDownloadsTools.Text = 'Tools'
 $GroupDownloadsTools.Height = $_INTERVAL_NORMAL + ($_BUTTON_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT) * 3
 $GroupDownloadsTools.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
 $GroupDownloadsTools.Location = "$_INTERVAL_NORMAL, $_INTERVAL_NORMAL"
+$_TAB_DOWNLOADS_TOOLS.Controls.Add($GroupDownloadsTools)
 
 
 $ButtonDownloadSDI = New-Object System.Windows.Forms.Button
@@ -30,7 +31,7 @@ $ButtonDownloadVictoria.Height = $_BUTTON_HEIGHT
 $ButtonDownloadVictoria.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadVictoria.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadVictoria, $ButtonDownloadVictoriaToolTipText)
-$ButtonDownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Victoria_4.47.zip' -Execute $CheckBoxVictoriaExecute.Checked} )
+$ButtonDownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Victoria.zip' -Execute $CheckBoxVictoriaExecute.Checked} )
 
 $CheckBoxVictoriaExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxVictoriaExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -56,7 +57,6 @@ $CheckBoxRufusExecute.Location = $ButtonDownloadRufus.Location + $_BUTTON_SHIFT_
 $CheckBoxRufusExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
 
 
-$_TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GroupDownloadsTools))
 $GroupDownloadsTools.Controls.AddRange(
     @($ButtonDownloadSDI, $ButtonDownloadVictoria, $ButtonDownloadRufus, $CheckBoxSDIExecute, $CheckBoxVictoriaExecute, $CheckBoxRufusExecute)
 )
