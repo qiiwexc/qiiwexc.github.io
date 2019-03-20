@@ -5,6 +5,7 @@ function HandleNiniteCheckBoxStateChange () {
     $CheckBoxNiniteExecute.Enabled = $ButtonNiniteDownload.Enabled
 }
 
+
 function NiniteQueryBuilder () {
     $Array = @()
     if ($CheckBoxNinite7zip.Checked) {$Array += $CheckBoxNinite7zip.Name}
@@ -17,6 +18,7 @@ function NiniteQueryBuilder () {
     if ($CheckBoxNiniteVSC.Checked) {$Array += $CheckBoxNiniteVSC.Name}
     return $Array -join '-'
 }
+
 
 function NiniteNameBuilder () {
     $Array = @()

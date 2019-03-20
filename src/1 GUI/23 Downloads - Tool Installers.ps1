@@ -13,7 +13,7 @@ $ButtonDownloadCCleaner.Height = $_BUTTON_HEIGHT
 $ButtonDownloadCCleaner.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadCCleaner.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadCCleaner, $ButtonDownloadCCleanerToolTipText)
-$ButtonDownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe' -Execute $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe' -Execute $CheckBoxCCleanerExecute.Checked} )
 
 $CheckBoxCCleanerExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxCCleanerExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -30,7 +30,7 @@ $ButtonDownloadDefraggler.Height = $_BUTTON_HEIGHT
 $ButtonDownloadDefraggler.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadDefraggler.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadDefraggler, $ButtonDownloadDefragglerToolTipText)
-$ButtonDownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe' -Execute $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe' -Execute $CheckBoxDefragglerExecute.Checked} )
 
 $CheckBoxDefragglerExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxDefragglerExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -47,7 +47,7 @@ $ButtonDownloadRecuva.Height = $_BUTTON_HEIGHT
 $ButtonDownloadRecuva.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadRecuva.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadRecuva, $ButtonDownloadRecuvaToolTipText)
-$ButtonDownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe' -Execute $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe' -Execute $CheckBoxRecuvaExecute.Checked} )
 
 $CheckBoxRecuvaExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxRecuvaExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -64,7 +64,7 @@ $ButtonDownloadMalwarebytes.Height = $_BUTTON_HEIGHT
 $ButtonDownloadMalwarebytes.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadMalwarebytes.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadMalwarebytes, $ButtonDownloadMalwarebytesToolTipText)
-$ButtonDownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' $CheckBoxMalwarebytesExecute.Checked} )
 
 $CheckBoxMalwarebytesExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxMalwarebytesExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD

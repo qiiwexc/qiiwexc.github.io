@@ -1,4 +1,4 @@
-$_VERSION = '19.3.19'
+$_VERSION = '19.3.20'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -52,7 +52,6 @@ $_INTERVAL_GROUP_TOP = 20
 
 $_BUTTON_HEIGHT = 28
 $_BUTTON_WIDTH_NORMAL = 160
-$_BUTTON_WIDTH_LARGE = 165
 $_BUTTON_INTERVAL_SHORT = $_BUTTON_HEIGHT + $_INTERVAL_SHORT
 $_BUTTON_INTERVAL_NORMAL = $_BUTTON_HEIGHT + $_INTERVAL_NORMAL
 $_BUTTON_SHIFT_VERTICAL_SHORT = "0, $_BUTTON_INTERVAL_SHORT"
@@ -67,6 +66,10 @@ $_CHECK_BOX_SHIFT_VERTICAL_SHORT = "0, $_CHECK_BOX_INTERVAL_SHORT"
 $_CHECK_BOX_SHIFT_HORIZONTAL_SHORT = "$_CHECK_BOX_INTERVAL_SHORT, 0"
 $_CHECK_BOX_SHIFT_VERTICAL_NORMAL = "0, $_CHECK_BOX_INTERVAL_NORMAL"
 $_CHECK_BOX_SHIFT_HORIZONTAL_NORMAL = "$_CHECK_BOX_INTERVAL_NORMAL, 0"
+
+$_INF = 'INF'
+$_WRN = 'WRN'
+$_ERR = 'ERR'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Form #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -103,64 +106,187 @@ $_FORM.Controls.AddRange(@($_LOG, $_TAB_CONTROL))
 $_TAB_HOME = New-Object System.Windows.Forms.TabPage
 $_TAB_HOME.Text = 'Home'
 $_TAB_HOME.UseVisualStyleBackColor = $True
-
-$ButtonSystemInformation = New-Object System.Windows.Forms.Button
-$ButtonSystemInformation.Text = 'System information'
-$ButtonSystemInformation.Height = $_BUTTON_HEIGHT
-$ButtonSystemInformation.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonSystemInformation.Location = "$($_INTERVAL_NORMAL + $_INTERVAL_SHORT), $($_INTERVAL_NORMAL + $_INTERVAL_SHORT)"
-$ButtonSystemInformation.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonSystemInformation, 'Print system information to the log')
-$ButtonSystemInformation.Add_Click( {PrintSystemInformation} )
-
-$_TAB_CONTROL.Controls.AddRange(@($_TAB_HOME))
-$_TAB_HOME.Controls.AddRange(@($ButtonSystemInformation))
+$_TAB_CONTROL.Controls.Add($_TAB_HOME)
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# This Utility #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - This Utility #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GroupHomeThisUtility = New-Object System.Windows.Forms.GroupBox
 $GroupHomeThisUtility.Text = 'This utility'
-$GroupHomeThisUtility.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 2
+$GroupHomeThisUtility.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 3
 $GroupHomeThisUtility.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
-$GroupHomeThisUtility.Location = "$($_TAB_CONTROL.Width - $GroupHomeThisUtility.Width - $_INTERVAL_NORMAL * 2 + $_INTERVAL_TAB_ADJUSTMENT), $_INTERVAL_NORMAL"
+$GroupHomeThisUtility.Location = "$_INTERVAL_NORMAL, $_INTERVAL_NORMAL"
+$_TAB_HOME.Controls.Add($GroupHomeThisUtility)
+
+
+$ButtonElevate = New-Object System.Windows.Forms.Button
+$ButtonElevate.Text = 'Run as administrator'
+$ButtonElevate.Height = $_BUTTON_HEIGHT
+$ButtonElevate.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonElevate.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
+$ButtonElevate.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonElevate, 'Restart this utility with administrator privileges')
+$ButtonElevate.Add_Click( {Elevate} )
 
 
 $ButtonBrowserHome = New-Object System.Windows.Forms.Button
 $ButtonBrowserHome.Text = 'Open in browser'
 $ButtonBrowserHome.Height = $_BUTTON_HEIGHT
 $ButtonBrowserHome.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonBrowserHome.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
+$ButtonBrowserHome.Location = $ButtonElevate.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonBrowserHome.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonBrowserHome, 'Open utility web page in the default browser')
 $ButtonBrowserHome.Add_Click( {OpenInBrowser 'qiiwexc.github.io'} )
 
 
-$ButtonCheckForUpdates = New-Object System.Windows.Forms.Button
-$ButtonCheckForUpdates.Text = 'Check for updates'
-$ButtonCheckForUpdates.Height = $_BUTTON_HEIGHT
-$ButtonCheckForUpdates.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonCheckForUpdates.Location = $ButtonBrowserHome.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonCheckForUpdates.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonCheckForUpdates, 'Check if new version of this utility is available')
-$ButtonCheckForUpdates.Add_Click( {CheckForUpdates 'Manual'} )
-
-$ButtonDownloadUpdate = New-Object System.Windows.Forms.Button
-$ButtonDownloadUpdate.Text = 'Download new version'
-$ButtonDownloadUpdate.Height = $ButtonCheckForUpdates.Height
-$ButtonDownloadUpdate.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadUpdate.Location = $ButtonCheckForUpdates.Location
-$ButtonDownloadUpdate.Font = $_BUTTON_FONT
-$ButtonDownloadUpdate.Visible = $False
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadUpdate, 'Download the new version of this utility')
-$ButtonDownloadUpdate.Add_Click( {DownloadUpdate} )
+$ButtonSystemInformation = New-Object System.Windows.Forms.Button
+$ButtonSystemInformation.Text = 'System information'
+$ButtonSystemInformation.Height = $_BUTTON_HEIGHT
+$ButtonSystemInformation.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonSystemInformation.Location = $ButtonBrowserHome.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
+$ButtonSystemInformation.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonSystemInformation, 'Print system information to the log')
+$ButtonSystemInformation.Add_Click( {PrintSystemInformation} )
 
 
-$_TAB_HOME.Controls.AddRange(@($GroupHomeThisUtility))
-$GroupHomeThisUtility.Controls.AddRange(@($ButtonBrowserHome, $ButtonCheckForUpdates, $ButtonDownloadUpdate))
+$GroupHomeThisUtility.Controls.AddRange(@($ButtonElevate, $ButtonBrowserHome, $ButtonSystemInformation))
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$GroupHomeUpdate = New-Object System.Windows.Forms.GroupBox
+$GroupHomeUpdate.Text = 'Updates'
+$GroupHomeUpdate.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 2
+$GroupHomeUpdate.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
+$GroupHomeUpdate.Location = $GroupHomeThisUtility.Location + "0, $($GroupHomeThisUtility.Height + $_INTERVAL_NORMAL)"
+$_TAB_HOME.Controls.Add($GroupHomeUpdate)
+
+
+$ButtonGoogleUpdate = New-Object System.Windows.Forms.Button
+$ButtonGoogleUpdate.Text = 'Update Google Chrome'
+$ButtonGoogleUpdate.Height = $_BUTTON_HEIGHT
+$ButtonGoogleUpdate.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonGoogleUpdate.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
+$ButtonGoogleUpdate.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonGoogleUpdate, 'Silently update Google Chrome and other Google software')
+$ButtonGoogleUpdate.Add_Click( {UpdateGoogleSoftware} )
+
+
+$ButtonUpdateStoreApps = New-Object System.Windows.Forms.Button
+$ButtonUpdateStoreApps.Text = 'Update Store apps'
+$ButtonUpdateStoreApps.Height = $_BUTTON_HEIGHT
+$ButtonUpdateStoreApps.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonUpdateStoreApps.Location = $ButtonGoogleUpdate.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
+$ButtonUpdateStoreApps.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonUpdateStoreApps, 'Update Microsoft Store apps')
+$ButtonUpdateStoreApps.Add_Click( {UpdateStoreApps} )
+
+
+$GroupHomeUpdate.Controls.AddRange(@($ButtonGoogleUpdate, $ButtonUpdateStoreApps))
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - Diagnostics #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$GroupHomeDiagnostics = New-Object System.Windows.Forms.GroupBox
+$GroupHomeDiagnostics.Text = 'Diagnostics'
+$GroupHomeDiagnostics.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 4 - $_INTERVAL_SHORT * 2
+$GroupHomeDiagnostics.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
+$GroupHomeDiagnostics.Location = $GroupHomeThisUtility.Location + "$($GroupHomeThisUtility.Width + $_INTERVAL_NORMAL), 0"
+$_TAB_HOME.Controls.Add($GroupHomeDiagnostics)
+
+
+$ButtonCheckDrive = New-Object System.Windows.Forms.Button
+$ButtonCheckDrive.Text = 'Check C: drive health'
+$ButtonCheckDrive.Height = $_BUTTON_HEIGHT
+$ButtonCheckDrive.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonCheckDrive.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
+$ButtonCheckDrive.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonCheckDrive, 'Perform a C: drive health check')
+$ButtonCheckDrive.Add_Click( {CheckDrive} )
+
+
+$ButtonCheckMemory = New-Object System.Windows.Forms.Button
+$ButtonCheckMemory.Text = 'Check RAM'
+$ButtonCheckMemory.Height = $_BUTTON_HEIGHT
+$ButtonCheckMemory.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonCheckMemory.Location = $ButtonCheckDrive.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
+$ButtonCheckMemory.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonCheckMemory, 'Start RAM checking utility')
+$ButtonCheckMemory.Add_Click( {CheckMemory} )
+
+
+$ButtonSecurityScanQuick = New-Object System.Windows.Forms.Button
+$ButtonSecurityScanQuick.Text = 'Quick security scan'
+$ButtonSecurityScanQuick.Height = $_BUTTON_HEIGHT
+$ButtonSecurityScanQuick.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonSecurityScanQuick.Location = $ButtonCheckMemory.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
+$ButtonSecurityScanQuick.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonSecurityScanQuick, 'Perform a quick security scan')
+$ButtonSecurityScanQuick.Add_Click( {StartSecurityScan 'quick'} )
+
+$ButtonSecurityScanFull = New-Object System.Windows.Forms.Button
+$ButtonSecurityScanFull.Text = 'Full security scan'
+$ButtonSecurityScanFull.Height = $_BUTTON_HEIGHT
+$ButtonSecurityScanFull.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonSecurityScanFull.Location = $ButtonSecurityScanQuick.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
+$ButtonSecurityScanFull.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonSecurityScanFull, 'Perform a full security scan')
+$ButtonSecurityScanFull.Add_Click( {StartSecurityScan 'full'} )
+
+
+$GroupHomeDiagnostics.Controls.AddRange(@($ButtonCheckDrive, $ButtonCheckMemory, $ButtonSecurityScanQuick, $ButtonSecurityScanFull))
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$GroupHomeOptimization = New-Object System.Windows.Forms.GroupBox
+$GroupHomeOptimization.Text = 'Optimization'
+$GroupHomeOptimization.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 3
+$GroupHomeOptimization.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
+$GroupHomeOptimization.Location = $GroupHomeDiagnostics.Location + "$($GroupHomeDiagnostics.Width + $_INTERVAL_NORMAL), 0"
+$_TAB_HOME.Controls.Add($GroupHomeOptimization)
+
+
+$ButtonCloudFlareDNS = New-Object System.Windows.Forms.Button
+$ButtonCloudFlareDNS.Text = 'Setup CloudFlare DNS'
+$ButtonCloudFlareDNS.Height = $_BUTTON_HEIGHT
+$ButtonCloudFlareDNS.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonCloudFlareDNS.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
+$ButtonCloudFlareDNS.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonCloudFlareDNS, 'Set DNS to CouldFlare - 1.1.1.1 / 1.0.0.1')
+$ButtonCloudFlareDNS.Add_Click( {CloudFlareDNS} )
+
+
+$ButtonRunCCleaner = New-Object System.Windows.Forms.Button
+$ButtonRunCCleaner.Text = 'Run CCleaner silently'
+$ButtonRunCCleaner.Height = $_BUTTON_HEIGHT
+$ButtonRunCCleaner.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonRunCCleaner.Location = $ButtonCloudFlareDNS.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
+$ButtonRunCCleaner.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonRunCCleaner, 'Clean the system in the background with CCleaner')
+$ButtonRunCCleaner.Add_Click( {RunCCleaner} )
+
+
+$ButtonOptimizeDrive = New-Object System.Windows.Forms.Button
+$ButtonOptimizeDrive.Text = 'Optimize / defrag drive'
+$ButtonOptimizeDrive.Height = $_BUTTON_HEIGHT
+$ButtonOptimizeDrive.Width = $_BUTTON_WIDTH_NORMAL
+$ButtonOptimizeDrive.Location = $ButtonRunCCleaner.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
+$ButtonOptimizeDrive.Font = $_BUTTON_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonOptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
+$ButtonOptimizeDrive.Add_Click( {OptimizeDrive} )
+
+
+$GroupHomeOptimization.Controls.AddRange(@($ButtonCloudFlareDNS, $ButtonRunCCleaner, $ButtonOptimizeDrive))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Installers #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+$_TAB_DOWNLOADS_INSTALLERS = New-Object System.Windows.Forms.TabPage
+$_TAB_DOWNLOADS_INSTALLERS.Text = 'Downloads: Installers'
+$_TAB_DOWNLOADS_INSTALLERS.UseVisualStyleBackColor = $True
+$_TAB_CONTROL.Controls.Add($_TAB_DOWNLOADS_INSTALLERS)
+
 
 $_CHECK_BOX_WIDTH_DOWNLOAD = 145
 $_CHECK_BOX_SIZE_DOWNLOAD = "$($_CHECK_BOX_WIDTH_DOWNLOAD), $($_CHECK_BOX_HEIGHT)"
@@ -169,17 +295,13 @@ $_LABEL_SHIFT_BROWSER = '22, -3'
 
 $_AV_WARNING_MESSAGE = "!! THIS FILE MAY TRIGGER ANTI-VIRUS FALSE POSITIVE !!`n!! IT IS RECOMMENDED TO DISABLE A/V SOFTWARE FOR DOWNLOAD AND SUBESEQUENT USE OF THIS FILE !!"
 $_TEXT_EXECUTE_AFTER_DOWNLOAD = 'Execute after download'
-$_TOOLTIP_EXECUTE_AFTER_DOWNLOAD = "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
 $_TEXT_OPENS_IN_BROWSER = 'Opens in the browser'
-
-$_TAB_DOWNLOADS_INSTALLERS = New-Object System.Windows.Forms.TabPage
-$_TAB_DOWNLOADS_INSTALLERS.Text = 'Downloads: Installers'
-$_TAB_DOWNLOADS_INSTALLERS.UseVisualStyleBackColor = $True
-
-$_TAB_CONTROL.Controls.AddRange(@($_TAB_DOWNLOADS_INSTALLERS))
+$_TEXT_INSTALL_SILENTLY = 'Install silently'
+$_TOOLTIP_EXECUTE_AFTER_DOWNLOAD = "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
+$_TOOLTIP_INSTALL_SILENTLY = 'Perform silent installation with no prompts'
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Ninite #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Ninite #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GroupNinite = New-Object System.Windows.Forms.GroupBox
 $GroupNinite.Text = 'Ninite'
@@ -294,11 +416,11 @@ $GroupNinite.Controls.AddRange(@(
     ))
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Software Installers #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Software Installers #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GroupEssentials = New-Object System.Windows.Forms.GroupBox
 $GroupEssentials.Text = 'Essentials'
-$GroupEssentials.Height = $_INTERVAL_NORMAL + ($_BUTTON_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT) * 3
+$GroupEssentials.Height = $_INTERVAL_NORMAL + ($_BUTTON_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT) * 3 + $_INTERVAL_NORMAL
 $GroupEssentials.Width = $GroupNinite.Width
 $GroupEssentials.Location = $GroupNinite.Location + "$($GroupNinite.Width + $_INTERVAL_NORMAL), 0"
 
@@ -311,19 +433,31 @@ $ButtonDownloadUnchecky.Height = $_BUTTON_HEIGHT
 $ButtonDownloadUnchecky.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadUnchecky.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadUnchecky, $ButtonDownloadUncheckyToolTipText)
-$ButtonDownloadUnchecky.Add_Click( {DownloadFile 'unchecky.com/files/unchecky_setup.exe' -Execute $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadUnchecky.Add_Click( {
+        DownloadFile 'unchecky.com/files/unchecky_setup.exe' `
+            -Execute $CheckBoxExecuteUnchecky.Checked `
+            -Switches $(if ($CheckBoxExecuteUnchecky.Checked -and $CheckBoxSilentlyInstallUnchecky.Checked) {'-install -no_desktop_icon'})
+    } )
 
-$CheckBoxUncheckyExecute = New-Object System.Windows.Forms.CheckBox
-$CheckBoxUncheckyExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxUncheckyExecute.Location = $ButtonDownloadUnchecky.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxUncheckyExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxUncheckyExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CheckBoxExecuteUnchecky = New-Object System.Windows.Forms.CheckBox
+$CheckBoxExecuteUnchecky.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
+$CheckBoxExecuteUnchecky.Location = $ButtonDownloadUnchecky.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxExecuteUnchecky, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
+$CheckBoxExecuteUnchecky.Add_CheckStateChanged( {$CheckBoxSilentlyInstallUnchecky.Enabled = $CheckBoxExecuteUnchecky.Checked} )
+$CheckBoxExecuteUnchecky.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+
+$CheckBoxSilentlyInstallUnchecky = New-Object System.Windows.Forms.CheckBox
+$CheckBoxSilentlyInstallUnchecky.Text = $_TEXT_INSTALL_SILENTLY
+$CheckBoxSilentlyInstallUnchecky.Enabled = $False
+$CheckBoxSilentlyInstallUnchecky.Location = $CheckBoxExecuteUnchecky.Location + "0, $_CHECK_BOX_HEIGHT"
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxSilentlyInstallUnchecky, $_TOOLTIP_INSTALL_SILENTLY)
+$CheckBoxSilentlyInstallUnchecky.Size = $_CHECK_BOX_SIZE_DOWNLOAD
 
 
 $ButtonDownloadOffice = New-Object System.Windows.Forms.Button
 $ButtonDownloadOffice.Text = 'Office 2013 - 2019'
 $ButtonDownloadOfficeToolTipText = "Download Microsoft Office 2013 - 2019 installer and activator`n`n$_AV_WARNING_MESSAGE"
-$ButtonDownloadOffice.Location = $ButtonDownloadUnchecky.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
+$ButtonDownloadOffice.Location = $ButtonDownloadUnchecky.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL + $_BUTTON_SHIFT_VERTICAL_NORMAL
 $ButtonDownloadOffice.Height = $_BUTTON_HEIGHT
 $ButtonDownloadOffice.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadOffice.Font = $_BUTTON_FONT
@@ -357,12 +491,12 @@ $LabelDownloadChrome.Size = $_CHECK_BOX_SIZE_DOWNLOAD
 
 
 $_TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GroupEssentials))
-$GroupEssentials.Controls.AddRange(
-    @($ButtonDownloadUnchecky, $CheckBoxUncheckyExecute, $ButtonDownloadOffice, $CheckBoxOfficeExecute, $ButtonDownloadChrome, $LabelDownloadChrome)
-)
+$GroupEssentials.Controls.AddRange(@($ButtonDownloadUnchecky, $CheckBoxExecuteUnchecky, $CheckBoxSilentlyInstallUnchecky,
+        $ButtonDownloadOffice, $CheckBoxOfficeExecute, $ButtonDownloadChrome, $LabelDownloadChrome
+    ))
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Tool Installers #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Tool Installers #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GroupInstallersTools = New-Object System.Windows.Forms.GroupBox
 $GroupInstallersTools.Text = 'Tools'
@@ -379,7 +513,7 @@ $ButtonDownloadCCleaner.Height = $_BUTTON_HEIGHT
 $ButtonDownloadCCleaner.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadCCleaner.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadCCleaner, $ButtonDownloadCCleanerToolTipText)
-$ButtonDownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe' -Execute $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe' -Execute $CheckBoxCCleanerExecute.Checked} )
 
 $CheckBoxCCleanerExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxCCleanerExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -396,7 +530,7 @@ $ButtonDownloadDefraggler.Height = $_BUTTON_HEIGHT
 $ButtonDownloadDefraggler.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadDefraggler.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadDefraggler, $ButtonDownloadDefragglerToolTipText)
-$ButtonDownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe' -Execute $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe' -Execute $CheckBoxDefragglerExecute.Checked} )
 
 $CheckBoxDefragglerExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxDefragglerExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -413,7 +547,7 @@ $ButtonDownloadRecuva.Height = $_BUTTON_HEIGHT
 $ButtonDownloadRecuva.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadRecuva.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadRecuva, $ButtonDownloadRecuvaToolTipText)
-$ButtonDownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe' -Execute $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe' -Execute $CheckBoxRecuvaExecute.Checked} )
 
 $CheckBoxRecuvaExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxRecuvaExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -430,7 +564,7 @@ $ButtonDownloadMalwarebytes.Height = $_BUTTON_HEIGHT
 $ButtonDownloadMalwarebytes.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadMalwarebytes.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadMalwarebytes, $ButtonDownloadMalwarebytesToolTipText)
-$ButtonDownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' $CheckBoxUncheckyExecute.Checked} )
+$ButtonDownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' $CheckBoxMalwarebytesExecute.Checked} )
 
 $CheckBoxMalwarebytesExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxMalwarebytesExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -451,17 +585,17 @@ $GroupInstallersTools.Controls.AddRange(@(
 $_TAB_DOWNLOADS_TOOLS = New-Object System.Windows.Forms.TabPage
 $_TAB_DOWNLOADS_TOOLS.Text = 'Downloads: Tools and ISO'
 $_TAB_DOWNLOADS_TOOLS.UseVisualStyleBackColor = $True
+$_TAB_CONTROL.Controls.Add($_TAB_DOWNLOADS_TOOLS)
 
-$_TAB_CONTROL.Controls.AddRange(@($_TAB_DOWNLOADS_TOOLS))
 
-
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Tools #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Tools #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GroupDownloadsTools = New-Object System.Windows.Forms.GroupBox
 $GroupDownloadsTools.Text = 'Tools'
 $GroupDownloadsTools.Height = $_INTERVAL_NORMAL + ($_BUTTON_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT) * 3
 $GroupDownloadsTools.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
 $GroupDownloadsTools.Location = "$_INTERVAL_NORMAL, $_INTERVAL_NORMAL"
+$_TAB_DOWNLOADS_TOOLS.Controls.Add($GroupDownloadsTools)
 
 
 $ButtonDownloadSDI = New-Object System.Windows.Forms.Button
@@ -489,7 +623,7 @@ $ButtonDownloadVictoria.Height = $_BUTTON_HEIGHT
 $ButtonDownloadVictoria.Width = $_BUTTON_WIDTH_NORMAL
 $ButtonDownloadVictoria.Font = $_BUTTON_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadVictoria, $ButtonDownloadVictoriaToolTipText)
-$ButtonDownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Victoria_4.47.zip' -Execute $CheckBoxVictoriaExecute.Checked} )
+$ButtonDownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Victoria.zip' -Execute $CheckBoxVictoriaExecute.Checked} )
 
 $CheckBoxVictoriaExecute = New-Object System.Windows.Forms.CheckBox
 $CheckBoxVictoriaExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
@@ -515,13 +649,12 @@ $CheckBoxRufusExecute.Location = $ButtonDownloadRufus.Location + $_BUTTON_SHIFT_
 $CheckBoxRufusExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
 
 
-$_TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GroupDownloadsTools))
 $GroupDownloadsTools.Controls.AddRange(
     @($ButtonDownloadSDI, $ButtonDownloadVictoria, $ButtonDownloadRufus, $CheckBoxSDIExecute, $CheckBoxVictoriaExecute, $CheckBoxRufusExecute)
 )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Activators #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Activators #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GroupDownloadsActivators = New-Object System.Windows.Forms.GroupBox
 $GroupDownloadsActivators.Text = 'Activators'
@@ -574,7 +707,7 @@ $_TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GroupDownloadsActivators))
 $GroupDownloadsActivators.Controls.AddRange(@($ButtonDownloadKMS, $ButtonDownloadChew, $CheckBoxKMSExecute, $CheckBoxChewExecute))
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Windows Images #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Windows Images #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GroupDownloadsWindows = New-Object System.Windows.Forms.GroupBox
 $GroupDownloadsWindows.Text = 'Windows ISO Images'
@@ -686,47 +819,78 @@ function Startup {
     $_FORM.Activate()
     $_LOG.AppendText("[$((Get-Date).ToString())] Initializing...")
 
-    GatherSystemInformation
-    CheckForUpdates
-
-    $script:WorkingDirectory = (Split-Path ($MyInvocation.ScriptName))
-
     if ($_IS_ELEVATED) {
         $_FORM.Text = "$($_FORM.Text): Administrator"
-        $ButtonElevate.Text = 'Already elevated'
+        $ButtonElevate.Text = 'Running as admin'
         $ButtonElevate.Enabled = $False
     }
 
-    $script:GoogleUpdatePath = "C:\Program Files$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {' (x86)'})\Google\Update\GoogleUpdate.exe"
-    $ButtonGoogleUpdate.Enabled = Test-Path $GoogleUpdatePath
+    GatherSystemInformation
+    CheckForUpdates
+
+    if ($_SYSTEM_INFO.PSVersion -lt 5) {Write-Log $_WRN "PowerShell $_PS_VERSION detected, while versions >=5 are supported. Some features might not work."}
+
+    $script:_CURRENT_DIR = (Split-Path ($MyInvocation.ScriptName))
+
+    $script:GoogleUpdateExe = "$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
+    $ButtonGoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+
+    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {'64'}).exe"
+    $ButtonRunCCleaner.Enabled = Test-Path $CCleanerExe
+
+    $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
+    $ButtonSecurityScanQuick.Enabled = Test-Path $DefenderExe
+    $ButtonSecurityScanFull.Enabled = $ButtonSecurityScanQuick.Enabled
 }
 
 
-function ExitScript {$_FORM.Close()}
+function Elevate {
+    if (-not $_IS_ELEVATED) {
+        Start-Process -Verb RunAs -FilePath 'powershell' -ArgumentList $MyInvocation.ScriptName
+        ExitScript
+    }
+}
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Logger #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-
-$_INF = 'INF'
-$_WRN = 'WRN'
-$_ERR = 'ERR'
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Common Functions #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 function Write-Log($Level, $Message) {
     $Text = "[$((Get-Date).ToString())] $Message"
     $_LOG.SelectionStart = $_LOG.TextLength
 
-    switch ($Level) { $_WRN {$_LOG.SelectionColor = 'blue'} $_ERR {$_LOG.SelectionColor = 'red'} }
+    switch ($Level) { $_WRN {$_LOG.SelectionColor = 'blue'} $_ERR {$_LOG.SelectionColor = 'red'} Default {$_LOG.SelectionColor = 'black'} }
 
     Write-Host $Text
     $_LOG.AppendText("`n$Text")
+
     $_LOG.SelectionColor = 'black'
     $_LOG.ScrollToCaret();
 }
 
 
+function ExecuteAsAdmin ($Command, $Message) {Start-Process -Wait -Verb RunAs -FilePath 'powershell' -ArgumentList "-Command `"Write-Host $Message; $Command`""}
+
+
+function ExitScript {$_FORM.Close()}
+
+
+function OpenInBrowser ($URL) {
+    if ($URL.length -lt 1) {
+        Write-Log $_ERR 'No URL specified'
+        return
+    }
+
+    $UrlToOpen = if ($URL -like 'http*') {$URL} else {'https://' + $URL}
+    Write-Log $_INF "Openning URL in the default browser: $UrlToOpen"
+
+    try {[System.Diagnostics.Process]::Start($UrlToOpen)}
+    catch [Exception] {Write-Log $_ERR "Could not open the URL: $($_.Exception.Message)"}
+}
+
+
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Self-Update #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function CheckForUpdates ($Mode) {
+function CheckForUpdates {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $_INF 'Checking for updates...'
 
@@ -740,12 +904,11 @@ function CheckForUpdates ($Mode) {
 
     if ($UpdateAvailable) {
         Write-Log $_WRN "Newer version available: v$LatestVersion"
-        $ButtonCheckForUpdates.Visible = $False
-        $ButtonDownloadUpdate.Visible = $True
-        if ($Mode -ne 'Manual') {DownloadUpdate}
+        DownloadUpdate
     }
     else {Write-Log $_INF 'Currently running the latest version'}
 }
+
 
 function DownloadUpdate {
     $DownloadURL = 'https://qiiwexc.github.io/d/qiiwexc.ps1'
@@ -759,11 +922,6 @@ function DownloadUpdate {
         return
     }
 
-    RestartAfterUpdate
-}
-
-
-function RestartAfterUpdate {
     Write-Log $_WRN 'Restarting...'
 
     try {Start-Process -FilePath 'powershell' -ArgumentList $TargetFile}
@@ -790,6 +948,7 @@ function GatherSystemInformation {
     $SystemPartition = $SystemLogicalDisk | Select-Object -Property @{L = 'FreeSpaceGB'; E = {'{0:N2}' -f ($_.FreeSpace / 1GB)}}, @{L = 'SizeGB'; E = {'{0:N2}' -f ($_.Size / 1GB)}}
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
+    $PSVersion = $PSVersionTable.PSVersion.Major
     $SystemType = switch ($ComputerSystem.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} }
     $SystemManufacturer = $ComputerSystem.Manufacturer
     $SystemModel = $ComputerSystem.Model
@@ -810,6 +969,7 @@ function GatherSystemInformation {
     $OSRelease = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId
     $OSVersion = $OperatingSystem.Version
 
+    $_SYSTEM_INFO | Add-Member -MemberType NoteProperty -Name 'PSVersion' -Value "$PSVersion" -Force
     $_SYSTEM_INFO | Add-Member -MemberType NoteProperty -Name 'Type' -Value "$SystemType" -Force
     $_SYSTEM_INFO | Add-Member -MemberType NoteProperty -Name 'Manufacturer' -Value "$SystemManufacturer" -Force
     $_SYSTEM_INFO | Add-Member -MemberType NoteProperty -Name 'Model' -Value "$SystemModel" -Force
@@ -833,8 +993,10 @@ function GatherSystemInformation {
     $_LOG.AppendText(' Done')
 }
 
+
 function PrintSystemInformation {
     Write-Log $_INF 'Current system information:'
+    Write-Log $_INF "   PowerShell version: $($_SYSTEM_INFO.PSVersion)"
     Write-Log $_INF "   Computer model: $($_SYSTEM_INFO.Manufacturer), $($_SYSTEM_INFO.Model)"
     Write-Log $_INF "   BIOS version: $($_SYSTEM_INFO.BIOSVersion)"
     Write-Log $_INF "   CPU name: $($_SYSTEM_INFO.CPU)"
@@ -850,109 +1012,153 @@ function PrintSystemInformation {
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Open In Browser #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function OpenInBrowser ($URL) {
-    if ($URL.length -lt 1) {
-        Write-Log $_ERR 'No URL specified'
+function UpdateGoogleSoftware {
+    Write-Log $_INF 'Starting Google Update'
+
+    try {Start-Process -Wait -FilePath $GoogleUpdateExe -ArgumentList '/c'}
+    catch [Exception] {
+        Write-Log $_ERR "Google Update failed: $($_.Exception.Message)"
         return
     }
 
-    $UrlToOpen = if ($URL -like 'http*') {$URL} else {'https://' + $URL}
-    Write-Log $_INF "Openning URL in the default browser: $UrlToOpen"
-    try {[System.Diagnostics.Process]::Start($UrlToOpen)}
-    catch [Exception] {Write-Log $_ERR "Could not open the URL: $($_.Exception.Message)"}
+    try {Start-Process -Wait -FilePath $GoogleUpdateExe -ArgumentList '/ua /installsource scheduler'}
+    catch [Exception] {
+        Write-Log $_ERR "Google Update failed: $($_.Exception.Message)"
+        return
+    }
+
+    Write-Log $_WRN 'Google software updated successfully'
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Download File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-
-function DownloadFile ($URL, $SaveAs, $Execute) {
-    if ($URL.length -lt 1) {
-        Write-Log $_ERR 'No URL specified'
-        return
-    }
-
-    $DownloadURL = if ($URL -like 'http*') {$URL} else {'https://' + $URL}
-    $FileName = if ($SaveAs) {$SaveAs} else {$DownloadURL | Split-Path -Leaf}
-    $SavePath = "$WorkingDirectory\$FileName"
-
-    Write-Log $_INF "Downloading from $DownloadURL"
-    Write-Log $_INF "SavePath = $SavePath"
+function UpdateStoreApps {
+    Write-Log $_INF 'Updating Microsoft Store apps'
 
     try {
-        (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
-
-        if (Test-Path $SavePath) {Write-Log $_WRN 'Download complete'}
-        else {throw 'Possibly computer is offline or disk is full'}
+        ExecuteAsAdmin "(Get-WmiObject -Namespace 'root\cimv2\mdm\dmmap' -Class 'MDM_EnterpriseModernAppManagement_AppManagement01').UpdateScanMethod()" `
+            'Updating Microsoft Store apps...'
     }
     catch [Exception] {
-        Write-Log $_ERR "Download failed: $($_.Exception.Message)"
+        Write-Log $_ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"
         return
     }
 
-    if ($Execute) {Execute $FileName}
+    Write-Log $_WRN 'Microsoft Store apps updated successfully'
 }
 
-function Extract ($FileName) {
-    Write-Log $_INF "Extracting $FileName"
 
-    switch -wildcard ($FileName) {
-        'ChewWGA.zip' {
-            $ExtractionPath = '.'
-            $Executable = 'CW.eXe'
-        }
-        'Office_2013-2019.zip' {
-            $ExtractionPath = '.'
-            $Executable = 'OInstall.exe'
-        }
-        'Victoria_4.47.zip' {
-            $ExtractionPath = '.'
-            $Executable = 'Victoria 4.47.exe'
-        }
-        'KMSAuto_Lite.zip' {
-            $ExtractionPath = $FileName.trimend('.zip')
-            $Executable = if ($_SYSTEM_INFO.Architecture -eq '64-bit') {'KMSAuto x64.exe'} else {'KMSAuto.exe'}
-        }
-        "SDI_R*" {
-            $ExtractionPath = $FileName.trimend('.zip')
-            $Executable = "$ExtractionPath\SDI_auto.bat"
-        }
-        Default {$ExtractionPath = $FileName.trimend('.zip')}
-    }
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-    $TargetDirName = "$WorkingDirectory\$ExtractionPath"
-    if ($ExtractionPath -ne '.') {Remove-Item $TargetDirName -Recurse -ErrorAction Ignore}
+function CheckDrive {
+    Write-Log $_INF 'Checking C: drive health'
 
-    try {[System.IO.Compression.ZipFile]::ExtractToDirectory("$WorkingDirectory\$FileName", $TargetDirName)}
+    try {Start-Process -Wait -Verb RunAs -FilePath 'chkdsk' -ArgumentList '/scan'}
     catch [Exception] {
-        Write-Log $_ERR "Extraction failed: $($_.Exception.Message)"
+        Write-Log $_ERR "Failed to check drive health: $($_.Exception.Message)"
         return
     }
 
-    if ($ExtractionPath -eq 'KMSAuto_Lite') {
-        $TempDir = $TargetDirName
-        $TargetDirName = $WorkingDirectory
-
-        Move-Item -Path "$TempDir\$Executable" -Destination "$TargetDirName\$Executable"
-        Remove-Item $TempDir -Recurse -ErrorAction Ignore
-    }
-
-    Write-Log $_INF "Files extracted to $TargetDirName"
-
-    Write-Log $_INF "Removing $FileName"
-    Remove-Item "$WorkingDirectory\$FileName" -ErrorAction Ignore
-
-    Write-Log $_WRN 'Extraction finished'
-
-    return $Executable
+    Write-Log $_WRN 'C: drive health check completed successfully'
 }
 
-function Execute ($FileName) {
-    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {Extract $FileName} else {$FileName}
 
-    Write-Log $_INF "Executing '$Executable'"
-    & "$WorkingDirectory\$Executable"
+function CheckMemory {
+    Write-Log $_INF 'Starting memory checking tool'
+
+    try {Start-Process -Wait -FilePath 'mdsched'}
+    catch [Exception] {
+        Write-Log $_ERR "Failed to start memory checking tool: $($_.Exception.Message)"
+        return
+    }
+
+    Write-Log $_WRN 'Memory checking tool was closed'
+}
+
+
+function StartSecurityScan ($Mode) {
+    if (-not $Mode) {
+        Write-Log $_WRN "Scan mode not specified, assuming 'quick'"
+        $Mode = 'quick'
+    }
+
+    Write-Log $_INF 'Updating security signatures'
+
+    try {Start-Process -Wait -FilePath $DefenderExe -ArgumentList '-SignatureUpdate'}
+    catch [Exception] {
+        Write-Log $_ERR "Security signature update failed: $($_.Exception.Message)"
+        return
+    }
+
+    Write-Log $_INF "Starting $Mode securtiy scan"
+
+    try {Start-Process -FilePath $DefenderExe -ArgumentList "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})"}
+    catch [Exception] {
+        Write-Log $_ERR "Failed to perform a $Mode securtiy scan: $($_.Exception.Message)"
+        return
+    }
+
+    Write-Log $_WRN 'Securtiy scan started successfully'
+}
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+function CloudFlareDNS {
+    Write-Log $_INF 'Changing DNS address to CloudFlare DNS (1.1.1.1 / 1.0.0.1)'
+
+    $CurrentNetworkAdapter = (Get-NetAdapter -Physical | Where-Object Status -eq 'Up').ifIndex
+
+    if (-not $CurrentNetworkAdapter) {
+        Write-Log $_ERR 'Could not determine network adapter used to connect to the Internet'
+        Write-Log $_ERR 'This could mean that computer is not connected'
+        return
+    }
+
+    try {
+        ExecuteAsAdmin "Set-DnsClientServerAddress -InterfaceIndex $CurrentNetworkAdapter -ServerAddresses ('1.1.1.1', '1.0.0.1')" `
+            'Changing DNS address to CloudFlare DNS'
+    }
+    catch [Exception] {
+        Write-Log $_ERR "Failed to change DNS address: $($_.Exception.Message)"
+        return
+    }
+
+    Write-Log $_WRN 'CloudFlare DNS set up successfully'
+}
+
+
+function RunCCleaner {
+    if (-not $CCleanerWarningShown) {
+        Write-Log $_WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
+        Write-Log $_WRN 'Click the button again to contunue'
+        $script:CCleanerWarningShown = $True
+        return
+    }
+
+    Write-Log $_INF 'Cleanup started'
+
+    try {Start-Process -Wait -FilePath $CCleanerExe -ArgumentList '/auto'}
+    catch [Exception] {
+        Write-Log $_ERR "Cleanup failed: $($_.Exception.Message)"
+        return
+    }
+
+    Write-Log $_WRN 'Cleanup completed successfully'
+}
+
+
+function OptimizeDrive {
+    Write-Log $_INF 'Starting drive optimization'
+
+    try {Start-Process -Verb RunAs -FilePath 'defrag' -ArgumentList '/C /H /U /O'}
+    catch [Exception] {
+        Write-Log $_ERR "Failed to optimize the drive: $($_.Exception.Message)"
+        return
+    }
+
+    Write-Log $_WRN 'Drive optimization completed'
 }
 
 
@@ -964,6 +1170,7 @@ function HandleNiniteCheckBoxStateChange () {
         $CheckBoxNiniteqBittorrent.Checked -or $CheckBoxNiniteGoogleDrive.Checked -or $CheckBoxNiniteVSC.Checked
     $CheckBoxNiniteExecute.Enabled = $ButtonNiniteDownload.Enabled
 }
+
 
 function NiniteQueryBuilder () {
     $Array = @()
@@ -978,6 +1185,7 @@ function NiniteQueryBuilder () {
     return $Array -join '-'
 }
 
+
 function NiniteNameBuilder () {
     $Array = @()
     if ($CheckBoxNinite7zip.Checked) {$Array += $CheckBoxNinite7zip.Text}
@@ -990,6 +1198,120 @@ function NiniteNameBuilder () {
     if ($CheckBoxNiniteVSC.Checked) {$Array += $CheckBoxNiniteVSC.Text}
     return "Ninite $($Array -join ' ') Installer.exe"
 }
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Download and Execute #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+function DownloadFile ($URL, $SaveAs, $Execute, $Switches) {
+    if ($URL.length -lt 1) {
+        Write-Log $_ERR 'No URL specified'
+        return
+    }
+
+    $DownloadURL = if ($URL -like 'http*') {$URL} else {'https://' + $URL}
+    $FileName = if ($SaveAs) {$SaveAs} else {$DownloadURL | Split-Path -Leaf}
+    $SavePath = "$_CURRENT_DIR\$FileName"
+
+    Write-Log $_INF "Downloading from $DownloadURL"
+
+    try {
+        (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
+
+        if (Test-Path $SavePath) {Write-Log $_WRN 'Download complete'}
+        else {throw 'Possibly computer is offline or disk is full'}
+    }
+    catch [Exception] {
+        Write-Log $_ERR "Download failed: $($_.Exception.Message)"
+        return
+    }
+
+    if ($Execute) {ExecuteFile $FileName $Switches}
+}
+
+
+function ExtractArchive ($FileName) {
+    Write-Log $_INF "Extracting $FileName"
+
+    switch -Wildcard ($FileName) {
+        'ChewWGA.zip' {
+            $ExtractionPath = '.'
+            $Executable = 'CW.eXe'
+        }
+        'Office_2013-2019.zip' {
+            $ExtractionPath = '.'
+            $Executable = 'OInstall.exe'
+        }
+        'Victoria.zip' {
+            $ExtractionPath = '.'
+            $Executable = 'Victoria.exe'
+        }
+        'KMSAuto_Lite.zip' {
+            $ExtractionPath = $FileName.trimend('.zip')
+            $Executable = if ($_SYSTEM_INFO.Architecture -eq '64-bit') {'KMSAuto x64.exe'} else {'KMSAuto.exe'}
+        }
+        "SDI_R*" {
+            $ExtractionPath = $FileName.trimend('.zip')
+            $Executable = "$ExtractionPath\SDI_auto.bat"
+        }
+        Default {$ExtractionPath = $FileName.trimend('.zip')}
+    }
+
+    $TargetDirName = "$_CURRENT_DIR\$ExtractionPath"
+    if ($ExtractionPath -ne '.') {Remove-Item $TargetDirName -Recurse -ErrorAction Ignore}
+
+    try {[System.IO.Compression.ZipFile]::ExtractToDirectory("$_CURRENT_DIR\$FileName", $TargetDirName)}
+    catch [Exception] {
+        Write-Log $_ERR "Extraction failed: $($_.Exception.Message)"
+        return
+    }
+
+    if ($ExtractionPath -eq 'KMSAuto_Lite') {
+        $TempDir = $TargetDirName
+        $TargetDirName = $_CURRENT_DIR
+
+        Move-Item -Path "$TempDir\$Executable" -Destination "$TargetDirName\$Executable"
+        Remove-Item $TempDir -Recurse -ErrorAction Ignore
+    }
+
+    Write-Log $_WRN "Files extracted to $TargetDirName"
+
+    Write-Log $_INF "Removing $FileName"
+    Remove-Item "$_CURRENT_DIR\$FileName" -ErrorAction Ignore
+
+    Write-Log $_WRN 'Extraction completed'
+
+    return $Executable
+}
+
+
+function ExecuteFile ($FileName, $Switches) {
+    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {ExtractArchive $FileName} else {$FileName}
+
+    if ($Switches) {
+        Write-Log $_INF "Installing '$Executable' silently"
+
+        try {Start-Process -Wait -FilePath "$_CURRENT_DIR\$Executable" -ArgumentList $Switches}
+        catch [Exception] {
+            Write-Log $_ERR "'$Executable' silent installation failed: $($_.Exception.Message)"
+            return
+        }
+
+        Write-Log $_INF "Removing $FileName"
+        Remove-Item "$_CURRENT_DIR\$FileName" -ErrorAction Ignore
+
+        Write-Log $_WRN "'$Executable' installation completed"
+    }
+    else {
+        Write-Log $_WRN "Executing '$Executable'"
+
+        try {Start-Process -FilePath "$_CURRENT_DIR\$Executable"}
+        catch [Exception] {
+            Write-Log $_ERR "'$Executable' execution failed: $($_.Exception.Message)"
+            return
+        }
+    }
+}
+
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Draw Form #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#

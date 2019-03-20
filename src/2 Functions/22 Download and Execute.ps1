@@ -1,4 +1,4 @@
-function DownloadFile ($URL, $SaveAs, $Execute) {
+function DownloadFile ($URL, $SaveAs, $Execute, $Switches) {
     if ($URL.length -lt 1) {
         Write-Log $_ERR 'No URL specified'
         return
@@ -6,10 +6,9 @@ function DownloadFile ($URL, $SaveAs, $Execute) {
 
     $DownloadURL = if ($URL -like 'http*') {$URL} else {'https://' + $URL}
     $FileName = if ($SaveAs) {$SaveAs} else {$DownloadURL | Split-Path -Leaf}
-    $SavePath = "$CurrentDirectory\$FileName"
+    $SavePath = "$_CURRENT_DIR\$FileName"
 
     Write-Log $_INF "Downloading from $DownloadURL"
-    Write-Log $_INF "SavePath = $SavePath"
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
@@ -22,13 +21,14 @@ function DownloadFile ($URL, $SaveAs, $Execute) {
         return
     }
 
-    if ($Execute) {Execute $FileName}
+    if ($Execute) {ExecuteFile $FileName $Switches}
 }
 
-function Extract ($FileName) {
+
+function ExtractArchive ($FileName) {
     Write-Log $_INF "Extracting $FileName"
 
-    switch -wildcard ($FileName) {
+    switch -Wildcard ($FileName) {
         'ChewWGA.zip' {
             $ExtractionPath = '.'
             $Executable = 'CW.eXe'
@@ -37,9 +37,9 @@ function Extract ($FileName) {
             $ExtractionPath = '.'
             $Executable = 'OInstall.exe'
         }
-        'Victoria_4.47.zip' {
+        'Victoria.zip' {
             $ExtractionPath = '.'
-            $Executable = 'Victoria 4.47.exe'
+            $Executable = 'Victoria.exe'
         }
         'KMSAuto_Lite.zip' {
             $ExtractionPath = $FileName.trimend('.zip')
@@ -52,10 +52,10 @@ function Extract ($FileName) {
         Default {$ExtractionPath = $FileName.trimend('.zip')}
     }
 
-    $TargetDirName = "$CurrentDirectory\$ExtractionPath"
+    $TargetDirName = "$_CURRENT_DIR\$ExtractionPath"
     if ($ExtractionPath -ne '.') {Remove-Item $TargetDirName -Recurse -ErrorAction Ignore}
 
-    try {[System.IO.Compression.ZipFile]::ExtractToDirectory("$CurrentDirectory\$FileName", $TargetDirName)}
+    try {[System.IO.Compression.ZipFile]::ExtractToDirectory("$_CURRENT_DIR\$FileName", $TargetDirName)}
     catch [Exception] {
         Write-Log $_ERR "Extraction failed: $($_.Exception.Message)"
         return
@@ -63,25 +63,47 @@ function Extract ($FileName) {
 
     if ($ExtractionPath -eq 'KMSAuto_Lite') {
         $TempDir = $TargetDirName
-        $TargetDirName = $CurrentDirectory
+        $TargetDirName = $_CURRENT_DIR
 
         Move-Item -Path "$TempDir\$Executable" -Destination "$TargetDirName\$Executable"
         Remove-Item $TempDir -Recurse -ErrorAction Ignore
     }
 
-    Write-Log $_INF "Files extracted to $TargetDirName"
+    Write-Log $_WRN "Files extracted to $TargetDirName"
 
     Write-Log $_INF "Removing $FileName"
-    Remove-Item "$CurrentDirectory\$FileName" -ErrorAction Ignore
+    Remove-Item "$_CURRENT_DIR\$FileName" -ErrorAction Ignore
 
-    Write-Log $_WRN 'Extraction finished'
+    Write-Log $_WRN 'Extraction completed'
 
     return $Executable
 }
 
-function Execute ($FileName) {
-    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {Extract $FileName} else {$FileName}
 
-    Write-Log $_INF "Executing '$Executable'"
-    & "$CurrentDirectory\$Executable"
+function ExecuteFile ($FileName, $Switches) {
+    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {ExtractArchive $FileName} else {$FileName}
+
+    if ($Switches) {
+        Write-Log $_INF "Installing '$Executable' silently"
+
+        try {Start-Process -Wait -FilePath "$_CURRENT_DIR\$Executable" -ArgumentList $Switches}
+        catch [Exception] {
+            Write-Log $_ERR "'$Executable' silent installation failed: $($_.Exception.Message)"
+            return
+        }
+
+        Write-Log $_INF "Removing $FileName"
+        Remove-Item "$_CURRENT_DIR\$FileName" -ErrorAction Ignore
+
+        Write-Log $_WRN "'$Executable' installation completed"
+    }
+    else {
+        Write-Log $_WRN "Executing '$Executable'"
+
+        try {Start-Process -FilePath "$_CURRENT_DIR\$Executable"}
+        catch [Exception] {
+            Write-Log $_ERR "'$Executable' execution failed: $($_.Exception.Message)"
+            return
+        }
+    }
 }
