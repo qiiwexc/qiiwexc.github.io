@@ -1,29 +1,29 @@
-$GroupHomeUpdate = New-Object System.Windows.Forms.GroupBox
-$GroupHomeUpdate.Text = 'Updates'
-$GroupHomeUpdate.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 2
-$GroupHomeUpdate.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
-$GroupHomeUpdate.Location = $GroupHomeThisUtility.Location + "0, $($GroupHomeThisUtility.Height + $_INTERVAL_NORMAL)"
-$_TAB_HOME.Controls.Add($GroupHomeUpdate)
+$GRP_HomeUpdate = New-Object System.Windows.Forms.GroupBox
+$GRP_HomeUpdate.Text = 'Updates'
+$GRP_HomeUpdate.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 2
+$GRP_HomeUpdate.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_HomeUpdate.Location = $GRP_HomeThisUtility.Location + "0, $($GRP_HomeThisUtility.Height + $INT_NORMAL)"
+$TAB_HOME.Controls.Add($GRP_HomeUpdate)
 
 
-$ButtonGoogleUpdate = New-Object System.Windows.Forms.Button
-$ButtonGoogleUpdate.Text = 'Update Google Chrome'
-$ButtonGoogleUpdate.Height = $_BUTTON_HEIGHT
-$ButtonGoogleUpdate.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonGoogleUpdate.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonGoogleUpdate.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonGoogleUpdate, 'Silently update Google Chrome and other Google software')
-$ButtonGoogleUpdate.Add_Click( {UpdateGoogleSoftware} )
+$BTN_GoogleUpdate = New-Object System.Windows.Forms.Button
+$BTN_GoogleUpdate.Text = 'Update Google Chrome'
+$BTN_GoogleUpdate.Height = $BTN_HEIGHT
+$BTN_GoogleUpdate.Width = $BTN_WIDTH_NORMAL
+$BTN_GoogleUpdate.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_GoogleUpdate.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_GoogleUpdate, 'Silently update Google Chrome and other Google software')
+$BTN_GoogleUpdate.Add_Click( {UpdateGoogleSoftware} )
 
 
-$ButtonUpdateStoreApps = New-Object System.Windows.Forms.Button
-$ButtonUpdateStoreApps.Text = 'Update Store apps'
-$ButtonUpdateStoreApps.Height = $_BUTTON_HEIGHT
-$ButtonUpdateStoreApps.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonUpdateStoreApps.Location = $ButtonGoogleUpdate.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonUpdateStoreApps.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonUpdateStoreApps, 'Update Microsoft Store apps')
-$ButtonUpdateStoreApps.Add_Click( {UpdateStoreApps} )
+$BTN_UpdateStoreApps = New-Object System.Windows.Forms.Button
+$BTN_UpdateStoreApps.Text = 'Update Store apps'
+$BTN_UpdateStoreApps.Height = $BTN_HEIGHT
+$BTN_UpdateStoreApps.Width = $BTN_WIDTH_NORMAL
+$BTN_UpdateStoreApps.Location = $BTN_GoogleUpdate.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_UpdateStoreApps.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateStoreApps, 'Update Microsoft Store apps')
+$BTN_UpdateStoreApps.Add_Click( {UpdateStoreApps} )
 
 
-$GroupHomeUpdate.Controls.AddRange(@($ButtonGoogleUpdate, $ButtonUpdateStoreApps))
+$GRP_HomeUpdate.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps))

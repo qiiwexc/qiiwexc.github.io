@@ -1,49 +1,47 @@
-$GroupDownloadsActivators = New-Object System.Windows.Forms.GroupBox
-$GroupDownloadsActivators.Text = 'Activators'
-$GroupDownloadsActivators.Height = $_INTERVAL_NORMAL + ($_BUTTON_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT) * 2
-$GroupDownloadsActivators.Width = $GroupDownloadsTools.Width
-$GroupDownloadsActivators.Location = $GroupDownloadsTools.Location + "$($GroupDownloadsTools.Width + $_INTERVAL_NORMAL), 0"
+$GRP_DownloadsActivators = New-Object System.Windows.Forms.GroupBox
+$GRP_DownloadsActivators.Text = 'Activators'
+$GRP_DownloadsActivators.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 2
+$GRP_DownloadsActivators.Width = $GRP_DownloadsTools.Width
+$GRP_DownloadsActivators.Location = $GRP_DownloadsTools.Location + "$($GRP_DownloadsTools.Width + $INT_NORMAL), 0"
 
 
-$ButtonDownloadKMS = New-Object System.Windows.Forms.Button
-$ButtonDownloadKMS.Text = 'KMSAuto Lite'
-$ButtonDownloadKMSToolTipText = "Download KMSAuto Lite`rActivates Windows 7 - 10 and Office 2010 - 2019`n`n$_AV_WARNING_MESSAGE"
-$ButtonDownloadKMS.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonDownloadKMS.Height = $_BUTTON_HEIGHT
-$ButtonDownloadKMS.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadKMS.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadKMS, $ButtonDownloadKMSToolTipText)
-$ButtonDownloadKMS.Add_Click( {
-        Write-Log $_WRN $_AV_WARNING_MESSAGE
-        DownloadFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -Execute $CheckBoxKMSExecute.Checked
+$BTN_DownloadKMS = New-Object System.Windows.Forms.Button
+$BTN_DownloadKMS.Text = 'KMSAuto Lite'
+$BTN_DownloadKMS.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_DownloadKMS.Height = $BTN_HEIGHT
+$BTN_DownloadKMS.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadKMS.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMS, "Download KMSAuto Lite`rActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
+$BTN_DownloadKMS.Add_Click( {
+        Write-Log $WRN $TXT_AV_WARNING
+        DownloadFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -Execute $CBOX_KMSExecute.Checked
     } )
 
-$CheckBoxKMSExecute = New-Object System.Windows.Forms.CheckBox
-$CheckBoxKMSExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxKMSExecute.Location = $ButtonDownloadKMS.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxKMSExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxKMSExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CBOX_KMSExecute = New-Object System.Windows.Forms.CheckBox
+$CBOX_KMSExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_KMSExecute.Location = $BTN_DownloadKMS.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_KMSExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_KMSExecute.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$ButtonDownloadChew = New-Object System.Windows.Forms.Button
-$ButtonDownloadChew.Text = 'ChewWGA'
-$ButtonDownloadChewToolTipText = "Download ChewWGA`rFor activating hopeless Windows 7 installations`n`n$_AV_WARNING_MESSAGE"
-$ButtonDownloadChew.Location = $ButtonDownloadKMS.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadChew.Height = $_BUTTON_HEIGHT
-$ButtonDownloadChew.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadChew.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadChew, $ButtonDownloadChewToolTipText)
-$ButtonDownloadChew.Add_Click( {
-        Write-Log $_WRN $_AV_WARNING_MESSAGE
-        DownloadFile 'qiiwexc.github.io/d/ChewWGA.zip' -Execute $CheckBoxChewExecute.Checked
+$BTN_DownloadChew = New-Object System.Windows.Forms.Button
+$BTN_DownloadChew.Text = 'ChewWGA'
+$BTN_DownloadChew.Location = $BTN_DownloadKMS.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadChew.Height = $BTN_HEIGHT
+$BTN_DownloadChew.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadChew.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChew, "Download ChewWGA`rFor activating hopeless Windows 7 installations`n`n$TXT_AV_WARNING")
+$BTN_DownloadChew.Add_Click( {
+        Write-Log $WRN $TXT_AV_WARNING
+        DownloadFile 'qiiwexc.github.io/d/ChewWGA.zip' -Execute $CBOX_ChewExecute.Checked
     } )
 
-$CheckBoxChewExecute = New-Object System.Windows.Forms.CheckBox
-$CheckBoxChewExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxChewExecute.Location = $ButtonDownloadChew.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxChewExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxChewExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CBOX_ChewExecute = New-Object System.Windows.Forms.CheckBox
+$CBOX_ChewExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ChewExecute.Location = $BTN_DownloadChew.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ChewExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ChewExecute.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$_TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GroupDownloadsActivators))
-$GroupDownloadsActivators.Controls.AddRange(@($ButtonDownloadKMS, $ButtonDownloadChew, $CheckBoxKMSExecute, $CheckBoxChewExecute))
+$TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GRP_DownloadsActivators))
+$GRP_DownloadsActivators.Controls.AddRange(@($BTN_DownloadKMS, $BTN_DownloadChew, $CBOX_KMSExecute, $CBOX_ChewExecute))

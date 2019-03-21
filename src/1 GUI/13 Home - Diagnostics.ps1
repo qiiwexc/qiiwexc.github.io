@@ -1,48 +1,48 @@
-$GroupHomeDiagnostics = New-Object System.Windows.Forms.GroupBox
-$GroupHomeDiagnostics.Text = 'Diagnostics'
-$GroupHomeDiagnostics.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 4 - $_INTERVAL_SHORT * 2
-$GroupHomeDiagnostics.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
-$GroupHomeDiagnostics.Location = $GroupHomeThisUtility.Location + "$($GroupHomeThisUtility.Width + $_INTERVAL_NORMAL), 0"
-$_TAB_HOME.Controls.Add($GroupHomeDiagnostics)
+$GRP_HomeDiagnostics = New-Object System.Windows.Forms.GroupBox
+$GRP_HomeDiagnostics.Text = 'Diagnostics'
+$GRP_HomeDiagnostics.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 4 - $INT_SHORT * 2
+$GRP_HomeDiagnostics.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_HomeDiagnostics.Location = $GRP_HomeThisUtility.Location + "$($GRP_HomeThisUtility.Width + $INT_NORMAL), 0"
+$TAB_HOME.Controls.Add($GRP_HomeDiagnostics)
 
 
-$ButtonCheckDrive = New-Object System.Windows.Forms.Button
-$ButtonCheckDrive.Text = 'Check C: drive health'
-$ButtonCheckDrive.Height = $_BUTTON_HEIGHT
-$ButtonCheckDrive.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonCheckDrive.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonCheckDrive.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonCheckDrive, 'Perform a C: drive health check')
-$ButtonCheckDrive.Add_Click( {CheckDrive} )
+$BTN_CheckDrive = New-Object System.Windows.Forms.Button
+$BTN_CheckDrive.Text = 'Check C: drive health'
+$BTN_CheckDrive.Height = $BTN_HEIGHT
+$BTN_CheckDrive.Width = $BTN_WIDTH_NORMAL
+$BTN_CheckDrive.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_CheckDrive.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDrive, 'Perform a C: drive health check')
+$BTN_CheckDrive.Add_Click( {CheckDrive} )
 
 
-$ButtonCheckMemory = New-Object System.Windows.Forms.Button
-$ButtonCheckMemory.Text = 'Check RAM'
-$ButtonCheckMemory.Height = $_BUTTON_HEIGHT
-$ButtonCheckMemory.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonCheckMemory.Location = $ButtonCheckDrive.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonCheckMemory.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonCheckMemory, 'Start RAM checking utility')
-$ButtonCheckMemory.Add_Click( {CheckMemory} )
+$BTN_CheckMemory = New-Object System.Windows.Forms.Button
+$BTN_CheckMemory.Text = 'Check RAM'
+$BTN_CheckMemory.Height = $BTN_HEIGHT
+$BTN_CheckMemory.Width = $BTN_WIDTH_NORMAL
+$BTN_CheckMemory.Location = $BTN_CheckDrive.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_CheckMemory.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMemory, 'Start RAM checking utility')
+$BTN_CheckMemory.Add_Click( {CheckMemory} )
 
 
-$ButtonSecurityScanQuick = New-Object System.Windows.Forms.Button
-$ButtonSecurityScanQuick.Text = 'Quick security scan'
-$ButtonSecurityScanQuick.Height = $_BUTTON_HEIGHT
-$ButtonSecurityScanQuick.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonSecurityScanQuick.Location = $ButtonCheckMemory.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonSecurityScanQuick.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonSecurityScanQuick, 'Perform a quick security scan')
-$ButtonSecurityScanQuick.Add_Click( {StartSecurityScan 'quick'} )
+$BTN_SecurityScanQuick = New-Object System.Windows.Forms.Button
+$BTN_SecurityScanQuick.Text = 'Quick security scan'
+$BTN_SecurityScanQuick.Height = $BTN_HEIGHT
+$BTN_SecurityScanQuick.Width = $BTN_WIDTH_NORMAL
+$BTN_SecurityScanQuick.Location = $BTN_CheckMemory.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_SecurityScanQuick.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_SecurityScanQuick, 'Perform a quick security scan')
+$BTN_SecurityScanQuick.Add_Click( {StartSecurityScan 'quick'} )
 
-$ButtonSecurityScanFull = New-Object System.Windows.Forms.Button
-$ButtonSecurityScanFull.Text = 'Full security scan'
-$ButtonSecurityScanFull.Height = $_BUTTON_HEIGHT
-$ButtonSecurityScanFull.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonSecurityScanFull.Location = $ButtonSecurityScanQuick.Location + $_BUTTON_SHIFT_VERTICAL_SHORT
-$ButtonSecurityScanFull.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonSecurityScanFull, 'Perform a full security scan')
-$ButtonSecurityScanFull.Add_Click( {StartSecurityScan 'full'} )
+$BTN_SecurityScanFull = New-Object System.Windows.Forms.Button
+$BTN_SecurityScanFull.Text = 'Full security scan'
+$BTN_SecurityScanFull.Height = $BTN_HEIGHT
+$BTN_SecurityScanFull.Width = $BTN_WIDTH_NORMAL
+$BTN_SecurityScanFull.Location = $BTN_SecurityScanQuick.Location + $BTN_SHIFT_VER_SHORT
+$BTN_SecurityScanFull.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_SecurityScanFull, 'Perform a full security scan')
+$BTN_SecurityScanFull.Add_Click( {StartSecurityScan 'full'} )
 
 
-$GroupHomeDiagnostics.Controls.AddRange(@($ButtonCheckDrive, $ButtonCheckMemory, $ButtonSecurityScanQuick, $ButtonSecurityScanFull))
+$GRP_HomeDiagnostics.Controls.AddRange(@($BTN_CheckDrive, $BTN_CheckMemory, $BTN_SecurityScanQuick, $BTN_SecurityScanFull))

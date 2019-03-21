@@ -6,32 +6,32 @@ $VersionFile = "$DistPath\version"
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $TargetFile = "$DistPath\$DistFileName"
-$_INF = 'INF'
-$_WRN = 'WRN'
+$INF = 'INF'
+$WRN = 'WRN'
 
 function Write-Log($Level, $Message) {
     $Timestamp = (Get-Date).ToString()
     $Text = "[$Timestamp] $Message"
-    switch ($Level) { $_WRN {Write-Warning $Text} $_INF {Write-Host $Text} Default {Write-Host $Message} }
+    switch ($Level) { $WRN {Write-Warning $Text} $INF {Write-Host $Text} Default {Write-Host $Message} }
 }
 
 function Build {
     $Version = Get-Date -Format 'y.M.d'
 
-    Write-Log $_INF 'Build task started'
-    Write-Log $_INF "Source path = $SourcePath"
-    Write-Log $_INF "Target file = $TargetFile"
-    Write-Log $_INF "Version     = $Version"
+    Write-Log $INF 'Build task started'
+    Write-Log $INF "Source path = $SourcePath"
+    Write-Log $INF "Target file = $TargetFile"
+    Write-Log $INF "Version     = $Version"
 
     Remove-Item $TargetFile -Force -ErrorAction Ignore
     Remove-Item $VersionFile -Force -ErrorAction Ignore
     New-Item $DistPath -ItemType Directory -Force | Out-Null
 
-    Write-Log $_INF 'Writing version file'
+    Write-Log $INF 'Writing version file'
     Add-Content $VersionFile $Version
 
-    Write-Log $_INF 'Building...'
-    Add-Content $TargetFile "`$_VERSION = '$Version'"
+    Write-Log $INF 'Building...'
+    Add-Content $TargetFile "`$VERSION = '$Version'"
 
     foreach ($File in Get-ChildItem -Path $SourcePath -Recurse -File) {
         $FileName = $File.ToString().Replace('.ps1', '')
@@ -43,12 +43,12 @@ function Build {
         Add-Content $TargetFile (Get-Content -Path $File.FullName)
     }
 
-    Write-Log $_INF 'Finished'
+    Write-Log $INF 'Finished'
 }
 
 function BuildAndRun {
     Build
-    Write-Log $_INF "Running $TargetFile"
+    Write-Log $INF "Running $TargetFile"
     Start-Process powershell.exe ".\$TargetFile"
 }
 

@@ -1,80 +1,76 @@
-$GroupInstallersTools = New-Object System.Windows.Forms.GroupBox
-$GroupInstallersTools.Text = 'Tools'
-$GroupInstallersTools.Height = $_INTERVAL_NORMAL + ($_BUTTON_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT) * 4 + $_INTERVAL_NORMAL
-$GroupInstallersTools.Width = $GroupEssentials.Width
-$GroupInstallersTools.Location = $GroupEssentials.Location + "$($GroupEssentials.Width + $_INTERVAL_NORMAL), 0"
+$GRP_InstallersTools = New-Object System.Windows.Forms.GroupBox
+$GRP_InstallersTools.Text = 'Tools'
+$GRP_InstallersTools.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 4 + $INT_NORMAL
+$GRP_InstallersTools.Width = $GRP_Essentials.Width
+$GRP_InstallersTools.Location = $GRP_Essentials.Location + "$($GRP_Essentials.Width + $INT_NORMAL), 0"
 
 
-$ButtonDownloadCCleaner = New-Object System.Windows.Forms.Button
-$ButtonDownloadCCleaner.Text = 'CCleaner'
-$ButtonDownloadCCleanerToolTipText = 'Download CCleaner installer'
-$ButtonDownloadCCleaner.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonDownloadCCleaner.Height = $_BUTTON_HEIGHT
-$ButtonDownloadCCleaner.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadCCleaner.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadCCleaner, $ButtonDownloadCCleanerToolTipText)
-$ButtonDownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe' -Execute $CheckBoxCCleanerExecute.Checked} )
+$BTN_DownloadCCleaner = New-Object System.Windows.Forms.Button
+$BTN_DownloadCCleaner.Text = 'CCleaner'
+$BTN_DownloadCCleaner.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_DownloadCCleaner.Height = $BTN_HEIGHT
+$BTN_DownloadCCleaner.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadCCleaner.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
+$BTN_DownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe' -Execute $CBOX_CCleanerExecute.Checked} )
 
-$CheckBoxCCleanerExecute = New-Object System.Windows.Forms.CheckBox
-$CheckBoxCCleanerExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxCCleanerExecute.Location = $ButtonDownloadCCleaner.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxCCleanerExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxCCleanerExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
-
-
-$ButtonDownloadDefraggler = New-Object System.Windows.Forms.Button
-$ButtonDownloadDefraggler.Text = 'Defraggler'
-$ButtonDownloadDefragglerToolTipText = 'Download Defraggler installer'
-$ButtonDownloadDefraggler.Location = $ButtonDownloadCCleaner.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadDefraggler.Height = $_BUTTON_HEIGHT
-$ButtonDownloadDefraggler.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadDefraggler.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadDefraggler, $ButtonDownloadDefragglerToolTipText)
-$ButtonDownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe' -Execute $CheckBoxDefragglerExecute.Checked} )
-
-$CheckBoxDefragglerExecute = New-Object System.Windows.Forms.CheckBox
-$CheckBoxDefragglerExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxDefragglerExecute.Location = $ButtonDownloadDefraggler.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxDefragglerExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxDefragglerExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CBOX_CCleanerExecute = New-Object System.Windows.Forms.CheckBox
+$CBOX_CCleanerExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_CCleanerExecute.Location = $BTN_DownloadCCleaner.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_CCleanerExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_CCleanerExecute.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$ButtonDownloadRecuva = New-Object System.Windows.Forms.Button
-$ButtonDownloadRecuva.Text = 'Recuva'
-$ButtonDownloadRecuvaToolTipText = "Download Recuva installer`rRecuva helps restore deleted files"
-$ButtonDownloadRecuva.Location = $ButtonDownloadDefraggler.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadRecuva.Height = $_BUTTON_HEIGHT
-$ButtonDownloadRecuva.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadRecuva.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadRecuva, $ButtonDownloadRecuvaToolTipText)
-$ButtonDownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe' -Execute $CheckBoxRecuvaExecute.Checked} )
+$BTN_DownloadDefraggler = New-Object System.Windows.Forms.Button
+$BTN_DownloadDefraggler.Text = 'Defraggler'
+$BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadDefraggler.Height = $BTN_HEIGHT
+$BTN_DownloadDefraggler.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadDefraggler.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadDefraggler, 'Download Defraggler installer')
+$BTN_DownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe' -Execute $CBOX_DefragglerExecute.Checked} )
 
-$CheckBoxRecuvaExecute = New-Object System.Windows.Forms.CheckBox
-$CheckBoxRecuvaExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxRecuvaExecute.Location = $ButtonDownloadRecuva.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxRecuvaExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxRecuvaExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
-
-
-$ButtonDownloadMalwarebytes = New-Object System.Windows.Forms.Button
-$ButtonDownloadMalwarebytes.Text = 'Malwarebytes'
-$ButtonDownloadMalwarebytesToolTipText = "Download Malwarebytes installer`rMalwarebytes helps remove malware and adware"
-$ButtonDownloadMalwarebytes.Location = $ButtonDownloadRecuva.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL + $_CHECK_BOX_SHIFT_VERTICAL_NORMAL
-$ButtonDownloadMalwarebytes.Height = $_BUTTON_HEIGHT
-$ButtonDownloadMalwarebytes.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadMalwarebytes.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadMalwarebytes, $ButtonDownloadMalwarebytesToolTipText)
-$ButtonDownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' $CheckBoxMalwarebytesExecute.Checked} )
-
-$CheckBoxMalwarebytesExecute = New-Object System.Windows.Forms.CheckBox
-$CheckBoxMalwarebytesExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxMalwarebytesExecute.Location = $ButtonDownloadMalwarebytes.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxMalwarebytesExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxMalwarebytesExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CBOX_DefragglerExecute = New-Object System.Windows.Forms.CheckBox
+$CBOX_DefragglerExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_DefragglerExecute.Location = $BTN_DownloadDefraggler.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_DefragglerExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_DefragglerExecute.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$_TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GroupInstallersTools))
-$GroupInstallersTools.Controls.AddRange(@(
-        $ButtonDownloadCCleaner, $ButtonDownloadDefraggler, $ButtonDownloadRecuva, $ButtonDownloadMalwarebytes,
-        $CheckBoxCCleanerExecute, $CheckBoxDefragglerExecute, $CheckBoxRecuvaExecute, $CheckBoxMalwarebytesExecute
+$BTN_DownloadRecuva = New-Object System.Windows.Forms.Button
+$BTN_DownloadRecuva.Text = 'Recuva'
+$BTN_DownloadRecuva.Location = $BTN_DownloadDefraggler.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadRecuva.Height = $BTN_HEIGHT
+$BTN_DownloadRecuva.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadRecuva.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRecuva, "Download Recuva installer`rRecuva helps restore deleted files")
+$BTN_DownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe' -Execute $CBOX_RecuvaExecute.Checked} )
+
+$CBOX_RecuvaExecute = New-Object System.Windows.Forms.CheckBox
+$CBOX_RecuvaExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_RecuvaExecute.Location = $BTN_DownloadRecuva.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_RecuvaExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_RecuvaExecute.Size = $CBOX_SIZE_DOWNLOAD
+
+
+$BTN_DownloadMalwarebytes = New-Object System.Windows.Forms.Button
+$BTN_DownloadMalwarebytes.Text = 'Malwarebytes'
+$BTN_DownloadMalwarebytes.Location = $BTN_DownloadRecuva.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_NORMAL
+$BTN_DownloadMalwarebytes.Height = $BTN_HEIGHT
+$BTN_DownloadMalwarebytes.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadMalwarebytes.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`rMalwarebytes helps remove malware and adware")
+$BTN_DownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' $CBOX_MalwarebytesExecute.Checked} )
+
+$CBOX_MalwarebytesExecute = New-Object System.Windows.Forms.CheckBox
+$CBOX_MalwarebytesExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_MalwarebytesExecute.Location = $BTN_DownloadMalwarebytes.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_MalwarebytesExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_MalwarebytesExecute.Size = $CBOX_SIZE_DOWNLOAD
+
+
+$TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GRP_InstallersTools))
+$GRP_InstallersTools.Controls.AddRange(@(
+        $BTN_DownloadCCleaner, $BTN_DownloadDefraggler, $BTN_DownloadRecuva, $BTN_DownloadMalwarebytes,
+        $CBOX_CCleanerExecute, $CBOX_DefragglerExecute, $CBOX_RecuvaExecute, $CBOX_MalwarebytesExecute
     ))

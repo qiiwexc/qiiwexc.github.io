@@ -1,39 +1,39 @@
-$GroupHomeOptimization = New-Object System.Windows.Forms.GroupBox
-$GroupHomeOptimization.Text = 'Optimization'
-$GroupHomeOptimization.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 3
-$GroupHomeOptimization.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
-$GroupHomeOptimization.Location = $GroupHomeDiagnostics.Location + "$($GroupHomeDiagnostics.Width + $_INTERVAL_NORMAL), 0"
-$_TAB_HOME.Controls.Add($GroupHomeOptimization)
+$GRP_HomeOptimization = New-Object System.Windows.Forms.GroupBox
+$GRP_HomeOptimization.Text = 'Optimization'
+$GRP_HomeOptimization.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
+$GRP_HomeOptimization.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_HomeOptimization.Location = $GRP_HomeDiagnostics.Location + "$($GRP_HomeDiagnostics.Width + $INT_NORMAL), 0"
+$TAB_HOME.Controls.Add($GRP_HomeOptimization)
 
 
-$ButtonCloudFlareDNS = New-Object System.Windows.Forms.Button
-$ButtonCloudFlareDNS.Text = 'Setup CloudFlare DNS'
-$ButtonCloudFlareDNS.Height = $_BUTTON_HEIGHT
-$ButtonCloudFlareDNS.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonCloudFlareDNS.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonCloudFlareDNS.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonCloudFlareDNS, 'Set DNS to CouldFlare - 1.1.1.1 / 1.0.0.1')
-$ButtonCloudFlareDNS.Add_Click( {CloudFlareDNS} )
+$BTN_CloudFlareDNS = New-Object System.Windows.Forms.Button
+$BTN_CloudFlareDNS.Text = 'Setup CloudFlare DNS'
+$BTN_CloudFlareDNS.Height = $BTN_HEIGHT
+$BTN_CloudFlareDNS.Width = $BTN_WIDTH_NORMAL
+$BTN_CloudFlareDNS.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_CloudFlareDNS.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CloudFlareDNS, 'Set DNS to CouldFlare - 1.1.1.1 / 1.0.0.1')
+$BTN_CloudFlareDNS.Add_Click( {CloudFlareDNS} )
 
 
-$ButtonRunCCleaner = New-Object System.Windows.Forms.Button
-$ButtonRunCCleaner.Text = 'Run CCleaner silently'
-$ButtonRunCCleaner.Height = $_BUTTON_HEIGHT
-$ButtonRunCCleaner.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonRunCCleaner.Location = $ButtonCloudFlareDNS.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonRunCCleaner.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonRunCCleaner, 'Clean the system in the background with CCleaner')
-$ButtonRunCCleaner.Add_Click( {RunCCleaner} )
+$BTN_RunCCleaner = New-Object System.Windows.Forms.Button
+$BTN_RunCCleaner.Text = 'Run CCleaner silently'
+$BTN_RunCCleaner.Height = $BTN_HEIGHT
+$BTN_RunCCleaner.Width = $BTN_WIDTH_NORMAL
+$BTN_RunCCleaner.Location = $BTN_CloudFlareDNS.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_RunCCleaner.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RunCCleaner, 'Clean the system in the background with CCleaner')
+$BTN_RunCCleaner.Add_Click( {RunCCleaner} )
 
 
-$ButtonOptimizeDrive = New-Object System.Windows.Forms.Button
-$ButtonOptimizeDrive.Text = 'Optimize / defrag drive'
-$ButtonOptimizeDrive.Height = $_BUTTON_HEIGHT
-$ButtonOptimizeDrive.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonOptimizeDrive.Location = $ButtonRunCCleaner.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonOptimizeDrive.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonOptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
-$ButtonOptimizeDrive.Add_Click( {OptimizeDrive} )
+$BTN_OptimizeDrive = New-Object System.Windows.Forms.Button
+$BTN_OptimizeDrive.Text = 'Optimize / defrag drive'
+$BTN_OptimizeDrive.Height = $BTN_HEIGHT
+$BTN_OptimizeDrive.Width = $BTN_WIDTH_NORMAL
+$BTN_OptimizeDrive.Location = $BTN_RunCCleaner.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_OptimizeDrive.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
+$BTN_OptimizeDrive.Add_Click( {OptimizeDrive} )
 
 
-$GroupHomeOptimization.Controls.AddRange(@($ButtonCloudFlareDNS, $ButtonRunCCleaner, $ButtonOptimizeDrive))
+$GRP_HomeOptimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_RunCCleaner, $BTN_OptimizeDrive))

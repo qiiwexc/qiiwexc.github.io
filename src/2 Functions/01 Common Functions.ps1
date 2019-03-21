@@ -1,32 +1,32 @@
 function Write-Log($Level, $Message) {
     $Text = "[$((Get-Date).ToString())] $Message"
-    $_LOG.SelectionStart = $_LOG.TextLength
+    $LOG.SelectionStart = $LOG.TextLength
 
-    switch ($Level) { $_WRN {$_LOG.SelectionColor = 'blue'} $_ERR {$_LOG.SelectionColor = 'red'} Default {$_LOG.SelectionColor = 'black'} }
+    switch ($Level) { $WRN {$LOG.SelectionColor = 'blue'} $ERR {$LOG.SelectionColor = 'red'} Default {$LOG.SelectionColor = 'black'} }
 
     Write-Host $Text
-    $_LOG.AppendText("`n$Text")
+    $LOG.AppendText("`n$Text")
 
-    $_LOG.SelectionColor = 'black'
-    $_LOG.ScrollToCaret();
+    $LOG.SelectionColor = 'black'
+    $LOG.ScrollToCaret();
 }
 
 
 function ExecuteAsAdmin ($Command, $Message) {Start-Process -Wait -Verb RunAs -FilePath 'powershell' -ArgumentList "-Command `"Write-Host $Message; $Command`""}
 
 
-function ExitScript {$_FORM.Close()}
+function ExitScript {$FORM.Close()}
 
 
-function OpenInBrowser ($URL) {
-    if ($URL.length -lt 1) {
-        Write-Log $_ERR 'No URL specified'
+function OpenInBrowser ($Url) {
+    if ($Url.length -lt 1) {
+        Write-Log $ERR 'No URL specified'
         return
     }
 
-    $UrlToOpen = if ($URL -like 'http*') {$URL} else {'https://' + $URL}
-    Write-Log $_INF "Openning URL in the default browser: $UrlToOpen"
+    $UrlToOpen = if ($Url -like 'http*') {$Url} else {'https://' + $Url}
+    Write-Log $INF "Openning URL in the default browser: $UrlToOpen"
 
     try {[System.Diagnostics.Process]::Start($UrlToOpen)}
-    catch [Exception] {Write-Log $_ERR "Could not open the URL: $($_.Exception.Message)"}
+    catch [Exception] {Write-Log $ERR "Could not open the URL: $($_.Exception.Message)"}
 }

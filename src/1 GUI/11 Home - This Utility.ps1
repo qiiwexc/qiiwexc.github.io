@@ -1,39 +1,39 @@
-$GroupHomeThisUtility = New-Object System.Windows.Forms.GroupBox
-$GroupHomeThisUtility.Text = 'This utility'
-$GroupHomeThisUtility.Height = $_INTERVAL_GROUP_TOP + $_BUTTON_INTERVAL_NORMAL * 3
-$GroupHomeThisUtility.Width = $_INTERVAL_NORMAL + $_BUTTON_WIDTH_NORMAL + $_INTERVAL_NORMAL
-$GroupHomeThisUtility.Location = "$_INTERVAL_NORMAL, $_INTERVAL_NORMAL"
-$_TAB_HOME.Controls.Add($GroupHomeThisUtility)
+$GRP_HomeThisUtility = New-Object System.Windows.Forms.GroupBox
+$GRP_HomeThisUtility.Text = 'This utility'
+$GRP_HomeThisUtility.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
+$GRP_HomeThisUtility.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_HomeThisUtility.Location = "$INT_NORMAL, $INT_NORMAL"
+$TAB_HOME.Controls.Add($GRP_HomeThisUtility)
 
 
-$ButtonElevate = New-Object System.Windows.Forms.Button
-$ButtonElevate.Text = 'Run as administrator'
-$ButtonElevate.Height = $_BUTTON_HEIGHT
-$ButtonElevate.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonElevate.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonElevate.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonElevate, 'Restart this utility with administrator privileges')
-$ButtonElevate.Add_Click( {Elevate} )
+$BTN_Elevate = New-Object System.Windows.Forms.Button
+$BTN_Elevate.Text = 'Run as administrator'
+$BTN_Elevate.Height = $BTN_HEIGHT
+$BTN_Elevate.Width = $BTN_WIDTH_NORMAL
+$BTN_Elevate.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_Elevate.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Elevate, 'Restart this utility with administrator privileges')
+$BTN_Elevate.Add_Click( {Elevate} )
 
 
-$ButtonBrowserHome = New-Object System.Windows.Forms.Button
-$ButtonBrowserHome.Text = 'Open in browser'
-$ButtonBrowserHome.Height = $_BUTTON_HEIGHT
-$ButtonBrowserHome.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonBrowserHome.Location = $ButtonElevate.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonBrowserHome.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonBrowserHome, 'Open utility web page in the default browser')
-$ButtonBrowserHome.Add_Click( {OpenInBrowser 'qiiwexc.github.io'} )
+$BTN_BrowserHome = New-Object System.Windows.Forms.Button
+$BTN_BrowserHome.Text = 'Open in browser'
+$BTN_BrowserHome.Height = $BTN_HEIGHT
+$BTN_BrowserHome.Width = $BTN_WIDTH_NORMAL
+$BTN_BrowserHome.Location = $BTN_Elevate.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_BrowserHome.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_BrowserHome, 'Open utility web page in the default browser')
+$BTN_BrowserHome.Add_Click( {OpenInBrowser 'qiiwexc.github.io'} )
 
 
-$ButtonSystemInformation = New-Object System.Windows.Forms.Button
-$ButtonSystemInformation.Text = 'System information'
-$ButtonSystemInformation.Height = $_BUTTON_HEIGHT
-$ButtonSystemInformation.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonSystemInformation.Location = $ButtonBrowserHome.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonSystemInformation.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonSystemInformation, 'Print system information to the log')
-$ButtonSystemInformation.Add_Click( {PrintSystemInformation} )
+$BTN_SystemInformation = New-Object System.Windows.Forms.Button
+$BTN_SystemInformation.Text = 'System information'
+$BTN_SystemInformation.Height = $BTN_HEIGHT
+$BTN_SystemInformation.Width = $BTN_WIDTH_NORMAL
+$BTN_SystemInformation.Location = $BTN_BrowserHome.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_SystemInformation.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_SystemInformation, 'Print system information to the log')
+$BTN_SystemInformation.Add_Click( {PrintSystemInformation} )
 
 
-$GroupHomeThisUtility.Controls.AddRange(@($ButtonElevate, $ButtonBrowserHome, $ButtonSystemInformation))
+$GRP_HomeThisUtility.Controls.AddRange(@($BTN_Elevate, $BTN_BrowserHome, $BTN_SystemInformation))
