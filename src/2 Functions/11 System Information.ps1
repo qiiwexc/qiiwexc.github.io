@@ -5,18 +5,16 @@ function GatherSystemInformation {
 
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
-    $script:_OS_NAME = $OperatingSystem.Caption
-    $script:_OS_ARCH = $OperatingSystem.OSArchitecture
-    $script:_OS_VER = $OperatingSystem.Version
-    $script:PSVersion = $PSVersionTable.PSVersion.Major
-    $script:OfficeVersion = (Get-ItemProperty 'HKCR:\Word.Application\CurVer').'(default)'
+    $script:OS_NAME = $OperatingSystem.Caption
+    $script:OS_ARCH = $OperatingSystem.OSArchitecture
+    $script:OS_VERSION = $OperatingSystem.Version
+    $script:PS_VERSION = $PSVersionTable.PSVersion.Major
 
-    $script:_CURRENT_DIR = (Split-Path ($MyInvocation.ScriptName))
+    $script:CURRENT_DIR = (Split-Path ($MyInvocation.ScriptName))
 
     $script:GoogleUpdateExe = "$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
     $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {'64'}).exe"
     $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-
 
     $LOG.AppendText(' Done')
 }
@@ -41,9 +39,8 @@ function PrintSystemInformation {
     Write-Log $INF "    System partition - free space: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($(($SystemPartition.FreeSpaceGB/$SystemPartition.SizeGB).tostring('P')))"
     Write-Log $INF '  Software'
     Write-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"
-    Write-Log $INF "    Operation system:  $($OperatingSystem)"
-    Write-Log $INF "    OS architecture:  $($Architecture)"
-    Write-Log $INF "    OS version / build number:  v$((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId) / $($OSVersion)"
-    Write-Log $INF "    PowerShell version:  $($PSVersion)"
-    Write-Log $INF "    Office version:  $($OfficeVersion)"
+    Write-Log $INF "    Operation system:  $($OS_NAME)"
+    Write-Log $INF "    OS architecture:  $($OS_ARCH)"
+    Write-Log $INF "    OS version / build number:  v$((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId) / $($OS_VERSION)"
+    Write-Log $INF "    PowerShell version:  $($PS_VERSION)"
 }

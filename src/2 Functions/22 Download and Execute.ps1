@@ -6,7 +6,7 @@ function DownloadFile ($Url, $SaveAs, $Execute, $Switches) {
 
     $DownloadURL = if ($Url -like 'http*') {$Url} else {'https://' + $Url}
     $FileName = if ($SaveAs) {$SaveAs} else {$DownloadURL | Split-Path -Leaf}
-    $SavePath = "$_CURRENT_DIR\$FileName"
+    $SavePath = "$CURRENT_DIR\$FileName"
 
     Write-Log $INF "Downloading from $DownloadURL"
 
@@ -52,10 +52,10 @@ function ExtractArchive ($FileName) {
         Default {$ExtractionPath = $FileName.trimend('.zip')}
     }
 
-    $TargetDirName = "$_CURRENT_DIR\$ExtractionPath"
+    $TargetDirName = "$CURRENT_DIR\$ExtractionPath"
     if ($ExtractionPath -ne '.') {Remove-Item $TargetDirName -Recurse -ErrorAction Ignore}
 
-    try {[System.IO.Compression.ZipFile]::ExtractToDirectory("$_CURRENT_DIR\$FileName", $TargetDirName)}
+    try {[System.IO.Compression.ZipFile]::ExtractToDirectory("$CURRENT_DIR\$FileName", $TargetDirName)}
     catch [Exception] {
         Write-Log $ERR "Extraction failed: $($_.Exception.Message)"
         return
@@ -63,7 +63,7 @@ function ExtractArchive ($FileName) {
 
     if ($ExtractionPath -eq 'KMSAuto_Lite') {
         $TempDir = $TargetDirName
-        $TargetDirName = $_CURRENT_DIR
+        $TargetDirName = $CURRENT_DIR
 
         Move-Item -Path "$TempDir\$Executable" -Destination "$TargetDirName\$Executable"
         Remove-Item $TempDir -Recurse -ErrorAction Ignore
@@ -72,7 +72,7 @@ function ExtractArchive ($FileName) {
     Write-Log $WRN "Files extracted to $TargetDirName"
 
     Write-Log $INF "Removing $FileName"
-    Remove-Item "$_CURRENT_DIR\$FileName" -ErrorAction Ignore
+    Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
 
     Write-Log $WRN 'Extraction completed'
 
@@ -86,21 +86,21 @@ function ExecuteFile ($FileName, $Switches) {
     if ($Switches) {
         Write-Log $INF "Installing '$Executable' silently"
 
-        try {Start-Process -Wait -FilePath "$_CURRENT_DIR\$Executable" -ArgumentList $Switches}
+        try {Start-Process -Wait -FilePath "$CURRENT_DIR\$Executable" -ArgumentList $Switches}
         catch [Exception] {
             Write-Log $ERR "'$Executable' silent installation failed: $($_.Exception.Message)"
             return
         }
 
         Write-Log $INF "Removing $FileName"
-        Remove-Item "$_CURRENT_DIR\$FileName" -ErrorAction Ignore
+        Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
 
         Write-Log $WRN "'$Executable' installation completed"
     }
     else {
         Write-Log $WRN "Executing '$Executable'"
 
-        try {Start-Process -FilePath "$_CURRENT_DIR\$Executable"}
+        try {Start-Process -FilePath "$CURRENT_DIR\$Executable"}
         catch [Exception] {
             Write-Log $ERR "'$Executable' execution failed: $($_.Exception.Message)"
             return
