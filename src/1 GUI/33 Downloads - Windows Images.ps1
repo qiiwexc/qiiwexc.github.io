@@ -1,102 +1,96 @@
-$GroupDownloadsWindows = New-Object System.Windows.Forms.GroupBox
-$GroupDownloadsWindows.Text = 'Windows ISO Images'
-$GroupDownloadsWindows.Height = $_INTERVAL_NORMAL + ($_BUTTON_INTERVAL_SHORT + $_CHECK_BOX_INTERVAL_SHORT) * 6
-$GroupDownloadsWindows.Width = $GroupDownloadsActivators.Width
-$GroupDownloadsWindows.Location = $GroupDownloadsActivators.Location + "$($GroupDownloadsActivators.Width + $_INTERVAL_NORMAL), 0"
+$GRP_DownloadsWindows = New-Object System.Windows.Forms.GroupBox
+$GRP_DownloadsWindows.Text = 'Windows ISO Images'
+$GRP_DownloadsWindows.Height = $INT_NORMAL + ($BTN_INT_SHORT + $CBOX_INT_SHORT) * 6
+$GRP_DownloadsWindows.Width = $GRP_DownloadsActivators.Width
+$GRP_DownloadsWindows.Location = $GRP_DownloadsActivators.Location + "$($GRP_DownloadsActivators.Width + $INT_NORMAL), 0"
 
 
-$ButtonDownloadWindows10 = New-Object System.Windows.Forms.Button
-$ButtonDownloadWindows10.Text = 'Windows 10'
-$ButtonDownloadWindows10ToolTipText = 'Download $($ButtonDownloadWindows10.Text) (v1809-Jan) RUS-ENG x86-x64 -36in1- KMS (AIO) ISO image'
-$ButtonDownloadWindows10.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonDownloadWindows10.Height = $_BUTTON_HEIGHT
-$ButtonDownloadWindows10.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadWindows10.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindows10, $ButtonDownloadWindows10ToolTipText)
-$ButtonDownloadWindows10.Add_Click( {OpenInBrowser 'http://monkrus.ws/2019/01/windows-10-v1809-jan-rus-eng-x86-x64.html'} )
+$BTN_DownloadWindows10 = New-Object System.Windows.Forms.Button
+$BTN_DownloadWindows10.Text = 'Windows 10'
+$BTN_DownloadWindows10.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_DownloadWindows10.Height = $BTN_HEIGHT
+$BTN_DownloadWindows10.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindows10.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindows10, 'Download Windows 10 (v1809-Jan) RUS-ENG x86-x64 -36in1- KMS (AIO) ISO image')
+$BTN_DownloadWindows10.Add_Click( {OpenInBrowser 'http://monkrus.ws/2019/01/windows-10-v1809-jan-rus-eng-x86-x64.html'} )
 
-$LabelDownloadWindows10 = New-Object System.Windows.Forms.Label
-$LabelDownloadWindows10.Text = $_TEXT_OPENS_IN_BROWSER
-$LabelDownloadWindows10.Location = $ButtonDownloadWindows10.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_LABEL_SHIFT_BROWSER
-$LabelDownloadWindows10.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$LBL_DownloadWindows10 = New-Object System.Windows.Forms.Label
+$LBL_DownloadWindows10.Text = $TXT_OPENS_IN_BROWSER
+$LBL_DownloadWindows10.Location = $BTN_DownloadWindows10.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_DownloadWindows10.Size = $CBOX_SIZE_DOWNLOAD
 
-$ButtonDownloadWindows8 = New-Object System.Windows.Forms.Button
-$ButtonDownloadWindows8.Text = 'Windows 8.1'
-$ButtonDownloadWindows8ToolTipText = 'Download $($ButtonDownloadWindows8.Text) with Update 3 RUS-ENG x86-x64 -16in1- Activated (AIO) ISO image'
-$ButtonDownloadWindows8.Location = $ButtonDownloadWindows10.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadWindows8.Height = $_BUTTON_HEIGHT
-$ButtonDownloadWindows8.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadWindows8.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindows8, $ButtonDownloadWindows8ToolTipText)
-$ButtonDownloadWindows8.Add_Click( {OpenInBrowser 'rutracker.org/forum/viewtopic.php?t=5109222'} )
+$BTN_DownloadWindows8 = New-Object System.Windows.Forms.Button
+$BTN_DownloadWindows8.Text = 'Windows 8.1'
+$BTN_DownloadWindows8.Location = $BTN_DownloadWindows10.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadWindows8.Height = $BTN_HEIGHT
+$BTN_DownloadWindows8.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindows8.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindows8, 'Download Windows 8.1 with Update 3 RUS-ENG x86-x64 -16in1- Activated (AIO) ISO image')
+$BTN_DownloadWindows8.Add_Click( {OpenInBrowser 'rutracker.org/forum/viewtopic.php?t=5109222'} )
 
-$LabelDownloadWindows8 = New-Object System.Windows.Forms.Label
-$LabelDownloadWindows8.Text = $_TEXT_OPENS_IN_BROWSER
-$LabelDownloadWindows8.Location = $ButtonDownloadWindows8.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_LABEL_SHIFT_BROWSER
-$LabelDownloadWindows8.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$LBL_DownloadWindows8 = New-Object System.Windows.Forms.Label
+$LBL_DownloadWindows8.Text = $TXT_OPENS_IN_BROWSER
+$LBL_DownloadWindows8.Location = $BTN_DownloadWindows8.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_DownloadWindows8.Size = $CBOX_SIZE_DOWNLOAD
 
-$ButtonDownloadWindows7 = New-Object System.Windows.Forms.Button
-$ButtonDownloadWindows7.Text = 'Windows 7'
-$ButtonDownloadWindows7ToolTipText = 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v5 (AIO) ISO image'
-$ButtonDownloadWindows7.Location = $ButtonDownloadWindows8.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadWindows7.Height = $_BUTTON_HEIGHT
-$ButtonDownloadWindows7.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadWindows7.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindows7, $ButtonDownloadWindows7ToolTipText)
-$ButtonDownloadWindows7.Add_Click( {OpenInBrowser 'http://monkrus.ws/2018/03/windows-7-sp1-ie11-rus-eng-x86-x64.html'} )
+$BTN_DownloadWindows7 = New-Object System.Windows.Forms.Button
+$BTN_DownloadWindows7.Text = 'Windows 7'
+$BTN_DownloadWindows7.Location = $BTN_DownloadWindows8.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadWindows7.Height = $BTN_HEIGHT
+$BTN_DownloadWindows7.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindows7.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v5 (AIO) ISO image')
+$BTN_DownloadWindows7.Add_Click( {OpenInBrowser 'http://monkrus.ws/2018/03/windows-7-sp1-ie11-rus-eng-x86-x64.html'} )
 
-$LabelDownloadWindows7 = New-Object System.Windows.Forms.Label
-$LabelDownloadWindows7.Text = $_TEXT_OPENS_IN_BROWSER
-$LabelDownloadWindows7.Location = $ButtonDownloadWindows7.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_LABEL_SHIFT_BROWSER
-$LabelDownloadWindows7.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$LBL_DownloadWindows7 = New-Object System.Windows.Forms.Label
+$LBL_DownloadWindows7.Text = $TXT_OPENS_IN_BROWSER
+$LBL_DownloadWindows7.Location = $BTN_DownloadWindows7.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_DownloadWindows7.Size = $CBOX_SIZE_DOWNLOAD
 
-$ButtonDownloadWindowsXPENG = New-Object System.Windows.Forms.Button
-$ButtonDownloadWindowsXPENG.Text = 'Windows XP (ENG)'
-$ButtonDownloadWindowsXPENGToolTipText = 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image'
-$ButtonDownloadWindowsXPENG.Location = $ButtonDownloadWindows7.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadWindowsXPENG.Height = $_BUTTON_HEIGHT
-$ButtonDownloadWindowsXPENG.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadWindowsXPENG.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindowsXPENG, $ButtonDownloadWindowsXPENGToolTipText)
-$ButtonDownloadWindowsXPENG.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'} )
+$BTN_DownloadWindowsXPENG = New-Object System.Windows.Forms.Button
+$BTN_DownloadWindowsXPENG.Text = 'Windows XP (ENG)'
+$BTN_DownloadWindowsXPENG.Location = $BTN_DownloadWindows7.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadWindowsXPENG.Height = $BTN_HEIGHT
+$BTN_DownloadWindowsXPENG.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindowsXPENG.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindowsXPENG, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
+$BTN_DownloadWindowsXPENG.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'} )
 
-$LabelDownloadWindowsXPENG = New-Object System.Windows.Forms.Label
-$LabelDownloadWindowsXPENG.Text = $_TEXT_OPENS_IN_BROWSER
-$LabelDownloadWindowsXPENG.Location = $ButtonDownloadWindowsXPENG.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_LABEL_SHIFT_BROWSER
-$LabelDownloadWindowsXPENG.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$LBL_DownloadWindowsXPENG = New-Object System.Windows.Forms.Label
+$LBL_DownloadWindowsXPENG.Text = $TXT_OPENS_IN_BROWSER
+$LBL_DownloadWindowsXPENG.Location = $BTN_DownloadWindowsXPENG.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_DownloadWindowsXPENG.Size = $CBOX_SIZE_DOWNLOAD
 
-$ButtonDownloadWindowsXPRUS = New-Object System.Windows.Forms.Button
-$ButtonDownloadWindowsXPRUS.Text = 'Windows XP (RUS)'
-$ButtonDownloadWindowsXPRUSToolTipText = 'Download Windows XP SP3 (RUS) + Office 2010 SP2 (RUS) [v17.5.6] ISO image'
-$ButtonDownloadWindowsXPRUS.Location = $ButtonDownloadWindowsXPENG.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadWindowsXPRUS.Height = $_BUTTON_HEIGHT
-$ButtonDownloadWindowsXPRUS.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadWindowsXPRUS.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindowsXPRUS, $ButtonDownloadWindowsXPRUSToolTipText)
-$ButtonDownloadWindowsXPRUS.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1mgs56mX2-dQMk9e5KaXhODLBWXipmLCR'} )
+$BTN_DownloadWindowsXPRUS = New-Object System.Windows.Forms.Button
+$BTN_DownloadWindowsXPRUS.Text = 'Windows XP (RUS)'
+$BTN_DownloadWindowsXPRUS.Location = $BTN_DownloadWindowsXPENG.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadWindowsXPRUS.Height = $BTN_HEIGHT
+$BTN_DownloadWindowsXPRUS.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindowsXPRUS.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindowsXPRUS, 'Download Windows XP SP3 (RUS) + Office 2010 SP2 (RUS) [v17.5.6] ISO image')
+$BTN_DownloadWindowsXPRUS.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1mgs56mX2-dQMk9e5KaXhODLBWXipmLCR'} )
 
-$LabelDownloadWindowsXPRUS = New-Object System.Windows.Forms.Label
-$LabelDownloadWindowsXPRUS.Text = $_TEXT_OPENS_IN_BROWSER
-$LabelDownloadWindowsXPRUS.Location = $ButtonDownloadWindowsXPRUS.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_LABEL_SHIFT_BROWSER
-$LabelDownloadWindowsXPRUS.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$LBL_DownloadWindowsXPRUS = New-Object System.Windows.Forms.Label
+$LBL_DownloadWindowsXPRUS.Text = $TXT_OPENS_IN_BROWSER
+$LBL_DownloadWindowsXPRUS.Location = $BTN_DownloadWindowsXPRUS.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_DownloadWindowsXPRUS.Size = $CBOX_SIZE_DOWNLOAD
 
-$ButtonDownloadWindowsPE = New-Object System.Windows.Forms.Button
-$ButtonDownloadWindowsPE.Text = 'Windows PE'
-$ButtonDownloadWindowsPEToolTipText = 'Download Windows PE (Live CD) ISO image'
-$ButtonDownloadWindowsPE.Location = $ButtonDownloadWindowsXPRUS.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadWindowsPE.Height = $_BUTTON_HEIGHT
-$ButtonDownloadWindowsPE.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadWindowsPE.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadWindowsPE, $ButtonDownloadWindowsPEToolTipText)
-$ButtonDownloadWindowsPE.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'} )
+$BTN_DownloadWindowsPE = New-Object System.Windows.Forms.Button
+$BTN_DownloadWindowsPE.Text = 'Windows PE'
+$BTN_DownloadWindowsPE.Location = $BTN_DownloadWindowsXPRUS.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadWindowsPE.Height = $BTN_HEIGHT
+$BTN_DownloadWindowsPE.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindowsPE.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindowsPE, 'Download Windows PE (Live CD) ISO image')
+$BTN_DownloadWindowsPE.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'} )
 
-$LabelDownloadWindowsPE = New-Object System.Windows.Forms.Label
-$LabelDownloadWindowsPE.Text = $_TEXT_OPENS_IN_BROWSER
-$LabelDownloadWindowsPE.Location = $ButtonDownloadWindowsPE.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_LABEL_SHIFT_BROWSER
-$LabelDownloadWindowsPE.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$LBL_DownloadWindowsPE = New-Object System.Windows.Forms.Label
+$LBL_DownloadWindowsPE.Text = $TXT_OPENS_IN_BROWSER
+$LBL_DownloadWindowsPE.Location = $BTN_DownloadWindowsPE.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_DownloadWindowsPE.Size = $CBOX_SIZE_DOWNLOAD
 
-$_TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GroupDownloadsWindows))
-$GroupDownloadsWindows.Controls.AddRange(@(
-        $ButtonDownloadWindows10, $LabelDownloadWindows10, $ButtonDownloadWindows8, $LabelDownloadWindows8, $ButtonDownloadWindows7, $LabelDownloadWindows7,
-        $ButtonDownloadWindowsXPENG, $LabelDownloadWindowsXPENG, $ButtonDownloadWindowsXPRUS, $LabelDownloadWindowsXPRUS, $ButtonDownloadWindowsPE, $LabelDownloadWindowsPE
+$TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GRP_DownloadsWindows))
+$GRP_DownloadsWindows.Controls.AddRange(@(
+        $BTN_DownloadWindows10, $LBL_DownloadWindows10, $BTN_DownloadWindows8, $LBL_DownloadWindows8, $BTN_DownloadWindows7, $LBL_DownloadWindows7,
+        $BTN_DownloadWindowsXPENG, $LBL_DownloadWindowsXPENG, $BTN_DownloadWindowsXPRUS, $LBL_DownloadWindowsXPRUS, $BTN_DownloadWindowsPE, $LBL_DownloadWindowsPE
     ))

@@ -1,4 +1,4 @@
-$_TAB_HOME = New-Object System.Windows.Forms.TabPage
-$_TAB_HOME.Text = 'Home'
-$_TAB_HOME.UseVisualStyleBackColor = $True
-$_TAB_CONTROL.Controls.Add($_TAB_HOME)
+$TAB_HOME = New-Object System.Windows.Forms.TabPage
+$TAB_HOME.Text = 'Home'
+$TAB_HOME.UseVisualStyleBackColor = $True
+$TAB_CONTROL.Controls.Add($TAB_HOME)

@@ -1,76 +1,72 @@
-$GroupEssentials = New-Object System.Windows.Forms.GroupBox
-$GroupEssentials.Text = 'Essentials'
-$GroupEssentials.Height = $_INTERVAL_NORMAL + ($_BUTTON_INTERVAL_NORMAL + $_CHECK_BOX_INTERVAL_SHORT) * 3 + $_INTERVAL_NORMAL
-$GroupEssentials.Width = $GroupNinite.Width
-$GroupEssentials.Location = $GroupNinite.Location + "$($GroupNinite.Width + $_INTERVAL_NORMAL), 0"
+$GRP_Essentials = New-Object System.Windows.Forms.GroupBox
+$GRP_Essentials.Text = 'Essentials'
+$GRP_Essentials.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 3 + $INT_NORMAL
+$GRP_Essentials.Width = $GRP_Ninite.Width
+$GRP_Essentials.Location = $GRP_Ninite.Location + "$($GRP_Ninite.Width + $INT_NORMAL), 0"
 
 
-$ButtonDownloadUnchecky = New-Object System.Windows.Forms.Button
-$ButtonDownloadUnchecky.Text = 'Unchecky'
-$ButtonDownloadUncheckyToolTipText = "Download Unchecky installer`rUnchecky clears adware checkboxes when installing software"
-$ButtonDownloadUnchecky.Location = "$_INTERVAL_NORMAL, $_INTERVAL_GROUP_TOP"
-$ButtonDownloadUnchecky.Height = $_BUTTON_HEIGHT
-$ButtonDownloadUnchecky.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadUnchecky.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadUnchecky, $ButtonDownloadUncheckyToolTipText)
-$ButtonDownloadUnchecky.Add_Click( {
-        DownloadFile 'unchecky.com/files/unchecky_setup.exe' `
-            -Execute $CheckBoxExecuteUnchecky.Checked `
-            -Switches $(if ($CheckBoxExecuteUnchecky.Checked -and $CheckBoxSilentlyInstallUnchecky.Checked) {'-install -no_desktop_icon'})
+$BTN_DownloadUnchecky = New-Object System.Windows.Forms.Button
+$BTN_DownloadUnchecky.Text = 'Unchecky'
+$BTN_DownloadUnchecky.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_DownloadUnchecky.Height = $BTN_HEIGHT
+$BTN_DownloadUnchecky.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadUnchecky.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadUnchecky, "Download Unchecky installer`rUnchecky clears adware checkboxes when installing software")
+$BTN_DownloadUnchecky.Add_Click( {
+        DownloadFile 'unchecky.com/files/unchecky_setup.exe' -Execute $CBOX_ExecuteUnchecky.Checked `
+            -Switches $(if ($CBOX_ExecuteUnchecky.Checked -and $CBOX_SilentlyInstallUnchecky.Checked) {'-install -no_desktop_icon'})
     } )
 
-$CheckBoxExecuteUnchecky = New-Object System.Windows.Forms.CheckBox
-$CheckBoxExecuteUnchecky.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxExecuteUnchecky.Location = $ButtonDownloadUnchecky.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxExecuteUnchecky, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxExecuteUnchecky.Add_CheckStateChanged( {$CheckBoxSilentlyInstallUnchecky.Enabled = $CheckBoxExecuteUnchecky.Checked} )
-$CheckBoxExecuteUnchecky.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CBOX_ExecuteUnchecky = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteUnchecky.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteUnchecky.Location = $BTN_DownloadUnchecky.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteUnchecky, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteUnchecky.Add_CheckStateChanged( {$CBOX_SilentlyInstallUnchecky.Enabled = $CBOX_ExecuteUnchecky.Checked} )
+$CBOX_ExecuteUnchecky.Size = $CBOX_SIZE_DOWNLOAD
 
-$CheckBoxSilentlyInstallUnchecky = New-Object System.Windows.Forms.CheckBox
-$CheckBoxSilentlyInstallUnchecky.Text = $_TEXT_INSTALL_SILENTLY
-$CheckBoxSilentlyInstallUnchecky.Enabled = $False
-$CheckBoxSilentlyInstallUnchecky.Location = $CheckBoxExecuteUnchecky.Location + "0, $_CHECK_BOX_HEIGHT"
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxSilentlyInstallUnchecky, $_TOOLTIP_INSTALL_SILENTLY)
-$CheckBoxSilentlyInstallUnchecky.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CBOX_SilentlyInstallUnchecky = New-Object System.Windows.Forms.CheckBox
+$CBOX_SilentlyInstallUnchecky.Text = $TXT_INSTALL_SILENTLY
+$CBOX_SilentlyInstallUnchecky.Enabled = $False
+$CBOX_SilentlyInstallUnchecky.Location = $CBOX_ExecuteUnchecky.Location + "0, $CBOX_HEIGHT"
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_SilentlyInstallUnchecky, $TIP_INSTALL_SILENTLY)
+$CBOX_SilentlyInstallUnchecky.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$ButtonDownloadOffice = New-Object System.Windows.Forms.Button
-$ButtonDownloadOffice.Text = 'Office 2013 - 2019'
-$ButtonDownloadOfficeToolTipText = "Download Microsoft Office 2013 - 2019 installer and activator`n`n$_AV_WARNING_MESSAGE"
-$ButtonDownloadOffice.Location = $ButtonDownloadUnchecky.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL + $_BUTTON_SHIFT_VERTICAL_NORMAL
-$ButtonDownloadOffice.Height = $_BUTTON_HEIGHT
-$ButtonDownloadOffice.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadOffice.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadOffice, $ButtonDownloadOfficeToolTipText)
-$ButtonDownloadOffice.Add_Click( {
-        Write-Log $_WRN $_AV_WARNING_MESSAGE
-        DownloadFile 'qiiwexc.github.io/d/Office_2013-2019.zip' -Execute $CheckBoxOfficeExecute.Checked
+$BTN_DownloadOffice = New-Object System.Windows.Forms.Button
+$BTN_DownloadOffice.Text = 'Office 2013 - 2019'
+$BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $BTN_SHIFT_VER_NORMAL + $BTN_SHIFT_VER_NORMAL
+$BTN_DownloadOffice.Height = $BTN_HEIGHT
+$BTN_DownloadOffice.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadOffice.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadOffice, "Download Microsoft Office 2013 - 2019 installer and activator`n`n$TXT_AV_WARNING")
+$BTN_DownloadOffice.Add_Click( {
+        Write-Log $WRN $TXT_AV_WARNING
+        DownloadFile 'qiiwexc.github.io/d/Office_2013-2019.zip' -Execute $CBOX_OfficeExecute.Checked
     } )
 
-$CheckBoxOfficeExecute = New-Object System.Windows.Forms.CheckBox
-$CheckBoxOfficeExecute.Text = $_TEXT_EXECUTE_AFTER_DOWNLOAD
-$CheckBoxOfficeExecute.Location = $ButtonDownloadOffice.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_CHECK_BOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBoxOfficeExecute, $_TOOLTIP_EXECUTE_AFTER_DOWNLOAD)
-$CheckBoxOfficeExecute.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$CBOX_OfficeExecute = New-Object System.Windows.Forms.CheckBox
+$CBOX_OfficeExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_OfficeExecute.Location = $BTN_DownloadOffice.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_OfficeExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_OfficeExecute.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$ButtonDownloadChrome = New-Object System.Windows.Forms.Button
-$ButtonDownloadChrome.Text = 'Chrome Beta'
-$ButtonDownloadChromeToolTipText = 'Download Google Chrome Beta installer'
-$ButtonDownloadChrome.Location = $ButtonDownloadOffice.Location + $_BUTTON_SHIFT_VERTICAL_NORMAL + $_CHECK_BOX_SHIFT_VERTICAL_SHORT
-$ButtonDownloadChrome.Height = $_BUTTON_HEIGHT
-$ButtonDownloadChrome.Width = $_BUTTON_WIDTH_NORMAL
-$ButtonDownloadChrome.Font = $_BUTTON_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($ButtonDownloadChrome, $ButtonDownloadChromeToolTipText)
-$ButtonDownloadChrome.Add_Click( {OpenInBrowser 'google.com/chrome/beta'} )
+$BTN_DownloadChrome = New-Object System.Windows.Forms.Button
+$BTN_DownloadChrome.Text = 'Chrome Beta'
+$BTN_DownloadChrome.Location = $BTN_DownloadOffice.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadChrome.Height = $BTN_HEIGHT
+$BTN_DownloadChrome.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadChrome.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChrome, 'Download Google Chrome Beta installer')
+$BTN_DownloadChrome.Add_Click( {OpenInBrowser 'google.com/chrome/beta'} )
 
-$LabelDownloadChrome = New-Object System.Windows.Forms.Label
-$LabelDownloadChrome.Text = $_TEXT_OPENS_IN_BROWSER
-$LabelDownloadChrome.Location = $ButtonDownloadChrome.Location + $_BUTTON_SHIFT_VERTICAL_SHORT + $_LABEL_SHIFT_BROWSER
-$LabelDownloadChrome.Size = $_CHECK_BOX_SIZE_DOWNLOAD
+$LBL_DownloadChrome = New-Object System.Windows.Forms.Label
+$LBL_DownloadChrome.Text = $TXT_OPENS_IN_BROWSER
+$LBL_DownloadChrome.Location = $BTN_DownloadChrome.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_DownloadChrome.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$_TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GroupEssentials))
-$GroupEssentials.Controls.AddRange(@($ButtonDownloadUnchecky, $CheckBoxExecuteUnchecky, $CheckBoxSilentlyInstallUnchecky,
-        $ButtonDownloadOffice, $CheckBoxOfficeExecute, $ButtonDownloadChrome, $LabelDownloadChrome
-    ))
+$TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GRP_Essentials))
+$GRP_Essentials.Controls.AddRange(
+    @($BTN_DownloadUnchecky, $CBOX_ExecuteUnchecky, $CBOX_SilentlyInstallUnchecky, $BTN_DownloadOffice, $CBOX_OfficeExecute, $BTN_DownloadChrome, $LBL_DownloadChrome)
+)
