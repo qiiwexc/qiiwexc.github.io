@@ -16,8 +16,8 @@ function Startup {
 
     $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_SecurityScanQuick.Enabled = Test-Path $DefenderExe
-    $BTN_SecurityScanFull.Enabled = $BTN_SecurityScanQuick.Enabled
+    $BTN_QuickSecurityScan.Enabled = Test-Path $DefenderExe
+    $BTN_FullSecurityScan.Enabled = $BTN_QuickSecurityScan.Enabled
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
 }
@@ -25,7 +25,7 @@ function Startup {
 
 function Elevate {
     if (-not $IS_ELEVATED) {
-        Start-Process -Verb RunAs -FilePath 'powershell' -ArgumentList $MyInvocation.ScriptName
+        Start-Process 'powershell' $MyInvocation.ScriptName -Verb RunAs
         ExitScript
     }
 }

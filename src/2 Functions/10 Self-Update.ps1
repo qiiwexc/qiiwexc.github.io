@@ -2,7 +2,7 @@ function CheckForUpdates {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $INF 'Checking for updates...'
 
-    try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString() -Replace "`n", ''}
+    try {$LatestVersion = (Invoke-WebRequest $VersionURL).ToString() -Replace "`n", ''}
     catch [Exception] {
         Write-Log $ERR "Failed to check for update: $($_.Exception.Message)"
         return
@@ -24,7 +24,7 @@ function DownloadUpdate {
 
     Write-Log $WRN 'Downloading new version...'
 
-    try {Invoke-WebRequest -Uri $DownloadURL -OutFile $TargetFile}
+    try {Invoke-WebRequest $DownloadURL -OutFile $TargetFile}
     catch [Exception] {
         Write-Log $ERR "Failed to download update: $($_.Exception.Message)"
         return
@@ -32,7 +32,7 @@ function DownloadUpdate {
 
     Write-Log $WRN 'Restarting...'
 
-    try {Start-Process -FilePath 'powershell' -ArgumentList $TargetFile}
+    try {Start-Process 'powershell' $TargetFile}
     catch [Exception] {
         Write-Log $ERR "Failed to start new version: $($_.Exception.Message)"
         return

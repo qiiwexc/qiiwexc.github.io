@@ -1,9 +1,9 @@
-$GRP_HomeOptimization = New-Object System.Windows.Forms.GroupBox
-$GRP_HomeOptimization.Text = 'Optimization'
-$GRP_HomeOptimization.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
-$GRP_HomeOptimization.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
-$GRP_HomeOptimization.Location = $GRP_HomeDiagnostics.Location + "$($GRP_HomeDiagnostics.Width + $INT_NORMAL), 0"
-$TAB_HOME.Controls.Add($GRP_HomeOptimization)
+$GRP_Optimization = New-Object System.Windows.Forms.GroupBox
+$GRP_Optimization.Text = 'Optimization'
+$GRP_Optimization.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
+$GRP_Optimization.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_Optimization.Location = $GRP_Diagnostics.Location + "$($GRP_Diagnostics.Width + $INT_NORMAL), 0"
+$TAB_HOME.Controls.Add($GRP_Optimization)
 
 
 $BTN_CloudFlareDNS = New-Object System.Windows.Forms.Button
@@ -26,14 +26,24 @@ $BTN_RunCCleaner.Font = $BTN_FONT
 $BTN_RunCCleaner.Add_Click( {RunCCleaner} )
 
 
+$BTN_DeleteRestorePoints = New-Object System.Windows.Forms.Button
+$BTN_DeleteRestorePoints.Text = 'Delete all restore points'
+$BTN_DeleteRestorePoints.Height = $BTN_HEIGHT
+$BTN_DeleteRestorePoints.Width = $BTN_WIDTH_NORMAL
+$BTN_DeleteRestorePoints.Location = $BTN_RunCCleaner.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_DeleteRestorePoints.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DeleteRestorePoints, 'Delete all restore points (shadow copies)')
+$BTN_DeleteRestorePoints.Add_Click( {DeleteRestorePoints} )
+
+
 $BTN_OptimizeDrive = New-Object System.Windows.Forms.Button
 $BTN_OptimizeDrive.Text = 'Optimize / defrag drive'
 $BTN_OptimizeDrive.Height = $BTN_HEIGHT
 $BTN_OptimizeDrive.Width = $BTN_WIDTH_NORMAL
-$BTN_OptimizeDrive.Location = $BTN_RunCCleaner.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_OptimizeDrive.Location = $BTN_DeleteRestorePoints.Location + $BTN_SHIFT_VER_NORMAL
 $BTN_OptimizeDrive.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
 $BTN_OptimizeDrive.Add_Click( {OptimizeDrive} )
 
 
-$GRP_HomeOptimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_RunCCleaner, $BTN_OptimizeDrive))
+$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_RunCCleaner, $BTN_DeleteRestorePoints, $BTN_OptimizeDrive))

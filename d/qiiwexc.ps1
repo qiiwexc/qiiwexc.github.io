@@ -1,4 +1,4 @@
-$VERSION = '19.3.21'
+$VERSION = '19.3.22'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -51,18 +51,18 @@ $BTN_HEIGHT = 28
 $BTN_WIDTH_NORMAL = 160
 $BTN_INT_SHORT = $BTN_HEIGHT + $INT_SHORT
 $BTN_INT_NORMAL = $BTN_HEIGHT + $INT_NORMAL
-$BTN_SHIFT_VER_SHORT = "0, $BTN_INT_SHORT"
 $BTN_SHIFT_HOR_SHORT = "$BTN_INT_SHORT, 0"
-$BTN_SHIFT_VER_NORMAL = "0, $BTN_INT_NORMAL"
 $BTN_SHIFT_HOR_NORMAL = "$BTN_INT_NORMAL, 0"
+$BTN_SHIFT_VER_SHORT = "0, $BTN_INT_SHORT"
+$BTN_SHIFT_VER_NORMAL = "0, $BTN_INT_NORMAL"
 
 $CBOX_HEIGHT = 20
 $CBOX_INT_SHORT = $CBOX_HEIGHT + $INT_SHORT
 $CBOX_INT_NORMAL = $CBOX_HEIGHT + $INT_NORMAL
-$CBOX_SHIFT_VER_SHORT = "0, $CBOX_INT_SHORT"
 $CBOX_SHIFT_HOR_SHORT = "$CBOX_INT_SHORT, 0"
-$CBOX_SHIFT_VER_NORMAL = "0, $CBOX_INT_NORMAL"
 $CBOX_SHIFT_HOR_NORMAL = "$CBOX_INT_NORMAL, 0"
+$CBOX_SHIFT_VER_SHORT = "0, $CBOX_INT_SHORT"
+$CBOX_SHIFT_VER_NORMAL = "0, $CBOX_INT_NORMAL"
 
 $INF = 'INF'
 $WRN = 'WRN'
@@ -108,12 +108,12 @@ $TAB_CONTROL.Controls.Add($TAB_HOME)
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - This Utility #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$GRP_HomeThisUtility = New-Object System.Windows.Forms.GroupBox
-$GRP_HomeThisUtility.Text = 'This utility'
-$GRP_HomeThisUtility.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
-$GRP_HomeThisUtility.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
-$GRP_HomeThisUtility.Location = "$INT_NORMAL, $INT_NORMAL"
-$TAB_HOME.Controls.Add($GRP_HomeThisUtility)
+$GRP_ThisUtility = New-Object System.Windows.Forms.GroupBox
+$GRP_ThisUtility.Text = 'This utility'
+$GRP_ThisUtility.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
+$GRP_ThisUtility.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_ThisUtility.Location = "$INT_NORMAL, $INT_NORMAL"
+$TAB_HOME.Controls.Add($GRP_ThisUtility)
 
 
 $BTN_Elevate = New-Object System.Windows.Forms.Button
@@ -146,17 +146,17 @@ $BTN_SystemInformation.Font = $BTN_FONT
 $BTN_SystemInformation.Add_Click( {PrintSystemInformation} )
 
 
-$GRP_HomeThisUtility.Controls.AddRange(@($BTN_Elevate, $BTN_BrowserHome, $BTN_SystemInformation))
+$GRP_ThisUtility.Controls.AddRange(@($BTN_Elevate, $BTN_BrowserHome, $BTN_SystemInformation))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$GRP_HomeUpdate = New-Object System.Windows.Forms.GroupBox
-$GRP_HomeUpdate.Text = 'Updates'
-$GRP_HomeUpdate.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 2
-$GRP_HomeUpdate.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
-$GRP_HomeUpdate.Location = $GRP_HomeThisUtility.Location + "0, $($GRP_HomeThisUtility.Height + $INT_NORMAL)"
-$TAB_HOME.Controls.Add($GRP_HomeUpdate)
+$GRP_Updates = New-Object System.Windows.Forms.GroupBox
+$GRP_Updates.Text = 'Updates'
+$GRP_Updates.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 2
+$GRP_Updates.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_Updates.Location = $GRP_ThisUtility.Location + "0, $($GRP_ThisUtility.Height + $INT_NORMAL)"
+$TAB_HOME.Controls.Add($GRP_Updates)
 
 
 $BTN_GoogleUpdate = New-Object System.Windows.Forms.Button
@@ -179,17 +179,17 @@ $BTN_UpdateStoreApps.Font = $BTN_FONT
 $BTN_UpdateStoreApps.Add_Click( {UpdateStoreApps} )
 
 
-$GRP_HomeUpdate.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps))
+$GRP_Updates.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - Diagnostics #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$GRP_HomeDiagnostics = New-Object System.Windows.Forms.GroupBox
-$GRP_HomeDiagnostics.Text = 'Diagnostics'
-$GRP_HomeDiagnostics.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 4 - $INT_SHORT * 2
-$GRP_HomeDiagnostics.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
-$GRP_HomeDiagnostics.Location = $GRP_HomeThisUtility.Location + "$($GRP_HomeThisUtility.Width + $INT_NORMAL), 0"
-$TAB_HOME.Controls.Add($GRP_HomeDiagnostics)
+$GRP_Diagnostics = New-Object System.Windows.Forms.GroupBox
+$GRP_Diagnostics.Text = 'Diagnostics'
+$GRP_Diagnostics.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 4 - $INT_SHORT * 2
+$GRP_Diagnostics.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_Diagnostics.Location = $GRP_ThisUtility.Location + "$($GRP_ThisUtility.Width + $INT_NORMAL), 0"
+$TAB_HOME.Controls.Add($GRP_Diagnostics)
 
 
 $BTN_CheckDrive = New-Object System.Windows.Forms.Button
@@ -212,36 +212,36 @@ $BTN_CheckMemory.Font = $BTN_FONT
 $BTN_CheckMemory.Add_Click( {CheckMemory} )
 
 
-$BTN_SecurityScanQuick = New-Object System.Windows.Forms.Button
-$BTN_SecurityScanQuick.Text = 'Quick security scan'
-$BTN_SecurityScanQuick.Height = $BTN_HEIGHT
-$BTN_SecurityScanQuick.Width = $BTN_WIDTH_NORMAL
-$BTN_SecurityScanQuick.Location = $BTN_CheckMemory.Location + $BTN_SHIFT_VER_NORMAL
-$BTN_SecurityScanQuick.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_SecurityScanQuick, 'Perform a quick security scan')
-$BTN_SecurityScanQuick.Add_Click( {StartSecurityScan 'quick'} )
+$BTN_QuickSecurityScan = New-Object System.Windows.Forms.Button
+$BTN_QuickSecurityScan.Text = 'Quick security scan'
+$BTN_QuickSecurityScan.Height = $BTN_HEIGHT
+$BTN_QuickSecurityScan.Width = $BTN_WIDTH_NORMAL
+$BTN_QuickSecurityScan.Location = $BTN_CheckMemory.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_QuickSecurityScan.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_QuickSecurityScan, 'Perform a quick security scan')
+$BTN_QuickSecurityScan.Add_Click( {StartSecurityScan 'quick'} )
 
-$BTN_SecurityScanFull = New-Object System.Windows.Forms.Button
-$BTN_SecurityScanFull.Text = 'Full security scan'
-$BTN_SecurityScanFull.Height = $BTN_HEIGHT
-$BTN_SecurityScanFull.Width = $BTN_WIDTH_NORMAL
-$BTN_SecurityScanFull.Location = $BTN_SecurityScanQuick.Location + $BTN_SHIFT_VER_SHORT
-$BTN_SecurityScanFull.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_SecurityScanFull, 'Perform a full security scan')
-$BTN_SecurityScanFull.Add_Click( {StartSecurityScan 'full'} )
+$BTN_FullSecurityScan = New-Object System.Windows.Forms.Button
+$BTN_FullSecurityScan.Text = 'Full security scan'
+$BTN_FullSecurityScan.Height = $BTN_HEIGHT
+$BTN_FullSecurityScan.Width = $BTN_WIDTH_NORMAL
+$BTN_FullSecurityScan.Location = $BTN_QuickSecurityScan.Location + $BTN_SHIFT_VER_SHORT
+$BTN_FullSecurityScan.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_FullSecurityScan, 'Perform a full security scan')
+$BTN_FullSecurityScan.Add_Click( {StartSecurityScan 'full'} )
 
 
-$GRP_HomeDiagnostics.Controls.AddRange(@($BTN_CheckDrive, $BTN_CheckMemory, $BTN_SecurityScanQuick, $BTN_SecurityScanFull))
+$GRP_Diagnostics.Controls.AddRange(@($BTN_CheckDrive, $BTN_CheckMemory, $BTN_QuickSecurityScan, $BTN_FullSecurityScan))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$GRP_HomeOptimization = New-Object System.Windows.Forms.GroupBox
-$GRP_HomeOptimization.Text = 'Optimization'
-$GRP_HomeOptimization.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
-$GRP_HomeOptimization.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
-$GRP_HomeOptimization.Location = $GRP_HomeDiagnostics.Location + "$($GRP_HomeDiagnostics.Width + $INT_NORMAL), 0"
-$TAB_HOME.Controls.Add($GRP_HomeOptimization)
+$GRP_Optimization = New-Object System.Windows.Forms.GroupBox
+$GRP_Optimization.Text = 'Optimization'
+$GRP_Optimization.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
+$GRP_Optimization.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_Optimization.Location = $GRP_Diagnostics.Location + "$($GRP_Diagnostics.Width + $INT_NORMAL), 0"
+$TAB_HOME.Controls.Add($GRP_Optimization)
 
 
 $BTN_CloudFlareDNS = New-Object System.Windows.Forms.Button
@@ -264,36 +264,49 @@ $BTN_RunCCleaner.Font = $BTN_FONT
 $BTN_RunCCleaner.Add_Click( {RunCCleaner} )
 
 
+$BTN_DeleteRestorePoints = New-Object System.Windows.Forms.Button
+$BTN_DeleteRestorePoints.Text = 'Delete all restore points'
+$BTN_DeleteRestorePoints.Height = $BTN_HEIGHT
+$BTN_DeleteRestorePoints.Width = $BTN_WIDTH_NORMAL
+$BTN_DeleteRestorePoints.Location = $BTN_RunCCleaner.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_DeleteRestorePoints.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DeleteRestorePoints, 'Delete all restore points (shadow copies)')
+$BTN_DeleteRestorePoints.Add_Click( {DeleteRestorePoints} )
+
+
 $BTN_OptimizeDrive = New-Object System.Windows.Forms.Button
 $BTN_OptimizeDrive.Text = 'Optimize / defrag drive'
 $BTN_OptimizeDrive.Height = $BTN_HEIGHT
 $BTN_OptimizeDrive.Width = $BTN_WIDTH_NORMAL
-$BTN_OptimizeDrive.Location = $BTN_RunCCleaner.Location + $BTN_SHIFT_VER_NORMAL
+$BTN_OptimizeDrive.Location = $BTN_DeleteRestorePoints.Location + $BTN_SHIFT_VER_NORMAL
 $BTN_OptimizeDrive.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
 $BTN_OptimizeDrive.Add_Click( {OptimizeDrive} )
 
 
-$GRP_HomeOptimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_RunCCleaner, $BTN_OptimizeDrive))
+$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_RunCCleaner, $BTN_DeleteRestorePoints, $BTN_OptimizeDrive))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads (Installers) #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$TAB_DOWNLOADS_INSTALLERS = New-Object System.Windows.Forms.TabPage
-$TAB_DOWNLOADS_INSTALLERS.Text = 'Downloads: Installers'
-$TAB_DOWNLOADS_INSTALLERS.UseVisualStyleBackColor = $True
-$TAB_CONTROL.Controls.Add($TAB_DOWNLOADS_INSTALLERS)
+$TAB_INSTALLERS = New-Object System.Windows.Forms.TabPage
+$TAB_INSTALLERS.Text = 'Downloads: Installers'
+$TAB_INSTALLERS.UseVisualStyleBackColor = $True
+$TAB_CONTROL.Controls.Add($TAB_INSTALLERS)
 
 
 $CBOX_WIDTH_DOWNLOAD = 145
 $CBOX_SIZE_DOWNLOAD = "$($CBOX_WIDTH_DOWNLOAD), $($CBOX_HEIGHT)"
 $CBOX_SHIFT_EXECUTE = '12, -5'
+
 $LBL_SHIFT_BROWSER = '22, -3'
+
 
 $TXT_AV_WARNING = "!! THIS FILE MAY TRIGGER ANTI-VIRUS FALSE POSITIVE !!`n!! IT IS RECOMMENDED TO DISABLE A/V SOFTWARE FOR DOWNLOAD AND SUBESEQUENT USE OF THIS FILE !!"
 $TXT_EXECUTE_AFTER_DOWNLOAD = 'Execute after download'
-$TXT_OPENS_IN_BROWSER = 'Opens in the browser'
 $TXT_INSTALL_SILENTLY = 'Install silently'
+$TXT_OPENS_IN_BROWSER = 'Opens in the browser'
+
 $TIP_EXECUTE_AFTER_DOWNLOAD = "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
 $TIP_INSTALL_SILENTLY = 'Perform silent installation with no prompts'
 
@@ -305,108 +318,108 @@ $GRP_Ninite.Text = 'Ninite'
 $GRP_Ninite.Height = $INT_NORMAL + $CBOX_INT_SHORT * 10 + $BTN_INT_NORMAL * 2
 $GRP_Ninite.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
 $GRP_Ninite.Location = "$INT_NORMAL, $INT_NORMAL"
+$TAB_INSTALLERS.Controls.Add($GRP_Ninite)
 
 
-$CBOX_NiniteChrome = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteChrome.Text = "Google Chrome"
-$CBOX_NiniteChrome.Name = "chrome"
-$CBOX_NiniteChrome.Location = "$INT_NORMAL, $INT_GROUP_TOP"
-$CBOX_NiniteChrome.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteChrome.Checked = $True
-$CBOX_NiniteChrome.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_Chrome = New-Object System.Windows.Forms.CheckBox
+$CBOX_Chrome.Text = "Google Chrome"
+$CBOX_Chrome.Name = "chrome"
+$CBOX_Chrome.Checked = $True
+$CBOX_Chrome.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$CBOX_Chrome.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_Chrome.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_Ninite7zip = New-Object System.Windows.Forms.CheckBox
-$CBOX_Ninite7zip.Text = "7-Zip"
-$CBOX_Ninite7zip.Name = "7zip"
-$CBOX_Ninite7zip.Location = $CBOX_NiniteChrome.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_Ninite7zip.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_Ninite7zip.Checked = $True
-$CBOX_Ninite7zip.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_7zip = New-Object System.Windows.Forms.CheckBox
+$CBOX_7zip.Text = "7-Zip"
+$CBOX_7zip.Name = "7zip"
+$CBOX_7zip.Checked = $True
+$CBOX_7zip.Location = $CBOX_Chrome.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_7zip.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_7zip.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteVLC = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteVLC.Text = "VLC"
-$CBOX_NiniteVLC.Name = "vlc"
-$CBOX_NiniteVLC.Location = $CBOX_Ninite7zip.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteVLC.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteVLC.Checked = $True
-$CBOX_NiniteVLC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_VLC = New-Object System.Windows.Forms.CheckBox
+$CBOX_VLC.Text = "VLC"
+$CBOX_VLC.Name = "vlc"
+$CBOX_VLC.Checked = $True
+$CBOX_VLC.Location = $CBOX_7zip.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_VLC.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_VLC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteTeamViewer = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteTeamViewer.Text = "TeamViewer"
-$CBOX_NiniteTeamViewer.Name = "teamviewer14"
-$CBOX_NiniteTeamViewer.Location = $CBOX_NiniteVLC.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteTeamViewer.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteTeamViewer.Checked = $True
-$CBOX_NiniteTeamViewer.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_TeamViewer = New-Object System.Windows.Forms.CheckBox
+$CBOX_TeamViewer.Text = "TeamViewer"
+$CBOX_TeamViewer.Name = "teamviewer14"
+$CBOX_TeamViewer.Checked = $True
+$CBOX_TeamViewer.Location = $CBOX_VLC.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_TeamViewer.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_TeamViewer.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteSkype = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteSkype.Text = "Skype"
-$CBOX_NiniteSkype.Name = "skype"
-$CBOX_NiniteSkype.Location = $CBOX_NiniteTeamViewer.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteSkype.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteSkype.Checked = $True
-$CBOX_NiniteSkype.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_Skype = New-Object System.Windows.Forms.CheckBox
+$CBOX_Skype.Text = "Skype"
+$CBOX_Skype.Name = "skype"
+$CBOX_Skype.Checked = $True
+$CBOX_Skype.Location = $CBOX_TeamViewer.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_Skype.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_Skype.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteqBittorrent = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteqBittorrent.Text = "qBittorrent"
-$CBOX_NiniteqBittorrent.Name = "qbittorrent"
-$CBOX_NiniteqBittorrent.Location = $CBOX_NiniteSkype.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteqBittorrent.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteqBittorrent.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_qBittorrent = New-Object System.Windows.Forms.CheckBox
+$CBOX_qBittorrent.Text = "qBittorrent"
+$CBOX_qBittorrent.Name = "qbittorrent"
+$CBOX_qBittorrent.Location = $CBOX_Skype.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_qBittorrent.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_qBittorrent.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteGoogleDrive = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteGoogleDrive.Text = "Google Drive"
-$CBOX_NiniteGoogleDrive.Name = "googlebackupandsync"
-$CBOX_NiniteGoogleDrive.Location = $CBOX_NiniteqBittorrent.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteGoogleDrive.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteGoogleDrive.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_GoogleDrive = New-Object System.Windows.Forms.CheckBox
+$CBOX_GoogleDrive.Text = "Google Drive"
+$CBOX_GoogleDrive.Name = "googlebackupandsync"
+$CBOX_GoogleDrive.Location = $CBOX_qBittorrent.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_GoogleDrive.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_GoogleDrive.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteVSC = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteVSC.Text = "Visual Studio Code"
-$CBOX_NiniteVSC.Name = "vscode"
-$CBOX_NiniteVSC.Location = $CBOX_NiniteGoogleDrive.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteVSC.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteVSC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
-
-
-$BTN_NiniteDownload = New-Object System.Windows.Forms.Button
-$BTN_NiniteDownload.Text = 'Download selected'
-$BTN_NiniteDownload.Location = $CBOX_NiniteVSC.Location + $BTN_SHIFT_VER_SHORT
-$BTN_NiniteDownload.Height = $BTN_HEIGHT
-$BTN_NiniteDownload.Width = $BTN_WIDTH_NORMAL
-$BTN_NiniteDownload.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_NiniteDownload, 'Download Ninite universal installer for selected applications')
-$BTN_NiniteDownload.Add_Click( {DownloadFile "https://ninite.com/$(NiniteQueryBuilder)/ninite.exe" $(NiniteNameBuilder) $CBOX_NiniteExecute.Checked} )
-
-$CBOX_NiniteExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_NiniteExecute.Location = $BTN_NiniteDownload.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_NiniteExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_NiniteExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_VSCode = New-Object System.Windows.Forms.CheckBox
+$CBOX_VSCode.Text = "Visual Studio Code"
+$CBOX_VSCode.Name = "vscode"
+$CBOX_VSCode.Location = $CBOX_GoogleDrive.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_VSCode.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_VSCode.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
 
-$BTN_NiniteOpenInBrowser = New-Object System.Windows.Forms.Button
-$BTN_NiniteOpenInBrowser.Text = 'View other'
-$BTN_NiniteOpenInBrowser.Location = $BTN_NiniteDownload.Location + $CBOX_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
-$BTN_NiniteOpenInBrowser.Height = $BTN_HEIGHT
-$BTN_NiniteOpenInBrowser.Width = $BTN_WIDTH_NORMAL
-$BTN_NiniteOpenInBrowser.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_NiniteOpenInBrowser, 'Open Ninite universal installer web page')
-$BTN_NiniteOpenInBrowser.Add_Click( {
+$BTN_DownloadNinite = New-Object System.Windows.Forms.Button
+$BTN_DownloadNinite.Text = 'Download selected'
+$BTN_DownloadNinite.Height = $BTN_HEIGHT
+$BTN_DownloadNinite.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadNinite.Location = $CBOX_VSCode.Location + $BTN_SHIFT_VER_SHORT
+$BTN_DownloadNinite.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadNinite, 'Download Ninite universal installer for selected applications')
+$BTN_DownloadNinite.Add_Click( {DownloadFile "https://ninite.com/$(NiniteQueryBuilder)/ninite.exe" $(NiniteNameBuilder) $CBOX_ExecuteNinite.Checked} )
+
+$CBOX_ExecuteNinite = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteNinite.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteNinite.Location = $BTN_DownloadNinite.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteNinite, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteNinite.Size = $CBOX_SIZE_DOWNLOAD
+
+
+$BTN_OpenNiniteInBrowser = New-Object System.Windows.Forms.Button
+$BTN_OpenNiniteInBrowser.Text = 'View other'
+$BTN_OpenNiniteInBrowser.Height = $BTN_HEIGHT
+$BTN_OpenNiniteInBrowser.Width = $BTN_WIDTH_NORMAL
+$BTN_OpenNiniteInBrowser.Location = $BTN_DownloadNinite.Location + $CBOX_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
+$BTN_OpenNiniteInBrowser.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OpenNiniteInBrowser, 'Open Ninite universal installer web page')
+$BTN_OpenNiniteInBrowser.Add_Click( {
         $Query = NiniteQueryBuilder
         OpenInBrowser $(if ($Query) {"ninite.com/?select=$($Query)"} else {'ninite.com'})
     } )
 
-$LBL_NiniteOpenInBrowser = New-Object System.Windows.Forms.Label
-$LBL_NiniteOpenInBrowser.Text = $TXT_OPENS_IN_BROWSER
-$LBL_NiniteOpenInBrowser.Location = $BTN_NiniteOpenInBrowser.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
-$LBL_NiniteOpenInBrowser.Size = $CBOX_SIZE_DOWNLOAD
+$LBL_OpenNiniteInBrowser = New-Object System.Windows.Forms.Label
+$LBL_OpenNiniteInBrowser.Text = $TXT_OPENS_IN_BROWSER
+$LBL_OpenNiniteInBrowser.Location = $BTN_OpenNiniteInBrowser.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_OpenNiniteInBrowser.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GRP_Ninite))
 $GRP_Ninite.Controls.AddRange(@(
-        $BTN_NiniteDownload, $BTN_NiniteOpenInBrowser, $CBOX_NiniteExecute, $LBL_NiniteOpenInBrowser, $CBOX_Ninite7zip, $CBOX_NiniteVLC,
-        $CBOX_NiniteTeamViewer, $CBOX_NiniteSkype, $CBOX_NiniteChrome, $CBOX_NiniteqBittorrent, $CBOX_NiniteGoogleDrive, $CBOX_NiniteVSC
+        $BTN_DownloadNinite, $BTN_OpenNiniteInBrowser, $LBL_OpenNiniteInBrowser, $CBOX_ExecuteNinite,
+        $CBOX_7zip, $CBOX_VLC, $CBOX_TeamViewer, $CBOX_Skype, $CBOX_Chrome, $CBOX_qBittorrent, $CBOX_GoogleDrive, $CBOX_VSCode
     ))
 
 
@@ -417,18 +430,19 @@ $GRP_Essentials.Text = 'Essentials'
 $GRP_Essentials.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 3 + $INT_NORMAL
 $GRP_Essentials.Width = $GRP_Ninite.Width
 $GRP_Essentials.Location = $GRP_Ninite.Location + "$($GRP_Ninite.Width + $INT_NORMAL), 0"
+$TAB_INSTALLERS.Controls.Add($GRP_Essentials)
 
 
 $BTN_DownloadUnchecky = New-Object System.Windows.Forms.Button
 $BTN_DownloadUnchecky.Text = 'Unchecky'
-$BTN_DownloadUnchecky.Location = "$INT_NORMAL, $INT_GROUP_TOP"
 $BTN_DownloadUnchecky.Height = $BTN_HEIGHT
 $BTN_DownloadUnchecky.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadUnchecky.Location = "$INT_NORMAL, $INT_GROUP_TOP"
 $BTN_DownloadUnchecky.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadUnchecky, "Download Unchecky installer`rUnchecky clears adware checkboxes when installing software")
 $BTN_DownloadUnchecky.Add_Click( {
-        DownloadFile 'unchecky.com/files/unchecky_setup.exe' -Execute $CBOX_ExecuteUnchecky.Checked `
-            -Switches $(if ($CBOX_ExecuteUnchecky.Checked -and $CBOX_SilentlyInstallUnchecky.Checked) {'-install -no_desktop_icon'})
+        $SilentInstallSwitches = if ($CBOX_ExecuteUnchecky.Checked -and $CBOX_SilentlyInstallUnchecky.Checked) {'-install -no_desktop_icon'}
+        DownloadFile 'unchecky.com/files/unchecky_setup.exe' -Execute $CBOX_ExecuteUnchecky.Checked -Switches $SilentInstallSwitches
     } )
 
 $CBOX_ExecuteUnchecky = New-Object System.Windows.Forms.CheckBox
@@ -448,28 +462,28 @@ $CBOX_SilentlyInstallUnchecky.Size = $CBOX_SIZE_DOWNLOAD
 
 $BTN_DownloadOffice = New-Object System.Windows.Forms.Button
 $BTN_DownloadOffice.Text = 'Office 2013 - 2019'
-$BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $BTN_SHIFT_VER_NORMAL + $BTN_SHIFT_VER_NORMAL
 $BTN_DownloadOffice.Height = $BTN_HEIGHT
 $BTN_DownloadOffice.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $BTN_SHIFT_VER_NORMAL + $BTN_SHIFT_VER_NORMAL
 $BTN_DownloadOffice.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadOffice, "Download Microsoft Office 2013 - 2019 installer and activator`n`n$TXT_AV_WARNING")
 $BTN_DownloadOffice.Add_Click( {
         Write-Log $WRN $TXT_AV_WARNING
-        DownloadFile 'qiiwexc.github.io/d/Office_2013-2019.zip' -Execute $CBOX_OfficeExecute.Checked
+        DownloadFile 'qiiwexc.github.io/d/Office_2013-2019.zip' -Execute $CBOX_ExecuteOffice.Checked
     } )
 
-$CBOX_OfficeExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_OfficeExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_OfficeExecute.Location = $BTN_DownloadOffice.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_OfficeExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_OfficeExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteOffice = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteOffice.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteOffice.Location = $BTN_DownloadOffice.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteOffice, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteOffice.Size = $CBOX_SIZE_DOWNLOAD
 
 
 $BTN_DownloadChrome = New-Object System.Windows.Forms.Button
 $BTN_DownloadChrome.Text = 'Chrome Beta'
-$BTN_DownloadChrome.Location = $BTN_DownloadOffice.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadChrome.Height = $BTN_HEIGHT
 $BTN_DownloadChrome.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadChrome.Location = $BTN_DownloadOffice.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadChrome.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChrome, 'Download Google Chrome Beta installer')
 $BTN_DownloadChrome.Add_Click( {OpenInBrowser 'google.com/chrome/beta'} )
@@ -480,210 +494,209 @@ $LBL_DownloadChrome.Location = $BTN_DownloadChrome.Location + $BTN_SHIFT_VER_SHO
 $LBL_DownloadChrome.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GRP_Essentials))
 $GRP_Essentials.Controls.AddRange(
-    @($BTN_DownloadUnchecky, $CBOX_ExecuteUnchecky, $CBOX_SilentlyInstallUnchecky, $BTN_DownloadOffice, $CBOX_OfficeExecute, $BTN_DownloadChrome, $LBL_DownloadChrome)
+    @($BTN_DownloadUnchecky, $CBOX_ExecuteUnchecky, $CBOX_SilentlyInstallUnchecky, $BTN_DownloadOffice, $CBOX_ExecuteOffice, $BTN_DownloadChrome, $LBL_DownloadChrome)
 )
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Tool Installers #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$GRP_InstallersTools = New-Object System.Windows.Forms.GroupBox
-$GRP_InstallersTools.Text = 'Tools'
-$GRP_InstallersTools.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 4 + $INT_NORMAL
-$GRP_InstallersTools.Width = $GRP_Essentials.Width
-$GRP_InstallersTools.Location = $GRP_Essentials.Location + "$($GRP_Essentials.Width + $INT_NORMAL), 0"
+$GRP_InstallTools = New-Object System.Windows.Forms.GroupBox
+$GRP_InstallTools.Text = 'Tools'
+$GRP_InstallTools.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 4 + $INT_NORMAL
+$GRP_InstallTools.Width = $GRP_Essentials.Width
+$GRP_InstallTools.Location = $GRP_Essentials.Location + "$($GRP_Essentials.Width + $INT_NORMAL), 0"
+$TAB_INSTALLERS.Controls.Add($GRP_InstallTools)
 
 
 $BTN_DownloadCCleaner = New-Object System.Windows.Forms.Button
 $BTN_DownloadCCleaner.Text = 'CCleaner'
-$BTN_DownloadCCleaner.Location = "$INT_NORMAL, $INT_GROUP_TOP"
 $BTN_DownloadCCleaner.Height = $BTN_HEIGHT
 $BTN_DownloadCCleaner.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadCCleaner.Location = "$INT_NORMAL, $INT_GROUP_TOP"
 $BTN_DownloadCCleaner.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
-$BTN_DownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe' -Execute $CBOX_CCleanerExecute.Checked} )
+$BTN_DownloadCCleaner.Add_Click( {DownloadFile 'download.ccleaner.com/ccsetup.exe' -Execute $CBOX_ExecuteCCleaner.Checked} )
 
-$CBOX_CCleanerExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_CCleanerExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_CCleanerExecute.Location = $BTN_DownloadCCleaner.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_CCleanerExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_CCleanerExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteCCleaner = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteCCleaner.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteCCleaner.Location = $BTN_DownloadCCleaner.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteCCleaner, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteCCleaner.Size = $CBOX_SIZE_DOWNLOAD
 
 
 $BTN_DownloadDefraggler = New-Object System.Windows.Forms.Button
 $BTN_DownloadDefraggler.Text = 'Defraggler'
-$BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadDefraggler.Height = $BTN_HEIGHT
 $BTN_DownloadDefraggler.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadDefraggler.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadDefraggler, 'Download Defraggler installer')
-$BTN_DownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe' -Execute $CBOX_DefragglerExecute.Checked} )
+$BTN_DownloadDefraggler.Add_Click( {DownloadFile 'download.ccleaner.com/dfsetup.exe' -Execute $CBOX_ExecuteDefraggler.Checked} )
 
-$CBOX_DefragglerExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_DefragglerExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_DefragglerExecute.Location = $BTN_DownloadDefraggler.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_DefragglerExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_DefragglerExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteDefraggler = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteDefraggler.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteDefraggler.Location = $BTN_DownloadDefraggler.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteDefraggler, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteDefraggler.Size = $CBOX_SIZE_DOWNLOAD
 
 
 $BTN_DownloadRecuva = New-Object System.Windows.Forms.Button
 $BTN_DownloadRecuva.Text = 'Recuva'
-$BTN_DownloadRecuva.Location = $BTN_DownloadDefraggler.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadRecuva.Height = $BTN_HEIGHT
 $BTN_DownloadRecuva.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadRecuva.Location = $BTN_DownloadDefraggler.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadRecuva.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRecuva, "Download Recuva installer`rRecuva helps restore deleted files")
-$BTN_DownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe' -Execute $CBOX_RecuvaExecute.Checked} )
+$BTN_DownloadRecuva.Add_Click( {DownloadFile 'download.ccleaner.com/rcsetup.exe' -Execute $CBOX_ExecuteRecuva.Checked} )
 
-$CBOX_RecuvaExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_RecuvaExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_RecuvaExecute.Location = $BTN_DownloadRecuva.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_RecuvaExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_RecuvaExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteRecuva = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteRecuva.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteRecuva.Location = $BTN_DownloadRecuva.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteRecuva, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteRecuva.Size = $CBOX_SIZE_DOWNLOAD
 
 
 $BTN_DownloadMalwarebytes = New-Object System.Windows.Forms.Button
 $BTN_DownloadMalwarebytes.Text = 'Malwarebytes'
-$BTN_DownloadMalwarebytes.Location = $BTN_DownloadRecuva.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_NORMAL
 $BTN_DownloadMalwarebytes.Height = $BTN_HEIGHT
 $BTN_DownloadMalwarebytes.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadMalwarebytes.Location = $BTN_DownloadRecuva.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_NORMAL
 $BTN_DownloadMalwarebytes.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`rMalwarebytes helps remove malware and adware")
-$BTN_DownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' $CBOX_MalwarebytesExecute.Checked} )
+$BTN_DownloadMalwarebytes.Add_Click( {DownloadFile 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' -Execute $CBOX_ExecuteMalwarebytes.Checked} )
 
-$CBOX_MalwarebytesExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_MalwarebytesExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_MalwarebytesExecute.Location = $BTN_DownloadMalwarebytes.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_MalwarebytesExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_MalwarebytesExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteMalwarebytes = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteMalwarebytes.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteMalwarebytes.Location = $BTN_DownloadMalwarebytes.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteMalwarebytes, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteMalwarebytes.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GRP_InstallersTools))
-$GRP_InstallersTools.Controls.AddRange(@(
+$GRP_InstallTools.Controls.AddRange(@(
         $BTN_DownloadCCleaner, $BTN_DownloadDefraggler, $BTN_DownloadRecuva, $BTN_DownloadMalwarebytes,
-        $CBOX_CCleanerExecute, $CBOX_DefragglerExecute, $CBOX_RecuvaExecute, $CBOX_MalwarebytesExecute
+        $CBOX_ExecuteCCleaner, $CBOX_ExecuteDefraggler, $CBOX_ExecuteRecuva, $CBOX_ExecuteMalwarebytes
     ))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads (Tools and ISO) #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$TAB_DOWNLOADS_TOOLS = New-Object System.Windows.Forms.TabPage
-$TAB_DOWNLOADS_TOOLS.Text = 'Downloads: Tools and ISO'
-$TAB_DOWNLOADS_TOOLS.UseVisualStyleBackColor = $True
-$TAB_CONTROL.Controls.Add($TAB_DOWNLOADS_TOOLS)
+$TAB_TOOLS_AND_ISO = New-Object System.Windows.Forms.TabPage
+$TAB_TOOLS_AND_ISO.Text = 'Downloads: Tools and ISO'
+$TAB_TOOLS_AND_ISO.UseVisualStyleBackColor = $True
+$TAB_CONTROL.Controls.Add($TAB_TOOLS_AND_ISO)
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Tools #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$GRP_DownloadsTools = New-Object System.Windows.Forms.GroupBox
-$GRP_DownloadsTools.Text = 'Tools'
-$GRP_DownloadsTools.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 3
-$GRP_DownloadsTools.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
-$GRP_DownloadsTools.Location = "$INT_NORMAL, $INT_NORMAL"
-$TAB_DOWNLOADS_TOOLS.Controls.Add($GRP_DownloadsTools)
+$GRP_DownloadTools = New-Object System.Windows.Forms.GroupBox
+$GRP_DownloadTools.Text = 'Tools'
+$GRP_DownloadTools.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 3
+$GRP_DownloadTools.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_DownloadTools.Location = "$INT_NORMAL, $INT_NORMAL"
+$TAB_TOOLS_AND_ISO.Controls.Add($GRP_DownloadTools)
 
 
 $BTN_DownloadSDI = New-Object System.Windows.Forms.Button
 $BTN_DownloadSDI.Text = 'Snappy Driver Installer'
-$BTN_DownloadSDI.Location = "$INT_NORMAL, $INT_GROUP_TOP"
 $BTN_DownloadSDI.Height = $BTN_HEIGHT
 $BTN_DownloadSDI.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadSDI.Location = "$INT_NORMAL, $INT_GROUP_TOP"
 $BTN_DownloadSDI.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadSDI, 'Download Snappy Driver Installer')
-$BTN_DownloadSDI.Add_Click( {DownloadFile 'sdi-tool.org/releases/SDI_R1811.zip' -Execute $CBOX_SDIExecute.Checked} )
+$BTN_DownloadSDI.Add_Click( {DownloadFile 'sdi-tool.org/releases/SDI_R1811.zip' -Execute $CBOX_ExecuteSDI.Checked} )
 
-$CBOX_SDIExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_SDIExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_SDIExecute.Location = $BTN_DownloadSDI.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_SDIExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_SDIExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteSDI = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteSDI.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteSDI.Location = $BTN_DownloadSDI.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteSDI, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteSDI.Size = $CBOX_SIZE_DOWNLOAD
 
 
 $BTN_DownloadVictoria = New-Object System.Windows.Forms.Button
 $BTN_DownloadVictoria.Text = 'Victoria'
-$BTN_DownloadVictoria.Location = $BTN_DownloadSDI.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadVictoria.Height = $BTN_HEIGHT
 $BTN_DownloadVictoria.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadVictoria.Location = $BTN_DownloadSDI.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadVictoria.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
-$BTN_DownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Victoria.zip' -Execute $CBOX_VictoriaExecute.Checked} )
+$BTN_DownloadVictoria.Add_Click( {DownloadFile 'qiiwexc.github.io/d/Victoria.zip' -Execute $CBOX_ExecuteVictoria.Checked} )
 
-$CBOX_VictoriaExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_VictoriaExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_VictoriaExecute.Location = $BTN_DownloadVictoria.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_VictoriaExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_VictoriaExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteVictoria = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteVictoria.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteVictoria.Location = $BTN_DownloadVictoria.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteVictoria, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteVictoria.Size = $CBOX_SIZE_DOWNLOAD
 
 
 $BTN_DownloadRufus = New-Object System.Windows.Forms.Button
 $BTN_DownloadRufus.Text = 'Rufus'
-$BTN_DownloadRufus.Location = $BTN_DownloadVictoria.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadRufus.Height = $BTN_HEIGHT
 $BTN_DownloadRufus.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadRufus.Location = $BTN_DownloadVictoria.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadRufus.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRufus, 'Download Rufus - a bootable USB creator')
-$BTN_DownloadRufus.Add_Click( {DownloadFile 'github.com/pbatard/rufus/releases/download/v3.4/rufus-3.4p.exe' -Execute $CBOX_RufusExecute.Checked} )
+$BTN_DownloadRufus.Add_Click( {DownloadFile 'github.com/pbatard/rufus/releases/download/v3.4/rufus-3.4p.exe' -Execute $CBOX_ExecuteRufus.Checked} )
 
-$CBOX_RufusExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_RufusExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_RufusExecute.Location = $BTN_DownloadRufus.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_RufusExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_RufusExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteRufus = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteRufus.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteRufus.Location = $BTN_DownloadRufus.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteRufus, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteRufus.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$GRP_DownloadsTools.Controls.AddRange(@($BTN_DownloadSDI, $BTN_DownloadVictoria, $BTN_DownloadRufus, $CBOX_SDIExecute, $CBOX_VictoriaExecute, $CBOX_RufusExecute))
+$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadSDI, $BTN_DownloadVictoria, $BTN_DownloadRufus, $CBOX_ExecuteSDI, $CBOX_ExecuteVictoria, $CBOX_ExecuteRufus))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Activators #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-$GRP_DownloadsActivators = New-Object System.Windows.Forms.GroupBox
-$GRP_DownloadsActivators.Text = 'Activators'
-$GRP_DownloadsActivators.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 2
-$GRP_DownloadsActivators.Width = $GRP_DownloadsTools.Width
-$GRP_DownloadsActivators.Location = $GRP_DownloadsTools.Location + "$($GRP_DownloadsTools.Width + $INT_NORMAL), 0"
+$GRP_Activators = New-Object System.Windows.Forms.GroupBox
+$GRP_Activators.Text = 'Activators'
+$GRP_Activators.Height = $INT_NORMAL + ($BTN_INT_NORMAL + $CBOX_INT_SHORT) * 2
+$GRP_Activators.Width = $GRP_DownloadTools.Width
+$GRP_Activators.Location = $GRP_DownloadTools.Location + "$($GRP_DownloadTools.Width + $INT_NORMAL), 0"
+$TAB_TOOLS_AND_ISO.Controls.Add($GRP_Activators)
 
 
-$BTN_DownloadKMS = New-Object System.Windows.Forms.Button
-$BTN_DownloadKMS.Text = 'KMSAuto Lite'
-$BTN_DownloadKMS.Location = "$INT_NORMAL, $INT_GROUP_TOP"
-$BTN_DownloadKMS.Height = $BTN_HEIGHT
-$BTN_DownloadKMS.Width = $BTN_WIDTH_NORMAL
-$BTN_DownloadKMS.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMS, "Download KMSAuto Lite`rActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
-$BTN_DownloadKMS.Add_Click( {
+$BTN_DownloadKMSAuto = New-Object System.Windows.Forms.Button
+$BTN_DownloadKMSAuto.Text = 'KMSAuto Lite'
+$BTN_DownloadKMSAuto.Height = $BTN_HEIGHT
+$BTN_DownloadKMSAuto.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadKMSAuto.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$BTN_DownloadKMSAuto.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`rActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
+$BTN_DownloadKMSAuto.Add_Click( {
         Write-Log $WRN $TXT_AV_WARNING
-        DownloadFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -Execute $CBOX_KMSExecute.Checked
+        DownloadFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -Execute $CBOX_ExecuteKMSAuto.Checked
     } )
 
-$CBOX_KMSExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_KMSExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_KMSExecute.Location = $BTN_DownloadKMS.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_KMSExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_KMSExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteKMSAuto = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteKMSAuto.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteKMSAuto, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteKMSAuto.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$BTN_DownloadChew = New-Object System.Windows.Forms.Button
-$BTN_DownloadChew.Text = 'ChewWGA'
-$BTN_DownloadChew.Location = $BTN_DownloadKMS.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
-$BTN_DownloadChew.Height = $BTN_HEIGHT
-$BTN_DownloadChew.Width = $BTN_WIDTH_NORMAL
-$BTN_DownloadChew.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChew, "Download ChewWGA`rFor activating hopeless Windows 7 installations`n`n$TXT_AV_WARNING")
-$BTN_DownloadChew.Add_Click( {
+$BTN_DownloadChewWGA = New-Object System.Windows.Forms.Button
+$BTN_DownloadChewWGA.Text = 'ChewWGA'
+$BTN_DownloadChewWGA.Height = $BTN_HEIGHT
+$BTN_DownloadChewWGA.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadChewWGA.Location = $BTN_DownloadKMSAuto.Location + $BTN_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
+$BTN_DownloadChewWGA.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChewWGA, "Download ChewWGA`rFor activating hopeless Windows 7 installations`n`n$TXT_AV_WARNING")
+$BTN_DownloadChewWGA.Add_Click( {
         Write-Log $WRN $TXT_AV_WARNING
-        DownloadFile 'qiiwexc.github.io/d/ChewWGA.zip' -Execute $CBOX_ChewExecute.Checked
+        DownloadFile 'qiiwexc.github.io/d/ChewWGA.zip' -Execute $CBOX_ExecuteChewWGA.Checked
     } )
 
-$CBOX_ChewExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_ChewExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_ChewExecute.Location = $BTN_DownloadChew.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ChewExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_ChewExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_ExecuteChewWGA = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteChewWGA.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteChewWGA.Location = $BTN_DownloadChewWGA.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteChewWGA, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteChewWGA.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GRP_DownloadsActivators))
-$GRP_DownloadsActivators.Controls.AddRange(@($BTN_DownloadKMS, $BTN_DownloadChew, $CBOX_KMSExecute, $CBOX_ChewExecute))
+$GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $BTN_DownloadChewWGA, $CBOX_ExecuteKMSAuto, $CBOX_ExecuteChewWGA))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Windows Images #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -691,15 +704,16 @@ $GRP_DownloadsActivators.Controls.AddRange(@($BTN_DownloadKMS, $BTN_DownloadChew
 $GRP_DownloadsWindows = New-Object System.Windows.Forms.GroupBox
 $GRP_DownloadsWindows.Text = 'Windows ISO Images'
 $GRP_DownloadsWindows.Height = $INT_NORMAL + ($BTN_INT_SHORT + $CBOX_INT_SHORT) * 6
-$GRP_DownloadsWindows.Width = $GRP_DownloadsActivators.Width
-$GRP_DownloadsWindows.Location = $GRP_DownloadsActivators.Location + "$($GRP_DownloadsActivators.Width + $INT_NORMAL), 0"
+$GRP_DownloadsWindows.Width = $GRP_Activators.Width
+$GRP_DownloadsWindows.Location = $GRP_Activators.Location + "$($GRP_Activators.Width + $INT_NORMAL), 0"
+$TAB_TOOLS_AND_ISO.Controls.Add($GRP_DownloadsWindows)
 
 
 $BTN_DownloadWindows10 = New-Object System.Windows.Forms.Button
 $BTN_DownloadWindows10.Text = 'Windows 10'
-$BTN_DownloadWindows10.Location = "$INT_NORMAL, $INT_GROUP_TOP"
 $BTN_DownloadWindows10.Height = $BTN_HEIGHT
 $BTN_DownloadWindows10.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindows10.Location = "$INT_NORMAL, $INT_GROUP_TOP"
 $BTN_DownloadWindows10.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindows10, 'Download Windows 10 (v1809-Jan) RUS-ENG x86-x64 -36in1- KMS (AIO) ISO image')
 $BTN_DownloadWindows10.Add_Click( {OpenInBrowser 'http://monkrus.ws/2019/01/windows-10-v1809-jan-rus-eng-x86-x64.html'} )
@@ -711,9 +725,9 @@ $LBL_DownloadWindows10.Size = $CBOX_SIZE_DOWNLOAD
 
 $BTN_DownloadWindows8 = New-Object System.Windows.Forms.Button
 $BTN_DownloadWindows8.Text = 'Windows 8.1'
-$BTN_DownloadWindows8.Location = $BTN_DownloadWindows10.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindows8.Height = $BTN_HEIGHT
 $BTN_DownloadWindows8.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindows8.Location = $BTN_DownloadWindows10.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindows8.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindows8, 'Download Windows 8.1 with Update 3 RUS-ENG x86-x64 -16in1- Activated (AIO) ISO image')
 $BTN_DownloadWindows8.Add_Click( {OpenInBrowser 'rutracker.org/forum/viewtopic.php?t=5109222'} )
@@ -725,9 +739,9 @@ $LBL_DownloadWindows8.Size = $CBOX_SIZE_DOWNLOAD
 
 $BTN_DownloadWindows7 = New-Object System.Windows.Forms.Button
 $BTN_DownloadWindows7.Text = 'Windows 7'
-$BTN_DownloadWindows7.Location = $BTN_DownloadWindows8.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindows7.Height = $BTN_HEIGHT
 $BTN_DownloadWindows7.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindows7.Location = $BTN_DownloadWindows8.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindows7.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v5 (AIO) ISO image')
 $BTN_DownloadWindows7.Add_Click( {OpenInBrowser 'http://monkrus.ws/2018/03/windows-7-sp1-ie11-rus-eng-x86-x64.html'} )
@@ -739,9 +753,9 @@ $LBL_DownloadWindows7.Size = $CBOX_SIZE_DOWNLOAD
 
 $BTN_DownloadWindowsXPENG = New-Object System.Windows.Forms.Button
 $BTN_DownloadWindowsXPENG.Text = 'Windows XP (ENG)'
-$BTN_DownloadWindowsXPENG.Location = $BTN_DownloadWindows7.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindowsXPENG.Height = $BTN_HEIGHT
 $BTN_DownloadWindowsXPENG.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindowsXPENG.Location = $BTN_DownloadWindows7.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindowsXPENG.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindowsXPENG, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
 $BTN_DownloadWindowsXPENG.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'} )
@@ -753,9 +767,9 @@ $LBL_DownloadWindowsXPENG.Size = $CBOX_SIZE_DOWNLOAD
 
 $BTN_DownloadWindowsXPRUS = New-Object System.Windows.Forms.Button
 $BTN_DownloadWindowsXPRUS.Text = 'Windows XP (RUS)'
-$BTN_DownloadWindowsXPRUS.Location = $BTN_DownloadWindowsXPENG.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindowsXPRUS.Height = $BTN_HEIGHT
 $BTN_DownloadWindowsXPRUS.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindowsXPRUS.Location = $BTN_DownloadWindowsXPENG.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindowsXPRUS.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindowsXPRUS, 'Download Windows XP SP3 (RUS) + Office 2010 SP2 (RUS) [v17.5.6] ISO image')
 $BTN_DownloadWindowsXPRUS.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1mgs56mX2-dQMk9e5KaXhODLBWXipmLCR'} )
@@ -767,9 +781,9 @@ $LBL_DownloadWindowsXPRUS.Size = $CBOX_SIZE_DOWNLOAD
 
 $BTN_DownloadWindowsPE = New-Object System.Windows.Forms.Button
 $BTN_DownloadWindowsPE.Text = 'Windows PE'
-$BTN_DownloadWindowsPE.Location = $BTN_DownloadWindowsXPRUS.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindowsPE.Height = $BTN_HEIGHT
 $BTN_DownloadWindowsPE.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadWindowsPE.Location = $BTN_DownloadWindowsXPRUS.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_VER_SHORT
 $BTN_DownloadWindowsPE.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadWindowsPE, 'Download Windows PE (Live CD) ISO image')
 $BTN_DownloadWindowsPE.Add_Click( {OpenInBrowser 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'} )
@@ -779,7 +793,6 @@ $LBL_DownloadWindowsPE.Text = $TXT_OPENS_IN_BROWSER
 $LBL_DownloadWindowsPE.Location = $BTN_DownloadWindowsPE.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
 $LBL_DownloadWindowsPE.Size = $CBOX_SIZE_DOWNLOAD
 
-$TAB_DOWNLOADS_TOOLS.Controls.AddRange(@($GRP_DownloadsWindows))
 $GRP_DownloadsWindows.Controls.AddRange(@(
         $BTN_DownloadWindows10, $LBL_DownloadWindows10, $BTN_DownloadWindows8, $LBL_DownloadWindows8, $BTN_DownloadWindows7, $LBL_DownloadWindows7,
         $BTN_DownloadWindowsXPENG, $LBL_DownloadWindowsXPENG, $BTN_DownloadWindowsXPRUS, $LBL_DownloadWindowsXPRUS, $BTN_DownloadWindowsPE, $LBL_DownloadWindowsPE
@@ -806,8 +819,8 @@ function Startup {
 
     $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_SecurityScanQuick.Enabled = Test-Path $DefenderExe
-    $BTN_SecurityScanFull.Enabled = $BTN_SecurityScanQuick.Enabled
+    $BTN_QuickSecurityScan.Enabled = Test-Path $DefenderExe
+    $BTN_FullSecurityScan.Enabled = $BTN_QuickSecurityScan.Enabled
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
 }
@@ -815,7 +828,7 @@ function Startup {
 
 function Elevate {
     if (-not $IS_ELEVATED) {
-        Start-Process -Verb RunAs -FilePath 'powershell' -ArgumentList $MyInvocation.ScriptName
+        Start-Process 'powershell' $MyInvocation.ScriptName -Verb RunAs
         ExitScript
     }
 }
@@ -835,9 +848,6 @@ function Write-Log($Level, $Message) {
     $LOG.SelectionColor = 'black'
     $LOG.ScrollToCaret();
 }
-
-
-function ExecuteAsAdmin ($Command, $Message) {Start-Process -Wait -Verb RunAs -FilePath 'powershell' -ArgumentList "-Command `"Write-Host $Message; $Command`""}
 
 
 function ExitScript {$FORM.Close()}
@@ -863,7 +873,7 @@ function CheckForUpdates {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Write-Log $INF 'Checking for updates...'
 
-    try {$LatestVersion = (Invoke-WebRequest -Uri $VersionURL).ToString() -Replace "`n", ''}
+    try {$LatestVersion = (Invoke-WebRequest $VersionURL).ToString() -Replace "`n", ''}
     catch [Exception] {
         Write-Log $ERR "Failed to check for update: $($_.Exception.Message)"
         return
@@ -885,7 +895,7 @@ function DownloadUpdate {
 
     Write-Log $WRN 'Downloading new version...'
 
-    try {Invoke-WebRequest -Uri $DownloadURL -OutFile $TargetFile}
+    try {Invoke-WebRequest $DownloadURL -OutFile $TargetFile}
     catch [Exception] {
         Write-Log $ERR "Failed to download update: $($_.Exception.Message)"
         return
@@ -893,7 +903,7 @@ function DownloadUpdate {
 
     Write-Log $WRN 'Restarting...'
 
-    try {Start-Process -FilePath 'powershell' -ArgumentList $TargetFile}
+    try {Start-Process 'powershell' $TargetFile}
     catch [Exception] {
         Write-Log $ERR "Failed to start new version: $($_.Exception.Message)"
         return
@@ -908,7 +918,7 @@ function DownloadUpdate {
 function GatherSystemInformation {
     Write-Log $INF 'Gathering system information...'
 
-    New-PSDrive -PSProvider Registry -Root HKEY_CLASSES_ROOT -Name HKCR
+    New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
 
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
@@ -917,10 +927,10 @@ function GatherSystemInformation {
     $script:OS_VERSION = $OperatingSystem.Version
     $script:PS_VERSION = $PSVersionTable.PSVersion.Major
 
-    $script:CURRENT_DIR = (Split-Path ($MyInvocation.ScriptName))
+    $script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
 
-    $script:GoogleUpdateExe = "$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
-    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {'64'}).exe"
+    $script:GoogleUpdateExe = "$(if ($OS_ARCH -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
+    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
     $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
 
     $LOG.AppendText(' Done')
@@ -930,8 +940,8 @@ function GatherSystemInformation {
 function PrintSystemInformation {
     $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, PCSystemType, @{L = 'RAM'; E = {'{0:N2}' -f ($_.TotalPhysicalMemory / 1GB)}}
     $Processor = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, ThreadCount
-    $SystemLogicalDisk = Get-WmiObject -Class Win32_LogicalDisk -Filter "DriveType = '3'"
-    $SystemPartition = $SystemLogicalDisk | Select-Object -Property @{L = 'FreeSpaceGB'; E = {'{0:N2}' -f ($_.FreeSpace / 1GB)}}, @{L = 'SizeGB'; E = {'{0:N2}' -f ($_.Size / 1GB)}}
+    $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType = '3'"
+    $SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = {'{0:N2}' -f ($_.FreeSpace / 1GB)}}, @{L = 'SizeGB'; E = {'{0:N2}' -f ($_.Size / 1GB)}}
 
     Write-Log $INF 'Current system information:'
     Write-Log $INF '  Hardware'
@@ -942,7 +952,7 @@ function PrintSystemInformation {
     Write-Log $INF "    Cores / Threads:  $($Processor.NumberOfCores) / $($Processor.ThreadCount)"
     Write-Log $INF "    RAM available:  $($ComputerSystem.RAM) GB"
     Write-Log $INF "    GPU name:  $((Get-WmiObject Win32_VideoController).Name)"
-    Write-Log $INF "    System drive model:  $(($SystemLogicalDisk.GetRelated('Win32_DiskPartition').GetRelated('Win32_DiskDrive')).Model)"
+    Write-Log $INF "    System drive model:  $(($LogicalDisk.GetRelated('Win32_DiskPartition').GetRelated('Win32_DiskDrive')).Model)"
     Write-Log $INF "    System partition - free space: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($(($SystemPartition.FreeSpaceGB/$SystemPartition.SizeGB).tostring('P')))"
     Write-Log $INF '  Software'
     Write-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"
@@ -956,59 +966,60 @@ function PrintSystemInformation {
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 function UpdateGoogleSoftware {
-    Write-Log $INF 'Starting Google Update'
+    Write-Log $INF 'Starting Google Update...'
 
-    try {Start-Process -Wait -FilePath $GoogleUpdateExe -ArgumentList '/c'}
+    try {Start-Process $GoogleUpdateExe '/c'}
     catch [Exception] {
         Write-Log $ERR "Google Update failed: $($_.Exception.Message)"
         return
     }
 
-    try {Start-Process -Wait -FilePath $GoogleUpdateExe -ArgumentList '/ua /installsource scheduler'}
+    try {Start-Process $GoogleUpdateExe '/ua /installsource scheduler'}
     catch [Exception] {
         Write-Log $ERR "Google Update failed: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Google software updated successfully'
+    Write-Log $WRN 'Google Update started successfully'
 }
 
 
 function UpdateStoreApps {
-    Write-Log $INF 'Updating Microsoft Store apps'
+    Write-Log $INF 'Starting Microsoft Store apps update...'
 
     try {
-        ExecuteAsAdmin "(Get-WmiObject -Namespace 'root\cimv2\mdm\dmmap' -Class 'MDM_EnterpriseModernAppManagement_AppManagement01').UpdateScanMethod()" `
-            'Updating Microsoft Store apps...'
+        $Message = 'Updating Microsoft Store apps...'
+        $Command = "(Get-WmiObject -Namespace 'root\cimv2\mdm\dmmap' -Class 'MDM_EnterpriseModernAppManagement_AppManagement01').UpdateScanMethod()"
+        Start-Process 'powershell' "-Command `"Write-Host $Message; $Command`"" -Verb RunAs
     }
     catch [Exception] {
         Write-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Microsoft Store apps updated successfully'
+    Write-Log $WRN 'Microsoft Store apps are updating'
 }
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 function CheckDrive {
-    Write-Log $INF 'Checking C: drive health'
+    Write-Log $INF 'Starting C: drive health check...'
 
-    try {Start-Process -Wait -Verb RunAs -FilePath 'chkdsk' -ArgumentList '/scan'}
+    try {Start-Process 'chkdsk' '/scan' -Verb RunAs }
     catch [Exception] {
         Write-Log $ERR "Failed to check drive health: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'C: drive health check completed successfully'
+    Write-Log $WRN 'C: drive health check is running'
 }
 
 
 function CheckMemory {
-    Write-Log $INF 'Starting memory checking tool'
+    Write-Log $INF 'Starting memory checking tool...'
 
-    try {Start-Process -Wait -FilePath 'mdsched'}
+    try {Start-Process 'mdsched' -Wait}
     catch [Exception] {
         Write-Log $ERR "Failed to start memory checking tool: $($_.Exception.Message)"
         return
@@ -1024,17 +1035,17 @@ function StartSecurityScan ($Mode) {
         $Mode = 'quick'
     }
 
-    Write-Log $INF 'Updating security signatures'
+    Write-Log $INF 'Updating security signatures...'
 
-    try {Start-Process -Wait -FilePath $DefenderExe -ArgumentList '-SignatureUpdate'}
+    try {Start-Process $DefenderExe '-SignatureUpdate' -Wait}
     catch [Exception] {
         Write-Log $ERR "Security signature update failed: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $INF "Starting $Mode securtiy scan"
+    Write-Log $INF "Starting $Mode securtiy scan..."
 
-    try {Start-Process -FilePath $DefenderExe -ArgumentList "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})"}
+    try {Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})"}
     catch [Exception] {
         Write-Log $ERR "Failed to perform a $Mode securtiy scan: $($_.Exception.Message)"
         return
@@ -1047,7 +1058,7 @@ function StartSecurityScan ($Mode) {
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 function CloudFlareDNS {
-    Write-Log $INF 'Changing DNS address to CloudFlare DNS (1.1.1.1 / 1.0.0.1)'
+    Write-Log $INF 'Changing DNS address to CloudFlare DNS (1.1.1.1 / 1.0.0.1)...'
 
     $CurrentNetworkAdapter = (Get-NetAdapter -Physical | Where-Object Status -eq 'Up').ifIndex
 
@@ -1058,15 +1069,16 @@ function CloudFlareDNS {
     }
 
     try {
-        ExecuteAsAdmin "Set-DnsClientServerAddress -InterfaceIndex $CurrentNetworkAdapter -ServerAddresses ('1.1.1.1', '1.0.0.1')" `
-            'Changing DNS address to CloudFlare DNS'
+        $Message = 'Changing DNS address to CloudFlare DNS...'
+        $Command = "Set-DnsClientServerAddress -InterfaceIndex $CurrentNetworkAdapter -ServerAddresses ('1.1.1.1', '1.0.0.1')"
+        Start-Process 'powershell' "-Command `"Write-Host $Message; $Command`"" -Verb RunAs -Wait
     }
     catch [Exception] {
         Write-Log $ERR "Failed to change DNS address: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'CloudFlare DNS set up successfully'
+    Write-Log $WRN 'CloudFlare DNS was set up successfully'
 }
 
 
@@ -1078,64 +1090,77 @@ function RunCCleaner {
         return
     }
 
-    Write-Log $INF 'Cleanup started'
+    Write-Log $INF 'Starting CCleaner background task...'
 
-    try {Start-Process -Wait -FilePath $CCleanerExe -ArgumentList '/auto'}
+    try {Start-Process $CCleanerExe '/auto'}
     catch [Exception] {
         Write-Log $ERR "Cleanup failed: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Cleanup completed successfully'
+    Write-Log $WRN 'CCleaner is running'
+}
+
+
+function DeleteRestorePoints {
+    Write-Log $INF 'Deleting all restore points'
+
+    try {Start-Process 'vssadmin' 'delete shadows /all' -Verb RunAs -Wait}
+    catch [Exception] {
+        Write-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"
+        return
+    }
+
+    Write-Log $WRN 'All restore points deleted successfully'
 }
 
 
 function OptimizeDrive {
-    Write-Log $INF 'Starting drive optimization'
+    Write-Log $INF 'Starting drive optimization...'
 
-    try {Start-Process -Verb RunAs -FilePath 'defrag' -ArgumentList '/C /H /U /O'}
+    try {Start-Process 'defrag' '/C /H /U /O' -Verb RunAs}
     catch [Exception] {
         Write-Log $ERR "Failed to optimize the drive: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Drive optimization completed'
+    Write-Log $WRN 'Drive optimization is running'
 }
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Ninite #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 function HandleNiniteCheckBoxStateChange () {
-    $BTN_NiniteDownload.Enabled = $CBOX_Ninite7zip.Checked -or $CBOX_NiniteVLC.Checked -or $CBOX_NiniteTeamViewer.Checked -or $CBOX_NiniteSkype.Checked -or `
-        $CBOX_NiniteChrome.Checked -or $CBOX_NiniteqBittorrent.Checked -or $CBOX_NiniteGoogleDrive.Checked -or $CBOX_NiniteVSC.Checked
-    $CBOX_NiniteExecute.Enabled = $BTN_NiniteDownload.Enabled
+    $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or $CBOX_TeamViewer.Checked -or $CBOX_Skype.Checked -or `
+        $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked -or $CBOX_GoogleDrive.Checked -or $CBOX_VSCode.Checked
+    $CBOX_ExecuteNinite.Enabled = $BTN_DownloadNinite.Enabled
 }
 
 
 function NiniteQueryBuilder () {
     $Array = @()
-    if ($CBOX_Ninite7zip.Checked) {$Array += $CBOX_Ninite7zip.Name}
-    if ($CBOX_NiniteVLC.Checked) {$Array += $CBOX_NiniteVLC.Name}
-    if ($CBOX_NiniteTeamViewer.Checked) {$Array += $CBOX_NiniteTeamViewer.Name}
-    if ($CBOX_NiniteSkype.Checked) {$Array += $CBOX_NiniteSkype.Name}
-    if ($CBOX_NiniteChrome.Checked) {$Array += $CBOX_NiniteChrome.Name}
-    if ($CBOX_NiniteqBittorrent.Checked) {$Array += $CBOX_NiniteqBittorrent.Name}
-    if ($CBOX_NiniteGoogleDrive.Checked) {$Array += $CBOX_NiniteGoogleDrive.Name}
-    if ($CBOX_NiniteVSC.Checked) {$Array += $CBOX_NiniteVSC.Name}
+    if ($CBOX_7zip.Checked) {$Array += $CBOX_7zip.Name}
+    if ($CBOX_VLC.Checked) {$Array += $CBOX_VLC.Name}
+    if ($CBOX_TeamViewer.Checked) {$Array += $CBOX_TeamViewer.Name}
+    if ($CBOX_Skype.Checked) {$Array += $CBOX_Skype.Name}
+    if ($CBOX_Chrome.Checked) {$Array += $CBOX_Chrome.Name}
+    if ($CBOX_qBittorrent.Checked) {$Array += $CBOX_qBittorrent.Name}
+    if ($CBOX_GoogleDrive.Checked) {$Array += $CBOX_GoogleDrive.Name}
+    if ($CBOX_VSCode.Checked) {$Array += $CBOX_VSCode.Name}
     return $Array -join '-'
 }
 
 
 function NiniteNameBuilder () {
     $Array = @()
-    if ($CBOX_Ninite7zip.Checked) {$Array += $CBOX_Ninite7zip.Text}
-    if ($CBOX_NiniteVLC.Checked) {$Array += $CBOX_NiniteVLC.Text}
-    if ($CBOX_NiniteTeamViewer.Checked) {$Array += $CBOX_NiniteTeamViewer.Text}
-    if ($CBOX_NiniteSkype.Checked) {$Array += $CBOX_NiniteSkype.Text}
-    if ($CBOX_NiniteChrome.Checked) {$Array += $CBOX_NiniteChrome.Text}
-    if ($CBOX_NiniteqBittorrent.Checked) {$Array += $CBOX_NiniteqBittorrent.Text}
-    if ($CBOX_NiniteGoogleDrive.Checked) {$Array += $CBOX_NiniteGoogleDrive.Text}
-    if ($CBOX_NiniteVSC.Checked) {$Array += $CBOX_NiniteVSC.Text}
+    if ($CBOX_7zip.Checked) {$Array += $CBOX_7zip.Text}
+    if ($CBOX_VLC.Checked) {$Array += $CBOX_VLC.Text}
+    if ($CBOX_TeamViewer.Checked) {$Array += $CBOX_TeamViewer.Text}
+    if ($CBOX_Skype.Checked) {$Array += $CBOX_Skype.Text}
+    if ($CBOX_Chrome.Checked) {$Array += $CBOX_Chrome.Text}
+    if ($CBOX_qBittorrent.Checked) {$Array += $CBOX_qBittorrent.Text}
+    if ($CBOX_GoogleDrive.Checked) {$Array += $CBOX_GoogleDrive.Text}
+    if ($CBOX_VSCode.Checked) {$Array += $CBOX_VSCode.Text}
     return "Ninite $($Array -join ' ') Installer.exe"
 }
 
@@ -1144,7 +1169,7 @@ function NiniteNameBuilder () {
 
 function DownloadFile ($Url, $SaveAs, $Execute, $Switches) {
     if ($Url.length -lt 1) {
-        Write-Log $ERR 'No URL specified'
+        Write-Log $ERR 'No download URL specified'
         return
     }
 
@@ -1156,7 +1181,6 @@ function DownloadFile ($Url, $SaveAs, $Execute, $Switches) {
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
-
         if (Test-Path $SavePath) {Write-Log $WRN 'Download complete'}
         else {throw 'Possibly computer is offline or disk is full'}
     }
@@ -1169,8 +1193,34 @@ function DownloadFile ($Url, $SaveAs, $Execute, $Switches) {
 }
 
 
+function ExecuteFile ($FileName, $Switches) {
+    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {ExtractArchive $FileName} else {$FileName}
+
+    if ($Switches) {
+        Write-Log $INF "Installing '$Executable' silently..."
+
+        try {Start-Process "$CURRENT_DIR\$Executable" $Switches -Wait}
+        catch [Exception] {
+            Write-Log $ERR "'$Executable' silent installation failed: $($_.Exception.Message)"
+            return
+        }
+
+        Write-Log $INF "Removing $FileName..."
+        Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
+
+        Write-Log $WRN "'$Executable' installation completed"
+    }
+    else {
+        Write-Log $WRN "Executing '$Executable'..."
+
+        try {Start-Process "$CURRENT_DIR\$Executable"}
+        catch [Exception] {Write-Log $ERR "'$Executable' execution failed: $($_.Exception.Message)"}
+    }
+}
+
+
 function ExtractArchive ($FileName) {
-    Write-Log $INF "Extracting $FileName"
+    Write-Log $INF "Extracting $FileName..."
 
     switch -Wildcard ($FileName) {
         'ChewWGA.zip' {
@@ -1209,49 +1259,19 @@ function ExtractArchive ($FileName) {
         $TempDir = $TargetDirName
         $TargetDirName = $CURRENT_DIR
 
-        Move-Item -Path "$TempDir\$Executable" -Destination "$TargetDirName\$Executable"
+        Move-Item "$TempDir\$Executable" "$TargetDirName\$Executable"
         Remove-Item $TempDir -Recurse -ErrorAction Ignore
     }
 
     Write-Log $WRN "Files extracted to $TargetDirName"
 
-    Write-Log $INF "Removing $FileName"
+    Write-Log $INF "Removing $FileName..."
     Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
 
     Write-Log $WRN 'Extraction completed'
 
     return $Executable
 }
-
-
-function ExecuteFile ($FileName, $Switches) {
-    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {ExtractArchive $FileName} else {$FileName}
-
-    if ($Switches) {
-        Write-Log $INF "Installing '$Executable' silently"
-
-        try {Start-Process -Wait -FilePath "$CURRENT_DIR\$Executable" -ArgumentList $Switches}
-        catch [Exception] {
-            Write-Log $ERR "'$Executable' silent installation failed: $($_.Exception.Message)"
-            return
-        }
-
-        Write-Log $INF "Removing $FileName"
-        Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
-
-        Write-Log $WRN "'$Executable' installation completed"
-    }
-    else {
-        Write-Log $WRN "Executing '$Executable'"
-
-        try {Start-Process -FilePath "$CURRENT_DIR\$Executable"}
-        catch [Exception] {
-            Write-Log $ERR "'$Executable' execution failed: $($_.Exception.Message)"
-            return
-        }
-    }
-}
-
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Draw Form #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#

@@ -1,9 +1,9 @@
-$GRP_HomeThisUtility = New-Object System.Windows.Forms.GroupBox
-$GRP_HomeThisUtility.Text = 'This utility'
-$GRP_HomeThisUtility.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
-$GRP_HomeThisUtility.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
-$GRP_HomeThisUtility.Location = "$INT_NORMAL, $INT_NORMAL"
-$TAB_HOME.Controls.Add($GRP_HomeThisUtility)
+$GRP_ThisUtility = New-Object System.Windows.Forms.GroupBox
+$GRP_ThisUtility.Text = 'This utility'
+$GRP_ThisUtility.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 3
+$GRP_ThisUtility.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_ThisUtility.Location = "$INT_NORMAL, $INT_NORMAL"
+$TAB_HOME.Controls.Add($GRP_ThisUtility)
 
 
 $BTN_Elevate = New-Object System.Windows.Forms.Button
@@ -36,4 +36,4 @@ $BTN_SystemInformation.Font = $BTN_FONT
 $BTN_SystemInformation.Add_Click( {PrintSystemInformation} )
 
 
-$GRP_HomeThisUtility.Controls.AddRange(@($BTN_Elevate, $BTN_BrowserHome, $BTN_SystemInformation))
+$GRP_ThisUtility.Controls.AddRange(@($BTN_Elevate, $BTN_BrowserHome, $BTN_SystemInformation))

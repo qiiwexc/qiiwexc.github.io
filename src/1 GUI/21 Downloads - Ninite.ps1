@@ -3,106 +3,106 @@ $GRP_Ninite.Text = 'Ninite'
 $GRP_Ninite.Height = $INT_NORMAL + $CBOX_INT_SHORT * 10 + $BTN_INT_NORMAL * 2
 $GRP_Ninite.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
 $GRP_Ninite.Location = "$INT_NORMAL, $INT_NORMAL"
+$TAB_INSTALLERS.Controls.Add($GRP_Ninite)
 
 
-$CBOX_NiniteChrome = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteChrome.Text = "Google Chrome"
-$CBOX_NiniteChrome.Name = "chrome"
-$CBOX_NiniteChrome.Location = "$INT_NORMAL, $INT_GROUP_TOP"
-$CBOX_NiniteChrome.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteChrome.Checked = $True
-$CBOX_NiniteChrome.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_Chrome = New-Object System.Windows.Forms.CheckBox
+$CBOX_Chrome.Text = "Google Chrome"
+$CBOX_Chrome.Name = "chrome"
+$CBOX_Chrome.Checked = $True
+$CBOX_Chrome.Location = "$INT_NORMAL, $INT_GROUP_TOP"
+$CBOX_Chrome.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_Chrome.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_Ninite7zip = New-Object System.Windows.Forms.CheckBox
-$CBOX_Ninite7zip.Text = "7-Zip"
-$CBOX_Ninite7zip.Name = "7zip"
-$CBOX_Ninite7zip.Location = $CBOX_NiniteChrome.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_Ninite7zip.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_Ninite7zip.Checked = $True
-$CBOX_Ninite7zip.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_7zip = New-Object System.Windows.Forms.CheckBox
+$CBOX_7zip.Text = "7-Zip"
+$CBOX_7zip.Name = "7zip"
+$CBOX_7zip.Checked = $True
+$CBOX_7zip.Location = $CBOX_Chrome.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_7zip.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_7zip.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteVLC = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteVLC.Text = "VLC"
-$CBOX_NiniteVLC.Name = "vlc"
-$CBOX_NiniteVLC.Location = $CBOX_Ninite7zip.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteVLC.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteVLC.Checked = $True
-$CBOX_NiniteVLC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_VLC = New-Object System.Windows.Forms.CheckBox
+$CBOX_VLC.Text = "VLC"
+$CBOX_VLC.Name = "vlc"
+$CBOX_VLC.Checked = $True
+$CBOX_VLC.Location = $CBOX_7zip.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_VLC.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_VLC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteTeamViewer = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteTeamViewer.Text = "TeamViewer"
-$CBOX_NiniteTeamViewer.Name = "teamviewer14"
-$CBOX_NiniteTeamViewer.Location = $CBOX_NiniteVLC.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteTeamViewer.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteTeamViewer.Checked = $True
-$CBOX_NiniteTeamViewer.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_TeamViewer = New-Object System.Windows.Forms.CheckBox
+$CBOX_TeamViewer.Text = "TeamViewer"
+$CBOX_TeamViewer.Name = "teamviewer14"
+$CBOX_TeamViewer.Checked = $True
+$CBOX_TeamViewer.Location = $CBOX_VLC.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_TeamViewer.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_TeamViewer.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteSkype = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteSkype.Text = "Skype"
-$CBOX_NiniteSkype.Name = "skype"
-$CBOX_NiniteSkype.Location = $CBOX_NiniteTeamViewer.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteSkype.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteSkype.Checked = $True
-$CBOX_NiniteSkype.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_Skype = New-Object System.Windows.Forms.CheckBox
+$CBOX_Skype.Text = "Skype"
+$CBOX_Skype.Name = "skype"
+$CBOX_Skype.Checked = $True
+$CBOX_Skype.Location = $CBOX_TeamViewer.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_Skype.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_Skype.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteqBittorrent = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteqBittorrent.Text = "qBittorrent"
-$CBOX_NiniteqBittorrent.Name = "qbittorrent"
-$CBOX_NiniteqBittorrent.Location = $CBOX_NiniteSkype.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteqBittorrent.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteqBittorrent.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_qBittorrent = New-Object System.Windows.Forms.CheckBox
+$CBOX_qBittorrent.Text = "qBittorrent"
+$CBOX_qBittorrent.Name = "qbittorrent"
+$CBOX_qBittorrent.Location = $CBOX_Skype.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_qBittorrent.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_qBittorrent.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteGoogleDrive = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteGoogleDrive.Text = "Google Drive"
-$CBOX_NiniteGoogleDrive.Name = "googlebackupandsync"
-$CBOX_NiniteGoogleDrive.Location = $CBOX_NiniteqBittorrent.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteGoogleDrive.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteGoogleDrive.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
+$CBOX_GoogleDrive = New-Object System.Windows.Forms.CheckBox
+$CBOX_GoogleDrive.Text = "Google Drive"
+$CBOX_GoogleDrive.Name = "googlebackupandsync"
+$CBOX_GoogleDrive.Location = $CBOX_qBittorrent.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_GoogleDrive.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_GoogleDrive.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
-$CBOX_NiniteVSC = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteVSC.Text = "Visual Studio Code"
-$CBOX_NiniteVSC.Name = "vscode"
-$CBOX_NiniteVSC.Location = $CBOX_NiniteGoogleDrive.Location + $CBOX_SHIFT_VER_SHORT
-$CBOX_NiniteVSC.Size = $CBOX_SIZE_DOWNLOAD
-$CBOX_NiniteVSC.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
-
-
-$BTN_NiniteDownload = New-Object System.Windows.Forms.Button
-$BTN_NiniteDownload.Text = 'Download selected'
-$BTN_NiniteDownload.Location = $CBOX_NiniteVSC.Location + $BTN_SHIFT_VER_SHORT
-$BTN_NiniteDownload.Height = $BTN_HEIGHT
-$BTN_NiniteDownload.Width = $BTN_WIDTH_NORMAL
-$BTN_NiniteDownload.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_NiniteDownload, 'Download Ninite universal installer for selected applications')
-$BTN_NiniteDownload.Add_Click( {DownloadFile "https://ninite.com/$(NiniteQueryBuilder)/ninite.exe" $(NiniteNameBuilder) $CBOX_NiniteExecute.Checked} )
-
-$CBOX_NiniteExecute = New-Object System.Windows.Forms.CheckBox
-$CBOX_NiniteExecute.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
-$CBOX_NiniteExecute.Location = $BTN_NiniteDownload.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_NiniteExecute, $TIP_EXECUTE_AFTER_DOWNLOAD)
-$CBOX_NiniteExecute.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_VSCode = New-Object System.Windows.Forms.CheckBox
+$CBOX_VSCode.Text = "Visual Studio Code"
+$CBOX_VSCode.Name = "vscode"
+$CBOX_VSCode.Location = $CBOX_GoogleDrive.Location + $CBOX_SHIFT_VER_SHORT
+$CBOX_VSCode.Size = $CBOX_SIZE_DOWNLOAD
+$CBOX_VSCode.Add_CheckStateChanged( {HandleNiniteCheckBoxStateChange} )
 
 
-$BTN_NiniteOpenInBrowser = New-Object System.Windows.Forms.Button
-$BTN_NiniteOpenInBrowser.Text = 'View other'
-$BTN_NiniteOpenInBrowser.Location = $BTN_NiniteDownload.Location + $CBOX_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
-$BTN_NiniteOpenInBrowser.Height = $BTN_HEIGHT
-$BTN_NiniteOpenInBrowser.Width = $BTN_WIDTH_NORMAL
-$BTN_NiniteOpenInBrowser.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_NiniteOpenInBrowser, 'Open Ninite universal installer web page')
-$BTN_NiniteOpenInBrowser.Add_Click( {
+$BTN_DownloadNinite = New-Object System.Windows.Forms.Button
+$BTN_DownloadNinite.Text = 'Download selected'
+$BTN_DownloadNinite.Height = $BTN_HEIGHT
+$BTN_DownloadNinite.Width = $BTN_WIDTH_NORMAL
+$BTN_DownloadNinite.Location = $CBOX_VSCode.Location + $BTN_SHIFT_VER_SHORT
+$BTN_DownloadNinite.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadNinite, 'Download Ninite universal installer for selected applications')
+$BTN_DownloadNinite.Add_Click( {DownloadFile "https://ninite.com/$(NiniteQueryBuilder)/ninite.exe" $(NiniteNameBuilder) $CBOX_ExecuteNinite.Checked} )
+
+$CBOX_ExecuteNinite = New-Object System.Windows.Forms.CheckBox
+$CBOX_ExecuteNinite.Text = $TXT_EXECUTE_AFTER_DOWNLOAD
+$CBOX_ExecuteNinite.Location = $BTN_DownloadNinite.Location + $BTN_SHIFT_VER_SHORT + $CBOX_SHIFT_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ExecuteNinite, $TIP_EXECUTE_AFTER_DOWNLOAD)
+$CBOX_ExecuteNinite.Size = $CBOX_SIZE_DOWNLOAD
+
+
+$BTN_OpenNiniteInBrowser = New-Object System.Windows.Forms.Button
+$BTN_OpenNiniteInBrowser.Text = 'View other'
+$BTN_OpenNiniteInBrowser.Height = $BTN_HEIGHT
+$BTN_OpenNiniteInBrowser.Width = $BTN_WIDTH_NORMAL
+$BTN_OpenNiniteInBrowser.Location = $BTN_DownloadNinite.Location + $CBOX_SHIFT_VER_NORMAL + $CBOX_SHIFT_VER_SHORT
+$BTN_OpenNiniteInBrowser.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OpenNiniteInBrowser, 'Open Ninite universal installer web page')
+$BTN_OpenNiniteInBrowser.Add_Click( {
         $Query = NiniteQueryBuilder
         OpenInBrowser $(if ($Query) {"ninite.com/?select=$($Query)"} else {'ninite.com'})
     } )
 
-$LBL_NiniteOpenInBrowser = New-Object System.Windows.Forms.Label
-$LBL_NiniteOpenInBrowser.Text = $TXT_OPENS_IN_BROWSER
-$LBL_NiniteOpenInBrowser.Location = $BTN_NiniteOpenInBrowser.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
-$LBL_NiniteOpenInBrowser.Size = $CBOX_SIZE_DOWNLOAD
+$LBL_OpenNiniteInBrowser = New-Object System.Windows.Forms.Label
+$LBL_OpenNiniteInBrowser.Text = $TXT_OPENS_IN_BROWSER
+$LBL_OpenNiniteInBrowser.Location = $BTN_OpenNiniteInBrowser.Location + $BTN_SHIFT_VER_SHORT + $LBL_SHIFT_BROWSER
+$LBL_OpenNiniteInBrowser.Size = $CBOX_SIZE_DOWNLOAD
 
 
-$TAB_DOWNLOADS_INSTALLERS.Controls.AddRange(@($GRP_Ninite))
 $GRP_Ninite.Controls.AddRange(@(
-        $BTN_NiniteDownload, $BTN_NiniteOpenInBrowser, $CBOX_NiniteExecute, $LBL_NiniteOpenInBrowser, $CBOX_Ninite7zip, $CBOX_NiniteVLC,
-        $CBOX_NiniteTeamViewer, $CBOX_NiniteSkype, $CBOX_NiniteChrome, $CBOX_NiniteqBittorrent, $CBOX_NiniteGoogleDrive, $CBOX_NiniteVSC
+        $BTN_DownloadNinite, $BTN_OpenNiniteInBrowser, $LBL_OpenNiniteInBrowser, $CBOX_ExecuteNinite,
+        $CBOX_7zip, $CBOX_VLC, $CBOX_TeamViewer, $CBOX_Skype, $CBOX_Chrome, $CBOX_qBittorrent, $CBOX_GoogleDrive, $CBOX_VSCode
     ))

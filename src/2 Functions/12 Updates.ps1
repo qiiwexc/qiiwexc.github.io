@@ -1,33 +1,34 @@
 function UpdateGoogleSoftware {
-    Write-Log $INF 'Starting Google Update'
+    Write-Log $INF 'Starting Google Update...'
 
-    try {Start-Process -Wait -FilePath $GoogleUpdateExe -ArgumentList '/c'}
+    try {Start-Process $GoogleUpdateExe '/c'}
     catch [Exception] {
         Write-Log $ERR "Google Update failed: $($_.Exception.Message)"
         return
     }
 
-    try {Start-Process -Wait -FilePath $GoogleUpdateExe -ArgumentList '/ua /installsource scheduler'}
+    try {Start-Process $GoogleUpdateExe '/ua /installsource scheduler'}
     catch [Exception] {
         Write-Log $ERR "Google Update failed: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Google software updated successfully'
+    Write-Log $WRN 'Google Update started successfully'
 }
 
 
 function UpdateStoreApps {
-    Write-Log $INF 'Updating Microsoft Store apps'
+    Write-Log $INF 'Starting Microsoft Store apps update...'
 
     try {
-        ExecuteAsAdmin "(Get-WmiObject -Namespace 'root\cimv2\mdm\dmmap' -Class 'MDM_EnterpriseModernAppManagement_AppManagement01').UpdateScanMethod()" `
-            'Updating Microsoft Store apps...'
+        $Message = 'Updating Microsoft Store apps...'
+        $Command = "(Get-WmiObject -Namespace 'root\cimv2\mdm\dmmap' -Class 'MDM_EnterpriseModernAppManagement_AppManagement01').UpdateScanMethod()"
+        Start-Process 'powershell' "-Command `"Write-Host $Message; $Command`"" -Verb RunAs
     }
     catch [Exception] {
         Write-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Microsoft Store apps updated successfully'
+    Write-Log $WRN 'Microsoft Store apps are updating'
 }
