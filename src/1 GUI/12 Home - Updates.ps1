@@ -1,9 +1,9 @@
-$GRP_HomeUpdate = New-Object System.Windows.Forms.GroupBox
-$GRP_HomeUpdate.Text = 'Updates'
-$GRP_HomeUpdate.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 2
-$GRP_HomeUpdate.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
-$GRP_HomeUpdate.Location = $GRP_HomeThisUtility.Location + "0, $($GRP_HomeThisUtility.Height + $INT_NORMAL)"
-$TAB_HOME.Controls.Add($GRP_HomeUpdate)
+$GRP_Updates = New-Object System.Windows.Forms.GroupBox
+$GRP_Updates.Text = 'Updates'
+$GRP_Updates.Height = $INT_GROUP_TOP + $BTN_INT_NORMAL * 2
+$GRP_Updates.Width = $INT_NORMAL + $BTN_WIDTH_NORMAL + $INT_NORMAL
+$GRP_Updates.Location = $GRP_ThisUtility.Location + "0, $($GRP_ThisUtility.Height + $INT_NORMAL)"
+$TAB_HOME.Controls.Add($GRP_Updates)
 
 
 $BTN_GoogleUpdate = New-Object System.Windows.Forms.Button
@@ -26,4 +26,4 @@ $BTN_UpdateStoreApps.Font = $BTN_FONT
 $BTN_UpdateStoreApps.Add_Click( {UpdateStoreApps} )
 
 
-$GRP_HomeUpdate.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps))
+$GRP_Updates.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps))

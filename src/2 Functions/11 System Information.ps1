@@ -1,7 +1,7 @@
 function GatherSystemInformation {
     Write-Log $INF 'Gathering system information...'
 
-    New-PSDrive -PSProvider Registry -Root HKEY_CLASSES_ROOT -Name HKCR
+    New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
 
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
@@ -10,10 +10,10 @@ function GatherSystemInformation {
     $script:OS_VERSION = $OperatingSystem.Version
     $script:PS_VERSION = $PSVersionTable.PSVersion.Major
 
-    $script:CURRENT_DIR = (Split-Path ($MyInvocation.ScriptName))
+    $script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
 
-    $script:GoogleUpdateExe = "$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
-    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($_SYSTEM_INFO.Architecture -eq '64-bit') {'64'}).exe"
+    $script:GoogleUpdateExe = "$(if ($OS_ARCH -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
+    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
     $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
 
     $LOG.AppendText(' Done')
@@ -23,8 +23,8 @@ function GatherSystemInformation {
 function PrintSystemInformation {
     $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, PCSystemType, @{L = 'RAM'; E = {'{0:N2}' -f ($_.TotalPhysicalMemory / 1GB)}}
     $Processor = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, ThreadCount
-    $SystemLogicalDisk = Get-WmiObject -Class Win32_LogicalDisk -Filter "DriveType = '3'"
-    $SystemPartition = $SystemLogicalDisk | Select-Object -Property @{L = 'FreeSpaceGB'; E = {'{0:N2}' -f ($_.FreeSpace / 1GB)}}, @{L = 'SizeGB'; E = {'{0:N2}' -f ($_.Size / 1GB)}}
+    $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType = '3'"
+    $SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = {'{0:N2}' -f ($_.FreeSpace / 1GB)}}, @{L = 'SizeGB'; E = {'{0:N2}' -f ($_.Size / 1GB)}}
 
     Write-Log $INF 'Current system information:'
     Write-Log $INF '  Hardware'
@@ -35,7 +35,7 @@ function PrintSystemInformation {
     Write-Log $INF "    Cores / Threads:  $($Processor.NumberOfCores) / $($Processor.ThreadCount)"
     Write-Log $INF "    RAM available:  $($ComputerSystem.RAM) GB"
     Write-Log $INF "    GPU name:  $((Get-WmiObject Win32_VideoController).Name)"
-    Write-Log $INF "    System drive model:  $(($SystemLogicalDisk.GetRelated('Win32_DiskPartition').GetRelated('Win32_DiskDrive')).Model)"
+    Write-Log $INF "    System drive model:  $(($LogicalDisk.GetRelated('Win32_DiskPartition').GetRelated('Win32_DiskDrive')).Model)"
     Write-Log $INF "    System partition - free space: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($(($SystemPartition.FreeSpaceGB/$SystemPartition.SizeGB).tostring('P')))"
     Write-Log $INF '  Software'
     Write-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"

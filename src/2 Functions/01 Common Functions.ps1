@@ -12,9 +12,6 @@ function Write-Log($Level, $Message) {
 }
 
 
-function ExecuteAsAdmin ($Command, $Message) {Start-Process -Wait -Verb RunAs -FilePath 'powershell' -ArgumentList "-Command `"Write-Host $Message; $Command`""}
-
-
 function ExitScript {$FORM.Close()}
 
 
