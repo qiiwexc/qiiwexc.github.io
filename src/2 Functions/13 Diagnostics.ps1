@@ -1,50 +1,51 @@
-function CheckDrive {
-    Write-Log $INF 'Starting C: drive health check...'
+function Start-DriveCheck {
+    Add-Log $INF 'Starting C: drive health check...'
 
-    try {Start-Process 'chkdsk' '/scan' -Verb RunAs }
+    try {Start-Process 'chkdsk' '/scan' -Verb RunAs}
     catch [Exception] {
-        Write-Log $ERR "Failed to check drive health: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to check drive health: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'C: drive health check is running'
+    Set-Success
 }
 
 
-function CheckMemory {
-    Write-Log $INF 'Starting memory checking tool...'
+function Start-MemoryCheckTool {
+    Add-Log $INF 'Starting memory checking tool...'
 
-    try {Start-Process 'mdsched' -Wait}
+    try {Start-Process 'mdsched'}
     catch [Exception] {
-        Write-Log $ERR "Failed to start memory checking tool: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to start memory checking tool: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Memory checking tool was closed'
+    Set-Success
 }
 
 
-function StartSecurityScan ($Mode) {
+function Start-SecurityScan ($Mode) {
     if (-not $Mode) {
-        Write-Log $WRN "Scan mode not specified, assuming 'quick'"
+        Add-Log $WRN "Scan mode not specified, assuming 'quick'"
         $Mode = 'quick'
     }
 
-    Write-Log $INF 'Updating security signatures...'
+    Add-Log $INF 'Updating security signatures...'
 
     try {Start-Process $DefenderExe '-SignatureUpdate' -Wait}
     catch [Exception] {
-        Write-Log $ERR "Security signature update failed: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $INF "Starting $Mode securtiy scan..."
+    Set-Success
+    Add-Log $INF "Starting $Mode securtiy scan..."
 
     try {Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})"}
     catch [Exception] {
-        Write-Log $ERR "Failed to perform a $Mode securtiy scan: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to perform a $Mode securtiy scan: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Securtiy scan started successfully'
+    Set-Success
 }

@@ -1,42 +1,55 @@
-function CheckForUpdates {
+function Get-CurrentVersion {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
-    Write-Log $INF 'Checking for updates...'
+    Add-Log $INF 'Checking for updates...'
+
+    $IsNotConnected = Get-Connection
+    if ($IsNotConnected) {
+        Add-Log $ERR "Failed to check for updates: $IsNotConnected"
+        return
+    }
 
     try {$LatestVersion = (Invoke-WebRequest $VersionURL).ToString() -Replace "`n", ''}
     catch [Exception] {
-        Write-Log $ERR "Failed to check for update: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
         return
     }
 
     $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $null)
 
     if ($UpdateAvailable) {
-        Write-Log $WRN "Newer version available: v$LatestVersion"
-        DownloadUpdate
+        Add-Log $WRN "Newer version available: v$LatestVersion"
+        Get-Update
     }
-    else {Write-Log $INF 'Currently running the latest version'}
+    else {Write-Log ' No updates available'}
 }
 
 
-function DownloadUpdate {
+function Get-Update {
     $DownloadURL = 'https://qiiwexc.github.io/d/qiiwexc.ps1'
     $TargetFile = $MyInvocation.ScriptName
 
-    Write-Log $WRN 'Downloading new version...'
+    Add-Log $WRN 'Downloading new version...'
+
+    $IsNotConnected = Get-Connection
+    if ($IsNotConnected) {
+        Add-Log $ERR "Failed to download update: $IsNotConnected"
+        return
+    }
 
     try {Invoke-WebRequest $DownloadURL -OutFile $TargetFile}
     catch [Exception] {
-        Write-Log $ERR "Failed to download update: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Restarting...'
+    Set-Success
+    Add-Log $WRN 'Restarting...'
 
     try {Start-Process 'powershell' $TargetFile}
     catch [Exception] {
-        Write-Log $ERR "Failed to start new version: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
         return
     }
 
-    ExitScript
+    Exit-Script
 }

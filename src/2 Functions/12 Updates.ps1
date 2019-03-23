@@ -1,24 +1,24 @@
-function UpdateGoogleSoftware {
-    Write-Log $INF 'Starting Google Update...'
+function Start-GoogleUpdate {
+    Add-Log $INF 'Starting Google Update...'
 
     try {Start-Process $GoogleUpdateExe '/c'}
     catch [Exception] {
-        Write-Log $ERR "Google Update failed: $($_.Exception.Message)"
+        Add-Log $ERR "Google Update failed: $($_.Exception.Message)"
         return
     }
 
     try {Start-Process $GoogleUpdateExe '/ua /installsource scheduler'}
     catch [Exception] {
-        Write-Log $ERR "Google Update failed: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Google Update started successfully'
+    Set-Success
 }
 
 
-function UpdateStoreApps {
-    Write-Log $INF 'Starting Microsoft Store apps update...'
+function Start-StoreAppUpdate {
+    Add-Log $INF 'Starting Microsoft Store apps update...'
 
     try {
         $Message = 'Updating Microsoft Store apps...'
@@ -26,9 +26,48 @@ function UpdateStoreApps {
         Start-Process 'powershell' "-Command `"Write-Host $Message; $Command`"" -Verb RunAs
     }
     catch [Exception] {
-        Write-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"
         return
     }
 
-    Write-Log $WRN 'Microsoft Store apps are updating'
+    Set-Success
+}
+
+
+function Set-OfficeInsiderChannel {
+    Add-Log $INF 'Switching Microsoft Office to insider update channel...'
+
+    try {Start-Process $OfficeC2RClientExe '/changesetting Channel="Insiders"' -Wait}
+    catch [Exception] {
+        Add-Log $ERR "Failed to switch Microsoft Office update channel: $($_.Exception.Message)"
+        return
+    }
+
+    Set-Success
+}
+
+
+function Start-OfficeUpdate {
+    Add-Log $INF 'Starting Microsoft Office update...'
+
+    try {Start-Process $OfficeC2RClientExe '/update user' -Wait}
+    catch [Exception] {
+        Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"
+        return
+    }
+
+    Set-Success
+}
+
+
+function Start-WindowsUpdate {
+    Add-Log $INF 'Starting Windows Update...'
+
+    try {Start-Process 'UsoClient' 'StartInteractiveScan' -Wait}
+    catch [Exception] {
+        Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"
+        return
+    }
+
+    Set-Success
 }

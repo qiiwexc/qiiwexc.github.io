@@ -6,14 +6,14 @@ $FORM.FormBorderStyle = 'Fixed3D'
 $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
 $FORM.Top = $True
-$FORM.Add_Shown( {Startup} )
+$FORM.Add_Shown( {Initialize-Startup} )
 
 
 $LOG = New-Object System.Windows.Forms.RichTextBox
 $LOG.Height = 200
 $LOG.Width = - $INT_SHORT + $FORM_WIDTH - $INT_SHORT
 $LOG.Location = "$INT_SHORT, $($FORM_HEIGHT - $LOG.Height - $INT_SHORT)"
-$LOG.Font = "$FORM_FONT_TYPE, 9"
+$LOG.Font = "$FONT_NAME, 9"
 $LOG.ReadOnly = $True
 
 
