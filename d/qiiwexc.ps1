@@ -327,13 +327,13 @@ $TAB_CONTROL.Controls.Add($TAB_INSTALLERS)
 
 $CBOX_WIDTH_DOWNLOAD = 145
 $CBOX_SIZE_DOWNLOAD = "$($CBOX_WIDTH_DOWNLOAD), $($CBOX_HEIGHT)"
-$CBOX_SHIFT_EXECUTE = '12, -5'
+$CBOX_SHIFT_EXECUTE = '25, -5'
 
-$LBL_SHIFT_BROWSER = '22, -3'
+$LBL_SHIFT_BROWSER = '30, -5'
 
 
 $TXT_AV_WARNING = "!! THIS FILE MAY TRIGGER ANTI-VIRUS FALSE POSITIVE !!`n!! IT IS RECOMMENDED TO DISABLE A/V SOFTWARE FOR DOWNLOAD AND SUBESEQUENT USE OF THIS FILE !!"
-$TXT_EXECUTE_AFTER_DOWNLOAD = 'Execute after download'
+$TXT_EXECUTE_AFTER_DOWNLOAD = 'Start after download'
 $TXT_OPENS_IN_BROWSER = 'Opens in the browser'
 
 $TIP_EXECUTE_AFTER_DOWNLOAD = "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
@@ -1376,7 +1376,7 @@ function Start-File ($FileName, $Switches, $IsSilentInstall) {
         Set-Success
     }
     else {
-        Add-Log $INF "Executing '$Executable'..."
+        Add-Log $INF "Starting '$Executable'..."
 
         try {if ($Switches) {Start-Process "$CURRENT_DIR\$Executable" $Switches} else {Start-Process "$CURRENT_DIR\$Executable"}}
         catch [Exception] {
