@@ -1,6 +1,6 @@
-function DownloadFile ($Url, $SaveAs, $Execute, $Switches) {
+function Start-Download ($Url, $SaveAs) {
     if ($Url.length -lt 1) {
-        Write-Log $ERR 'No download URL specified'
+        Add-Log $ERR 'Download failed: No download URL specified'
         return
     }
 
@@ -8,85 +8,83 @@ function DownloadFile ($Url, $SaveAs, $Execute, $Switches) {
     $FileName = if ($SaveAs) {$SaveAs} else {$DownloadURL | Split-Path -Leaf}
     $SavePath = "$CURRENT_DIR\$FileName"
 
-    Write-Log $INF "Downloading from $DownloadURL"
+    Add-Log $INF "Downloading from $DownloadURL"
+
+    $IsNotConnected = Get-Connection
+    if ($IsNotConnected) {
+        Add-Log $ERR "Download failed: $IsNotConnected"
+        return
+    }
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
-        if (Test-Path $SavePath) {Write-Log $WRN 'Download complete'}
+        if (Test-Path $SavePath) {Set-Success}
         else {throw 'Possibly computer is offline or disk is full'}
     }
     catch [Exception] {
-        Write-Log $ERR "Download failed: $($_.Exception.Message)"
+        Add-Log $ERR "Download failed: $($_.Exception.Message)"
         return
     }
 
-    if ($Execute) {ExecuteFile $FileName $Switches}
+    return $FileName
 }
 
 
-function ExecuteFile ($FileName, $Switches) {
-    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {ExtractArchive $FileName} else {$FileName}
+function Start-File ($FileName, $Switches, $IsSilentInstall) {
+    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {Start-Extraction $FileName} else {$FileName}
 
-    if ($Switches) {
-        Write-Log $INF "Installing '$Executable' silently..."
+    if ($Switches -and $IsSilentInstall) {
+        Add-Log $INF "Installing '$Executable' silently..."
 
         try {Start-Process "$CURRENT_DIR\$Executable" $Switches -Wait}
         catch [Exception] {
-            Write-Log $ERR "'$Executable' silent installation failed: $($_.Exception.Message)"
+            Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"
             return
         }
 
-        Write-Log $INF "Removing $FileName..."
-        Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
+        Set-Success
 
-        Write-Log $WRN "'$Executable' installation completed"
+        Add-Log $INF "Removing $FileName..."
+        Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
+        Set-Success
     }
     else {
-        Write-Log $WRN "Executing '$Executable'..."
+        Add-Log $INF "Starting '$Executable'..."
 
-        try {Start-Process "$CURRENT_DIR\$Executable"}
-        catch [Exception] {Write-Log $ERR "'$Executable' execution failed: $($_.Exception.Message)"}
+        try {if ($Switches) {Start-Process "$CURRENT_DIR\$Executable" $Switches} else {Start-Process "$CURRENT_DIR\$Executable"}}
+        catch [Exception] {
+            Add-Log $ERR "Failed to execute' $Executable': $($_.Exception.Message)"
+            return
+        }
+
+        Set-Success
     }
 }
 
 
-function ExtractArchive ($FileName) {
-    Write-Log $INF "Extracting $FileName..."
+function Start-Extraction ($FileName) {
+    Add-Log $INF "Extracting $FileName..."
+
+    $ExtractionPath = if ($FileName -eq 'KMSAuto_Lite.zip' -or $FileName -match 'SDI_R*') {$FileName.trimend('.zip')}
 
     switch -Wildcard ($FileName) {
-        'ChewWGA.zip' {
-            $ExtractionPath = '.'
-            $Executable = 'CW.eXe'
-        }
-        'Office_2013-2019.zip' {
-            $ExtractionPath = '.'
-            $Executable = 'OInstall.exe'
-        }
-        'Victoria.zip' {
-            $ExtractionPath = '.'
-            $Executable = 'Victoria.exe'
-        }
-        'KMSAuto_Lite.zip' {
-            $ExtractionPath = $FileName.trimend('.zip')
-            $Executable = if ($_SYSTEM_INFO.Architecture -eq '64-bit') {'KMSAuto x64.exe'} else {'KMSAuto.exe'}
-        }
-        "SDI_R*" {
-            $ExtractionPath = $FileName.trimend('.zip')
-            $Executable = "$ExtractionPath\SDI_auto.bat"
-        }
-        Default {$ExtractionPath = $FileName.trimend('.zip')}
+        'ChewWGA.zip' {$Executable = 'CW.eXe'}
+        'Office_2013-2019.zip' {$Executable = 'OInstall.exe'}
+        'Victoria.zip' {$Executable = 'Victoria.exe'}
+        'KMSAuto_Lite.zip' {$Executable = if ($OS_ARCH -eq '64-bit') {'KMSAuto x64.exe'} else {'KMSAuto.exe'}}
+        'SDI_R*' {$Executable = "$ExtractionPath\SDI_auto.bat"}
     }
 
     $TargetDirName = "$CURRENT_DIR\$ExtractionPath"
-    if ($ExtractionPath -ne '.') {Remove-Item $TargetDirName -Recurse -ErrorAction Ignore}
+    if ($ExtractionPath) {Remove-Item $TargetDirName -Recurse -ErrorAction Ignore}
 
     try {[System.IO.Compression.ZipFile]::ExtractToDirectory("$CURRENT_DIR\$FileName", $TargetDirName)}
     catch [Exception] {
-        Write-Log $ERR "Extraction failed: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to extract' $FileName': $($_.Exception.Message)"
         return
     }
 
-    if ($ExtractionPath -eq 'KMSAuto_Lite') {
+    if ($FileName -eq 'KMSAuto_Lite.zip') {
         $TempDir = $TargetDirName
         $TargetDirName = $CURRENT_DIR
 
@@ -94,12 +92,12 @@ function ExtractArchive ($FileName) {
         Remove-Item $TempDir -Recurse -ErrorAction Ignore
     }
 
-    Write-Log $WRN "Files extracted to $TargetDirName"
+    Set-Success
+    Add-Log $INF "Files extracted to $TargetDirName"
 
-    Write-Log $INF "Removing $FileName..."
+    Add-Log $INF "Removing $FileName..."
     Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
-
-    Write-Log $WRN 'Extraction completed'
+    Set-Success
 
     return $Executable
 }
