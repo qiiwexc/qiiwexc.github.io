@@ -41,6 +41,7 @@ function Start-Build {
 
         Add-Content $TargetFile "`r`n`r`n$Spacer# $SectionName $Spacer#`r`n"
         Add-Content $TargetFile (Get-Content $File.FullName)
+        Start-Sleep -m 5
     }
 
     Add-Log $INF 'Finished'

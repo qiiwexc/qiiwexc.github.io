@@ -33,7 +33,7 @@ $CBOX_StartVictoria.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartVictoria.Size = $CBOX_SIZE
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartVictoria, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartVictoria.Add_CheckStateChanged( {$BTN_DownloadVictoria.Text = "Victoria$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartVictoria.Add_CheckStateChanged( {$BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})"} )
 
 
 $BTN_DownloadRecuva = New-Object System.Windows.Forms.Button
@@ -53,7 +53,7 @@ $CBOX_StartRecuva.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartRecuva.Size = $CBOX_SIZE
 $CBOX_StartRecuva.Location = $BTN_DownloadRecuva.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartRecuva, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartRecuva.Add_CheckStateChanged( {$BTN_DownloadRecuva.Text = "Recuva$(if ($CBOX_StartRecuva.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartRecuva.Add_CheckStateChanged( {$BTN_DownloadRecuva.Text = "Recuva (restore data)$(if ($CBOX_StartRecuva.Checked) {$REQUIRES_ELEVATION})"} )
 
 
 $BTN_CheckRAM = New-Object System.Windows.Forms.Button

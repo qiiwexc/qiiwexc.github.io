@@ -1,4 +1,4 @@
-$VERSION = '19.3.24'
+$VERSION = '19.3.25'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -224,7 +224,7 @@ $CBOX_StartAAct.Add_CheckStateChanged( {$BTN_DownloadAAct.Text = "AAct (Win 7+, 
 
 
 $BTN_DownloadChewWGA = New-Object System.Windows.Forms.Button
-$BTN_DownloadChewWGA.Text = 'ChewWGA (Windows 7)'
+$BTN_DownloadChewWGA.Text = 'ChewWGA (Win 7)'
 $BTN_DownloadChewWGA.Height = $BTN_HEIGHT
 $BTN_DownloadChewWGA.Width = $BTN_WIDTH
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
@@ -241,7 +241,7 @@ $CBOX_StartChewWGA.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartChewWGA.Size = $CBOX_SIZE
 $CBOX_StartChewWGA.Location = $BTN_DownloadChewWGA.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartChewWGA, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartChewWGA.Add_CheckStateChanged( {$BTN_DownloadChewWGA.Text = "ChewWGA (Windows 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartChewWGA.Add_CheckStateChanged( {$BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})"} )
 
 
 $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $BTN_DownloadAAct, $CBOX_StartAAct, $BTN_DownloadChewWGA, $CBOX_StartChewWGA))
@@ -308,6 +308,10 @@ $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
 
 
 $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadChrome, $LBL_DownloadChrome, $BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
 $TAB_INSTALLERS = New-Object System.Windows.Forms.TabPage
 $TAB_INSTALLERS.Text = 'Downloads'
 $TAB_INSTALLERS.UseVisualStyleBackColor = $True
@@ -701,7 +705,7 @@ $CBOX_StartVictoria.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartVictoria.Size = $CBOX_SIZE
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartVictoria, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartVictoria.Add_CheckStateChanged( {$BTN_DownloadVictoria.Text = "Victoria$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartVictoria.Add_CheckStateChanged( {$BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})"} )
 
 
 $BTN_DownloadRecuva = New-Object System.Windows.Forms.Button
@@ -721,7 +725,7 @@ $CBOX_StartRecuva.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartRecuva.Size = $CBOX_SIZE
 $CBOX_StartRecuva.Location = $BTN_DownloadRecuva.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartRecuva, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartRecuva.Add_CheckStateChanged( {$BTN_DownloadRecuva.Text = "Recuva$(if ($CBOX_StartRecuva.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartRecuva.Add_CheckStateChanged( {$BTN_DownloadRecuva.Text = "Recuva (restore data)$(if ($CBOX_StartRecuva.Checked) {$REQUIRES_ELEVATION})"} )
 
 
 $BTN_CheckRAM = New-Object System.Windows.Forms.Button
@@ -753,7 +757,7 @@ $BTN_CheckKeyboard.Height = $BTN_HEIGHT
 $BTN_CheckKeyboard.Width = $BTN_WIDTH
 $BTN_CheckKeyboard.Location = $BTN_INIT_LOCATION
 $BTN_CheckKeyboard.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Start RAM checking utility')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Open webpage with a keyboard test')
 $BTN_CheckKeyboard.Add_Click( {Open-InBrowser 'onlinemictest.com/keyboard-test'} )
 
 $LBL_CheckKeyboard = New-Object System.Windows.Forms.Label
@@ -768,7 +772,7 @@ $BTN_CheckMic.Height = $BTN_HEIGHT
 $BTN_CheckMic.Width = $BTN_WIDTH
 $BTN_CheckMic.Location = $BTN_CheckKeyboard.Location + $SHIFT_BTN_LONG
 $BTN_CheckMic.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Start RAM checking utility')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Open webpage with a microphone test')
 $BTN_CheckMic.Add_Click( {Open-InBrowser 'onlinemictest.com'} )
 
 $LBL_CheckMic = New-Object System.Windows.Forms.Label
@@ -783,7 +787,7 @@ $BTN_CheckWebCam.Height = $BTN_HEIGHT
 $BTN_CheckWebCam.Width = $BTN_WIDTH
 $BTN_CheckWebCam.Location = $BTN_CheckMic.Location + $SHIFT_BTN_LONG
 $BTN_CheckWebCam.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWebCam, 'Start RAM checking utility')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWebCam, 'Open webpage with a webcam test')
 $BTN_CheckWebCam.Add_Click( {Open-InBrowser 'onlinemictest.com/webcam-test'} )
 
 $LBL_CheckWebCam = New-Object System.Windows.Forms.Label
@@ -894,6 +898,10 @@ $TAB_MAINTENANCE = New-Object System.Windows.Forms.TabPage
 $TAB_MAINTENANCE.Text = 'Maintenace'
 $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
 $TAB_CONTROL.Controls.Add($TAB_MAINTENANCE)
+
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
 $GRP_Updates = New-Object System.Windows.Forms.GroupBox
 $GRP_Updates.Text = 'Updates'
 $GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4 + $INT_BTN_SHORT
@@ -1231,13 +1239,14 @@ function Start-Download ($Url, $SaveAs) {
 function Start-Extraction ($FileName) {
     Add-Log $INF "Extracting $FileName..."
 
-    $ExtractionPath = if ($FileName -eq 'KMSAuto_Lite.zip' -or $FileName -match 'SDI_R*') {$FileName.trimend('.zip')}
+    $ExtractionPath = if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip' -or $FileName -match 'SDI_R*') {$FileName.trimend('.zip')}
 
     switch -Wildcard ($FileName) {
         'ChewWGA.zip' {$Executable = 'CW.eXe'}
         'Office_2013-2019.zip' {$Executable = 'OInstall.exe'}
         'Victoria.zip' {$Executable = 'Victoria.exe'}
-        'KMSAuto_Lite.zip' {$Executable = if ($OS_ARCH -eq '64-bit') {'KMSAuto x64.exe'} else {'KMSAuto.exe'}}
+        'AAct.zip' {$Executable = "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe"}
+        'KMSAuto_Lite.zip' {$Executable = "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe"}
         'SDI_R*' {$Executable = "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})"}
     }
 
@@ -1250,7 +1259,7 @@ function Start-Extraction ($FileName) {
         return
     }
 
-    if ($FileName -eq 'KMSAuto_Lite.zip') {
+    if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip') {
         $TempDir = $TargetDirName
         $TargetDirName = $CURRENT_DIR
 
@@ -1271,6 +1280,36 @@ function Start-Extraction ($FileName) {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Execute File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
+function Start-File ($FileName, $Switches, $IsSilentInstall) {
+    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') {Start-Extraction $FileName} else {$FileName}
+
+    if ($Switches -and $IsSilentInstall) {
+        Add-Log $INF "Installing '$Executable' silently..."
+
+        try {Start-Process "$CURRENT_DIR\$Executable" $Switches -Wait}
+        catch [Exception] {
+            Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"
+            return
+        }
+
+        Out-Success
+
+        Add-Log $INF "Removing $FileName..."
+        Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
+        Out-Success
+    }
+    else {
+        Add-Log $INF "Starting '$Executable'..."
+
+        try {if ($Switches) {Start-Process "$CURRENT_DIR\$Executable" $Switches} else {Start-Process "$CURRENT_DIR\$Executable"}}
+        catch [Exception] {
+            Add-Log $ERR "Failed to execute' $Executable': $($_.Exception.Message)"
+            return
+        }
+
+        Out-Success
+    }
+}
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Start Elevated #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -1561,6 +1600,76 @@ function Start-WindowsUpdate {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Cleanup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
+function Clear-RecycleBin {
+    Add-Log $INF 'Emptying Recycle Bin...'
+
+    try {(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object {Remove-Item $_.Path -Recurse -Confirm:$False}}
+    catch [Exception] {
+        Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"
+        return
+    }
+
+    Out-Success
+}
+
+
+function Start-DiskCleanup {
+    Add-Log $INF 'Starting disk cleanup utility...'
+
+    try {Start-Process 'cleanmgr' '/lowdisk' -Verb RunAs}
+    catch [Exception] {
+        Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"
+        return
+    }
+
+    Out-Success
+}
+
+
+function Start-CCleaner {
+    if (-not $CCleanerWarningShown) {
+        Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
+        Add-Log $WRN 'Click the button again to contunue'
+        $script:CCleanerWarningShown = $True
+        return
+    }
+
+    Add-Log $INF 'Starting CCleaner background task...'
+
+    try {Start-Process $CCleanerExe '/auto'}
+    catch [Exception] {
+        Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"
+        return
+    }
+
+    Out-Success
+}
+
+
+function Start-WindowsCleanup {
+    Add-Log $INF 'Starting Windows update cleanup...'
+
+    try {Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -Verb RunAs}
+    catch [Exception] {
+        Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"
+        return
+    }
+
+    Out-Success
+}
+
+
+function Remove-RestorePoints {
+    Add-Log $INF 'Deleting all restore points...'
+
+    try {Start-Process 'vssadmin' 'delete shadows /all' -Verb RunAs -Wait}
+    catch [Exception] {
+        Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"
+        return
+    }
+
+    Out-Success
+}
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
