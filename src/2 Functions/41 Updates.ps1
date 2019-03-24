@@ -3,7 +3,7 @@ function Start-GoogleUpdate {
 
     try {Start-Process $GoogleUpdateExe '/c'}
     catch [Exception] {
-        Add-Log $ERR "Google Update failed: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"
         return
     }
 
@@ -13,7 +13,7 @@ function Start-GoogleUpdate {
         return
     }
 
-    Set-Success
+    Out-Success
 }
 
 
@@ -30,7 +30,7 @@ function Start-StoreAppUpdate {
         return
     }
 
-    Set-Success
+    Out-Success
 }
 
 
@@ -43,7 +43,7 @@ function Set-OfficeInsiderChannel {
         return
     }
 
-    Set-Success
+    Out-Success
 }
 
 
@@ -56,7 +56,7 @@ function Start-OfficeUpdate {
         return
     }
 
-    Set-Success
+    Out-Success
 }
 
 
@@ -69,5 +69,5 @@ function Start-WindowsUpdate {
         return
     }
 
-    Set-Success
+    Out-Success
 }

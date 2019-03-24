@@ -9,7 +9,7 @@ function Initialize-Startup {
         $BTN_Elevate.Enabled = $False
     }
 
-    Get-SystemInformation
+    Get-SystemInfo
     if ($PS_VERSION -lt 5) {Add-Log $WRN "PowerShell $PS_VERSION detected, while versions >=5 are supported. Some features might not work correctly."}
 
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -28,14 +28,4 @@ function Initialize-Startup {
 }
 
 
-function Start-Elevated {
-    if (-not $IS_ELEVATED) {
-        try {Start-Process 'powershell' $MyInvocation.ScriptName -Verb RunAs}
-        catch [Exception] {
-            Add-Log $ERR "Failed to restart with administrator privileges: $($_.Exception.Message)"
-            return
-        }
-
-        Exit-Script
-    }
-}
+function Exit-Script {$FORM.Close()}

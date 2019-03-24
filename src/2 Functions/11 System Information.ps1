@@ -1,4 +1,4 @@
-function Get-SystemInformation {
+function Get-SystemInfo {
     Add-Log $INF 'Gathering system information...'
 
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
@@ -20,11 +20,11 @@ function Get-SystemInformation {
     $script:OfficeVersion = if ($WordRegPath) {($WordRegPath.'(default)') -Replace '\D+', ''}
     $script:OfficeInstallType = if ($OfficeVersion) {if (Test-Path $OfficeC2RClientExe) {'C2R'} else {'MSI'}}
 
-    Set-Success
+    Out-Success
 }
 
 
-function Out-SystemInformation {
+function Out-SystemInfo {
     $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, PCSystemType, @{L = 'RAM'; E = {'{0:N2}' -f ($_.TotalPhysicalMemory / 1GB)}}
     $Processor = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, ThreadCount
     $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType = '3'"
