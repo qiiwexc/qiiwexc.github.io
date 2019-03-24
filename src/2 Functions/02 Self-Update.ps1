@@ -2,7 +2,7 @@ function Get-CurrentVersion {
     $VersionURL = 'https://qiiwexc.github.io/d/version'
     Add-Log $INF 'Checking for updates...'
 
-    $IsNotConnected = Get-Connection
+    $IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Failed to check for updates: $IsNotConnected"
         return
@@ -30,7 +30,7 @@ function Get-Update {
 
     Add-Log $WRN 'Downloading new version...'
 
-    $IsNotConnected = Get-Connection
+    $IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Failed to download update: $IsNotConnected"
         return
@@ -42,7 +42,7 @@ function Get-Update {
         return
     }
 
-    Set-Success
+    Out-Success
     Add-Log $WRN 'Restarting...'
 
     try {Start-Process 'powershell' $TargetFile}

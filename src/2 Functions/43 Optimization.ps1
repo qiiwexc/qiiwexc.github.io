@@ -20,40 +20,7 @@ function Set-CloudFlareDNS {
         return
     }
 
-    Set-Success
-}
-
-
-function Start-CCleaner {
-    if (-not $CCleanerWarningShown) {
-        Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
-        Add-Log $WRN 'Click the button again to contunue'
-        $script:CCleanerWarningShown = $True
-        return
-    }
-
-    Add-Log $INF 'Starting CCleaner background task...'
-
-    try {Start-Process $CCleanerExe '/auto'}
-    catch [Exception] {
-        Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"
-        return
-    }
-
-    Set-Success
-}
-
-
-function Remove-RestorePoints {
-    Add-Log $INF 'Deleting all restore points...'
-
-    try {Start-Process 'vssadmin' 'delete shadows /all' -Verb RunAs -Wait}
-    catch [Exception] {
-        Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"
-        return
-    }
-
-    Set-Success
+    Out-Success
 }
 
 
@@ -66,5 +33,5 @@ function Start-DriveOptimization {
         return
     }
 
-    Set-Success
+    Out-Success
 }
