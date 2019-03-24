@@ -12,7 +12,7 @@ $BTN_CheckKeyboard.Height = $BTN_HEIGHT
 $BTN_CheckKeyboard.Width = $BTN_WIDTH
 $BTN_CheckKeyboard.Location = $BTN_INIT_LOCATION
 $BTN_CheckKeyboard.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Start RAM checking utility')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Open webpage with a keyboard test')
 $BTN_CheckKeyboard.Add_Click( {Open-InBrowser 'onlinemictest.com/keyboard-test'} )
 
 $LBL_CheckKeyboard = New-Object System.Windows.Forms.Label
@@ -27,7 +27,7 @@ $BTN_CheckMic.Height = $BTN_HEIGHT
 $BTN_CheckMic.Width = $BTN_WIDTH
 $BTN_CheckMic.Location = $BTN_CheckKeyboard.Location + $SHIFT_BTN_LONG
 $BTN_CheckMic.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Start RAM checking utility')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Open webpage with a microphone test')
 $BTN_CheckMic.Add_Click( {Open-InBrowser 'onlinemictest.com'} )
 
 $LBL_CheckMic = New-Object System.Windows.Forms.Label
@@ -42,7 +42,7 @@ $BTN_CheckWebCam.Height = $BTN_HEIGHT
 $BTN_CheckWebCam.Width = $BTN_WIDTH
 $BTN_CheckWebCam.Location = $BTN_CheckMic.Location + $SHIFT_BTN_LONG
 $BTN_CheckWebCam.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWebCam, 'Start RAM checking utility')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWebCam, 'Open webpage with a webcam test')
 $BTN_CheckWebCam.Add_Click( {Open-InBrowser 'onlinemictest.com/webcam-test'} )
 
 $LBL_CheckWebCam = New-Object System.Windows.Forms.Label

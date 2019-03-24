@@ -1,13 +1,14 @@
 function Start-Extraction ($FileName) {
     Add-Log $INF "Extracting $FileName..."
 
-    $ExtractionPath = if ($FileName -eq 'KMSAuto_Lite.zip' -or $FileName -match 'SDI_R*') {$FileName.trimend('.zip')}
+    $ExtractionPath = if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip' -or $FileName -match 'SDI_R*') {$FileName.trimend('.zip')}
 
     switch -Wildcard ($FileName) {
         'ChewWGA.zip' {$Executable = 'CW.eXe'}
         'Office_2013-2019.zip' {$Executable = 'OInstall.exe'}
         'Victoria.zip' {$Executable = 'Victoria.exe'}
-        'KMSAuto_Lite.zip' {$Executable = if ($OS_ARCH -eq '64-bit') {'KMSAuto x64.exe'} else {'KMSAuto.exe'}}
+        'AAct.zip' {$Executable = "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe"}
+        'KMSAuto_Lite.zip' {$Executable = "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe"}
         'SDI_R*' {$Executable = "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})"}
     }
 
@@ -20,7 +21,7 @@ function Start-Extraction ($FileName) {
         return
     }
 
-    if ($FileName -eq 'KMSAuto_Lite.zip') {
+    if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip') {
         $TempDir = $TargetDirName
         $TargetDirName = $CURRENT_DIR
 

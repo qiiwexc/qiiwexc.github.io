@@ -49,7 +49,7 @@ $CBOX_StartAAct.Add_CheckStateChanged( {$BTN_DownloadAAct.Text = "AAct (Win 7+, 
 
 
 $BTN_DownloadChewWGA = New-Object System.Windows.Forms.Button
-$BTN_DownloadChewWGA.Text = 'ChewWGA (Windows 7)'
+$BTN_DownloadChewWGA.Text = 'ChewWGA (Win 7)'
 $BTN_DownloadChewWGA.Height = $BTN_HEIGHT
 $BTN_DownloadChewWGA.Width = $BTN_WIDTH
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
@@ -66,7 +66,7 @@ $CBOX_StartChewWGA.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartChewWGA.Size = $CBOX_SIZE
 $CBOX_StartChewWGA.Location = $BTN_DownloadChewWGA.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartChewWGA, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartChewWGA.Add_CheckStateChanged( {$BTN_DownloadChewWGA.Text = "ChewWGA (Windows 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartChewWGA.Add_CheckStateChanged( {$BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})"} )
 
 
 $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $BTN_DownloadAAct, $CBOX_StartAAct, $BTN_DownloadChewWGA, $CBOX_StartChewWGA))
