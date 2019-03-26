@@ -8,11 +8,6 @@ function Get-SystemInfo {
     $script:OS_VERSION = $OperatingSystem.Version
     $script:PS_VERSION = $PSVersionTable.PSVersion.Major
 
-    $script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
-
-    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
-    $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-    $script:GoogleUpdateExe = "$(if ($OS_ARCH -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
     $script:OfficeC2RClientExe = "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 
     New-PSDrive HKCR Registry HKEY_CLASSES_ROOT

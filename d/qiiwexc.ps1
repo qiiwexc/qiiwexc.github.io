@@ -1,4 +1,4 @@
-$VERSION = '19.3.25'
+$VERSION = '19.3.26'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -900,7 +900,7 @@ $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
 $TAB_CONTROL.Controls.Add($TAB_MAINTENANCE)
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Maintenace - Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GRP_Updates = New-Object System.Windows.Forms.GroupBox
 $GRP_Updates.Text = 'Updates'
@@ -962,7 +962,7 @@ $BTN_WindowsUpdate.Add_Click( {Start-WindowsUpdate} )
 $GRP_Updates.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps, $BTN_OfficeInsider, $BTN_UpdateOffice, $BTN_WindowsUpdate))
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - Cleanup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Maintenace - Cleanup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GRP_Cleanup = New-Object System.Windows.Forms.GroupBox
 $GRP_Cleanup.Text = 'Cleanup'
@@ -1025,11 +1025,11 @@ $BTN_DeleteRestorePoints.Add_Click( {Remove-RestorePoints} )
 $GRP_Cleanup.Controls.AddRange(@($BTN_EmptyRecycleBin, $BTN_DiskCleanup, $BTN_RunCCleaner, $BTN_WindowsCleanup, $BTN_DeleteRestorePoints))
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Maintenace - Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 $GRP_Optimization = New-Object System.Windows.Forms.GroupBox
 $GRP_Optimization.Text = 'Optimization'
-$GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2
+$GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Optimization.Width = $GRP_WIDTH
 $GRP_Optimization.Location = $GRP_Cleanup.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Optimization)
@@ -1055,7 +1055,18 @@ $BTN_OptimizeDrive.Font = $BTN_FONT
 $BTN_OptimizeDrive.Add_Click( {Start-DriveOptimization} )
 
 
-$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_OptimizeDrive))
+$BTN_RunDefraggler = New-Object System.Windows.Forms.Button
+$BTN_RunDefraggler.Text = "Run Defraggler for (C:)$REQUIRES_ELEVATION"
+$BTN_RunDefraggler.Height = $BTN_HEIGHT
+$BTN_RunDefraggler.Width = $BTN_WIDTH
+$BTN_RunDefraggler.Location = $BTN_OptimizeDrive.Location + $SHIFT_BTN_NORMAL
+$BTN_RunDefraggler.Font = $BTN_FONT
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RunDefraggler, 'Perform (C:) drive defragmentation with Defraggler')
+$BTN_RunDefraggler.Add_Click( {Start-Defraggler} )
+
+
+$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_OptimizeDrive, $BTN_RunDefraggler))
+
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Startup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -1077,8 +1088,16 @@ function Initialize-Startup {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Get-CurrentVersion
 
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+    $script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
+
+    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
+    $script:DefragglerExe = "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
+    $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
+    $script:GoogleUpdateExe = "$(if ($OS_ARCH -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
+
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
 
     $BTN_UpdateOffice.Enabled = $OfficeInstallType -eq 'C2R'
     $BTN_OfficeInsider.Enabled = $BTN_UpdateOffice.Enabled
@@ -1341,11 +1360,6 @@ function Get-SystemInfo {
     $script:OS_VERSION = $OperatingSystem.Version
     $script:PS_VERSION = $PSVersionTable.PSVersion.Major
 
-    $script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
-
-    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
-    $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-    $script:GoogleUpdateExe = "$(if ($OS_ARCH -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
     $script:OfficeC2RClientExe = "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 
     New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
@@ -1706,6 +1720,19 @@ function Start-DriveOptimization {
     try {Start-Process 'defrag' '/C /H /U /O' -Verb RunAs}
     catch [Exception] {
         Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"
+        return
+    }
+
+    Out-Success
+}
+
+
+function Start-Defraggler {
+    Add-Log $INF 'Starting (C:) drive optimization with Defraggler...'
+
+    try {Start-Process $DefragglerExe 'C:\' -Verb RunAs}
+    catch [Exception] {
+        Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"
         return
     }
 
