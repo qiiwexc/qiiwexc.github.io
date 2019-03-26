@@ -15,8 +15,16 @@ function Initialize-Startup {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Get-CurrentVersion
 
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+    $script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
+
+    $script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
+    $script:DefragglerExe = "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
+    $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
+    $script:GoogleUpdateExe = "$(if ($OS_ARCH -eq '64-bit') {${env:ProgramFiles(x86)}} else {$env:ProgramFiles})\Google\Update\GoogleUpdate.exe"
+
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
 
     $BTN_UpdateOffice.Enabled = $OfficeInstallType -eq 'C2R'
     $BTN_OfficeInsider.Enabled = $BTN_UpdateOffice.Enabled
