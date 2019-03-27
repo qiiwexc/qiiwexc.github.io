@@ -12,4 +12,8 @@ function Open-InBrowser ($Url) {
 }
 
 
-function Get-ConnectionStatus {return $(if (-not (Get-NetAdapter -Physical | Where-Object Status -eq 'Up')) {'Computer is not connected to the Internet'})}
+function Get-ConnectionStatus {
+    if ($PS_VERSION -gt 2) {
+        return $(if (-not (Get-NetAdapter -Physical | Where-Object Status -eq 'Up')) {'Computer is not connected to the Internet'})
+    }
+}

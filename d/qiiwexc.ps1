@@ -1,4 +1,4 @@
-$VERSION = '19.3.26'
+$VERSION = '19.3.27'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -818,6 +818,7 @@ $BTN_CheckWindowsHealth.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWindowsHealth, 'Check Windows health')
 $BTN_CheckWindowsHealth.Add_Click( {Test-WindowsHealth} )
 
+
 $BTN_RepairWindows = New-Object System.Windows.Forms.Button
 $BTN_RepairWindows.Text = "Repair Windows$REQUIRES_ELEVATION"
 $BTN_RepairWindows.Height = $BTN_HEIGHT
@@ -826,6 +827,7 @@ $BTN_RepairWindows.Location = $BTN_CheckWindowsHealth.Location + $SHIFT_BTN_NORM
 $BTN_RepairWindows.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RepairWindows, 'Attempt to restore Windows health')
 $BTN_RepairWindows.Add_Click( {Repair-Windows} )
+
 
 $BTN_CheckSystemFiles = New-Object System.Windows.Forms.Button
 $BTN_CheckSystemFiles.Text = "Check system files$REQUIRES_ELEVATION"
@@ -1068,7 +1070,6 @@ $BTN_RunDefraggler.Add_Click( {Start-Defraggler} )
 $GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_OptimizeDrive, $BTN_RunDefraggler))
 
 
-
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Startup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 function Initialize-Startup {
@@ -1216,7 +1217,11 @@ function Open-InBrowser ($Url) {
 }
 
 
-function Get-ConnectionStatus {return $(if (-not (Get-NetAdapter -Physical | Where-Object Status -eq 'Up')) {'Computer is not connected to the Internet'})}
+function Get-ConnectionStatus {
+    if ($PS_VERSION -gt 2) {
+        return $(if (-not (Get-NetAdapter -Physical | Where-Object Status -eq 'Up')) {'Computer is not connected to the Internet'})
+    }
+}
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Download File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -1384,18 +1389,18 @@ function Out-SystemInfo {
     Add-Log $INF "    Computer type:  $(switch ($ComputerSystem.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
     Add-Log $INF "    Computer manufacturer:  $($ComputerSystem.Manufacturer)"
     Add-Log $INF "    Computer model:  $($ComputerSystem.Model)"
-    Add-Log $INF "    CPU name:  $($Processor.Name)"
+    Add-Log $INF "    CPU name:  $($Processor.Name -Join '; ')"
     Add-Log $INF "    Cores / Threads:  $($Processor.NumberOfCores) / $($Processor.ThreadCount)"
     Add-Log $INF "    RAM available:  $($ComputerSystem.RAM) GB"
-    Add-Log $INF "    GPU name:  $((Get-WmiObject Win32_VideoController).Name)"
-    Add-Log $INF "    System drive model:  $(($LogicalDisk.GetRelated('Win32_DiskPartition').GetRelated('Win32_DiskDrive')).Model)"
+    Add-Log $INF "    GPU name:  $((Get-WmiObject Win32_VideoController).Name -Join '; ')"
+    Add-Log $INF "    System drive model:  $(($LogicalDisk.GetRelated('Win32_DiskPartition').GetRelated('Win32_DiskDrive')).Model -Join '; ')"
     Add-Log $INF "    System partition - free space: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($(($SystemPartition.FreeSpaceGB/$SystemPartition.SizeGB).tostring('P')))"
     Add-Log $INF '  Software'
     Add-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"
     Add-Log $INF "    Operation system:  $OS_NAME"
     Add-Log $INF "    OS architecture:  $OS_ARCH"
     Add-Log $INF "    OS version / build number:  v$((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId) / $OS_VERSION"
-    Add-Log $INF "    PowerShell version:  $PS_VERSION"
+    Add-Log $INF "    PowerShell version:  $PS_VERSION.$($PSVersionTable.PSVersion.Minor)"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OfficeInstallType) {`"($OfficeInstallType installation type)`"})"
 }
 
@@ -1440,11 +1445,11 @@ function Set-NiniteFileName () {
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Check HDD and RAM #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 function Start-DriveCheck {
-    Add-Log $INF 'Starting C: drive health check...'
+    Add-Log $INF 'Starting (C:) drive health check...'
 
     try {Start-Process 'chkdsk' '/scan' -Verb RunAs}
     catch [Exception] {
-        Add-Log $ERR "Failed to check drive health: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"
         return
     }
 
@@ -1617,7 +1622,10 @@ function Start-WindowsUpdate {
 function Clear-RecycleBin {
     Add-Log $INF 'Emptying Recycle Bin...'
 
-    try {(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object {Remove-Item $_.Path -Recurse -Confirm:$False}}
+    try {
+        if ($PS_VERSION -ge 5) {Clear-RecycleBin}
+        else {(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object {Remove-Item $_.Path -Recurse -Confirm:$False}}
+    }
     catch [Exception] {
         Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"
         return

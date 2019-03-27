@@ -1,7 +1,10 @@
 function Clear-RecycleBin {
     Add-Log $INF 'Emptying Recycle Bin...'
 
-    try {(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object {Remove-Item $_.Path -Recurse -Confirm:$False}}
+    try {
+        if ($PS_VERSION -ge 5) {Clear-RecycleBin}
+        else {(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object {Remove-Item $_.Path -Recurse -Confirm:$False}}
+    }
     catch [Exception] {
         Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"
         return

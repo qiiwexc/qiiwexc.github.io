@@ -1,9 +1,9 @@
 function Start-DriveCheck {
-    Add-Log $INF 'Starting C: drive health check...'
+    Add-Log $INF 'Starting (C:) drive health check...'
 
     try {Start-Process 'chkdsk' '/scan' -Verb RunAs}
     catch [Exception] {
-        Add-Log $ERR "Failed to check drive health: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"
         return
     }
 
