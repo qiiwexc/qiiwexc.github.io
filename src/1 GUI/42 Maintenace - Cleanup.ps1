@@ -13,7 +13,7 @@ $BTN_EmptyRecycleBin.Width = $BTN_WIDTH
 $BTN_EmptyRecycleBin.Location = $BTN_INIT_LOCATION
 $BTN_EmptyRecycleBin.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_EmptyRecycleBin, 'Empty Recycle Bin')
-$BTN_EmptyRecycleBin.Add_Click( {Clear-RecycleBin} )
+$BTN_EmptyRecycleBin.Add_Click( {Remove-Trash} )
 
 
 $BTN_DiskCleanup = New-Object System.Windows.Forms.Button

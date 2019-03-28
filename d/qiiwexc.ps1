@@ -1,4 +1,4 @@
-$VERSION = '19.3.27'
+$VERSION = '19.3.28'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -280,7 +280,7 @@ $BTN_DownloadRufus.Location = $BTN_DownloadChrome.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRufus.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRufus, 'Download Rufus - a bootable USB creator')
 $BTN_DownloadRufus.Add_Click( {
-        $FileName = Start-Download 'github.com/pbatard/rufus/releases/download/v3.4/rufus-3.4p.exe'
+        $FileName = Start-Download 'github.com/pbatard/rufus/releases/download/v3.5/rufus-3.5p.exe'
         if ($CBOX_StartRufus.Checked -and $FileName) {Start-File $FileName '-g'}
     } )
 
@@ -981,7 +981,7 @@ $BTN_EmptyRecycleBin.Width = $BTN_WIDTH
 $BTN_EmptyRecycleBin.Location = $BTN_INIT_LOCATION
 $BTN_EmptyRecycleBin.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_EmptyRecycleBin, 'Empty Recycle Bin')
-$BTN_EmptyRecycleBin.Add_Click( {Clear-RecycleBin} )
+$BTN_EmptyRecycleBin.Add_Click( {Remove-Trash} )
 
 
 $BTN_DiskCleanup = New-Object System.Windows.Forms.Button
@@ -1619,12 +1619,12 @@ function Start-WindowsUpdate {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Cleanup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Clear-RecycleBin {
+function Remove-Trash {
     Add-Log $INF 'Emptying Recycle Bin...'
 
     try {
-        if ($PS_VERSION -ge 5) {Clear-RecycleBin}
-        else {(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object {Remove-Item $_.Path -Recurse -Confirm:$False}}
+        if ($PS_VERSION -ge 5) {Clear-RecycleBin -Force}
+        else {(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object {Remove-Item $_.Path -Recurse -Force}}
     }
     catch [Exception] {
         Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"
