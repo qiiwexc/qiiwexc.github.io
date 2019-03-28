@@ -29,7 +29,7 @@ $BTN_DownloadRufus.Location = $BTN_DownloadChrome.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRufus.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRufus, 'Download Rufus - a bootable USB creator')
 $BTN_DownloadRufus.Add_Click( {
-        $FileName = Start-Download 'github.com/pbatard/rufus/releases/download/v3.4/rufus-3.4p.exe'
+        $FileName = Start-Download 'github.com/pbatard/rufus/releases/download/v3.5/rufus-3.5p.exe'
         if ($CBOX_StartRufus.Checked -and $FileName) {Start-File $FileName '-g'}
     } )
 
