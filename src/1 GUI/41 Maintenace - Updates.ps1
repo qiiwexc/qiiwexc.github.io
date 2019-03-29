@@ -27,7 +27,7 @@ $BTN_UpdateStoreApps.Add_Click( {Start-StoreAppUpdate} )
 
 
 $BTN_OfficeInsider = New-Object System.Windows.Forms.Button
-$BTN_OfficeInsider.Text = 'Become Office insider'
+$BTN_OfficeInsider.Text = "Become Office insider$REQUIRES_ELEVATION"
 $BTN_OfficeInsider.Height = $BTN_HEIGHT
 $BTN_OfficeInsider.Width = $BTN_WIDTH
 $BTN_OfficeInsider.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
