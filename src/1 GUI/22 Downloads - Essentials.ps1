@@ -14,7 +14,7 @@ $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
 $BTN_DownloadSDI.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadSDI, 'Download Snappy Driver Installer')
 $BTN_DownloadSDI.Add_Click( {
-        $FileName = Start-Download 'sdi-tool.org/releases/SDI_R1811.zip'
+        $FileName = Start-Download 'sdi-tool.org/releases/SDI_R1903.zip'
         if ($CBOX_StartSDI.Checked -and $FileName) {Start-File $FileName}
     } )
 
