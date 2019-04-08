@@ -10,7 +10,7 @@ function Initialize-Startup {
     }
 
     Get-SystemInfo
-    if ($PS_VERSION -lt 5) {Add-Log $WRN "PowerShell $PS_VERSION detected, while versions >=5 are supported. Some features might not work correctly."}
+    if ($PS_VERSION -lt 5) { Add-Log $WRN "PowerShell $PS_VERSION detected, while versions >=5 are supported. Some features might not work correctly." }
 
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Get-CurrentVersion
@@ -36,4 +36,4 @@ function Initialize-Startup {
 }
 
 
-function Exit-Script {$FORM.Close()}
+function Exit-Script { $FORM.Close() }

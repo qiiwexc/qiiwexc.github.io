@@ -12,20 +12,20 @@ function Get-SystemInfo {
 
     New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
     $WordRegPath = Get-ItemProperty 'HKCR:\Word.Application\CurVer' -ErrorAction SilentlyContinue
-    $script:OfficeVersion = if ($WordRegPath) {($WordRegPath.'(default)') -Replace '\D+', ''}
-    $script:OfficeInstallType = if ($OfficeVersion) {if (Test-Path $OfficeC2RClientExe) {'C2R'} else {'MSI'}}
+    $script:OfficeVersion = if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' }
+    $script:OfficeInstallType = if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } }
 
     Out-Success
 }
 
 
 function Out-SystemInfo {
-    $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, PCSystemType, @{L = 'RAM'; E = {'{0:N2}' -f ($_.TotalPhysicalMemory / 1GB)}}
+    $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }
     $Processor = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, ThreadCount
     $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType = '3'"
-    $SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = {'{0:N2}' -f ($_.FreeSpace / 1GB)}}, @{L = 'SizeGB'; E = {'{0:N2}' -f ($_.Size / 1GB)}}
-    $OfficeYear = switch ($OfficeVersion) { 16 {'2016 / 2019'} 15 {'2013'} 14 {'2010'} 12 {'2007'} 11 {'2003'} }
-    $OfficeName = if ($OfficeYear) {"Microsoft Office $OfficeYear"} else {'Unknown version or not installed'}
+    $SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'SizeGB'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+    $OfficeYear = switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }
+    $OfficeName = if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }
 
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'

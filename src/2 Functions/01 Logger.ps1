@@ -3,7 +3,7 @@ function Add-Log($Level, $Message) {
     $Text = "[$Timestamp] $Message"
     $LOG.SelectionStart = $LOG.TextLength
 
-    switch ($Level) { $WRN {$LOG.SelectionColor = 'blue'} $ERR {$LOG.SelectionColor = 'red'} Default {$LOG.SelectionColor = 'black'} }
+    switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
     Write-Log "`n$Text"
 }
 

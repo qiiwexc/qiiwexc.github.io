@@ -8,7 +8,7 @@ function Get-CurrentVersion {
         return
     }
 
-    try {$LatestVersion = (Invoke-WebRequest $VersionURL).ToString() -Replace "`n", ''}
+    try { $LatestVersion = (Invoke-WebRequest $VersionURL).ToString() -Replace "`n", '' }
     catch [Exception] {
         Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
         return
@@ -20,7 +20,7 @@ function Get-CurrentVersion {
         Add-Log $WRN "Newer version available: v$LatestVersion"
         Get-Update
     }
-    else {Write-Log ' No updates available'}
+    else { Write-Log ' No updates available' }
 }
 
 
@@ -36,7 +36,7 @@ function Get-Update {
         return
     }
 
-    try {Invoke-WebRequest $DownloadURL -OutFile $TargetFile}
+    try { Invoke-WebRequest $DownloadURL -OutFile $TargetFile }
     catch [Exception] {
         Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
         return
@@ -45,7 +45,7 @@ function Get-Update {
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try {Start-Process 'powershell' $TargetFile}
+    try { Start-Process 'powershell' $TargetFile }
     catch [Exception] {
         Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
         return

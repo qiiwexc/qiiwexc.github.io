@@ -27,7 +27,7 @@ function Set-CloudFlareDNS {
 function Start-DriveOptimization {
     Add-Log $INF 'Starting drive optimization...'
 
-    try {Start-Process 'defrag' '/C /H /U /O' -Verb RunAs}
+    try { Start-Process 'defrag' '/C /H /U /O' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"
         return
@@ -40,7 +40,7 @@ function Start-DriveOptimization {
 function Start-Defraggler {
     Add-Log $INF 'Starting (C:) drive optimization with Defraggler...'
 
-    try {Start-Process $DefragglerExe 'C:\' -Verb RunAs}
+    try { Start-Process $DefragglerExe 'C:\' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"
         return

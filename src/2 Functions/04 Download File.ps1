@@ -4,8 +4,8 @@ function Start-Download ($Url, $SaveAs) {
         return
     }
 
-    $DownloadURL = if ($Url -like 'http*') {$Url} else {'https://' + $Url}
-    $FileName = if ($SaveAs) {$SaveAs} else {$DownloadURL | Split-Path -Leaf}
+    $DownloadURL = if ($Url -like 'http*') { $Url } else { 'https://' + $Url }
+    $FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL | Split-Path -Leaf }
     $SavePath = "$CURRENT_DIR\$FileName"
 
     Add-Log $INF "Downloading from $DownloadURL"
@@ -18,8 +18,8 @@ function Start-Download ($Url, $SaveAs) {
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
-        if (Test-Path $SavePath) {Out-Success}
-        else {throw 'Possibly computer is offline or disk is full'}
+        if (Test-Path $SavePath) { Out-Success }
+        else { throw 'Possibly computer is offline or disk is full' }
     }
     catch [Exception] {
         Add-Log $ERR "Download failed: $($_.Exception.Message)"

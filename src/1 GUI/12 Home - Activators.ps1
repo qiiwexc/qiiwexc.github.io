@@ -16,7 +16,7 @@ $BTN_DownloadKMSAuto.Font = $BTN_FONT
 $BTN_DownloadKMSAuto.Add_Click( {
         Add-Log $WRN $TXT_AV_WARNING
         $FileName = Start-Download 'qiiwexc.github.io/d/KMSAuto_Lite.zip'
-        if ($CBOX_StartKMSAuto.Checked -and $FileName) {Start-File $FileName}
+        if ($CBOX_StartKMSAuto.Checked -and $FileName) { Start-File $FileName }
     } )
 
 $CBOX_StartKMSAuto = New-Object System.Windows.Forms.CheckBox
@@ -24,7 +24,7 @@ $CBOX_StartKMSAuto.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartKMSAuto.Size = $CBOX_SIZE
 $CBOX_StartKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartKMSAuto, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartKMSAuto.Add_CheckStateChanged( {$BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 $BTN_DownloadAAct = New-Object System.Windows.Forms.Button
@@ -37,7 +37,7 @@ $BTN_DownloadAAct.Font = $BTN_FONT
 $BTN_DownloadAAct.Add_Click( {
         Add-Log $WRN $TXT_AV_WARNING
         $FileName = Start-Download 'qiiwexc.github.io/d/AAct.zip'
-        if ($CBOX_StartAAct.Checked -and $FileName) {Start-File $FileName}
+        if ($CBOX_StartAAct.Checked -and $FileName) { Start-File $FileName }
     } )
 
 $CBOX_StartAAct = New-Object System.Windows.Forms.CheckBox
@@ -45,7 +45,7 @@ $CBOX_StartAAct.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartAAct.Size = $CBOX_SIZE
 $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartAAct, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartAAct.Add_CheckStateChanged( {$BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 $BTN_DownloadChewWGA = New-Object System.Windows.Forms.Button
@@ -58,7 +58,7 @@ $BTN_DownloadChewWGA.Font = $BTN_FONT
 $BTN_DownloadChewWGA.Add_Click( {
         Add-Log $WRN $TXT_AV_WARNING
         $FileName = Start-Download 'qiiwexc.github.io/d/ChewWGA.zip'
-        if ($CBOX_StartChewWGA.Checked -and $FileName) {Start-File $FileName}
+        if ($CBOX_StartChewWGA.Checked -and $FileName) { Start-File $FileName }
     } )
 
 $CBOX_StartChewWGA = New-Object System.Windows.Forms.CheckBox
@@ -66,7 +66,7 @@ $CBOX_StartChewWGA.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartChewWGA.Size = $CBOX_SIZE
 $CBOX_StartChewWGA.Location = $BTN_DownloadChewWGA.Location + $SHIFT_CBOX_EXECUTE
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartChewWGA, $TIP_START_AFTER_DOWNLOAD)
-$CBOX_StartChewWGA.Add_CheckStateChanged( {$BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})"} )
+$CBOX_StartChewWGA.Add_CheckStateChanged( { $BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $BTN_DownloadAAct, $CBOX_StartAAct, $BTN_DownloadChewWGA, $CBOX_StartChewWGA))

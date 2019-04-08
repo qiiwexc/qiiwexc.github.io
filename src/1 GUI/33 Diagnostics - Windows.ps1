@@ -13,7 +13,7 @@ $BTN_CheckWindowsHealth.Width = $BTN_WIDTH
 $BTN_CheckWindowsHealth.Location = $BTN_INIT_LOCATION
 $BTN_CheckWindowsHealth.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWindowsHealth, 'Check Windows health')
-$BTN_CheckWindowsHealth.Add_Click( {Test-WindowsHealth} )
+$BTN_CheckWindowsHealth.Add_Click( { Test-WindowsHealth } )
 
 
 $BTN_RepairWindows = New-Object System.Windows.Forms.Button
@@ -23,7 +23,7 @@ $BTN_RepairWindows.Width = $BTN_WIDTH
 $BTN_RepairWindows.Location = $BTN_CheckWindowsHealth.Location + $SHIFT_BTN_NORMAL
 $BTN_RepairWindows.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RepairWindows, 'Attempt to restore Windows health')
-$BTN_RepairWindows.Add_Click( {Repair-Windows} )
+$BTN_RepairWindows.Add_Click( { Repair-Windows } )
 
 
 $BTN_CheckSystemFiles = New-Object System.Windows.Forms.Button
@@ -33,7 +33,7 @@ $BTN_CheckSystemFiles.Width = $BTN_WIDTH
 $BTN_CheckSystemFiles.Location = $BTN_RepairWindows.Location + $SHIFT_BTN_NORMAL
 $BTN_CheckSystemFiles.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckSystemFiles, 'Check system file integrity')
-$BTN_CheckSystemFiles.Add_Click( {Repair-SystemFiles} )
+$BTN_CheckSystemFiles.Add_Click( { Repair-SystemFiles } )
 
 
 $GRP_Windows.Controls.AddRange(@($BTN_CheckWindowsHealth, $BTN_RepairWindows, $BTN_CheckSystemFiles))
