@@ -6,7 +6,7 @@ $FORM.FormBorderStyle = 'Fixed3D'
 $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
 $FORM.Top = $True
-$FORM.Add_Shown( {Initialize-Startup} )
+$FORM.Add_Shown( { Initialize-Startup } )
 
 
 $LOG = New-Object System.Windows.Forms.RichTextBox

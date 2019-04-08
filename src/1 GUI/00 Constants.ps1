@@ -2,7 +2,7 @@ $INF = 'INF'
 $WRN = 'WRN'
 $ERR = 'ERR'
 
-$REQUIRES_ELEVATION = if (-not $IS_ELEVATED) {' *'}
+$REQUIRES_ELEVATION = if (-not $IS_ELEVATED) { ' *' }
 
 $FORM_WIDTH = 670
 $FORM_HEIGHT = 625

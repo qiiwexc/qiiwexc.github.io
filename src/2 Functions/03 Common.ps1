@@ -4,16 +4,16 @@ function Open-InBrowser ($Url) {
         return
     }
 
-    $UrlToOpen = if ($Url -like 'http*') {$Url} else {'https://' + $Url}
+    $UrlToOpen = if ($Url -like 'http*') { $Url } else { 'https://' + $Url }
     Add-Log $INF "Openning URL in the default browser: $UrlToOpen"
 
-    try {[System.Diagnostics.Process]::Start($UrlToOpen)}
-    catch [Exception] {Add-Log $ERR "Could not open the URL: $($_.Exception.Message)"}
+    try { [System.Diagnostics.Process]::Start($UrlToOpen) }
+    catch [Exception] { Add-Log $ERR "Could not open the URL: $($_.Exception.Message)" }
 }
 
 
 function Get-ConnectionStatus {
     if ($PS_VERSION -gt 2) {
-        return $(if (-not (Get-NetAdapter -Physical | Where-Object Status -eq 'Up')) {'Computer is not connected to the Internet'})
+        return $(if (-not (Get-NetAdapter -Physical | Where-Object Status -eq 'Up')) { 'Computer is not connected to the Internet' })
     }
 }
