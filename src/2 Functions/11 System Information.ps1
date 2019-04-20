@@ -4,7 +4,7 @@ function Get-SystemInfo {
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
     $script:OS_NAME = $OperatingSystem.Caption
-    $script:OS_ARCH = $OperatingSystem.OSArchitecture
+    $script:OS_ARCH = if ($OperatingSystem.OSArchitecture -like '64-*') { '64-bit' } else { '32-bit' }
     $script:OS_VERSION = $OperatingSystem.Version
     $script:PS_VERSION = $PSVersionTable.PSVersion.Major
 
@@ -15,15 +15,17 @@ function Get-SystemInfo {
     $script:OfficeVersion = if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' }
     $script:OfficeInstallType = if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } }
 
+    $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType = '3'"
+    $script:SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'SizeGB'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+
     Out-Success
 }
 
 
 function Out-SystemInfo {
     $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }
-    $Processor = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, ThreadCount
-    $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType = '3'"
-    $SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'SizeGB'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+    $Processor = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
+    $Storage = Get-PhysicalDisk | Select-Object FriendlyName, MediaType, HealthStatus, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
     $OfficeYear = switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }
     $OfficeName = if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }
 
@@ -33,10 +35,10 @@ function Out-SystemInfo {
     Add-Log $INF "    Computer manufacturer:  $($ComputerSystem.Manufacturer)"
     Add-Log $INF "    Computer model:  $($ComputerSystem.Model)"
     Add-Log $INF "    CPU name:  $($Processor.Name -Join '; ')"
-    Add-Log $INF "    Cores / Threads:  $($Processor.NumberOfCores) / $($Processor.ThreadCount)"
+    Add-Log $INF "    Cores / Threads:  $($Processor.NumberOfCores) / $($Processor.NumberOfLogicalProcessors)"
     Add-Log $INF "    RAM available:  $($ComputerSystem.RAM) GB"
     Add-Log $INF "    GPU name:  $((Get-WmiObject Win32_VideoController).Name -Join '; ')"
-    Add-Log $INF "    System drive model:  $(($LogicalDisk.GetRelated('Win32_DiskPartition').GetRelated('Win32_DiskDrive')).Model -Join '; ')"
+    Add-Log $INF "    Storage:  $($Storage.FriendlyName) (Size: $($Storage.Size) GB, Type: $($Storage.MediaType), Health Status: $($Storage.HealthStatus))"
     Add-Log $INF "    System partition - free space: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($(($SystemPartition.FreeSpaceGB/$SystemPartition.SizeGB).tostring('P')))"
     Add-Log $INF '  Software'
     Add-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"

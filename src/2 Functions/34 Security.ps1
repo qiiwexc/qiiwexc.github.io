@@ -13,11 +13,11 @@ function Start-SecurityScan ($Mode) {
     }
 
     Out-Success
-    Add-Log $INF "Starting $Mode securtiy scan..."
+    Add-Log $INF "Starting $Mode security scan..."
 
     try { Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})" }
     catch [Exception] {
-        Add-Log $ERR "Failed to perform a $Mode securtiy scan: $($_.Exception.Message)"
+        Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"
         return
     }
 

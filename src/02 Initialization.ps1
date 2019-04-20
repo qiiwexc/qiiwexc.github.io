@@ -14,5 +14,6 @@ public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
 
 [Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0) | Out-Null
 
-Add-Type -AssemblyName System.Windows.Forms
+try { Add-Type -AssemblyName System.Windows.Forms } catch { throw 'System not supported' }
+
 [System.Windows.Forms.Application]::EnableVisualStyles()

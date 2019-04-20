@@ -31,10 +31,10 @@ $BTN_DownloadMalwarebytes.Height = $BTN_HEIGHT
 $BTN_DownloadMalwarebytes.Width = $BTN_WIDTH
 $BTN_DownloadMalwarebytes.Location = $BTN_FullSecurityScan.Location + $SHIFT_BTN_NORMAL
 $BTN_DownloadMalwarebytes.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`rMalwarebytes helps remove malware and adware")
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`nMalwarebytes helps remove malware and adware")
 $BTN_DownloadMalwarebytes.Add_Click( {
-        $FileName = Start-Download 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe'
-        if ($CBOX_StartMalwarebytes.Checked -and $FileName) { Start-File $FileName }
+        $DownloadedFile = Start-Download 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe'
+        if ($CBOX_StartMalwarebytes.Checked -and $DownloadedFile) { Start-File $DownloadedFile }
     } )
 
 $CBOX_StartMalwarebytes = New-Object System.Windows.Forms.CheckBox

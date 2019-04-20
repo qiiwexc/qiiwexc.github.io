@@ -5,7 +5,7 @@ function Open-InBrowser ($Url) {
     }
 
     $UrlToOpen = if ($Url -like 'http*') { $Url } else { 'https://' + $Url }
-    Add-Log $INF "Openning URL in the default browser: $UrlToOpen"
+    Add-Log $INF "Opening URL in the default browser: $UrlToOpen"
 
     try { [System.Diagnostics.Process]::Start($UrlToOpen) }
     catch [Exception] { Add-Log $ERR "Could not open the URL: $($_.Exception.Message)" }

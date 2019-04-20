@@ -14,8 +14,8 @@ $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
 $BTN_DownloadSDI.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadSDI, 'Download Snappy Driver Installer')
 $BTN_DownloadSDI.Add_Click( {
-        $FileName = Start-Download 'sdi-tool.org/releases/SDI_R1904.zip'
-        if ($CBOX_StartSDI.Checked -and $FileName) { Start-File $FileName }
+        $DownloadedFile = Start-Download 'sdi-tool.org/releases/SDI_R1904.zip'
+        if ($CBOX_StartSDI.Checked -and $DownloadedFile) { Start-File $DownloadedFile }
     } )
 
 $CBOX_StartSDI = New-Object System.Windows.Forms.CheckBox
@@ -32,11 +32,11 @@ $BTN_DownloadUnchecky.Height = $BTN_HEIGHT
 $BTN_DownloadUnchecky.Width = $BTN_WIDTH
 $BTN_DownloadUnchecky.Location = $BTN_DownloadSDI.Location + $SHIFT_BTN_LONG
 $BTN_DownloadUnchecky.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadUnchecky, "Download Unchecky installer`rUnchecky clears adware checkboxes when installing software")
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadUnchecky, "Download Unchecky installer`n$TXT_UNCHECKY_INFO")
 $BTN_DownloadUnchecky.Add_Click( {
-        $FileName = Start-Download 'unchecky.com/files/unchecky_setup.exe'
-        if ($CBOX_StartUnchecky.Checked -and $FileName) {
-            Start-File $FileName $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) -IsSilentInstall $True
+        $DownloadedFile = Start-Download 'unchecky.com/files/unchecky_setup.exe'
+        if ($CBOX_StartUnchecky.Checked -and $DownloadedFile) {
+            Start-File $DownloadedFile $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) -IsSilentInstall $True
         }
     } )
 
@@ -65,8 +65,8 @@ $BTN_DownloadOffice.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadOffice, "Download Microsoft Office 2013 - 2019 C2R installer and activator`n`n$TXT_AV_WARNING")
 $BTN_DownloadOffice.Add_Click( {
         Add-Log $WRN $TXT_AV_WARNING
-        $FileName = Start-Download 'qiiwexc.github.io/d/Office_2013-2019.zip'
-        if ($CBOX_StartOffice.Checked -and $FileName) { Start-File $FileName }
+        $DownloadedFile = Start-Download 'qiiwexc.github.io/d/Office_2013-2019.zip'
+        if ($CBOX_StartOffice.Checked -and $DownloadedFile) { Start-File $DownloadedFile }
     } )
 
 $CBOX_StartOffice = New-Object System.Windows.Forms.CheckBox

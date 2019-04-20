@@ -12,11 +12,11 @@ $BTN_DownloadKMSAuto.Height = $BTN_HEIGHT
 $BTN_DownloadKMSAuto.Width = $BTN_WIDTH
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
 $BTN_DownloadKMSAuto.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`rActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
 $BTN_DownloadKMSAuto.Add_Click( {
         Add-Log $WRN $TXT_AV_WARNING
-        $FileName = Start-Download 'qiiwexc.github.io/d/KMSAuto_Lite.zip'
-        if ($CBOX_StartKMSAuto.Checked -and $FileName) { Start-File $FileName }
+        $DownloadedFile = Start-Download 'qiiwexc.github.io/d/KMSAuto_Lite.zip'
+        if ($CBOX_StartKMSAuto.Checked -and $DownloadedFile) { Start-File $DownloadedFile }
     } )
 
 $CBOX_StartKMSAuto = New-Object System.Windows.Forms.CheckBox
@@ -33,11 +33,11 @@ $BTN_DownloadAAct.Height = $BTN_HEIGHT
 $BTN_DownloadAAct.Width = $BTN_WIDTH
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
 $BTN_DownloadAAct.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadAAct, "Download AAct`rActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadAAct, "Download AAct`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
 $BTN_DownloadAAct.Add_Click( {
         Add-Log $WRN $TXT_AV_WARNING
-        $FileName = Start-Download 'qiiwexc.github.io/d/AAct.zip'
-        if ($CBOX_StartAAct.Checked -and $FileName) { Start-File $FileName }
+        $DownloadedFile = Start-Download 'qiiwexc.github.io/d/AAct.zip'
+        if ($CBOX_StartAAct.Checked -and $DownloadedFile) { Start-File $DownloadedFile }
     } )
 
 $CBOX_StartAAct = New-Object System.Windows.Forms.CheckBox
@@ -54,11 +54,11 @@ $BTN_DownloadChewWGA.Height = $BTN_HEIGHT
 $BTN_DownloadChewWGA.Width = $BTN_WIDTH
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
 $BTN_DownloadChewWGA.Font = $BTN_FONT
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChewWGA, "Download ChewWGA`rLast resort for activating hopeless Windows 7 cases`n`n$TXT_AV_WARNING")
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChewWGA, "Download ChewWGA`nLast resort for activating hopeless Windows 7 cases`n`n$TXT_AV_WARNING")
 $BTN_DownloadChewWGA.Add_Click( {
         Add-Log $WRN $TXT_AV_WARNING
-        $FileName = Start-Download 'qiiwexc.github.io/d/ChewWGA.zip'
-        if ($CBOX_StartChewWGA.Checked -and $FileName) { Start-File $FileName }
+        $DownloadedFile = Start-Download 'qiiwexc.github.io/d/ChewWGA.zip'
+        if ($CBOX_StartChewWGA.Checked -and $DownloadedFile) { Start-File $DownloadedFile }
     } )
 
 $CBOX_StartChewWGA = New-Object System.Windows.Forms.CheckBox
