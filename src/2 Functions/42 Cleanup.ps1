@@ -30,7 +30,7 @@ function Start-DiskCleanup {
 function Start-CCleaner {
     if (-not $CCleanerWarningShown) {
         Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
-        Add-Log $WRN 'Click the button again to contunue'
+        Add-Log $WRN 'Click the button again to continue'
         $script:CCleanerWarningShown = $True
         return
     }
@@ -63,7 +63,7 @@ function Start-WindowsCleanup {
 function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
-    try { Start-Process 'vssadmin' 'delete shadows /all' -Verb RunAs -Wait }
+    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs -Wait }
     catch [Exception] {
         Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"
         return
