@@ -39,7 +39,7 @@ function Start-Build {
         $Repetitions = 30 - [Math]::Round(($SectionName.length + 1) / 4)
         $Spacer = '#-' * $Repetitions
 
-        Add-Content $TargetFile "`r`n`r`n$Spacer# $SectionName $Spacer#`r`n"
+        Add-Content $TargetFile "`n`n$Spacer# $SectionName $Spacer#`n"
         Add-Content $TargetFile (Get-Content $File.FullName)
         Start-Sleep -m 5
     }

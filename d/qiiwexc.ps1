@@ -1,4 +1,4 @@
-$VERSION = '19.4.21'
+$VERSION = '19.4.23'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -1226,13 +1226,14 @@ function Get-CurrentVersion {
         return
     }
 
-    try { $LatestVersion = (Invoke-WebRequest $VersionURL).ToString() -Replace "`n", '' }
+    try {
+        $LatestVersion = (Invoke-WebRequest $VersionURL).ToString().Replace("`r", '').Replace("`n", '')
+        $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $null)
+    }
     catch [Exception] {
         Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
         return
     }
-
-    $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $null)
 
     if ($UpdateAvailable) {
         Add-Log $WRN "Newer version available: v$LatestVersion"
