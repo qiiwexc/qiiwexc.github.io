@@ -12,7 +12,7 @@ $WRN = 'WRN'
 function Add-Log($Level, $Message) {
     $Timestamp = (Get-Date).ToString()
     $Text = "[$Timestamp] $Message"
-    switch ($Level) { $WRN {Write-Warning $Text} $INF {Write-Host $Text} Default {Write-Host $Message} }
+    switch ($Level) { $WRN { Write-Warning $Text } $INF { Write-Host $Text } Default { Write-Host $Message } }
 }
 
 function Start-Build {
@@ -28,7 +28,7 @@ function Start-Build {
     New-Item $DistPath -ItemType Directory -Force | Out-Null
 
     Add-Log $INF 'Writing version file'
-    Add-Content $VersionFile $Version
+    Add-Content $VersionFile "$Version`n" -NoNewline
 
     Add-Log $INF 'Building...'
     Add-Content $TargetFile "`$VERSION = '$Version'"
@@ -53,4 +53,4 @@ function Start-BuildAndRun {
     Start-Process 'powershell' ".\$TargetFile"
 }
 
-if ($args[0] -eq '--and-run') {Start-BuildAndRun} else {Start-Build}
+if ($args[0] -eq '--and-run') { Start-BuildAndRun } else { Start-Build }
