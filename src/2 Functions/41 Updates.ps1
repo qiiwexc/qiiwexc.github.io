@@ -63,7 +63,7 @@ function Start-OfficeUpdate {
 function Start-WindowsUpdate {
     Add-Log $INF 'Starting Windows Update...'
 
-    try { Start-Process 'UsoClient' 'StartInteractiveScan' -Wait }
+    try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' -Wait } else { Start-Process 'wuauclt' '/detectnow /updatenow' -Wait } }
     catch [Exception] {
         Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"
         return

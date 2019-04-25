@@ -4,15 +4,18 @@ function Start-SecurityScan ($Mode) {
         $Mode = 'quick'
     }
 
-    Add-Log $INF 'Updating security signatures...'
+    if ($OS_VERSION -gt 7) {
+        Add-Log $INF 'Updating security signatures...'
 
-    try { Start-Process $DefenderExe '-SignatureUpdate' -Wait }
-    catch [Exception] {
-        Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"
-        return
+        try { Start-Process $DefenderExe '-SignatureUpdate' -Wait }
+        catch [Exception] {
+            Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"
+            return
+        }
+
+        Out-Success
     }
 
-    Out-Success
     Add-Log $INF "Starting $Mode security scan..."
 
     try { Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})" }

@@ -1,7 +1,11 @@
-function Start-DriveCheck {
+function Start-DriveCheck ($FullScan) {
     Add-Log $INF 'Starting (C:) drive health check...'
 
-    try { Start-Process 'chkdsk' '/scan' -Verb RunAs }
+    try {
+        if ($FullScan) { Start-Process 'chkdsk' '/B' -Verb RunAs } else {
+            if ($OS_VERSION -gt 7) { Start-Process 'chkdsk' '/scan /perf' -Verb RunAs } else { Start-Process 'chkdsk' -Verb RunAs }
+        }
+    }
     catch [Exception] {
         Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"
         return

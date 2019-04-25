@@ -5,7 +5,7 @@ function Start-Download ($Url, $SaveAs) {
     }
 
     $DownloadURL = if ($Url -like 'http*') { $Url } else { 'https://' + $Url }
-    $FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL | Split-Path -Leaf }
+    $FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }
     $SavePath = "$CURRENT_DIR\$FileName"
 
     Add-Log $INF "Downloading from $DownloadURL"
