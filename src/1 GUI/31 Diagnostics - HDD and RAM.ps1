@@ -1,6 +1,6 @@
 $GRP_HDDandRAM = New-Object System.Windows.Forms.GroupBox
 $GRP_HDDandRAM.Text = 'HDD and RAM'
-$GRP_HDDandRAM.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2 + $INT_BTN_NORMAL * 2
+$GRP_HDDandRAM.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG * 3
 $GRP_HDDandRAM.Width = $GRP_WIDTH
 $GRP_HDDandRAM.Location = $GRP_INIT_LOCATION
 $TAB_DIAGNOSTICS.Controls.Add($GRP_HDDandRAM)
@@ -13,14 +13,20 @@ $BTN_CheckDrive.Width = $BTN_WIDTH
 $BTN_CheckDrive.Location = $BTN_INIT_LOCATION
 $BTN_CheckDrive.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDrive, 'Perform a (C:) drive health check')
-$BTN_CheckDrive.Add_Click( { Start-DriveCheck } )
+$BTN_CheckDrive.Add_Click( { Start-DriveCheck $CBOX_ScheduleDriveCheck.Checked } )
+
+$CBOX_ScheduleDriveCheck = New-Object System.Windows.Forms.CheckBox
+$CBOX_ScheduleDriveCheck.Text = 'Schedule full check'
+$CBOX_ScheduleDriveCheck.Size = $CBOX_SIZE
+$CBOX_ScheduleDriveCheck.Location = $BTN_CheckDrive.Location + $SHIFT_CBOX_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ScheduleDriveCheck, 'Schedule a full drive check on next restart')
 
 
 $BTN_DownloadVictoria = New-Object System.Windows.Forms.Button
 $BTN_DownloadVictoria.Text = 'Victoria (HDD scan)'
 $BTN_DownloadVictoria.Height = $BTN_HEIGHT
 $BTN_DownloadVictoria.Width = $BTN_WIDTH
-$BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_NORMAL
+$BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_LONG
 $BTN_DownloadVictoria.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
 $BTN_DownloadVictoria.Add_Click( {
@@ -66,4 +72,4 @@ $BTN_CheckRAM.Font = $BTN_FONT
 $BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
 
 
-$GRP_HDDandRAM.Controls.AddRange(@($BTN_CheckDrive, $BTN_DownloadVictoria, $CBOX_StartVictoria, $BTN_DownloadRecuva, $CBOX_StartRecuva, $BTN_CheckRAM))
+$GRP_HDDandRAM.Controls.AddRange(@($BTN_CheckDrive, $CBOX_ScheduleDriveCheck, $BTN_DownloadVictoria, $CBOX_StartVictoria, $BTN_DownloadRecuva, $CBOX_StartRecuva, $BTN_CheckRAM))

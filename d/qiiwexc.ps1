@@ -1,4 +1,4 @@
-$VERSION = '19.4.24'
+$VERSION = '19.4.25'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -674,7 +674,7 @@ $TAB_CONTROL.Controls.Add($TAB_DIAGNOSTICS)
 
 $GRP_HDDandRAM = New-Object System.Windows.Forms.GroupBox
 $GRP_HDDandRAM.Text = 'HDD and RAM'
-$GRP_HDDandRAM.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2 + $INT_BTN_NORMAL * 2
+$GRP_HDDandRAM.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG * 3
 $GRP_HDDandRAM.Width = $GRP_WIDTH
 $GRP_HDDandRAM.Location = $GRP_INIT_LOCATION
 $TAB_DIAGNOSTICS.Controls.Add($GRP_HDDandRAM)
@@ -687,14 +687,20 @@ $BTN_CheckDrive.Width = $BTN_WIDTH
 $BTN_CheckDrive.Location = $BTN_INIT_LOCATION
 $BTN_CheckDrive.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDrive, 'Perform a (C:) drive health check')
-$BTN_CheckDrive.Add_Click( { Start-DriveCheck } )
+$BTN_CheckDrive.Add_Click( { Start-DriveCheck $CBOX_ScheduleDriveCheck.Checked } )
+
+$CBOX_ScheduleDriveCheck = New-Object System.Windows.Forms.CheckBox
+$CBOX_ScheduleDriveCheck.Text = 'Schedule full check'
+$CBOX_ScheduleDriveCheck.Size = $CBOX_SIZE
+$CBOX_ScheduleDriveCheck.Location = $BTN_CheckDrive.Location + $SHIFT_CBOX_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ScheduleDriveCheck, 'Schedule a full drive check on next restart')
 
 
 $BTN_DownloadVictoria = New-Object System.Windows.Forms.Button
 $BTN_DownloadVictoria.Text = 'Victoria (HDD scan)'
 $BTN_DownloadVictoria.Height = $BTN_HEIGHT
 $BTN_DownloadVictoria.Width = $BTN_WIDTH
-$BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_NORMAL
+$BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_LONG
 $BTN_DownloadVictoria.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
 $BTN_DownloadVictoria.Add_Click( {
@@ -740,7 +746,7 @@ $BTN_CheckRAM.Font = $BTN_FONT
 $BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
 
 
-$GRP_HDDandRAM.Controls.AddRange(@($BTN_CheckDrive, $BTN_DownloadVictoria, $CBOX_StartVictoria, $BTN_DownloadRecuva, $CBOX_StartRecuva, $BTN_CheckRAM))
+$GRP_HDDandRAM.Controls.AddRange(@($BTN_CheckDrive, $CBOX_ScheduleDriveCheck, $BTN_DownloadVictoria, $CBOX_StartVictoria, $BTN_DownloadRecuva, $CBOX_StartRecuva, $BTN_CheckRAM))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - Other Hardware #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -1135,6 +1141,7 @@ function Initialize-Startup {
 
     Get-SystemInfo
     if ($PS_VERSION -lt 5) { Add-Log $WRN "PowerShell $PS_VERSION detected, while versions >=5 are supported. Some features might not work correctly." }
+    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
 
     $script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
     $script:PROGRAM_FILES_86 = if ($OS_ARCH -eq '64-bit') { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles }
@@ -1143,6 +1150,10 @@ function Initialize-Startup {
     $script:DefragglerExe = "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
     $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
     $script:GoogleUpdateExe = "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe"
+
+    $BTN_WindowsCleanup.Enabled = $OS_VERSION -gt 7
+    $BTN_RepairWindows.Enabled = $OS_VERSION -gt 7
+    $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
 
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
     $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
@@ -1156,8 +1167,11 @@ function Initialize-Startup {
 
     $BTN_FileCleanup.Enabled = $IS_ELEVATED
 
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
+    catch [Exception] { Add-Log $ERR "Failed to load System.IO.Compression.FileSystem module, unzipping archives won't work: $($_.Exception.Message)" }
+
+    try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 }
+    catch [Exception] { Add-Log $ERR "Failed to configure security protocol, downloading over HTTPS won't work: $($_.Exception.Message)" }
 
     Get-CurrentVersion
 
@@ -1180,10 +1194,11 @@ function Initialize-Startup {
         Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
     }
 
-    $CurrentNetworkAdapter = (Get-NetAdapter -Physical | Where-Object Status -eq 'Up').ifIndex
-    if ($CurrentNetworkAdapter) {
-        $CurrentDnsServer = (Get-DnsClientServerAddress -InterfaceIndex $CurrentNetworkAdapter).ServerAddresses
-        if ($CurrentDnsServer -NotContains '1.1.1.1' -and $CurrentDnsServer -NotContains '1.0.0.1') {
+
+    $NetworkAdapter = Get-NetworkAdapter
+    if ($NetworkAdapter) {
+        $CurrentDnsServer = $NetworkAdapter.DNSServerSearchOrder
+        if (-not ($CurrentDnsServer -Contains '1.1.1.1' -or $CurrentDnsServer -Contains '1.0.0.1')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
             Add-Log $INF '  privacy online (see Maintenance -> Optimization -> Setup CouldFlare DNS).'
@@ -1300,11 +1315,10 @@ function Open-InBrowser ($Url) {
 }
 
 
-function Get-ConnectionStatus {
-    if ($PS_VERSION -gt 2) {
-        return $(if (-not (Get-NetAdapter -Physical | Where-Object Status -eq 'Up')) { 'Computer is not connected to the Internet' })
-    }
-}
+function Get-NetworkAdapter { return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
+
+
+function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { return 'Computer is not connected to the Internet' } }
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Download File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -1316,7 +1330,7 @@ function Start-Download ($Url, $SaveAs) {
     }
 
     $DownloadURL = if ($Url -like 'http*') { $Url } else { 'https://' + $Url }
-    $FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL | Split-Path -Leaf }
+    $FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }
     $SavePath = "$CURRENT_DIR\$FileName"
 
     Add-Log $INF "Downloading from $DownloadURL"
@@ -1446,18 +1460,18 @@ function Get-SystemInfo {
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
     $script:OS_NAME = $OperatingSystem.Caption
+    $script:OS_BUILD = $OperatingSystem.Version
     $script:OS_ARCH = if ($OperatingSystem.OSArchitecture -like '64-*') { '64-bit' } else { '32-bit' }
-    $script:OS_VERSION = $OperatingSystem.Version
+    $script:OS_VERSION = if ($OS_BUILD -match '10.0.*') { 10 } elseif ($OS_BUILD -match '6.3.*') { 8.1 } elseif ($OS_BUILD -match '6.2.*') { 8 } elseif ($OS_BUILD -match '6.1.*') { 7 } else { 'Vista or less' }
     $script:PS_VERSION = $PSVersionTable.PSVersion.Major
-
-    $script:OfficeC2RClientExe = "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 
     New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
     $WordRegPath = Get-ItemProperty 'HKCR:\Word.Application\CurVer' -ErrorAction SilentlyContinue
     $script:OfficeVersion = if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' }
+    $script:OfficeC2RClientExe = "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
     $script:OfficeInstallType = if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } }
 
-    $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType = '3'"
+    $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'"
     $script:SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'SizeGB'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
 
     Out-Success
@@ -1465,30 +1479,39 @@ function Get-SystemInfo {
 
 
 function Out-SystemInfo {
-    $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }
+    $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }
     $Processor = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
-    $Storage = Get-PhysicalDisk | Select-Object FriendlyName, MediaType, HealthStatus, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
-    $OfficeYear = switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }
-    $OfficeName = if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }
 
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
     Add-Log $INF "    Computer type:  $(switch ($ComputerSystem.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
-    Add-Log $INF "    Computer manufacturer:  $($ComputerSystem.Manufacturer)"
-    Add-Log $INF "    Computer model:  $($ComputerSystem.Model)"
+    Add-Log $INF "    Computer model:  $($ComputerSystem.Manufacturer) $($ComputerSystem.Model) $(if ($ComputerSystem.SystemSKUNumber) {"($($ComputerSystem.SystemSKUNumber))"})"
     Add-Log $INF "    CPU name:  $($Processor.Name -Join '; ')"
     Add-Log $INF "    Cores / Threads:  $($Processor.NumberOfCores) / $($Processor.NumberOfLogicalProcessors)"
     Add-Log $INF "    RAM available:  $($ComputerSystem.RAM) GB"
     Add-Log $INF "    GPU name:  $((Get-WmiObject Win32_VideoController).Name -Join '; ')"
-    Add-Log $INF "    Storage:  $($Storage.FriendlyName) (Size: $($Storage.Size) GB, Type: $($Storage.MediaType), Health Status: $($Storage.HealthStatus))"
-    Add-Log $INF "    System partition - free space: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($(($SystemPartition.FreeSpaceGB/$SystemPartition.SizeGB).tostring('P')))"
+
+    if ($OS_VERSION -gt 7) {
+        $Storage = Get-PhysicalDisk | Select-Object BusType, FirmwareVersion, FriendlyName, HealthStatus, MediaType, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+        Add-Log $INF "    Storage:  $($Storage.FriendlyName) ($($Storage.BusType) $($Storage.MediaType), $($Storage.Size) GB, $($Storage.HealthStatus), Firmware: $($Storage.FirmwareVersion))"
+    }
+    else {
+        $Storage = Get-WmiObject Win32_DiskDrive | Select-Object FirmwareRevision, Model, Status, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+        Add-Log $INF "    Storage:  $($Storage.Model) ($($Storage.Size) GB, Health: $($Storage.Status), Firmware: $($Storage.FirmwareRevision))"
+    }
+
+    $OfficeYear = switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }
+    $OfficeName = if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }
+    $Win10Release = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId
+
+    Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($(($SystemPartition.FreeSpaceGB/$SystemPartition.SizeGB).tostring('P')))"
     Add-Log $INF '  Software'
     Add-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"
     Add-Log $INF "    Operation system:  $OS_NAME"
     Add-Log $INF "    OS architecture:  $OS_ARCH"
-    Add-Log $INF "    OS version / build number:  v$((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId) / $OS_VERSION"
-    Add-Log $INF "    PowerShell version:  $PS_VERSION.$($PSVersionTable.PSVersion.Minor)"
+    Add-Log $INF "    $(if ($OS_VERSION -eq 10) {'OS release / '})Build number:  $(if ($OS_VERSION -eq 10) {"v$Win10Release / "})$OS_BUILD"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OfficeInstallType) {`"($OfficeInstallType installation type)`"})"
+    Add-Log $INF "    PowerShell version:  $PS_VERSION.$($PSVersionTable.PSVersion.Minor)"
 }
 
 
@@ -1531,10 +1554,14 @@ function Set-NiniteFileName () {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Check HDD and RAM #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Start-DriveCheck {
+function Start-DriveCheck ($FullScan) {
     Add-Log $INF 'Starting (C:) drive health check...'
 
-    try { Start-Process 'chkdsk' '/scan' -Verb RunAs }
+    try {
+        if ($FullScan) { Start-Process 'chkdsk' '/B' -Verb RunAs } else {
+            if ($OS_VERSION -gt 7) { Start-Process 'chkdsk' '/scan /perf' -Verb RunAs } else { Start-Process 'chkdsk' -Verb RunAs }
+        }
+    }
     catch [Exception] {
         Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"
         return
@@ -1606,15 +1633,18 @@ function Start-SecurityScan ($Mode) {
         $Mode = 'quick'
     }
 
-    Add-Log $INF 'Updating security signatures...'
+    if ($OS_VERSION -gt 7) {
+        Add-Log $INF 'Updating security signatures...'
 
-    try { Start-Process $DefenderExe '-SignatureUpdate' -Wait }
-    catch [Exception] {
-        Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"
-        return
+        try { Start-Process $DefenderExe '-SignatureUpdate' -Wait }
+        catch [Exception] {
+            Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"
+            return
+        }
+
+        Out-Success
     }
 
-    Out-Success
     Add-Log $INF "Starting $Mode security scan..."
 
     try { Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})" }
@@ -1694,7 +1724,7 @@ function Start-OfficeUpdate {
 function Start-WindowsUpdate {
     Add-Log $INF 'Starting Windows Update...'
 
-    try { Start-Process 'UsoClient' 'StartInteractiveScan' -Wait }
+    try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' -Wait } else { Start-Process 'wuauclt' '/detectnow /updatenow' -Wait } }
     catch [Exception] {
         Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"
         return
@@ -2044,19 +2074,14 @@ function Set-CloudFlareDNS {
     Add-Log $WRN 'Internet connection may get interrupted briefly'
     Add-Log $INF 'Changing DNS server to CloudFlare DNS (1.1.1.1 / 1.0.0.1)...'
 
-    $CurrentNetworkAdapter = (Get-NetAdapter -Physical | Where-Object Status -eq 'Up').ifIndex
-
-    if (-not $CurrentNetworkAdapter) {
+    if (-not (Get-NetworkAdapter)) {
         Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
         Add-Log $ERR 'This could mean that computer is not connected'
         return
     }
 
-    try {
-        $Message = 'Changing DNS server to CloudFlare DNS...'
-        $Command = "Set-DnsClientServerAddress -InterfaceIndex $CurrentNetworkAdapter -ServerAddresses ('1.1.1.1', '1.0.0.1')"
-        Start-Process 'powershell' "-Command `"Write-Host $Message; $Command`"" -Verb RunAs -Wait
-    }
+    $Command = "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))"
+    try { Start-Process 'powershell' "-Command `"Write-Host 'Changing DNS server to CloudFlare DNS...'; $Command`"" -Verb RunAs -Wait }
     catch [Exception] {
         Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
         return
@@ -2069,7 +2094,7 @@ function Set-CloudFlareDNS {
 function Start-DriveOptimization {
     Add-Log $INF 'Starting drive optimization...'
 
-    try { Start-Process 'defrag' '/C /H /U /O' -Verb RunAs }
+    try { Start-Process 'defrag' $(if ($OS_VERSION -gt 7) { '/C /H /U /O' } else { 'C: /H /U' }) -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"
         return
