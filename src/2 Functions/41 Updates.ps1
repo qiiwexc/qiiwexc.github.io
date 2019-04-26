@@ -22,7 +22,7 @@ function Start-StoreAppUpdate {
 
     try {
         $Message = 'Updating Microsoft Store apps...'
-        $Command = "(Get-WmiObject -Namespace 'root\cimv2\mdm\dmmap' -Class 'MDM_EnterpriseModernAppManagement_AppManagement01').UpdateScanMethod()"
+        $Command = "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
         Start-Process 'powershell' "-Command `"Write-Host $Message; $Command`"" -Verb RunAs
     }
     catch [Exception] {
