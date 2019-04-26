@@ -249,7 +249,6 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
         "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
         "$PROGRAM_FILES_86\Notepad++\change.log"
-        "$PROGRAM_FILES_86\Notepad++\LICENSE"
         "$PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PROGRAM_FILES_86\Notepad++\updater\LICENSE"
         "$PROGRAM_FILES_86\Notepad++\updater\README.md"

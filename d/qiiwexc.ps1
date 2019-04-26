@@ -1,4 +1,4 @@
-$VERSION = '19.4.25'
+$VERSION = '19.4.26'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -1683,7 +1683,7 @@ function Start-StoreAppUpdate {
 
     try {
         $Message = 'Updating Microsoft Store apps...'
-        $Command = "(Get-WmiObject -Namespace 'root\cimv2\mdm\dmmap' -Class 'MDM_EnterpriseModernAppManagement_AppManagement01').UpdateScanMethod()"
+        $Command = "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
         Start-Process 'powershell' "-Command `"Write-Host $Message; $Command`"" -Verb RunAs
     }
     catch [Exception] {
@@ -1839,7 +1839,7 @@ function Start-FileCleanup {
             Add-Log $INF "Removing older versions from $Path"
 
             $Newest = (Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1).Name
-            Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories $Newest | ForEach-Object {Remove-Item $_ -Recurse -Force}
+            Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories $Newest | ForEach-Object { Remove-Item $_ -Recurse -Force }
 
             Out-Success
         }
@@ -1871,7 +1871,7 @@ function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object {Remove-Item $_ -Recurse -Force}
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Recurse -Force }
             Out-Success
         }
     }
@@ -1987,7 +1987,6 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
         "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
         "$PROGRAM_FILES_86\Notepad++\change.log"
-        "$PROGRAM_FILES_86\Notepad++\LICENSE"
         "$PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PROGRAM_FILES_86\Notepad++\updater\LICENSE"
         "$PROGRAM_FILES_86\Notepad++\updater\README.md"
@@ -2081,7 +2080,7 @@ function Set-CloudFlareDNS {
     }
 
     $Command = "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))"
-    try { Start-Process 'powershell' "-Command `"Write-Host 'Changing DNS server to CloudFlare DNS...'; $Command`"" -Verb RunAs -Wait }
+    try { Start-Process 'powershell' "-Command `"Write-Host 'Changing DNS server to CloudFlare DNS...'; $Command`"" -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
         return
