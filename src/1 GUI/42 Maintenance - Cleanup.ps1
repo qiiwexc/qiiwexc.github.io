@@ -7,7 +7,7 @@ $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
 
 $BTN_EmptyRecycleBin = New-Object System.Windows.Forms.Button
-$BTN_EmptyRecycleBin.Text = 'Empty Recycle Bin'
+$BTN_EmptyRecycleBin.Text = "Empty Recycle Bin$(if($PS_VERSION -le 2) {$REQUIRES_ELEVATION})"
 $BTN_EmptyRecycleBin.Height = $BTN_HEIGHT
 $BTN_EmptyRecycleBin.Width = $BTN_WIDTH
 $BTN_EmptyRecycleBin.Location = $BTN_INIT_LOCATION

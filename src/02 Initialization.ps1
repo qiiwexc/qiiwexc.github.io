@@ -17,3 +17,5 @@ public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
 try { Add-Type -AssemblyName System.Windows.Forms } catch { throw 'System not supported' }
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
+
+$PS_VERSION = $PSVersionTable.PSVersion.Major

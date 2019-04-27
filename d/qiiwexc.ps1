@@ -1,4 +1,4 @@
-$VERSION = '19.4.27'
+$VERSION = '19.4.28'
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -29,9 +29,11 @@ public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
 
 [Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0) | Out-Null
 
-try { Add-Type -AssemblyName System.Windows.Forms } catch { throw 'System not supported' }
+try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not supported' }
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
+
+$PS_VERSION = $PSVersionTable.PSVersion.Major
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Constants #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -190,7 +192,7 @@ $BTN_DownloadKMSAuto.Width = $BTN_WIDTH
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
 $BTN_DownloadKMSAuto.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
-$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -Execute $CBOX_StartKMSAuto.Checked -AVWarning $True } )
+$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -AVWarning -MultiFile -Execute:$CBOX_StartKMSAuto.Checked } )
 
 $CBOX_StartKMSAuto = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartKMSAuto.Text = $TXT_START_AFTER_DOWNLOAD
@@ -207,7 +209,7 @@ $BTN_DownloadAAct.Width = $BTN_WIDTH
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
 $BTN_DownloadAAct.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadAAct, "Download AAct`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
-$BTN_DownloadAAct.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/AAct.zip' -Execute $CBOX_StartAAct.Checked -AVWarning $True } )
+$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/AAct.zip' -AVWarning -MultiFile -Execute:$CBOX_StartAAct.Checked } )
 
 $CBOX_StartAAct = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartAAct.Text = $TXT_START_AFTER_DOWNLOAD
@@ -224,7 +226,7 @@ $BTN_DownloadChewWGA.Width = $BTN_WIDTH
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
 $BTN_DownloadChewWGA.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChewWGA, "Download ChewWGA`nLast resort for activating hopeless Windows 7 cases`n`n$TXT_AV_WARNING")
-$BTN_DownloadChewWGA.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/ChewWGA.zip' -Execute $CBOX_StartChewWGA.Checked -AVWarning $True } )
+$BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/ChewWGA.zip' -AVWarning -Execute:$CBOX_StartChewWGA.Checked } )
 
 $CBOX_StartChewWGA = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartChewWGA.Text = $TXT_START_AFTER_DOWNLOAD
@@ -254,12 +256,17 @@ $BTN_DownloadChrome.Width = $BTN_WIDTH
 $BTN_DownloadChrome.Location = $BTN_INIT_LOCATION
 $BTN_DownloadChrome.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChrome, 'Open Google Chrome Beta download page')
-$BTN_DownloadChrome.Add_Click( { Open-InBrowser 'google.com/chrome/beta' } )
+$BTN_DownloadChrome.Add_Click( {
+        $ChromeBetaURL = 'dl.google.com/tag/s/appguid%3D%7B8237E44A-0054-442C-B6B6-EA0509993955%7D%26appname%3DGoogle%2520Chrome%2520Beta%26needsadmin%3Dprefers%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe'
+        Start-DownloadExtractExecute $ChromeBetaURL -Execute:$CBOX_StartChrome.Checked
+    } )
 
-$LBL_DownloadChrome = New-Object System.Windows.Forms.Label
-$LBL_DownloadChrome.Text = $TXT_OPENS_IN_BROWSER
-$LBL_DownloadChrome.Size = $CBOX_SIZE
-$LBL_DownloadChrome.Location = $BTN_DownloadChrome.Location + $SHIFT_LBL_BROWSER
+$CBOX_StartChrome = New-Object System.Windows.Forms.CheckBox
+$CBOX_StartChrome.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartChrome.Size = $CBOX_SIZE
+$CBOX_StartChrome.Location = $BTN_DownloadChrome.Location + $SHIFT_CBOX_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartChrome, $TIP_START_AFTER_DOWNLOAD)
+$CBOX_StartChrome.Add_CheckStateChanged( { $BTN_DownloadChrome.Text = "Chrome Beta$(if ($CBOX_StartChrome.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 $BTN_DownloadRufus = New-Object System.Windows.Forms.Button
@@ -301,7 +308,7 @@ $LBL_WindowsPE.Size = $CBOX_SIZE
 $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
 
 
-$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadChrome, $LBL_DownloadChrome, $BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
+$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadChrome, $CBOX_StartChrome, $BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -391,7 +398,7 @@ $BTN_DownloadNinite.Width = $BTN_WIDTH
 $BTN_DownloadNinite.Location = $CBOX_VSCode.Location + $SHIFT_BTN_SHORT
 $BTN_DownloadNinite.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadNinite, 'Download Ninite universal installer for selected applications')
-$BTN_DownloadNinite.Add_Click( { Start-DownloadAndExecute "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) -Execute $CBOX_StartNinite.Checked } )
+$BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) -Execute:$CBOX_StartNinite.Checked } )
 
 $CBOX_StartNinite = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartNinite.Text = $TXT_START_AFTER_DOWNLOAD
@@ -442,7 +449,7 @@ $BTN_DownloadSDI.Width = $BTN_WIDTH
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
 $BTN_DownloadSDI.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadSDI, 'Download Snappy Driver Installer')
-$BTN_DownloadSDI.Add_Click( { Start-DownloadAndExecute 'sdi-tool.org/releases/SDI_R1904.zip' -Execute $CBOX_StartSDI.Checked } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute 'sdi-tool.org/releases/SDI_R1904.zip' -MultiFile -Execute:$CBOX_StartSDI.Checked } )
 
 $CBOX_StartSDI = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartSDI.Text = $TXT_START_AFTER_DOWNLOAD
@@ -462,7 +469,7 @@ $BTN_DownloadUnchecky.Font = $BTN_FONT
 $BTN_DownloadUnchecky.Add_Click( {
         $DownloadedFile = Start-Download 'unchecky.com/files/unchecky_setup.exe'
         if ($CBOX_StartUnchecky.Checked -and $DownloadedFile) {
-            Start-File $DownloadedFile $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) -IsSilentInstall $True
+            Start-File $DownloadedFile $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) -SilentInstall
         }
     } )
 
@@ -489,7 +496,7 @@ $BTN_DownloadOffice.Width = $BTN_WIDTH
 $BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
 $BTN_DownloadOffice.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadOffice, "Download Microsoft Office 2013 - 2019 C2R installer and activator`n`n$TXT_AV_WARNING")
-$BTN_DownloadOffice.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/Office_2013-2019.zip' -Execute $CBOX_StartOffice.Checked -AVWarning $True } )
+$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Office_2013-2019.zip' -AVWarning -Execute:$CBOX_StartOffice.Checked } )
 
 $CBOX_StartOffice = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartOffice.Text = $TXT_START_AFTER_DOWNLOAD
@@ -521,7 +528,7 @@ $BTN_DownloadCCleaner.Width = $BTN_WIDTH
 $BTN_DownloadCCleaner.Location = $BTN_INIT_LOCATION
 $BTN_DownloadCCleaner.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
-$BTN_DownloadCCleaner.Add_Click( { Start-DownloadAndExecute 'download.ccleaner.com/ccsetup.exe' -Execute $CBOX_StartCCleaner.Checked } )
+$BTN_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute 'download.ccleaner.com/ccsetup.exe' -Execute:$CBOX_StartCCleaner.Checked } )
 
 $CBOX_StartCCleaner = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartCCleaner.Text = $TXT_START_AFTER_DOWNLOAD
@@ -538,7 +545,7 @@ $BTN_DownloadDefraggler.Width = $BTN_WIDTH
 $BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
 $BTN_DownloadDefraggler.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadDefraggler, 'Download Defraggler installer')
-$BTN_DownloadDefraggler.Add_Click( { Start-DownloadAndExecute 'download.ccleaner.com/dfsetup.exe' -Execute $CBOX_StartDefraggler.Checked } )
+$BTN_DownloadDefraggler.Add_Click( { Start-DownloadExtractExecute 'download.ccleaner.com/dfsetup.exe' -Execute:$CBOX_StartDefraggler.Checked } )
 
 $CBOX_StartDefraggler = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartDefraggler.Text = $TXT_START_AFTER_DOWNLOAD
@@ -679,7 +686,7 @@ $BTN_DownloadVictoria.Width = $BTN_WIDTH
 $BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_LONG
 $BTN_DownloadVictoria.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
-$BTN_DownloadVictoria.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/Victoria.zip' -Execute $CBOX_StartVictoria.Checked } )
+$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Victoria.zip' -Execute:$CBOX_StartVictoria.Checked } )
 
 $CBOX_StartVictoria = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartVictoria.Text = $TXT_START_AFTER_DOWNLOAD
@@ -696,7 +703,7 @@ $BTN_DownloadRecuva.Width = $BTN_WIDTH
 $BTN_DownloadRecuva.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRecuva.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRecuva, "Download Recuva installer`nRecuva helps restore deleted files")
-$BTN_DownloadRecuva.Add_Click( { Start-DownloadAndExecute 'download.ccleaner.com/rcsetup.exe' -Execute $CBOX_StartRecuva.Checked } )
+$BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute 'ccleaner.com/recuva/download/portable/downloadfile' 'Recuva.zip' -MultiFile -Execute:$CBOX_StartRecuva.Checked } )
 
 $CBOX_StartRecuva = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartRecuva.Text = $TXT_START_AFTER_DOWNLOAD
@@ -736,7 +743,7 @@ $BTN_HardwareMonitor.Width = $BTN_WIDTH
 $BTN_HardwareMonitor.Location = $BTN_INIT_LOCATION
 $BTN_HardwareMonitor.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temerature, ')
-$BTN_HardwareMonitor.Add_Click( { Start-DownloadAndExecute 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -Execute $CBOX_HardwareMonitor.Checked } )
+$BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -MultiFile -Execute:$CBOX_HardwareMonitor.Checked } )
 
 $CBOX_HardwareMonitor = New-Object System.Windows.Forms.CheckBox
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
@@ -891,7 +898,7 @@ $BTN_DownloadMalwarebytes.Width = $BTN_WIDTH
 $BTN_DownloadMalwarebytes.Location = $BTN_FullSecurityScan.Location + $SHIFT_BTN_NORMAL
 $BTN_DownloadMalwarebytes.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`nMalwarebytes helps remove malware and adware")
-$BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadAndExecute 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' -Execute $CBOX_StartMalwarebytes.Checked } )
+$BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadExtractExecute 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' -Execute:$CBOX_StartMalwarebytes.Checked } )
 
 $CBOX_StartMalwarebytes = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartMalwarebytes.Text = $TXT_START_AFTER_DOWNLOAD
@@ -985,7 +992,7 @@ $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
 
 $BTN_EmptyRecycleBin = New-Object System.Windows.Forms.Button
-$BTN_EmptyRecycleBin.Text = 'Empty Recycle Bin'
+$BTN_EmptyRecycleBin.Text = "Empty Recycle Bin$(if($PS_VERSION -le 2) {$REQUIRES_ELEVATION})"
 $BTN_EmptyRecycleBin.Height = $BTN_HEIGHT
 $BTN_EmptyRecycleBin.Width = $BTN_WIDTH
 $BTN_EmptyRecycleBin.Location = $BTN_INIT_LOCATION
@@ -1140,15 +1147,17 @@ function Initialize-Startup {
     $BTN_QuickSecurityScan.Enabled = Test-Path $DefenderExe
     $BTN_FullSecurityScan.Enabled = $BTN_QuickSecurityScan.Enabled
 
-    $BTN_FileCleanup.Enabled = $IS_ELEVATED
-
-    try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
-    catch [Exception] { Add-Log $ERR "Failed to load System.IO.Compression.FileSystem module, unzipping archives will not work: $($_.Exception.Message)" }
-
     if ($PS_VERSION -gt 2) {
         try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
-        catch [Exception] { Add-Log $ERR "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
+        catch [Exception] { Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
+
+        try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
+        catch [Exception] {
+            Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
+            $script:Shell = New-Object -com Shell.Application
+        }
     }
+    else { $script:Shell = New-Object -com Shell.Application }
 
     Get-CurrentVersion
 
@@ -1165,12 +1174,13 @@ function Initialize-Startup {
         Add-Log $INF 'C2R versions of Office install updates silently in the background with no need to restart computer.'
     }
 
-    $FreeDiskSpace = ($SystemPartition.FreeSpaceGB / $SystemPartition.SizeGB)
-    if ($FreeDiskSpace -le 0.15) {
-        Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
-        Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
+    if ($SystemPartition) {
+        $FreeDiskSpace = Get-FreeDiskSpace
+        if ($FreeDiskSpace -le 0.15) {
+            Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
+            Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
+        }
     }
-
 
     $NetworkAdapter = Get-NetworkAdapter
     if ($NetworkAdapter) {
@@ -1186,7 +1196,13 @@ function Initialize-Startup {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Logger #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Add-Log($Level, $Message) {
+function Add-Log {
+    Param(
+        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
+        [String][Parameter(Position = 1)]$Message = $(Write-Host "`n>>> $($MyInvocation.MyCommand.Name): Log message missing <<<" -NoNewline)
+    )
+    if (-not $Message) { Return }
+
     $Timestamp = (Get-Date).ToString()
     $Text = "[$Timestamp] $Message"
     $LOG.SelectionStart = $LOG.TextLength
@@ -1196,7 +1212,10 @@ function Add-Log($Level, $Message) {
 }
 
 
-function Write-Log($Text) {
+function Write-Log {
+    Param([String]$Text = $(Write-Host "`n>>> $($MyInvocation.MyCommand.Name): Log message missing <<<" -NoNewline))
+    if (-not $Text) { Return }
+
     Write-Host $Text -NoNewline
     $LOG.AppendText($Text)
     $LOG.SelectionColor = 'black'
@@ -1217,8 +1236,8 @@ function Out-Success {
 
 function Get-CurrentVersion {
     if ($PS_VERSION -le 2) {
-        Add-Log $WRN "Automatic self-updates are not supported on PowerShell $PS_VERSION (PowerShell 3 and higher required)."
-        return
+        Add-Log $WRN "Automatic self-update is not supported on PowerShell $PS_VERSION (PowerShell 3 and higher required)."
+        Return
     }
 
     Add-Log $INF 'Checking for updates...'
@@ -1226,7 +1245,7 @@ function Get-CurrentVersion {
     $IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Failed to check for updates: $IsNotConnected"
-        return
+        Return
     }
 
     try {
@@ -1235,7 +1254,7 @@ function Get-CurrentVersion {
     }
     catch [Exception] {
         Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
-        return
+        Return
     }
 
     if ($UpdateAvailable) {
@@ -1255,13 +1274,13 @@ function Get-Update {
     $IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Failed to download update: $IsNotConnected"
-        return
+        Return
     }
 
     try { Invoke-WebRequest $DownloadURL -OutFile $TargetFile }
     catch [Exception] {
         Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1270,7 +1289,7 @@ function Get-Update {
     try { Start-Process 'powershell' $TargetFile }
     catch [Exception] {
         Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Exit-Script
@@ -1279,13 +1298,11 @@ function Get-Update {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Common #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Open-InBrowser ($Url) {
-    if ($Url.length -lt 1) {
-        Add-Log $ERR 'No URL specified'
-        return
-    }
+function Open-InBrowser {
+    Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
+    if (-not $URL) { Return }
 
-    $UrlToOpen = if ($Url -like 'http*') { $Url } else { 'https://' + $Url }
+    $UrlToOpen = if ($URL -like 'http*') { $URL } else { 'https://' + $URL }
     Add-Log $INF "Opening URL in the default browser: $UrlToOpen"
 
     try { [System.Diagnostics.Process]::Start($UrlToOpen) }
@@ -1293,21 +1310,34 @@ function Open-InBrowser ($Url) {
 }
 
 
-function Start-DownloadAndExecute ($URL, $FileName, $Execute, $AVWarning) {
+function Start-DownloadExtractExecute {
+    Param(
+        [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"),
+        [String][Parameter(Position = 1)]$FileName,
+        [Switch]$AVWarning, [Switch]$MultiFile, [Switch]$Execute
+    )
+    if (-not $URL) { Return }
+
     if ($AVWarning) { Add-Log $WRN $TXT_AV_WARNING }
 
-    if ($PS_VERSION -le 2 -and ($URL -match 'github.com/*' -or $URL -match 'github.io/*')) { Open-InBrowser $URL }
+    if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
     else {
-        $DownloadedFile = if ($FileName) { Start-Download $URL $FileName } else { Start-Download $URL }
-        if ($Execute -and $DownloadedFile) { Start-File $DownloadedFile }
+        $DownloadedFile = Start-Download $URL $FileName
+
+        if ($DownloadedFile) {
+            $Executable = if ($DownloadedFile.Substring($DownloadedFile.Length - 4) -eq '.zip') { Start-Extraction $DownloadedFile -MF:$MultiFile } else { $DownloadedFile }
+            if ($Execute) { Start-File $Executable }
+        }
     }
 }
 
 
-function Get-NetworkAdapter { return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
+function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpaceGB / $SystemPartition.SizeGB) }
+
+function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
 
 
-function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { return 'Computer is not connected to the Internet' } }
+function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
 
 
 function Exit-Script { $FORM.Close() }
@@ -1315,53 +1345,61 @@ function Exit-Script { $FORM.Close() }
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Download File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Start-Download ($Url, $SaveAs) {
-    if ($Url.length -lt 1) {
-        Add-Log $ERR 'Download failed: No download URL specified'
-        return
-    }
+function Start-Download {
+    Param(
+        [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No download URL specified"),
+        [String][Parameter(Position = 1)]$SaveAs
+    )
+    if (-not $URL) { Return }
 
-    $DownloadURL = if ($Url -like 'http*') { $Url } else { 'https://' + $Url }
+    $DownloadURL = if ($URL -like 'http*') { $URL } else { 'https://' + $URL }
     $FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }
     $SavePath = "$CURRENT_DIR\$FileName"
+
+    if (-not (Test-Path $CURRENT_DIR)) {
+        Add-Log $WRN "Download path $CURRENT_DIR does not exist. Creating it."
+        New-Item $CURRENT_DIR -ItemType Directory -Force | Out-Null
+    }
 
     Add-Log $INF "Downloading from $DownloadURL"
 
     $IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Download failed: $IsNotConnected"
-        return
+        Return
     }
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
         if (Test-Path $SavePath) { Out-Success }
-        else { throw 'Possibly computer is offline or disk is full' }
+        else { Throw 'Possibly computer is offline or disk is full' }
     }
     catch [Exception] {
         Add-Log $ERR "Download failed: $($_.Exception.Message)"
-        return
+        Return
     }
 
-    return $FileName
+    Return $FileName
 }
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Extract ZIP #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Start-Extraction ($FileName) {
+function Start-Extraction {
+    Param(
+        [String][Parameter(Position = 0)]$FileName = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
+        [Switch][Parameter(Position = 1)][alias('MF')]$MultiFileArchive
+    )
+    if (-not $FileName) { Return }
+
     Add-Log $INF "Extracting $FileName..."
 
-    $IsMultiFileArchive = $FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip' -or $FileName -match 'hwmonitor_*' -or $FileName -match 'SDI_R*'
-    $ExtractionPath = if ($IsMultiFileArchive) { $FileName.TrimEnd('.zip') }
+    $ExtractionPath = if ($MultiFileArchive) { $FileName.TrimEnd('.zip') }
 
     $TargetDirName = "$CURRENT_DIR\$ExtractionPath"
-    if ($IsMultiFileArchive) { Remove-Item $TargetDirName -Recurse -ErrorAction Ignore }
-
-    try { [System.IO.Compression.ZipFile]::ExtractToDirectory("$CURRENT_DIR\$FileName", $TargetDirName) }
-    catch [Exception] {
-        Add-Log $ERR "Failed to extract' $FileName': $($_.Exception.Message)"
-        return
+    if ($MultiFileArchive) {
+        Remove-Item $TargetDirName -Recurse -Force -ErrorAction SilentlyContinue
+        New-Item $TargetDirName -ItemType Directory -Force | Out-Null
     }
 
     switch -Wildcard ($FileName) {
@@ -1371,55 +1409,75 @@ function Start-Extraction ($FileName) {
         'AAct.zip' { $Executable = "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { $Executable = "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
         'hwmonitor_*' { $Executable = "HWMonitor_$(if ($OS_ARCH -eq '64-bit') {'x64'} else {'x32'}).exe" }
+        'Recuva.zip' { $Executable = "$ExtractionPath\recuva$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" }
         'SDI_R*' { $Executable = "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})" }
     }
 
-    if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip' -or $FileName -match 'hwmonitor_*') {
+    Remove-Item "$CURRENT_DIR\$Executable" -Force -ErrorAction SilentlyContinue
+
+    try {
+        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory("$CURRENT_DIR\$FileName", $TargetDirName) }
+        else { foreach ($Item in $Shell.NameSpace("$CURRENT_DIR\$FileName").Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
+    }
+    catch [Exception] {
+        Add-Log $ERR "Failed to extract' $FileName': $($_.Exception.Message)"
+        Return
+    }
+
+    if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip' -or $FileName -Match 'hwmonitor_*') {
         $TempDir = $TargetDirName
         $TargetDirName = $CURRENT_DIR
 
         Move-Item "$TempDir\$Executable" "$TargetDirName\$Executable"
-        Remove-Item $TempDir -Recurse -ErrorAction Ignore
+        Remove-Item $TempDir -Recurse -Force
     }
 
     Out-Success
     Add-Log $INF "Files extracted to $TargetDirName"
 
     Add-Log $INF "Removing $FileName..."
-    Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
+    Remove-Item "$CURRENT_DIR\$FileName" -Force
     Out-Success
 
-    return $Executable
+    Return $Executable
 }
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Execute File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Start-File ($FileName, $Switches, $IsSilentInstall) {
-    $Executable = if ($FileName.Substring($FileName.Length - 4) -eq '.zip') { Start-Extraction $FileName } else { $FileName }
+function Start-File {
+    Param(
+        [String][Parameter(Position = 0)]$Executable = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No executable specified"),
+        [String][Parameter(Position = 1)]$Switches, [Switch]$SilentInstall
+    )
+    if (-not $Executable) { Return }
 
-    if ($Switches -and $IsSilentInstall) {
+    if ($Switches -and $SilentInstall) {
         Add-Log $INF "Installing '$Executable' silently..."
 
         try { Start-Process "$CURRENT_DIR\$Executable" $Switches -Wait }
         catch [Exception] {
             Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"
-            return
+            Return
         }
 
         Out-Success
 
-        Add-Log $INF "Removing $FileName..."
-        Remove-Item "$CURRENT_DIR\$FileName" -ErrorAction Ignore
+        Add-Log $INF "Removing $Executable..."
+        Remove-Item "$CURRENT_DIR\$Executable" -Force
         Out-Success
     }
     else {
         Add-Log $INF "Starting '$Executable'..."
 
-        try { if ($Switches) { Start-Process "$CURRENT_DIR\$Executable" $Switches } else { Start-Process "$CURRENT_DIR\$Executable" } }
+        try {
+            if ($Switches) { Start-Process "$CURRENT_DIR\$Executable" $Switches }
+            elseif ($Executable -Match 'SDI_R*') { Start-Process "$CURRENT_DIR\$Executable" -WorkingDirectory "$CURRENT_DIR\$($Executable.Split('\')[0])" }
+            else { Start-Process "$CURRENT_DIR\$Executable" }
+        }
         catch [Exception] {
-            Add-Log $ERR "Failed to execute' $Executable': $($_.Exception.Message)"
-            return
+            Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"
+            Return
         }
 
         Out-Success
@@ -1436,7 +1494,7 @@ function Start-Elevated {
         try { Start-Process 'powershell' $MyInvocation.ScriptName -Verb RunAs }
         catch [Exception] {
             Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
-            return
+            Return
         }
 
         Exit-Script
@@ -1454,8 +1512,7 @@ function Get-SystemInfo {
     $script:OS_NAME = $OperatingSystem.Caption
     $script:OS_BUILD = $OperatingSystem.Version
     $script:OS_ARCH = if ($OperatingSystem.OSArchitecture -like '64-*') { '64-bit' } else { '32-bit' }
-    $script:OS_VERSION = if ($OS_BUILD -match '10.0.*') { 10 } elseif ($OS_BUILD -match '6.3.*') { 8.1 } elseif ($OS_BUILD -match '6.2.*') { 8 } elseif ($OS_BUILD -match '6.1.*') { 7 } else { 'Vista or less' }
-    $script:PS_VERSION = $PSVersionTable.PSVersion.Major
+    $script:OS_VERSION = if ($OS_BUILD -Match '10.0.*') { 10 } elseif ($OS_BUILD -Match '6.3.*') { 8.1 } elseif ($OS_BUILD -Match '6.2.*') { 8 } elseif ($OS_BUILD -Match '6.1.*') { 7 } else { 'Vista or older' }
 
     New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
     $WordRegPath = Get-ItemProperty 'HKCR:\Word.Application\CurVer' -ErrorAction SilentlyContinue
@@ -1471,32 +1528,48 @@ function Get-SystemInfo {
 
 
 function Out-SystemInfo {
-    $ComputerSystem = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }
-    $Processor = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
-
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
-    Add-Log $INF "    Computer type:  $(switch ($ComputerSystem.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
-    Add-Log $INF "    Computer model:  $($ComputerSystem.Manufacturer) $($ComputerSystem.Model) $(if ($ComputerSystem.SystemSKUNumber) {"($($ComputerSystem.SystemSKUNumber))"})"
-    Add-Log $INF "    CPU name:  $($Processor.Name -Join '; ')"
-    Add-Log $INF "    Cores / Threads:  $($Processor.NumberOfCores) / $($Processor.NumberOfLogicalProcessors)"
-    Add-Log $INF "    RAM available:  $($ComputerSystem.RAM) GB"
-    Add-Log $INF "    GPU name:  $((Get-WmiObject Win32_VideoController).Name -Join '; ')"
+
+    $Computer = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }
+    if ($Computer) {
+        Add-Log $INF "    Computer type:  $(switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
+        Add-Log $INF "    Computer model:  $($Computer.Manufacturer) $($Computer.Model) $(if ($Computer.SystemSKUNumber) {"($($Computer.SystemSKUNumber))"})"
+        Add-Log $INF "    RAM available:  $($Computer.RAM) GB"
+    }
+
+    $Processors = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
+    if ($Processors) {
+        foreach ($Item in $Processors) {
+            Add-Log $INF "    CPU name:  $($Item.Name)"
+            Add-Log $INF "    Cores / Threads:  $($Item.NumberOfCores) / $($Item.NumberOfLogicalProcessors)"
+        }
+    }
+
+    $VideoControllers = (Get-WmiObject Win32_VideoController).Name
+    if ($VideoControllers) { foreach ($Item in $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
 
     if ($OS_VERSION -gt 7) {
-        $Storage = Get-PhysicalDisk | Select-Object BusType, FirmwareVersion, FriendlyName, HealthStatus, MediaType, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
-        Add-Log $INF "    Storage:  $($Storage.FriendlyName) ($($Storage.BusType) $($Storage.MediaType), $($Storage.Size) GB, $($Storage.HealthStatus), Firmware: $($Storage.FirmwareVersion))"
+        $Storage = Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, @{L = 'Firmware'; E = { $_.FirmwareVersion } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+        if ($Storage) {
+            foreach ($Item in $Storage) {
+                Add-Log $INF "    Storage:  $($Item.FriendlyName) ($($Item.BusType) $($Item.MediaType), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.Firmware))"
+            }
+        }
     }
     else {
-        $Storage = Get-WmiObject Win32_DiskDrive | Select-Object FirmwareRevision, Model, Status, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
-        Add-Log $INF "    Storage:  $($Storage.Model) ($($Storage.Size) GB, Health: $($Storage.Status), Firmware: $($Storage.FirmwareRevision))"
+        $Storage = Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, @{L = 'Firmware'; E = { $_.FirmwareRevision } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+        if ($Storage) { foreach ($Item in $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.Firmware))" } }
+    }
+
+    if ($SystemPartition) {
+        Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($((Get-FreeDiskSpace).ToString('P')))"
     }
 
     $OfficeYear = switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }
     $OfficeName = if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }
     $Win10Release = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId
 
-    Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($(($SystemPartition.FreeSpaceGB/$SystemPartition.SizeGB).tostring('P')))"
     Add-Log $INF '  Software'
     Add-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"
     Add-Log $INF "    Operation system:  $OS_NAME"
@@ -1509,14 +1582,14 @@ function Out-SystemInfo {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Ninite #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Set-NiniteButtonState () {
+function Set-NiniteButtonState {
     $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or $CBOX_TeamViewer.Checked -or $CBOX_Skype.Checked -or `
         $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked -or $CBOX_GoogleDrive.Checked -or $CBOX_VSCode.Checked
     $CBOX_StartNinite.Enabled = $BTN_DownloadNinite.Enabled
 }
 
 
-function Set-NiniteQuery () {
+function Set-NiniteQuery {
     $Array = @()
     if ($CBOX_7zip.Checked) { $Array += $CBOX_7zip.Name }
     if ($CBOX_VLC.Checked) { $Array += $CBOX_VLC.Name }
@@ -1526,11 +1599,11 @@ function Set-NiniteQuery () {
     if ($CBOX_qBittorrent.Checked) { $Array += $CBOX_qBittorrent.Name }
     if ($CBOX_GoogleDrive.Checked) { $Array += $CBOX_GoogleDrive.Name }
     if ($CBOX_VSCode.Checked) { $Array += $CBOX_VSCode.Name }
-    return $Array -Join '-'
+    Return $Array -Join '-'
 }
 
 
-function Set-NiniteFileName () {
+function Set-NiniteFileName {
     $Array = @()
     if ($CBOX_7zip.Checked) { $Array += $CBOX_7zip.Text }
     if ($CBOX_VLC.Checked) { $Array += $CBOX_VLC.Text }
@@ -1540,13 +1613,15 @@ function Set-NiniteFileName () {
     if ($CBOX_qBittorrent.Checked) { $Array += $CBOX_qBittorrent.Text }
     if ($CBOX_GoogleDrive.Checked) { $Array += $CBOX_GoogleDrive.Text }
     if ($CBOX_VSCode.Checked) { $Array += $CBOX_VSCode.Text }
-    return "Ninite $($Array -Join ' ') Installer.exe"
+    Return "Ninite $($Array -Join ' ') Installer.exe"
 }
 
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Check HDD and RAM #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Start-DriveCheck ($FullScan) {
+function Start-DriveCheck {
+    Param([Switch][Parameter(Position = 0)]$FullScan)
+
     Add-Log $INF 'Starting (C:) drive health check...'
 
     try {
@@ -1556,7 +1631,7 @@ function Start-DriveCheck ($FullScan) {
     }
     catch [Exception] {
         Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1569,7 +1644,7 @@ function Start-MemoryCheckTool {
     try { Start-Process 'mdsched' }
     catch [Exception] {
         Add-Log $ERR "Failed to start memory checking tool: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1584,7 +1659,7 @@ function Test-WindowsHealth {
     try { Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1597,7 +1672,7 @@ function Repair-Windows {
     try { Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to repair Windows: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1610,7 +1685,7 @@ function Repair-SystemFiles {
     try { Start-Process 'sfc' '/scannow' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to check system file integrity: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1619,11 +1694,9 @@ function Repair-SystemFiles {
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Security #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-function Start-SecurityScan ($Mode) {
-    if (-not $Mode) {
-        Add-Log $WRN "Scan mode not specified, assuming 'quick'"
-        $Mode = 'quick'
-    }
+function Start-SecurityScan {
+    Param([String][Parameter(Position = 0)][ValidateSet('quick', 'full')]$Mode = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No scan mode specified"))
+    if (-not $Mode) { Return }
 
     if ($OS_VERSION -gt 7) {
         Add-Log $INF 'Updating security signatures...'
@@ -1631,7 +1704,7 @@ function Start-SecurityScan ($Mode) {
         try { Start-Process $DefenderExe '-SignatureUpdate' -Wait }
         catch [Exception] {
             Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"
-            return
+            Return
         }
 
         Out-Success
@@ -1642,7 +1715,7 @@ function Start-SecurityScan ($Mode) {
     try { Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})" }
     catch [Exception] {
         Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1657,13 +1730,13 @@ function Start-GoogleUpdate {
     try { Start-Process $GoogleUpdateExe '/c' }
     catch [Exception] {
         Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"
-        return
+        Return
     }
 
     try { Start-Process $GoogleUpdateExe '/ua /installsource scheduler' }
     catch [Exception] {
         Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1673,14 +1746,11 @@ function Start-GoogleUpdate {
 function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
 
-    try {
-        $Message = 'Updating Microsoft Store apps...'
-        $Command = "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
-        Start-Process 'powershell' "-Command `"Write-Host $Message; $Command`"" -Verb RunAs
-    }
+    $Command = "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
+    try { Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -Wait -WindowStyle Hidden }
     catch [Exception] {
         Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1693,7 +1763,7 @@ function Set-OfficeInsiderChannel {
     try { Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs -Wait }
     catch [Exception] {
         Add-Log $ERR "Failed to switch Microsoft Office update channel: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1706,7 +1776,7 @@ function Start-OfficeUpdate {
     try { Start-Process $OfficeC2RClientExe '/update user' -Wait }
     catch [Exception] {
         Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1719,7 +1789,7 @@ function Start-WindowsUpdate {
     try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' -Wait } else { Start-Process 'wuauclt' '/detectnow /updatenow' -Wait } }
     catch [Exception] {
         Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1733,11 +1803,14 @@ function Remove-Trash {
 
     try {
         if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
-        else { (New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force } }
+        else {
+            $Command = '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }'
+            Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
+        }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1750,7 +1823,7 @@ function Start-DiskCleanup {
     try { Start-Process 'cleanmgr' '/lowdisk' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1762,7 +1835,7 @@ function Start-CCleaner {
         Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
         Add-Log $WRN 'Click the button again to continue'
         $script:CCleanerWarningShown = $True
-        return
+        Return
     }
 
     Add-Log $INF 'Starting CCleaner background task...'
@@ -1770,7 +1843,7 @@ function Start-CCleaner {
     try { Start-Process $CCleanerExe '/auto' }
     catch [Exception] {
         Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1783,7 +1856,7 @@ function Start-WindowsCleanup {
     try { Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1793,10 +1866,10 @@ function Start-WindowsCleanup {
 function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
-    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs -Wait }
+    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -1818,20 +1891,20 @@ function Start-FileCleanup {
     $NonVersionedDirectories = @('Assets', 'Download', 'Install', 'SetupMetrics')
     $Containers = @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate)
 
-    $NewestJava86 = if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestJava = if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestOpera = if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChrome = if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChromeBeta = if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestJava86 = if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestJava = if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestOpera = if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestChrome = if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestChromeBeta = if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
 
     foreach ($Path in $Containers) {
         if (Test-Path $Path) {
             Add-Log $INF "Removing older versions from $Path"
 
-            $Newest = (Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1).Name
-            Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories $Newest | ForEach-Object { Remove-Item $_ -Recurse -Force }
+            $Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
+            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item $_ -Recurse -Force }
 
             Out-Success
         }
@@ -1843,6 +1916,8 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Resource*.dll;TeamViewer_Resource_en.dll,TeamViewer_Resource_ru.dll"
         "$PROGRAM_FILES_86\WinSCP\Translations;WinSCP.ru"
         "$env:ProgramFiles\7-Zip\Lang;en.ttt,lv.txt,ru.txt"
+        "$env:ProgramFiles\CCleaner\Lang;lang-1049.dll,lang-1062.dll"
+        "$env:ProgramFiles\Defraggler\Lang;lang-1049.dll,lang-1062.dll"
         "$env:ProgramFiles\FileZilla FTP Client\locales;lv_LV,ru"
         "$env:ProgramFiles\Google\Drive\Languages;lv,ru"
         "$env:ProgramFiles\Malwarebytes\Anti-Malware\Languages;lang_ru.qm"
@@ -1850,6 +1925,7 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Oracle\VirtualBox\nls;qt_ru.qm,VirtualBox_ru.qm"
         "$env:ProgramFiles\paint.net\Resources;ru"
         "$env:ProgramFiles\qBittorrent\translations;qt_lv.qm,qt_ru.qm,qtbase_lv.qm,qtbase_ru.qm"
+        "$env:ProgramFiles\Recuva\Lang;lang-1049.dll,lang-1062.dll"
         "$env:ProgramFiles\VideoLAN\VLC\locale;lv,ru"
         "$NewestOpera\localization;en-US.pak,lv.pak,ru.pak"
         "$NewestChrome\Locales;en-US.pak,lv.pak,ru.pak"
@@ -1863,7 +1939,7 @@ function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Recurse -Force }
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue }
             Out-Success
         }
     }
@@ -1921,9 +1997,10 @@ function Start-FileCleanup {
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Docs.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Sheets.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Slides.lnk"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\CCleaner\*.url"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Defraggler\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\About Java.lnk"
-        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\Get Help.url"
-        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\Visit Java.com.url"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\License (English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (CHM, English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (PDF, English).lnk"
@@ -1931,6 +2008,7 @@ function Start-FileCleanup {
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PuTTY (64-bit)\PuTTY Web Site.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PuTTY\PuTTY Manual.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PuTTY\PuTTY Web Site.lnk"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Recuva\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Steam\Steam Support Center.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\Documentation.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\Release Notes.lnk"
@@ -1960,12 +2038,29 @@ function Start-FileCleanup {
         "$env:ProgramData\USOShared"
         "$env:ProgramData\VirtualBox"
         "$env:ProgramData\WindowsHolographicDevices"
+        "$PROGRAM_FILES_86\7-Zip\7-zip.chm"
+        "$PROGRAM_FILES_86\7-Zip\7-zip.dll.tmp"
+        "$PROGRAM_FILES_86\7-Zip\descript.ion"
+        "$PROGRAM_FILES_86\7-Zip\History.txt"
+        "$PROGRAM_FILES_86\7-Zip\License.txt"
+        "$PROGRAM_FILES_86\7-Zip\readme.txt"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files"
+        "$PROGRAM_FILES_86\CCleaner\Setup"
+        "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
+        "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
+        "$PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
+        "$PROGRAM_FILES_86\FileZilla FTP Client\GPL.html"
+        "$PROGRAM_FILES_86\FileZilla FTP Client\NEWS"
+        "$PROGRAM_FILES_86\Foxit Software\Foxit Reader\notice.txt"
+        "$PROGRAM_FILES_86\Git\LICENSE.txt"
+        "$PROGRAM_FILES_86\Git\mingw64\doc"
+        "$PROGRAM_FILES_86\Git\ReleaseNotes.html"
+        "$PROGRAM_FILES_86\Git\tmp"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Application\SetupMetrics"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Temp"
         "$PROGRAM_FILES_86\Google\Chrome Dev\Application\SetupMetrics"
@@ -1976,17 +2071,50 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Google\Update\Download"
         "$PROGRAM_FILES_86\Google\Update\Install"
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSE.rtf"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSES.chromium.html"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
+        "$PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
         "$PROGRAM_FILES_86\Notepad++\change.log"
         "$PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PROGRAM_FILES_86\Notepad++\updater\LICENSE"
         "$PROGRAM_FILES_86\Notepad++\updater\README.md"
+        "$PROGRAM_FILES_86\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
+        "$PROGRAM_FILES_86\NVIDIA Corporation\license.txt"
+        "$PROGRAM_FILES_86\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\doc"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\License_en_US.rtf"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\VirtualBox.chm"
+        "$PROGRAM_FILES_86\paint.net\License.txt"
+        "$PROGRAM_FILES_86\paint.net\Staging"
+        "$PROGRAM_FILES_86\PuTTY\LICENCE"
+        "$PROGRAM_FILES_86\PuTTY\putty.chm"
+        "$PROGRAM_FILES_86\PuTTY\README.txt"
+        "$PROGRAM_FILES_86\PuTTY\website.url"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses"
         "$PROGRAM_FILES_86\Steam\dumps"
         "$PROGRAM_FILES_86\Steam\logs"
         "$PROGRAM_FILES_86\TeamViewer\*.log"
         "$PROGRAM_FILES_86\TeamViewer\*.txt"
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Note.exe"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\AUTHORS.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\COPYING.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\Documentation.url"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\New_Skins.url"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\NEWS.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\README.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\THANKS.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\VideoLAN Website.url"
+        "$PROGRAM_FILES_86\WinRAR\Descript.ion"
+        "$PROGRAM_FILES_86\WinRAR\License.txt"
+        "$PROGRAM_FILES_86\WinRAR\Order.htm"
+        "$PROGRAM_FILES_86\WinRAR\Rar.txt"
+        "$PROGRAM_FILES_86\WinRAR\ReadMe.txt"
+        "$PROGRAM_FILES_86\WinRAR\WhatsNew.txt"
+        "$PROGRAM_FILES_86\WinRAR\WinRAR.chm"
         "$PROGRAM_FILES_86\WinSCP\license.txt"
         "$PROGRAM_FILES_86\WinSCP\PuTTY\LICENCE"
         "$PROGRAM_FILES_86\WinSCP\PuTTY\putty.chm"
@@ -1996,22 +2124,40 @@ function Start-FileCleanup {
         "$env:ProgramFiles\7-Zip\History.txt"
         "$env:ProgramFiles\7-Zip\License.txt"
         "$env:ProgramFiles\7-Zip\readme.txt"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\*.pdf"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\ReadMe.htm"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Setup Files"
+        "$env:ProgramFiles\CCleaner\Setup"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\FileZilla FTP Client\AUTHORS"
         "$env:ProgramFiles\FileZilla FTP Client\GPL.html"
         "$env:ProgramFiles\FileZilla FTP Client\NEWS"
+        "$env:ProgramFiles\Foxit Software\Foxit Reader\notice.txt"
         "$env:ProgramFiles\Git\LICENSE.txt"
         "$env:ProgramFiles\Git\mingw64\doc"
         "$env:ProgramFiles\Git\ReleaseNotes.html"
         "$env:ProgramFiles\Git\tmp"
+        "$env:ProgramFiles\Google\Chrome Beta\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome Beta\Temp"
+        "$env:ProgramFiles\Google\Chrome Dev\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome Dev\Temp"
+        "$env:ProgramFiles\Google\Chrome\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome\Temp"
+        "$env:ProgramFiles\Google\CrashReports"
+        "$env:ProgramFiles\Google\Update\Download"
+        "$env:ProgramFiles\Google\Update\Install"
+        "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$env:ProgramFiles\Mozilla Firefox\install.log"
+        "$env:ProgramFiles\Mozilla Maintenance Service\logs"
         "$env:ProgramFiles\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
-        "$env:ProgramFiles\NVIDIA Corporation\Installer2"
         "$env:ProgramFiles\NVIDIA Corporation\license.txt"
         "$env:ProgramFiles\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$env:ProgramFiles\Oracle\VirtualBox\doc"
@@ -2024,6 +2170,12 @@ function Start-FileCleanup {
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"
         "$env:ProgramFiles\PuTTY\website.url"
+        "$env:ProgramFiles\Razer\Razer Services\Razer Central\Licenses"
+        "$env:ProgramFiles\Steam\dumps"
+        "$env:ProgramFiles\Steam\logs"
+        "$env:ProgramFiles\TeamViewer\*.log"
+        "$env:ProgramFiles\TeamViewer\*.txt"
+        "$env:ProgramFiles\TeamViewer\TeamViewer_Note.exe"
         "$env:ProgramFiles\VideoLAN\VLC\AUTHORS.txt"
         "$env:ProgramFiles\VideoLAN\VLC\COPYING.txt"
         "$env:ProgramFiles\VideoLAN\VLC\Documentation.url"
@@ -2039,6 +2191,9 @@ function Start-FileCleanup {
         "$env:ProgramFiles\WinRAR\ReadMe.txt"
         "$env:ProgramFiles\WinRAR\WhatsNew.txt"
         "$env:ProgramFiles\WinRAR\WinRAR.chm"
+        "$env:ProgramFiles\WinSCP\license.txt"
+        "$env:ProgramFiles\WinSCP\PuTTY\LICENCE"
+        "$env:ProgramFiles\WinSCP\PuTTY\putty.chm"
         "$env:TMP\*"
         "$env:WinDir\Logs\*"
         "$env:WinDir\Temp\*"
@@ -2048,9 +2203,14 @@ function Start-FileCleanup {
     foreach ($Item in $ItemsToDelete) {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
-            Remove-Item $Item -Recurse -Force
+            Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
             Out-Success
         }
+    }
+
+    if (-not $IS_ELEVATED) {
+        Add-Log $WRN 'Removal of certain files requires administrator privileges. To remove them, restart the utility'
+        Add-Log $WRN '  as administrator (see Home -> This utility -> Run as administrator) and run this task again.'
     }
 
     Add-Log $INF $LogMessage
@@ -2067,14 +2227,14 @@ function Set-CloudFlareDNS {
     if (-not (Get-NetworkAdapter)) {
         Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
         Add-Log $ERR 'This could mean that computer is not connected'
-        return
+        Return
     }
 
     $Command = "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))"
-    try { Start-Process 'powershell' "-Command `"Write-Host 'Changing DNS server to CloudFlare DNS...'; $Command`"" -Verb RunAs }
+    try { Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden }
     catch [Exception] {
         Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -2087,7 +2247,7 @@ function Start-DriveOptimization {
     try { Start-Process 'defrag' $(if ($OS_VERSION -gt 7) { '/C /H /U /O' } else { 'C: /H /U' }) -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -2100,7 +2260,7 @@ function Start-Defraggler {
     try { Start-Process $DefragglerExe 'C:\' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success

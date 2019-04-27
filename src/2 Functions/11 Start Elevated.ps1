@@ -5,7 +5,7 @@ function Start-Elevated {
         try { Start-Process 'powershell' $MyInvocation.ScriptName -Verb RunAs }
         catch [Exception] {
             Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
-            return
+            Return
         }
 
         Exit-Script

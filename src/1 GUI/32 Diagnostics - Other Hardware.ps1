@@ -13,7 +13,7 @@ $BTN_HardwareMonitor.Width = $BTN_WIDTH
 $BTN_HardwareMonitor.Location = $BTN_INIT_LOCATION
 $BTN_HardwareMonitor.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temerature, ')
-$BTN_HardwareMonitor.Add_Click( { Start-DownloadAndExecute 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -Execute $CBOX_HardwareMonitor.Checked } )
+$BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -MultiFile -Execute:$CBOX_HardwareMonitor.Checked } )
 
 $CBOX_HardwareMonitor = New-Object System.Windows.Forms.CheckBox
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD

@@ -1,7 +1,7 @@
 function Get-CurrentVersion {
     if ($PS_VERSION -le 2) {
-        Add-Log $WRN "Automatic self-updates are not supported on PowerShell $PS_VERSION (PowerShell 3 and higher required)."
-        return
+        Add-Log $WRN "Automatic self-update is not supported on PowerShell $PS_VERSION (PowerShell 3 and higher required)."
+        Return
     }
 
     Add-Log $INF 'Checking for updates...'
@@ -9,7 +9,7 @@ function Get-CurrentVersion {
     $IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Failed to check for updates: $IsNotConnected"
-        return
+        Return
     }
 
     try {
@@ -18,7 +18,7 @@ function Get-CurrentVersion {
     }
     catch [Exception] {
         Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
-        return
+        Return
     }
 
     if ($UpdateAvailable) {
@@ -38,13 +38,13 @@ function Get-Update {
     $IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Failed to download update: $IsNotConnected"
-        return
+        Return
     }
 
     try { Invoke-WebRequest $DownloadURL -OutFile $TargetFile }
     catch [Exception] {
         Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -53,7 +53,7 @@ function Get-Update {
     try { Start-Process 'powershell' $TargetFile }
     catch [Exception] {
         Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Exit-Script

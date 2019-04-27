@@ -1,4 +1,6 @@
-function Start-DriveCheck ($FullScan) {
+function Start-DriveCheck {
+    Param([Switch][Parameter(Position = 0)]$FullScan)
+
     Add-Log $INF 'Starting (C:) drive health check...'
 
     try {
@@ -8,7 +10,7 @@ function Start-DriveCheck ($FullScan) {
     }
     catch [Exception] {
         Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -21,7 +23,7 @@ function Start-MemoryCheckTool {
     try { Start-Process 'mdsched' }
     catch [Exception] {
         Add-Log $ERR "Failed to start memory checking tool: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
