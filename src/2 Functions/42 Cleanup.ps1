@@ -101,7 +101,7 @@ function Start-FileCleanup {
             Add-Log $INF "Removing older versions from $Path"
 
             $Newest = (Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1).Name
-            Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories $Newest | ForEach-Object {Remove-Item $_ -Recurse -Force}
+            Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories $Newest | ForEach-Object { Remove-Item $_ -Recurse -Force }
 
             Out-Success
         }
@@ -133,7 +133,7 @@ function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object {Remove-Item $_ -Recurse -Force}
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Recurse -Force }
             Out-Success
         }
     }
@@ -236,7 +236,6 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files"
-        "$PROGRAM_FILES_86\Foxit Software\Foxit Reader\notice.txt"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Application\SetupMetrics"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Temp"
         "$PROGRAM_FILES_86\Google\Chrome Dev\Application\SetupMetrics"

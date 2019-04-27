@@ -10,8 +10,12 @@ function Initialize-Startup {
     }
 
     Get-SystemInfo
-    if ($PS_VERSION -lt 5) { Add-Log $WRN "PowerShell $PS_VERSION detected, while versions >=5 are supported. Some features might not work correctly." }
+
+    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
+    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+
     if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
+    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
 
     $script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
     $script:PROGRAM_FILES_86 = if ($OS_ARCH -eq '64-bit') { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles }
@@ -20,6 +24,13 @@ function Initialize-Startup {
     $script:DefragglerExe = "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
     $script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
     $script:GoogleUpdateExe = "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe"
+
+    $CBOX_StartAAct.Enabled = $PS_VERSION -gt 2
+    $CBOX_StartChewWGA.Enabled = $PS_VERSION -gt 2
+    $CBOX_StartKMSAuto.Enabled = $PS_VERSION -gt 2
+    $CBOX_StartOffice.Enabled = $PS_VERSION -gt 2
+    $CBOX_StartRufus.Enabled = $PS_VERSION -gt 2
+    $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
 
     $BTN_WindowsCleanup.Enabled = $OS_VERSION -gt 7
     $BTN_RepairWindows.Enabled = $OS_VERSION -gt 7
@@ -38,10 +49,12 @@ function Initialize-Startup {
     $BTN_FileCleanup.Enabled = $IS_ELEVATED
 
     try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
-    catch [Exception] { Add-Log $ERR "Failed to load System.IO.Compression.FileSystem module, unzipping archives won't work: $($_.Exception.Message)" }
+    catch [Exception] { Add-Log $ERR "Failed to load System.IO.Compression.FileSystem module, unzipping archives will not work: $($_.Exception.Message)" }
 
-    try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 }
-    catch [Exception] { Add-Log $ERR "Failed to configure security protocol, downloading over HTTPS won't work: $($_.Exception.Message)" }
+    if ($PS_VERSION -gt 2) {
+        try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
+        catch [Exception] { Add-Log $ERR "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
+    }
 
     Get-CurrentVersion
 
@@ -75,6 +88,3 @@ function Initialize-Startup {
         }
     }
 }
-
-
-function Exit-Script { $FORM.Close() }
