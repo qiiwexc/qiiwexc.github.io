@@ -46,15 +46,17 @@ function Initialize-Startup {
     $BTN_QuickSecurityScan.Enabled = Test-Path $DefenderExe
     $BTN_FullSecurityScan.Enabled = $BTN_QuickSecurityScan.Enabled
 
-    $BTN_FileCleanup.Enabled = $IS_ELEVATED
-
-    try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
-    catch [Exception] { Add-Log $ERR "Failed to load System.IO.Compression.FileSystem module, unzipping archives will not work: $($_.Exception.Message)" }
-
     if ($PS_VERSION -gt 2) {
         try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
-        catch [Exception] { Add-Log $ERR "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
+        catch [Exception] { Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
+
+        try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
+        catch [Exception] {
+            Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
+            $script:Shell = New-Object -com Shell.Application
+        }
     }
+    else { $script:Shell = New-Object -com Shell.Application }
 
     Get-CurrentVersion
 
@@ -71,12 +73,13 @@ function Initialize-Startup {
         Add-Log $INF 'C2R versions of Office install updates silently in the background with no need to restart computer.'
     }
 
-    $FreeDiskSpace = ($SystemPartition.FreeSpaceGB / $SystemPartition.SizeGB)
-    if ($FreeDiskSpace -le 0.15) {
-        Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
-        Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
+    if ($SystemPartition) {
+        $FreeDiskSpace = Get-FreeDiskSpace
+        if ($FreeDiskSpace -le 0.15) {
+            Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
+            Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
+        }
     }
-
 
     $NetworkAdapter = Get-NetworkAdapter
     if ($NetworkAdapter) {

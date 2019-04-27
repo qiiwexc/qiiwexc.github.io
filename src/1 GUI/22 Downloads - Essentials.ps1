@@ -13,7 +13,7 @@ $BTN_DownloadSDI.Width = $BTN_WIDTH
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
 $BTN_DownloadSDI.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadSDI, 'Download Snappy Driver Installer')
-$BTN_DownloadSDI.Add_Click( { Start-DownloadAndExecute 'sdi-tool.org/releases/SDI_R1904.zip' -Execute $CBOX_StartSDI.Checked } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute 'sdi-tool.org/releases/SDI_R1904.zip' -MultiFile -Execute:$CBOX_StartSDI.Checked } )
 
 $CBOX_StartSDI = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartSDI.Text = $TXT_START_AFTER_DOWNLOAD
@@ -33,7 +33,7 @@ $BTN_DownloadUnchecky.Font = $BTN_FONT
 $BTN_DownloadUnchecky.Add_Click( {
         $DownloadedFile = Start-Download 'unchecky.com/files/unchecky_setup.exe'
         if ($CBOX_StartUnchecky.Checked -and $DownloadedFile) {
-            Start-File $DownloadedFile $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) -IsSilentInstall $True
+            Start-File $DownloadedFile $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) -SilentInstall
         }
     } )
 
@@ -60,7 +60,7 @@ $BTN_DownloadOffice.Width = $BTN_WIDTH
 $BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
 $BTN_DownloadOffice.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadOffice, "Download Microsoft Office 2013 - 2019 C2R installer and activator`n`n$TXT_AV_WARNING")
-$BTN_DownloadOffice.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/Office_2013-2019.zip' -Execute $CBOX_StartOffice.Checked -AVWarning $True } )
+$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Office_2013-2019.zip' -AVWarning -Execute:$CBOX_StartOffice.Checked } )
 
 $CBOX_StartOffice = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartOffice.Text = $TXT_START_AFTER_DOWNLOAD

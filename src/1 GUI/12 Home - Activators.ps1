@@ -13,7 +13,7 @@ $BTN_DownloadKMSAuto.Width = $BTN_WIDTH
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
 $BTN_DownloadKMSAuto.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
-$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -Execute $CBOX_StartKMSAuto.Checked -AVWarning $True } )
+$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -AVWarning -MultiFile -Execute:$CBOX_StartKMSAuto.Checked } )
 
 $CBOX_StartKMSAuto = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartKMSAuto.Text = $TXT_START_AFTER_DOWNLOAD
@@ -30,7 +30,7 @@ $BTN_DownloadAAct.Width = $BTN_WIDTH
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
 $BTN_DownloadAAct.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadAAct, "Download AAct`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
-$BTN_DownloadAAct.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/AAct.zip' -Execute $CBOX_StartAAct.Checked -AVWarning $True } )
+$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/AAct.zip' -AVWarning -MultiFile -Execute:$CBOX_StartAAct.Checked } )
 
 $CBOX_StartAAct = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartAAct.Text = $TXT_START_AFTER_DOWNLOAD
@@ -47,7 +47,7 @@ $BTN_DownloadChewWGA.Width = $BTN_WIDTH
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
 $BTN_DownloadChewWGA.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChewWGA, "Download ChewWGA`nLast resort for activating hopeless Windows 7 cases`n`n$TXT_AV_WARNING")
-$BTN_DownloadChewWGA.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/ChewWGA.zip' -Execute $CBOX_StartChewWGA.Checked -AVWarning $True } )
+$BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/ChewWGA.zip' -AVWarning -Execute:$CBOX_StartChewWGA.Checked } )
 
 $CBOX_StartChewWGA = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartChewWGA.Text = $TXT_START_AFTER_DOWNLOAD

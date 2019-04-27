@@ -29,7 +29,7 @@ $BTN_DownloadVictoria.Width = $BTN_WIDTH
 $BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_LONG
 $BTN_DownloadVictoria.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
-$BTN_DownloadVictoria.Add_Click( { Start-DownloadAndExecute 'qiiwexc.github.io/d/Victoria.zip' -Execute $CBOX_StartVictoria.Checked } )
+$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Victoria.zip' -Execute:$CBOX_StartVictoria.Checked } )
 
 $CBOX_StartVictoria = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartVictoria.Text = $TXT_START_AFTER_DOWNLOAD
@@ -46,7 +46,7 @@ $BTN_DownloadRecuva.Width = $BTN_WIDTH
 $BTN_DownloadRecuva.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRecuva.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRecuva, "Download Recuva installer`nRecuva helps restore deleted files")
-$BTN_DownloadRecuva.Add_Click( { Start-DownloadAndExecute 'download.ccleaner.com/rcsetup.exe' -Execute $CBOX_StartRecuva.Checked } )
+$BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute 'ccleaner.com/recuva/download/portable/downloadfile' 'Recuva.zip' -MultiFile -Execute:$CBOX_StartRecuva.Checked } )
 
 $CBOX_StartRecuva = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartRecuva.Text = $TXT_START_AFTER_DOWNLOAD

@@ -75,7 +75,7 @@ $BTN_DownloadNinite.Width = $BTN_WIDTH
 $BTN_DownloadNinite.Location = $CBOX_VSCode.Location + $SHIFT_BTN_SHORT
 $BTN_DownloadNinite.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadNinite, 'Download Ninite universal installer for selected applications')
-$BTN_DownloadNinite.Add_Click( { Start-DownloadAndExecute "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) -Execute $CBOX_StartNinite.Checked } )
+$BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) -Execute:$CBOX_StartNinite.Checked } )
 
 $CBOX_StartNinite = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartNinite.Text = $TXT_START_AFTER_DOWNLOAD

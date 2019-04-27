@@ -3,11 +3,14 @@ function Remove-Trash {
 
     try {
         if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
-        else { (New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force } }
+        else {
+            $Command = '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }'
+            Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
+        }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -20,7 +23,7 @@ function Start-DiskCleanup {
     try { Start-Process 'cleanmgr' '/lowdisk' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -32,7 +35,7 @@ function Start-CCleaner {
         Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
         Add-Log $WRN 'Click the button again to continue'
         $script:CCleanerWarningShown = $True
-        return
+        Return
     }
 
     Add-Log $INF 'Starting CCleaner background task...'
@@ -40,7 +43,7 @@ function Start-CCleaner {
     try { Start-Process $CCleanerExe '/auto' }
     catch [Exception] {
         Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -53,7 +56,7 @@ function Start-WindowsCleanup {
     try { Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -63,10 +66,10 @@ function Start-WindowsCleanup {
 function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
-    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs -Wait }
+    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -88,20 +91,20 @@ function Start-FileCleanup {
     $NonVersionedDirectories = @('Assets', 'Download', 'Install', 'SetupMetrics')
     $Containers = @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate)
 
-    $NewestJava86 = if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestJava = if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestOpera = if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChrome = if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChromeBeta = if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestJava86 = if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestJava = if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestOpera = if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestChrome = if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestChromeBeta = if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    $NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
 
     foreach ($Path in $Containers) {
         if (Test-Path $Path) {
             Add-Log $INF "Removing older versions from $Path"
 
-            $Newest = (Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories | Sort-Object CreationTime | Select-Object -Last 1).Name
-            Get-ChildItem $Path -Directory -Exclude $NonVersionedDirectories $Newest | ForEach-Object { Remove-Item $_ -Recurse -Force }
+            $Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
+            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item $_ -Recurse -Force }
 
             Out-Success
         }
@@ -113,6 +116,8 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Resource*.dll;TeamViewer_Resource_en.dll,TeamViewer_Resource_ru.dll"
         "$PROGRAM_FILES_86\WinSCP\Translations;WinSCP.ru"
         "$env:ProgramFiles\7-Zip\Lang;en.ttt,lv.txt,ru.txt"
+        "$env:ProgramFiles\CCleaner\Lang;lang-1049.dll,lang-1062.dll"
+        "$env:ProgramFiles\Defraggler\Lang;lang-1049.dll,lang-1062.dll"
         "$env:ProgramFiles\FileZilla FTP Client\locales;lv_LV,ru"
         "$env:ProgramFiles\Google\Drive\Languages;lv,ru"
         "$env:ProgramFiles\Malwarebytes\Anti-Malware\Languages;lang_ru.qm"
@@ -120,6 +125,7 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Oracle\VirtualBox\nls;qt_ru.qm,VirtualBox_ru.qm"
         "$env:ProgramFiles\paint.net\Resources;ru"
         "$env:ProgramFiles\qBittorrent\translations;qt_lv.qm,qt_ru.qm,qtbase_lv.qm,qtbase_ru.qm"
+        "$env:ProgramFiles\Recuva\Lang;lang-1049.dll,lang-1062.dll"
         "$env:ProgramFiles\VideoLAN\VLC\locale;lv,ru"
         "$NewestOpera\localization;en-US.pak,lv.pak,ru.pak"
         "$NewestChrome\Locales;en-US.pak,lv.pak,ru.pak"
@@ -133,7 +139,7 @@ function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Recurse -Force }
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue }
             Out-Success
         }
     }
@@ -191,9 +197,10 @@ function Start-FileCleanup {
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Docs.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Sheets.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Slides.lnk"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\CCleaner\*.url"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Defraggler\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\About Java.lnk"
-        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\Get Help.url"
-        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\Visit Java.com.url"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\License (English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (CHM, English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (PDF, English).lnk"
@@ -201,6 +208,7 @@ function Start-FileCleanup {
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PuTTY (64-bit)\PuTTY Web Site.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PuTTY\PuTTY Manual.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PuTTY\PuTTY Web Site.lnk"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Recuva\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Steam\Steam Support Center.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\Documentation.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\VideoLAN\Release Notes.lnk"
@@ -230,12 +238,29 @@ function Start-FileCleanup {
         "$env:ProgramData\USOShared"
         "$env:ProgramData\VirtualBox"
         "$env:ProgramData\WindowsHolographicDevices"
+        "$PROGRAM_FILES_86\7-Zip\7-zip.chm"
+        "$PROGRAM_FILES_86\7-Zip\7-zip.dll.tmp"
+        "$PROGRAM_FILES_86\7-Zip\descript.ion"
+        "$PROGRAM_FILES_86\7-Zip\History.txt"
+        "$PROGRAM_FILES_86\7-Zip\License.txt"
+        "$PROGRAM_FILES_86\7-Zip\readme.txt"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files"
+        "$PROGRAM_FILES_86\CCleaner\Setup"
+        "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
+        "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
+        "$PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
+        "$PROGRAM_FILES_86\FileZilla FTP Client\GPL.html"
+        "$PROGRAM_FILES_86\FileZilla FTP Client\NEWS"
+        "$PROGRAM_FILES_86\Foxit Software\Foxit Reader\notice.txt"
+        "$PROGRAM_FILES_86\Git\LICENSE.txt"
+        "$PROGRAM_FILES_86\Git\mingw64\doc"
+        "$PROGRAM_FILES_86\Git\ReleaseNotes.html"
+        "$PROGRAM_FILES_86\Git\tmp"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Application\SetupMetrics"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Temp"
         "$PROGRAM_FILES_86\Google\Chrome Dev\Application\SetupMetrics"
@@ -246,17 +271,50 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Google\Update\Download"
         "$PROGRAM_FILES_86\Google\Update\Install"
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSE.rtf"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSES.chromium.html"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
+        "$PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
         "$PROGRAM_FILES_86\Notepad++\change.log"
         "$PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PROGRAM_FILES_86\Notepad++\updater\LICENSE"
         "$PROGRAM_FILES_86\Notepad++\updater\README.md"
+        "$PROGRAM_FILES_86\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
+        "$PROGRAM_FILES_86\NVIDIA Corporation\license.txt"
+        "$PROGRAM_FILES_86\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\doc"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\License_en_US.rtf"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\VirtualBox.chm"
+        "$PROGRAM_FILES_86\paint.net\License.txt"
+        "$PROGRAM_FILES_86\paint.net\Staging"
+        "$PROGRAM_FILES_86\PuTTY\LICENCE"
+        "$PROGRAM_FILES_86\PuTTY\putty.chm"
+        "$PROGRAM_FILES_86\PuTTY\README.txt"
+        "$PROGRAM_FILES_86\PuTTY\website.url"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses"
         "$PROGRAM_FILES_86\Steam\dumps"
         "$PROGRAM_FILES_86\Steam\logs"
         "$PROGRAM_FILES_86\TeamViewer\*.log"
         "$PROGRAM_FILES_86\TeamViewer\*.txt"
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Note.exe"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\AUTHORS.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\COPYING.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\Documentation.url"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\New_Skins.url"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\NEWS.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\README.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\THANKS.txt"
+        "$PROGRAM_FILES_86\VideoLAN\VLC\VideoLAN Website.url"
+        "$PROGRAM_FILES_86\WinRAR\Descript.ion"
+        "$PROGRAM_FILES_86\WinRAR\License.txt"
+        "$PROGRAM_FILES_86\WinRAR\Order.htm"
+        "$PROGRAM_FILES_86\WinRAR\Rar.txt"
+        "$PROGRAM_FILES_86\WinRAR\ReadMe.txt"
+        "$PROGRAM_FILES_86\WinRAR\WhatsNew.txt"
+        "$PROGRAM_FILES_86\WinRAR\WinRAR.chm"
         "$PROGRAM_FILES_86\WinSCP\license.txt"
         "$PROGRAM_FILES_86\WinSCP\PuTTY\LICENCE"
         "$PROGRAM_FILES_86\WinSCP\PuTTY\putty.chm"
@@ -266,22 +324,40 @@ function Start-FileCleanup {
         "$env:ProgramFiles\7-Zip\History.txt"
         "$env:ProgramFiles\7-Zip\License.txt"
         "$env:ProgramFiles\7-Zip\readme.txt"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\*.pdf"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\ReadMe.htm"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
+        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Setup Files"
+        "$env:ProgramFiles\CCleaner\Setup"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\FileZilla FTP Client\AUTHORS"
         "$env:ProgramFiles\FileZilla FTP Client\GPL.html"
         "$env:ProgramFiles\FileZilla FTP Client\NEWS"
+        "$env:ProgramFiles\Foxit Software\Foxit Reader\notice.txt"
         "$env:ProgramFiles\Git\LICENSE.txt"
         "$env:ProgramFiles\Git\mingw64\doc"
         "$env:ProgramFiles\Git\ReleaseNotes.html"
         "$env:ProgramFiles\Git\tmp"
+        "$env:ProgramFiles\Google\Chrome Beta\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome Beta\Temp"
+        "$env:ProgramFiles\Google\Chrome Dev\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome Dev\Temp"
+        "$env:ProgramFiles\Google\Chrome\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome\Temp"
+        "$env:ProgramFiles\Google\CrashReports"
+        "$env:ProgramFiles\Google\Update\Download"
+        "$env:ProgramFiles\Google\Update\Install"
+        "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$env:ProgramFiles\Mozilla Firefox\install.log"
+        "$env:ProgramFiles\Mozilla Maintenance Service\logs"
         "$env:ProgramFiles\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
-        "$env:ProgramFiles\NVIDIA Corporation\Installer2"
         "$env:ProgramFiles\NVIDIA Corporation\license.txt"
         "$env:ProgramFiles\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$env:ProgramFiles\Oracle\VirtualBox\doc"
@@ -294,6 +370,12 @@ function Start-FileCleanup {
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"
         "$env:ProgramFiles\PuTTY\website.url"
+        "$env:ProgramFiles\Razer\Razer Services\Razer Central\Licenses"
+        "$env:ProgramFiles\Steam\dumps"
+        "$env:ProgramFiles\Steam\logs"
+        "$env:ProgramFiles\TeamViewer\*.log"
+        "$env:ProgramFiles\TeamViewer\*.txt"
+        "$env:ProgramFiles\TeamViewer\TeamViewer_Note.exe"
         "$env:ProgramFiles\VideoLAN\VLC\AUTHORS.txt"
         "$env:ProgramFiles\VideoLAN\VLC\COPYING.txt"
         "$env:ProgramFiles\VideoLAN\VLC\Documentation.url"
@@ -309,6 +391,9 @@ function Start-FileCleanup {
         "$env:ProgramFiles\WinRAR\ReadMe.txt"
         "$env:ProgramFiles\WinRAR\WhatsNew.txt"
         "$env:ProgramFiles\WinRAR\WinRAR.chm"
+        "$env:ProgramFiles\WinSCP\license.txt"
+        "$env:ProgramFiles\WinSCP\PuTTY\LICENCE"
+        "$env:ProgramFiles\WinSCP\PuTTY\putty.chm"
         "$env:TMP\*"
         "$env:WinDir\Logs\*"
         "$env:WinDir\Temp\*"
@@ -318,9 +403,14 @@ function Start-FileCleanup {
     foreach ($Item in $ItemsToDelete) {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
-            Remove-Item $Item -Recurse -Force
+            Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
             Out-Success
         }
+    }
+
+    if (-not $IS_ELEVATED) {
+        Add-Log $WRN 'Removal of certain files requires administrator privileges. To remove them, restart the utility'
+        Add-Log $WRN '  as administrator (see Home -> This utility -> Run as administrator) and run this task again.'
     }
 
     Add-Log $INF $LogMessage

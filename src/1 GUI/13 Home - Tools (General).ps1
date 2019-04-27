@@ -13,12 +13,17 @@ $BTN_DownloadChrome.Width = $BTN_WIDTH
 $BTN_DownloadChrome.Location = $BTN_INIT_LOCATION
 $BTN_DownloadChrome.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChrome, 'Open Google Chrome Beta download page')
-$BTN_DownloadChrome.Add_Click( { Open-InBrowser 'google.com/chrome/beta' } )
+$BTN_DownloadChrome.Add_Click( {
+        $ChromeBetaURL = 'dl.google.com/tag/s/appguid%3D%7B8237E44A-0054-442C-B6B6-EA0509993955%7D%26appname%3DGoogle%2520Chrome%2520Beta%26needsadmin%3Dprefers%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe'
+        Start-DownloadExtractExecute $ChromeBetaURL -Execute:$CBOX_StartChrome.Checked
+    } )
 
-$LBL_DownloadChrome = New-Object System.Windows.Forms.Label
-$LBL_DownloadChrome.Text = $TXT_OPENS_IN_BROWSER
-$LBL_DownloadChrome.Size = $CBOX_SIZE
-$LBL_DownloadChrome.Location = $BTN_DownloadChrome.Location + $SHIFT_LBL_BROWSER
+$CBOX_StartChrome = New-Object System.Windows.Forms.CheckBox
+$CBOX_StartChrome.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartChrome.Size = $CBOX_SIZE
+$CBOX_StartChrome.Location = $BTN_DownloadChrome.Location + $SHIFT_CBOX_EXECUTE
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartChrome, $TIP_START_AFTER_DOWNLOAD)
+$CBOX_StartChrome.Add_CheckStateChanged( { $BTN_DownloadChrome.Text = "Chrome Beta$(if ($CBOX_StartChrome.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 $BTN_DownloadRufus = New-Object System.Windows.Forms.Button
@@ -60,4 +65,4 @@ $LBL_WindowsPE.Size = $CBOX_SIZE
 $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
 
 
-$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadChrome, $LBL_DownloadChrome, $BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
+$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadChrome, $CBOX_StartChrome, $BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))

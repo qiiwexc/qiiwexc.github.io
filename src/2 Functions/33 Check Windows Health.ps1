@@ -4,7 +4,7 @@ function Test-WindowsHealth {
     try { Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -17,7 +17,7 @@ function Repair-Windows {
     try { Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to repair Windows: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success
@@ -30,7 +30,7 @@ function Repair-SystemFiles {
     try { Start-Process 'sfc' '/scannow' -Verb RunAs }
     catch [Exception] {
         Add-Log $ERR "Failed to check system file integrity: $($_.Exception.Message)"
-        return
+        Return
     }
 
     Out-Success

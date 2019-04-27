@@ -23,8 +23,8 @@ function Start-Build {
     Add-Log $INF "Target file = $TargetFile"
     Add-Log $INF "Version     = $Version"
 
-    Remove-Item $TargetFile -Force -ErrorAction Ignore
-    Remove-Item $VersionFile -Force -ErrorAction Ignore
+    Remove-Item $TargetFile -Force -ErrorAction SilentlyContinue
+    Remove-Item $VersionFile -Force -ErrorAction SilentlyContinue
     New-Item $DistPath -ItemType Directory -Force | Out-Null
 
     Add-Log $INF 'Writing version file'
