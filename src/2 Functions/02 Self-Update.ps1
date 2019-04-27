@@ -1,5 +1,9 @@
 function Get-CurrentVersion {
-    $VersionURL = 'https://qiiwexc.github.io/d/version'
+    if ($PS_VERSION -le 2) {
+        Add-Log $WRN "Automatic self-updates are not supported on PowerShell $PS_VERSION (PowerShell 3 and higher required)."
+        return
+    }
+
     Add-Log $INF 'Checking for updates...'
 
     $IsNotConnected = Get-ConnectionStatus
@@ -9,7 +13,7 @@ function Get-CurrentVersion {
     }
 
     try {
-        $LatestVersion = (Invoke-WebRequest $VersionURL).ToString().Replace("`r", '').Replace("`n", '')
+        $LatestVersion = (Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString().Replace("`r", '').Replace("`n", '')
         $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $null)
     }
     catch [Exception] {

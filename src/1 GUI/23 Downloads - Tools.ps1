@@ -13,10 +13,7 @@ $BTN_DownloadCCleaner.Width = $BTN_WIDTH
 $BTN_DownloadCCleaner.Location = $BTN_INIT_LOCATION
 $BTN_DownloadCCleaner.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
-$BTN_DownloadCCleaner.Add_Click( {
-        $DownloadedFile = Start-Download 'download.ccleaner.com/ccsetup.exe'
-        if ($CBOX_StartCCleaner.Checked -and $DownloadedFile) { Start-File $DownloadedFile }
-    } )
+$BTN_DownloadCCleaner.Add_Click( { Start-DownloadAndExecute 'download.ccleaner.com/ccsetup.exe' -Execute $CBOX_StartCCleaner.Checked } )
 
 $CBOX_StartCCleaner = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartCCleaner.Text = $TXT_START_AFTER_DOWNLOAD
@@ -33,10 +30,7 @@ $BTN_DownloadDefraggler.Width = $BTN_WIDTH
 $BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
 $BTN_DownloadDefraggler.Font = $BTN_FONT
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadDefraggler, 'Download Defraggler installer')
-$BTN_DownloadDefraggler.Add_Click( {
-        $DownloadedFile = Start-Download 'download.ccleaner.com/dfsetup.exe'
-        if ($CBOX_StartDefraggler.Checked -and $DownloadedFile) { Start-File $DownloadedFile }
-    } )
+$BTN_DownloadDefraggler.Add_Click( { Start-DownloadAndExecute 'download.ccleaner.com/dfsetup.exe' -Execute $CBOX_StartDefraggler.Checked } )
 
 $CBOX_StartDefraggler = New-Object System.Windows.Forms.CheckBox
 $CBOX_StartDefraggler.Text = $TXT_START_AFTER_DOWNLOAD
