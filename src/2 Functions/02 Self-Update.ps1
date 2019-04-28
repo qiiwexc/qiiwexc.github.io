@@ -6,15 +6,15 @@ function Get-CurrentVersion {
 
     Add-Log $INF 'Checking for updates...'
 
-    $IsNotConnected = Get-ConnectionStatus
+    [String]$IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Failed to check for updates: $IsNotConnected"
         Return
     }
 
     try {
-        $LatestVersion = (Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString().Replace("`r", '').Replace("`n", '')
-        $UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $null)
+        [String]$LatestVersion = (Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString().Replace("`r", '').Replace("`n", '')
+        [Bool]$UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $null)
     }
     catch [Exception] {
         Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
@@ -30,12 +30,12 @@ function Get-CurrentVersion {
 
 
 function Get-Update {
-    $DownloadURL = 'https://qiiwexc.github.io/d/qiiwexc.ps1'
-    $TargetFile = $MyInvocation.ScriptName
+    [String]$DownloadURL = 'https://qiiwexc.github.io/d/qiiwexc.ps1'
+    [String]$TargetFile = $MyInvocation.ScriptName
 
     Add-Log $WRN 'Downloading new version...'
 
-    $IsNotConnected = Get-ConnectionStatus
+    [String]$IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Failed to download update: $IsNotConnected"
         Return

@@ -8,7 +8,7 @@ function Set-CloudFlareDNS {
         Return
     }
 
-    $Command = "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))"
+    Set-Variable Command "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))" -Option Constant
     try { Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden }
     catch [Exception] {
         Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"

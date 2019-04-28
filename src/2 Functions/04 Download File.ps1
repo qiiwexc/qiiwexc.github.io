@@ -5,9 +5,9 @@ function Start-Download {
     )
     if (-not $URL) { Return }
 
-    $DownloadURL = if ($URL -like 'http*') { $URL } else { 'https://' + $URL }
-    $FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }
-    $SavePath = "$CURRENT_DIR\$FileName"
+    [String]$DownloadURL = if ($URL -like 'http*') { $URL } else { 'https://' + $URL }
+    [String]$FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }
+    [String]$SavePath = "$CURRENT_DIR\$FileName"
 
     if (-not (Test-Path $CURRENT_DIR)) {
         Add-Log $WRN "Download path $CURRENT_DIR does not exist. Creating it."
@@ -16,7 +16,7 @@ function Start-Download {
 
     Add-Log $INF "Downloading from $DownloadURL"
 
-    $IsNotConnected = Get-ConnectionStatus
+    [String]$IsNotConnected = Get-ConnectionStatus
     if ($IsNotConnected) {
         Add-Log $ERR "Download failed: $IsNotConnected"
         Return

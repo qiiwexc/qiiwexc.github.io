@@ -1,12 +1,11 @@
 function Set-NiniteButtonState {
-    $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or $CBOX_TeamViewer.Checked -or $CBOX_Skype.Checked -or `
-        $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked -or $CBOX_GoogleDrive.Checked -or $CBOX_VSCode.Checked
-    $CBOX_StartNinite.Enabled = $BTN_DownloadNinite.Enabled
+    $CBOX_StartNinite.Enabled = $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or $CBOX_TeamViewer.Checked -or `
+        $CBOX_Skype.Checked -or $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked -or $CBOX_GoogleDrive.Checked -or $CBOX_VSCode.Checked
 }
 
 
 function Set-NiniteQuery {
-    $Array = @()
+    [String[]]$Array = @()
     if ($CBOX_7zip.Checked) { $Array += $CBOX_7zip.Name }
     if ($CBOX_VLC.Checked) { $Array += $CBOX_VLC.Name }
     if ($CBOX_TeamViewer.Checked) { $Array += $CBOX_TeamViewer.Name }
@@ -20,7 +19,7 @@ function Set-NiniteQuery {
 
 
 function Set-NiniteFileName {
-    $Array = @()
+    [String[]]$Array = @()
     if ($CBOX_7zip.Checked) { $Array += $CBOX_7zip.Text }
     if ($CBOX_VLC.Checked) { $Array += $CBOX_VLC.Text }
     if ($CBOX_TeamViewer.Checked) { $Array += $CBOX_TeamViewer.Text }

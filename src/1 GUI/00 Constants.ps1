@@ -1,55 +1,56 @@
-$INF = 'INF'
-$WRN = 'WRN'
-$ERR = 'ERR'
+Set-Variable INF 'INF' -Option Constant
+Set-Variable WRN 'WRN' -Option Constant
+Set-Variable ERR 'ERR' -Option Constant
 
-$REQUIRES_ELEVATION = if (-not $IS_ELEVATED) { ' *' }
+Set-Variable REQUIRES_ELEVATION $(if (-not $IS_ELEVATED) { ' *' }) -Option Constant
 
-$FORM_WIDTH = 670
-$FORM_HEIGHT = 625
+Set-Variable FORM_WIDTH 670 -Option Constant
+Set-Variable FORM_HEIGHT 625 -Option Constant
 
-$BTN_WIDTH = 167
-$BTN_HEIGHT = 28
+Set-Variable BTN_WIDTH 167 -Option Constant
+Set-Variable BTN_HEIGHT 28 -Option Constant
 
-$CBOX_WIDTH = 145
-$CBOX_HEIGHT = 20
-$CBOX_SIZE = "$CBOX_WIDTH, $CBOX_HEIGHT"
+Set-Variable CBOX_WIDTH 145 -Option Constant
+Set-Variable CBOX_HEIGHT 20 -Option Constant
 
-$INT_SHORT = 5
-$INT_NORMAL = 15
-$INT_LONG = 30
-$INT_TAB_ADJ = 4
-$INT_GROUP_TOP = 20
+Set-Variable INT_SHORT 5 -Option Constant
+Set-Variable INT_NORMAL 15 -Option Constant
+Set-Variable INT_LONG 30 -Option Constant
+Set-Variable INT_TAB_ADJ 4 -Option Constant
+Set-Variable INT_GROUP_TOP 20 -Option Constant
 
-$INT_BTN_SHORT = $BTN_HEIGHT + $INT_SHORT
-$INT_BTN_NORMAL = $BTN_HEIGHT + $INT_NORMAL
-$INT_BTN_LONG = $BTN_HEIGHT + $INT_LONG
+Set-Variable INT_BTN_SHORT ($BTN_HEIGHT + $INT_SHORT) -Option Constant
+Set-Variable INT_BTN_NORMAL ($BTN_HEIGHT + $INT_NORMAL) -Option Constant
+Set-Variable INT_BTN_LONG ($BTN_HEIGHT + $INT_LONG) -Option Constant
 
-$INT_CBOX_SHORT = $CBOX_HEIGHT + $INT_SHORT
-$INT_CBOX_NORMAL = $CBOX_HEIGHT + $INT_NORMAL
+Set-Variable INT_CBOX_SHORT ($CBOX_HEIGHT + $INT_SHORT) -Option Constant
+Set-Variable INT_CBOX_NORMAL ($CBOX_HEIGHT + $INT_NORMAL) -Option Constant
 
-$GRP_WIDTH = $INT_NORMAL + $BTN_WIDTH + $INT_NORMAL
+Set-Variable GRP_WIDTH ($INT_NORMAL + $BTN_WIDTH + $INT_NORMAL) -Option Constant
 
-$BTN_INIT_LOCATION = "$INT_NORMAL, $INT_GROUP_TOP"
-$GRP_INIT_LOCATION = "$INT_NORMAL, $INT_NORMAL"
+Set-Variable CBOX_SIZE "$CBOX_WIDTH, $CBOX_HEIGHT" -Option Constant
 
-$SHIFT_BTN_SHORT = "0, $INT_BTN_SHORT"
-$SHIFT_BTN_NORMAL = "0, $INT_BTN_NORMAL"
-$SHIFT_BTN_LONG = "0, $INT_BTN_LONG"
+Set-Variable BTN_INIT_LOCATION "$INT_NORMAL, $INT_GROUP_TOP" -Option Constant
+Set-Variable GRP_INIT_LOCATION "$INT_NORMAL, $INT_NORMAL" -Option Constant
 
-$SHIFT_CBOX_SHORT = "0, $INT_CBOX_SHORT"
-$SHIFT_CBOX_NORMAL = "0, $INT_CBOX_NORMAL"
-$SHIFT_CBOX_EXECUTE = "$($INT_LONG - $INT_SHORT), $($INT_BTN_SHORT - $INT_SHORT)"
+Set-Variable SHIFT_BTN_SHORT "0, $INT_BTN_SHORT" -Option Constant
+Set-Variable SHIFT_BTN_NORMAL "0, $INT_BTN_NORMAL" -Option Constant
+Set-Variable SHIFT_BTN_LONG "0, $INT_BTN_LONG" -Option Constant
 
-$SHIFT_GRP_HOR_NORMAL = "$($GRP_WIDTH + $INT_NORMAL), 0"
+Set-Variable SHIFT_CBOX_SHORT "0, $INT_CBOX_SHORT" -Option Constant
+Set-Variable SHIFT_CBOX_NORMAL "0, $INT_CBOX_NORMAL" -Option Constant
+Set-Variable SHIFT_CBOX_EXECUTE "$($INT_LONG - $INT_SHORT), $($INT_BTN_SHORT - $INT_SHORT)" -Option Constant
 
-$SHIFT_LBL_BROWSER = "$INT_LONG, $($INT_BTN_SHORT - $INT_SHORT)"
+Set-Variable SHIFT_GRP_HOR_NORMAL "$($GRP_WIDTH + $INT_NORMAL), 0" -Option Constant
 
-$FONT_NAME = 'Microsoft Sans Serif'
-$BTN_FONT = "$FONT_NAME, 10"
+Set-Variable SHIFT_LBL_BROWSER "$INT_LONG, $($INT_BTN_SHORT - $INT_SHORT)" -Option Constant
 
-$TXT_START_AFTER_DOWNLOAD = 'Start after download'
-$TXT_OPENS_IN_BROWSER = 'Opens in the browser'
-$TXT_UNCHECKY_INFO = 'Unchecky clears adware checkboxes when installing software'
-$TXT_AV_WARNING = "This file may trigger anti-virus false positive!`nIt is recommended to disable anti-virus software for download and subsequent use of this file!"
+Set-Variable FONT_NAME 'Microsoft Sans Serif' -Option Constant
+Set-Variable BTN_FONT "$FONT_NAME, 10" -Option Constant
 
-$TIP_START_AFTER_DOWNLOAD = "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
+Set-Variable TXT_START_AFTER_DOWNLOAD 'Start after download' -Option Constant
+Set-Variable TXT_OPENS_IN_BROWSER 'Opens in the browser' -Option Constant
+Set-Variable TXT_UNCHECKY_INFO 'Unchecky clears adware checkboxes when installing software' -Option Constant
+Set-Variable TXT_AV_WARNING "This file may trigger anti-virus false positive!`nIt is recommended to disable anti-virus software for download and subsequent use of this file!" -Option Constant
+
+Set-Variable TIP_START_AFTER_DOWNLOAD "Execute after download has finished`nIf download is a ZIP file, it will get extracted first" -Option Constant

@@ -1,1 +1,1 @@
-$FORM.ShowDialog() | Out-Null
+[Void]$FORM.ShowDialog()
