@@ -1,12 +1,12 @@
 function Add-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
-        [String][Parameter(Position = 1)]$Message = $(Write-Host "`n>>> $($MyInvocation.MyCommand.Name): Log message missing <<<" -NoNewline)
+        [String][Parameter(Position = 1)]$Message = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline)
     )
     if (-not $Message) { Return }
 
-    $Timestamp = (Get-Date).ToString()
-    $Text = "[$Timestamp] $Message"
+    [String]$Timestamp = (Get-Date).ToString()
+    [String]$Text = "[$Timestamp] $Message"
     $LOG.SelectionStart = $LOG.TextLength
 
     switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
@@ -15,7 +15,7 @@ function Add-Log {
 
 
 function Write-Log {
-    Param([String]$Text = $(Write-Host "`n>>> $($MyInvocation.MyCommand.Name): Log message missing <<<" -NoNewline))
+    Param([String]$Text = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline))
     if (-not $Text) { Return }
 
     Write-Host $Text -NoNewline

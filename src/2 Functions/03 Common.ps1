@@ -2,7 +2,7 @@ function Open-InBrowser {
     Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
     if (-not $URL) { Return }
 
-    $UrlToOpen = if ($URL -like 'http*') { $URL } else { 'https://' + $URL }
+    Set-Variable UrlToOpen $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL }) -Option Constant
     Add-Log $INF "Opening URL in the default browser: $UrlToOpen"
 
     try { [System.Diagnostics.Process]::Start($UrlToOpen) }
@@ -22,10 +22,11 @@ function Start-DownloadExtractExecute {
 
     if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
     else {
-        $DownloadedFile = Start-Download $URL $FileName
+        Set-Variable DownloadedFile (Start-Download $URL $FileName) -Option Constant
 
         if ($DownloadedFile) {
-            $Executable = if ($DownloadedFile.Substring($DownloadedFile.Length - 4) -eq '.zip') { Start-Extraction $DownloadedFile -MF:$MultiFile } else { $DownloadedFile }
+            Set-Variable IsZip ($DownloadedFile.Substring($DownloadedFile.Length - 4) -eq '.zip') -Option Constant
+            Set-Variable Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -MF:$MultiFile } else { $DownloadedFile }) -Option Constant
             if ($Execute) { Start-File $Executable }
         }
     }
@@ -36,8 +37,8 @@ function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpaceGB / $SystemParti
 
 function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
 
-
 function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
 
+function Restore-WindowTitle { $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE }
 
-function Exit-Script { $FORM.Close() }
+function Exit-Script { Restore-WindowTitle; $FORM.Close() }

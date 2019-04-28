@@ -4,7 +4,7 @@ function Remove-Trash {
     try {
         if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
         else {
-            $Command = '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }'
+            [String]$Command = '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }'
             Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
         }
     }
@@ -34,7 +34,7 @@ function Start-CCleaner {
     if (-not $CCleanerWarningShown) {
         Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
         Add-Log $WRN 'Click the button again to continue'
-        $script:CCleanerWarningShown = $True
+        [Bool]$Script:CCleanerWarningShown = $True
         Return
     }
 
@@ -77,40 +77,40 @@ function Remove-RestorePoints {
 
 
 function Start-FileCleanup {
-    $LogMessage = 'Removing unnecessary files...'
+    [String]$LogMessage = 'Removing unnecessary files...'
     Add-Log $INF $LogMessage
 
-    $ContainerJava86 = "${env:ProgramFiles(x86)}\Java"
-    $ContainerJava = "$env:ProgramFiles\Java"
-    $ContainerOpera = "$env:ProgramFiles\Opera"
-    $ContainerChrome = "$PROGRAM_FILES_86\Google\Chrome\Application"
-    $ContainerChromeBeta = "$PROGRAM_FILES_86\Google\Chrome Beta\Application"
-    $ContainerChromeDev = "$PROGRAM_FILES_86\Google\Chrome Dev\Application"
-    $ContainerGoogleUpdate = "$PROGRAM_FILES_86\Google\Update"
+    [String]$ContainerJava86 = "${env:ProgramFiles(x86)}\Java"
+    [String]$ContainerJava = "$env:ProgramFiles\Java"
+    [String]$ContainerOpera = "$env:ProgramFiles\Opera"
+    [String]$ContainerChrome = "$PROGRAM_FILES_86\Google\Chrome\Application"
+    [String]$ContainerChromeBeta = "$PROGRAM_FILES_86\Google\Chrome Beta\Application"
+    [String]$ContainerChromeDev = "$PROGRAM_FILES_86\Google\Chrome Dev\Application"
+    [String]$ContainerGoogleUpdate = "$PROGRAM_FILES_86\Google\Update"
 
-    $NonVersionedDirectories = @('Assets', 'Download', 'Install', 'SetupMetrics')
-    $Containers = @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate)
+    [String[]]$NonVersionedDirectories = @('Assets', 'Download', 'Install', 'SetupMetrics')
+    [String[]]$Containers = @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate)
 
-    $NewestJava86 = if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestJava = if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestOpera = if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChrome = if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChromeBeta = if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    $NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    [String]$NewestJava86 = if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    [String]$NewestJava = if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    [String]$NewestOpera = if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    [String]$NewestChrome = if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    [String]$NewestChromeBeta = if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    [String]$NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    [String]$NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
 
-    foreach ($Path in $Containers) {
+    foreach ($Path In $Containers) {
         if (Test-Path $Path) {
             Add-Log $INF "Removing older versions from $Path"
 
-            $Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
+            [String]$Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
             Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item $_ -Recurse -Force }
 
             Out-Success
         }
     }
 
-    $ItemsToDeleteWithExclusions = @(
+    [String[]]$ItemsToDeleteWithExclusions = @(
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\locales;en-US.pak,lv.pak,ru.pak"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\locales;en-US.pak,lv.pak,ru.pak"
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Resource*.dll;TeamViewer_Resource_en.dll,TeamViewer_Resource_ru.dll"
@@ -134,8 +134,8 @@ function Start-FileCleanup {
         "$NewestGoogleUpdate\goopdateres_*.dll;goopdateres_en-GB.dll,goopdateres_en-US.dll,goopdateres_lv.dll,goopdateres_ru.dll"
     )
 
-    foreach ($Item in $ItemsToDeleteWithExclusions) {
-        $Path, $Exclusions = $Item.Split(';')
+    foreach ($Item In $ItemsToDeleteWithExclusions) {
+        [String]$Path, [String]$Exclusions = $Item.Split(';')
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
@@ -144,7 +144,7 @@ function Start-FileCleanup {
         }
     }
 
-    $ItemsToDelete = @(
+    [String[]]$ItemsToDelete = @(
         "$NewestJava86\COPYRIGHT"
         "$NewestJava86\LICENSE"
         "$NewestJava86\release"
@@ -365,7 +365,6 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Oracle\VirtualBox\License_en_US.rtf"
         "$env:ProgramFiles\Oracle\VirtualBox\VirtualBox.chm"
         "$env:ProgramFiles\paint.net\License.txt"
-        "$env:ProgramFiles\paint.net\Staging"
         "$env:ProgramFiles\PuTTY\LICENCE"
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"
@@ -400,7 +399,7 @@ function Start-FileCleanup {
         "$env:WinDir\SoftwareDistribution\Download\*"
     )
 
-    foreach ($Item in $ItemsToDelete) {
+    foreach ($Item In $ItemsToDelete) {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
             Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
