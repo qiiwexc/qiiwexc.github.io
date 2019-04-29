@@ -3,25 +3,50 @@ function Get-SystemInfo {
 
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
-    [String]$Script:OS_NAME = $OperatingSystem.Caption
-    [String]$Script:OS_BUILD = $OperatingSystem.Version
-    [String]$Script:OS_ARCH = if ($OperatingSystem.OSArchitecture -like '64-*') { '64-bit' } else { '32-bit' }
-    [Float]$Script:OS_VERSION = if ($OS_BUILD -Match '10.0.*') { 10 } elseif ($OS_BUILD -Match '6.3.*') { 8.1 } elseif ($OS_BUILD -Match '6.2.*') { 8 } elseif ($OS_BUILD -Match '6.1.*') { 7 }
+    Set-Variable OS_NAME $OperatingSystem.Caption -Option Constant -Scope Script
+    Set-Variable OS_BUILD $OperatingSystem.Version -Option Constant -Scope Script
+    Set-Variable OS_ARCH $(if ($OperatingSystem.OSArchitecture -like '64-*') { '64-bit' } else { '32-bit' }) -Option Constant -Scope Script
+    Set-Variable OS_VERSION $(Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } }) -Option Constant -Scope Script
+
+    Set-Variable CURRENT_DIR $(Split-Path $MyInvocation.ScriptName) -Option Constant -Scope Script
+    Set-Variable PROGRAM_FILES_86 $(if ($OS_ARCH -eq '64-bit') { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles }) -Option Constant -Scope Script
 
     New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
-    $WordRegPath = Get-ItemProperty 'HKCR:\Word.Application\CurVer' -ErrorAction SilentlyContinue
-    [Int]$Script:OfficeVersion = if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' }
-    [String]$Script:OfficeC2RClientExe = "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
-    [String]$Script:OfficeInstallType = if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } }
+    Set-Variable WordRegPath (Get-ItemProperty 'HKCR:\Word.Application\CurVer' -ErrorAction SilentlyContinue) -Option Constant
+    Set-Variable OfficeVersion $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' }) -Option Constant -Scope Script
+    Set-Variable OfficeC2RClientExe "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe" -Option Constant -Scope Script
+    Set-Variable OfficeInstallType $(if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } }) -Option Constant -Scope Script
 
-    $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'"
-    $Script:SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'SizeGB'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+    Set-Variable CCleanerExe "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" -Option Constant -Scope Script
+    Set-Variable DefragglerExe "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" -Option Constant -Scope Script
+    Set-Variable DefenderExe "$env:ProgramFiles\Windows Defender\MpCmdRun.exe" -Option Constant -Scope Script
+    Set-Variable GoogleUpdateExe "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe" -Option Constant -Scope Script
+
+
+    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
+    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+
+    Set-Variable LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'") -Option Constant
+    $Script:SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
 
     Out-Success
+
+    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
+    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+
+    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
+    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
 }
 
 
 function Out-SystemInfo {
+    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
+    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
 
@@ -34,30 +59,30 @@ function Out-SystemInfo {
 
     $Processors = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
     if ($Processors) {
-        foreach ($Item In $Processors) {
+        ForEach ($Item In $Processors) {
             Add-Log $INF "    CPU name:  $($Item.Name)"
             Add-Log $INF "    Cores / Threads:  $($Item.NumberOfCores) / $($Item.NumberOfLogicalProcessors)"
         }
     }
 
     $VideoControllers = (Get-WmiObject Win32_VideoController).Name
-    if ($VideoControllers) { foreach ($Item In $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
+    if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
 
     if ($OS_VERSION -gt 7) {
         $Storage = Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, @{L = 'Firmware'; E = { $_.FirmwareVersion } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
         if ($Storage) {
-            foreach ($Item In $Storage) {
+            ForEach ($Item In $Storage) {
                 Add-Log $INF "    Storage:  $($Item.FriendlyName) ($($Item.BusType) $($Item.MediaType), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.Firmware))"
             }
         }
     }
     else {
         $Storage = Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, @{L = 'Firmware'; E = { $_.FirmwareRevision } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
-        if ($Storage) { foreach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.Firmware))" } }
+        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.Firmware))" } }
     }
 
     if ($SystemPartition) {
-        Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($((Get-FreeDiskSpace).ToString('P')))"
+        Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpace) GB / $($SystemPartition.Size) GB ($((Get-FreeDiskSpace).ToString('P')))"
     }
 
     [String]$OfficeYear = Switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }

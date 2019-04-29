@@ -1,7 +1,6 @@
 function Initialize-Startup {
     $FORM.Activate()
-    Set-Variable Timestamp $((Get-Date).ToString()) -Option Constant
-    Write-Log "[$Timestamp] Initializing..."
+    Write-Log "[$((Get-Date).ToString())] Initializing..."
 
     if ($IS_ELEVATED) {
         $FORM.Text = "$($FORM.Text): Administrator"
@@ -11,28 +10,12 @@ function Initialize-Startup {
 
     Get-SystemInfo
 
-    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
-    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+    $CBOX_StartAAct.Checked = $CBOX_StartAAct.Enabled = $CBOX_StartChewWGA.Checked = $CBOX_StartChewWGA.Enabled = `
+        $CBOX_StartKMSAuto.Checked = $CBOX_StartKMSAuto.Enabled = $CBOX_StartOffice.Checked = $CBOX_StartOffice.Enabled = `
+        $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
 
-    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
-    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
-
-    [String]$Script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
-    [String]$Script:PROGRAM_FILES_86 = if ($OS_ARCH -eq '64-bit') { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles }
-
-    [String]$Script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
-    [String]$Script:DefragglerExe = "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
-    [String]$Script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-    [String]$Script:GoogleUpdateExe = "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe"
-
-    $CBOX_StartAAct.Enabled = $CBOX_StartChewWGA.Enabled = $CBOX_StartKMSAuto.Enabled = $CBOX_StartOffice.Enabled = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
     $BTN_WindowsCleanup.Enabled = $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
-    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
     $BTN_QuickSecurityScan.Enabled = $BTN_FullSecurityScan.Enabled = Test-Path $DefenderExe
-
-    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
 
     if ($PS_VERSION -gt 2) {
         try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
@@ -41,10 +24,10 @@ function Initialize-Startup {
         try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
         catch [Exception] {
             Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
-            $Script:Shell = New-Object -com Shell.Application
+            Set-Variable Shell $(New-Object -com Shell.Application) -Option Constant -Scope Script
         }
     }
-    else { $Script:Shell = New-Object -com Shell.Application }
+    else { Set-Variable Shell $(New-Object -com Shell.Application) -Option Constant -Scope Script }
 
     Get-CurrentVersion
 
@@ -62,16 +45,16 @@ function Initialize-Startup {
     }
 
     if ($SystemPartition) {
-        [Float]$FreeDiskSpace = Get-FreeDiskSpace
+        Set-Variable FreeDiskSpace (Get-FreeDiskSpace) -Option Constant
         if ($FreeDiskSpace -le 0.15) {
             Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
             Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
         }
     }
 
-    $NetworkAdapter = Get-NetworkAdapter
+    Set-Variable NetworkAdapter (Get-NetworkAdapter) -Option Constant
     if ($NetworkAdapter) {
-        [Array]$CurrentDnsServer = $NetworkAdapter.DNSServerSearchOrder
+        Set-Variable CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder -Option Constant
         if (-not ($CurrentDnsServer -Contains '1.1.1.1' -or $CurrentDnsServer -Contains '1.0.0.1')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'

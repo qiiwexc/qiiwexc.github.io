@@ -1,81 +1,3 @@
-function Remove-Trash {
-    Add-Log $INF 'Emptying Recycle Bin...'
-
-    try {
-        if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
-        else {
-            [String]$Command = '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }'
-            Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
-        }
-    }
-    catch [Exception] {
-        Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
-function Start-DiskCleanup {
-    Add-Log $INF 'Starting disk cleanup utility...'
-
-    try { Start-Process 'cleanmgr' '/lowdisk' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
-function Start-CCleaner {
-    if (-not $CCleanerWarningShown) {
-        Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
-        Add-Log $WRN 'Click the button again to continue'
-        [Bool]$Script:CCleanerWarningShown = $True
-        Return
-    }
-
-    Add-Log $INF 'Starting CCleaner background task...'
-
-    try { Start-Process $CCleanerExe '/auto' }
-    catch [Exception] {
-        Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
-function Start-WindowsCleanup {
-    Add-Log $INF 'Starting Windows update cleanup...'
-
-    try { Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
-function Remove-RestorePoints {
-    Add-Log $INF 'Deleting all restore points...'
-
-    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
 function Start-FileCleanup {
     [String]$LogMessage = 'Removing unnecessary files...'
     Add-Log $INF $LogMessage
@@ -99,14 +21,14 @@ function Start-FileCleanup {
     [String]$NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
     [String]$NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
 
-    foreach ($Path In $Containers) {
+    ForEach ($Path In $Containers) {
         if (Test-Path $Path) {
             Add-Log $INF "Removing older versions from $Path"
 
             [String]$Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
             Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item $_ -Recurse -Force }
 
-            Out-Success
+            if (Test-Path $Path) { Out-Failure } else { Out-Success }
         }
     }
 
@@ -134,7 +56,7 @@ function Start-FileCleanup {
         "$NewestGoogleUpdate\goopdateres_*.dll;goopdateres_en-GB.dll,goopdateres_en-US.dll,goopdateres_lv.dll,goopdateres_ru.dll"
     )
 
-    foreach ($Item In $ItemsToDeleteWithExclusions) {
+    ForEach ($Item In $ItemsToDeleteWithExclusions) {
         [String]$Path, [String]$Exclusions = $Item.Split(';')
 
         if (Test-Path $Path) {
@@ -156,51 +78,38 @@ function Start-FileCleanup {
         "$NewestJava\*.html"
         "$NewestJava\*.txt"
         "$NewestChrome\default_apps"
+        "$NewestChrome\default_apps\*"
         "$NewestChrome\Installer"
+        "$NewestChrome\Installer\*"
         "$NewestChromeBeta\default_apps"
+        "$NewestChromeBeta\default_apps\*"
         "$NewestChromeBeta\Installer"
+        "$NewestChromeBeta\Installer\*"
         "$NewestChromeDev\default_apps"
+        "$NewestChromeDev\default_apps\*"
         "$NewestChromeDev\Installer"
+        "$NewestChromeDev\Installer\*"
         "$NewestGoogleUpdate\Recovery"
+        "$NewestGoogleUpdate\Recovery\*"
         "$env:SystemDrive\Intel"
+        "$env:SystemDrive\Intel\*"
         "$env:SystemDrive\Intel\Logs\*"
+        "$env:SystemDrive\PerfLogs"
+        "$env:SystemDrive\PerfLogs\*"
         "$env:SystemDrive\temp"
-        "$env:Public\Foxit Software"
-        "$env:UserProfile\.VirtualBox\*.log*"
-        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs"
-        "$env:UserProfile\AppData\LocalLow\PKI Client"
-        "$env:UserProfile\AppData\LocalLow\Sun"
-        "$env:UserProfile\MicrosoftEdgeBackups"
-        "$env:AppData\Code\logs"
-        "$env:AppData\Google"
-        "$env:AppData\hpqLog"
-        "$env:AppData\Microsoft\Skype for Desktop\logs"
-        "$env:AppData\Opera Software\Opera Stable\Crash Reports"
-        "$env:AppData\Opera Software\Opera Stable\*.log"
-        "$env:AppData\Skype"
-        "$env:AppData\Sun"
-        "$env:AppData\Synapse3"
-        "$env:AppData\TeamViewer\*.log"
-        "$env:AppData\Visual Studio Code"
-        "$env:AppData\vlc\crashdump"
-        "$env:LocalAppData\CrashDumps"
-        "$env:LocalAppData\DBG"
-        "$env:LocalAppData\Deployment"
-        "$env:LocalAppData\Diagnostics"
-        "$env:LocalAppData\Google\CrashReports"
-        "$env:LocalAppData\Google\Software Reporter Tool"
-        "$env:LocalAppData\PeerDistRepub"
-        "$env:LocalAppData\Razer\Synapse3\Log"
-        "$env:LocalAppData\VirtualStore"
+        "$env:SystemDrive\temp\*"
         "$env:ProgramData\Adobe"
+        "$env:ProgramData\Adobe\*"
+        "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
+        "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Docs.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Sheets.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Slides.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\CCleaner\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Defraggler\*.url"
-        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\About Java.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\*.url"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\About Java.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\License (English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (CHM, English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (PDF, English).lnk"
@@ -218,26 +127,47 @@ function Start-FileCleanup {
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\WinRAR\Console RAR manual.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\WinRAR\What is new in the latest version.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\WinRAR\WinRAR help.lnk"
+        "$env:ProgramData\Microsoft\Windows\WER\ReportArchive\*"
         "$env:ProgramData\Mozilla"
+        "$env:ProgramData\Mozilla\*"
         "$env:ProgramData\NVIDIA Corporation\NvFBCPlugin"
+        "$env:ProgramData\NVIDIA Corporation\NvFBCPlugin\*"
         "$env:ProgramData\NVIDIA Corporation\umdlogs"
+        "$env:ProgramData\NVIDIA Corporation\umdlogs\*"
         "$env:ProgramData\NVIDIA\*.log_backup1"
         "$env:ProgramData\Oracle"
+        "$env:ProgramData\Oracle\*"
+        "$env:ProgramData\Package Cache"
+        "$env:ProgramData\Package Cache\*"
         "$env:ProgramData\Razer\GameManager\Logs"
+        "$env:ProgramData\Razer\GameManager\Logs\*"
         "$env:ProgramData\Razer\Installer\Logs"
+        "$env:ProgramData\Razer\Installer\Logs\*"
         "$env:ProgramData\Razer\Razer Central\Logs"
+        "$env:ProgramData\Razer\Razer Central\Logs\*"
         "$env:ProgramData\Razer\Razer Central\WebAppCache\Service Worker\Database\*.log"
         "$env:ProgramData\Razer\Synapse3\CrashDumps"
+        "$env:ProgramData\Razer\Synapse3\CrashDumps\*"
         "$env:ProgramData\Razer\Synapse3\Log"
+        "$env:ProgramData\Razer\Synapse3\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Bin\Devices\Charlotte\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Bin\Devices\Charlotte\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Bin\Devices\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Bin\Devices\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Bin\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Bin\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Lib\DetectManager\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Lib\DetectManager\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Log\*"
         "$env:ProgramData\Roaming"
+        "$env:ProgramData\Roaming\*"
         "$env:ProgramData\USOShared"
+        "$env:ProgramData\USOShared\*"
         "$env:ProgramData\VirtualBox"
+        "$env:ProgramData\VirtualBox\*"
         "$env:ProgramData\WindowsHolographicDevices"
+        "$env:ProgramData\WindowsHolographicDevices\*"
         "$PROGRAM_FILES_86\7-Zip\7-zip.chm"
         "$PROGRAM_FILES_86\7-Zip\7-zip.dll.tmp"
         "$PROGRAM_FILES_86\7-Zip\descript.ion"
@@ -250,7 +180,9 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files"
+        "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files\*"
         "$PROGRAM_FILES_86\CCleaner\Setup"
+        "$PROGRAM_FILES_86\CCleaner\Setup\*"
         "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
         "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
@@ -259,24 +191,37 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Foxit Software\Foxit Reader\notice.txt"
         "$PROGRAM_FILES_86\Git\LICENSE.txt"
         "$PROGRAM_FILES_86\Git\mingw64\doc"
+        "$PROGRAM_FILES_86\Git\mingw64\doc\*"
         "$PROGRAM_FILES_86\Git\ReleaseNotes.html"
         "$PROGRAM_FILES_86\Git\tmp"
+        "$PROGRAM_FILES_86\Git\tmp\*"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Application\SetupMetrics"
+        "$PROGRAM_FILES_86\Google\Chrome Beta\Application\SetupMetrics\*"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Temp"
+        "$PROGRAM_FILES_86\Google\Chrome Beta\Temp\*"
         "$PROGRAM_FILES_86\Google\Chrome Dev\Application\SetupMetrics"
+        "$PROGRAM_FILES_86\Google\Chrome Dev\Application\SetupMetrics\*"
         "$PROGRAM_FILES_86\Google\Chrome Dev\Temp"
+        "$PROGRAM_FILES_86\Google\Chrome Dev\Temp\*"
         "$PROGRAM_FILES_86\Google\Chrome\Application\SetupMetrics"
+        "$PROGRAM_FILES_86\Google\Chrome\Application\SetupMetrics\*"
         "$PROGRAM_FILES_86\Google\Chrome\Temp"
+        "$PROGRAM_FILES_86\Google\Chrome\Temp\*"
         "$PROGRAM_FILES_86\Google\CrashReports"
+        "$PROGRAM_FILES_86\Google\CrashReports\*"
         "$PROGRAM_FILES_86\Google\Update\Download"
+        "$PROGRAM_FILES_86\Google\Update\Download\*"
         "$PROGRAM_FILES_86\Google\Update\Install"
+        "$PROGRAM_FILES_86\Google\Update\Install\*"
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
+        "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs\*"
         "$PROGRAM_FILES_86\Notepad++\change.log"
         "$PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PROGRAM_FILES_86\Notepad++\updater\LICENSE"
@@ -285,18 +230,23 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\NVIDIA Corporation\license.txt"
         "$PROGRAM_FILES_86\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$PROGRAM_FILES_86\Oracle\VirtualBox\doc"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\doc\*"
         "$PROGRAM_FILES_86\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
         "$PROGRAM_FILES_86\Oracle\VirtualBox\License_en_US.rtf"
         "$PROGRAM_FILES_86\Oracle\VirtualBox\VirtualBox.chm"
         "$PROGRAM_FILES_86\paint.net\License.txt"
         "$PROGRAM_FILES_86\paint.net\Staging"
+        "$PROGRAM_FILES_86\paint.net\Staging\*"
         "$PROGRAM_FILES_86\PuTTY\LICENCE"
         "$PROGRAM_FILES_86\PuTTY\putty.chm"
         "$PROGRAM_FILES_86\PuTTY\README.txt"
         "$PROGRAM_FILES_86\PuTTY\website.url"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses"
+        "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses\*"
         "$PROGRAM_FILES_86\Steam\dumps"
+        "$PROGRAM_FILES_86\Steam\dumps\*"
         "$PROGRAM_FILES_86\Steam\logs"
+        "$PROGRAM_FILES_86\Steam\logs\*"
         "$PROGRAM_FILES_86\TeamViewer\*.log"
         "$PROGRAM_FILES_86\TeamViewer\*.txt"
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Note.exe"
@@ -329,8 +279,8 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
-        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Setup Files"
         "$env:ProgramFiles\CCleaner\Setup"
+        "$env:ProgramFiles\CCleaner\Setup\*"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\FileZilla FTP Client\AUTHORS"
@@ -341,22 +291,34 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Git\mingw64\doc"
         "$env:ProgramFiles\Git\ReleaseNotes.html"
         "$env:ProgramFiles\Git\tmp"
+        "$env:ProgramFiles\Git\tmp\*"
         "$env:ProgramFiles\Google\Chrome Beta\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome Beta\Application\SetupMetrics\*"
         "$env:ProgramFiles\Google\Chrome Beta\Temp"
+        "$env:ProgramFiles\Google\Chrome Beta\Temp\*"
         "$env:ProgramFiles\Google\Chrome Dev\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome Dev\Application\SetupMetrics\*"
         "$env:ProgramFiles\Google\Chrome Dev\Temp"
+        "$env:ProgramFiles\Google\Chrome Dev\Temp\*"
         "$env:ProgramFiles\Google\Chrome\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome\Application\SetupMetrics\*"
         "$env:ProgramFiles\Google\Chrome\Temp"
+        "$env:ProgramFiles\Google\Chrome\Temp\*"
         "$env:ProgramFiles\Google\CrashReports"
+        "$env:ProgramFiles\Google\CrashReports\*"
         "$env:ProgramFiles\Google\Update\Download"
+        "$env:ProgramFiles\Google\Update\Download\*"
         "$env:ProgramFiles\Google\Update\Install"
+        "$env:ProgramFiles\Google\Update\Install\*"
         "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
+        "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses\*"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$env:ProgramFiles\Mozilla Firefox\install.log"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs"
+        "$env:ProgramFiles\Mozilla Maintenance Service\logs\*"
         "$env:ProgramFiles\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
         "$env:ProgramFiles\NVIDIA Corporation\license.txt"
         "$env:ProgramFiles\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
@@ -370,8 +332,11 @@ function Start-FileCleanup {
         "$env:ProgramFiles\PuTTY\README.txt"
         "$env:ProgramFiles\PuTTY\website.url"
         "$env:ProgramFiles\Razer\Razer Services\Razer Central\Licenses"
+        "$env:ProgramFiles\Razer\Razer Services\Razer Central\Licenses\*"
         "$env:ProgramFiles\Steam\dumps"
+        "$env:ProgramFiles\Steam\dumps\*"
         "$env:ProgramFiles\Steam\logs"
+        "$env:ProgramFiles\Steam\logs\*"
         "$env:ProgramFiles\TeamViewer\*.log"
         "$env:ProgramFiles\TeamViewer\*.txt"
         "$env:ProgramFiles\TeamViewer\TeamViewer_Note.exe"
@@ -393,17 +358,132 @@ function Start-FileCleanup {
         "$env:ProgramFiles\WinSCP\license.txt"
         "$env:ProgramFiles\WinSCP\PuTTY\LICENCE"
         "$env:ProgramFiles\WinSCP\PuTTY\putty.chm"
-        "$env:TMP\*"
+        "$env:WinDir\*.log"
+        "$env:WinDir\debug\*.log"
+        "$env:WinDir\INF\*.log"
         "$env:WinDir\Logs\*"
+        "$env:WinDir\Microsoft.NET\Framework\*\*.log"
+        "$env:WinDir\Microsoft.NET\Framework64\*\*.log"
+        "$env:WinDir\Panther\UnattendGC\*.log"
+        "$env:WinDir\Performance\WinSAT\*.log"
+        "$env:WinDir\security\logs\*.log"
+        "$env:WinDir\security\logs\*.old"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0\*.log"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0\UsageLogs"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0\UsageLogs\*"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0_32\*.log"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0\*.log"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0\UsageLogs"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Temp\*"
+        "$env:WinDir\SoftwareDistribution\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs\*"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0_32\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Temp\*"
         "$env:WinDir\Temp\*"
         "$env:WinDir\SoftwareDistribution\Download\*"
+        "$env:TMP\*"
+        "$env:Public\Foxit Software"
+        "$env:Public\Foxit Software\*"
+        "$env:UserProfile\.VirtualBox\*.log*"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\Media Player\lastplayed.wpl"
+        "$env:UserProfile\AppData\Local\Microsoft\Office\16.0\WebServiceCache"
+        "$env:UserProfile\AppData\Local\Microsoft\Office\16.0\WebServiceCache\*"
+        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\logs"
+        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\logs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\setup"
+        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\setup\*"
+        "$env:UserProfile\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
+        "$env:UserProfile\AppData\Local\Microsoft\Windows\SettingSync\metastore\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\Windows\WebCache\*.log"
+        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs"
+        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs\*"
+        "$env:UserProfile\AppData\LocalLow\PKI Client"
+        "$env:UserProfile\AppData\LocalLow\PKI Client\*"
+        "$env:UserProfile\AppData\LocalLow\Sun"
+        "$env:UserProfile\AppData\LocalLow\Sun\*"
+        "$env:UserProfile\MicrosoftEdgeBackups"
+        "$env:UserProfile\MicrosoftEdgeBackups\*"
+        "$env:AppData\Code\logs"
+        "$env:AppData\Code\logs\*"
+        "$env:AppData\Google"
+        "$env:AppData\Google\*"
+        "$env:AppData\hpqLog"
+        "$env:AppData\hpqLog\*"
+        "$env:AppData\Microsoft\Office\Recent"
+        "$env:AppData\Microsoft\Office\Recent\*"
+        "$env:AppData\Microsoft\Skype for Desktop\logs"
+        "$env:AppData\Microsoft\Skype for Desktop\logs\*"
+        "$env:AppData\Microsoft\Windows\Recent\*"
+        "$env:AppData\Opera Software\Opera Stable\*.log"
+        "$env:AppData\Opera Software\Opera Stable\Crash Reports"
+        "$env:AppData\Opera Software\Opera Stable\Crash Reports\*"
+        "$env:AppData\Skype"
+        "$env:AppData\Skype\*"
+        "$env:AppData\Sun"
+        "$env:AppData\Sun\*"
+        "$env:AppData\Synapse3"
+        "$env:AppData\Synapse3\*"
+        "$env:AppData\TeamViewer\*.log"
+        "$env:AppData\Visual Studio Code"
+        "$env:AppData\Visual Studio Code\*"
+        "$env:AppData\vlc\art"
+        "$env:AppData\vlc\art\*"
+        "$env:AppData\vlc\crashdump"
+        "$env:AppData\vlc\crashdump\*"
+        "$env:LocalAppData\CrashDumps"
+        "$env:LocalAppData\CrashDumps\*"
+        "$env:LocalAppData\DBG"
+        "$env:LocalAppData\DBG\*"
+        "$env:LocalAppData\Deployment"
+        "$env:LocalAppData\Deployment\*"
+        "$env:LocalAppData\Diagnostics"
+        "$env:LocalAppData\Diagnostics\*"
+        "$env:LocalAppData\Google\CrashReports"
+        "$env:LocalAppData\Google\CrashReports\*"
+        "$env:LocalAppData\Google\Software Reporter Tool"
+        "$env:LocalAppData\Google\Software Reporter Tool\*"
+        "$env:LocalAppData\PeerDistRepub"
+        "$env:LocalAppData\PeerDistRepub\*"
+        "$env:LocalAppData\Razer\Synapse3\Log"
+        "$env:LocalAppData\Razer\Synapse3\Log\*"
+        "$env:LocalAppData\VirtualStore"
+        "$env:LocalAppData\VirtualStore\*"
     )
 
-    foreach ($Item In $ItemsToDelete) {
+    ForEach ($Item In $ItemsToDelete) {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
             Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
-            Out-Success
+            if (Test-Path $Path) { Out-Failure } else { Out-Success }
         }
     }
 
@@ -411,6 +491,7 @@ function Start-FileCleanup {
         Add-Log $WRN 'Removal of certain files requires administrator privileges. To remove them, restart the utility'
         Add-Log $WRN '  as administrator (see Home -> This utility -> Run as administrator) and run this task again.'
     }
+    else { Add-Log $INF 'Some files are in use, so they cannot be deleted.' }
 
     Add-Log $INF $LogMessage
     Out-Success

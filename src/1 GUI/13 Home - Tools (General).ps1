@@ -24,6 +24,7 @@ $BTN_DownloadChrome.Font = $BTN_DownloadRufus.Font = $BTN_WindowsPE.Font = $BTN_
 $BTN_DownloadChrome.Height = $BTN_DownloadRufus.Height = $BTN_WindowsPE.Height = $BTN_HEIGHT
 $BTN_DownloadChrome.Width = $BTN_DownloadRufus.Width = $BTN_WindowsPE.Width = $BTN_WIDTH
 
+$CBOX_StartChrome.Checked = $CBOX_StartRufus.Checked = $True
 $CBOX_StartChrome.Size = $CBOX_StartRufus.Size = $LBL_WindowsPE.Size = $CBOX_SIZE
 $CBOX_StartChrome.Text = $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -31,7 +32,7 @@ $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadChrome, $CBOX_StartChrome, $
 
 
 
-$BTN_DownloadChrome.Text = 'Chrome Beta'
+$BTN_DownloadChrome.Text = "Chrome Beta$REQUIRES_ELEVATION"
 $BTN_DownloadChrome.Location = $BTN_INIT_LOCATION
 $BTN_DownloadChrome.Add_Click( {
         Set-Variable ChromeBetaURL 'dl.google.com/tag/s/appguid%3D%7B8237E44A-0054-442C-B6B6-EA0509993955%7D%26usagestats%3D1%26appname%3DGoogle%2520Chrome%2520Beta%26needsadmin%3Dprefers%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe' -Option Constant
@@ -42,7 +43,7 @@ $CBOX_StartChrome.Location = $BTN_DownloadChrome.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartChrome.Add_CheckStateChanged( { $BTN_DownloadChrome.Text = "Chrome Beta$(if ($CBOX_StartChrome.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadRufus.Text = 'Rufus (bootable USB)'
+$BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadChrome.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRufus.Add_Click( {
         Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.5/rufus-3.5p.exe' -Option Constant

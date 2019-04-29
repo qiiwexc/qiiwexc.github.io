@@ -3,10 +3,7 @@ function Start-Elevated {
         Add-Log $INF 'Requesting administrator privileges...'
 
         try { Start-Process 'powershell' $MyInvocation.ScriptName -Verb RunAs }
-        catch [Exception] {
-            Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
-            Return
-        }
+        catch [Exception] { Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"; Return }
 
         Exit-Script
     }

@@ -6,10 +6,7 @@ function Start-SecurityScan {
         Add-Log $INF 'Updating security signatures...'
 
         try { Start-Process $DefenderExe '-SignatureUpdate' -Wait }
-        catch [Exception] {
-            Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"
-            Return
-        }
+        catch [Exception] { Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"; Return }
 
         Out-Success
     }
@@ -17,10 +14,7 @@ function Start-SecurityScan {
     Add-Log $INF "Starting $Mode security scan..."
 
     try { Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})" }
-    catch [Exception] {
-        Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"; Return }
 
     Out-Success
 }

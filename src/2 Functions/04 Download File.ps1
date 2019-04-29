@@ -5,9 +5,9 @@ function Start-Download {
     )
     if (-not $URL) { Return }
 
-    [String]$DownloadURL = if ($URL -like 'http*') { $URL } else { 'https://' + $URL }
-    [String]$FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }
-    [String]$SavePath = "$CURRENT_DIR\$FileName"
+    Set-Variable DownloadURL $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL }) -Option Constant
+    Set-Variable FileName $(if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }) -Option Constant
+    Set-Variable SavePath "$CURRENT_DIR\$FileName" -Option Constant
 
     if (-not (Test-Path $CURRENT_DIR)) {
         Add-Log $WRN "Download path $CURRENT_DIR does not exist. Creating it."
@@ -16,21 +16,15 @@ function Start-Download {
 
     Add-Log $INF "Downloading from $DownloadURL"
 
-    [String]$IsNotConnected = Get-ConnectionStatus
-    if ($IsNotConnected) {
-        Add-Log $ERR "Download failed: $IsNotConnected"
-        Return
-    }
+    Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
+    if ($IsNotConnected) { Add-Log $ERR "Download failed: $IsNotConnected"; Return }
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
         if (Test-Path $SavePath) { Out-Success }
         else { Throw 'Possibly computer is offline or disk is full' }
     }
-    catch [Exception] {
-        Add-Log $ERR "Download failed: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Download failed: $($_.Exception.Message)"; Return }
 
     Return $FileName
 }
