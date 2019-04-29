@@ -25,6 +25,7 @@ $BTN_DownloadKMSAuto.Font = $BTN_DownloadAAct.Font = $BTN_DownloadChewWGA.Font =
 $BTN_DownloadKMSAuto.Height = $BTN_DownloadAAct.Height = $BTN_DownloadChewWGA.Height = $BTN_HEIGHT
 $BTN_DownloadKMSAuto.Width = $BTN_DownloadAAct.Width = $BTN_DownloadChewWGA.Width = $BTN_WIDTH
 
+$CBOX_StartKMSAuto.Checked = $CBOX_StartAAct.Checked = $CBOX_StartChewWGA.Checked = $True
 $CBOX_StartKMSAuto.Size = $CBOX_StartAAct.Size = $CBOX_StartChewWGA.Size = $CBOX_SIZE
 $CBOX_StartKMSAuto.Text = $CBOX_StartAAct.Text = $CBOX_StartChewWGA.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -32,7 +33,7 @@ $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $B
 
 
 
-$BTN_DownloadKMSAuto.Text = 'KMSAuto Lite'
+$BTN_DownloadKMSAuto.Text = "KMSAuto Lite$REQUIRES_ELEVATION"
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
 $BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -AVWarning -MultiFile -Execute:$CBOX_StartKMSAuto.Checked } )
 
@@ -40,7 +41,7 @@ $CBOX_StartKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_CBOX_EXECUT
 $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadAAct.Text = 'AAct (Win 7+, Office)'
+$BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$REQUIRES_ELEVATION"
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
 $BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/AAct.zip' -AVWarning -MultiFile -Execute:$CBOX_StartAAct.Checked } )
 
@@ -48,7 +49,7 @@ $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadChewWGA.Text = 'ChewWGA (Win 7)'
+$BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$REQUIRES_ELEVATION"
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
 $BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/ChewWGA.zip' -AVWarning -Execute:$CBOX_StartChewWGA.Checked } )
 

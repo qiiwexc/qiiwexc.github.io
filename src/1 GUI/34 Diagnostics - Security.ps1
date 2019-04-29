@@ -32,11 +32,12 @@ $BTN_FullSecurityScan.Location = $BTN_QuickSecurityScan.Location + $SHIFT_BTN_SH
 $BTN_FullSecurityScan.Add_Click( { Start-SecurityScan 'full' } )
 
 
-$BTN_DownloadMalwarebytes.Text = 'Malwarebytes'
+$BTN_DownloadMalwarebytes.Text = "Malwarebytes$REQUIRES_ELEVATION"
 $BTN_DownloadMalwarebytes.Location = $BTN_FullSecurityScan.Location + $SHIFT_BTN_NORMAL
 $BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadExtractExecute 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' -Execute:$CBOX_StartMalwarebytes.Checked } )
 
 $CBOX_StartMalwarebytes.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartMalwarebytes.Checked = $True
 $CBOX_StartMalwarebytes.Size = $CBOX_SIZE
 $CBOX_StartMalwarebytes.Location = $BTN_DownloadMalwarebytes.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartMalwarebytes.Add_CheckStateChanged( { $BTN_DownloadMalwarebytes.Text = "Malwarebytes$(if ($CBOX_StartMalwarebytes.Checked) {$REQUIRES_ELEVATION})" } )

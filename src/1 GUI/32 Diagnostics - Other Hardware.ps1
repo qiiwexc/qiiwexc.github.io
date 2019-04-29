@@ -17,7 +17,7 @@ Set-Variable LBL_CheckKeyboard (New-Object System.Windows.Forms.Label) -Option C
 Set-Variable LBL_CheckMic (New-Object System.Windows.Forms.Label) -Option Constant
 Set-Variable LBL_CheckWebCam (New-Object System.Windows.Forms.Label) -Option Constant
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temerature, ')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temperature, voltage and frequency')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StressTest, 'Open webpage with a CPU benchmark / stress test')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Open webpage with a keyboard test')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Open webpage with a microphone test')
@@ -38,11 +38,12 @@ $GRP_Hardware.Controls.AddRange(
 
 
 
-$BTN_HardwareMonitor.Text = "CPUID HWMonitor"
+$BTN_HardwareMonitor.Text = "CPUID HWMonitor$REQUIRES_ELEVATION"
 $BTN_HardwareMonitor.Location = $BTN_INIT_LOCATION
 $BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -MultiFile -Execute:$CBOX_HardwareMonitor.Checked } )
 
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_HardwareMonitor.Checked = $True
 $CBOX_HardwareMonitor.Location = $BTN_HardwareMonitor.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_HardwareMonitor.Add_CheckStateChanged( { $BTN_HardwareMonitor.Text = "CPUID HWMonitor$(if ($CBOX_HardwareMonitor.Checked) {$REQUIRES_ELEVATION})" } )
 

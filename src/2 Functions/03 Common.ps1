@@ -33,12 +33,12 @@ function Start-DownloadExtractExecute {
 }
 
 
-function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpaceGB / $SystemPartition.SizeGB) }
+function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
 
 function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
 
 function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
 
-function Restore-WindowTitle { $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE }
+function Reset-CmdWindow { $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
 
-function Exit-Script { Restore-WindowTitle; $FORM.Close() }
+function Exit-Script { Reset-CmdWindow; $FORM.Close() }

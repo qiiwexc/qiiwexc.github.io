@@ -39,21 +39,17 @@ function Start-Build {
     Add-Log $INF 'Building...'
     Add-Content $TargetFile "`$VERSION = '$Version'"
 
-    foreach ($File In Get-ChildItem $SourcePath -Recurse -File) {
+    ForEach ($File In Get-ChildItem $SourcePath -Recurse -File) {
         [String]$SectionName = $File.ToString().Replace('.ps1', '').Remove(0, 3)
-        [String]$Spacer = '#-' * (30 - [Math]::Round(($SectionName.length + 1) / 4))
+        [String]$Spacer = '=-' * (30 - [Math]::Round(($SectionName.length + 1) / 4))
 
-        Add-Content $TargetFile "`n`n$Spacer# $SectionName $Spacer#`n"
+        Add-Content $TargetFile "`n`n#$Spacer# $SectionName #$Spacer#`n"
         Add-Content $TargetFile (Get-Content $File.FullName)
-        Start-Sleep -m 5
     }
 
     Add-Log $INF 'Finished'
 
-    if ($AndRun) {
-        Add-Log $INF "Running $TargetFile"
-        Start-Process 'powershell' ".\$TargetFile"
-    }
+    if ($AndRun) { Add-Log $INF "Running $TargetFile"; Start-Process 'powershell' ".\$TargetFile" }
 }
 
 

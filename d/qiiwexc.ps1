@@ -1,17 +1,30 @@
-$VERSION = '19.4.29'
+$VERSION = '19.4.30'
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Disclaimer #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 <#
+
+-=-=-=-=-=-= README =-=-=-=-=-=-
 
 To execute, right-click the file, then select "Run with PowerShell".
 Double click will simply open the file in Notepad.
 
+
+-=-=-=-= TROUBLESHOOTING =-=-=-=-
+
+If a window briefly opens and closes, press Win+R on the keyboard, paste the following and click OK:
+    PowerShell -Command "Start-Process 'PowerShell' -Verb RunAs"
+
+Then paste the following and hit Enter:
+    Set-ExecutionPolicy RemoteSigned -Force; Exit
+
+Now you can try starting the utility again
+
 #>
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Initialization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Initialization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Write-Host 'Initializing...'
 
@@ -22,7 +35,7 @@ $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administr
 
 Set-Variable PSShellInvocationCommand $((Get-ItemProperty 'HKLM:\SOFTWARE\Classes\Microsoft.PowerShellScript.1\Shell\0\Command').'(default)') -Option Constant
 Set-Variable StartedFromGUI $("`"$($MyInvocation.Line)`"" -eq $PSShellInvocationCommand.Split(' ', 3)[2].Replace('%1', $MyInvocation.MyCommand.Definition)) -Option Constant
-if ($StartedFromGUI) {
+if ($StartedFromGUI -or -not $MyInvocation.Line) {
     try {
         Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
                                                                     [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
@@ -39,7 +52,7 @@ try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not su
 Set-Variable PS_VERSION $($PSVersionTable.PSVersion.Major) -Option Constant
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Constants #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable INF 'INF' -Option Constant
 Set-Variable WRN 'WRN' -Option Constant
@@ -99,7 +112,7 @@ Set-Variable TXT_AV_WARNING "This file may trigger anti-virus false positive!`nI
 Set-Variable TIP_START_AFTER_DOWNLOAD "Execute after download has finished`nIf download is a ZIP file, it will get extracted first" -Option Constant
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Form #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Form #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable FORM (New-Object System.Windows.Forms.Form) -Option Constant
 Set-Variable LOG (New-Object System.Windows.Forms.RichTextBox) -Option Constant
@@ -124,7 +137,7 @@ $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
 $FORM.Top = $True
 $FORM.Add_Shown( { Initialize-Startup } )
-$FORM.Add_FormClosing( { Restore-WindowTitle } )
+$FORM.Add_FormClosing( { Reset-CmdWindow } )
 
 
 $LOG.Height = 200
@@ -144,7 +157,7 @@ $TAB_DIAGNOSTICS.Text = 'Diagnostics'
 $TAB_MAINTENANCE.Text = 'Maintenance'
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - This Utility #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - This Utility #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_ThisUtility (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_ThisUtility.Text = 'This utility'
@@ -184,7 +197,7 @@ $BTN_SystemInfo.Location = $BTN_BrowserHome.Location + $SHIFT_BTN_NORMAL
 $BTN_SystemInfo.Add_Click( { Out-SystemInfo } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - Activators #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Activators (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Activators.Text = 'Activators'
@@ -213,6 +226,7 @@ $BTN_DownloadKMSAuto.Font = $BTN_DownloadAAct.Font = $BTN_DownloadChewWGA.Font =
 $BTN_DownloadKMSAuto.Height = $BTN_DownloadAAct.Height = $BTN_DownloadChewWGA.Height = $BTN_HEIGHT
 $BTN_DownloadKMSAuto.Width = $BTN_DownloadAAct.Width = $BTN_DownloadChewWGA.Width = $BTN_WIDTH
 
+$CBOX_StartKMSAuto.Checked = $CBOX_StartAAct.Checked = $CBOX_StartChewWGA.Checked = $True
 $CBOX_StartKMSAuto.Size = $CBOX_StartAAct.Size = $CBOX_StartChewWGA.Size = $CBOX_SIZE
 $CBOX_StartKMSAuto.Text = $CBOX_StartAAct.Text = $CBOX_StartChewWGA.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -220,7 +234,7 @@ $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $B
 
 
 
-$BTN_DownloadKMSAuto.Text = 'KMSAuto Lite'
+$BTN_DownloadKMSAuto.Text = "KMSAuto Lite$REQUIRES_ELEVATION"
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
 $BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -AVWarning -MultiFile -Execute:$CBOX_StartKMSAuto.Checked } )
 
@@ -228,7 +242,7 @@ $CBOX_StartKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_CBOX_EXECUT
 $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadAAct.Text = 'AAct (Win 7+, Office)'
+$BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$REQUIRES_ELEVATION"
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
 $BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/AAct.zip' -AVWarning -MultiFile -Execute:$CBOX_StartAAct.Checked } )
 
@@ -236,7 +250,7 @@ $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadChewWGA.Text = 'ChewWGA (Win 7)'
+$BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$REQUIRES_ELEVATION"
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
 $BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/ChewWGA.zip' -AVWarning -Execute:$CBOX_StartChewWGA.Checked } )
 
@@ -244,7 +258,7 @@ $CBOX_StartChewWGA.Location = $BTN_DownloadChewWGA.Location + $SHIFT_CBOX_EXECUT
 $CBOX_StartChewWGA.Add_CheckStateChanged( { $BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Home - Tools (General) #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Tools (General) #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_DownloadTools (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_DownloadTools.Text = 'Tools (General)'
@@ -272,6 +286,7 @@ $BTN_DownloadChrome.Font = $BTN_DownloadRufus.Font = $BTN_WindowsPE.Font = $BTN_
 $BTN_DownloadChrome.Height = $BTN_DownloadRufus.Height = $BTN_WindowsPE.Height = $BTN_HEIGHT
 $BTN_DownloadChrome.Width = $BTN_DownloadRufus.Width = $BTN_WindowsPE.Width = $BTN_WIDTH
 
+$CBOX_StartChrome.Checked = $CBOX_StartRufus.Checked = $True
 $CBOX_StartChrome.Size = $CBOX_StartRufus.Size = $LBL_WindowsPE.Size = $CBOX_SIZE
 $CBOX_StartChrome.Text = $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -279,7 +294,7 @@ $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadChrome, $CBOX_StartChrome, $
 
 
 
-$BTN_DownloadChrome.Text = 'Chrome Beta'
+$BTN_DownloadChrome.Text = "Chrome Beta$REQUIRES_ELEVATION"
 $BTN_DownloadChrome.Location = $BTN_INIT_LOCATION
 $BTN_DownloadChrome.Add_Click( {
         Set-Variable ChromeBetaURL 'dl.google.com/tag/s/appguid%3D%7B8237E44A-0054-442C-B6B6-EA0509993955%7D%26usagestats%3D1%26appname%3DGoogle%2520Chrome%2520Beta%26needsadmin%3Dprefers%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe' -Option Constant
@@ -290,7 +305,7 @@ $CBOX_StartChrome.Location = $BTN_DownloadChrome.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartChrome.Add_CheckStateChanged( { $BTN_DownloadChrome.Text = "Chrome Beta$(if ($CBOX_StartChrome.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadRufus.Text = 'Rufus (bootable USB)'
+$BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadChrome.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRufus.Add_Click( {
         Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.5/rufus-3.5p.exe' -Option Constant
@@ -313,7 +328,7 @@ $LBL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
 $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Ninite #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Ninite (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Ninite.Text = 'Ninite'
@@ -344,9 +359,9 @@ $BTN_DownloadNinite.Font = $BTN_OpenNiniteInBrowser.Font = $BTN_FONT
 $BTN_DownloadNinite.Height = $BTN_OpenNiniteInBrowser.Height = $BTN_HEIGHT
 $BTN_DownloadNinite.Width = $BTN_OpenNiniteInBrowser.Width = $BTN_WIDTH
 
+$CBOX_Chrome.Checked = $CBOX_7zip.Checked = $CBOX_VLC.Checked = $CBOX_TeamViewer.Checked = $CBOX_Skype.Checked = $CBOX_StartNinite.Checked = $True
 $CBOX_Chrome.Size = $CBOX_7zip.Size = $CBOX_VLC.Size = $CBOX_TeamViewer.Size = $CBOX_Skype.Size = $CBOX_qBittorrent.Size = `
     $CBOX_GoogleDrive.Size = $CBOX_VSCode.Size = $CBOX_StartNinite.Size = $LBL_OpenNiniteInBrowser.Size = $CBOX_SIZE
-$CBOX_Chrome.Checked = $CBOX_7zip.Checked = $CBOX_VLC.Checked = $CBOX_TeamViewer.Checked = $CBOX_Skype.Checked = $True
 
 $GRP_Ninite.Controls.AddRange(
     @($BTN_DownloadNinite, $BTN_OpenNiniteInBrowser, $LBL_OpenNiniteInBrowser, $CBOX_StartNinite,
@@ -355,48 +370,48 @@ $GRP_Ninite.Controls.AddRange(
 
 
 
-$CBOX_Chrome.Text = "Google Chrome"
-$CBOX_Chrome.Name = "chrome"
+$CBOX_Chrome.Text = 'Google Chrome'
+$CBOX_Chrome.Name = 'chrome'
 $CBOX_Chrome.Location = $BTN_INIT_LOCATION
 $CBOX_Chrome.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-$CBOX_7zip.Text = "7-Zip"
-$CBOX_7zip.Name = "7zip"
+$CBOX_7zip.Text = '7-Zip'
+$CBOX_7zip.Name = '7zip'
 $CBOX_7zip.Location = $CBOX_Chrome.Location + $SHIFT_CBOX_SHORT
 $CBOX_7zip.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-$CBOX_VLC.Text = "VLC"
-$CBOX_VLC.Name = "vlc"
+$CBOX_VLC.Text = 'VLC'
+$CBOX_VLC.Name = 'vlc'
 $CBOX_VLC.Location = $CBOX_7zip.Location + $SHIFT_CBOX_SHORT
 $CBOX_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-$CBOX_TeamViewer.Text = "TeamViewer"
-$CBOX_TeamViewer.Name = "teamviewer14"
+$CBOX_TeamViewer.Text = 'TeamViewer'
+$CBOX_TeamViewer.Name = 'teamviewer14'
 $CBOX_TeamViewer.Location = $CBOX_VLC.Location + $SHIFT_CBOX_SHORT
 $CBOX_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-$CBOX_Skype.Text = "Skype"
-$CBOX_Skype.Name = "skype"
+$CBOX_Skype.Text = 'Skype'
+$CBOX_Skype.Name = 'skype'
 $CBOX_Skype.Location = $CBOX_TeamViewer.Location + $SHIFT_CBOX_SHORT
 $CBOX_Skype.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-$CBOX_qBittorrent.Text = "qBittorrent"
-$CBOX_qBittorrent.Name = "qbittorrent"
+$CBOX_qBittorrent.Text = 'qBittorrent'
+$CBOX_qBittorrent.Name = 'qbittorrent'
 $CBOX_qBittorrent.Location = $CBOX_Skype.Location + $SHIFT_CBOX_SHORT
 $CBOX_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-$CBOX_GoogleDrive.Text = "Google Drive"
-$CBOX_GoogleDrive.Name = "googlebackupandsync"
+$CBOX_GoogleDrive.Text = 'Google Drive'
+$CBOX_GoogleDrive.Name = 'googlebackupandsync'
 $CBOX_GoogleDrive.Location = $CBOX_qBittorrent.Location + $SHIFT_CBOX_SHORT
 $CBOX_GoogleDrive.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-$CBOX_VSCode.Text = "Visual Studio Code"
-$CBOX_VSCode.Name = "vscode"
+$CBOX_VSCode.Text = 'Visual Studio Code'
+$CBOX_VSCode.Name = 'vscode'
 $CBOX_VSCode.Location = $CBOX_GoogleDrive.Location + $SHIFT_CBOX_SHORT
 $CBOX_VSCode.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
 
-$BTN_DownloadNinite.Text = 'Download selected'
+$BTN_DownloadNinite.Text = "Download selected$REQUIRES_ELEVATION"
 $BTN_DownloadNinite.Location = $CBOX_VSCode.Location + $SHIFT_BTN_SHORT
 $BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) -Execute:$CBOX_StartNinite.Checked } )
 
@@ -408,15 +423,14 @@ $CBOX_StartNinite.Add_CheckStateChanged( { $BTN_DownloadNinite.Text = "Download 
 $BTN_OpenNiniteInBrowser.Text = 'View other'
 $BTN_OpenNiniteInBrowser.Location = $BTN_DownloadNinite.Location + $SHIFT_BTN_LONG
 $BTN_OpenNiniteInBrowser.Add_Click( {
-        Set-Variable Query (Set-NiniteQuery) -Option Constant
-        Open-InBrowser $(if ($Query) { "ninite.com/?select=$($Query)" } else { 'ninite.com' })
+        Set-Variable Query (Set-NiniteQuery) -Option Constant; Open-InBrowser $(if ($Query) { "ninite.com/?select=$($Query)" } else { 'ninite.com' })
     } )
 
 $LBL_OpenNiniteInBrowser.Text = $TXT_OPENS_IN_BROWSER
 $LBL_OpenNiniteInBrowser.Location = $BTN_OpenNiniteInBrowser.Location + $SHIFT_LBL_BROWSER
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Essentials #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Essentials #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Essentials (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Essentials.Text = 'Essentials'
@@ -447,6 +461,7 @@ $BTN_DownloadSDI.Font = $BTN_DownloadUnchecky.Font = $BTN_DownloadOffice.Font = 
 $BTN_DownloadSDI.Height = $BTN_DownloadUnchecky.Height = $BTN_DownloadOffice.Height = $BTN_HEIGHT
 $BTN_DownloadSDI.Width = $BTN_DownloadUnchecky.Width = $BTN_DownloadOffice.Width = $BTN_WIDTH
 
+$CBOX_StartSDI.Checked = $CBOX_StartUnchecky.Checked = $CBOX_StartOffice.Checked = $CBOX_SilentlyInstallUnchecky.Checked = $True
 $CBOX_StartSDI.Size = $CBOX_StartUnchecky.Size = $CBOX_StartOffice.Size = $CBOX_SilentlyInstallUnchecky.Size = $CBOX_SIZE
 $CBOX_StartSDI.Text = $CBOX_StartUnchecky.Text = $CBOX_StartOffice.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -456,7 +471,7 @@ $GRP_Essentials.Controls.AddRange(
 
 
 
-$BTN_DownloadSDI.Text = 'Snappy Driver Installer'
+$BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
 $BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute 'sdi-tool.org/releases/SDI_R1904.zip' -MultiFile -Execute:$CBOX_StartSDI.Checked } )
 
@@ -464,10 +479,10 @@ $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadUnchecky.Text = 'Unchecky'
+$BTN_DownloadUnchecky.Text = "Unchecky$REQUIRES_ELEVATION"
 $BTN_DownloadUnchecky.Location = $BTN_DownloadSDI.Location + $SHIFT_BTN_LONG
 $BTN_DownloadUnchecky.Add_Click( {
-        Set-Variable DownloadedFile 'unchecky.com/files/unchecky_setup.exe' -Option Constant
+        Set-Variable DownloadedFile (Start-Download 'unchecky.com/files/unchecky_setup.exe') -Option Constant
         if ($CBOX_StartUnchecky.Checked -and $DownloadedFile) { Start-File $DownloadedFile $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) -SilentInstall }
     } )
 
@@ -475,12 +490,11 @@ $CBOX_StartUnchecky.Location = $BTN_DownloadUnchecky.Location + $SHIFT_CBOX_EXEC
 $CBOX_StartUnchecky.Add_CheckStateChanged( { $CBOX_SilentlyInstallUnchecky.Enabled = $CBOX_StartUnchecky.Checked } )
 
 $CBOX_SilentlyInstallUnchecky.Text = 'Install silently'
-$CBOX_SilentlyInstallUnchecky.Enabled = $False
 $CBOX_SilentlyInstallUnchecky.Location = $CBOX_StartUnchecky.Location + "0, $CBOX_HEIGHT"
 $CBOX_StartUnchecky.Add_CheckStateChanged( { $BTN_DownloadUnchecky.Text = "Unchecky$(if ($CBOX_StartUnchecky.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadOffice.Text = 'Office 2013 - 2019'
+$BTN_DownloadOffice.Text = "Office 2013 - 2019$REQUIRES_ELEVATION"
 $BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
 $BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Office_2013-2019.zip' -AVWarning -Execute:$CBOX_StartOffice.Checked } )
 
@@ -488,7 +502,7 @@ $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2019$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Tools #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_InstallTools (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_InstallTools.Text = 'Tools'
@@ -513,6 +527,7 @@ $BTN_DownloadCCleaner.Font = $BTN_DownloadDefraggler.Font = $BTN_FONT
 $BTN_DownloadCCleaner.Height = $BTN_DownloadDefraggler.Height = $BTN_HEIGHT
 $BTN_DownloadCCleaner.Width = $BTN_DownloadDefraggler.Width = $BTN_WIDTH
 
+$CBOX_StartCCleaner.Checked = $CBOX_StartDefraggler.Checked = $True
 $CBOX_StartCCleaner.Size = $CBOX_StartDefraggler.Size = $CBOX_SIZE
 $CBOX_StartCCleaner.Text = $CBOX_StartDefraggler.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -520,7 +535,7 @@ $GRP_InstallTools.Controls.AddRange(@($BTN_DownloadCCleaner, $CBOX_StartCCleaner
 
 
 
-$BTN_DownloadCCleaner.Text = 'CCleaner'
+$BTN_DownloadCCleaner.Text = "CCleaner$REQUIRES_ELEVATION"
 $BTN_DownloadCCleaner.Location = $BTN_INIT_LOCATION
 $BTN_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute 'download.ccleaner.com/ccsetup.exe' -Execute:$CBOX_StartCCleaner.Checked } )
 
@@ -528,7 +543,7 @@ $CBOX_StartCCleaner.Location = $BTN_DownloadCCleaner.Location + $SHIFT_CBOX_EXEC
 $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CCleaner$(if ($CBOX_StartCCleaner.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadDefraggler.Text = 'Defraggler'
+$BTN_DownloadDefraggler.Text = "Defraggler$REQUIRES_ELEVATION"
 $BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
 $BTN_DownloadDefraggler.Add_Click( { Start-DownloadExtractExecute 'download.ccleaner.com/dfsetup.exe' -Execute:$CBOX_StartDefraggler.Checked } )
 
@@ -536,7 +551,7 @@ $CBOX_StartDefraggler.Location = $BTN_DownloadDefraggler.Location + $SHIFT_CBOX_
 $CBOX_StartDefraggler.Add_CheckStateChanged( { $BTN_DownloadDefraggler.Text = "Defraggler$(if ($CBOX_StartDefraggler.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Downloads - Windows Images #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_DownloadWindows (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_DownloadWindows.Text = 'Windows Images'
@@ -608,7 +623,7 @@ $BTN_WindowsXPRUS.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1mgs56mX2-
 $LBL_WindowsXPRUS.Location = $BTN_WindowsXPRUS.Location + $SHIFT_LBL_BROWSER
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - HDD and RAM #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - HDD and RAM #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_HDDandRAM (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_HDDandRAM.Text = 'HDD and RAM'
@@ -639,6 +654,7 @@ $BTN_CheckDrive.Font = $BTN_DownloadVictoria.Font = $BTN_DownloadRecuva.Font = $
 $BTN_CheckDrive.Height = $BTN_DownloadVictoria.Height = $BTN_DownloadRecuva.Height = $BTN_CheckRAM.Height = $BTN_HEIGHT
 $BTN_CheckDrive.Width = $BTN_DownloadVictoria.Width = $BTN_DownloadRecuva.Width = $BTN_CheckRAM.Width = $BTN_WIDTH
 
+$CBOX_StartVictoria.Checked = $CBOX_StartRecuva.Checked = $True
 $CBOX_StartVictoria.Size = $CBOX_StartRecuva.Size = $CBOX_ScheduleDriveCheck.Size = $CBOX_SIZE
 $CBOX_StartVictoria.Text = $CBOX_StartRecuva.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -654,7 +670,7 @@ $CBOX_ScheduleDriveCheck.Text = 'Schedule full check'
 $CBOX_ScheduleDriveCheck.Location = $BTN_CheckDrive.Location + $SHIFT_CBOX_EXECUTE
 
 
-$BTN_DownloadVictoria.Text = 'Victoria (HDD scan)'
+$BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
 $BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_LONG
 $BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Victoria.zip' -Execute:$CBOX_StartVictoria.Checked } )
 
@@ -662,7 +678,7 @@ $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXEC
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadRecuva.Text = 'Recuva (restore data)'
+$BTN_DownloadRecuva.Text = "Recuva (restore data)$REQUIRES_ELEVATION"
 $BTN_DownloadRecuva.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute 'ccleaner.com/recuva/download/portable/downloadfile' 'Recuva.zip' -MultiFile -Execute:$CBOX_StartRecuva.Checked } )
 
@@ -675,7 +691,7 @@ $BTN_CheckRAM.Location = $BTN_DownloadRecuva.Location + $SHIFT_BTN_LONG
 $BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - Other Hardware #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Other Hardware #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Hardware (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Hardware.Text = 'Other hardware'
@@ -696,7 +712,7 @@ Set-Variable LBL_CheckKeyboard (New-Object System.Windows.Forms.Label) -Option C
 Set-Variable LBL_CheckMic (New-Object System.Windows.Forms.Label) -Option Constant
 Set-Variable LBL_CheckWebCam (New-Object System.Windows.Forms.Label) -Option Constant
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temerature, ')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temperature, voltage and frequency')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StressTest, 'Open webpage with a CPU benchmark / stress test')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Open webpage with a keyboard test')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Open webpage with a microphone test')
@@ -717,11 +733,12 @@ $GRP_Hardware.Controls.AddRange(
 
 
 
-$BTN_HardwareMonitor.Text = "CPUID HWMonitor"
+$BTN_HardwareMonitor.Text = "CPUID HWMonitor$REQUIRES_ELEVATION"
 $BTN_HardwareMonitor.Location = $BTN_INIT_LOCATION
 $BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -MultiFile -Execute:$CBOX_HardwareMonitor.Checked } )
 
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_HardwareMonitor.Checked = $True
 $CBOX_HardwareMonitor.Location = $BTN_HardwareMonitor.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_HardwareMonitor.Add_CheckStateChanged( { $BTN_HardwareMonitor.Text = "CPUID HWMonitor$(if ($CBOX_HardwareMonitor.Checked) {$REQUIRES_ELEVATION})" } )
 
@@ -754,7 +771,7 @@ $BTN_CheckWebCam.Add_Click( { Open-InBrowser 'onlinemictest.com/webcam-test' } )
 $LBL_CheckWebCam.Location = $BTN_CheckWebCam.Location + $SHIFT_LBL_BROWSER
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - Windows #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Windows (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Windows.Text = 'Windows'
@@ -794,7 +811,7 @@ $BTN_CheckSystemFiles.Location = $BTN_RepairWindows.Location + $SHIFT_BTN_NORMAL
 $BTN_CheckSystemFiles.Add_Click( { Repair-SystemFiles } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Diagnostics - Security #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Security #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Malware (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Malware.Text = 'Security'
@@ -830,17 +847,18 @@ $BTN_FullSecurityScan.Location = $BTN_QuickSecurityScan.Location + $SHIFT_BTN_SH
 $BTN_FullSecurityScan.Add_Click( { Start-SecurityScan 'full' } )
 
 
-$BTN_DownloadMalwarebytes.Text = 'Malwarebytes'
+$BTN_DownloadMalwarebytes.Text = "Malwarebytes$REQUIRES_ELEVATION"
 $BTN_DownloadMalwarebytes.Location = $BTN_FullSecurityScan.Location + $SHIFT_BTN_NORMAL
 $BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadExtractExecute 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' -Execute:$CBOX_StartMalwarebytes.Checked } )
 
 $CBOX_StartMalwarebytes.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartMalwarebytes.Checked = $True
 $CBOX_StartMalwarebytes.Size = $CBOX_SIZE
 $CBOX_StartMalwarebytes.Location = $BTN_DownloadMalwarebytes.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartMalwarebytes.Add_CheckStateChanged( { $BTN_DownloadMalwarebytes.Text = "Malwarebytes$(if ($CBOX_StartMalwarebytes.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Maintenance - Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Updates (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Updates.Text = 'Updates'
@@ -893,7 +911,7 @@ $BTN_WindowsUpdate.Location = $BTN_UpdateOffice.Location + $SHIFT_BTN_NORMAL
 $BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Maintenance - Cleanup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Cleanup (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Cleanup.Text = 'Cleanup'
@@ -955,7 +973,7 @@ $BTN_DeleteRestorePoints.Location = $BTN_WindowsCleanup.Location + $SHIFT_BTN_NO
 $BTN_DeleteRestorePoints.Add_Click( { Remove-RestorePoints } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Maintenance - Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable GRP_Optimization (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Optimization.Text = 'Optimization'
@@ -995,12 +1013,11 @@ $BTN_RunDefraggler.Location = $BTN_OptimizeDrive.Location + $SHIFT_BTN_NORMAL
 $BTN_RunDefraggler.Add_Click( { Start-Defraggler } )
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Startup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Initialize-Startup {
     $FORM.Activate()
-    Set-Variable Timestamp $((Get-Date).ToString()) -Option Constant
-    Write-Log "[$Timestamp] Initializing..."
+    Write-Log "[$((Get-Date).ToString())] Initializing..."
 
     if ($IS_ELEVATED) {
         $FORM.Text = "$($FORM.Text): Administrator"
@@ -1010,28 +1027,12 @@ function Initialize-Startup {
 
     Get-SystemInfo
 
-    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
-    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+    $CBOX_StartAAct.Checked = $CBOX_StartAAct.Enabled = $CBOX_StartChewWGA.Checked = $CBOX_StartChewWGA.Enabled = `
+        $CBOX_StartKMSAuto.Checked = $CBOX_StartKMSAuto.Enabled = $CBOX_StartOffice.Checked = $CBOX_StartOffice.Enabled = `
+        $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
 
-    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
-    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
-
-    [String]$Script:CURRENT_DIR = Split-Path ($MyInvocation.ScriptName)
-    [String]$Script:PROGRAM_FILES_86 = if ($OS_ARCH -eq '64-bit') { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles }
-
-    [String]$Script:CCleanerExe = "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
-    [String]$Script:DefragglerExe = "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
-    [String]$Script:DefenderExe = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-    [String]$Script:GoogleUpdateExe = "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe"
-
-    $CBOX_StartAAct.Enabled = $CBOX_StartChewWGA.Enabled = $CBOX_StartKMSAuto.Enabled = $CBOX_StartOffice.Enabled = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
     $BTN_WindowsCleanup.Enabled = $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
-    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
     $BTN_QuickSecurityScan.Enabled = $BTN_FullSecurityScan.Enabled = Test-Path $DefenderExe
-
-    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
 
     if ($PS_VERSION -gt 2) {
         try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
@@ -1040,10 +1041,10 @@ function Initialize-Startup {
         try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
         catch [Exception] {
             Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
-            [__ComObject]$Script:Shell = New-Object -com Shell.Application
+            Set-Variable Shell $(New-Object -com Shell.Application) -Option Constant -Scope Script
         }
     }
-    else { [__ComObject]$Script:Shell = New-Object -com Shell.Application }
+    else { Set-Variable Shell $(New-Object -com Shell.Application) -Option Constant -Scope Script }
 
     Get-CurrentVersion
 
@@ -1061,16 +1062,16 @@ function Initialize-Startup {
     }
 
     if ($SystemPartition) {
-        [Float]$FreeDiskSpace = Get-FreeDiskSpace
+        Set-Variable FreeDiskSpace (Get-FreeDiskSpace) -Option Constant
         if ($FreeDiskSpace -le 0.15) {
             Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
             Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
         }
     }
 
-    $NetworkAdapter = Get-NetworkAdapter
+    Set-Variable NetworkAdapter (Get-NetworkAdapter) -Option Constant
     if ($NetworkAdapter) {
-        [Array]$CurrentDnsServer = $NetworkAdapter.DNSServerSearchOrder
+        Set-Variable CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder -Option Constant
         if (-not ($CurrentDnsServer -Contains '1.1.1.1' -or $CurrentDnsServer -Contains '1.0.0.1')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
@@ -1080,7 +1081,7 @@ function Initialize-Startup {
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Logger #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Logger #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Add-Log {
     Param(
@@ -1089,11 +1090,10 @@ function Add-Log {
     )
     if (-not $Message) { Return }
 
-    [String]$Timestamp = (Get-Date).ToString()
-    [String]$Text = "[$Timestamp] $Message"
+    Set-Variable Text "[$((Get-Date).ToString())] $Message" -Option Constant
     $LOG.SelectionStart = $LOG.TextLength
 
-    switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
+    Switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
     Write-Log "`n$Text"
 }
 
@@ -1109,39 +1109,42 @@ function Write-Log {
 }
 
 
-function Out-Success {
+function Out-Status {
+    Param([String][ValidateSet('Done', 'Failed')]$Status = $(Write-Host "`n$($MyInvocation.MyCommand.Name): No status specified" -NoNewline))
+    if (-not $Status) { Return }
+
+    Set-Variable LogDefaultFont $LOG.Font -Option Constant
     Write-Log(' ')
-    $LogDefaultFont = $LOG.Font
+
     $LOG.SelectionFont = New-Object Drawing.Font($LogDefaultFont.FontFamily, $LogDefaultFont.Size, [Drawing.FontStyle]::Underline)
-    Write-Log('Done')
+
+    Write-Log($Status)
+
     $LOG.SelectionFont = $LogDefaultFont
+    $LOG.SelectionColor = 'black'
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Self-Update #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+function Out-Success { Out-Status 'Done' }
+
+function Out-Failure { Out-Status 'Failed' }
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Self-Update #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Get-CurrentVersion {
-    if ($PS_VERSION -le 2) {
-        Add-Log $WRN "Automatic self-update is not supported on PowerShell $PS_VERSION (PowerShell 3 and higher required)."
-        Return
-    }
+    if ($PS_VERSION -le 2) { Add-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"; Return }
 
     Add-Log $INF 'Checking for updates...'
 
-    [String]$IsNotConnected = Get-ConnectionStatus
-    if ($IsNotConnected) {
-        Add-Log $ERR "Failed to check for updates: $IsNotConnected"
-        Return
-    }
+    Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
+    if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
 
     try {
-        [String]$LatestVersion = (Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString().Replace("`r", '').Replace("`n", '')
-        [Bool]$UpdateAvailable = [DateTime]::ParseExact($LatestVersion, 'yy.M.d', $null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $null)
+        Set-Variable LatestVersion ((Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString().Replace("`r", '').Replace("`n", '')) -Option Constant
+        Set-Variable UpdateAvailable ([DateTime]::ParseExact($LatestVersion, 'yy.M.d', $Null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $Null)) -Option Constant
     }
-    catch [Exception] {
-        Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"; Return }
 
     if ($UpdateAvailable) {
         Add-Log $WRN "Newer version available: v$LatestVersion"
@@ -1152,37 +1155,28 @@ function Get-CurrentVersion {
 
 
 function Get-Update {
-    [String]$DownloadURL = 'https://qiiwexc.github.io/d/qiiwexc.ps1'
-    [String]$TargetFile = $MyInvocation.ScriptName
+    Set-Variable DownloadURL 'https://qiiwexc.github.io/d/qiiwexc.ps1' -Option Constant
+    Set-Variable TargetFile $MyInvocation.ScriptName -Option Constant
 
     Add-Log $WRN 'Downloading new version...'
 
-    [String]$IsNotConnected = Get-ConnectionStatus
-    if ($IsNotConnected) {
-        Add-Log $ERR "Failed to download update: $IsNotConnected"
-        Return
-    }
+    Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
+    if ($IsNotConnected) { Add-Log $ERR "Failed to download update: $IsNotConnected"; Return }
 
     try { Invoke-WebRequest $DownloadURL -OutFile $TargetFile }
-    catch [Exception] {
-        Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
 
     Out-Success
     Add-Log $WRN 'Restarting...'
 
     try { Start-Process 'powershell' $TargetFile }
-    catch [Exception] {
-        Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
 
     Exit-Script
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Common #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Common #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Open-InBrowser {
     Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
@@ -1219,18 +1213,18 @@ function Start-DownloadExtractExecute {
 }
 
 
-function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpaceGB / $SystemPartition.SizeGB) }
+function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
 
 function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
 
 function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
 
-function Restore-WindowTitle { $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE }
+function Reset-CmdWindow { $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
 
-function Exit-Script { Restore-WindowTitle; $FORM.Close() }
+function Exit-Script { Reset-CmdWindow; $FORM.Close() }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Download File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download File #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-Download {
     Param(
@@ -1239,9 +1233,9 @@ function Start-Download {
     )
     if (-not $URL) { Return }
 
-    [String]$DownloadURL = if ($URL -like 'http*') { $URL } else { 'https://' + $URL }
-    [String]$FileName = if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }
-    [String]$SavePath = "$CURRENT_DIR\$FileName"
+    Set-Variable DownloadURL $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL }) -Option Constant
+    Set-Variable FileName $(if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }) -Option Constant
+    Set-Variable SavePath "$CURRENT_DIR\$FileName" -Option Constant
 
     if (-not (Test-Path $CURRENT_DIR)) {
         Add-Log $WRN "Download path $CURRENT_DIR does not exist. Creating it."
@@ -1250,27 +1244,21 @@ function Start-Download {
 
     Add-Log $INF "Downloading from $DownloadURL"
 
-    [String]$IsNotConnected = Get-ConnectionStatus
-    if ($IsNotConnected) {
-        Add-Log $ERR "Download failed: $IsNotConnected"
-        Return
-    }
+    Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
+    if ($IsNotConnected) { Add-Log $ERR "Download failed: $IsNotConnected"; Return }
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
         if (Test-Path $SavePath) { Out-Success }
         else { Throw 'Possibly computer is offline or disk is full' }
     }
-    catch [Exception] {
-        Add-Log $ERR "Download failed: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Download failed: $($_.Exception.Message)"; Return }
 
     Return $FileName
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Extract ZIP #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Extract ZIP #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-Extraction {
     Param(
@@ -1304,7 +1292,7 @@ function Start-Extraction {
 
     try {
         if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory("$CURRENT_DIR\$FileName", $TargetDirName) }
-        else { foreach ($Item In $Shell.NameSpace("$CURRENT_DIR\$FileName").Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
+        else { ForEach ($Item In $Shell.NameSpace("$CURRENT_DIR\$FileName").Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to extract' $FileName': $($_.Exception.Message)"
@@ -1330,7 +1318,7 @@ function Start-Extraction {
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Execute File #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Execute File #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-File {
     Param(
@@ -1343,10 +1331,7 @@ function Start-File {
         Add-Log $INF "Installing '$Executable' silently..."
 
         try { Start-Process "$CURRENT_DIR\$Executable" $Switches -Wait }
-        catch [Exception] {
-            Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"
-            Return
-        }
+        catch [Exception] { Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"; Return }
 
         Out-Success
 
@@ -1362,59 +1347,78 @@ function Start-File {
             elseif ($Executable -Match 'SDI_R*') { Start-Process "$CURRENT_DIR\$Executable" -WorkingDirectory "$CURRENT_DIR\$($Executable.Split('\')[0])" }
             else { Start-Process "$CURRENT_DIR\$Executable" }
         }
-        catch [Exception] {
-            Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"
-            Return
-        }
+        catch [Exception] { Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"; Return }
 
         Out-Success
     }
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Start Elevated #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Elevated #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-Elevated {
     if (-not $IS_ELEVATED) {
         Add-Log $INF 'Requesting administrator privileges...'
 
         try { Start-Process 'powershell' $MyInvocation.ScriptName -Verb RunAs }
-        catch [Exception] {
-            Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
-            Return
-        }
+        catch [Exception] { Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"; Return }
 
         Exit-Script
     }
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# System Information #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# System Information #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Get-SystemInfo {
     Add-Log $INF 'Gathering system information...'
 
     $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
 
-    [String]$Script:OS_NAME = $OperatingSystem.Caption
-    [String]$Script:OS_BUILD = $OperatingSystem.Version
-    [String]$Script:OS_ARCH = if ($OperatingSystem.OSArchitecture -like '64-*') { '64-bit' } else { '32-bit' }
-    [Float]$Script:OS_VERSION = if ($OS_BUILD -Match '10.0.*') { 10 } elseif ($OS_BUILD -Match '6.3.*') { 8.1 } elseif ($OS_BUILD -Match '6.2.*') { 8 } elseif ($OS_BUILD -Match '6.1.*') { 7 }
+    Set-Variable OS_NAME $OperatingSystem.Caption -Option Constant -Scope Script
+    Set-Variable OS_BUILD $OperatingSystem.Version -Option Constant -Scope Script
+    Set-Variable OS_ARCH $(if ($OperatingSystem.OSArchitecture -like '64-*') { '64-bit' } else { '32-bit' }) -Option Constant -Scope Script
+    Set-Variable OS_VERSION $(Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } }) -Option Constant -Scope Script
+
+    Set-Variable CURRENT_DIR $(Split-Path $MyInvocation.ScriptName) -Option Constant -Scope Script
+    Set-Variable PROGRAM_FILES_86 $(if ($OS_ARCH -eq '64-bit') { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles }) -Option Constant -Scope Script
 
     New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
-    $WordRegPath = Get-ItemProperty 'HKCR:\Word.Application\CurVer' -ErrorAction SilentlyContinue
-    [Int]$Script:OfficeVersion = if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' }
-    [String]$Script:OfficeC2RClientExe = "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
-    [String]$Script:OfficeInstallType = if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } }
+    Set-Variable WordRegPath (Get-ItemProperty 'HKCR:\Word.Application\CurVer' -ErrorAction SilentlyContinue) -Option Constant
+    Set-Variable OfficeVersion $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' }) -Option Constant -Scope Script
+    Set-Variable OfficeC2RClientExe "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe" -Option Constant -Scope Script
+    Set-Variable OfficeInstallType $(if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } }) -Option Constant -Scope Script
 
-    $LogicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'"
-    $Script:SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpaceGB'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'SizeGB'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+    Set-Variable CCleanerExe "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" -Option Constant -Scope Script
+    Set-Variable DefragglerExe "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" -Option Constant -Scope Script
+    Set-Variable DefenderExe "$env:ProgramFiles\Windows Defender\MpCmdRun.exe" -Option Constant -Scope Script
+    Set-Variable GoogleUpdateExe "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe" -Option Constant -Scope Script
+
+
+    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
+    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+
+    Set-Variable LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'") -Option Constant
+    $Script:SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
 
     Out-Success
+
+    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
+    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+
+    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
+    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
 }
 
 
 function Out-SystemInfo {
+    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
+    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
 
@@ -1427,30 +1431,30 @@ function Out-SystemInfo {
 
     $Processors = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
     if ($Processors) {
-        foreach ($Item In $Processors) {
+        ForEach ($Item In $Processors) {
             Add-Log $INF "    CPU name:  $($Item.Name)"
             Add-Log $INF "    Cores / Threads:  $($Item.NumberOfCores) / $($Item.NumberOfLogicalProcessors)"
         }
     }
 
     $VideoControllers = (Get-WmiObject Win32_VideoController).Name
-    if ($VideoControllers) { foreach ($Item In $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
+    if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
 
     if ($OS_VERSION -gt 7) {
         $Storage = Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, @{L = 'Firmware'; E = { $_.FirmwareVersion } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
         if ($Storage) {
-            foreach ($Item In $Storage) {
+            ForEach ($Item In $Storage) {
                 Add-Log $INF "    Storage:  $($Item.FriendlyName) ($($Item.BusType) $($Item.MediaType), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.Firmware))"
             }
         }
     }
     else {
         $Storage = Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, @{L = 'Firmware'; E = { $_.FirmwareRevision } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
-        if ($Storage) { foreach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.Firmware))" } }
+        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.Firmware))" } }
     }
 
     if ($SystemPartition) {
-        Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpaceGB) GB / $($SystemPartition.SizeGB) GB ($((Get-FreeDiskSpace).ToString('P')))"
+        Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpace) GB / $($SystemPartition.Size) GB ($((Get-FreeDiskSpace).ToString('P')))"
     }
 
     [String]$OfficeYear = Switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }
@@ -1467,7 +1471,7 @@ function Out-SystemInfo {
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Ninite #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Set-NiniteButtonState {
     $CBOX_StartNinite.Enabled = $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or $CBOX_TeamViewer.Checked -or `
@@ -1503,7 +1507,7 @@ function Set-NiniteFileName {
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Check HDD and RAM #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check HDD and RAM #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-DriveCheck {
     Param([Switch][Parameter(Position = 0)]$FullScan)
@@ -1515,10 +1519,7 @@ function Start-DriveCheck {
             if ($OS_VERSION -gt 7) { Start-Process 'chkdsk' '/scan /perf' -Verb RunAs } else { Start-Process 'chkdsk' -Verb RunAs }
         }
     }
-    catch [Exception] {
-        Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1528,25 +1529,19 @@ function Start-MemoryCheckTool {
     Add-Log $INF 'Starting memory checking tool...'
 
     try { Start-Process 'mdsched' }
-    catch [Exception] {
-        Add-Log $ERR "Failed to start memory checking tool: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to start memory checking tool: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Check Windows Health #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Windows Health #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
 
     try { Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1556,10 +1551,7 @@ function Repair-Windows {
     Add-Log $INF 'Starting Windows repair...'
 
     try { Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to repair Windows: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to repair Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1569,16 +1561,13 @@ function Repair-SystemFiles {
     Add-Log $INF 'Starting system file integrity check...'
 
     try { Start-Process 'sfc' '/scannow' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to check system file integrity: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to check system file integrity: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Security #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Security #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-SecurityScan {
     Param([String][Parameter(Position = 0)][ValidateSet('quick', 'full')]$Mode = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No scan mode specified"))
@@ -1588,10 +1577,7 @@ function Start-SecurityScan {
         Add-Log $INF 'Updating security signatures...'
 
         try { Start-Process $DefenderExe '-SignatureUpdate' -Wait }
-        catch [Exception] {
-            Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"
-            Return
-        }
+        catch [Exception] { Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"; Return }
 
         Out-Success
     }
@@ -1599,31 +1585,22 @@ function Start-SecurityScan {
     Add-Log $INF "Starting $Mode security scan..."
 
     try { Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})" }
-    catch [Exception] {
-        Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Updates #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-GoogleUpdate {
     Add-Log $INF 'Starting Google Update...'
 
     try { Start-Process $GoogleUpdateExe '/c' }
-    catch [Exception] {
-        Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"; Return }
 
     try { Start-Process $GoogleUpdateExe '/ua /installsource scheduler' }
-    catch [Exception] {
-        Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1632,12 +1609,9 @@ function Start-GoogleUpdate {
 function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
 
-    $Command = "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
+    Set-Variable Command "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()" -Option Constant
     try { Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -Wait -WindowStyle Hidden }
-    catch [Exception] {
-        Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1647,10 +1621,7 @@ function Set-OfficeInsiderChannel {
     Add-Log $INF 'Switching Microsoft Office to insider update channel...'
 
     try { Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to switch Microsoft Office update channel: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to switch Microsoft Office update channel: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1660,10 +1631,7 @@ function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
     try { Start-Process $OfficeC2RClientExe '/update user' -Wait }
-    catch [Exception] {
-        Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1673,94 +1641,13 @@ function Start-WindowsUpdate {
     Add-Log $INF 'Starting Windows Update...'
 
     try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' -Wait } else { Start-Process 'wuauclt' '/detectnow /updatenow' -Wait } }
-    catch [Exception] {
-        Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Cleanup #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-
-function Remove-Trash {
-    Add-Log $INF 'Emptying Recycle Bin...'
-
-    try {
-        if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
-        else {
-            [String]$Command = '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }'
-            Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
-        }
-    }
-    catch [Exception] {
-        Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
-function Start-DiskCleanup {
-    Add-Log $INF 'Starting disk cleanup utility...'
-
-    try { Start-Process 'cleanmgr' '/lowdisk' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
-function Start-CCleaner {
-    if (-not $CCleanerWarningShown) {
-        Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
-        Add-Log $WRN 'Click the button again to continue'
-        [Bool]$Script:CCleanerWarningShown = $True
-        Return
-    }
-
-    Add-Log $INF 'Starting CCleaner background task...'
-
-    try { Start-Process $CCleanerExe '/auto' }
-    catch [Exception] {
-        Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
-function Start-WindowsCleanup {
-    Add-Log $INF 'Starting Windows update cleanup...'
-
-    try { Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
-function Remove-RestorePoints {
-    Add-Log $INF 'Deleting all restore points...'
-
-    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# File Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-FileCleanup {
     [String]$LogMessage = 'Removing unnecessary files...'
@@ -1785,14 +1672,14 @@ function Start-FileCleanup {
     [String]$NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
     [String]$NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
 
-    foreach ($Path In $Containers) {
+    ForEach ($Path In $Containers) {
         if (Test-Path $Path) {
             Add-Log $INF "Removing older versions from $Path"
 
             [String]$Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
             Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item $_ -Recurse -Force }
 
-            Out-Success
+            if (Test-Path $Path) { Out-Failure } else { Out-Success }
         }
     }
 
@@ -1820,7 +1707,7 @@ function Start-FileCleanup {
         "$NewestGoogleUpdate\goopdateres_*.dll;goopdateres_en-GB.dll,goopdateres_en-US.dll,goopdateres_lv.dll,goopdateres_ru.dll"
     )
 
-    foreach ($Item In $ItemsToDeleteWithExclusions) {
+    ForEach ($Item In $ItemsToDeleteWithExclusions) {
         [String]$Path, [String]$Exclusions = $Item.Split(';')
 
         if (Test-Path $Path) {
@@ -1842,51 +1729,38 @@ function Start-FileCleanup {
         "$NewestJava\*.html"
         "$NewestJava\*.txt"
         "$NewestChrome\default_apps"
+        "$NewestChrome\default_apps\*"
         "$NewestChrome\Installer"
+        "$NewestChrome\Installer\*"
         "$NewestChromeBeta\default_apps"
+        "$NewestChromeBeta\default_apps\*"
         "$NewestChromeBeta\Installer"
+        "$NewestChromeBeta\Installer\*"
         "$NewestChromeDev\default_apps"
+        "$NewestChromeDev\default_apps\*"
         "$NewestChromeDev\Installer"
+        "$NewestChromeDev\Installer\*"
         "$NewestGoogleUpdate\Recovery"
+        "$NewestGoogleUpdate\Recovery\*"
         "$env:SystemDrive\Intel"
+        "$env:SystemDrive\Intel\*"
         "$env:SystemDrive\Intel\Logs\*"
+        "$env:SystemDrive\PerfLogs"
+        "$env:SystemDrive\PerfLogs\*"
         "$env:SystemDrive\temp"
-        "$env:Public\Foxit Software"
-        "$env:UserProfile\.VirtualBox\*.log*"
-        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs"
-        "$env:UserProfile\AppData\LocalLow\PKI Client"
-        "$env:UserProfile\AppData\LocalLow\Sun"
-        "$env:UserProfile\MicrosoftEdgeBackups"
-        "$env:AppData\Code\logs"
-        "$env:AppData\Google"
-        "$env:AppData\hpqLog"
-        "$env:AppData\Microsoft\Skype for Desktop\logs"
-        "$env:AppData\Opera Software\Opera Stable\Crash Reports"
-        "$env:AppData\Opera Software\Opera Stable\*.log"
-        "$env:AppData\Skype"
-        "$env:AppData\Sun"
-        "$env:AppData\Synapse3"
-        "$env:AppData\TeamViewer\*.log"
-        "$env:AppData\Visual Studio Code"
-        "$env:AppData\vlc\crashdump"
-        "$env:LocalAppData\CrashDumps"
-        "$env:LocalAppData\DBG"
-        "$env:LocalAppData\Deployment"
-        "$env:LocalAppData\Diagnostics"
-        "$env:LocalAppData\Google\CrashReports"
-        "$env:LocalAppData\Google\Software Reporter Tool"
-        "$env:LocalAppData\PeerDistRepub"
-        "$env:LocalAppData\Razer\Synapse3\Log"
-        "$env:LocalAppData\VirtualStore"
+        "$env:SystemDrive\temp\*"
         "$env:ProgramData\Adobe"
+        "$env:ProgramData\Adobe\*"
+        "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
+        "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Docs.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Sheets.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Backup and Sync from Google\Google Slides.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\CCleaner\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Defraggler\*.url"
-        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\About Java.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\*.url"
+        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\About Java.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\License (English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (CHM, English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (PDF, English).lnk"
@@ -1904,26 +1778,47 @@ function Start-FileCleanup {
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\WinRAR\Console RAR manual.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\WinRAR\What is new in the latest version.lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\WinRAR\WinRAR help.lnk"
+        "$env:ProgramData\Microsoft\Windows\WER\ReportArchive\*"
         "$env:ProgramData\Mozilla"
+        "$env:ProgramData\Mozilla\*"
         "$env:ProgramData\NVIDIA Corporation\NvFBCPlugin"
+        "$env:ProgramData\NVIDIA Corporation\NvFBCPlugin\*"
         "$env:ProgramData\NVIDIA Corporation\umdlogs"
+        "$env:ProgramData\NVIDIA Corporation\umdlogs\*"
         "$env:ProgramData\NVIDIA\*.log_backup1"
         "$env:ProgramData\Oracle"
+        "$env:ProgramData\Oracle\*"
+        "$env:ProgramData\Package Cache"
+        "$env:ProgramData\Package Cache\*"
         "$env:ProgramData\Razer\GameManager\Logs"
+        "$env:ProgramData\Razer\GameManager\Logs\*"
         "$env:ProgramData\Razer\Installer\Logs"
+        "$env:ProgramData\Razer\Installer\Logs\*"
         "$env:ProgramData\Razer\Razer Central\Logs"
+        "$env:ProgramData\Razer\Razer Central\Logs\*"
         "$env:ProgramData\Razer\Razer Central\WebAppCache\Service Worker\Database\*.log"
         "$env:ProgramData\Razer\Synapse3\CrashDumps"
+        "$env:ProgramData\Razer\Synapse3\CrashDumps\*"
         "$env:ProgramData\Razer\Synapse3\Log"
+        "$env:ProgramData\Razer\Synapse3\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Bin\Devices\Charlotte\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Bin\Devices\Charlotte\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Bin\Devices\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Bin\Devices\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Bin\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Bin\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Lib\DetectManager\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Lib\DetectManager\Log\*"
         "$env:ProgramData\Razer\Synapse3\Service\Log"
+        "$env:ProgramData\Razer\Synapse3\Service\Log\*"
         "$env:ProgramData\Roaming"
+        "$env:ProgramData\Roaming\*"
         "$env:ProgramData\USOShared"
+        "$env:ProgramData\USOShared\*"
         "$env:ProgramData\VirtualBox"
+        "$env:ProgramData\VirtualBox\*"
         "$env:ProgramData\WindowsHolographicDevices"
+        "$env:ProgramData\WindowsHolographicDevices\*"
         "$PROGRAM_FILES_86\7-Zip\7-zip.chm"
         "$PROGRAM_FILES_86\7-Zip\7-zip.dll.tmp"
         "$PROGRAM_FILES_86\7-Zip\descript.ion"
@@ -1936,7 +1831,9 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files"
+        "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files\*"
         "$PROGRAM_FILES_86\CCleaner\Setup"
+        "$PROGRAM_FILES_86\CCleaner\Setup\*"
         "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
         "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
@@ -1945,24 +1842,37 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Foxit Software\Foxit Reader\notice.txt"
         "$PROGRAM_FILES_86\Git\LICENSE.txt"
         "$PROGRAM_FILES_86\Git\mingw64\doc"
+        "$PROGRAM_FILES_86\Git\mingw64\doc\*"
         "$PROGRAM_FILES_86\Git\ReleaseNotes.html"
         "$PROGRAM_FILES_86\Git\tmp"
+        "$PROGRAM_FILES_86\Git\tmp\*"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Application\SetupMetrics"
+        "$PROGRAM_FILES_86\Google\Chrome Beta\Application\SetupMetrics\*"
         "$PROGRAM_FILES_86\Google\Chrome Beta\Temp"
+        "$PROGRAM_FILES_86\Google\Chrome Beta\Temp\*"
         "$PROGRAM_FILES_86\Google\Chrome Dev\Application\SetupMetrics"
+        "$PROGRAM_FILES_86\Google\Chrome Dev\Application\SetupMetrics\*"
         "$PROGRAM_FILES_86\Google\Chrome Dev\Temp"
+        "$PROGRAM_FILES_86\Google\Chrome Dev\Temp\*"
         "$PROGRAM_FILES_86\Google\Chrome\Application\SetupMetrics"
+        "$PROGRAM_FILES_86\Google\Chrome\Application\SetupMetrics\*"
         "$PROGRAM_FILES_86\Google\Chrome\Temp"
+        "$PROGRAM_FILES_86\Google\Chrome\Temp\*"
         "$PROGRAM_FILES_86\Google\CrashReports"
+        "$PROGRAM_FILES_86\Google\CrashReports\*"
         "$PROGRAM_FILES_86\Google\Update\Download"
+        "$PROGRAM_FILES_86\Google\Update\Download\*"
         "$PROGRAM_FILES_86\Google\Update\Install"
+        "$PROGRAM_FILES_86\Google\Update\Install\*"
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
+        "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs\*"
         "$PROGRAM_FILES_86\Notepad++\change.log"
         "$PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PROGRAM_FILES_86\Notepad++\updater\LICENSE"
@@ -1971,18 +1881,23 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\NVIDIA Corporation\license.txt"
         "$PROGRAM_FILES_86\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$PROGRAM_FILES_86\Oracle\VirtualBox\doc"
+        "$PROGRAM_FILES_86\Oracle\VirtualBox\doc\*"
         "$PROGRAM_FILES_86\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
         "$PROGRAM_FILES_86\Oracle\VirtualBox\License_en_US.rtf"
         "$PROGRAM_FILES_86\Oracle\VirtualBox\VirtualBox.chm"
         "$PROGRAM_FILES_86\paint.net\License.txt"
         "$PROGRAM_FILES_86\paint.net\Staging"
+        "$PROGRAM_FILES_86\paint.net\Staging\*"
         "$PROGRAM_FILES_86\PuTTY\LICENCE"
         "$PROGRAM_FILES_86\PuTTY\putty.chm"
         "$PROGRAM_FILES_86\PuTTY\README.txt"
         "$PROGRAM_FILES_86\PuTTY\website.url"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses"
+        "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses\*"
         "$PROGRAM_FILES_86\Steam\dumps"
+        "$PROGRAM_FILES_86\Steam\dumps\*"
         "$PROGRAM_FILES_86\Steam\logs"
+        "$PROGRAM_FILES_86\Steam\logs\*"
         "$PROGRAM_FILES_86\TeamViewer\*.log"
         "$PROGRAM_FILES_86\TeamViewer\*.txt"
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Note.exe"
@@ -2015,8 +1930,8 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
-        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Setup Files"
         "$env:ProgramFiles\CCleaner\Setup"
+        "$env:ProgramFiles\CCleaner\Setup\*"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\FileZilla FTP Client\AUTHORS"
@@ -2027,22 +1942,34 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Git\mingw64\doc"
         "$env:ProgramFiles\Git\ReleaseNotes.html"
         "$env:ProgramFiles\Git\tmp"
+        "$env:ProgramFiles\Git\tmp\*"
         "$env:ProgramFiles\Google\Chrome Beta\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome Beta\Application\SetupMetrics\*"
         "$env:ProgramFiles\Google\Chrome Beta\Temp"
+        "$env:ProgramFiles\Google\Chrome Beta\Temp\*"
         "$env:ProgramFiles\Google\Chrome Dev\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome Dev\Application\SetupMetrics\*"
         "$env:ProgramFiles\Google\Chrome Dev\Temp"
+        "$env:ProgramFiles\Google\Chrome Dev\Temp\*"
         "$env:ProgramFiles\Google\Chrome\Application\SetupMetrics"
+        "$env:ProgramFiles\Google\Chrome\Application\SetupMetrics\*"
         "$env:ProgramFiles\Google\Chrome\Temp"
+        "$env:ProgramFiles\Google\Chrome\Temp\*"
         "$env:ProgramFiles\Google\CrashReports"
+        "$env:ProgramFiles\Google\CrashReports\*"
         "$env:ProgramFiles\Google\Update\Download"
+        "$env:ProgramFiles\Google\Update\Download\*"
         "$env:ProgramFiles\Google\Update\Install"
+        "$env:ProgramFiles\Google\Update\Install\*"
         "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
+        "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses\*"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$env:ProgramFiles\Mozilla Firefox\install.log"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs"
+        "$env:ProgramFiles\Mozilla Maintenance Service\logs\*"
         "$env:ProgramFiles\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
         "$env:ProgramFiles\NVIDIA Corporation\license.txt"
         "$env:ProgramFiles\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
@@ -2056,8 +1983,11 @@ function Start-FileCleanup {
         "$env:ProgramFiles\PuTTY\README.txt"
         "$env:ProgramFiles\PuTTY\website.url"
         "$env:ProgramFiles\Razer\Razer Services\Razer Central\Licenses"
+        "$env:ProgramFiles\Razer\Razer Services\Razer Central\Licenses\*"
         "$env:ProgramFiles\Steam\dumps"
+        "$env:ProgramFiles\Steam\dumps\*"
         "$env:ProgramFiles\Steam\logs"
+        "$env:ProgramFiles\Steam\logs\*"
         "$env:ProgramFiles\TeamViewer\*.log"
         "$env:ProgramFiles\TeamViewer\*.txt"
         "$env:ProgramFiles\TeamViewer\TeamViewer_Note.exe"
@@ -2079,17 +2009,132 @@ function Start-FileCleanup {
         "$env:ProgramFiles\WinSCP\license.txt"
         "$env:ProgramFiles\WinSCP\PuTTY\LICENCE"
         "$env:ProgramFiles\WinSCP\PuTTY\putty.chm"
-        "$env:TMP\*"
+        "$env:WinDir\*.log"
+        "$env:WinDir\debug\*.log"
+        "$env:WinDir\INF\*.log"
         "$env:WinDir\Logs\*"
+        "$env:WinDir\Microsoft.NET\Framework\*\*.log"
+        "$env:WinDir\Microsoft.NET\Framework64\*\*.log"
+        "$env:WinDir\Panther\UnattendGC\*.log"
+        "$env:WinDir\Performance\WinSAT\*.log"
+        "$env:WinDir\security\logs\*.log"
+        "$env:WinDir\security\logs\*.old"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0\*.log"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0\UsageLogs"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0\UsageLogs\*"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0_32\*.log"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0\*.log"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0\UsageLogs"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*"
+        "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Temp\*"
+        "$env:WinDir\SoftwareDistribution\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs\*"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0_32\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0\*.log"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*"
+        "$env:WinDir\System32\config\systemprofile\AppData\Local\Temp\*"
         "$env:WinDir\Temp\*"
         "$env:WinDir\SoftwareDistribution\Download\*"
+        "$env:TMP\*"
+        "$env:Public\Foxit Software"
+        "$env:Public\Foxit Software\*"
+        "$env:UserProfile\.VirtualBox\*.log*"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs"
+        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\Media Player\lastplayed.wpl"
+        "$env:UserProfile\AppData\Local\Microsoft\Office\16.0\WebServiceCache"
+        "$env:UserProfile\AppData\Local\Microsoft\Office\16.0\WebServiceCache\*"
+        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\logs"
+        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\logs\*"
+        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\setup"
+        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\setup\*"
+        "$env:UserProfile\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
+        "$env:UserProfile\AppData\Local\Microsoft\Windows\SettingSync\metastore\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
+        "$env:UserProfile\AppData\Local\Microsoft\Windows\WebCache\*.log"
+        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs"
+        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs\*"
+        "$env:UserProfile\AppData\LocalLow\PKI Client"
+        "$env:UserProfile\AppData\LocalLow\PKI Client\*"
+        "$env:UserProfile\AppData\LocalLow\Sun"
+        "$env:UserProfile\AppData\LocalLow\Sun\*"
+        "$env:UserProfile\MicrosoftEdgeBackups"
+        "$env:UserProfile\MicrosoftEdgeBackups\*"
+        "$env:AppData\Code\logs"
+        "$env:AppData\Code\logs\*"
+        "$env:AppData\Google"
+        "$env:AppData\Google\*"
+        "$env:AppData\hpqLog"
+        "$env:AppData\hpqLog\*"
+        "$env:AppData\Microsoft\Office\Recent"
+        "$env:AppData\Microsoft\Office\Recent\*"
+        "$env:AppData\Microsoft\Skype for Desktop\logs"
+        "$env:AppData\Microsoft\Skype for Desktop\logs\*"
+        "$env:AppData\Microsoft\Windows\Recent\*"
+        "$env:AppData\Opera Software\Opera Stable\*.log"
+        "$env:AppData\Opera Software\Opera Stable\Crash Reports"
+        "$env:AppData\Opera Software\Opera Stable\Crash Reports\*"
+        "$env:AppData\Skype"
+        "$env:AppData\Skype\*"
+        "$env:AppData\Sun"
+        "$env:AppData\Sun\*"
+        "$env:AppData\Synapse3"
+        "$env:AppData\Synapse3\*"
+        "$env:AppData\TeamViewer\*.log"
+        "$env:AppData\Visual Studio Code"
+        "$env:AppData\Visual Studio Code\*"
+        "$env:AppData\vlc\art"
+        "$env:AppData\vlc\art\*"
+        "$env:AppData\vlc\crashdump"
+        "$env:AppData\vlc\crashdump\*"
+        "$env:LocalAppData\CrashDumps"
+        "$env:LocalAppData\CrashDumps\*"
+        "$env:LocalAppData\DBG"
+        "$env:LocalAppData\DBG\*"
+        "$env:LocalAppData\Deployment"
+        "$env:LocalAppData\Deployment\*"
+        "$env:LocalAppData\Diagnostics"
+        "$env:LocalAppData\Diagnostics\*"
+        "$env:LocalAppData\Google\CrashReports"
+        "$env:LocalAppData\Google\CrashReports\*"
+        "$env:LocalAppData\Google\Software Reporter Tool"
+        "$env:LocalAppData\Google\Software Reporter Tool\*"
+        "$env:LocalAppData\PeerDistRepub"
+        "$env:LocalAppData\PeerDistRepub\*"
+        "$env:LocalAppData\Razer\Synapse3\Log"
+        "$env:LocalAppData\Razer\Synapse3\Log\*"
+        "$env:LocalAppData\VirtualStore"
+        "$env:LocalAppData\VirtualStore\*"
     )
 
-    foreach ($Item In $ItemsToDelete) {
+    ForEach ($Item In $ItemsToDelete) {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
             Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
-            Out-Success
+            if (Test-Path $Path) { Out-Failure } else { Out-Success }
         }
     }
 
@@ -2097,13 +2142,79 @@ function Start-FileCleanup {
         Add-Log $WRN 'Removal of certain files requires administrator privileges. To remove them, restart the utility'
         Add-Log $WRN '  as administrator (see Home -> This utility -> Run as administrator) and run this task again.'
     }
+    else { Add-Log $INF 'Some files are in use, so they cannot be deleted.' }
 
     Add-Log $INF $LogMessage
     Out-Success
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Optimization #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# System Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+function Remove-Trash {
+    Add-Log $INF 'Emptying Recycle Bin...'
+
+    try {
+        if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
+        else {
+            Set-Variable Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }' -Option Constant
+            Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
+        }
+    }
+    catch [Exception] { Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+function Start-DiskCleanup {
+    Add-Log $INF 'Starting disk cleanup utility...'
+
+    try { Start-Process 'cleanmgr' '/lowdisk' -Verb RunAs }
+    catch [Exception] { Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+function Start-CCleaner {
+    if (-not $CCleanerWarningShown) {
+        Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
+        Add-Log $WRN 'Click the button again to continue'
+        Set-Variable CCleanerWarningShown $True -Option Constant -Scope Script
+        Return
+    }
+
+    Add-Log $INF 'Starting CCleaner background task...'
+
+    try { Start-Process $CCleanerExe '/auto' }
+    catch [Exception] { Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+function Start-WindowsCleanup {
+    Add-Log $INF 'Starting Windows update cleanup...'
+
+    try { Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -Verb RunAs }
+    catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+function Remove-RestorePoints {
+    Add-Log $INF 'Deleting all restore points...'
+
+    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs -WindowStyle Hidden }
+    catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Set-CloudFlareDNS {
     Add-Log $WRN 'Internet connection may get interrupted briefly'
@@ -2117,10 +2228,7 @@ function Set-CloudFlareDNS {
 
     Set-Variable Command "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))" -Option Constant
     try { Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden }
-    catch [Exception] {
-        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -2130,10 +2238,7 @@ function Start-DriveOptimization {
     Add-Log $INF 'Starting drive optimization...'
 
     try { Start-Process 'defrag' $(if ($OS_VERSION -gt 7) { '/C /H /U /O' } else { 'C: /H /U' }) -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -2143,15 +2248,12 @@ function Start-Defraggler {
     Add-Log $INF 'Starting (C:) drive optimization with Defraggler...'
 
     try { Start-Process $DefragglerExe 'C:\' -Verb RunAs }
-    catch [Exception] {
-        Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"
-        Return
-    }
+    catch [Exception] { Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# Draw Form #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Draw Form #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 [Void]$FORM.ShowDialog()

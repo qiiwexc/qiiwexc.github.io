@@ -27,6 +27,7 @@ $BTN_CheckDrive.Font = $BTN_DownloadVictoria.Font = $BTN_DownloadRecuva.Font = $
 $BTN_CheckDrive.Height = $BTN_DownloadVictoria.Height = $BTN_DownloadRecuva.Height = $BTN_CheckRAM.Height = $BTN_HEIGHT
 $BTN_CheckDrive.Width = $BTN_DownloadVictoria.Width = $BTN_DownloadRecuva.Width = $BTN_CheckRAM.Width = $BTN_WIDTH
 
+$CBOX_StartVictoria.Checked = $CBOX_StartRecuva.Checked = $True
 $CBOX_StartVictoria.Size = $CBOX_StartRecuva.Size = $CBOX_ScheduleDriveCheck.Size = $CBOX_SIZE
 $CBOX_StartVictoria.Text = $CBOX_StartRecuva.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -42,7 +43,7 @@ $CBOX_ScheduleDriveCheck.Text = 'Schedule full check'
 $CBOX_ScheduleDriveCheck.Location = $BTN_CheckDrive.Location + $SHIFT_CBOX_EXECUTE
 
 
-$BTN_DownloadVictoria.Text = 'Victoria (HDD scan)'
+$BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
 $BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_LONG
 $BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Victoria.zip' -Execute:$CBOX_StartVictoria.Checked } )
 
@@ -50,7 +51,7 @@ $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXEC
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadRecuva.Text = 'Recuva (restore data)'
+$BTN_DownloadRecuva.Text = "Recuva (restore data)$REQUIRES_ELEVATION"
 $BTN_DownloadRecuva.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute 'ccleaner.com/recuva/download/portable/downloadfile' 'Recuva.zip' -MultiFile -Execute:$CBOX_StartRecuva.Checked } )
 

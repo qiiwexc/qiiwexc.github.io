@@ -21,6 +21,7 @@ $BTN_DownloadCCleaner.Font = $BTN_DownloadDefraggler.Font = $BTN_FONT
 $BTN_DownloadCCleaner.Height = $BTN_DownloadDefraggler.Height = $BTN_HEIGHT
 $BTN_DownloadCCleaner.Width = $BTN_DownloadDefraggler.Width = $BTN_WIDTH
 
+$CBOX_StartCCleaner.Checked = $CBOX_StartDefraggler.Checked = $True
 $CBOX_StartCCleaner.Size = $CBOX_StartDefraggler.Size = $CBOX_SIZE
 $CBOX_StartCCleaner.Text = $CBOX_StartDefraggler.Text = $TXT_START_AFTER_DOWNLOAD
 
@@ -28,7 +29,7 @@ $GRP_InstallTools.Controls.AddRange(@($BTN_DownloadCCleaner, $CBOX_StartCCleaner
 
 
 
-$BTN_DownloadCCleaner.Text = 'CCleaner'
+$BTN_DownloadCCleaner.Text = "CCleaner$REQUIRES_ELEVATION"
 $BTN_DownloadCCleaner.Location = $BTN_INIT_LOCATION
 $BTN_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute 'download.ccleaner.com/ccsetup.exe' -Execute:$CBOX_StartCCleaner.Checked } )
 
@@ -36,7 +37,7 @@ $CBOX_StartCCleaner.Location = $BTN_DownloadCCleaner.Location + $SHIFT_CBOX_EXEC
 $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CCleaner$(if ($CBOX_StartCCleaner.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadDefraggler.Text = 'Defraggler'
+$BTN_DownloadDefraggler.Text = "Defraggler$REQUIRES_ELEVATION"
 $BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
 $BTN_DownloadDefraggler.Add_Click( { Start-DownloadExtractExecute 'download.ccleaner.com/dfsetup.exe' -Execute:$CBOX_StartDefraggler.Checked } )
 

@@ -21,7 +21,7 @@ $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
 $FORM.Top = $True
 $FORM.Add_Shown( { Initialize-Startup } )
-$FORM.Add_FormClosing( { Restore-WindowTitle } )
+$FORM.Add_FormClosing( { Reset-CmdWindow } )
 
 
 $LOG.Height = 200

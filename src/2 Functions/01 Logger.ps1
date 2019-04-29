@@ -5,11 +5,10 @@ function Add-Log {
     )
     if (-not $Message) { Return }
 
-    [String]$Timestamp = (Get-Date).ToString()
-    [String]$Text = "[$Timestamp] $Message"
+    Set-Variable Text "[$((Get-Date).ToString())] $Message" -Option Constant
     $LOG.SelectionStart = $LOG.TextLength
 
-    switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
+    Switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
     Write-Log "`n$Text"
 }
 
@@ -25,10 +24,22 @@ function Write-Log {
 }
 
 
-function Out-Success {
+function Out-Status {
+    Param([String][ValidateSet('Done', 'Failed')]$Status = $(Write-Host "`n$($MyInvocation.MyCommand.Name): No status specified" -NoNewline))
+    if (-not $Status) { Return }
+
+    Set-Variable LogDefaultFont $LOG.Font -Option Constant
     Write-Log(' ')
-    $LogDefaultFont = $LOG.Font
+
     $LOG.SelectionFont = New-Object Drawing.Font($LogDefaultFont.FontFamily, $LogDefaultFont.Size, [Drawing.FontStyle]::Underline)
-    Write-Log('Done')
+
+    Write-Log($Status)
+
     $LOG.SelectionFont = $LogDefaultFont
+    $LOG.SelectionColor = 'black'
 }
+
+
+function Out-Success { Out-Status 'Done' }
+
+function Out-Failure { Out-Status 'Failed' }
