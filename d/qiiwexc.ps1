@@ -1,4 +1,4 @@
-$VERSION = '19.4.30'
+$VERSION = '19.5.2'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -35,13 +35,11 @@ $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administr
 
 Set-Variable PSShellInvocationCommand $((Get-ItemProperty 'HKLM:\SOFTWARE\Classes\Microsoft.PowerShellScript.1\Shell\0\Command').'(default)') -Option Constant
 Set-Variable StartedFromGUI $("`"$($MyInvocation.Line)`"" -eq $PSShellInvocationCommand.Split(' ', 3)[2].Replace('%1', $MyInvocation.MyCommand.Definition)) -Option Constant
-if ($StartedFromGUI -or -not $MyInvocation.Line) {
-    try {
-        Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
-                                                                    [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
-    }
-    catch { Throw 'System not supported' }
+Set-Variable HIDE_CONSOLE ($args[0] -eq '-HideConsole' -or $StartedFromGUI -or -not $MyInvocation.Line) -Option Constant
 
+if ($HIDE_CONSOLE) {
+    Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
+                                                                [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
     [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
 }
 
@@ -60,6 +58,7 @@ Set-Variable ERR 'ERR' -Option Constant
 
 Set-Variable REQUIRES_ELEVATION $(if (-not $IS_ELEVATED) { ' *' }) -Option Constant
 
+
 Set-Variable FORM_WIDTH 670 -Option Constant
 Set-Variable FORM_HEIGHT 625 -Option Constant
 
@@ -69,11 +68,15 @@ Set-Variable BTN_HEIGHT 28 -Option Constant
 Set-Variable CBOX_WIDTH 145 -Option Constant
 Set-Variable CBOX_HEIGHT 20 -Option Constant
 
+Set-Variable RBTN_WIDTH 80 -Option Constant
+Set-Variable RBTN_HEIGHT 20 -Option Constant
+
 Set-Variable INT_SHORT 5 -Option Constant
 Set-Variable INT_NORMAL 15 -Option Constant
 Set-Variable INT_LONG 30 -Option Constant
 Set-Variable INT_TAB_ADJ 4 -Option Constant
 Set-Variable INT_GROUP_TOP 20 -Option Constant
+
 
 Set-Variable INT_BTN_SHORT ($BTN_HEIGHT + $INT_SHORT) -Option Constant
 Set-Variable INT_BTN_NORMAL ($BTN_HEIGHT + $INT_NORMAL) -Option Constant
@@ -82,12 +85,15 @@ Set-Variable INT_BTN_LONG ($BTN_HEIGHT + $INT_LONG) -Option Constant
 Set-Variable INT_CBOX_SHORT ($CBOX_HEIGHT + $INT_SHORT) -Option Constant
 Set-Variable INT_CBOX_NORMAL ($CBOX_HEIGHT + $INT_NORMAL) -Option Constant
 
+
 Set-Variable GRP_WIDTH ($INT_NORMAL + $BTN_WIDTH + $INT_NORMAL) -Option Constant
 
 Set-Variable CBOX_SIZE "$CBOX_WIDTH, $CBOX_HEIGHT" -Option Constant
+Set-Variable RBTN_SIZE "$RBTN_WIDTH, $RBTN_HEIGHT" -Option Constant
 
 Set-Variable BTN_INIT_LOCATION "$INT_NORMAL, $INT_GROUP_TOP" -Option Constant
 Set-Variable GRP_INIT_LOCATION "$INT_NORMAL, $INT_NORMAL" -Option Constant
+
 
 Set-Variable SHIFT_BTN_SHORT "0, $INT_BTN_SHORT" -Option Constant
 Set-Variable SHIFT_BTN_NORMAL "0, $INT_BTN_NORMAL" -Option Constant
@@ -97,13 +103,20 @@ Set-Variable SHIFT_CBOX_SHORT "0, $INT_CBOX_SHORT" -Option Constant
 Set-Variable SHIFT_CBOX_NORMAL "0, $INT_CBOX_NORMAL" -Option Constant
 Set-Variable SHIFT_CBOX_EXECUTE "$($INT_LONG - $INT_SHORT), $($INT_BTN_SHORT - $INT_SHORT)" -Option Constant
 
+Set-Variable SHIFT_RBTN_QUICK_SCAN "10, $($INT_BTN_SHORT - $INT_SHORT)" -Option Constant
+Set-Variable SHIFT_RBTN_FULL_SCAN "$RBTN_WIDTH, 0" -Option Constant
+
 Set-Variable SHIFT_GRP_HOR_NORMAL "$($GRP_WIDTH + $INT_NORMAL), 0" -Option Constant
 
 Set-Variable SHIFT_LBL_BROWSER "$INT_LONG, $($INT_BTN_SHORT - $INT_SHORT)" -Option Constant
 
+
 Set-Variable FONT_NAME 'Microsoft Sans Serif' -Option Constant
 Set-Variable BTN_FONT "$FONT_NAME, 10" -Option Constant
 
+
+Set-Variable TXT_QUICK_SCAN 'Quick scan' -Option Constant
+Set-Variable TXT_FULL_SCAN 'Full scan' -Option Constant
 Set-Variable TXT_START_AFTER_DOWNLOAD 'Start after download' -Option Constant
 Set-Variable TXT_OPENS_IN_BROWSER 'Opens in the browser' -Option Constant
 Set-Variable TXT_UNCHECKY_INFO 'Unchecky clears adware checkboxes when installing software' -Option Constant
@@ -127,6 +140,7 @@ $TAB_HOME.UseVisualStyleBackColor = $TAB_INSTALLERS.UseVisualStyleBackColor = $T
 
 $TAB_CONTROL.Controls.AddRange(@($TAB_HOME, $TAB_INSTALLERS, $TAB_DIAGNOSTICS, $TAB_MAINTENANCE))
 $FORM.Controls.AddRange(@($LOG, $TAB_CONTROL))
+
 
 
 $FORM.Text = "qiiwexc v$VERSION"
@@ -207,11 +221,12 @@ $GRP_Activators.Location = $GRP_ThisUtility.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_Activators)
 
 Set-Variable BTN_DownloadKMSAuto (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadAAct (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadChewWGA (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable CBOX_StartKMSAuto (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadAAct (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartAAct (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadChewWGA (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartChewWGA (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
@@ -268,11 +283,12 @@ $GRP_DownloadTools.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_DownloadTools)
 
 Set-Variable BTN_DownloadChrome (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadRufus (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_WindowsPE (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable CBOX_StartChrome (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadRufus (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartRufus (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_WindowsPE (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsPE (New-Object System.Windows.Forms.Label) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChrome, 'Open Google Chrome Beta download page')
@@ -347,8 +363,9 @@ Set-Variable CBOX_GoogleDrive (New-Object System.Windows.Forms.CheckBox) -Option
 Set-Variable CBOX_VSCode (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 Set-Variable BTN_DownloadNinite (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_OpenNiniteInBrowser (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartNinite (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_OpenNiniteInBrowser (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_OpenNiniteInBrowser (New-Object System.Windows.Forms.Label) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadNinite, 'Download Ninite universal installer for selected applications')
@@ -440,12 +457,13 @@ $GRP_Essentials.Location = $GRP_Ninite.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_INSTALLERS.Controls.Add($GRP_Essentials)
 
 Set-Variable BTN_DownloadSDI (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadUnchecky (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadOffice (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable CBOX_StartSDI (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadUnchecky (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartUnchecky (New-Object System.Windows.Forms.CheckBox) -Option Constant
 Set-Variable CBOX_SilentlyInstallUnchecky (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadOffice (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartOffice (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadSDI, 'Download Snappy Driver Installer')
@@ -512,9 +530,9 @@ $GRP_InstallTools.Location = $GRP_Essentials.Location + "0, $($GRP_Essentials.He
 $TAB_INSTALLERS.Controls.Add($GRP_InstallTools)
 
 Set-Variable BTN_DownloadCCleaner (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadDefraggler (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable CBOX_StartCCleaner (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadDefraggler (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartDefraggler (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
@@ -561,15 +579,18 @@ $GRP_DownloadWindows.Location = $GRP_Essentials.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_INSTALLERS.Controls.Add($GRP_DownloadWindows)
 
 Set-Variable BTN_Windows10 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_Windows8 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_Windows7 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_WindowsXPENG (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_WindowsXPRUS (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable LBL_Windows10 (New-Object System.Windows.Forms.Label) -Option Constant
+
+Set-Variable BTN_Windows8 (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_Windows8 (New-Object System.Windows.Forms.Label) -Option Constant
+
+Set-Variable BTN_Windows7 (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_Windows7 (New-Object System.Windows.Forms.Label) -Option Constant
+
+Set-Variable BTN_WindowsXPENG (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsXPENG (New-Object System.Windows.Forms.Label) -Option Constant
+
+Set-Variable BTN_WindowsXPRUS (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsXPRUS (New-Object System.Windows.Forms.Label) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1809-Jan) RUS-ENG x86-x64 -36in1- KMS (AIO) ISO image')
@@ -623,55 +644,60 @@ $BTN_WindowsXPRUS.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1mgs56mX2-
 $LBL_WindowsXPRUS.Location = $BTN_WindowsXPRUS.Location + $SHIFT_LBL_BROWSER
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - HDD and RAM #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - HDD #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable GRP_HDDandRAM (New-Object System.Windows.Forms.GroupBox) -Option Constant
-$GRP_HDDandRAM.Text = 'HDD and RAM'
-$GRP_HDDandRAM.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG * 3
-$GRP_HDDandRAM.Width = $GRP_WIDTH
-$GRP_HDDandRAM.Location = $GRP_INIT_LOCATION
-$TAB_DIAGNOSTICS.Controls.Add($GRP_HDDandRAM)
+Set-Variable GRP_HDD (New-Object System.Windows.Forms.GroupBox) -Option Constant
+$GRP_HDD.Text = 'HDD'
+$GRP_HDD.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
+$GRP_HDD.Width = $GRP_WIDTH
+$GRP_HDD.Location = $GRP_INIT_LOCATION
+$TAB_DIAGNOSTICS.Controls.Add($GRP_HDD)
 
-Set-Variable BTN_CheckDrive (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable BTN_CheckDisk (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable RBTN_QuickDiskCheck (New-Object System.Windows.Forms.RadioButton) -Option Constant
+Set-Variable RBTN_FullDiskCheck (New-Object System.Windows.Forms.RadioButton) -Option Constant
+
 Set-Variable BTN_DownloadVictoria (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadRecuva (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_CheckRAM (New-Object System.Windows.Forms.Button) -Option Constant
-
-Set-Variable CBOX_ScheduleDriveCheck (New-Object System.Windows.Forms.CheckBox) -Option Constant
 Set-Variable CBOX_StartVictoria (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadRecuva (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartRecuva (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDrive, 'Perform a (C:) drive health check')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDisk, 'Start (C:) disk health check')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRecuva, "Download Recuva installer`nRecuva helps restore deleted files")
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckRAM, 'Start RAM checking utility')
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_ScheduleDriveCheck, 'Schedule a full drive check on next restart')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_QuickDiskCheck, 'Perform a quick disk scan')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_FullDiskCheck, 'Schedule a full disk scan on next restart')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartVictoria, $TIP_START_AFTER_DOWNLOAD)
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartRecuva, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_CheckDrive.Font = $BTN_DownloadVictoria.Font = $BTN_DownloadRecuva.Font = $BTN_CheckRAM.Font = $BTN_FONT
-$BTN_CheckDrive.Height = $BTN_DownloadVictoria.Height = $BTN_DownloadRecuva.Height = $BTN_CheckRAM.Height = $BTN_HEIGHT
-$BTN_CheckDrive.Width = $BTN_DownloadVictoria.Width = $BTN_DownloadRecuva.Width = $BTN_CheckRAM.Width = $BTN_WIDTH
+$BTN_CheckDisk.Font = $BTN_DownloadVictoria.Font = $BTN_DownloadRecuva.Font = $BTN_FONT
+$BTN_CheckDisk.Height = $BTN_DownloadVictoria.Height = $BTN_DownloadRecuva.Height = $BTN_HEIGHT
+$BTN_CheckDisk.Width = $BTN_DownloadVictoria.Width = $BTN_DownloadRecuva.Width = $BTN_WIDTH
 
-$CBOX_StartVictoria.Checked = $CBOX_StartRecuva.Checked = $True
-$CBOX_StartVictoria.Size = $CBOX_StartRecuva.Size = $CBOX_ScheduleDriveCheck.Size = $CBOX_SIZE
+$CBOX_StartVictoria.Checked = $CBOX_StartRecuva.Checked = $RBTN_QuickDiskCheck.Checked = $True
+$CBOX_StartVictoria.Size = $CBOX_StartRecuva.Size = $CBOX_SIZE
+$RBTN_QuickDiskCheck.Size = $RBTN_FullDiskCheck.Size = $RBTN_SIZE
 $CBOX_StartVictoria.Text = $CBOX_StartRecuva.Text = $TXT_START_AFTER_DOWNLOAD
 
-$GRP_HDDandRAM.Controls.AddRange(@($BTN_CheckDrive, $CBOX_ScheduleDriveCheck, $BTN_DownloadVictoria, $CBOX_StartVictoria, $BTN_DownloadRecuva, $CBOX_StartRecuva, $BTN_CheckRAM))
+$GRP_HDD.Controls.AddRange(@($BTN_CheckDisk, $RBTN_QuickDiskCheck, $RBTN_FullDiskCheck, $BTN_DownloadVictoria, $CBOX_StartVictoria, $BTN_DownloadRecuva, $CBOX_StartRecuva))
 
 
 
-$BTN_CheckDrive.Text = "Check (C:) drive health$REQUIRES_ELEVATION"
-$BTN_CheckDrive.Location = $BTN_INIT_LOCATION
-$BTN_CheckDrive.Add_Click( { Start-DriveCheck $CBOX_ScheduleDriveCheck.Checked } )
+$BTN_CheckDisk.Text = "Check (C:) disk health$REQUIRES_ELEVATION"
+$BTN_CheckDisk.Location = $BTN_INIT_LOCATION
+$BTN_CheckDisk.Add_Click( { Start-DiskCheck $RBTN_FullDiskCheck.Checked } )
 
-$CBOX_ScheduleDriveCheck.Text = 'Schedule full check'
-$CBOX_ScheduleDriveCheck.Location = $BTN_CheckDrive.Location + $SHIFT_CBOX_EXECUTE
+$RBTN_QuickDiskCheck.Text = $TXT_QUICK_SCAN
+$RBTN_QuickDiskCheck.Location = $BTN_CheckDisk.Location + $SHIFT_RBTN_QUICK_SCAN
+
+$RBTN_FullDiskCheck.Text = $TXT_FULL_SCAN
+$RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_SCAN
 
 
 $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
-$BTN_DownloadVictoria.Location = $BTN_CheckDrive.Location + $SHIFT_BTN_LONG
+$BTN_DownloadVictoria.Location = $BTN_CheckDisk.Location + $SHIFT_BTN_LONG
 $BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Victoria.zip' -Execute:$CBOX_StartVictoria.Checked } )
 
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
@@ -686,55 +712,43 @@ $CBOX_StartRecuva.Location = $BTN_DownloadRecuva.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRecuva.Add_CheckStateChanged( { $BTN_DownloadRecuva.Text = "Recuva (restore data)$(if ($CBOX_StartRecuva.Checked) {$REQUIRES_ELEVATION})" } )
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - RAM and CPU #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable GRP_RAMandCPU (New-Object System.Windows.Forms.GroupBox) -Option Constant
+$GRP_RAMandCPU.Text = 'RAM and CPU'
+$GRP_RAMandCPU.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG * 2
+$GRP_RAMandCPU.Width = $GRP_WIDTH
+$GRP_RAMandCPU.Location = $GRP_HDD.Location + $SHIFT_GRP_HOR_NORMAL
+$TAB_DIAGNOSTICS.Controls.Add($GRP_RAMandCPU)
+
+Set-Variable BTN_CheckRAM (New-Object System.Windows.Forms.Button) -Option Constant
+
+Set-Variable BTN_HardwareMonitor (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable CBOX_HardwareMonitor (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_StressTest (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable LBL_StressTest (New-Object System.Windows.Forms.Label) -Option Constant
+
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckRAM, 'Start RAM checking utility')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temperature, voltage and frequency')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StressTest, 'Open webpage with a CPU benchmark / stress test')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_HardwareMonitor, $TIP_START_AFTER_DOWNLOAD)
+
+$BTN_CheckRAM.Font = $BTN_HardwareMonitor.Font = $BTN_StressTest.Font = $BTN_FONT
+$BTN_CheckRAM.Height = $BTN_HardwareMonitor.Height = $BTN_StressTest.Height = $BTN_HEIGHT
+$BTN_CheckRAM.Width = $BTN_HardwareMonitor.Width = $BTN_StressTest.Width = $BTN_WIDTH
+
+$GRP_RAMandCPU.Controls.AddRange(@($BTN_CheckRAM, $BTN_HardwareMonitor, $CBOX_HardwareMonitor, $BTN_StressTest, $LBL_StressTest))
+
+
+
 $BTN_CheckRAM.Text = 'RAM checking utility'
-$BTN_CheckRAM.Location = $BTN_DownloadRecuva.Location + $SHIFT_BTN_LONG
+$BTN_CheckRAM.Location = $BTN_INIT_LOCATION
 $BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Other Hardware #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable GRP_Hardware (New-Object System.Windows.Forms.GroupBox) -Option Constant
-$GRP_Hardware.Text = 'Other hardware'
-$GRP_Hardware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 5
-$GRP_Hardware.Width = $GRP_WIDTH
-$GRP_Hardware.Location = $GRP_HDDandRAM.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Hardware)
-
-Set-Variable BTN_HardwareMonitor (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_StressTest (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_CheckKeyboard (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_CheckMic (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_CheckWebCam (New-Object System.Windows.Forms.Button) -Option Constant
-
-Set-Variable CBOX_HardwareMonitor (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable LBL_StressTest (New-Object System.Windows.Forms.Label) -Option Constant
-Set-Variable LBL_CheckKeyboard (New-Object System.Windows.Forms.Label) -Option Constant
-Set-Variable LBL_CheckMic (New-Object System.Windows.Forms.Label) -Option Constant
-Set-Variable LBL_CheckWebCam (New-Object System.Windows.Forms.Label) -Option Constant
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temperature, voltage and frequency')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StressTest, 'Open webpage with a CPU benchmark / stress test')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Open webpage with a keyboard test')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Open webpage with a microphone test')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWebCam, 'Open webpage with a webcam test')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_HardwareMonitor, $TIP_START_AFTER_DOWNLOAD)
-
-$BTN_HardwareMonitor.Font = $BTN_StressTest.Font = $BTN_CheckKeyboard.Font = $BTN_CheckMic.Font = $BTN_CheckWebCam.Font = $BTN_FONT
-$BTN_HardwareMonitor.Height = $BTN_StressTest.Height = $BTN_CheckKeyboard.Height = $BTN_CheckMic.Height = $BTN_CheckWebCam.Height = $BTN_HEIGHT
-$BTN_HardwareMonitor.Width = $BTN_StressTest.Width = $BTN_CheckKeyboard.Width = $BTN_CheckMic.Width = $BTN_CheckWebCam.Width = $BTN_WIDTH
-
-$LBL_StressTest.Size = $LBL_CheckKeyboard.Size = $LBL_CheckMic.Size = $LBL_CheckWebCam.Size = $CBOX_HardwareMonitor.Size = $CBOX_SIZE
-$LBL_StressTest.Text = $LBL_CheckKeyboard.Text = $LBL_CheckMic.Text = $LBL_CheckWebCam.Text = $TXT_OPENS_IN_BROWSER
-
-$GRP_Hardware.Controls.AddRange(
-    @($BTN_HardwareMonitor, $CBOX_HardwareMonitor, $BTN_StressTest, $LBL_StressTest,
-        $BTN_CheckKeyboard, $LBL_CheckKeyboard, $BTN_CheckMic, $LBL_CheckMic, $BTN_CheckWebCam, $LBL_CheckWebCam)
-)
-
-
-
 $BTN_HardwareMonitor.Text = "CPUID HWMonitor$REQUIRES_ELEVATION"
-$BTN_HardwareMonitor.Location = $BTN_INIT_LOCATION
+$BTN_HardwareMonitor.Location = $BTN_CheckRAM.Location + $SHIFT_BTN_NORMAL
 $BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -MultiFile -Execute:$CBOX_HardwareMonitor.Checked } )
 
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
@@ -747,11 +761,45 @@ $BTN_StressTest.Text = 'CPU Stress Test'
 $BTN_StressTest.Location = $BTN_HardwareMonitor.Location + $SHIFT_BTN_LONG
 $BTN_StressTest.Add_Click( { Open-InBrowser 'silver.urih.com' } )
 
+$LBL_StressTest.Text = $TXT_OPENS_IN_BROWSER
+$LBL_StressTest.Size = $CBOX_SIZE
 $LBL_StressTest.Location = $BTN_StressTest.Location + $SHIFT_LBL_BROWSER
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Perepherals #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable GRP_Perepherals (New-Object System.Windows.Forms.GroupBox) -Option Constant
+$GRP_Perepherals.Text = 'Perepherals'
+$GRP_Perepherals.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
+$GRP_Perepherals.Width = $GRP_WIDTH
+$GRP_Perepherals.Location = $GRP_RAMandCPU.Location + $SHIFT_GRP_HOR_NORMAL
+$TAB_DIAGNOSTICS.Controls.Add($GRP_Perepherals)
+
+Set-Variable BTN_CheckKeyboard (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable BTN_CheckMic (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable BTN_CheckWebCam (New-Object System.Windows.Forms.Button) -Option Constant
+
+Set-Variable LBL_CheckKeyboard (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable LBL_CheckMic (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable LBL_CheckWebCam (New-Object System.Windows.Forms.Label) -Option Constant
+
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Open webpage with a keyboard test')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Open webpage with a microphone test')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWebCam, 'Open webpage with a webcam test')
+
+$BTN_CheckKeyboard.Font = $BTN_CheckMic.Font = $BTN_CheckWebCam.Font = $BTN_FONT
+$BTN_CheckKeyboard.Height = $BTN_CheckMic.Height = $BTN_CheckWebCam.Height = $BTN_HEIGHT
+$BTN_CheckKeyboard.Width = $BTN_CheckMic.Width = $BTN_CheckWebCam.Width = $BTN_WIDTH
+
+$LBL_CheckKeyboard.Size = $LBL_CheckMic.Size = $LBL_CheckWebCam.Size = $CBOX_HardwareMonitor.Size = $CBOX_SIZE
+$LBL_CheckKeyboard.Text = $LBL_CheckMic.Text = $LBL_CheckWebCam.Text = $TXT_OPENS_IN_BROWSER
+
+$GRP_Perepherals.Controls.AddRange(@($BTN_CheckKeyboard, $LBL_CheckKeyboard, $BTN_CheckMic, $LBL_CheckMic, $BTN_CheckWebCam, $LBL_CheckWebCam))
+
+
+
 $BTN_CheckKeyboard.Text = 'Check keyboard'
-$BTN_CheckKeyboard.Location = $BTN_StressTest.Location + $SHIFT_BTN_LONG
+$BTN_CheckKeyboard.Location = $BTN_INIT_LOCATION
 $BTN_CheckKeyboard.Add_Click( { Open-InBrowser 'onlinemictest.com/keyboard-test' } )
 
 $LBL_CheckKeyboard.Location = $BTN_CheckKeyboard.Location + $SHIFT_LBL_BROWSER
@@ -777,7 +825,7 @@ Set-Variable GRP_Windows (New-Object System.Windows.Forms.GroupBox) -Option Cons
 $GRP_Windows.Text = 'Windows'
 $GRP_Windows.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Windows.Width = $GRP_WIDTH
-$GRP_Windows.Location = $GRP_Hardware.Location + $SHIFT_GRP_HOR_NORMAL
+$GRP_Windows.Location = $GRP_HDD.Location + "0, $($GRP_HDD.Height + $INT_NORMAL)"
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Windows)
 
 Set-Variable BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button) -Option Constant
@@ -815,44 +863,52 @@ $BTN_CheckSystemFiles.Add_Click( { Repair-SystemFiles } )
 
 Set-Variable GRP_Malware (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Malware.Text = 'Security'
-$GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_SHORT + $INT_BTN_NORMAL + $INT_BTN_LONG
+$GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_Malware.Width = $GRP_WIDTH
-$GRP_Malware.Location = $GRP_Windows.Location + "0, $($GRP_Windows.Height + $INT_NORMAL)"
+$GRP_Malware.Location = $GRP_RAMandCPU.Location + "0, $($GRP_RAMandCPU.Height + $INT_NORMAL)"
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Malware)
 
-Set-Variable BTN_QuickSecurityScan (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_FullSecurityScan (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable BTN_StartSecurityScan (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable RBTN_QuickSecurityScan (New-Object System.Windows.Forms.RadioButton) -Option Constant
+Set-Variable RBTN_FullSecurityScan (New-Object System.Windows.Forms.RadioButton) -Option Constant
+
 Set-Variable BTN_DownloadMalwarebytes (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartMalwarebytes (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_QuickSecurityScan, 'Perform a quick security scan')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_FullSecurityScan, 'Perform a full security scan')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StartSecurityScan, 'Start security scan')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_QuickSecurityScan, 'Perform a quick security scan')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_FullSecurityScan, 'Perform a full security scan')
+
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`nMalwarebytes helps remove malware and adware")
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartMalwarebytes, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_QuickSecurityScan.Font = $BTN_FullSecurityScan.Font = $BTN_DownloadMalwarebytes.Font = $BTN_FONT
-$BTN_QuickSecurityScan.Height = $BTN_FullSecurityScan.Height = $BTN_DownloadMalwarebytes.Height = $BTN_HEIGHT
-$BTN_QuickSecurityScan.Width = $BTN_FullSecurityScan.Width = $BTN_DownloadMalwarebytes.Width = $BTN_WIDTH
+$BTN_StartSecurityScan.Font = $BTN_DownloadMalwarebytes.Font = $BTN_FONT
+$BTN_StartSecurityScan.Height = $BTN_DownloadMalwarebytes.Height = $BTN_HEIGHT
+$BTN_StartSecurityScan.Width = $BTN_DownloadMalwarebytes.Width = $BTN_WIDTH
 
-$GRP_Malware.Controls.AddRange(@($BTN_QuickSecurityScan, $BTN_FullSecurityScan, $BTN_DownloadMalwarebytes, $CBOX_StartMalwarebytes))
+$RBTN_QuickSecurityScan.Size = $RBTN_FullSecurityScan.Size = $RBTN_SIZE
+$RBTN_QuickSecurityScan.Checked = $CBOX_StartMalwarebytes.Checked = $True
+
+$GRP_Malware.Controls.AddRange(@($BTN_StartSecurityScan, $RBTN_QuickSecurityScan, $RBTN_FullSecurityScan, $BTN_DownloadMalwarebytes, $CBOX_StartMalwarebytes))
 
 
 
-$BTN_QuickSecurityScan.Text = 'Quick security scan'
-$BTN_QuickSecurityScan.Location = $BTN_INIT_LOCATION
-$BTN_QuickSecurityScan.Add_Click( { Start-SecurityScan 'quick' } )
+$BTN_StartSecurityScan.Text = 'Perform security scan'
+$BTN_StartSecurityScan.Location = $BTN_INIT_LOCATION
+$BTN_StartSecurityScan.Add_Click( { Start-SecurityScan $RBTN_FullSecurityScan.Checked } )
 
-$BTN_FullSecurityScan.Text = 'Full security scan'
-$BTN_FullSecurityScan.Location = $BTN_QuickSecurityScan.Location + $SHIFT_BTN_SHORT
-$BTN_FullSecurityScan.Add_Click( { Start-SecurityScan 'full' } )
+$RBTN_QuickSecurityScan.Text = $TXT_QUICK_SCAN
+$RBTN_QuickSecurityScan.Location = $BTN_StartSecurityScan.Location + $SHIFT_RBTN_QUICK_SCAN
+
+$RBTN_FullSecurityScan.Text = $TXT_FULL_SCAN
+$RBTN_FullSecurityScan.Location = $RBTN_QuickSecurityScan.Location + $SHIFT_RBTN_FULL_SCAN
 
 
 $BTN_DownloadMalwarebytes.Text = "Malwarebytes$REQUIRES_ELEVATION"
-$BTN_DownloadMalwarebytes.Location = $BTN_FullSecurityScan.Location + $SHIFT_BTN_NORMAL
+$BTN_DownloadMalwarebytes.Location = $BTN_StartSecurityScan.Location + $SHIFT_BTN_LONG
 $BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadExtractExecute 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' -Execute:$CBOX_StartMalwarebytes.Checked } )
 
 $CBOX_StartMalwarebytes.Text = $TXT_START_AFTER_DOWNLOAD
-$CBOX_StartMalwarebytes.Checked = $True
 $CBOX_StartMalwarebytes.Size = $CBOX_SIZE
 $CBOX_StartMalwarebytes.Location = $BTN_DownloadMalwarebytes.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartMalwarebytes.Add_CheckStateChanged( { $BTN_DownloadMalwarebytes.Text = "Malwarebytes$(if ($CBOX_StartMalwarebytes.Checked) {$REQUIRES_ELEVATION})" } )
@@ -919,7 +975,6 @@ $GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 6
 $GRP_Cleanup.Width = $GRP_WIDTH
 $GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
-
 
 Set-Variable BTN_EmptyRecycleBin (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_FileCleanup (New-Object System.Windows.Forms.Button) -Option Constant
@@ -1032,7 +1087,18 @@ function Initialize-Startup {
         $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
 
     $BTN_WindowsCleanup.Enabled = $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
-    $BTN_QuickSecurityScan.Enabled = $BTN_FullSecurityScan.Enabled = Test-Path $DefenderExe
+    $BTN_StartSecurityScan.Enabled = Test-Path $DefenderExe
+
+    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
+    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+
+    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
+    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+
+    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
+    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
 
     if ($PS_VERSION -gt 2) {
         try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
@@ -1090,11 +1156,10 @@ function Add-Log {
     )
     if (-not $Message) { Return }
 
-    Set-Variable Text "[$((Get-Date).ToString())] $Message" -Option Constant
     $LOG.SelectionStart = $LOG.TextLength
 
     Switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
-    Write-Log "`n$Text"
+    Write-Log "`n[$((Get-Date).ToString())] $Message"
 }
 
 
@@ -1110,15 +1175,15 @@ function Write-Log {
 
 
 function Out-Status {
-    Param([String][ValidateSet('Done', 'Failed')]$Status = $(Write-Host "`n$($MyInvocation.MyCommand.Name): No status specified" -NoNewline))
+    Param([String]$Status = $(Write-Host "`n$($MyInvocation.MyCommand.Name): No status specified" -NoNewline))
     if (-not $Status) { Return }
 
-    Set-Variable LogDefaultFont $LOG.Font -Option Constant
-    Write-Log(' ')
+    Write-Log ' '
 
+    Set-Variable LogDefaultFont $LOG.Font -Option Constant
     $LOG.SelectionFont = New-Object Drawing.Font($LogDefaultFont.FontFamily, $LogDefaultFont.Size, [Drawing.FontStyle]::Underline)
 
-    Write-Log($Status)
+    Write-Log $Status
 
     $LOG.SelectionFont = $LogDefaultFont
     $LOG.SelectionColor = 'black'
@@ -1150,7 +1215,7 @@ function Get-CurrentVersion {
         Add-Log $WRN "Newer version available: v$LatestVersion"
         Get-Update
     }
-    else { Write-Log ' No updates available' }
+    else { Out-Status 'No updates available' }
 }
 
 
@@ -1360,7 +1425,7 @@ function Start-Elevated {
     if (-not $IS_ELEVATED) {
         Add-Log $INF 'Requesting administrator privileges...'
 
-        try { Start-Process 'powershell' $MyInvocation.ScriptName -Verb RunAs }
+        try { Start-Process 'powershell' "$($MyInvocation.ScriptName)$(if ($HIDE_CONSOLE) {' -HideConsole'})" -Verb RunAs }
         catch [Exception] { Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"; Return }
 
         Exit-Script
@@ -1373,7 +1438,7 @@ function Start-Elevated {
 function Get-SystemInfo {
     Add-Log $INF 'Gathering system information...'
 
-    $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
+    Set-Variable OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version) -Option Constant
 
     Set-Variable OS_NAME $OperatingSystem.Caption -Option Constant -Scope Script
     Set-Variable OS_BUILD $OperatingSystem.Version -Option Constant -Scope Script
@@ -1394,22 +1459,10 @@ function Get-SystemInfo {
     Set-Variable DefenderExe "$env:ProgramFiles\Windows Defender\MpCmdRun.exe" -Option Constant -Scope Script
     Set-Variable GoogleUpdateExe "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe" -Option Constant -Scope Script
 
-
-    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
-    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
-
     Set-Variable LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'") -Option Constant
-    $Script:SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+    Set-Variable SystemPartition ($LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant -Scope Script
 
     Out-Success
-
-    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
-    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
-
-    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
-    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
 }
 
 
@@ -1422,14 +1475,15 @@ function Out-SystemInfo {
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
 
-    $Computer = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }
+    Set-Variable ComputerSystem (Get-WmiObject Win32_ComputerSystem) -Option Constant
+    Set-Variable Computer ($ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }) -Option Constant
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
         Add-Log $INF "    Computer model:  $($Computer.Manufacturer) $($Computer.Model) $(if ($Computer.SystemSKUNumber) {"($($Computer.SystemSKUNumber))"})"
         Add-Log $INF "    RAM available:  $($Computer.RAM) GB"
     }
 
-    $Processors = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
+    Set-Variable Processors (Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors) -Option Constant
     if ($Processors) {
         ForEach ($Item In $Processors) {
             Add-Log $INF "    CPU name:  $($Item.Name)"
@@ -1437,29 +1491,30 @@ function Out-SystemInfo {
         }
     }
 
-    $VideoControllers = (Get-WmiObject Win32_VideoController).Name
+    Set-Variable VideoControllers ((Get-WmiObject Win32_VideoController).Name) -Option Constant
     if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
 
     if ($OS_VERSION -gt 7) {
-        $Storage = Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, @{L = 'Firmware'; E = { $_.FirmwareVersion } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+        Set-Variable Storage (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, FirmwareVersion, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
         if ($Storage) {
             ForEach ($Item In $Storage) {
-                Add-Log $INF "    Storage:  $($Item.FriendlyName) ($($Item.BusType) $($Item.MediaType), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.Firmware))"
+                $Details = "$($Item.BusType)$(if ($Item.MediaType -ne 'Unspecified') {' ' + $Item.MediaType}), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.FirmwareVersion)"
+                Add-Log $INF "    Storage:  $($Item.FriendlyName) ($Details)"
             }
         }
     }
     else {
-        $Storage = Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, @{L = 'Firmware'; E = { $_.FirmwareRevision } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
-        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.Firmware))" } }
+        Set-Variable Storage (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, FirmwareRevision, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
+        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.FirmwareRevision))" } }
     }
 
     if ($SystemPartition) {
         Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpace) GB / $($SystemPartition.Size) GB ($((Get-FreeDiskSpace).ToString('P')))"
     }
 
-    [String]$OfficeYear = Switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }
-    [String]$OfficeName = if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }
-    [String]$Win10Release = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId
+    Set-Variable OfficeYear $(Switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }) -Option Constant
+    Set-Variable OfficeName $(if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }) -Option Constant
+    Set-Variable Win10Release ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId) -Option Constant
 
     Add-Log $INF '  Software'
     Add-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"
@@ -1507,23 +1562,23 @@ function Set-NiniteFileName {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check HDD and RAM #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check HDD #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-DriveCheck {
+function Start-DiskCheck {
     Param([Switch][Parameter(Position = 0)]$FullScan)
 
-    Add-Log $INF 'Starting (C:) drive health check...'
+    Add-Log $INF 'Starting (C:) disk health check...'
 
-    try {
-        if ($FullScan) { Start-Process 'chkdsk' '/B' -Verb RunAs } else {
-            if ($OS_VERSION -gt 7) { Start-Process 'chkdsk' '/scan /perf' -Verb RunAs } else { Start-Process 'chkdsk' -Verb RunAs }
-        }
-    }
-    catch [Exception] { Add-Log $ERR "Failed to check (C:) drive health: $($_.Exception.Message)"; Return }
+    Set-Variable Parameters $(if ($FullScan) { "'/B'" } elseif ($OS_VERSION -gt 7) { "'/scan /perf'" }) -Option Constant
+
+    try { Start-Process 'powershell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Disk check running...'; Start-Process 'chkdsk' $Parameters -NoNewWindow`"" -Verb RunAs }
+    catch [Exception] { Add-Log $ERR "Failed to check (C:) disk health: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check RAM #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-MemoryCheckTool {
     Add-Log $INF 'Starting memory checking tool...'
@@ -1540,7 +1595,9 @@ function Start-MemoryCheckTool {
 function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
 
-    try { Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -Verb RunAs }
+    Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Checking Windows health...'" -Option Constant
+
+    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1550,7 +1607,9 @@ function Test-WindowsHealth {
 function Repair-Windows {
     Add-Log $INF 'Starting Windows repair...'
 
-    try { Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -Verb RunAs }
+    Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Repairing Windows...'" -Option Constant
+
+    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to repair Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1560,7 +1619,7 @@ function Repair-Windows {
 function Repair-SystemFiles {
     Add-Log $INF 'Starting system file integrity check...'
 
-    try { Start-Process 'sfc' '/scannow' -Verb RunAs }
+    try { Start-Process 'powershell' "-Command (Get-Host).UI.RawUI.WindowTitle = 'Checking system files...'; Start-Process 'sfc' '/scannow' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to check system file integrity: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1570,21 +1629,26 @@ function Repair-SystemFiles {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Security #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-SecurityScan {
-    Param([String][Parameter(Position = 0)][ValidateSet('quick', 'full')]$Mode = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No scan mode specified"))
-    if (-not $Mode) { Return }
+    Param([Switch][Parameter(Position = 0)]$FullScan)
 
     if ($OS_VERSION -gt 7) {
         Add-Log $INF 'Updating security signatures...'
 
-        try { Start-Process $DefenderExe '-SignatureUpdate' -Wait }
+        [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Updating security signatures...'"
+
+        try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow`"" -Wait }
         catch [Exception] { Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"; Return }
 
         Out-Success
     }
 
+    Set-Variable Mode $(if ($FullScan) { 'full' } else { 'quick' }) -Option Constant
+
     Add-Log $INF "Starting $Mode security scan..."
 
-    try { Start-Process $DefenderExe "-Scan -ScanType $(if ($Mode -eq 'full') {2} else {1})" }
+    [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = '$((Get-Culture).TextInfo.ToTitleCase($Mode)) security scan running...'"
+
+    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType $(if ($FullScan) {2} else {1})' -NoNewWindow`"" -Wait }
     catch [Exception] { Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1650,27 +1714,27 @@ function Start-WindowsUpdate {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# File Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 function Start-FileCleanup {
-    [String]$LogMessage = 'Removing unnecessary files...'
+    Set-Variable LogMessage 'Removing unnecessary files...' -Option Constant
     Add-Log $INF $LogMessage
 
-    [String]$ContainerJava86 = "${env:ProgramFiles(x86)}\Java"
-    [String]$ContainerJava = "$env:ProgramFiles\Java"
-    [String]$ContainerOpera = "$env:ProgramFiles\Opera"
-    [String]$ContainerChrome = "$PROGRAM_FILES_86\Google\Chrome\Application"
-    [String]$ContainerChromeBeta = "$PROGRAM_FILES_86\Google\Chrome Beta\Application"
-    [String]$ContainerChromeDev = "$PROGRAM_FILES_86\Google\Chrome Dev\Application"
-    [String]$ContainerGoogleUpdate = "$PROGRAM_FILES_86\Google\Update"
+    Set-Variable ContainerJava86 "${env:ProgramFiles(x86)}\Java" -Option Constant
+    Set-Variable ContainerJava "$env:ProgramFiles\Java" -Option Constant
+    Set-Variable ContainerOpera "$env:ProgramFiles\Opera" -Option Constant
+    Set-Variable ContainerChrome "$PROGRAM_FILES_86\Google\Chrome\Application" -Option Constant
+    Set-Variable ContainerChromeBeta "$PROGRAM_FILES_86\Google\Chrome Beta\Application" -Option Constant
+    Set-Variable ContainerChromeDev "$PROGRAM_FILES_86\Google\Chrome Dev\Application" -Option Constant
+    Set-Variable ContainerGoogleUpdate "$PROGRAM_FILES_86\Google\Update" -Option Constant
 
-    [String[]]$NonVersionedDirectories = @('Assets', 'Download', 'Install', 'SetupMetrics')
-    [String[]]$Containers = @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate)
+    Set-Variable NonVersionedDirectories @('Assets', 'Download', 'Install', 'Offline', 'SetupMetrics') -Option Constant
+    Set-Variable Containers @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate) -Option Constant
 
-    [String]$NewestJava86 = if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestJava = if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestOpera = if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestChrome = if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestChromeBeta = if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    Set-Variable NewestJava86 $(if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestJava $(if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestOpera $(if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestChrome $(if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestChromeBeta $(if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestChromeDev $(if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestGoogleUpdate $(if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
 
     ForEach ($Path In $Containers) {
         if (Test-Path $Path) {
@@ -1683,7 +1747,7 @@ function Start-FileCleanup {
         }
     }
 
-    [String[]]$ItemsToDeleteWithExclusions = @(
+    Set-Variable ItemsToDeleteWithExclusions -Option Constant -Value @(
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\locales;en-US.pak,lv.pak,ru.pak"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\locales;en-US.pak,lv.pak,ru.pak"
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Resource*.dll;TeamViewer_Resource_en.dll,TeamViewer_Resource_ru.dll"
@@ -1705,6 +1769,8 @@ function Start-FileCleanup {
         "$NewestChromeBeta\Locales;en-US.pak,lv.pak,ru.pak"
         "$NewestChromeDev\Locales;en-US.pak,lv.pak,ru.pak"
         "$NewestGoogleUpdate\goopdateres_*.dll;goopdateres_en-GB.dll,goopdateres_en-US.dll,goopdateres_lv.dll,goopdateres_ru.dll"
+        "$env:LocalAppData\Microsoft\Teams\locales;en-US.pak,lv.pak,ru.pak"
+        "$env:LocalAppData\Microsoft\Teams\resources\locales;locale-en-us.json,locale-lv-lv.json,locale-ru-ru.json"
     )
 
     ForEach ($Item In $ItemsToDeleteWithExclusions) {
@@ -1717,7 +1783,7 @@ function Start-FileCleanup {
         }
     }
 
-    [String[]]$ItemsToDelete = @(
+    Set-Variable ItemsToDelete -Option Constant -Value @(
         "$NewestJava86\COPYRIGHT"
         "$NewestJava86\LICENSE"
         "$NewestJava86\release"
@@ -1749,8 +1815,17 @@ function Start-FileCleanup {
         "$env:SystemDrive\PerfLogs\*"
         "$env:SystemDrive\temp"
         "$env:SystemDrive\temp\*"
+        "$env:ProgramData\Accenture\Logs\*.log"
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
+        "$env:ProgramData\Kontiki\*.log"
+        "$env:ProgramData\Kollective\*.log"
+        "$env:ProgramData\Pulse Secure\Logging"
+        "$env:ProgramData\SymEFASI"
+        "$env:ProgramData\SymEFASI\*"
+        "$env:ProgramData\UIU"
+        "$env:ProgramData\UIU\*"
+        "$env:ProgramData\Pulse Secure\Logging\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
@@ -1830,7 +1905,6 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
-        "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files\*"
         "$PROGRAM_FILES_86\CCleaner\Setup"
         "$PROGRAM_FILES_86\CCleaner\Setup\*"
@@ -1864,6 +1938,8 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Google\Update\Download\*"
         "$PROGRAM_FILES_86\Google\Update\Install"
         "$PROGRAM_FILES_86\Google\Update\Install\*"
+        "$PROGRAM_FILES_86\Google\Update\Offline"
+        "$PROGRAM_FILES_86\Google\Update\Offline\*"
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSES.chromium.html"
@@ -1961,6 +2037,8 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Google\Update\Download\*"
         "$env:ProgramFiles\Google\Update\Install"
         "$env:ProgramFiles\Google\Update\Install\*"
+        "$env:ProgramFiles\Google\Update\Offline"
+        "$env:ProgramFiles\Google\Update\Offline\*"
         "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
@@ -2052,35 +2130,6 @@ function Start-FileCleanup {
         "$env:Public\Foxit Software"
         "$env:Public\Foxit Software\*"
         "$env:UserProfile\.VirtualBox\*.log*"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\Media Player\lastplayed.wpl"
-        "$env:UserProfile\AppData\Local\Microsoft\Office\16.0\WebServiceCache"
-        "$env:UserProfile\AppData\Local\Microsoft\Office\16.0\WebServiceCache\*"
-        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\logs"
-        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\logs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\setup"
-        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\setup\*"
-        "$env:UserProfile\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
-        "$env:UserProfile\AppData\Local\Microsoft\Windows\SettingSync\metastore\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\Windows\WebCache\*.log"
-        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs"
-        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs\*"
-        "$env:UserProfile\AppData\LocalLow\PKI Client"
-        "$env:UserProfile\AppData\LocalLow\PKI Client\*"
-        "$env:UserProfile\AppData\LocalLow\Sun"
-        "$env:UserProfile\AppData\LocalLow\Sun\*"
         "$env:UserProfile\MicrosoftEdgeBackups"
         "$env:UserProfile\MicrosoftEdgeBackups\*"
         "$env:AppData\Code\logs"
@@ -2093,7 +2142,9 @@ function Start-FileCleanup {
         "$env:AppData\Microsoft\Office\Recent\*"
         "$env:AppData\Microsoft\Skype for Desktop\logs"
         "$env:AppData\Microsoft\Skype for Desktop\logs\*"
-        "$env:AppData\Microsoft\Windows\Recent\*"
+        "$env:AppData\Microsoft Teams\logs"
+        "$env:AppData\Microsoft Teams\logs\*"
+        "$env:AppData\Microsoft\Windows\Recent\*.*"
         "$env:AppData\Opera Software\Opera Stable\*.log"
         "$env:AppData\Opera Software\Opera Stable\Crash Reports"
         "$env:AppData\Opera Software\Opera Stable\Crash Reports\*"
@@ -2122,6 +2173,43 @@ function Start-FileCleanup {
         "$env:LocalAppData\Google\CrashReports\*"
         "$env:LocalAppData\Google\Software Reporter Tool"
         "$env:LocalAppData\Google\Software Reporter Tool\*"
+        "$env:LocalAppData\LocalLow\AuthClient-4-VIP\logs"
+        "$env:LocalAppData\LocalLow\AuthClient-4-VIP\logs\*"
+        "$env:LocalAppData\LocalLow\PKI Client"
+        "$env:LocalAppData\LocalLow\PKI Client\*"
+        "$env:LocalAppData\LocalLow\Sun"
+        "$env:LocalAppData\LocalLow\Sun\*"
+        "$env:LocalAppData\Microsoft\CLR_v2.0_32\*.log"
+        "$env:LocalAppData\Microsoft\CLR_v2.0_32\UsageLogs"
+        "$env:LocalAppData\Microsoft\CLR_v2.0_32\UsageLogs\*"
+        "$env:LocalAppData\Microsoft\CLR_v2.0\*.log"
+        "$env:LocalAppData\Microsoft\CLR_v2.0\UsageLogs"
+        "$env:LocalAppData\Microsoft\CLR_v2.0\UsageLogs\*"
+        "$env:LocalAppData\Microsoft\CLR_v4.0_32\*.log"
+        "$env:LocalAppData\Microsoft\CLR_v4.0_32\UsageLogs"
+        "$env:LocalAppData\Microsoft\CLR_v4.0_32\UsageLogs\*"
+        "$env:LocalAppData\Microsoft\CLR_v4.0\*.log"
+        "$env:LocalAppData\Microsoft\CLR_v4.0\UsageLogs"
+        "$env:LocalAppData\Microsoft\CLR_v4.0\UsageLogs\*"
+        "$env:LocalAppData\Microsoft\Media Player\lastplayed.wpl"
+        "$env:LocalAppData\Microsoft\Office\16.0\WebServiceCache"
+        "$env:LocalAppData\Microsoft\Office\16.0\WebServiceCache\*"
+        "$env:LocalAppData\Microsoft\OneDrive\logs"
+        "$env:LocalAppData\Microsoft\OneDrive\logs\*"
+        "$env:LocalAppData\Microsoft\OneDrive\setup"
+        "$env:LocalAppData\Microsoft\OneDrive\setup\*"
+        "$env:LocalAppData\Microsoft\Teams\*.log"
+        "$env:LocalAppData\Microsoft\Teams\*.log"
+        "$env:LocalAppData\Microsoft\Teams\current\resources\ThirdPartyNotices.txt"
+        "$env:LocalAppData\Microsoft\Teams\packages\*.nupkg"
+        "$env:LocalAppData\Microsoft\Teams\packages\SquirrelTemp"
+        "$env:LocalAppData\Microsoft\Teams\packages\SquirrelTemp\*"
+        "$env:LocalAppData\Microsoft\Teams\previous"
+        "$env:LocalAppData\Microsoft\Teams\previous\*"
+        "$env:LocalAppData\Microsoft\Windows\Explorer\thumbcache_*.db"
+        "$env:LocalAppData\Microsoft\Windows\SettingSync\metastore\*.log"
+        "$env:LocalAppData\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
+        "$env:LocalAppData\Microsoft\Windows\WebCache\*.log"
         "$env:LocalAppData\PeerDistRepub"
         "$env:LocalAppData\PeerDistRepub\*"
         "$env:LocalAppData\Razer\Synapse3\Log"
@@ -2134,7 +2222,7 @@ function Start-FileCleanup {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
             Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
-            if (Test-Path $Path) { Out-Failure } else { Out-Success }
+            if (Test-Path $Item) { Out-Failure } else { Out-Success }
         }
     }
 
@@ -2197,7 +2285,9 @@ function Start-CCleaner {
 function Start-WindowsCleanup {
     Add-Log $INF 'Starting Windows update cleanup...'
 
-    try { Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -Verb RunAs }
+    Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Cleaning Windows...'" -Option Constant
+
+    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -2207,7 +2297,9 @@ function Start-WindowsCleanup {
 function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
-    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs -WindowStyle Hidden }
+    Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Deleting restore points...'" -Option Constant
+
+    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -2237,7 +2329,9 @@ function Set-CloudFlareDNS {
 function Start-DriveOptimization {
     Add-Log $INF 'Starting drive optimization...'
 
-    try { Start-Process 'defrag' $(if ($OS_VERSION -gt 7) { '/C /H /U /O' } else { 'C: /H /U' }) -Verb RunAs }
+    Set-Variable Parameters $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" }) -Option Constant
+
+    try { Start-Process 'powershell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Optimizing drives...'; Start-Process 'defrag' $Parameters -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
 
     Out-Success
