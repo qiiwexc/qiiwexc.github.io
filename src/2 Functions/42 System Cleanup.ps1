@@ -44,7 +44,9 @@ function Start-CCleaner {
 function Start-WindowsCleanup {
     Add-Log $INF 'Starting Windows update cleanup...'
 
-    try { Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -Verb RunAs }
+    Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Cleaning Windows...'" -Option Constant
+
+    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -54,7 +56,9 @@ function Start-WindowsCleanup {
 function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
-    try { Start-Process 'vssadmin' 'delete shadows /all /quiet' -Verb RunAs -WindowStyle Hidden }
+    Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Deleting restore points...'" -Option Constant
+
+    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
 
     Out-Success

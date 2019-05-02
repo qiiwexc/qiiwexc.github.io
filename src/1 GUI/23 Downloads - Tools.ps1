@@ -6,9 +6,9 @@ $GRP_InstallTools.Location = $GRP_Essentials.Location + "0, $($GRP_Essentials.He
 $TAB_INSTALLERS.Controls.Add($GRP_InstallTools)
 
 Set-Variable BTN_DownloadCCleaner (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadDefraggler (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable CBOX_StartCCleaner (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadDefraggler (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartDefraggler (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
