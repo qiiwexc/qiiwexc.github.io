@@ -1,7 +1,7 @@
 function Get-SystemInfo {
     Add-Log $INF 'Gathering system information...'
 
-    $OperatingSystem = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version
+    Set-Variable OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version) -Option Constant
 
     Set-Variable OS_NAME $OperatingSystem.Caption -Option Constant -Scope Script
     Set-Variable OS_BUILD $OperatingSystem.Version -Option Constant -Scope Script
@@ -22,22 +22,10 @@ function Get-SystemInfo {
     Set-Variable DefenderExe "$env:ProgramFiles\Windows Defender\MpCmdRun.exe" -Option Constant -Scope Script
     Set-Variable GoogleUpdateExe "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe" -Option Constant -Scope Script
 
-
-    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
-    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
-
     Set-Variable LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'") -Option Constant
-    $Script:SystemPartition = $LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+    Set-Variable SystemPartition ($LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant -Scope Script
 
     Out-Success
-
-    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
-    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
-
-    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
-    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
 }
 
 
@@ -50,14 +38,15 @@ function Out-SystemInfo {
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
 
-    $Computer = Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }
+    Set-Variable ComputerSystem (Get-WmiObject Win32_ComputerSystem) -Option Constant
+    Set-Variable Computer ($ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } }) -Option Constant
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
         Add-Log $INF "    Computer model:  $($Computer.Manufacturer) $($Computer.Model) $(if ($Computer.SystemSKUNumber) {"($($Computer.SystemSKUNumber))"})"
         Add-Log $INF "    RAM available:  $($Computer.RAM) GB"
     }
 
-    $Processors = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
+    Set-Variable Processors (Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors) -Option Constant
     if ($Processors) {
         ForEach ($Item In $Processors) {
             Add-Log $INF "    CPU name:  $($Item.Name)"
@@ -65,29 +54,30 @@ function Out-SystemInfo {
         }
     }
 
-    $VideoControllers = (Get-WmiObject Win32_VideoController).Name
+    Set-Variable VideoControllers ((Get-WmiObject Win32_VideoController).Name) -Option Constant
     if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
 
     if ($OS_VERSION -gt 7) {
-        $Storage = Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, @{L = 'Firmware'; E = { $_.FirmwareVersion } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
+        Set-Variable Storage (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, FirmwareVersion, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
         if ($Storage) {
             ForEach ($Item In $Storage) {
-                Add-Log $INF "    Storage:  $($Item.FriendlyName) ($($Item.BusType) $($Item.MediaType), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.Firmware))"
+                $Details = "$($Item.BusType)$(if ($Item.MediaType -ne 'Unspecified') {' ' + $Item.MediaType}), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.FirmwareVersion)"
+                Add-Log $INF "    Storage:  $($Item.FriendlyName) ($Details)"
             }
         }
     }
     else {
-        $Storage = Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, @{L = 'Firmware'; E = { $_.FirmwareRevision } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }
-        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.Firmware))" } }
+        Set-Variable Storage (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, FirmwareRevision, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
+        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.FirmwareRevision))" } }
     }
 
     if ($SystemPartition) {
         Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpace) GB / $($SystemPartition.Size) GB ($((Get-FreeDiskSpace).ToString('P')))"
     }
 
-    [String]$OfficeYear = Switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }
-    [String]$OfficeName = if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }
-    [String]$Win10Release = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId
+    Set-Variable OfficeYear $(Switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } }) -Option Constant
+    Set-Variable OfficeName $(if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' }) -Option Constant
+    Set-Variable Win10Release ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId) -Option Constant
 
     Add-Log $INF '  Software'
     Add-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"

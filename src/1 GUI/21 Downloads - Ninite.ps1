@@ -15,8 +15,9 @@ Set-Variable CBOX_GoogleDrive (New-Object System.Windows.Forms.CheckBox) -Option
 Set-Variable CBOX_VSCode (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 Set-Variable BTN_DownloadNinite (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_OpenNiniteInBrowser (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartNinite (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_OpenNiniteInBrowser (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_OpenNiniteInBrowser (New-Object System.Windows.Forms.Label) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadNinite, 'Download Ninite universal installer for selected applications')

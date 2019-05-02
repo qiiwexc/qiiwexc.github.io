@@ -15,7 +15,18 @@ function Initialize-Startup {
         $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
 
     $BTN_WindowsCleanup.Enabled = $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
-    $BTN_QuickSecurityScan.Enabled = $BTN_FullSecurityScan.Enabled = Test-Path $DefenderExe
+    $BTN_StartSecurityScan.Enabled = Test-Path $DefenderExe
+
+    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
+    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+
+    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
+    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+
+    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
+    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
 
     if ($PS_VERSION -gt 2) {
         try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }

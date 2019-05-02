@@ -16,7 +16,7 @@ function Get-CurrentVersion {
         Add-Log $WRN "Newer version available: v$LatestVersion"
         Get-Update
     }
-    else { Write-Log ' No updates available' }
+    else { Out-Status 'No updates available' }
 }
 
 

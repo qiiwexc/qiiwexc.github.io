@@ -6,15 +6,18 @@ $GRP_DownloadWindows.Location = $GRP_Essentials.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_INSTALLERS.Controls.Add($GRP_DownloadWindows)
 
 Set-Variable BTN_Windows10 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_Windows8 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_Windows7 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_WindowsXPENG (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_WindowsXPRUS (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable LBL_Windows10 (New-Object System.Windows.Forms.Label) -Option Constant
+
+Set-Variable BTN_Windows8 (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_Windows8 (New-Object System.Windows.Forms.Label) -Option Constant
+
+Set-Variable BTN_Windows7 (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_Windows7 (New-Object System.Windows.Forms.Label) -Option Constant
+
+Set-Variable BTN_WindowsXPENG (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsXPENG (New-Object System.Windows.Forms.Label) -Option Constant
+
+Set-Variable BTN_WindowsXPRUS (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsXPRUS (New-Object System.Windows.Forms.Label) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1809-Jan) RUS-ENG x86-x64 -36in1- KMS (AIO) ISO image')

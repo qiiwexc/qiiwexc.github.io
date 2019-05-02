@@ -5,7 +5,6 @@ $GRP_Cleanup.Width = $GRP_WIDTH
 $GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
-
 Set-Variable BTN_EmptyRecycleBin (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_FileCleanup (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_DiskCleanup (New-Object System.Windows.Forms.Button) -Option Constant

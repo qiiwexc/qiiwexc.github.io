@@ -6,11 +6,12 @@ $GRP_Activators.Location = $GRP_ThisUtility.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_Activators)
 
 Set-Variable BTN_DownloadKMSAuto (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadAAct (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadChewWGA (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable CBOX_StartKMSAuto (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadAAct (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartAAct (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadChewWGA (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartChewWGA (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")

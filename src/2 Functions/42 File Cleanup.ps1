@@ -1,25 +1,25 @@
 function Start-FileCleanup {
-    [String]$LogMessage = 'Removing unnecessary files...'
+    Set-Variable LogMessage 'Removing unnecessary files...' -Option Constant
     Add-Log $INF $LogMessage
 
-    [String]$ContainerJava86 = "${env:ProgramFiles(x86)}\Java"
-    [String]$ContainerJava = "$env:ProgramFiles\Java"
-    [String]$ContainerOpera = "$env:ProgramFiles\Opera"
-    [String]$ContainerChrome = "$PROGRAM_FILES_86\Google\Chrome\Application"
-    [String]$ContainerChromeBeta = "$PROGRAM_FILES_86\Google\Chrome Beta\Application"
-    [String]$ContainerChromeDev = "$PROGRAM_FILES_86\Google\Chrome Dev\Application"
-    [String]$ContainerGoogleUpdate = "$PROGRAM_FILES_86\Google\Update"
+    Set-Variable ContainerJava86 "${env:ProgramFiles(x86)}\Java" -Option Constant
+    Set-Variable ContainerJava "$env:ProgramFiles\Java" -Option Constant
+    Set-Variable ContainerOpera "$env:ProgramFiles\Opera" -Option Constant
+    Set-Variable ContainerChrome "$PROGRAM_FILES_86\Google\Chrome\Application" -Option Constant
+    Set-Variable ContainerChromeBeta "$PROGRAM_FILES_86\Google\Chrome Beta\Application" -Option Constant
+    Set-Variable ContainerChromeDev "$PROGRAM_FILES_86\Google\Chrome Dev\Application" -Option Constant
+    Set-Variable ContainerGoogleUpdate "$PROGRAM_FILES_86\Google\Update" -Option Constant
 
-    [String[]]$NonVersionedDirectories = @('Assets', 'Download', 'Install', 'SetupMetrics')
-    [String[]]$Containers = @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate)
+    Set-Variable NonVersionedDirectories @('Assets', 'Download', 'Install', 'Offline', 'SetupMetrics') -Option Constant
+    Set-Variable Containers @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate) -Option Constant
 
-    [String]$NewestJava86 = if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestJava = if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestOpera = if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestChrome = if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestChromeBeta = if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestChromeDev = if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
-    [String]$NewestGoogleUpdate = if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }
+    Set-Variable NewestJava86 $(if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestJava $(if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestOpera $(if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestChrome $(if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestChromeBeta $(if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestChromeDev $(if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable NewestGoogleUpdate $(if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
 
     ForEach ($Path In $Containers) {
         if (Test-Path $Path) {
@@ -32,7 +32,7 @@ function Start-FileCleanup {
         }
     }
 
-    [String[]]$ItemsToDeleteWithExclusions = @(
+    Set-Variable ItemsToDeleteWithExclusions -Option Constant -Value @(
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\locales;en-US.pak,lv.pak,ru.pak"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\locales;en-US.pak,lv.pak,ru.pak"
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Resource*.dll;TeamViewer_Resource_en.dll,TeamViewer_Resource_ru.dll"
@@ -54,6 +54,8 @@ function Start-FileCleanup {
         "$NewestChromeBeta\Locales;en-US.pak,lv.pak,ru.pak"
         "$NewestChromeDev\Locales;en-US.pak,lv.pak,ru.pak"
         "$NewestGoogleUpdate\goopdateres_*.dll;goopdateres_en-GB.dll,goopdateres_en-US.dll,goopdateres_lv.dll,goopdateres_ru.dll"
+        "$env:LocalAppData\Microsoft\Teams\locales;en-US.pak,lv.pak,ru.pak"
+        "$env:LocalAppData\Microsoft\Teams\resources\locales;locale-en-us.json,locale-lv-lv.json,locale-ru-ru.json"
     )
 
     ForEach ($Item In $ItemsToDeleteWithExclusions) {
@@ -66,7 +68,7 @@ function Start-FileCleanup {
         }
     }
 
-    [String[]]$ItemsToDelete = @(
+    Set-Variable ItemsToDelete -Option Constant -Value @(
         "$NewestJava86\COPYRIGHT"
         "$NewestJava86\LICENSE"
         "$NewestJava86\release"
@@ -98,8 +100,17 @@ function Start-FileCleanup {
         "$env:SystemDrive\PerfLogs\*"
         "$env:SystemDrive\temp"
         "$env:SystemDrive\temp\*"
+        "$env:ProgramData\Accenture\Logs\*.log"
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
+        "$env:ProgramData\Kontiki\*.log"
+        "$env:ProgramData\Kollective\*.log"
+        "$env:ProgramData\Pulse Secure\Logging"
+        "$env:ProgramData\SymEFASI"
+        "$env:ProgramData\SymEFASI\*"
+        "$env:ProgramData\UIU"
+        "$env:ProgramData\UIU\*"
+        "$env:ProgramData\Pulse Secure\Logging\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
@@ -179,7 +190,6 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
-        "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files\*"
         "$PROGRAM_FILES_86\CCleaner\Setup"
         "$PROGRAM_FILES_86\CCleaner\Setup\*"
@@ -213,6 +223,8 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Google\Update\Download\*"
         "$PROGRAM_FILES_86\Google\Update\Install"
         "$PROGRAM_FILES_86\Google\Update\Install\*"
+        "$PROGRAM_FILES_86\Google\Update\Offline"
+        "$PROGRAM_FILES_86\Google\Update\Offline\*"
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSES.chromium.html"
@@ -310,6 +322,8 @@ function Start-FileCleanup {
         "$env:ProgramFiles\Google\Update\Download\*"
         "$env:ProgramFiles\Google\Update\Install"
         "$env:ProgramFiles\Google\Update\Install\*"
+        "$env:ProgramFiles\Google\Update\Offline"
+        "$env:ProgramFiles\Google\Update\Offline\*"
         "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
@@ -401,35 +415,6 @@ function Start-FileCleanup {
         "$env:Public\Foxit Software"
         "$env:Public\Foxit Software\*"
         "$env:UserProfile\.VirtualBox\*.log*"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v2.0\UsageLogs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs"
-        "$env:UserProfile\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\Media Player\lastplayed.wpl"
-        "$env:UserProfile\AppData\Local\Microsoft\Office\16.0\WebServiceCache"
-        "$env:UserProfile\AppData\Local\Microsoft\Office\16.0\WebServiceCache\*"
-        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\logs"
-        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\logs\*"
-        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\setup"
-        "$env:UserProfile\AppData\Local\Microsoft\OneDrive\setup\*"
-        "$env:UserProfile\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
-        "$env:UserProfile\AppData\Local\Microsoft\Windows\SettingSync\metastore\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
-        "$env:UserProfile\AppData\Local\Microsoft\Windows\WebCache\*.log"
-        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs"
-        "$env:UserProfile\AppData\LocalLow\AuthClient-4-VIP\logs\*"
-        "$env:UserProfile\AppData\LocalLow\PKI Client"
-        "$env:UserProfile\AppData\LocalLow\PKI Client\*"
-        "$env:UserProfile\AppData\LocalLow\Sun"
-        "$env:UserProfile\AppData\LocalLow\Sun\*"
         "$env:UserProfile\MicrosoftEdgeBackups"
         "$env:UserProfile\MicrosoftEdgeBackups\*"
         "$env:AppData\Code\logs"
@@ -442,7 +427,9 @@ function Start-FileCleanup {
         "$env:AppData\Microsoft\Office\Recent\*"
         "$env:AppData\Microsoft\Skype for Desktop\logs"
         "$env:AppData\Microsoft\Skype for Desktop\logs\*"
-        "$env:AppData\Microsoft\Windows\Recent\*"
+        "$env:AppData\Microsoft Teams\logs"
+        "$env:AppData\Microsoft Teams\logs\*"
+        "$env:AppData\Microsoft\Windows\Recent\*.*"
         "$env:AppData\Opera Software\Opera Stable\*.log"
         "$env:AppData\Opera Software\Opera Stable\Crash Reports"
         "$env:AppData\Opera Software\Opera Stable\Crash Reports\*"
@@ -471,6 +458,43 @@ function Start-FileCleanup {
         "$env:LocalAppData\Google\CrashReports\*"
         "$env:LocalAppData\Google\Software Reporter Tool"
         "$env:LocalAppData\Google\Software Reporter Tool\*"
+        "$env:LocalAppData\LocalLow\AuthClient-4-VIP\logs"
+        "$env:LocalAppData\LocalLow\AuthClient-4-VIP\logs\*"
+        "$env:LocalAppData\LocalLow\PKI Client"
+        "$env:LocalAppData\LocalLow\PKI Client\*"
+        "$env:LocalAppData\LocalLow\Sun"
+        "$env:LocalAppData\LocalLow\Sun\*"
+        "$env:LocalAppData\Microsoft\CLR_v2.0_32\*.log"
+        "$env:LocalAppData\Microsoft\CLR_v2.0_32\UsageLogs"
+        "$env:LocalAppData\Microsoft\CLR_v2.0_32\UsageLogs\*"
+        "$env:LocalAppData\Microsoft\CLR_v2.0\*.log"
+        "$env:LocalAppData\Microsoft\CLR_v2.0\UsageLogs"
+        "$env:LocalAppData\Microsoft\CLR_v2.0\UsageLogs\*"
+        "$env:LocalAppData\Microsoft\CLR_v4.0_32\*.log"
+        "$env:LocalAppData\Microsoft\CLR_v4.0_32\UsageLogs"
+        "$env:LocalAppData\Microsoft\CLR_v4.0_32\UsageLogs\*"
+        "$env:LocalAppData\Microsoft\CLR_v4.0\*.log"
+        "$env:LocalAppData\Microsoft\CLR_v4.0\UsageLogs"
+        "$env:LocalAppData\Microsoft\CLR_v4.0\UsageLogs\*"
+        "$env:LocalAppData\Microsoft\Media Player\lastplayed.wpl"
+        "$env:LocalAppData\Microsoft\Office\16.0\WebServiceCache"
+        "$env:LocalAppData\Microsoft\Office\16.0\WebServiceCache\*"
+        "$env:LocalAppData\Microsoft\OneDrive\logs"
+        "$env:LocalAppData\Microsoft\OneDrive\logs\*"
+        "$env:LocalAppData\Microsoft\OneDrive\setup"
+        "$env:LocalAppData\Microsoft\OneDrive\setup\*"
+        "$env:LocalAppData\Microsoft\Teams\*.log"
+        "$env:LocalAppData\Microsoft\Teams\*.log"
+        "$env:LocalAppData\Microsoft\Teams\current\resources\ThirdPartyNotices.txt"
+        "$env:LocalAppData\Microsoft\Teams\packages\*.nupkg"
+        "$env:LocalAppData\Microsoft\Teams\packages\SquirrelTemp"
+        "$env:LocalAppData\Microsoft\Teams\packages\SquirrelTemp\*"
+        "$env:LocalAppData\Microsoft\Teams\previous"
+        "$env:LocalAppData\Microsoft\Teams\previous\*"
+        "$env:LocalAppData\Microsoft\Windows\Explorer\thumbcache_*.db"
+        "$env:LocalAppData\Microsoft\Windows\SettingSync\metastore\*.log"
+        "$env:LocalAppData\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
+        "$env:LocalAppData\Microsoft\Windows\WebCache\*.log"
         "$env:LocalAppData\PeerDistRepub"
         "$env:LocalAppData\PeerDistRepub\*"
         "$env:LocalAppData\Razer\Synapse3\Log"
@@ -483,7 +507,7 @@ function Start-FileCleanup {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
             Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
-            if (Test-Path $Path) { Out-Failure } else { Out-Success }
+            if (Test-Path $Item) { Out-Failure } else { Out-Success }
         }
     }
 

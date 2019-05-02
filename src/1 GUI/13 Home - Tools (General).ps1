@@ -6,11 +6,12 @@ $GRP_DownloadTools.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_DownloadTools)
 
 Set-Variable BTN_DownloadChrome (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadRufus (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_WindowsPE (New-Object System.Windows.Forms.Button) -Option Constant
-
 Set-Variable CBOX_StartChrome (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_DownloadRufus (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartRufus (New-Object System.Windows.Forms.CheckBox) -Option Constant
+
+Set-Variable BTN_WindowsPE (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsPE (New-Object System.Windows.Forms.Label) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChrome, 'Open Google Chrome Beta download page')

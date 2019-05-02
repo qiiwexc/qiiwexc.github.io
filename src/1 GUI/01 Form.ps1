@@ -13,6 +13,7 @@ $TAB_CONTROL.Controls.AddRange(@($TAB_HOME, $TAB_INSTALLERS, $TAB_DIAGNOSTICS, $
 $FORM.Controls.AddRange(@($LOG, $TAB_CONTROL))
 
 
+
 $FORM.Text = "qiiwexc v$VERSION"
 $FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
 $FORM.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\powershell.exe')
