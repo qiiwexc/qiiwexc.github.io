@@ -1,4 +1,4 @@
-$VERSION = '19.5.2'
+Set-Variable Version ([Version]'19.5.7') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -865,7 +865,7 @@ Set-Variable GRP_Malware (New-Object System.Windows.Forms.GroupBox) -Option Cons
 $GRP_Malware.Text = 'Security'
 $GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_Malware.Width = $GRP_WIDTH
-$GRP_Malware.Location = $GRP_RAMandCPU.Location + "0, $($GRP_RAMandCPU.Height + $INT_NORMAL)"
+$GRP_Malware.Location = $GRP_Windows.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Malware)
 
 Set-Variable BTN_StartSecurityScan (New-Object System.Windows.Forms.Button) -Option Constant
@@ -1089,10 +1089,7 @@ function Initialize-Startup {
     $BTN_WindowsCleanup.Enabled = $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
     $BTN_StartSecurityScan.Enabled = Test-Path $DefenderExe
 
-    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
-    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+    Set-ButtonState
 
     if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
     elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
@@ -1205,16 +1202,10 @@ function Get-CurrentVersion {
     Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
     if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
 
-    try {
-        Set-Variable LatestVersion ((Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString().Replace("`r", '').Replace("`n", '')) -Option Constant
-        Set-Variable UpdateAvailable ([DateTime]::ParseExact($LatestVersion, 'yy.M.d', $Null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $Null)) -Option Constant
-    }
+    try { Set-Variable LatestVersion ([Version](Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString()) -Option Constant }
     catch [Exception] { Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"; Return }
 
-    if ($UpdateAvailable) {
-        Add-Log $WRN "Newer version available: v$LatestVersion"
-        Get-Update
-    }
+    if ($LatestVersion -gt $VERSION) { Add-Log $WRN "Newer version available: v$LatestVersion"; Get-Update }
     else { Out-Status 'No updates available' }
 }
 
@@ -1255,6 +1246,27 @@ function Open-InBrowser {
 }
 
 
+function Set-ButtonState {
+    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
+    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
+    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
+    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
+}
+
+
+function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
+
+function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
+
+function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
+
+function Reset-CmdWindow { $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
+
+function Exit-Script { Reset-CmdWindow; $FORM.Close() }
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download Extract Execute #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
 function Start-DownloadExtractExecute {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"),
@@ -1276,17 +1288,6 @@ function Start-DownloadExtractExecute {
         }
     }
 }
-
-
-function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
-
-function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
-
-function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
-
-function Reset-CmdWindow { $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
-
-function Exit-Script { Reset-CmdWindow; $FORM.Close() }
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download File #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1467,11 +1468,6 @@ function Get-SystemInfo {
 
 
 function Out-SystemInfo {
-    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
-    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
-
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
 
@@ -1523,6 +1519,8 @@ function Out-SystemInfo {
     Add-Log $INF "    $(if ($OS_VERSION -eq 10) {'OS release / '})Build number:  $(if ($OS_VERSION -eq 10) {"v$Win10Release / "})$OS_BUILD"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OfficeInstallType) {`"($OfficeInstallType installation type)`"})"
     Add-Log $INF "    PowerShell version:  $PS_VERSION.$($PSVersionTable.PSVersion.Minor)"
+
+    Set-ButtonState
 }
 
 
@@ -1905,7 +1903,6 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
-        "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Setup Files\*"
         "$PROGRAM_FILES_86\CCleaner\Setup"
         "$PROGRAM_FILES_86\CCleaner\Setup\*"
         "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
@@ -1944,7 +1941,7 @@ function Start-FileCleanup {
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
-        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
+        "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses\*"
         "$PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PROGRAM_FILES_86\Mozilla Maintenance Service\logs"

@@ -2,7 +2,7 @@ Set-Variable GRP_Malware (New-Object System.Windows.Forms.GroupBox) -Option Cons
 $GRP_Malware.Text = 'Security'
 $GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_Malware.Width = $GRP_WIDTH
-$GRP_Malware.Location = $GRP_RAMandCPU.Location + "0, $($GRP_RAMandCPU.Height + $INT_NORMAL)"
+$GRP_Malware.Location = $GRP_Windows.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Malware)
 
 Set-Variable BTN_StartSecurityScan (New-Object System.Windows.Forms.Button) -Option Constant
