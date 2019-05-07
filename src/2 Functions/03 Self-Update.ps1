@@ -6,16 +6,10 @@ function Get-CurrentVersion {
     Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
     if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
 
-    try {
-        Set-Variable LatestVersion ((Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString().Replace("`r", '').Replace("`n", '')) -Option Constant
-        Set-Variable UpdateAvailable ([DateTime]::ParseExact($LatestVersion, 'yy.M.d', $Null) -gt [DateTime]::ParseExact($VERSION, 'yy.M.d', $Null)) -Option Constant
-    }
+    try { Set-Variable LatestVersion ([Version](Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString()) -Option Constant }
     catch [Exception] { Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"; Return }
 
-    if ($UpdateAvailable) {
-        Add-Log $WRN "Newer version available: v$LatestVersion"
-        Get-Update
-    }
+    if ($LatestVersion -gt $VERSION) { Add-Log $WRN "Newer version available: v$LatestVersion"; Get-Update }
     else { Out-Status 'No updates available' }
 }
 

@@ -30,11 +30,6 @@ function Get-SystemInfo {
 
 
 function Out-SystemInfo {
-    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
-    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
-
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
 
@@ -86,4 +81,6 @@ function Out-SystemInfo {
     Add-Log $INF "    $(if ($OS_VERSION -eq 10) {'OS release / '})Build number:  $(if ($OS_VERSION -eq 10) {"v$Win10Release / "})$OS_BUILD"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OfficeInstallType) {`"($OfficeInstallType installation type)`"})"
     Add-Log $INF "    PowerShell version:  $PS_VERSION.$($PSVersionTable.PSVersion.Minor)"
+
+    Set-ButtonState
 }

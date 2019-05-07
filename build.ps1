@@ -22,7 +22,7 @@ function Add-Log {
 function Start-Build {
     Param([Switch]$AndRun)
 
-    [String]$Version = Get-Date -Format 'y.M.d'
+    Set-Variable Version (Get-Date -Format 'y.M.d') -Option Constant
 
     Add-Log $INF 'Build task started'
     Add-Log $INF "Source path = $SourcePath"
@@ -37,7 +37,7 @@ function Start-Build {
     Add-Content $VersionFile "$Version`n" -NoNewline
 
     Add-Log $INF 'Building...'
-    Add-Content $TargetFile "`$VERSION = '$Version'"
+    Add-Content $TargetFile "Set-Variable Version ([Version]'$Version') -Option Constant"
 
     ForEach ($File In Get-ChildItem $SourcePath -Recurse -File) {
         [String]$SectionName = $File.ToString().Replace('.ps1', '').Remove(0, 3)
