@@ -1,11 +1,11 @@
-function Remove-Trash {
+Function Remove-Trash {
     Add-Log $INF 'Emptying Recycle Bin...'
 
     try {
         if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
         else {
             Set-Variable Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }' -Option Constant
-            Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
+            Start-Process 'PowerShell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
         }
     }
     catch [Exception] { Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"; Return }
@@ -14,7 +14,7 @@ function Remove-Trash {
 }
 
 
-function Start-DiskCleanup {
+Function Start-DiskCleanup {
     Add-Log $INF 'Starting disk cleanup utility...'
 
     try { Start-Process 'cleanmgr' '/lowdisk' -Verb RunAs }
@@ -24,7 +24,7 @@ function Start-DiskCleanup {
 }
 
 
-function Start-CCleaner {
+Function Start-CCleaner {
     if (-not $CCleanerWarningShown) {
         Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
         Add-Log $WRN 'Click the button again to continue'
@@ -41,24 +41,24 @@ function Start-CCleaner {
 }
 
 
-function Start-WindowsCleanup {
+Function Start-WindowsCleanup {
     Add-Log $INF 'Starting Windows update cleanup...'
 
     Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Cleaning Windows...'" -Option Constant
 
-    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-function Remove-RestorePoints {
+Function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
     Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Deleting restore points...'" -Option Constant
 
-    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
 
     Out-Success

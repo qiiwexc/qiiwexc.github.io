@@ -1,4 +1,4 @@
-function Initialize-Startup {
+Function Initialize-Startup {
     $FORM.Activate()
     Write-Log "[$((Get-Date).ToString())] Initializing..."
 

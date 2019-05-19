@@ -1,4 +1,4 @@
-function Start-DownloadExtractExecute {
+Function Start-DownloadExtractExecute {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"),
         [String][Parameter(Position = 1)]$FileName,

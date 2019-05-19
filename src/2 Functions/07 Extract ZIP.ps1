@@ -1,4 +1,4 @@
-function Start-Extraction {
+Function Start-Extraction {
     Param(
         [String][Parameter(Position = 0)]$FileName = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
         [Switch][Parameter(Position = 1)][alias('MF')]$MultiFileArchive
@@ -15,15 +15,15 @@ function Start-Extraction {
         New-Item $TargetDirName -ItemType Directory -Force | Out-Null
     }
 
-    Switch -Wildcard ($FileName) {
-        'ChewWGA.zip' { [String]$Executable = 'CW.eXe' }
-        'Office_2013-2019.zip' { [String]$Executable = 'OInstall.exe' }
-        'Victoria.zip' { [String]$Executable = 'Victoria.exe' }
-        'AAct.zip' { [String]$Executable = "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
-        'KMSAuto_Lite.zip' { [String]$Executable = "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
-        'hwmonitor_*' { [String]$Executable = "HWMonitor_$(if ($OS_ARCH -eq '64-bit') {'x64'} else {'x32'}).exe" }
-        'Recuva.zip' { [String]$Executable = "$ExtractionPath\recuva$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" }
-        'SDI_R*' { [String]$Executable = "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})" }
+    [String]$Executable = Switch -Wildcard ($FileName) {
+        'ChewWGA.zip' { 'CW.eXe' }
+        'Office_2013-2019.zip' { 'OInstall.exe' }
+        'AAct.zip' { "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
+        'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
+        'hwmonitor_*' { "HWMonitor_$(if ($OS_ARCH -eq '64-bit') {'x64'} else {'x32'}).exe" }
+        'Recuva.zip' { "$ExtractionPath\recuva$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" }
+        'SDI_R*' { "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})" }
+        Default { $FileName.TrimEnd('.zip') + '.exe' }
     }
 
     Remove-Item "$CURRENT_DIR\$Executable" -Force -ErrorAction SilentlyContinue

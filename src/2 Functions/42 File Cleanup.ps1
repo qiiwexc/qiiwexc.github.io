@@ -1,4 +1,4 @@
-function Start-FileCleanup {
+Function Start-FileCleanup {
     Set-Variable LogMessage 'Removing unnecessary files...' -Option Constant
     Add-Log $INF $LogMessage
 
@@ -100,7 +100,6 @@ function Start-FileCleanup {
         "$env:SystemDrive\PerfLogs\*"
         "$env:SystemDrive\temp"
         "$env:SystemDrive\temp\*"
-        "$env:ProgramData\Accenture\Logs\*.log"
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
         "$env:ProgramData\Kontiki\*.log"

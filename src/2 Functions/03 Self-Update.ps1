@@ -1,4 +1,4 @@
-function Get-CurrentVersion {
+Function Get-CurrentVersion {
     if ($PS_VERSION -le 2) { Add-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"; Return }
 
     Add-Log $INF 'Checking for updates...'
@@ -14,7 +14,7 @@ function Get-CurrentVersion {
 }
 
 
-function Get-Update {
+Function Get-Update {
     Set-Variable DownloadURL 'https://qiiwexc.github.io/d/qiiwexc.ps1' -Option Constant
     Set-Variable TargetFile $MyInvocation.ScriptName -Option Constant
 
@@ -29,7 +29,7 @@ function Get-Update {
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try { Start-Process 'powershell' $TargetFile }
+    try { Start-Process 'PowerShell' $TargetFile }
     catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
 
     Exit-Script

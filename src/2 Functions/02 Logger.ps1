@@ -1,4 +1,4 @@
-function Add-Log {
+Function Add-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
         [String][Parameter(Position = 1)]$Message = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline)
@@ -12,7 +12,7 @@ function Add-Log {
 }
 
 
-function Write-Log {
+Function Write-Log {
     Param([String]$Text = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline))
     if (-not $Text) { Return }
 
@@ -23,7 +23,7 @@ function Write-Log {
 }
 
 
-function Out-Status {
+Function Out-Status {
     Param([String]$Status = $(Write-Host "`n$($MyInvocation.MyCommand.Name): No status specified" -NoNewline))
     if (-not $Status) { Return }
 
@@ -39,6 +39,6 @@ function Out-Status {
 }
 
 
-function Out-Success { Out-Status 'Done' }
+Function Out-Success { Out-Status 'Done' }
 
-function Out-Failure { Out-Status 'Failed' }
+Function Out-Failure { Out-Status 'Failed' }

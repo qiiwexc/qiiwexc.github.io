@@ -1,4 +1,4 @@
-function Start-Download {
+Function Start-Download {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No download URL specified"),
         [String][Parameter(Position = 1)]$SaveAs
