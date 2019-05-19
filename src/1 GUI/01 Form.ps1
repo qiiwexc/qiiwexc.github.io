@@ -16,13 +16,13 @@ $FORM.Controls.AddRange(@($LOG, $TAB_CONTROL))
 
 $FORM.Text = "qiiwexc v$VERSION"
 $FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
-$FORM.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\powershell.exe')
+$FORM.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\PowerShell.exe')
 $FORM.FormBorderStyle = 'Fixed3D'
 $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
 $FORM.Top = $True
 $FORM.Add_Shown( { Initialize-Startup } )
-$FORM.Add_FormClosing( { Reset-CmdWindow } )
+$FORM.Add_FormClosing( { Reset-StateOnExit } )
 
 
 $LOG.Height = 200

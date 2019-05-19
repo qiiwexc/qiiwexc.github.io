@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.5.7') -Option Constant
+Set-Variable Version ([Version]'19.5.20') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -124,6 +124,8 @@ Set-Variable TXT_AV_WARNING "This file may trigger anti-virus false positive!`nI
 
 Set-Variable TIP_START_AFTER_DOWNLOAD "Execute after download has finished`nIf download is a ZIP file, it will get extracted first" -Option Constant
 
+Set-Variable TEMP_DIR "$env:TMP\qiiwexc" -Option Constant
+
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Form #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
@@ -145,13 +147,13 @@ $FORM.Controls.AddRange(@($LOG, $TAB_CONTROL))
 
 $FORM.Text = "qiiwexc v$VERSION"
 $FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
-$FORM.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\powershell.exe')
+$FORM.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\PowerShell.exe')
 $FORM.FormBorderStyle = 'Fixed3D'
 $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
 $FORM.Top = $True
 $FORM.Add_Shown( { Initialize-Startup } )
-$FORM.Add_FormClosing( { Reset-CmdWindow } )
+$FORM.Add_FormClosing( { Reset-StateOnExit } )
 
 
 $LOG.Height = 200
@@ -1070,7 +1072,7 @@ $BTN_RunDefraggler.Add_Click( { Start-Defraggler } )
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Initialize-Startup {
+Function Initialize-Startup {
     $FORM.Activate()
     Write-Log "[$((Get-Date).ToString())] Initializing..."
 
@@ -1146,7 +1148,7 @@ function Initialize-Startup {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Logger #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Add-Log {
+Function Add-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
         [String][Parameter(Position = 1)]$Message = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline)
@@ -1160,7 +1162,7 @@ function Add-Log {
 }
 
 
-function Write-Log {
+Function Write-Log {
     Param([String]$Text = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline))
     if (-not $Text) { Return }
 
@@ -1171,7 +1173,7 @@ function Write-Log {
 }
 
 
-function Out-Status {
+Function Out-Status {
     Param([String]$Status = $(Write-Host "`n$($MyInvocation.MyCommand.Name): No status specified" -NoNewline))
     if (-not $Status) { Return }
 
@@ -1187,14 +1189,14 @@ function Out-Status {
 }
 
 
-function Out-Success { Out-Status 'Done' }
+Function Out-Success { Out-Status 'Done' }
 
-function Out-Failure { Out-Status 'Failed' }
+Function Out-Failure { Out-Status 'Failed' }
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Self-Update #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Get-CurrentVersion {
+Function Get-CurrentVersion {
     if ($PS_VERSION -le 2) { Add-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"; Return }
 
     Add-Log $INF 'Checking for updates...'
@@ -1210,7 +1212,7 @@ function Get-CurrentVersion {
 }
 
 
-function Get-Update {
+Function Get-Update {
     Set-Variable DownloadURL 'https://qiiwexc.github.io/d/qiiwexc.ps1' -Option Constant
     Set-Variable TargetFile $MyInvocation.ScriptName -Option Constant
 
@@ -1225,7 +1227,7 @@ function Get-Update {
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try { Start-Process 'powershell' $TargetFile }
+    try { Start-Process 'PowerShell' $TargetFile }
     catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
 
     Exit-Script
@@ -1234,7 +1236,7 @@ function Get-Update {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Common #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Open-InBrowser {
+Function Open-InBrowser {
     Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
     if (-not $URL) { Return }
 
@@ -1246,7 +1248,7 @@ function Open-InBrowser {
 }
 
 
-function Set-ButtonState {
+Function Set-ButtonState {
     $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
     $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
@@ -1254,20 +1256,20 @@ function Set-ButtonState {
 }
 
 
-function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
+Function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
 
-function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
+Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
 
-function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
+Function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
 
-function Reset-CmdWindow { $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
+Function Reset-StateOnExit { Remove-Item $TEMP_DIR -Recurse -Force -ErrorAction SilentlyContinue; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
 
-function Exit-Script { Reset-CmdWindow; $FORM.Close() }
+Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download Extract Execute #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-DownloadExtractExecute {
+Function Start-DownloadExtractExecute {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"),
         [String][Parameter(Position = 1)]$FileName,
@@ -1292,7 +1294,7 @@ function Start-DownloadExtractExecute {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download File #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-Download {
+Function Start-Download {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No download URL specified"),
         [String][Parameter(Position = 1)]$SaveAs
@@ -1326,7 +1328,7 @@ function Start-Download {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Extract ZIP #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-Extraction {
+Function Start-Extraction {
     Param(
         [String][Parameter(Position = 0)]$FileName = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
         [Switch][Parameter(Position = 1)][alias('MF')]$MultiFileArchive
@@ -1343,15 +1345,15 @@ function Start-Extraction {
         New-Item $TargetDirName -ItemType Directory -Force | Out-Null
     }
 
-    Switch -Wildcard ($FileName) {
-        'ChewWGA.zip' { [String]$Executable = 'CW.eXe' }
-        'Office_2013-2019.zip' { [String]$Executable = 'OInstall.exe' }
-        'Victoria.zip' { [String]$Executable = 'Victoria.exe' }
-        'AAct.zip' { [String]$Executable = "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
-        'KMSAuto_Lite.zip' { [String]$Executable = "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
-        'hwmonitor_*' { [String]$Executable = "HWMonitor_$(if ($OS_ARCH -eq '64-bit') {'x64'} else {'x32'}).exe" }
-        'Recuva.zip' { [String]$Executable = "$ExtractionPath\recuva$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" }
-        'SDI_R*' { [String]$Executable = "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})" }
+    [String]$Executable = Switch -Wildcard ($FileName) {
+        'ChewWGA.zip' { 'CW.eXe' }
+        'Office_2013-2019.zip' { 'OInstall.exe' }
+        'AAct.zip' { "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
+        'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
+        'hwmonitor_*' { "HWMonitor_$(if ($OS_ARCH -eq '64-bit') {'x64'} else {'x32'}).exe" }
+        'Recuva.zip' { "$ExtractionPath\recuva$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" }
+        'SDI_R*' { "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})" }
+        Default { $FileName.TrimEnd('.zip') + '.exe' }
     }
 
     Remove-Item "$CURRENT_DIR\$Executable" -Force -ErrorAction SilentlyContinue
@@ -1386,7 +1388,7 @@ function Start-Extraction {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Execute File #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-File {
+Function Start-File {
     Param(
         [String][Parameter(Position = 0)]$Executable = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No executable specified"),
         [String][Parameter(Position = 1)]$Switches, [Switch]$SilentInstall
@@ -1422,11 +1424,11 @@ function Start-File {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Elevated #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-Elevated {
+Function Start-Elevated {
     if (-not $IS_ELEVATED) {
         Add-Log $INF 'Requesting administrator privileges...'
 
-        try { Start-Process 'powershell' "$($MyInvocation.ScriptName)$(if ($HIDE_CONSOLE) {' -HideConsole'})" -Verb RunAs }
+        try { Start-Process 'PowerShell' "$($MyInvocation.ScriptName)$(if ($HIDE_CONSOLE) {' -HideConsole'})" -Verb RunAs }
         catch [Exception] { Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"; Return }
 
         Exit-Script
@@ -1436,7 +1438,7 @@ function Start-Elevated {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# System Information #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Get-SystemInfo {
+Function Get-SystemInfo {
     Add-Log $INF 'Gathering system information...'
 
     Set-Variable OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version) -Option Constant
@@ -1467,7 +1469,7 @@ function Get-SystemInfo {
 }
 
 
-function Out-SystemInfo {
+Function Out-SystemInfo {
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
 
@@ -1476,31 +1478,31 @@ function Out-SystemInfo {
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
         Add-Log $INF "    Computer model:  $($Computer.Manufacturer) $($Computer.Model) $(if ($Computer.SystemSKUNumber) {"($($Computer.SystemSKUNumber))"})"
-        Add-Log $INF "    RAM available:  $($Computer.RAM) GB"
+        Add-Log $INF "    RAM:  $($Computer.RAM) GB"
     }
 
-    Set-Variable Processors (Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors) -Option Constant
+    [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors)
     if ($Processors) {
         ForEach ($Item In $Processors) {
-            Add-Log $INF "    CPU name:  $($Item.Name)"
-            Add-Log $INF "    Cores / Threads:  $($Item.NumberOfCores) / $($Item.NumberOfLogicalProcessors)"
+            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Name:  $($Item.Name)"
+            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Cores / Threads:  $($Item.NumberOfCores) / $($Item.NumberOfLogicalProcessors)"
         }
     }
 
-    Set-Variable VideoControllers ((Get-WmiObject Win32_VideoController).Name) -Option Constant
-    if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
+    [Array]$VideoControllers = ((Get-WmiObject Win32_VideoController).Name)
+    if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU $([Array]::IndexOf($VideoControllers, $Item)):  $Item" } }
 
     if ($OS_VERSION -gt 7) {
         Set-Variable Storage (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, FirmwareVersion, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
         if ($Storage) {
             ForEach ($Item In $Storage) {
                 $Details = "$($Item.BusType)$(if ($Item.MediaType -ne 'Unspecified') {' ' + $Item.MediaType}), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.FirmwareVersion)"
-                Add-Log $INF "    Storage:  $($Item.FriendlyName) ($Details)"
+                Add-Log $INF "    Storage $([Array]::IndexOf($Storage, $Item)):  $($Item.FriendlyName) ($Details)"
             }
         }
     }
     else {
-        Set-Variable Storage (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, FirmwareRevision, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
+        [Array]$Storage = (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, FirmwareRevision, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
         if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.FirmwareRevision))" } }
     }
 
@@ -1526,13 +1528,13 @@ function Out-SystemInfo {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Set-NiniteButtonState {
+Function Set-NiniteButtonState {
     $CBOX_StartNinite.Enabled = $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or $CBOX_TeamViewer.Checked -or `
         $CBOX_Skype.Checked -or $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked -or $CBOX_GoogleDrive.Checked -or $CBOX_VSCode.Checked
 }
 
 
-function Set-NiniteQuery {
+Function Set-NiniteQuery {
     [String[]]$Array = @()
     if ($CBOX_7zip.Checked) { $Array += $CBOX_7zip.Name }
     if ($CBOX_VLC.Checked) { $Array += $CBOX_VLC.Name }
@@ -1546,7 +1548,7 @@ function Set-NiniteQuery {
 }
 
 
-function Set-NiniteFileName {
+Function Set-NiniteFileName {
     [String[]]$Array = @()
     if ($CBOX_7zip.Checked) { $Array += $CBOX_7zip.Text }
     if ($CBOX_VLC.Checked) { $Array += $CBOX_VLC.Text }
@@ -1562,14 +1564,14 @@ function Set-NiniteFileName {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check HDD #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-DiskCheck {
+Function Start-DiskCheck {
     Param([Switch][Parameter(Position = 0)]$FullScan)
 
     Add-Log $INF 'Starting (C:) disk health check...'
 
     Set-Variable Parameters $(if ($FullScan) { "'/B'" } elseif ($OS_VERSION -gt 7) { "'/scan /perf'" }) -Option Constant
 
-    try { Start-Process 'powershell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Disk check running...'; Start-Process 'chkdsk' $Parameters -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Disk check running...'; Start-Process 'chkdsk' $Parameters -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to check (C:) disk health: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1578,7 +1580,7 @@ function Start-DiskCheck {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check RAM #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-MemoryCheckTool {
+Function Start-MemoryCheckTool {
     Add-Log $INF 'Starting memory checking tool...'
 
     try { Start-Process 'mdsched' }
@@ -1590,34 +1592,34 @@ function Start-MemoryCheckTool {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Windows Health #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Test-WindowsHealth {
+Function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
 
     Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Checking Windows health...'" -Option Constant
 
-    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-function Repair-Windows {
+Function Repair-Windows {
     Add-Log $INF 'Starting Windows repair...'
 
     Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Repairing Windows...'" -Option Constant
 
-    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to repair Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-function Repair-SystemFiles {
+Function Repair-SystemFiles {
     Add-Log $INF 'Starting system file integrity check...'
 
-    try { Start-Process 'powershell' "-Command (Get-Host).UI.RawUI.WindowTitle = 'Checking system files...'; Start-Process 'sfc' '/scannow' -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command (Get-Host).UI.RawUI.WindowTitle = 'Checking system files...'; Start-Process 'sfc' '/scannow' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to check system file integrity: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1626,7 +1628,7 @@ function Repair-SystemFiles {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Security #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-SecurityScan {
+Function Start-SecurityScan {
     Param([Switch][Parameter(Position = 0)]$FullScan)
 
     if ($OS_VERSION -gt 7) {
@@ -1634,7 +1636,7 @@ function Start-SecurityScan {
 
         [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Updating security signatures...'"
 
-        try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow`"" -Wait }
+        try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow`"" -Wait }
         catch [Exception] { Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"; Return }
 
         Out-Success
@@ -1646,7 +1648,7 @@ function Start-SecurityScan {
 
     [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = '$((Get-Culture).TextInfo.ToTitleCase($Mode)) security scan running...'"
 
-    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType $(if ($FullScan) {2} else {1})' -NoNewWindow`"" -Wait }
+    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType $(if ($FullScan) {2} else {1})' -NoNewWindow`"" -Wait }
     catch [Exception] { Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1655,7 +1657,7 @@ function Start-SecurityScan {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-GoogleUpdate {
+Function Start-GoogleUpdate {
     Add-Log $INF 'Starting Google Update...'
 
     try { Start-Process $GoogleUpdateExe '/c' }
@@ -1668,18 +1670,18 @@ function Start-GoogleUpdate {
 }
 
 
-function Start-StoreAppUpdate {
+Function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
 
     Set-Variable Command "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()" -Option Constant
-    try { Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -Wait -WindowStyle Hidden }
+    try { Start-Process 'PowerShell' "-Command `"$Command`"" -Verb RunAs -Wait -WindowStyle Hidden }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-function Set-OfficeInsiderChannel {
+Function Set-OfficeInsiderChannel {
     Add-Log $INF 'Switching Microsoft Office to insider update channel...'
 
     try { Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs }
@@ -1689,7 +1691,7 @@ function Set-OfficeInsiderChannel {
 }
 
 
-function Start-OfficeUpdate {
+Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
     try { Start-Process $OfficeC2RClientExe '/update user' -Wait }
@@ -1699,7 +1701,7 @@ function Start-OfficeUpdate {
 }
 
 
-function Start-WindowsUpdate {
+Function Start-WindowsUpdate {
     Add-Log $INF 'Starting Windows Update...'
 
     try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' -Wait } else { Start-Process 'wuauclt' '/detectnow /updatenow' -Wait } }
@@ -1711,7 +1713,7 @@ function Start-WindowsUpdate {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# File Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Start-FileCleanup {
+Function Start-FileCleanup {
     Set-Variable LogMessage 'Removing unnecessary files...' -Option Constant
     Add-Log $INF $LogMessage
 
@@ -1813,7 +1815,6 @@ function Start-FileCleanup {
         "$env:SystemDrive\PerfLogs\*"
         "$env:SystemDrive\temp"
         "$env:SystemDrive\temp\*"
-        "$env:ProgramData\Accenture\Logs\*.log"
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
         "$env:ProgramData\Kontiki\*.log"
@@ -2236,14 +2237,14 @@ function Start-FileCleanup {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# System Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Remove-Trash {
+Function Remove-Trash {
     Add-Log $INF 'Emptying Recycle Bin...'
 
     try {
         if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
         else {
             Set-Variable Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }' -Option Constant
-            Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
+            Start-Process 'PowerShell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden
         }
     }
     catch [Exception] { Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"; Return }
@@ -2252,7 +2253,7 @@ function Remove-Trash {
 }
 
 
-function Start-DiskCleanup {
+Function Start-DiskCleanup {
     Add-Log $INF 'Starting disk cleanup utility...'
 
     try { Start-Process 'cleanmgr' '/lowdisk' -Verb RunAs }
@@ -2262,7 +2263,7 @@ function Start-DiskCleanup {
 }
 
 
-function Start-CCleaner {
+Function Start-CCleaner {
     if (-not $CCleanerWarningShown) {
         Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
         Add-Log $WRN 'Click the button again to continue'
@@ -2279,24 +2280,24 @@ function Start-CCleaner {
 }
 
 
-function Start-WindowsCleanup {
+Function Start-WindowsCleanup {
     Add-Log $INF 'Starting Windows update cleanup...'
 
     Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Cleaning Windows...'" -Option Constant
 
-    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-function Remove-RestorePoints {
+Function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
     Set-Variable SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Deleting restore points...'" -Option Constant
 
-    try { Start-Process 'powershell' "-Command `"$SetTitle; Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -2305,7 +2306,7 @@ function Remove-RestorePoints {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-function Set-CloudFlareDNS {
+Function Set-CloudFlareDNS {
     Add-Log $WRN 'Internet connection may get interrupted briefly'
     Add-Log $INF 'Changing DNS server to CloudFlare DNS (1.1.1.1 / 1.0.0.1)...'
 
@@ -2316,29 +2317,29 @@ function Set-CloudFlareDNS {
     }
 
     Set-Variable Command "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))" -Option Constant
-    try { Start-Process 'powershell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden }
+    try { Start-Process 'PowerShell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden }
     catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-function Start-DriveOptimization {
+Function Start-DriveOptimization {
     Add-Log $INF 'Starting drive optimization...'
 
     Set-Variable Parameters $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" }) -Option Constant
 
-    try { Start-Process 'powershell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Optimizing drives...'; Start-Process 'defrag' $Parameters -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process 'PowerShell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Optimizing drives...'; Start-Process 'defrag' $Parameters -NoNewWindow`"" -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-function Start-Defraggler {
+Function Start-Defraggler {
     Add-Log $INF 'Starting (C:) drive optimization with Defraggler...'
 
-    try { Start-Process $DefragglerExe 'C:\' -Verb RunAs }
+    try { Start-Process $DefragglerExe 'C:' -Verb RunAs }
     catch [Exception] { Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"; Return }
 
     Out-Success

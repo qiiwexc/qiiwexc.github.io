@@ -7,7 +7,7 @@ Set-Variable INF 'INF' -Option Constant
 Set-Variable WRN 'WRN' -Option Constant
 
 
-function Add-Log {
+Function Add-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN')]$Level,
         [String][Parameter(Position = 1)]$Message = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline)
@@ -19,7 +19,7 @@ function Add-Log {
 }
 
 
-function Start-Build {
+Function Start-Build {
     Param([Switch]$AndRun)
 
     Set-Variable Version (Get-Date -Format 'y.M.d') -Option Constant
@@ -49,7 +49,7 @@ function Start-Build {
 
     Add-Log $INF 'Finished'
 
-    if ($AndRun) { Add-Log $INF "Running $TargetFile"; Start-Process 'powershell' ".\$TargetFile" }
+    if ($AndRun) { Add-Log $INF "Running $TargetFile"; Start-Process 'PowerShell' ".\$TargetFile" }
 }
 
 

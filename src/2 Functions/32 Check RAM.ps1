@@ -1,4 +1,4 @@
-function Start-MemoryCheckTool {
+Function Start-MemoryCheckTool {
     Add-Log $INF 'Starting memory checking tool...'
 
     try { Start-Process 'mdsched' }

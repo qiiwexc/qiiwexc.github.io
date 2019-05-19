@@ -1,4 +1,4 @@
-function Get-SystemInfo {
+Function Get-SystemInfo {
     Add-Log $INF 'Gathering system information...'
 
     Set-Variable OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version) -Option Constant
@@ -29,7 +29,7 @@ function Get-SystemInfo {
 }
 
 
-function Out-SystemInfo {
+Function Out-SystemInfo {
     Add-Log $INF 'Current system information:'
     Add-Log $INF '  Hardware'
 
@@ -38,31 +38,31 @@ function Out-SystemInfo {
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
         Add-Log $INF "    Computer model:  $($Computer.Manufacturer) $($Computer.Model) $(if ($Computer.SystemSKUNumber) {"($($Computer.SystemSKUNumber))"})"
-        Add-Log $INF "    RAM available:  $($Computer.RAM) GB"
+        Add-Log $INF "    RAM:  $($Computer.RAM) GB"
     }
 
-    Set-Variable Processors (Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors) -Option Constant
+    [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors)
     if ($Processors) {
         ForEach ($Item In $Processors) {
-            Add-Log $INF "    CPU name:  $($Item.Name)"
-            Add-Log $INF "    Cores / Threads:  $($Item.NumberOfCores) / $($Item.NumberOfLogicalProcessors)"
+            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Name:  $($Item.Name)"
+            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Cores / Threads:  $($Item.NumberOfCores) / $($Item.NumberOfLogicalProcessors)"
         }
     }
 
-    Set-Variable VideoControllers ((Get-WmiObject Win32_VideoController).Name) -Option Constant
-    if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU name:  $Item" } }
+    [Array]$VideoControllers = ((Get-WmiObject Win32_VideoController).Name)
+    if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU $([Array]::IndexOf($VideoControllers, $Item)):  $Item" } }
 
     if ($OS_VERSION -gt 7) {
         Set-Variable Storage (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, FirmwareVersion, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
         if ($Storage) {
             ForEach ($Item In $Storage) {
                 $Details = "$($Item.BusType)$(if ($Item.MediaType -ne 'Unspecified') {' ' + $Item.MediaType}), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.FirmwareVersion)"
-                Add-Log $INF "    Storage:  $($Item.FriendlyName) ($Details)"
+                Add-Log $INF "    Storage $([Array]::IndexOf($Storage, $Item)):  $($Item.FriendlyName) ($Details)"
             }
         }
     }
     else {
-        Set-Variable Storage (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, FirmwareRevision, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
+        [Array]$Storage = (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, FirmwareRevision, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
         if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.FirmwareRevision))" } }
     }
 

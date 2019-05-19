@@ -69,3 +69,5 @@ Set-Variable TXT_UNCHECKY_INFO 'Unchecky clears adware checkboxes when installin
 Set-Variable TXT_AV_WARNING "This file may trigger anti-virus false positive!`nIt is recommended to disable anti-virus software for download and subsequent use of this file!" -Option Constant
 
 Set-Variable TIP_START_AFTER_DOWNLOAD "Execute after download has finished`nIf download is a ZIP file, it will get extracted first" -Option Constant
+
+Set-Variable TEMP_DIR "$env:TMP\qiiwexc" -Option Constant
