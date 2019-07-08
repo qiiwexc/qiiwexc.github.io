@@ -1,7 +1,7 @@
 Function Start-Extraction {
     Param(
         [String][Parameter(Position = 0)]$FileName = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
-        [Switch][Parameter(Position = 1)][alias('MF')]$MultiFileArchive
+        [Switch][Parameter(Position = 1)][Alias('MF')]$MultiFileArchive
     )
     if (-not $FileName) { Return }
 
@@ -9,7 +9,7 @@ Function Start-Extraction {
 
     Set-Variable ExtractionPath $(if ($MultiFileArchive) { $FileName.TrimEnd('.zip') }) -Option Constant
 
-    [String]$TargetDirName = "$CURRENT_DIR\$ExtractionPath"
+    [String]$TargetDirName = "$ExtractionPath"
     if ($MultiFileArchive) {
         Remove-Item $TargetDirName -Recurse -Force -ErrorAction SilentlyContinue
         New-Item $TargetDirName -ItemType Directory -Force | Out-Null

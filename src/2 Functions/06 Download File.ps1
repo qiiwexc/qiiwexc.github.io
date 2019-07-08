@@ -1,17 +1,19 @@
 Function Start-Download {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No download URL specified"),
-        [String][Parameter(Position = 1)]$SaveAs
+        [String][Parameter(Position = 1)]$SaveAs,
+        [Switch]$Temp
     )
     if (-not $URL) { Return }
 
     Set-Variable DownloadURL $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL }) -Option Constant
     Set-Variable FileName $(if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }) -Option Constant
-    Set-Variable SavePath "$CURRENT_DIR\$FileName" -Option Constant
+    Set-Variable BaseDir $(if ($Temp) { $TEMP_DIR } else { $CURRENT_DIR }) -Option Constant
+    Set-Variable SavePath "$BaseDir\$FileName" -Option Constant
 
-    if (-not (Test-Path $CURRENT_DIR)) {
-        Add-Log $WRN "Download path $CURRENT_DIR does not exist. Creating it."
-        New-Item $CURRENT_DIR -ItemType Directory -Force | Out-Null
+    if (-not (Test-Path $BaseDir)) {
+        Add-Log $WRN "Download path $BaseDir does not exist. Creating it."
+        New-Item $BaseDir -ItemType Directory -Force | Out-Null
     }
 
     Add-Log $INF "Downloading from $DownloadURL"
@@ -26,5 +28,5 @@ Function Start-Download {
     }
     catch [Exception] { Add-Log $ERR "Download failed: $($_.Exception.Message)"; Return }
 
-    Return $FileName
+    Return $SavePath
 }

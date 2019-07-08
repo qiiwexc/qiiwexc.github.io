@@ -47,7 +47,7 @@ $CBOX_StartChrome.Add_CheckStateChanged( { $BTN_DownloadChrome.Text = "Chrome Be
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadChrome.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRufus.Add_Click( {
-        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.5/rufus-3.5p.exe' -Option Constant
+        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.6_BETA/rufus-3.6_BETA.exe' -Option Constant
         if ($PS_VERSION -gt 2) {
             $DownloadedFile = Start-Download $RufusURL
             if ($CBOX_StartRufus.Checked -and $DownloadedFile) { Start-File $DownloadedFile '-g' }

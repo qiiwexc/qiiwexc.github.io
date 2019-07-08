@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.5.20') -Option Constant
+Set-Variable Version ([Version]'19.7.9') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -326,7 +326,7 @@ $CBOX_StartChrome.Add_CheckStateChanged( { $BTN_DownloadChrome.Text = "Chrome Be
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadChrome.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRufus.Add_Click( {
-        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.5/rufus-3.5p.exe' -Option Constant
+        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.6_BETA/rufus-3.6_BETA.exe' -Option Constant
         if ($PS_VERSION -gt 2) {
             $DownloadedFile = Start-Download $RufusURL
             if ($CBOX_StartRufus.Checked -and $DownloadedFile) { Start-File $DownloadedFile '-g' }
@@ -1281,7 +1281,7 @@ Function Start-DownloadExtractExecute {
 
     if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
     else {
-        Set-Variable DownloadedFile (Start-Download $URL $FileName) -Option Constant
+        Set-Variable DownloadedFile (Start-Download $URL $FileName -Temp:$Execute) -Option Constant
 
         if ($DownloadedFile) {
             Set-Variable IsZip ($DownloadedFile.Substring($DownloadedFile.Length - 4) -eq '.zip') -Option Constant
@@ -1297,17 +1297,19 @@ Function Start-DownloadExtractExecute {
 Function Start-Download {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No download URL specified"),
-        [String][Parameter(Position = 1)]$SaveAs
+        [String][Parameter(Position = 1)]$SaveAs,
+        [Switch]$Temp
     )
     if (-not $URL) { Return }
 
     Set-Variable DownloadURL $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL }) -Option Constant
     Set-Variable FileName $(if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }) -Option Constant
-    Set-Variable SavePath "$CURRENT_DIR\$FileName" -Option Constant
+    Set-Variable BaseDir $(if ($Temp) { $TEMP_DIR } else { $CURRENT_DIR }) -Option Constant
+    Set-Variable SavePath "$BaseDir\$FileName" -Option Constant
 
-    if (-not (Test-Path $CURRENT_DIR)) {
-        Add-Log $WRN "Download path $CURRENT_DIR does not exist. Creating it."
-        New-Item $CURRENT_DIR -ItemType Directory -Force | Out-Null
+    if (-not (Test-Path $BaseDir)) {
+        Add-Log $WRN "Download path $BaseDir does not exist. Creating it."
+        New-Item $BaseDir -ItemType Directory -Force | Out-Null
     }
 
     Add-Log $INF "Downloading from $DownloadURL"
@@ -1322,7 +1324,7 @@ Function Start-Download {
     }
     catch [Exception] { Add-Log $ERR "Download failed: $($_.Exception.Message)"; Return }
 
-    Return $FileName
+    Return $SavePath
 }
 
 
@@ -1331,7 +1333,7 @@ Function Start-Download {
 Function Start-Extraction {
     Param(
         [String][Parameter(Position = 0)]$FileName = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
-        [Switch][Parameter(Position = 1)][alias('MF')]$MultiFileArchive
+        [Switch][Parameter(Position = 1)][Alias('MF')]$MultiFileArchive
     )
     if (-not $FileName) { Return }
 
@@ -1339,7 +1341,7 @@ Function Start-Extraction {
 
     Set-Variable ExtractionPath $(if ($MultiFileArchive) { $FileName.TrimEnd('.zip') }) -Option Constant
 
-    [String]$TargetDirName = "$CURRENT_DIR\$ExtractionPath"
+    [String]$TargetDirName = "$ExtractionPath"
     if ($MultiFileArchive) {
         Remove-Item $TargetDirName -Recurse -Force -ErrorAction SilentlyContinue
         New-Item $TargetDirName -ItemType Directory -Force | Out-Null
@@ -2094,7 +2096,6 @@ Function Start-FileCleanup {
         "$env:WinDir\Panther\UnattendGC\*.log"
         "$env:WinDir\Performance\WinSAT\*.log"
         "$env:WinDir\security\logs\*.log"
-        "$env:WinDir\security\logs\*.old"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"

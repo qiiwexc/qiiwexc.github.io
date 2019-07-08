@@ -379,7 +379,6 @@ Function Start-FileCleanup {
         "$env:WinDir\Panther\UnattendGC\*.log"
         "$env:WinDir\Performance\WinSAT\*.log"
         "$env:WinDir\security\logs\*.log"
-        "$env:WinDir\security\logs\*.old"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
