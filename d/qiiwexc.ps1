@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.7.9') -Option Constant
+Set-Variable Version ([Version]'19.7.14') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -616,7 +616,7 @@ $GRP_DownloadWindows.Controls.AddRange(
 
 $BTN_Windows10.Text = 'Windows 10 (v1809)'
 $BTN_Windows10.Location = $BTN_INIT_LOCATION
-$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2019/01/windows-10-v1809-jan-rus-eng-x86-x64.html' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2019/07/windows-10-v1903-jun-rus-eng-x86-x64.html' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
