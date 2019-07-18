@@ -8,22 +8,22 @@ Function Start-File {
     if ($Switches -and $SilentInstall) {
         Add-Log $INF "Installing '$Executable' silently..."
 
-        try { Start-Process "$CURRENT_DIR\$Executable" $Switches -Wait }
+        try { Start-Process $Executable $Switches -Wait }
         catch [Exception] { Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"; Return }
 
         Out-Success
 
         Add-Log $INF "Removing $Executable..."
-        Remove-Item "$CURRENT_DIR\$Executable" -Force
+        Remove-Item $Executable -Force
         Out-Success
     }
     else {
         Add-Log $INF "Starting '$Executable'..."
 
         try {
-            if ($Switches) { Start-Process "$CURRENT_DIR\$Executable" $Switches }
-            elseif ($Executable -Match 'SDI_R*') { Start-Process "$CURRENT_DIR\$Executable" -WorkingDirectory "$CURRENT_DIR\$($Executable.Split('\')[0])" }
-            else { Start-Process "$CURRENT_DIR\$Executable" }
+            if ($Switches) { Start-Process $Executable $Switches }
+            elseif ($Executable -Match 'SDI_R*') { Start-Process $Executable -WorkingDirectory $Executable.Split('\')[0] }
+            else { Start-Process $Executable }
         }
         catch [Exception] { Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"; Return }
 
