@@ -9,12 +9,13 @@ Function Start-Extraction {
 
     Set-Variable ExtractionPath $(if ($MultiFileArchive) { $FileName.TrimEnd('.zip') }) -Option Constant
 
-    [String]$TargetDirName = "$ExtractionPath"
+    [String]$TargetDirName = $ExtractionPath
     if ($MultiFileArchive) {
         Remove-Item $TargetDirName -Recurse -Force -ErrorAction SilentlyContinue
         New-Item $TargetDirName -ItemType Directory -Force | Out-Null
     }
 
+    # FIXME: relative vs absolute path
     [String]$Executable = Switch -Wildcard ($FileName) {
         'ChewWGA.zip' { 'CW.eXe' }
         'Office_2013-2019.zip' { 'OInstall.exe' }
@@ -26,11 +27,11 @@ Function Start-Extraction {
         Default { $FileName.TrimEnd('.zip') + '.exe' }
     }
 
-    Remove-Item "$CURRENT_DIR\$Executable" -Force -ErrorAction SilentlyContinue
+    Remove-Item $Executable -Force -ErrorAction SilentlyContinue
 
     try {
-        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory("$CURRENT_DIR\$FileName", $TargetDirName) }
-        else { ForEach ($Item In $Shell.NameSpace("$CURRENT_DIR\$FileName").Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
+        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($FileName, $TargetDirName) }
+        else { ForEach ($Item In $Shell.NameSpace($FileName).Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to extract' $FileName': $($_.Exception.Message)"
@@ -49,7 +50,7 @@ Function Start-Extraction {
     Add-Log $INF "Files extracted to $TargetDirName"
 
     Add-Log $INF "Removing $FileName..."
-    Remove-Item "$CURRENT_DIR\$FileName" -Force
+    Remove-Item $FileName -Force
     Out-Success
 
     Return $Executable
