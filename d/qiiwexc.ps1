@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.7.16') -Option Constant
+Set-Variable Version ([Version]'19.7.18') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -326,7 +326,7 @@ $CBOX_StartChrome.Add_CheckStateChanged( { $BTN_DownloadChrome.Text = "Chrome Be
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadChrome.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRufus.Add_Click( {
-        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.6_BETA/rufus-3.6_BETA.exe' -Option Constant
+        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.6/rufus-3.6.exe' -Option Constant
         if ($PS_VERSION -gt 2) {
             $DownloadedFile = Start-Download $RufusURL
             if ($CBOX_StartRufus.Checked -and $DownloadedFile) { Start-File $DownloadedFile '-g' }
@@ -1341,12 +1341,13 @@ Function Start-Extraction {
 
     Set-Variable ExtractionPath $(if ($MultiFileArchive) { $FileName.TrimEnd('.zip') }) -Option Constant
 
-    [String]$TargetDirName = "$ExtractionPath"
+    [String]$TargetDirName = $ExtractionPath
     if ($MultiFileArchive) {
         Remove-Item $TargetDirName -Recurse -Force -ErrorAction SilentlyContinue
         New-Item $TargetDirName -ItemType Directory -Force | Out-Null
     }
 
+    # FIXME: relative vs absolute path
     [String]$Executable = Switch -Wildcard ($FileName) {
         'ChewWGA.zip' { 'CW.eXe' }
         'Office_2013-2019.zip' { 'OInstall.exe' }
@@ -1358,11 +1359,11 @@ Function Start-Extraction {
         Default { $FileName.TrimEnd('.zip') + '.exe' }
     }
 
-    Remove-Item "$CURRENT_DIR\$Executable" -Force -ErrorAction SilentlyContinue
+    Remove-Item $Executable -Force -ErrorAction SilentlyContinue
 
     try {
-        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory("$CURRENT_DIR\$FileName", $TargetDirName) }
-        else { ForEach ($Item In $Shell.NameSpace("$CURRENT_DIR\$FileName").Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
+        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($FileName, $TargetDirName) }
+        else { ForEach ($Item In $Shell.NameSpace($FileName).Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to extract' $FileName': $($_.Exception.Message)"
@@ -1381,7 +1382,7 @@ Function Start-Extraction {
     Add-Log $INF "Files extracted to $TargetDirName"
 
     Add-Log $INF "Removing $FileName..."
-    Remove-Item "$CURRENT_DIR\$FileName" -Force
+    Remove-Item $FileName -Force
     Out-Success
 
     Return $Executable
@@ -1400,22 +1401,22 @@ Function Start-File {
     if ($Switches -and $SilentInstall) {
         Add-Log $INF "Installing '$Executable' silently..."
 
-        try { Start-Process "$CURRENT_DIR\$Executable" $Switches -Wait }
+        try { Start-Process $Executable $Switches -Wait }
         catch [Exception] { Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"; Return }
 
         Out-Success
 
         Add-Log $INF "Removing $Executable..."
-        Remove-Item "$CURRENT_DIR\$Executable" -Force
+        Remove-Item $Executable -Force
         Out-Success
     }
     else {
         Add-Log $INF "Starting '$Executable'..."
 
         try {
-            if ($Switches) { Start-Process "$CURRENT_DIR\$Executable" $Switches }
-            elseif ($Executable -Match 'SDI_R*') { Start-Process "$CURRENT_DIR\$Executable" -WorkingDirectory "$CURRENT_DIR\$($Executable.Split('\')[0])" }
-            else { Start-Process "$CURRENT_DIR\$Executable" }
+            if ($Switches) { Start-Process $Executable $Switches }
+            elseif ($Executable -Match 'SDI_R*') { Start-Process $Executable -WorkingDirectory $Executable.Split('\')[0] }
+            else { Start-Process $Executable }
         }
         catch [Exception] { Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"; Return }
 
@@ -2093,7 +2094,6 @@ Function Start-FileCleanup {
         "$env:WinDir\Logs\*"
         "$env:WinDir\Microsoft.NET\Framework\*\*.log"
         "$env:WinDir\Microsoft.NET\Framework64\*\*.log"
-        "$env:WinDir\Panther\UnattendGC\*.log"
         "$env:WinDir\Performance\WinSAT\*.log"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
