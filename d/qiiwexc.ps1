@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.7.18') -Option Constant
+Set-Variable Version ([Version]'19.9.10') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1758,7 +1758,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\7-Zip\Lang;en.ttt,lv.txt,ru.txt"
         "$env:ProgramFiles\CCleaner\Lang;lang-1049.dll,lang-1062.dll"
         "$env:ProgramFiles\Defraggler\Lang;lang-1049.dll,lang-1062.dll"
-        "$env:ProgramFiles\FileZilla FTP Client\locales;lv_LV,ru"
         "$env:ProgramFiles\Google\Drive\Languages;lv,ru"
         "$env:ProgramFiles\Malwarebytes\Anti-Malware\Languages;lang_ru.qm"
         "$env:ProgramFiles\Microsoft VS Code\locales;en-US.pak,lv.pak,ru.pak"
