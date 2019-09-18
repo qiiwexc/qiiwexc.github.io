@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.9.10') -Option Constant
+Set-Variable Version ([Version]'19.9.18') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -493,7 +493,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute 'sdi-tool.org/releases/SDI_R1904.zip' -MultiFile -Execute:$CBOX_StartSDI.Checked } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute 'sdi-tool.org/releases/SDI_R1909.zip' -MultiFile -Execute:$CBOX_StartSDI.Checked } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
@@ -1858,7 +1858,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Mozilla"
         "$env:ProgramData\Mozilla\*"
         "$env:ProgramData\NVIDIA Corporation\NvFBCPlugin"
-        "$env:ProgramData\NVIDIA Corporation\NvFBCPlugin\*"
         "$env:ProgramData\NVIDIA Corporation\umdlogs"
         "$env:ProgramData\NVIDIA Corporation\umdlogs\*"
         "$env:ProgramData\NVIDIA\*.log_backup1"
