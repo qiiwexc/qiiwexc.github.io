@@ -1,27 +1,25 @@
 Set-Variable GRP_Updates (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Updates.Text = 'Updates'
-$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4 + $INT_BTN_SHORT
+$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4
 $GRP_Updates.Width = $GRP_WIDTH
 $GRP_Updates.Location = $GRP_INIT_LOCATION
 $TAB_MAINTENANCE.Controls.Add($GRP_Updates)
 
 Set-Variable BTN_GoogleUpdate (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_OfficeInsider (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_UpdateOffice (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_WindowsUpdate (New-Object System.Windows.Forms.Button) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_GoogleUpdate, 'Silently update Google Chrome and other Google software')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateStoreApps, 'Update Microsoft Store apps')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OfficeInsider, 'Switch Microsoft Office to insider update channel')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateOffice, 'Update Microsoft Office (for C2R installations only)')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsUpdate, 'Check for Windows updates, download and install if available')
 
-$BTN_GoogleUpdate.Font = $BTN_UpdateStoreApps.Font = $BTN_OfficeInsider.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
-$BTN_GoogleUpdate.Height = $BTN_UpdateStoreApps.Height = $BTN_OfficeInsider.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
-$BTN_GoogleUpdate.Width = $BTN_UpdateStoreApps.Width = $BTN_OfficeInsider.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
+$BTN_GoogleUpdate.Font = $BTN_UpdateStoreApps.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
+$BTN_GoogleUpdate.Height = $BTN_UpdateStoreApps.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
+$BTN_GoogleUpdate.Width = $BTN_UpdateStoreApps.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
 
-$GRP_Updates.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps, $BTN_OfficeInsider, $BTN_UpdateOffice, $BTN_WindowsUpdate))
+$GRP_Updates.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps, $BTN_UpdateOffice, $BTN_WindowsUpdate))
 
 
 
@@ -35,12 +33,8 @@ $BTN_UpdateStoreApps.Location = $BTN_GoogleUpdate.Location + $SHIFT_BTN_NORMAL
 $BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
 
 
-$BTN_OfficeInsider.Text = "Become Office insider$REQUIRES_ELEVATION"
-$BTN_OfficeInsider.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
-$BTN_OfficeInsider.Add_Click( { Set-OfficeInsiderChannel } )
-
 $BTN_UpdateOffice.Text = 'Update Microsoft Office'
-$BTN_UpdateOffice.Location = $BTN_OfficeInsider.Location + $SHIFT_BTN_SHORT
+$BTN_UpdateOffice.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
 $BTN_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
 
 
