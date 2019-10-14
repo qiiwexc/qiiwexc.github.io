@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.9.18') -Option Constant
+Set-Variable Version ([Version]'19.10.15') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -115,8 +115,6 @@ Set-Variable FONT_NAME 'Microsoft Sans Serif' -Option Constant
 Set-Variable BTN_FONT "$FONT_NAME, 10" -Option Constant
 
 
-Set-Variable TXT_QUICK_SCAN 'Quick scan' -Option Constant
-Set-Variable TXT_FULL_SCAN 'Full scan' -Option Constant
 Set-Variable TXT_START_AFTER_DOWNLOAD 'Start after download' -Option Constant
 Set-Variable TXT_OPENS_IN_BROWSER 'Opens in the browser' -Option Constant
 Set-Variable TXT_UNCHECKY_INFO 'Unchecky clears adware checkboxes when installing software' -Option Constant
@@ -279,13 +277,10 @@ $CBOX_StartChewWGA.Add_CheckStateChanged( { $BTN_DownloadChewWGA.Text = "ChewWGA
 
 Set-Variable GRP_DownloadTools (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_DownloadTools.Text = 'Tools (General)'
-$GRP_DownloadTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
+$GRP_DownloadTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_DownloadTools.Width = $GRP_WIDTH
 $GRP_DownloadTools.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_DownloadTools)
-
-Set-Variable BTN_DownloadChrome (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartChrome (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 Set-Variable BTN_DownloadRufus (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartRufus (New-Object System.Windows.Forms.CheckBox) -Option Constant
@@ -293,40 +288,24 @@ Set-Variable CBOX_StartRufus (New-Object System.Windows.Forms.CheckBox) -Option 
 Set-Variable BTN_WindowsPE (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsPE (New-Object System.Windows.Forms.Label) -Option Constant
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChrome, 'Open Google Chrome Beta download page')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRufus, 'Download Rufus - a bootable USB creator')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsPE, 'Download Windows PE (Live CD) ISO image based on Windows 8')
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartChrome, $TIP_START_AFTER_DOWNLOAD)
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartRufus, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_DownloadChrome.Font = $BTN_DownloadRufus.Font = $BTN_WindowsPE.Font = $BTN_FONT
-$BTN_DownloadChrome.Height = $BTN_DownloadRufus.Height = $BTN_WindowsPE.Height = $BTN_HEIGHT
-$BTN_DownloadChrome.Width = $BTN_DownloadRufus.Width = $BTN_WindowsPE.Width = $BTN_WIDTH
+$BTN_DownloadRufus.Font = $BTN_WindowsPE.Font = $BTN_FONT
+$BTN_DownloadRufus.Height = $BTN_WindowsPE.Height = $BTN_HEIGHT
+$BTN_DownloadRufus.Width = $BTN_WindowsPE.Width = $BTN_WIDTH
 
-$CBOX_StartChrome.Checked = $CBOX_StartRufus.Checked = $True
-$CBOX_StartChrome.Size = $CBOX_StartRufus.Size = $LBL_WindowsPE.Size = $CBOX_SIZE
-$CBOX_StartChrome.Text = $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartRufus.Size = $LBL_WindowsPE.Size = $CBOX_SIZE
 
-$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadChrome, $CBOX_StartChrome, $BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
-
-
-
-$BTN_DownloadChrome.Text = "Chrome Beta$REQUIRES_ELEVATION"
-$BTN_DownloadChrome.Location = $BTN_INIT_LOCATION
-$BTN_DownloadChrome.Add_Click( {
-        Set-Variable ChromeBetaURL 'dl.google.com/tag/s/appguid%3D%7B8237E44A-0054-442C-B6B6-EA0509993955%7D%26usagestats%3D1%26appname%3DGoogle%2520Chrome%2520Beta%26needsadmin%3Dprefers%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe' -Option Constant
-        Start-DownloadExtractExecute $ChromeBetaURL -Execute:$CBOX_StartChrome.Checked
-    } )
-
-$CBOX_StartChrome.Location = $BTN_DownloadChrome.Location + $SHIFT_CBOX_EXECUTE
-$CBOX_StartChrome.Add_CheckStateChanged( { $BTN_DownloadChrome.Text = "Chrome Beta$(if ($CBOX_StartChrome.Checked) {$REQUIRES_ELEVATION})" } )
+$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
 
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
-$BTN_DownloadRufus.Location = $BTN_DownloadChrome.Location + $SHIFT_BTN_LONG
+$BTN_DownloadRufus.Location = $BTN_INIT_LOCATION
 $BTN_DownloadRufus.Add_Click( {
-        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.6/rufus-3.6.exe' -Option Constant
+        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.8/rufus-3.8.exe' -Option Constant
         if ($PS_VERSION -gt 2) {
             $DownloadedFile = Start-Download $RufusURL
             if ($CBOX_StartRufus.Checked -and $DownloadedFile) { Start-File $DownloadedFile '-g' }
@@ -335,6 +314,8 @@ $BTN_DownloadRufus.Add_Click( {
     } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
+$CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartRufus.Checked = $True
 $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (bootable USB)$(if ($CBOX_StartRufus.Checked) {$REQUIRES_ELEVATION})" } )
 
 
@@ -350,7 +331,7 @@ $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
 
 Set-Variable GRP_Ninite (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Ninite.Text = 'Ninite'
-$GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 8 + $INT_SHORT + $INT_BTN_LONG * 2
+$GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 6 + $INT_SHORT + $INT_BTN_LONG * 2
 $GRP_Ninite.Width = $GRP_WIDTH
 $GRP_Ninite.Location = $GRP_INIT_LOCATION
 $TAB_INSTALLERS.Controls.Add($GRP_Ninite)
@@ -361,8 +342,6 @@ Set-Variable CBOX_VLC (New-Object System.Windows.Forms.CheckBox) -Option Constan
 Set-Variable CBOX_TeamViewer (New-Object System.Windows.Forms.CheckBox) -Option Constant
 Set-Variable CBOX_Skype (New-Object System.Windows.Forms.CheckBox) -Option Constant
 Set-Variable CBOX_qBittorrent (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable CBOX_GoogleDrive (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable CBOX_VSCode (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 Set-Variable BTN_DownloadNinite (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartNinite (New-Object System.Windows.Forms.CheckBox) -Option Constant
@@ -379,12 +358,12 @@ $BTN_DownloadNinite.Height = $BTN_OpenNiniteInBrowser.Height = $BTN_HEIGHT
 $BTN_DownloadNinite.Width = $BTN_OpenNiniteInBrowser.Width = $BTN_WIDTH
 
 $CBOX_Chrome.Checked = $CBOX_7zip.Checked = $CBOX_VLC.Checked = $CBOX_TeamViewer.Checked = $CBOX_Skype.Checked = $CBOX_StartNinite.Checked = $True
-$CBOX_Chrome.Size = $CBOX_7zip.Size = $CBOX_VLC.Size = $CBOX_TeamViewer.Size = $CBOX_Skype.Size = $CBOX_qBittorrent.Size = `
-    $CBOX_GoogleDrive.Size = $CBOX_VSCode.Size = $CBOX_StartNinite.Size = $LBL_OpenNiniteInBrowser.Size = $CBOX_SIZE
+$CBOX_Chrome.Size = $CBOX_7zip.Size = $CBOX_VLC.Size = $CBOX_TeamViewer.Size = $CBOX_Skype.Size = `
+    $CBOX_qBittorrent.Size = $CBOX_StartNinite.Size = $LBL_OpenNiniteInBrowser.Size = $CBOX_SIZE
 
 $GRP_Ninite.Controls.AddRange(
     @($BTN_DownloadNinite, $BTN_OpenNiniteInBrowser, $LBL_OpenNiniteInBrowser, $CBOX_StartNinite,
-        $CBOX_7zip, $CBOX_VLC, $CBOX_TeamViewer, $CBOX_Skype, $CBOX_Chrome, $CBOX_qBittorrent, $CBOX_GoogleDrive, $CBOX_VSCode)
+        $CBOX_7zip, $CBOX_VLC, $CBOX_TeamViewer, $CBOX_Skype, $CBOX_Chrome, $CBOX_qBittorrent)
 )
 
 
@@ -419,19 +398,9 @@ $CBOX_qBittorrent.Name = 'qbittorrent'
 $CBOX_qBittorrent.Location = $CBOX_Skype.Location + $SHIFT_CBOX_SHORT
 $CBOX_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-$CBOX_GoogleDrive.Text = 'Google Drive'
-$CBOX_GoogleDrive.Name = 'googlebackupandsync'
-$CBOX_GoogleDrive.Location = $CBOX_qBittorrent.Location + $SHIFT_CBOX_SHORT
-$CBOX_GoogleDrive.Add_CheckStateChanged( { Set-NiniteButtonState } )
-
-$CBOX_VSCode.Text = 'Visual Studio Code'
-$CBOX_VSCode.Name = 'vscode'
-$CBOX_VSCode.Location = $CBOX_GoogleDrive.Location + $SHIFT_CBOX_SHORT
-$CBOX_VSCode.Add_CheckStateChanged( { Set-NiniteButtonState } )
-
 
 $BTN_DownloadNinite.Text = "Download selected$REQUIRES_ELEVATION"
-$BTN_DownloadNinite.Location = $CBOX_VSCode.Location + $SHIFT_BTN_SHORT
+$BTN_DownloadNinite.Location = $CBOX_qBittorrent.Location + $SHIFT_BTN_SHORT
 $BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) -Execute:$CBOX_StartNinite.Checked } )
 
 $CBOX_StartNinite.Text = $TXT_START_AFTER_DOWNLOAD
@@ -691,10 +660,10 @@ $BTN_CheckDisk.Text = "Check (C:) disk health$REQUIRES_ELEVATION"
 $BTN_CheckDisk.Location = $BTN_INIT_LOCATION
 $BTN_CheckDisk.Add_Click( { Start-DiskCheck $RBTN_FullDiskCheck.Checked } )
 
-$RBTN_QuickDiskCheck.Text = $TXT_QUICK_SCAN
+$RBTN_QuickDiskCheck.Text = 'Quick scan'
 $RBTN_QuickDiskCheck.Location = $BTN_CheckDisk.Location + $SHIFT_RBTN_QUICK_SCAN
 
-$RBTN_FullDiskCheck.Text = $TXT_FULL_SCAN
+$RBTN_FullDiskCheck.Text = 'Full scan'
 $RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_SCAN
 
 
@@ -865,22 +834,16 @@ $BTN_CheckSystemFiles.Add_Click( { Repair-SystemFiles } )
 
 Set-Variable GRP_Malware (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Malware.Text = 'Security'
-$GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
+$GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_LONG + $INT_BTN_NORMAL
 $GRP_Malware.Width = $GRP_WIDTH
 $GRP_Malware.Location = $GRP_Windows.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Malware)
 
 Set-Variable BTN_StartSecurityScan (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable RBTN_QuickSecurityScan (New-Object System.Windows.Forms.RadioButton) -Option Constant
-Set-Variable RBTN_FullSecurityScan (New-Object System.Windows.Forms.RadioButton) -Option Constant
-
 Set-Variable BTN_DownloadMalwarebytes (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartMalwarebytes (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StartSecurityScan, 'Start security scan')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_QuickSecurityScan, 'Perform a quick security scan')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_FullSecurityScan, 'Perform a full security scan')
-
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`nMalwarebytes helps remove malware and adware")
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartMalwarebytes, $TIP_START_AFTER_DOWNLOAD)
 
@@ -888,29 +851,20 @@ $BTN_StartSecurityScan.Font = $BTN_DownloadMalwarebytes.Font = $BTN_FONT
 $BTN_StartSecurityScan.Height = $BTN_DownloadMalwarebytes.Height = $BTN_HEIGHT
 $BTN_StartSecurityScan.Width = $BTN_DownloadMalwarebytes.Width = $BTN_WIDTH
 
-$RBTN_QuickSecurityScan.Size = $RBTN_FullSecurityScan.Size = $RBTN_SIZE
-$RBTN_QuickSecurityScan.Checked = $CBOX_StartMalwarebytes.Checked = $True
-
-$GRP_Malware.Controls.AddRange(@($BTN_StartSecurityScan, $RBTN_QuickSecurityScan, $RBTN_FullSecurityScan, $BTN_DownloadMalwarebytes, $CBOX_StartMalwarebytes))
+$GRP_Malware.Controls.AddRange(@($BTN_StartSecurityScan, $BTN_DownloadMalwarebytes, $CBOX_StartMalwarebytes))
 
 
-
-$BTN_StartSecurityScan.Text = 'Perform security scan'
+$BTN_StartSecurityScan.Text = 'Perform a security scan'
 $BTN_StartSecurityScan.Location = $BTN_INIT_LOCATION
-$BTN_StartSecurityScan.Add_Click( { Start-SecurityScan $RBTN_FullSecurityScan.Checked } )
-
-$RBTN_QuickSecurityScan.Text = $TXT_QUICK_SCAN
-$RBTN_QuickSecurityScan.Location = $BTN_StartSecurityScan.Location + $SHIFT_RBTN_QUICK_SCAN
-
-$RBTN_FullSecurityScan.Text = $TXT_FULL_SCAN
-$RBTN_FullSecurityScan.Location = $RBTN_QuickSecurityScan.Location + $SHIFT_RBTN_FULL_SCAN
+$BTN_StartSecurityScan.Add_Click( { Start-SecurityScan } )
 
 
 $BTN_DownloadMalwarebytes.Text = "Malwarebytes$REQUIRES_ELEVATION"
-$BTN_DownloadMalwarebytes.Location = $BTN_StartSecurityScan.Location + $SHIFT_BTN_LONG
+$BTN_DownloadMalwarebytes.Location = $BTN_StartSecurityScan.Location + $SHIFT_BTN_NORMAL
 $BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadExtractExecute 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' -Execute:$CBOX_StartMalwarebytes.Checked } )
 
 $CBOX_StartMalwarebytes.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartMalwarebytes.Checked = $True
 $CBOX_StartMalwarebytes.Size = $CBOX_SIZE
 $CBOX_StartMalwarebytes.Location = $BTN_DownloadMalwarebytes.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartMalwarebytes.Add_CheckStateChanged( { $BTN_DownloadMalwarebytes.Text = "Malwarebytes$(if ($CBOX_StartMalwarebytes.Checked) {$REQUIRES_ELEVATION})" } )
@@ -920,28 +874,26 @@ $CBOX_StartMalwarebytes.Add_CheckStateChanged( { $BTN_DownloadMalwarebytes.Text 
 
 Set-Variable GRP_Updates (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Updates.Text = 'Updates'
-$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4 + $INT_BTN_SHORT
+$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4
 $GRP_Updates.Width = $GRP_WIDTH
 $GRP_Updates.Location = $GRP_INIT_LOCATION
 $TAB_MAINTENANCE.Controls.Add($GRP_Updates)
 
 Set-Variable BTN_GoogleUpdate (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_OfficeInsider (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_UpdateOffice (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_WindowsUpdate (New-Object System.Windows.Forms.Button) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_GoogleUpdate, 'Silently update Google Chrome and other Google software')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateStoreApps, 'Update Microsoft Store apps')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OfficeInsider, 'Switch Microsoft Office to insider update channel')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateOffice, 'Update Microsoft Office (for C2R installations only)')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsUpdate, 'Check for Windows updates, download and install if available')
 
-$BTN_GoogleUpdate.Font = $BTN_UpdateStoreApps.Font = $BTN_OfficeInsider.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
-$BTN_GoogleUpdate.Height = $BTN_UpdateStoreApps.Height = $BTN_OfficeInsider.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
-$BTN_GoogleUpdate.Width = $BTN_UpdateStoreApps.Width = $BTN_OfficeInsider.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
+$BTN_GoogleUpdate.Font = $BTN_UpdateStoreApps.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
+$BTN_GoogleUpdate.Height = $BTN_UpdateStoreApps.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
+$BTN_GoogleUpdate.Width = $BTN_UpdateStoreApps.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
 
-$GRP_Updates.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps, $BTN_OfficeInsider, $BTN_UpdateOffice, $BTN_WindowsUpdate))
+$GRP_Updates.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps, $BTN_UpdateOffice, $BTN_WindowsUpdate))
 
 
 
@@ -955,12 +907,8 @@ $BTN_UpdateStoreApps.Location = $BTN_GoogleUpdate.Location + $SHIFT_BTN_NORMAL
 $BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
 
 
-$BTN_OfficeInsider.Text = "Become Office insider$REQUIRES_ELEVATION"
-$BTN_OfficeInsider.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
-$BTN_OfficeInsider.Add_Click( { Set-OfficeInsiderChannel } )
-
 $BTN_UpdateOffice.Text = 'Update Microsoft Office'
-$BTN_UpdateOffice.Location = $BTN_OfficeInsider.Location + $SHIFT_BTN_SHORT
+$BTN_UpdateOffice.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
 $BTN_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
 
 
@@ -1249,7 +1197,7 @@ Function Open-InBrowser {
 
 
 Function Set-ButtonState {
-    $BTN_UpdateOffice.Enabled = $BTN_OfficeInsider.Enabled = $OfficeInstallType -eq 'C2R'
+    $BTN_UpdateOffice.Enabled = $OfficeInstallType -eq 'C2R'
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
     $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
     $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
@@ -1532,8 +1480,8 @@ Function Out-SystemInfo {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Set-NiniteButtonState {
-    $CBOX_StartNinite.Enabled = $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or $CBOX_TeamViewer.Checked -or `
-        $CBOX_Skype.Checked -or $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked -or $CBOX_GoogleDrive.Checked -or $CBOX_VSCode.Checked
+    $CBOX_StartNinite.Enabled = $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or `
+        $CBOX_TeamViewer.Checked -or $CBOX_Skype.Checked -or $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked
 }
 
 
@@ -1545,8 +1493,6 @@ Function Set-NiniteQuery {
     if ($CBOX_Skype.Checked) { $Array += $CBOX_Skype.Name }
     if ($CBOX_Chrome.Checked) { $Array += $CBOX_Chrome.Name }
     if ($CBOX_qBittorrent.Checked) { $Array += $CBOX_qBittorrent.Name }
-    if ($CBOX_GoogleDrive.Checked) { $Array += $CBOX_GoogleDrive.Name }
-    if ($CBOX_VSCode.Checked) { $Array += $CBOX_VSCode.Name }
     Return $Array -Join '-'
 }
 
@@ -1559,8 +1505,6 @@ Function Set-NiniteFileName {
     if ($CBOX_Skype.Checked) { $Array += $CBOX_Skype.Text }
     if ($CBOX_Chrome.Checked) { $Array += $CBOX_Chrome.Text }
     if ($CBOX_qBittorrent.Checked) { $Array += $CBOX_qBittorrent.Text }
-    if ($CBOX_GoogleDrive.Checked) { $Array += $CBOX_GoogleDrive.Text }
-    if ($CBOX_VSCode.Checked) { $Array += $CBOX_VSCode.Text }
     Return "Ninite $($Array -Join ' ') Installer.exe"
 }
 
@@ -1632,8 +1576,6 @@ Function Repair-SystemFiles {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Security #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-SecurityScan {
-    Param([Switch][Parameter(Position = 0)]$FullScan)
-
     if ($OS_VERSION -gt 7) {
         Add-Log $INF 'Updating security signatures...'
 
@@ -1645,14 +1587,12 @@ Function Start-SecurityScan {
         Out-Success
     }
 
-    Set-Variable Mode $(if ($FullScan) { 'full' } else { 'quick' }) -Option Constant
+    Add-Log $INF "Performing a security scan..."
 
-    Add-Log $INF "Starting $Mode security scan..."
+    [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Security scan is running...'"
 
-    [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = '$((Get-Culture).TextInfo.ToTitleCase($Mode)) security scan running...'"
-
-    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType $(if ($FullScan) {2} else {1})' -NoNewWindow`"" -Wait }
-    catch [Exception] { Add-Log $ERR "Failed to perform a $Mode security scan: $($_.Exception.Message)"; Return }
+    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType 2' -NoNewWindow`"" -Wait }
+    catch [Exception] { Add-Log $ERR "Failed to perform a security scan: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1684,20 +1624,13 @@ Function Start-StoreAppUpdate {
 }
 
 
-Function Set-OfficeInsiderChannel {
-    Add-Log $INF 'Switching Microsoft Office to insider update channel...'
-
-    try { Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs }
-    catch [Exception] { Add-Log $ERR "Failed to switch Microsoft Office update channel: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
-    try { Start-Process $OfficeC2RClientExe '/update user' -Wait }
+    try {
+        Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs
+        Start-Process $OfficeC2RClientExe '/update user' -Wait
+    }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1819,7 +1752,6 @@ Function Start-FileCleanup {
         "$env:SystemDrive\temp\*"
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
-        "$env:ProgramData\Kontiki\*.log"
         "$env:ProgramData\Kollective\*.log"
         "$env:ProgramData\Pulse Secure\Logging"
         "$env:ProgramData\SymEFASI"

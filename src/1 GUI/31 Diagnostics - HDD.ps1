@@ -41,10 +41,10 @@ $BTN_CheckDisk.Text = "Check (C:) disk health$REQUIRES_ELEVATION"
 $BTN_CheckDisk.Location = $BTN_INIT_LOCATION
 $BTN_CheckDisk.Add_Click( { Start-DiskCheck $RBTN_FullDiskCheck.Checked } )
 
-$RBTN_QuickDiskCheck.Text = $TXT_QUICK_SCAN
+$RBTN_QuickDiskCheck.Text = 'Quick scan'
 $RBTN_QuickDiskCheck.Location = $BTN_CheckDisk.Location + $SHIFT_RBTN_QUICK_SCAN
 
-$RBTN_FullDiskCheck.Text = $TXT_FULL_SCAN
+$RBTN_FullDiskCheck.Text = 'Full scan'
 $RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_SCAN
 
 

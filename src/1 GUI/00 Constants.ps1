@@ -61,8 +61,6 @@ Set-Variable FONT_NAME 'Microsoft Sans Serif' -Option Constant
 Set-Variable BTN_FONT "$FONT_NAME, 10" -Option Constant
 
 
-Set-Variable TXT_QUICK_SCAN 'Quick scan' -Option Constant
-Set-Variable TXT_FULL_SCAN 'Full scan' -Option Constant
 Set-Variable TXT_START_AFTER_DOWNLOAD 'Start after download' -Option Constant
 Set-Variable TXT_OPENS_IN_BROWSER 'Opens in the browser' -Option Constant
 Set-Variable TXT_UNCHECKY_INFO 'Unchecky clears adware checkboxes when installing software' -Option Constant

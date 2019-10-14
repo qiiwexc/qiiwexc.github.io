@@ -22,20 +22,13 @@ Function Start-StoreAppUpdate {
 }
 
 
-Function Set-OfficeInsiderChannel {
-    Add-Log $INF 'Switching Microsoft Office to insider update channel...'
-
-    try { Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs }
-    catch [Exception] { Add-Log $ERR "Failed to switch Microsoft Office update channel: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
-    try { Start-Process $OfficeC2RClientExe '/update user' -Wait }
+    try {
+        Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs
+        Start-Process $OfficeC2RClientExe '/update user' -Wait
+    }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
 
     Out-Success
