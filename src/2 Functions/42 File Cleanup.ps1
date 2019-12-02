@@ -107,7 +107,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\SymEFASI\*"
         "$env:ProgramData\UIU"
         "$env:ProgramData\UIU\*"
-        "$env:ProgramData\Pulse Secure\Logging\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
