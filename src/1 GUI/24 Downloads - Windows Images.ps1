@@ -20,7 +20,7 @@ Set-Variable LBL_WindowsXPENG (New-Object System.Windows.Forms.Label) -Option Co
 Set-Variable BTN_WindowsXPRUS (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsXPRUS (New-Object System.Windows.Forms.Label) -Option Constant
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1809-Jan) RUS-ENG x86-x64 -36in1- KMS (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1909) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 with Update 3 RUS-ENG x86-x64 -16in1- Activated (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v5 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXPENG, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
@@ -39,9 +39,9 @@ $GRP_DownloadWindows.Controls.AddRange(
 
 
 
-$BTN_Windows10.Text = 'Windows 10 (v1809)'
+$BTN_Windows10.Text = 'Windows 10 (v1909)'
 $BTN_Windows10.Location = $BTN_INIT_LOCATION
-$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2019/07/windows-10-v1903-jun-rus-eng-x86-x64.html' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2019/12/windows-10-v1909-rus-eng-x86-x64-28in1.html' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 

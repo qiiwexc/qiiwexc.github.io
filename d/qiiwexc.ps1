@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.10.15') -Option Constant
+Set-Variable Version ([Version]'19.12.2') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -564,7 +564,7 @@ Set-Variable LBL_WindowsXPENG (New-Object System.Windows.Forms.Label) -Option Co
 Set-Variable BTN_WindowsXPRUS (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsXPRUS (New-Object System.Windows.Forms.Label) -Option Constant
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1809-Jan) RUS-ENG x86-x64 -36in1- KMS (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1909) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 with Update 3 RUS-ENG x86-x64 -16in1- Activated (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v5 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXPENG, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
@@ -583,9 +583,9 @@ $GRP_DownloadWindows.Controls.AddRange(
 
 
 
-$BTN_Windows10.Text = 'Windows 10 (v1809)'
+$BTN_Windows10.Text = 'Windows 10 (v1909)'
 $BTN_Windows10.Location = $BTN_INIT_LOCATION
-$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2019/07/windows-10-v1903-jun-rus-eng-x86-x64.html' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2019/12/windows-10-v1909-rus-eng-x86-x64-28in1.html' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
@@ -1444,7 +1444,7 @@ Function Out-SystemInfo {
     if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU $([Array]::IndexOf($VideoControllers, $Item)):  $Item" } }
 
     if ($OS_VERSION -gt 7) {
-        Set-Variable Storage (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, FirmwareVersion, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant
+        [Array]$Storage = (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, FirmwareVersion, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
         if ($Storage) {
             ForEach ($Item In $Storage) {
                 $Details = "$($Item.BusType)$(if ($Item.MediaType -ne 'Unspecified') {' ' + $Item.MediaType}), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.FirmwareVersion)"
@@ -1758,7 +1758,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\SymEFASI\*"
         "$env:ProgramData\UIU"
         "$env:ProgramData\UIU\*"
-        "$env:ProgramData\Pulse Secure\Logging\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
