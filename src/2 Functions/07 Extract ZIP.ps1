@@ -18,6 +18,7 @@ Function Start-Extraction {
     # FIXME: relative vs absolute path
     [String]$Executable = Switch -Wildcard ($FileName) {
         'ChewWGA.zip' { 'CW.eXe' }
+        'DriverStoreExplorer*' { 'Rapr.exe' }
         'Office_2013-2019.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
