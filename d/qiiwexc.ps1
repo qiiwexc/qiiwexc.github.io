@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.12.2') -Option Constant
+Set-Variable Version ([Version]'19.12.4') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -277,29 +277,33 @@ $CBOX_StartChewWGA.Add_CheckStateChanged( { $BTN_DownloadChewWGA.Text = "ChewWGA
 
 Set-Variable GRP_DownloadTools (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_DownloadTools.Text = 'Tools (General)'
-$GRP_DownloadTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
+$GRP_DownloadTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
 $GRP_DownloadTools.Width = $GRP_WIDTH
 $GRP_DownloadTools.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_DownloadTools)
 
 Set-Variable BTN_DownloadRufus (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable BTN_DownloadDSE (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable CBOX_StartRufus (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable CBOX_StartDSE (New-Object System.Windows.Forms.CheckBox) -Option Constant
 
 Set-Variable BTN_WindowsPE (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable LBL_WindowsPE (New-Object System.Windows.Forms.Label) -Option Constant
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRufus, 'Download Rufus - a bootable USB creator')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadDSE, 'Download Driver Store Explorer')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsPE, 'Download Windows PE (Live CD) ISO image based on Windows 8')
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartRufus, $TIP_START_AFTER_DOWNLOAD)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartDSE, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_DownloadRufus.Font = $BTN_WindowsPE.Font = $BTN_FONT
-$BTN_DownloadRufus.Height = $BTN_WindowsPE.Height = $BTN_HEIGHT
-$BTN_DownloadRufus.Width = $BTN_WindowsPE.Width = $BTN_WIDTH
+$BTN_DownloadRufus.Font = $BTN_DownloadDSE.Font = $BTN_WindowsPE.Font = $BTN_FONT
+$BTN_DownloadRufus.Height = $BTN_DownloadDSE.Height = $BTN_WindowsPE.Height = $BTN_HEIGHT
+$BTN_DownloadRufus.Width = $BTN_DownloadDSE.Width = $BTN_WindowsPE.Width = $BTN_WIDTH
 
-$CBOX_StartRufus.Size = $LBL_WindowsPE.Size = $CBOX_SIZE
+$CBOX_StartRufus.Size = $CBOX_StartDSE.Size = $LBL_WindowsPE.Size = $CBOX_SIZE
 
-$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
+$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BTN_DownloadDSE, $CBOX_StartDSE, $BTN_WindowsPE, $LBL_WindowsPE))
 
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
@@ -319,8 +323,18 @@ $CBOX_StartRufus.Checked = $True
 $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (bootable USB)$(if ($CBOX_StartRufus.Checked) {$REQUIRES_ELEVATION})" } )
 
 
+$BTN_DownloadDSE.Text = "Driver Store Explorer$REQUIRES_ELEVATION"
+$BTN_DownloadDSE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
+$BTN_DownloadDSE.Add_Click( { Start-DownloadExtractExecute 'github.com/lostindark/DriverStoreExplorer/releases/download/v0.10.58/DriverStoreExplorer.v0.10.58.zip' -MultiFile -Execute:$CBOX_StartDSE.Checked } )
+
+$CBOX_StartDSE.Location = $BTN_DownloadDSE.Location + $SHIFT_CBOX_EXECUTE
+$CBOX_StartDSE.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartDSE.Checked = $True
+$CBOX_StartDSE.Add_CheckStateChanged( { $BTN_DownloadDSE.Text = "Driver Store Explorer$(if ($CBOX_StartDSE.Checked) {$REQUIRES_ELEVATION})" } )
+
+
 $BTN_WindowsPE.Text = 'Windows PE (Live CD)'
-$BTN_WindowsPE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
+$BTN_WindowsPE.Location = $BTN_DownloadDSE.Location + $SHIFT_BTN_LONG
 $BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_' } )
 
 $LBL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
@@ -1298,6 +1312,7 @@ Function Start-Extraction {
     # FIXME: relative vs absolute path
     [String]$Executable = Switch -Wildcard ($FileName) {
         'ChewWGA.zip' { 'CW.eXe' }
+        'DriverStoreExplorer*' { 'Rapr.exe' }
         'Office_2013-2019.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
@@ -2101,7 +2116,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Google\Software Reporter Tool"
         "$env:LocalAppData\Google\Software Reporter Tool\*"
         "$env:LocalAppData\LocalLow\AuthClient-4-VIP\logs"
-        "$env:LocalAppData\LocalLow\AuthClient-4-VIP\logs\*"
         "$env:LocalAppData\LocalLow\PKI Client"
         "$env:LocalAppData\LocalLow\PKI Client\*"
         "$env:LocalAppData\LocalLow\Sun"
