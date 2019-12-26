@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.12.4') -Option Constant
+Set-Variable Version ([Version]'19.12.27') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -398,7 +398,7 @@ $CBOX_VLC.Location = $CBOX_7zip.Location + $SHIFT_CBOX_SHORT
 $CBOX_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
 $CBOX_TeamViewer.Text = 'TeamViewer'
-$CBOX_TeamViewer.Name = 'teamviewer14'
+$CBOX_TeamViewer.Name = 'teamviewer15'
 $CBOX_TeamViewer.Location = $CBOX_VLC.Location + $SHIFT_CBOX_SHORT
 $CBOX_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
@@ -1768,7 +1768,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
         "$env:ProgramData\Kollective\*.log"
-        "$env:ProgramData\Pulse Secure\Logging"
         "$env:ProgramData\SymEFASI"
         "$env:ProgramData\SymEFASI\*"
         "$env:ProgramData\UIU"

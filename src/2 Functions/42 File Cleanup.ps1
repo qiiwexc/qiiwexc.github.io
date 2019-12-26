@@ -102,7 +102,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
         "$env:ProgramData\Kollective\*.log"
-        "$env:ProgramData\Pulse Secure\Logging"
         "$env:ProgramData\SymEFASI"
         "$env:ProgramData\SymEFASI\*"
         "$env:ProgramData\UIU"
