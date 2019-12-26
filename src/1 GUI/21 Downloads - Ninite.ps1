@@ -53,7 +53,7 @@ $CBOX_VLC.Location = $CBOX_7zip.Location + $SHIFT_CBOX_SHORT
 $CBOX_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
 $CBOX_TeamViewer.Text = 'TeamViewer'
-$CBOX_TeamViewer.Name = 'teamviewer14'
+$CBOX_TeamViewer.Name = 'teamviewer15'
 $CBOX_TeamViewer.Location = $CBOX_VLC.Location + $SHIFT_CBOX_SHORT
 $CBOX_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
