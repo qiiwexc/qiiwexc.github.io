@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'19.12.27') -Option Constant
+Set-Variable Version ([Version]'20.1.22') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -888,36 +888,29 @@ $CBOX_StartMalwarebytes.Add_CheckStateChanged( { $BTN_DownloadMalwarebytes.Text 
 
 Set-Variable GRP_Updates (New-Object System.Windows.Forms.GroupBox) -Option Constant
 $GRP_Updates.Text = 'Updates'
-$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4
+$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Updates.Width = $GRP_WIDTH
 $GRP_Updates.Location = $GRP_INIT_LOCATION
 $TAB_MAINTENANCE.Controls.Add($GRP_Updates)
 
-Set-Variable BTN_GoogleUpdate (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_UpdateOffice (New-Object System.Windows.Forms.Button) -Option Constant
 Set-Variable BTN_WindowsUpdate (New-Object System.Windows.Forms.Button) -Option Constant
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_GoogleUpdate, 'Silently update Google Chrome and other Google software')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateStoreApps, 'Update Microsoft Store apps')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateOffice, 'Update Microsoft Office (for C2R installations only)')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsUpdate, 'Check for Windows updates, download and install if available')
 
-$BTN_GoogleUpdate.Font = $BTN_UpdateStoreApps.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
-$BTN_GoogleUpdate.Height = $BTN_UpdateStoreApps.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
-$BTN_GoogleUpdate.Width = $BTN_UpdateStoreApps.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
+$BTN_UpdateStoreApps.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
+$BTN_UpdateStoreApps.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
+$BTN_UpdateStoreApps.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
 
-$GRP_Updates.Controls.AddRange(@($BTN_GoogleUpdate, $BTN_UpdateStoreApps, $BTN_UpdateOffice, $BTN_WindowsUpdate))
+$GRP_Updates.Controls.AddRange(@($BTN_UpdateStoreApps, $BTN_UpdateOffice, $BTN_WindowsUpdate))
 
-
-
-$BTN_GoogleUpdate.Text = 'Update Google Chrome'
-$BTN_GoogleUpdate.Location = $BTN_INIT_LOCATION
-$BTN_GoogleUpdate.Add_Click( { Start-GoogleUpdate } )
 
 
 $BTN_UpdateStoreApps.Text = "Update Store apps$REQUIRES_ELEVATION"
-$BTN_UpdateStoreApps.Location = $BTN_GoogleUpdate.Location + $SHIFT_BTN_NORMAL
+$BTN_UpdateStoreApps.Location = $BTN_INIT_LOCATION
 $BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
 
 
@@ -1214,7 +1207,6 @@ Function Set-ButtonState {
     $BTN_UpdateOffice.Enabled = $OfficeInstallType -eq 'C2R'
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
     $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
 }
 
 
@@ -1426,7 +1418,6 @@ Function Get-SystemInfo {
     Set-Variable CCleanerExe "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" -Option Constant -Scope Script
     Set-Variable DefragglerExe "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" -Option Constant -Scope Script
     Set-Variable DefenderExe "$env:ProgramFiles\Windows Defender\MpCmdRun.exe" -Option Constant -Scope Script
-    Set-Variable GoogleUpdateExe "$PROGRAM_FILES_86\Google\Update\GoogleUpdate.exe" -Option Constant -Scope Script
 
     Set-Variable LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'") -Option Constant
     Set-Variable SystemPartition ($LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } }) -Option Constant -Scope Script
@@ -1614,19 +1605,6 @@ Function Start-SecurityScan {
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Start-GoogleUpdate {
-    Add-Log $INF 'Starting Google Update...'
-
-    try { Start-Process $GoogleUpdateExe '/c' }
-    catch [Exception] { Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"; Return }
-
-    try { Start-Process $GoogleUpdateExe '/ua /installsource scheduler' }
-    catch [Exception] { Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
 
 Function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
@@ -2114,7 +2092,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Google\CrashReports\*"
         "$env:LocalAppData\Google\Software Reporter Tool"
         "$env:LocalAppData\Google\Software Reporter Tool\*"
-        "$env:LocalAppData\LocalLow\AuthClient-4-VIP\logs"
         "$env:LocalAppData\LocalLow\PKI Client"
         "$env:LocalAppData\LocalLow\PKI Client\*"
         "$env:LocalAppData\LocalLow\Sun"
