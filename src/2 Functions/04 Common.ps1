@@ -14,7 +14,6 @@ Function Set-ButtonState {
     $BTN_UpdateOffice.Enabled = $OfficeInstallType -eq 'C2R'
     $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
     $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
-    $BTN_GoogleUpdate.Enabled = Test-Path $GoogleUpdateExe
 }
 
 

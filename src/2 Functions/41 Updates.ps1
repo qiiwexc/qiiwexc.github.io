@@ -1,16 +1,3 @@
-Function Start-GoogleUpdate {
-    Add-Log $INF 'Starting Google Update...'
-
-    try { Start-Process $GoogleUpdateExe '/c' }
-    catch [Exception] { Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"; Return }
-
-    try { Start-Process $GoogleUpdateExe '/ua /installsource scheduler' }
-    catch [Exception] { Add-Log $ERR "Failed to update Google software: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 Function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
 
