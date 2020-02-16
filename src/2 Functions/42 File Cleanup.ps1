@@ -371,7 +371,6 @@ Function Start-FileCleanup {
         "$env:WinDir\Logs\*"
         "$env:WinDir\Microsoft.NET\Framework\*\*.log"
         "$env:WinDir\Microsoft.NET\Framework64\*\*.log"
-        "$env:WinDir\Performance\WinSAT\*.log"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"
