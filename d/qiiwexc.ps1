@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'20.1.22') -Option Constant
+Set-Variable Version ([Version]'20.2.16') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -611,7 +611,7 @@ $LBL_Windows8.Location = $BTN_Windows8.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows7.Text = 'Windows 7 SP1'
 $BTN_Windows7.Location = $BTN_Windows8.Location + $SHIFT_BTN_LONG
-$BTN_Windows7.Add_Click( { Open-InBrowser 'http://monkrus.ws/2018/03/windows-7-sp1-ie11-rus-eng-x86-x64.html' } )
+$BTN_Windows7.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' } )
 
 $LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
 
@@ -2015,7 +2015,6 @@ Function Start-FileCleanup {
         "$env:WinDir\Logs\*"
         "$env:WinDir\Microsoft.NET\Framework\*\*.log"
         "$env:WinDir\Microsoft.NET\Framework64\*\*.log"
-        "$env:WinDir\Performance\WinSAT\*.log"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\*.log"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs"
         "$env:WinDir\ServiceProfiles\NetworkService\AppData\Local\Microsoft\CLR_v2.0_32\UsageLogs\*"

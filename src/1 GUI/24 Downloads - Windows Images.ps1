@@ -53,7 +53,7 @@ $LBL_Windows8.Location = $BTN_Windows8.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows7.Text = 'Windows 7 SP1'
 $BTN_Windows7.Location = $BTN_Windows8.Location + $SHIFT_BTN_LONG
-$BTN_Windows7.Add_Click( { Open-InBrowser 'http://monkrus.ws/2018/03/windows-7-sp1-ie11-rus-eng-x86-x64.html' } )
+$BTN_Windows7.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' } )
 
 $LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
 
