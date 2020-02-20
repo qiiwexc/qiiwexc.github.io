@@ -1,4 +1,4 @@
-Set-Variable Version ([Version]'20.2.16') -Option Constant
+Set-Variable Version ([Version]'20.2.21') -Option Constant
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -2091,7 +2091,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Google\CrashReports\*"
         "$env:LocalAppData\Google\Software Reporter Tool"
         "$env:LocalAppData\Google\Software Reporter Tool\*"
-        "$env:LocalAppData\LocalLow\PKI Client"
         "$env:LocalAppData\LocalLow\PKI Client\*"
         "$env:LocalAppData\LocalLow\Sun"
         "$env:LocalAppData\LocalLow\Sun\*"

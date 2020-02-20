@@ -1,7 +1,13 @@
+Set-Variable Version (Get-Date -Format 'y.M.d') -Option Constant
+
 Set-Variable SourcePath '.\src' -Option Constant
 Set-Variable DistPath '.\d' -Option Constant
 Set-Variable VersionFile "$DistPath\version" -Option Constant
 Set-Variable TargetFile "$DistPath\qiiwexc.ps1" -Option Constant
+Set-Variable WebPageFile ".\index.html" -Option Constant
+
+Set-Variable HtmlTitle "<title>qiiwexc $Version</title>" -Option Constant
+Set-Variable HtmlHeader "<h2><a href=`"d/qiiwexc.ps1`">qiiwexc $Version</a></h2>" -Option Constant
 
 Set-Variable INF 'INF' -Option Constant
 Set-Variable WRN 'WRN' -Option Constant
@@ -22,8 +28,6 @@ Function Add-Log {
 Function Start-Build {
     Param([Switch]$AndRun)
 
-    Set-Variable Version (Get-Date -Format 'y.M.d') -Option Constant
-
     Add-Log $INF 'Build task started'
     Add-Log $INF "Source path = $SourcePath"
     Add-Log $INF "Target file = $TargetFile"
@@ -34,7 +38,10 @@ Function Start-Build {
     New-Item $DistPath -ItemType Directory -Force | Out-Null
 
     Add-Log $INF 'Writing version file'
-    Add-Content $VersionFile "$Version`n" -NoNewline
+    Set-Content $VersionFile "$Version`n" -NoNewline
+
+    Add-Log $INF 'Updating version on the web page'
+    (Get-Content $WebPageFile) | ForEach-Object { $_ -Replace "<title>.+", $HtmlTitle -Replace "<h2>.+", $HtmlHeader } | Set-Content $WebPageFile
 
     Add-Log $INF 'Building...'
     Add-Content $TargetFile "Set-Variable Version ([Version]'$Version') -Option Constant"
