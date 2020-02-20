@@ -447,7 +447,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Google\CrashReports\*"
         "$env:LocalAppData\Google\Software Reporter Tool"
         "$env:LocalAppData\Google\Software Reporter Tool\*"
-        "$env:LocalAppData\LocalLow\PKI Client"
         "$env:LocalAppData\LocalLow\PKI Client\*"
         "$env:LocalAppData\LocalLow\Sun"
         "$env:LocalAppData\LocalLow\Sun\*"
