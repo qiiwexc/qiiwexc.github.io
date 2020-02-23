@@ -1,7 +1,7 @@
 Function Add-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
-        [String][Parameter(Position = 1)]$Message = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline)
+        [String][Parameter(Position = 1)]$Message = $(Write-Host -NoNewline "`n$($MyInvocation.MyCommand.Name): Log message missing")
     )
     if (-not $Message) { Return }
 
@@ -13,10 +13,10 @@ Function Add-Log {
 
 
 Function Write-Log {
-    Param([String]$Text = $(Write-Host "`n$($MyInvocation.MyCommand.Name): Log message missing" -NoNewline))
+    Param([String]$Text = $(Write-Host -NoNewline "`n$($MyInvocation.MyCommand.Name): Log message missing"))
     if (-not $Text) { Return }
 
-    Write-Host $Text -NoNewline
+    Write-Host -NoNewline $Text
     $LOG.AppendText($Text)
     $LOG.SelectionColor = 'black'
     $LOG.ScrollToCaret();
@@ -24,12 +24,12 @@ Function Write-Log {
 
 
 Function Out-Status {
-    Param([String]$Status = $(Write-Host "`n$($MyInvocation.MyCommand.Name): No status specified" -NoNewline))
+    Param([String]$Status = $(Write-Host -NoNewline "`n$($MyInvocation.MyCommand.Name): No status specified"))
     if (-not $Status) { Return }
 
     Write-Log ' '
 
-    Set-Variable LogDefaultFont $LOG.Font -Option Constant
+    Set-Variable -Option Constant LogDefaultFont $LOG.Font
     $LOG.SelectionFont = New-Object Drawing.Font($LogDefaultFont.FontFamily, $LogDefaultFont.Size, [Drawing.FontStyle]::Underline)
 
     Write-Log $Status

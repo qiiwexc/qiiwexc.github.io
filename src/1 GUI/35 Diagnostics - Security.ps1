@@ -1,13 +1,13 @@
-Set-Variable GRP_Malware (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_Malware        (New-Object System.Windows.Forms.GroupBox)
 $GRP_Malware.Text = 'Security'
 $GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_LONG + $INT_BTN_NORMAL
 $GRP_Malware.Width = $GRP_WIDTH
 $GRP_Malware.Location = $GRP_Windows.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Malware)
 
-Set-Variable BTN_StartSecurityScan (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadMalwarebytes (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartMalwarebytes (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_StartSecurityScan    (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_DownloadMalwarebytes (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartMalwarebytes   (New-Object System.Windows.Forms.CheckBox)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StartSecurityScan, 'Start security scan')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`nMalwarebytes helps remove malware and adware")

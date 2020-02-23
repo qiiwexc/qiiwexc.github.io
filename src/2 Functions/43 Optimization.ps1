@@ -8,8 +8,8 @@ Function Set-CloudFlareDNS {
         Return
     }
 
-    Set-Variable Command "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))" -Option Constant
-    try { Start-Process 'PowerShell' "-Command `"$Command`"" -Verb RunAs -WindowStyle Hidden }
+    Set-Variable -Option Constant Command "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))"
+    try { Start-Process -Verb RunAs -WindowStyle Hidden 'PowerShell' "-Command `"$Command`"" }
     catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -19,9 +19,9 @@ Function Set-CloudFlareDNS {
 Function Start-DriveOptimization {
     Add-Log $INF 'Starting drive optimization...'
 
-    Set-Variable Parameters $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" }) -Option Constant
+    Set-Variable -Option Constant Parameters $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" })
 
-    try { Start-Process 'PowerShell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Optimizing drives...'; Start-Process 'defrag' $Parameters -NoNewWindow`"" -Verb RunAs }
+    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Optimizing drives...'; Start-Process 'defrag' $Parameters -NoNewWindow`"" }
     catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -31,7 +31,7 @@ Function Start-DriveOptimization {
 Function Start-Defraggler {
     Add-Log $INF 'Starting (C:) drive optimization with Defraggler...'
 
-    try { Start-Process $DefragglerExe 'C:' -Verb RunAs }
+    try { Start-Process -Verb RunAs $DefragglerExe 'C:' }
     catch [Exception] { Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"; Return }
 
     Out-Success

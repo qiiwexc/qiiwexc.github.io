@@ -1,13 +1,13 @@
-Set-Variable GRP_Windows (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_Windows        (New-Object System.Windows.Forms.GroupBox)
 $GRP_Windows.Text = 'Windows'
 $GRP_Windows.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Windows.Width = $GRP_WIDTH
 $GRP_Windows.Location = $GRP_HDD.Location + "0, $($GRP_HDD.Height + $INT_NORMAL)"
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Windows)
 
-Set-Variable BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_RepairWindows (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_CheckSystemFiles (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable -Option Constant BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_RepairWindows      (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_CheckSystemFiles   (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWindowsHealth, 'Check Windows health')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RepairWindows, 'Attempt to restore Windows health')

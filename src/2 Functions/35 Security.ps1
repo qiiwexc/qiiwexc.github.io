@@ -4,7 +4,7 @@ Function Start-SecurityScan {
 
         [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Updating security signatures...'"
 
-        try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow`"" -Wait }
+        try { Start-Process -Wait 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow`"" }
         catch [Exception] { Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"; Return }
 
         Out-Success
@@ -14,7 +14,7 @@ Function Start-SecurityScan {
 
     [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Security scan is running...'"
 
-    try { Start-Process 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType 2' -NoNewWindow`"" -Wait }
+    try { Start-Process -Wait 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType 2' -NoNewWindow`"" }
     catch [Exception] { Add-Log $ERR "Failed to perform a security scan: $($_.Exception.Message)"; Return }
 
     Out-Success

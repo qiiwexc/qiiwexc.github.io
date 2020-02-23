@@ -1,25 +1,25 @@
 Function Start-FileCleanup {
-    Set-Variable LogMessage 'Removing unnecessary files...' -Option Constant
+    Set-Variable -Option Constant LogMessage 'Removing unnecessary files...'
     Add-Log $INF $LogMessage
 
-    Set-Variable ContainerJava86 "${env:ProgramFiles(x86)}\Java" -Option Constant
-    Set-Variable ContainerJava "$env:ProgramFiles\Java" -Option Constant
-    Set-Variable ContainerOpera "$env:ProgramFiles\Opera" -Option Constant
-    Set-Variable ContainerChrome "$PROGRAM_FILES_86\Google\Chrome\Application" -Option Constant
-    Set-Variable ContainerChromeBeta "$PROGRAM_FILES_86\Google\Chrome Beta\Application" -Option Constant
-    Set-Variable ContainerChromeDev "$PROGRAM_FILES_86\Google\Chrome Dev\Application" -Option Constant
-    Set-Variable ContainerGoogleUpdate "$PROGRAM_FILES_86\Google\Update" -Option Constant
+    Set-Variable -Option Constant ContainerJava86 "${env:ProgramFiles(x86)}\Java"
+    Set-Variable -Option Constant ContainerJava "$env:ProgramFiles\Java"
+    Set-Variable -Option Constant ContainerOpera "$env:ProgramFiles\Opera"
+    Set-Variable -Option Constant ContainerChrome "$PROGRAM_FILES_86\Google\Chrome\Application"
+    Set-Variable -Option Constant ContainerChromeBeta "$PROGRAM_FILES_86\Google\Chrome Beta\Application"
+    Set-Variable -Option Constant ContainerChromeDev "$PROGRAM_FILES_86\Google\Chrome Dev\Application"
+    Set-Variable -Option Constant ContainerGoogleUpdate "$PROGRAM_FILES_86\Google\Update"
 
-    Set-Variable NonVersionedDirectories @('Assets', 'Download', 'Install', 'Offline', 'SetupMetrics') -Option Constant
-    Set-Variable Containers @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate) -Option Constant
+    Set-Variable -Option Constant NonVersionedDirectories @('Assets', 'Download', 'Install', 'Offline', 'SetupMetrics')
+    Set-Variable -Option Constant Containers @($ContainerJava86, $ContainerJava, $ContainerOpera, $ContainerChrome, $ContainerChromeBeta, $ContainerChromeDev, $ContainerGoogleUpdate)
 
-    Set-Variable NewestJava86 $(if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
-    Set-Variable NewestJava $(if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
-    Set-Variable NewestOpera $(if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
-    Set-Variable NewestChrome $(if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
-    Set-Variable NewestChromeBeta $(if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
-    Set-Variable NewestChromeDev $(if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
-    Set-Variable NewestGoogleUpdate $(if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 }) -Option Constant
+    Set-Variable -Option Constant NewestJava86 $(if (Test-Path $ContainerJava86) { Get-ChildItem $ContainerJava86 -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 })
+    Set-Variable -Option Constant NewestJava $(if (Test-Path $ContainerJava) { Get-ChildItem $ContainerJava -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 })
+    Set-Variable -Option Constant NewestOpera $(if (Test-Path $ContainerOpera) { Get-ChildItem $ContainerOpera -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 })
+    Set-Variable -Option Constant NewestChrome $(if (Test-Path $ContainerChrome) { Get-ChildItem $ContainerChrome -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 })
+    Set-Variable -Option Constant NewestChromeBeta $(if (Test-Path $ContainerChromeBeta) { Get-ChildItem $ContainerChromeBeta -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 })
+    Set-Variable -Option Constant NewestChromeDev $(if (Test-Path $ContainerChromeDev) { Get-ChildItem $ContainerChromeDev -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 })
+    Set-Variable -Option Constant NewestGoogleUpdate $(if (Test-Path $ContainerGoogleUpdate) { Get-ChildItem $ContainerGoogleUpdate -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1 })
 
     ForEach ($Path In $Containers) {
         if (Test-Path $Path) {
@@ -32,7 +32,7 @@ Function Start-FileCleanup {
         }
     }
 
-    Set-Variable ItemsToDeleteWithExclusions -Option Constant -Value @(
+    Set-Variable -Option Constant ItemsToDeleteWithExclusions -Value @(
         "$PROGRAM_FILES_86\Microsoft\Skype for Desktop\locales;en-US.pak,lv.pak,ru.pak"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\locales;en-US.pak,lv.pak,ru.pak"
         "$PROGRAM_FILES_86\TeamViewer\TeamViewer_Resource*.dll;TeamViewer_Resource_en.dll,TeamViewer_Resource_ru.dll"
@@ -67,7 +67,7 @@ Function Start-FileCleanup {
         }
     }
 
-    Set-Variable ItemsToDelete -Option Constant -Value @(
+    Set-Variable -Option Constant ItemsToDelete -Value @(
         "$NewestJava86\COPYRIGHT"
         "$NewestJava86\LICENSE"
         "$NewestJava86\release"
@@ -212,6 +212,8 @@ Function Start-FileCleanup {
         "$PROGRAM_FILES_86\Google\Chrome\Temp\*"
         "$PROGRAM_FILES_86\Google\CrashReports"
         "$PROGRAM_FILES_86\Google\CrashReports\*"
+        "$PROGRAM_FILES_86\Google\Policies"
+        "$PROGRAM_FILES_86\Google\Policies\*"
         "$PROGRAM_FILES_86\Google\Update\Download"
         "$PROGRAM_FILES_86\Google\Update\Download\*"
         "$PROGRAM_FILES_86\Google\Update\Install"
@@ -447,7 +449,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Google\CrashReports\*"
         "$env:LocalAppData\Google\Software Reporter Tool"
         "$env:LocalAppData\Google\Software Reporter Tool\*"
-        "$env:LocalAppData\LocalLow\PKI Client\*"
         "$env:LocalAppData\LocalLow\Sun"
         "$env:LocalAppData\LocalLow\Sun\*"
         "$env:LocalAppData\Microsoft\CLR_v2.0_32\*.log"

@@ -1,13 +1,13 @@
-Set-Variable GRP_ThisUtility (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_ThisUtility (New-Object System.Windows.Forms.GroupBox)
 $GRP_ThisUtility.Text = 'This utility'
 $GRP_ThisUtility.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_ThisUtility.Width = $GRP_WIDTH
 $GRP_ThisUtility.Location = $GRP_INIT_LOCATION
 $TAB_HOME.Controls.Add($GRP_ThisUtility)
 
-Set-Variable BTN_Elevate (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_BrowserHome (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_SystemInfo (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable -Option Constant BTN_Elevate     (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_BrowserHome (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_SystemInfo  (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Elevate, 'Restart this utility with administrator privileges')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_BrowserHome, 'Open utility web page in the default browser')

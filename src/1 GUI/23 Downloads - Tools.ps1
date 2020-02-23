@@ -1,15 +1,15 @@
-Set-Variable GRP_InstallTools (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_InstallTools    (New-Object System.Windows.Forms.GroupBox)
 $GRP_InstallTools.Text = 'Tools'
 $GRP_InstallTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_InstallTools.Width = $GRP_WIDTH
 $GRP_InstallTools.Location = $GRP_Essentials.Location + "0, $($GRP_Essentials.Height + $INT_NORMAL)"
 $TAB_INSTALLERS.Controls.Add($GRP_InstallTools)
 
-Set-Variable BTN_DownloadCCleaner (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartCCleaner (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadCCleaner   (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartCCleaner     (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable BTN_DownloadDefraggler (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartDefraggler (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadDefraggler (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartDefraggler   (New-Object System.Windows.Forms.CheckBox)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadDefraggler, 'Download Defraggler installer')

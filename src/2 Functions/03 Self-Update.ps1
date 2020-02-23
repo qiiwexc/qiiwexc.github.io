@@ -3,10 +3,10 @@ Function Get-CurrentVersion {
 
     Add-Log $INF 'Checking for updates...'
 
-    Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
+    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
 
-    try { Set-Variable LatestVersion ([Version](Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString()) -Option Constant }
+    try { Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString()) }
     catch [Exception] { Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"; Return }
 
     if ($LatestVersion -gt $VERSION) { Add-Log $WRN "Newer version available: v$LatestVersion"; Get-Update }
@@ -15,12 +15,12 @@ Function Get-CurrentVersion {
 
 
 Function Get-Update {
-    Set-Variable DownloadURL 'https://qiiwexc.github.io/d/qiiwexc.ps1' -Option Constant
-    Set-Variable TargetFile $MyInvocation.ScriptName -Option Constant
+    Set-Variable -Option Constant DownloadURL 'https://qiiwexc.github.io/d/qiiwexc.ps1'
+    Set-Variable -Option Constant TargetFile $MyInvocation.ScriptName
 
     Add-Log $WRN 'Downloading new version...'
 
-    Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
+    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) { Add-Log $ERR "Failed to download update: $IsNotConnected"; Return }
 
     try { Invoke-WebRequest $DownloadURL -OutFile $TargetFile }

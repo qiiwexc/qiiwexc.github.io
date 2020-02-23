@@ -8,13 +8,13 @@ Function Start-File {
     if ($Switches -and $SilentInstall) {
         Add-Log $INF "Installing '$Executable' silently..."
 
-        try { Start-Process $Executable $Switches -Wait }
+        try { Start-Process -Wait $Executable $Switches }
         catch [Exception] { Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"; Return }
 
         Out-Success
 
         Add-Log $INF "Removing $Executable..."
-        Remove-Item $Executable -Force
+        Remove-Item -Force $Executable
         Out-Success
     }
     else {
