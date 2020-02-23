@@ -1,16 +1,16 @@
-Set-Variable GRP_Cleanup (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_Cleanup           (New-Object System.Windows.Forms.GroupBox)
 $GRP_Cleanup.Text = 'Cleanup'
 $GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 6
 $GRP_Cleanup.Width = $GRP_WIDTH
 $GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
-Set-Variable BTN_EmptyRecycleBin (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_FileCleanup (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DiskCleanup (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_RunCCleaner (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_WindowsCleanup (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DeleteRestorePoints (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable -Option Constant BTN_EmptyRecycleBin     (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_FileCleanup         (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_DiskCleanup         (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_RunCCleaner         (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_WindowsCleanup      (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_DeleteRestorePoints (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_EmptyRecycleBin, 'Empty Recycle Bin')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_FileCleanup, 'Remove temporary files, some log files and empty directories, and some other unnecessary files')

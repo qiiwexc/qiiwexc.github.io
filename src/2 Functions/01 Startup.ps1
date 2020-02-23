@@ -32,10 +32,10 @@ Function Initialize-Startup {
         try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
         catch [Exception] {
             Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
-            Set-Variable Shell $(New-Object -com Shell.Application) -Option Constant -Scope Script
+            Set-Variable -Option Constant -Scope Script Shell $(New-Object -com Shell.Application)
         }
     }
-    else { Set-Variable Shell $(New-Object -com Shell.Application) -Option Constant -Scope Script }
+    else { Set-Variable -Option Constant -Scope Script Shell $(New-Object -com Shell.Application) }
 
     Get-CurrentVersion
 
@@ -53,16 +53,16 @@ Function Initialize-Startup {
     }
 
     if ($SystemPartition) {
-        Set-Variable FreeDiskSpace (Get-FreeDiskSpace) -Option Constant
+        Set-Variable -Option Constant FreeDiskSpace (Get-FreeDiskSpace)
         if ($FreeDiskSpace -le 0.15) {
             Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
             Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
         }
     }
 
-    Set-Variable NetworkAdapter (Get-NetworkAdapter) -Option Constant
+    Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
     if ($NetworkAdapter) {
-        Set-Variable CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder -Option Constant
+        Set-Variable -Option Constant CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder
         if (-not ($CurrentDnsServer -Contains '1.1.1.1' -or $CurrentDnsServer -Contains '1.0.0.1')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'

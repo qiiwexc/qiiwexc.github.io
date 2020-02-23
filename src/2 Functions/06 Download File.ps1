@@ -6,10 +6,10 @@ Function Start-Download {
     )
     if (-not $URL) { Return }
 
-    Set-Variable DownloadURL $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL }) -Option Constant
-    Set-Variable FileName $(if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 }) -Option Constant
-    Set-Variable BaseDir $(if ($Temp) { $TEMP_DIR } else { $CURRENT_DIR }) -Option Constant
-    Set-Variable SavePath "$BaseDir\$FileName" -Option Constant
+    Set-Variable -Option Constant DownloadURL $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL })
+    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 })
+    Set-Variable -Option Constant BaseDir $(if ($Temp) { $TEMP_DIR } else { $CURRENT_DIR })
+    Set-Variable -Option Constant SavePath "$BaseDir\$FileName"
 
     if (-not (Test-Path $BaseDir)) {
         Add-Log $WRN "Download path $BaseDir does not exist. Creating it."
@@ -18,7 +18,7 @@ Function Start-Download {
 
     Add-Log $INF "Downloading from $DownloadURL"
 
-    Set-Variable IsNotConnected (Get-ConnectionStatus) -Option Constant
+    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) { Add-Log $ERR "Download failed: $IsNotConnected"; Return }
 
     try {

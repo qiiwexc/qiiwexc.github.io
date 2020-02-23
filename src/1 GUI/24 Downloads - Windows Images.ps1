@@ -1,24 +1,24 @@
-Set-Variable GRP_DownloadWindows (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_DownloadWindows (New-Object System.Windows.Forms.GroupBox)
 $GRP_DownloadWindows.Text = 'Windows Images'
 $GRP_DownloadWindows.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 5 + $INT_SHORT
 $GRP_DownloadWindows.Width = $GRP_WIDTH
 $GRP_DownloadWindows.Location = $GRP_Essentials.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_INSTALLERS.Controls.Add($GRP_DownloadWindows)
 
-Set-Variable BTN_Windows10 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable LBL_Windows10 (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable -Option Constant BTN_Windows10      (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_Windows10      (New-Object System.Windows.Forms.Label)
 
-Set-Variable BTN_Windows8 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable LBL_Windows8 (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable -Option Constant BTN_Windows8       (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_Windows8       (New-Object System.Windows.Forms.Label)
 
-Set-Variable BTN_Windows7 (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable LBL_Windows7 (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable -Option Constant BTN_Windows7       (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_Windows7       (New-Object System.Windows.Forms.Label)
 
-Set-Variable BTN_WindowsXPENG (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable LBL_WindowsXPENG (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable -Option Constant BTN_WindowsXPENG   (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_WindowsXPENG   (New-Object System.Windows.Forms.Label)
 
-Set-Variable BTN_WindowsXPRUS (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable LBL_WindowsXPRUS (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable -Option Constant BTN_WindowsXPRUS   (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_WindowsXPRUS   (New-Object System.Windows.Forms.Label)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1909) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 with Update 3 RUS-ENG x86-x64 -16in1- Activated (AIO) ISO image')

@@ -1,11 +1,11 @@
-Set-Variable FORM (New-Object System.Windows.Forms.Form) -Option Constant
-Set-Variable LOG (New-Object System.Windows.Forms.RichTextBox) -Option Constant
-Set-Variable TAB_CONTROL (New-Object System.Windows.Forms.TabControl) -Option Constant
+Set-Variable -Option Constant FORM        (New-Object System.Windows.Forms.Form)
+Set-Variable -Option Constant LOG         (New-Object System.Windows.Forms.RichTextBox)
+Set-Variable -Option Constant TAB_CONTROL (New-Object System.Windows.Forms.TabControl)
 
-Set-Variable TAB_HOME (New-Object System.Windows.Forms.TabPage) -Option Constant
-Set-Variable TAB_INSTALLERS (New-Object System.Windows.Forms.TabPage) -Option Constant
-Set-Variable TAB_DIAGNOSTICS (New-Object System.Windows.Forms.TabPage) -Option Constant
-Set-Variable TAB_MAINTENANCE (New-Object System.Windows.Forms.TabPage) -Option Constant
+Set-Variable -Option Constant TAB_HOME        (New-Object System.Windows.Forms.TabPage)
+Set-Variable -Option Constant TAB_INSTALLERS  (New-Object System.Windows.Forms.TabPage)
+Set-Variable -Option Constant TAB_DIAGNOSTICS (New-Object System.Windows.Forms.TabPage)
+Set-Variable -Option Constant TAB_MAINTENANCE (New-Object System.Windows.Forms.TabPage)
 
 $TAB_HOME.UseVisualStyleBackColor = $TAB_INSTALLERS.UseVisualStyleBackColor = $TAB_DIAGNOSTICS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
 

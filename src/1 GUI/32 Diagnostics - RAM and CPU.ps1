@@ -1,17 +1,17 @@
-Set-Variable GRP_RAMandCPU (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_RAMandCPU        (New-Object System.Windows.Forms.GroupBox)
 $GRP_RAMandCPU.Text = 'RAM and CPU'
 $GRP_RAMandCPU.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG * 2
 $GRP_RAMandCPU.Width = $GRP_WIDTH
 $GRP_RAMandCPU.Location = $GRP_HDD.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_DIAGNOSTICS.Controls.Add($GRP_RAMandCPU)
 
-Set-Variable BTN_CheckRAM (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable -Option Constant BTN_CheckRAM         (New-Object System.Windows.Forms.Button)
 
-Set-Variable BTN_HardwareMonitor (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_HardwareMonitor (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_HardwareMonitor  (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_HardwareMonitor (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable BTN_StressTest (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable LBL_StressTest (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable -Option Constant BTN_StressTest       (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_StressTest       (New-Object System.Windows.Forms.Label)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckRAM, 'Start RAM checking utility')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temperature, voltage and frequency')
@@ -33,7 +33,7 @@ $BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
 
 $BTN_HardwareMonitor.Text = "CPUID HWMonitor$REQUIRES_ELEVATION"
 $BTN_HardwareMonitor.Location = $BTN_CheckRAM.Location + $SHIFT_BTN_NORMAL
-$BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -MultiFile -Execute:$CBOX_HardwareMonitor.Checked } )
+$BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute -MultiFile 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -Execute:$CBOX_HardwareMonitor.Checked } )
 
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_HardwareMonitor.Checked = $True

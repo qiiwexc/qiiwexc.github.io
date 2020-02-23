@@ -1,19 +1,19 @@
-Set-Variable GRP_HDD (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_HDD        (New-Object System.Windows.Forms.GroupBox)
 $GRP_HDD.Text = 'HDD'
 $GRP_HDD.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
 $GRP_HDD.Width = $GRP_WIDTH
 $GRP_HDD.Location = $GRP_INIT_LOCATION
 $TAB_DIAGNOSTICS.Controls.Add($GRP_HDD)
 
-Set-Variable BTN_CheckDisk (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable RBTN_QuickDiskCheck (New-Object System.Windows.Forms.RadioButton) -Option Constant
-Set-Variable RBTN_FullDiskCheck (New-Object System.Windows.Forms.RadioButton) -Option Constant
+Set-Variable -Option Constant BTN_CheckDisk        (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant RBTN_QuickDiskCheck  (New-Object System.Windows.Forms.RadioButton)
+Set-Variable -Option Constant RBTN_FullDiskCheck   (New-Object System.Windows.Forms.RadioButton)
 
-Set-Variable BTN_DownloadVictoria (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartVictoria (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadVictoria (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartVictoria   (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable BTN_DownloadRecuva (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartRecuva (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadRecuva   (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartRecuva     (New-Object System.Windows.Forms.CheckBox)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDisk, 'Start (C:) disk health check')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
@@ -58,7 +58,7 @@ $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victo
 
 $BTN_DownloadRecuva.Text = "Recuva (restore data)$REQUIRES_ELEVATION"
 $BTN_DownloadRecuva.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
-$BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute 'ccleaner.com/recuva/download/portable/downloadfile' 'Recuva.zip' -MultiFile -Execute:$CBOX_StartRecuva.Checked } )
+$BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute -MultiFile 'ccleaner.com/recuva/download/portable/downloadfile' 'Recuva.zip' -Execute:$CBOX_StartRecuva.Checked } )
 
 $CBOX_StartRecuva.Location = $BTN_DownloadRecuva.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRecuva.Add_CheckStateChanged( { $BTN_DownloadRecuva.Text = "Recuva (restore data)$(if ($CBOX_StartRecuva.Checked) {$REQUIRES_ELEVATION})" } )

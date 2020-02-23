@@ -7,12 +7,12 @@ Function Start-Extraction {
 
     Add-Log $INF "Extracting $FileName..."
 
-    Set-Variable ExtractionPath $(if ($MultiFileArchive) { $FileName.TrimEnd('.zip') }) -Option Constant
+    Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $FileName.TrimEnd('.zip') })
 
     [String]$TargetDirName = $ExtractionPath
     if ($MultiFileArchive) {
-        Remove-Item $TargetDirName -Recurse -Force -ErrorAction SilentlyContinue
-        New-Item $TargetDirName -ItemType Directory -Force | Out-Null
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $TargetDirName
+        New-Item -ItemType Directory -Force $TargetDirName | Out-Null
     }
 
     # FIXME: relative vs absolute path
@@ -28,7 +28,7 @@ Function Start-Extraction {
         Default { $FileName.TrimEnd('.zip') + '.exe' }
     }
 
-    Remove-Item $Executable -Force -ErrorAction SilentlyContinue
+    Remove-Item -Force -ErrorAction SilentlyContinue $Executable
 
     try {
         if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($FileName, $TargetDirName) }
@@ -40,18 +40,18 @@ Function Start-Extraction {
     }
 
     if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip' -or $FileName -Match 'hwmonitor_*') {
-        Set-Variable TempDir $TargetDirName -Option Constant
+        Set-Variable -Option Constant TempDir $TargetDirName
         [String]$TargetDirName = $CURRENT_DIR
 
         Move-Item "$TempDir\$Executable" "$TargetDirName\$Executable"
-        Remove-Item $TempDir -Recurse -Force
+        Remove-Item -Recurse -Force $TempDir
     }
 
     Out-Success
     Add-Log $INF "Files extracted to $TargetDirName"
 
     Add-Log $INF "Removing $FileName..."
-    Remove-Item $FileName -Force
+    Remove-Item -Force $FileName
     Out-Success
 
     Return $Executable

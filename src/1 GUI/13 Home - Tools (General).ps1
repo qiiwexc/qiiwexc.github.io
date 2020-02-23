@@ -1,17 +1,17 @@
-Set-Variable GRP_DownloadTools (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_DownloadTools (New-Object System.Windows.Forms.GroupBox)
 $GRP_DownloadTools.Text = 'Tools (General)'
 $GRP_DownloadTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
 $GRP_DownloadTools.Width = $GRP_WIDTH
 $GRP_DownloadTools.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_DownloadTools)
 
-Set-Variable BTN_DownloadRufus (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_DownloadDSE (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartRufus (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable CBOX_StartDSE (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadRufus (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_DownloadDSE   (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartRufus   (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_StartDSE     (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable BTN_WindowsPE (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable LBL_WindowsPE (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable -Option Constant BTN_WindowsPE     (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_WindowsPE     (New-Object System.Windows.Forms.Label)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRufus, 'Download Rufus - a bootable USB creator')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadDSE, 'Download Driver Store Explorer')
@@ -32,7 +32,7 @@ $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BT
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_INIT_LOCATION
 $BTN_DownloadRufus.Add_Click( {
-        Set-Variable RufusURL 'github.com/pbatard/rufus/releases/download/v3.8/rufus-3.8.exe' -Option Constant
+        Set-Variable -Option Constant RufusURL 'github.com/pbatard/rufus/releases/download/v3.8/rufus-3.8.exe'
         if ($PS_VERSION -gt 2) {
             $DownloadedFile = Start-Download $RufusURL
             if ($CBOX_StartRufus.Checked -and $DownloadedFile) { Start-File $DownloadedFile '-g' }
@@ -48,7 +48,7 @@ $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (boot
 
 $BTN_DownloadDSE.Text = "Driver Store Explorer$REQUIRES_ELEVATION"
 $BTN_DownloadDSE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
-$BTN_DownloadDSE.Add_Click( { Start-DownloadExtractExecute 'github.com/lostindark/DriverStoreExplorer/releases/download/v0.10.58/DriverStoreExplorer.v0.10.58.zip' -MultiFile -Execute:$CBOX_StartDSE.Checked } )
+$BTN_DownloadDSE.Add_Click( { Start-DownloadExtractExecute -MultiFile 'github.com/lostindark/DriverStoreExplorer/releases/download/v0.10.58/DriverStoreExplorer.v0.10.58.zip' -Execute:$CBOX_StartDSE.Checked } )
 
 $CBOX_StartDSE.Location = $BTN_DownloadDSE.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartDSE.Text = $TXT_START_AFTER_DOWNLOAD

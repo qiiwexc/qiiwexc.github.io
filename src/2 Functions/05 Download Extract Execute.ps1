@@ -10,11 +10,11 @@ Function Start-DownloadExtractExecute {
 
     if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
     else {
-        Set-Variable DownloadedFile (Start-Download $URL $FileName -Temp:$Execute) -Option Constant
+        Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$Execute)
 
         if ($DownloadedFile) {
-            Set-Variable IsZip ($DownloadedFile.Substring($DownloadedFile.Length - 4) -eq '.zip') -Option Constant
-            Set-Variable Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -MF:$MultiFile } else { $DownloadedFile }) -Option Constant
+            Set-Variable -Option Constant IsZip ($DownloadedFile.Substring($DownloadedFile.Length - 4) -eq '.zip')
+            Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -MF:$MultiFile } else { $DownloadedFile })
             if ($Execute) { Start-File $Executable }
         }
     }

@@ -1,18 +1,18 @@
-Set-Variable GRP_Activators (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_Activators      (New-Object System.Windows.Forms.GroupBox)
 $GRP_Activators.Text = 'Activators'
 $GRP_Activators.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
 $GRP_Activators.Width = $GRP_WIDTH
 $GRP_Activators.Location = $GRP_ThisUtility.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_Activators)
 
-Set-Variable BTN_DownloadKMSAuto (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartKMSAuto (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadKMSAuto (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartKMSAuto   (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable BTN_DownloadAAct (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartAAct (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadAAct    (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartAAct      (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable BTN_DownloadChewWGA (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartChewWGA (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadChewWGA (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartChewWGA   (New-Object System.Windows.Forms.CheckBox)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadAAct, "Download AAct`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
@@ -36,7 +36,7 @@ $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $B
 
 $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$REQUIRES_ELEVATION"
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
-$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -AVWarning -MultiFile -Execute:$CBOX_StartKMSAuto.Checked } )
+$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -MultiFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -Execute:$CBOX_StartKMSAuto.Checked } )
 
 $CBOX_StartKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})" } )
@@ -44,7 +44,7 @@ $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto
 
 $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$REQUIRES_ELEVATION"
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
-$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/AAct.zip' -AVWarning -MultiFile -Execute:$CBOX_StartAAct.Checked } )
+$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -MultiFile 'qiiwexc.github.io/d/AAct.zip' -Execute:$CBOX_StartAAct.Checked } )
 
 $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
@@ -52,7 +52,7 @@ $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+,
 
 $BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$REQUIRES_ELEVATION"
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
-$BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/ChewWGA.zip' -AVWarning -Execute:$CBOX_StartChewWGA.Checked } )
+$BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute -AVWarning 'qiiwexc.github.io/d/ChewWGA.zip' -Execute:$CBOX_StartChewWGA.Checked } )
 
 $CBOX_StartChewWGA.Location = $BTN_DownloadChewWGA.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartChewWGA.Add_CheckStateChanged( { $BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})" } )

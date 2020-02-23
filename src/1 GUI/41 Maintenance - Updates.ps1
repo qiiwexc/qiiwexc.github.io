@@ -1,13 +1,13 @@
-Set-Variable GRP_Updates (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_Updates        (New-Object System.Windows.Forms.GroupBox)
 $GRP_Updates.Text = 'Updates'
 $GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Updates.Width = $GRP_WIDTH
 $GRP_Updates.Location = $GRP_INIT_LOCATION
 $TAB_MAINTENANCE.Controls.Add($GRP_Updates)
 
-Set-Variable BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_UpdateOffice (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable BTN_WindowsUpdate (New-Object System.Windows.Forms.Button) -Option Constant
+Set-Variable -Option Constant BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_UpdateOffice    (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_WindowsUpdate   (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateStoreApps, 'Update Microsoft Store apps')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateOffice, 'Update Microsoft Office (for C2R installations only)')
@@ -26,7 +26,7 @@ $BTN_UpdateStoreApps.Location = $BTN_INIT_LOCATION
 $BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
 
 
-$BTN_UpdateOffice.Text = 'Update Microsoft Office'
+$BTN_UpdateOffice.Text = "Update Microsoft Office$REQUIRES_ELEVATION"
 $BTN_UpdateOffice.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
 $BTN_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
 

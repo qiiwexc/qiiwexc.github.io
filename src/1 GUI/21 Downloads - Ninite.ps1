@@ -1,22 +1,22 @@
-Set-Variable GRP_Ninite (New-Object System.Windows.Forms.GroupBox) -Option Constant
+Set-Variable -Option Constant GRP_Ninite       (New-Object System.Windows.Forms.GroupBox)
 $GRP_Ninite.Text = 'Ninite'
 $GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 6 + $INT_SHORT + $INT_BTN_LONG * 2
 $GRP_Ninite.Width = $GRP_WIDTH
 $GRP_Ninite.Location = $GRP_INIT_LOCATION
 $TAB_INSTALLERS.Controls.Add($GRP_Ninite)
 
-Set-Variable CBOX_Chrome (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable CBOX_7zip (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable CBOX_VLC (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable CBOX_TeamViewer (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable CBOX_Skype (New-Object System.Windows.Forms.CheckBox) -Option Constant
-Set-Variable CBOX_qBittorrent (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant CBOX_Chrome       (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_7zip         (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_VLC          (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_TeamViewer   (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_Skype        (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_qBittorrent  (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable BTN_DownloadNinite (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable CBOX_StartNinite (New-Object System.Windows.Forms.CheckBox) -Option Constant
+Set-Variable -Option Constant BTN_DownloadNinite   (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartNinite     (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable BTN_OpenNiniteInBrowser (New-Object System.Windows.Forms.Button) -Option Constant
-Set-Variable LBL_OpenNiniteInBrowser (New-Object System.Windows.Forms.Label) -Option Constant
+Set-Variable -Option Constant BTN_OpenNiniteInBrowser (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_OpenNiniteInBrowser (New-Object System.Windows.Forms.Label)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadNinite, 'Download Ninite universal installer for selected applications')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OpenNiniteInBrowser, 'Open Ninite universal installer web page for other installation options')
@@ -80,7 +80,7 @@ $CBOX_StartNinite.Add_CheckStateChanged( { $BTN_DownloadNinite.Text = "Download 
 $BTN_OpenNiniteInBrowser.Text = 'View other'
 $BTN_OpenNiniteInBrowser.Location = $BTN_DownloadNinite.Location + $SHIFT_BTN_LONG
 $BTN_OpenNiniteInBrowser.Add_Click( {
-        Set-Variable Query (Set-NiniteQuery) -Option Constant; Open-InBrowser $(if ($Query) { "ninite.com/?select=$($Query)" } else { 'ninite.com' })
+        Set-Variable -Option Constant Query (Set-NiniteQuery); Open-InBrowser $(if ($Query) { "ninite.com/?select=$($Query)" } else { 'ninite.com' })
     } )
 
 $LBL_OpenNiniteInBrowser.Text = $TXT_OPENS_IN_BROWSER
