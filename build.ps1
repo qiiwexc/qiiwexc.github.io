@@ -35,7 +35,7 @@ Function Start-Build {
 
     Remove-Item -Force -ErrorAction SilentlyContinue $TargetFile
     Remove-Item -Force -ErrorAction SilentlyContinue $VersionFile
-    New-Item -ItemType Directory -Force $DistPath | Out-Null
+    New-Item -Force -ItemType Directory $DistPath | Out-Null
 
     Add-Log $INF 'Writing version file'
     Set-Content $VersionFile "$Version`n" -NoNewline
@@ -46,7 +46,7 @@ Function Start-Build {
     Add-Log $INF 'Building...'
     Add-Content $TargetFile "Set-Variable -Option Constant Version ([Version]'$Version')"
 
-    ForEach ($File In Get-ChildItem $SourcePath -Recurse -File) {
+    ForEach ($File In Get-ChildItem -Recurse -File $SourcePath) {
         [String]$SectionName = $File.ToString().Replace('.ps1', '').Remove(0, 3)
         [String]$Spacer = '=-' * (30 - [Math]::Round(($SectionName.length + 1) / 4))
 

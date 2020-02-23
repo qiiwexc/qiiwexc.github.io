@@ -1,58 +1,65 @@
 Function Start-Extraction {
     Param(
-        [String][Parameter(Position = 0)]$FileName = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
-        [Switch][Parameter(Position = 1)][Alias('MF')]$MultiFileArchive
+        [String][Parameter(Position = 0)]$ZipPath = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
+        [Switch]$Execute
     )
-    if (-not $FileName) { Return }
+    if (-not $ZipPath) { Return }
 
-    Add-Log $INF "Extracting $FileName..."
+    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
+    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or $ZipName -eq 'KMSAuto_Lite.zip' -or `
+            $URL -Match 'hwmonitor_' -or $URL -Match 'DriverStoreExplorer' -or $URL -Match 'SDI_R')
 
-    Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $FileName.TrimEnd('.zip') })
+    Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
+    Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $TEMP_DIR })
+    Set-Variable -Option Constant TargetPath $(if ($Execute) { $TEMP_DIR } else { $CURRENT_DIR })
+    Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
-    [String]$TargetDirName = $ExtractionPath
-    if ($MultiFileArchive) {
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $TargetDirName
-        New-Item -ItemType Directory -Force $TargetDirName | Out-Null
-    }
-
-    # FIXME: relative vs absolute path
-    [String]$Executable = Switch -Wildcard ($FileName) {
+    [String]$Executable = Switch -Wildcard ($ZipName) {
         'ChewWGA.zip' { 'CW.eXe' }
-        'DriverStoreExplorer*' { 'Rapr.exe' }
         'Office_2013-2019.zip' { 'OInstall.exe' }
-        'AAct.zip' { "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
-        'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
-        'hwmonitor_*' { "HWMonitor_$(if ($OS_ARCH -eq '64-bit') {'x64'} else {'x32'}).exe" }
-        'Recuva.zip' { "$ExtractionPath\recuva$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" }
-        'SDI_R*' { "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})" }
-        Default { $FileName.TrimEnd('.zip') + '.exe' }
+        'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
+        'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
+        'hwmonitor_*' { "HWMonitor_$(if ($OS_64_BIT) {'x64'} else {'x32'}).exe" }
+        'DriverStoreExplorer*' { "$ExtractionDir\Rapr.exe" }
+        'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
+        Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
 
-    Remove-Item -Force -ErrorAction SilentlyContinue $Executable
+    Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -Like "$ExtractionDir\*")
+    Set-Variable -Option Constant TemporaryExe "$TemporaryPath\$Executable"
+    Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
+
+    Remove-Item -Force -ErrorAction SilentlyContinue $TemporaryExe
+    if ($MultiFileArchive) {
+        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $TemporaryPath
+        New-Item -Force -ItemType Directory $TemporaryPath | Out-Null
+    }
+
+    Add-Log $INF "Extracting $ZipPath..."
 
     try {
-        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($FileName, $TargetDirName) }
-        else { ForEach ($Item In $Shell.NameSpace($FileName).Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
+        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
+        else { ForEach ($Item In $Shell.NameSpace($ZipPath).Items()) { $Shell.NameSpace($TemporaryPath).CopyHere($Item) } }
     }
     catch [Exception] {
-        Add-Log $ERR "Failed to extract' $FileName': $($_.Exception.Message)"
+        Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
         Return
     }
 
-    if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip' -or $FileName -Match 'hwmonitor_*') {
-        Set-Variable -Option Constant TempDir $TargetDirName
-        [String]$TargetDirName = $CURRENT_DIR
+    Remove-Item -Force -ErrorAction SilentlyContinue $ZipPath
 
-        Move-Item "$TempDir\$Executable" "$TargetDirName\$Executable"
-        Remove-Item -Recurse -Force $TempDir
+    if (-not $IsDirectory) {
+        Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
+        if ($ExtractionPath) { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath }
+    }
+
+    if ( -not $Execute -and $IsDirectory) {
+        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse "$TargetPath\$ExtractionDir"
+        Move-Item -Force -ErrorAction SilentlyContinue $TemporaryPath $TargetPath
     }
 
     Out-Success
-    Add-Log $INF "Files extracted to $TargetDirName"
+    Add-Log $INF "Files extracted to $TemporaryPath"
 
-    Add-Log $INF "Removing $FileName..."
-    Remove-Item -Force $FileName
-    Out-Success
-
-    Return $Executable
+    Return $TargetExe
 }

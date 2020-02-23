@@ -62,7 +62,7 @@ Function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue }
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Force -ErrorAction SilentlyContinue -Recurse }
             Out-Success
         }
     }
@@ -101,7 +101,6 @@ Function Start-FileCleanup {
         "$env:SystemDrive\temp\*"
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
-        "$env:ProgramData\Kollective\*.log"
         "$env:ProgramData\SymEFASI"
         "$env:ProgramData\SymEFASI\*"
         "$env:ProgramData\UIU"
@@ -493,7 +492,7 @@ Function Start-FileCleanup {
     ForEach ($Item In $ItemsToDelete) {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
-            Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $Item
             if (Test-Path $Item) { Out-Failure } else { Out-Success }
         }
     }
