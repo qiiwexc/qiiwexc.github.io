@@ -31,14 +31,7 @@ $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BT
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_INIT_LOCATION
-$BTN_DownloadRufus.Add_Click( {
-        Set-Variable -Option Constant RufusURL 'github.com/pbatard/rufus/releases/download/v3.8/rufus-3.8.exe'
-        if ($PS_VERSION -gt 2) {
-            $DownloadedFile = Start-Download $RufusURL
-            if ($CBOX_StartRufus.Checked -and $DownloadedFile) { Start-File $DownloadedFile '-g' }
-        }
-        else { Open-InBrowser $RufusURL }
-    } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.8/rufus-3.8.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -48,7 +41,7 @@ $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (boot
 
 $BTN_DownloadDSE.Text = "Driver Store Explorer$REQUIRES_ELEVATION"
 $BTN_DownloadDSE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
-$BTN_DownloadDSE.Add_Click( { Start-DownloadExtractExecute -MultiFile 'github.com/lostindark/DriverStoreExplorer/releases/download/v0.10.58/DriverStoreExplorer.v0.10.58.zip' -Execute:$CBOX_StartDSE.Checked } )
+$BTN_DownloadDSE.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartDSE.Checked 'github.com/lostindark/DriverStoreExplorer/releases/download/v0.10.58/DriverStoreExplorer.v0.10.58.zip' } )
 
 $CBOX_StartDSE.Location = $BTN_DownloadDSE.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartDSE.Text = $TXT_START_AFTER_DOWNLOAD

@@ -24,6 +24,6 @@ Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfigu
 
 Function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
 
-Function Reset-StateOnExit { Remove-Item $TEMP_DIR -Recurse -Force -ErrorAction SilentlyContinue; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
+Function Reset-StateOnExit { Remove-Item $TEMP_DIR -Force -ErrorAction SilentlyContinue -Recurse; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
 
 Function Exit-Script { Reset-StateOnExit; $FORM.Close() }

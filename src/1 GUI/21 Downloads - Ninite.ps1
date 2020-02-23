@@ -70,7 +70,7 @@ $CBOX_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
 $BTN_DownloadNinite.Text = "Download selected$REQUIRES_ELEVATION"
 $BTN_DownloadNinite.Location = $CBOX_qBittorrent.Location + $SHIFT_BTN_SHORT
-$BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) -Execute:$CBOX_StartNinite.Checked } )
+$BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartNinite.Checked "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
 
 $CBOX_StartNinite.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartNinite.Location = $BTN_DownloadNinite.Location + $SHIFT_CBOX_EXECUTE

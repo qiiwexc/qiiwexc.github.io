@@ -40,7 +40,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -MultiFile 'sdi-tool.org/releases/SDI_R1909.zip' -Execute:$CBOX_StartSDI.Checked } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'sdi-tool.org/releases/SDI_R1909.zip' } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
@@ -49,8 +49,8 @@ $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver I
 $BTN_DownloadUnchecky.Text = "Unchecky$REQUIRES_ELEVATION"
 $BTN_DownloadUnchecky.Location = $BTN_DownloadSDI.Location + $SHIFT_BTN_LONG
 $BTN_DownloadUnchecky.Add_Click( {
-        Set-Variable -Option Constant DownloadedFile (Start-Download 'unchecky.com/files/unchecky_setup.exe')
-        if ($CBOX_StartUnchecky.Checked -and $DownloadedFile) { Start-File -SilentInstall $DownloadedFile $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) }
+        Set-Variable -Option Constant Params $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
+        Start-DownloadExtractExecute -Execute:$CBOX_StartUnchecky.Checked 'unchecky.com/files/unchecky_setup.exe' -Params:$Params -SilentInstall:$CBOX_SilentlyInstallUnchecky.Checked
     } )
 
 $CBOX_StartUnchecky.Location = $BTN_DownloadUnchecky.Location + $SHIFT_CBOX_EXECUTE
@@ -63,7 +63,7 @@ $CBOX_StartUnchecky.Add_CheckStateChanged( { $BTN_DownloadUnchecky.Text = "Unche
 
 $BTN_DownloadOffice.Text = "Office 2013 - 2019$REQUIRES_ELEVATION"
 $BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
-$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning 'qiiwexc.github.io/d/Office_2013-2019.zip' -Execute:$CBOX_StartOffice.Checked } )
+$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartOffice.Checked 'qiiwexc.github.io/d/Office_2013-2019.zip' } )
 
 $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2019$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )

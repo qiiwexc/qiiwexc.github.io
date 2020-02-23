@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.2.23')
+Set-Variable -Option Constant Version ([Version]'20.2.24')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -250,7 +250,7 @@ $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $B
 
 $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$REQUIRES_ELEVATION"
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
-$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -MultiFile 'qiiwexc.github.io/d/KMSAuto_Lite.zip' -Execute:$CBOX_StartKMSAuto.Checked } )
+$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartKMSAuto.Checked 'qiiwexc.github.io/d/KMSAuto_Lite.zip' } )
 
 $CBOX_StartKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})" } )
@@ -258,7 +258,7 @@ $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto
 
 $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$REQUIRES_ELEVATION"
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
-$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -MultiFile 'qiiwexc.github.io/d/AAct.zip' -Execute:$CBOX_StartAAct.Checked } )
+$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartAAct.Checked 'qiiwexc.github.io/d/AAct.zip' } )
 
 $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
@@ -266,7 +266,7 @@ $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+,
 
 $BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$REQUIRES_ELEVATION"
 $BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
-$BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute -AVWarning 'qiiwexc.github.io/d/ChewWGA.zip' -Execute:$CBOX_StartChewWGA.Checked } )
+$BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartChewWGA.Checked 'qiiwexc.github.io/d/ChewWGA.zip' } )
 
 $CBOX_StartChewWGA.Location = $BTN_DownloadChewWGA.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartChewWGA.Add_CheckStateChanged( { $BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})" } )
@@ -307,14 +307,7 @@ $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BT
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_INIT_LOCATION
-$BTN_DownloadRufus.Add_Click( {
-        Set-Variable -Option Constant RufusURL 'github.com/pbatard/rufus/releases/download/v3.8/rufus-3.8.exe'
-        if ($PS_VERSION -gt 2) {
-            $DownloadedFile = Start-Download $RufusURL
-            if ($CBOX_StartRufus.Checked -and $DownloadedFile) { Start-File $DownloadedFile '-g' }
-        }
-        else { Open-InBrowser $RufusURL }
-    } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.8/rufus-3.8.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -324,7 +317,7 @@ $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (boot
 
 $BTN_DownloadDSE.Text = "Driver Store Explorer$REQUIRES_ELEVATION"
 $BTN_DownloadDSE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
-$BTN_DownloadDSE.Add_Click( { Start-DownloadExtractExecute -MultiFile 'github.com/lostindark/DriverStoreExplorer/releases/download/v0.10.58/DriverStoreExplorer.v0.10.58.zip' -Execute:$CBOX_StartDSE.Checked } )
+$BTN_DownloadDSE.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartDSE.Checked 'github.com/lostindark/DriverStoreExplorer/releases/download/v0.10.58/DriverStoreExplorer.v0.10.58.zip' } )
 
 $CBOX_StartDSE.Location = $BTN_DownloadDSE.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartDSE.Text = $TXT_START_AFTER_DOWNLOAD
@@ -445,7 +438,7 @@ $CBOX_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
 $BTN_DownloadNinite.Text = "Download selected$REQUIRES_ELEVATION"
 $BTN_DownloadNinite.Location = $CBOX_qBittorrent.Location + $SHIFT_BTN_SHORT
-$BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) -Execute:$CBOX_StartNinite.Checked } )
+$BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartNinite.Checked "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
 
 $CBOX_StartNinite.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartNinite.Location = $BTN_DownloadNinite.Location + $SHIFT_CBOX_EXECUTE
@@ -506,7 +499,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -MultiFile 'sdi-tool.org/releases/SDI_R1909.zip' -Execute:$CBOX_StartSDI.Checked } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'sdi-tool.org/releases/SDI_R1909.zip' } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
@@ -515,8 +508,8 @@ $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver I
 $BTN_DownloadUnchecky.Text = "Unchecky$REQUIRES_ELEVATION"
 $BTN_DownloadUnchecky.Location = $BTN_DownloadSDI.Location + $SHIFT_BTN_LONG
 $BTN_DownloadUnchecky.Add_Click( {
-        Set-Variable -Option Constant DownloadedFile (Start-Download 'unchecky.com/files/unchecky_setup.exe')
-        if ($CBOX_StartUnchecky.Checked -and $DownloadedFile) { Start-File -SilentInstall $DownloadedFile $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' }) }
+        Set-Variable -Option Constant Params $(if ($CBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
+        Start-DownloadExtractExecute -Execute:$CBOX_StartUnchecky.Checked 'unchecky.com/files/unchecky_setup.exe' -Params:$Params -SilentInstall:$CBOX_SilentlyInstallUnchecky.Checked
     } )
 
 $CBOX_StartUnchecky.Location = $BTN_DownloadUnchecky.Location + $SHIFT_CBOX_EXECUTE
@@ -529,7 +522,7 @@ $CBOX_StartUnchecky.Add_CheckStateChanged( { $BTN_DownloadUnchecky.Text = "Unche
 
 $BTN_DownloadOffice.Text = "Office 2013 - 2019$REQUIRES_ELEVATION"
 $BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
-$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning 'qiiwexc.github.io/d/Office_2013-2019.zip' -Execute:$CBOX_StartOffice.Checked } )
+$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartOffice.Checked 'qiiwexc.github.io/d/Office_2013-2019.zip' } )
 
 $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2019$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
@@ -570,7 +563,7 @@ $GRP_InstallTools.Controls.AddRange(@($BTN_DownloadCCleaner, $CBOX_StartCCleaner
 
 $BTN_DownloadCCleaner.Text = "CCleaner$REQUIRES_ELEVATION"
 $BTN_DownloadCCleaner.Location = $BTN_INIT_LOCATION
-$BTN_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute 'download.ccleaner.com/ccsetup.exe' -Execute:$CBOX_StartCCleaner.Checked } )
+$BTN_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartCCleaner.Checked 'download.ccleaner.com/ccsetup.exe' } )
 
 $CBOX_StartCCleaner.Location = $BTN_DownloadCCleaner.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CCleaner$(if ($CBOX_StartCCleaner.Checked) {$REQUIRES_ELEVATION})" } )
@@ -578,7 +571,7 @@ $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CClea
 
 $BTN_DownloadDefraggler.Text = "Defraggler$REQUIRES_ELEVATION"
 $BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
-$BTN_DownloadDefraggler.Add_Click( { Start-DownloadExtractExecute 'download.ccleaner.com/dfsetup.exe' -Execute:$CBOX_StartDefraggler.Checked } )
+$BTN_DownloadDefraggler.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartDefraggler.Checked 'download.ccleaner.com/dfsetup.exe' } )
 
 $CBOX_StartDefraggler.Location = $BTN_DownloadDefraggler.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartDefraggler.Add_CheckStateChanged( { $BTN_DownloadDefraggler.Text = "Defraggler$(if ($CBOX_StartDefraggler.Checked) {$REQUIRES_ELEVATION})" } )
@@ -713,7 +706,7 @@ $RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_
 
 $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
 $BTN_DownloadVictoria.Location = $BTN_CheckDisk.Location + $SHIFT_BTN_LONG
-$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute 'qiiwexc.github.io/d/Victoria.zip' -Execute:$CBOX_StartVictoria.Checked } )
+$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'qiiwexc.github.io/d/Victoria.zip' } )
 
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
@@ -721,7 +714,7 @@ $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victo
 
 $BTN_DownloadRecuva.Text = "Recuva (restore data)$REQUIRES_ELEVATION"
 $BTN_DownloadRecuva.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
-$BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute -MultiFile 'ccleaner.com/recuva/download/portable/downloadfile' 'Recuva.zip' -Execute:$CBOX_StartRecuva.Checked } )
+$BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRecuva.Checked 'download.ccleaner.com/rcsetup.exe' } )
 
 $CBOX_StartRecuva.Location = $BTN_DownloadRecuva.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRecuva.Add_CheckStateChanged( { $BTN_DownloadRecuva.Text = "Recuva (restore data)$(if ($CBOX_StartRecuva.Checked) {$REQUIRES_ELEVATION})" } )
@@ -764,7 +757,7 @@ $BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
 
 $BTN_HardwareMonitor.Text = "CPUID HWMonitor$REQUIRES_ELEVATION"
 $BTN_HardwareMonitor.Location = $BTN_CheckRAM.Location + $SHIFT_BTN_NORMAL
-$BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute -MultiFile 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -Execute:$CBOX_HardwareMonitor.Checked } )
+$BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_HardwareMonitor.Checked 'http://download.cpuid.com/hwmonitor/hwmonitor_1.41.zip' } )
 
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_HardwareMonitor.Checked = $True
@@ -905,7 +898,7 @@ $BTN_StartSecurityScan.Add_Click( { Start-SecurityScan } )
 
 $BTN_DownloadMalwarebytes.Text = "Malwarebytes$REQUIRES_ELEVATION"
 $BTN_DownloadMalwarebytes.Location = $BTN_StartSecurityScan.Location + $SHIFT_BTN_NORMAL
-$BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadExtractExecute 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' -Execute:$CBOX_StartMalwarebytes.Checked } )
+$BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartMalwarebytes.Checked 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' } )
 
 $CBOX_StartMalwarebytes.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_StartMalwarebytes.Checked = $True
@@ -1247,7 +1240,7 @@ Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfigu
 
 Function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
 
-Function Reset-StateOnExit { Remove-Item $TEMP_DIR -Recurse -Force -ErrorAction SilentlyContinue; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
+Function Reset-StateOnExit { Remove-Item $TEMP_DIR -Force -ErrorAction SilentlyContinue -Recurse; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
 
 Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
 
@@ -1258,20 +1251,25 @@ Function Start-DownloadExtractExecute {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"),
         [String][Parameter(Position = 1)]$FileName,
-        [Switch]$AVWarning, [Switch]$MultiFile, [Switch]$Execute
+        [String]$Params, [Switch]$AVWarning, [Switch]$Execute, [Switch]$SilentInstall
     )
     if (-not $URL) { Return }
 
-    if ($AVWarning) { Add-Log $WRN $TXT_AV_WARNING }
+    if ($AVWarning -and -not $AVWarningShown) {
+        Add-Log $WRN $TXT_AV_WARNING
+        Add-Log $WRN 'Click the button again to continue'
+        Set-Variable -Option Constant -Scope Script AVWarningShown $True
+        Return
+    }
 
     if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
     else {
-        Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$Execute)
+        Set-Variable -Option Constant IsZip ($URL.Substring($URL.Length - 4) -eq '.zip')
+        Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 
         if ($DownloadedFile) {
-            Set-Variable -Option Constant IsZip ($DownloadedFile.Substring($DownloadedFile.Length - 4) -eq '.zip')
-            Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -MF:$MultiFile } else { $DownloadedFile })
-            if ($Execute) { Start-File $Executable }
+            Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
+            if ($Execute) { Start-File $Executable $Params -SilentInstall:$SilentInstall }
         }
     }
 }
@@ -1287,15 +1285,12 @@ Function Start-Download {
     )
     if (-not $URL) { Return }
 
-    Set-Variable -Option Constant DownloadURL $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL })
-    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { $DownloadURL.Split('/') | Select-Object -Last 1 })
-    Set-Variable -Option Constant BaseDir $(if ($Temp) { $TEMP_DIR } else { $CURRENT_DIR })
-    Set-Variable -Option Constant SavePath "$BaseDir\$FileName"
+    Set-Variable -Option Constant DownloadURL $(if ($URL -Like 'http*') { $URL } else { 'https://' + $URL })
+    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $DownloadURL })
+    Set-Variable -Option Constant TempPath "$TEMP_DIR\$FileName"
+    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$CURRENT_DIR\$FileName" })
 
-    if (-not (Test-Path $BaseDir)) {
-        Add-Log $WRN "Download path $BaseDir does not exist. Creating it."
-        New-Item $BaseDir -ItemType Directory -Force | Out-Null
-    }
+    New-Item -Force -ItemType Directory $TEMP_DIR | Out-Null
 
     Add-Log $INF "Downloading from $DownloadURL"
 
@@ -1303,7 +1298,9 @@ Function Start-Download {
     if ($IsNotConnected) { Add-Log $ERR "Download failed: $IsNotConnected"; Return }
 
     try {
-        (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $SavePath)
+        (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $TempPath)
+        if (-not $Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
+
         if (Test-Path $SavePath) { Out-Success }
         else { Throw 'Possibly computer is offline or disk is full' }
     }
@@ -1317,61 +1314,68 @@ Function Start-Download {
 
 Function Start-Extraction {
     Param(
-        [String][Parameter(Position = 0)]$FileName = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
-        [Switch][Parameter(Position = 1)][Alias('MF')]$MultiFileArchive
+        [String][Parameter(Position = 0)]$ZipPath = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
+        [Switch]$Execute
     )
-    if (-not $FileName) { Return }
+    if (-not $ZipPath) { Return }
 
-    Add-Log $INF "Extracting $FileName..."
+    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
+    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or $ZipName -eq 'KMSAuto_Lite.zip' -or `
+            $URL -Match 'hwmonitor_' -or $URL -Match 'DriverStoreExplorer' -or $URL -Match 'SDI_R')
 
-    Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $FileName.TrimEnd('.zip') })
+    Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
+    Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $TEMP_DIR })
+    Set-Variable -Option Constant TargetPath $(if ($Execute) { $TEMP_DIR } else { $CURRENT_DIR })
+    Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
-    [String]$TargetDirName = $ExtractionPath
-    if ($MultiFileArchive) {
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $TargetDirName
-        New-Item -ItemType Directory -Force $TargetDirName | Out-Null
-    }
-
-    # FIXME: relative vs absolute path
-    [String]$Executable = Switch -Wildcard ($FileName) {
+    [String]$Executable = Switch -Wildcard ($ZipName) {
         'ChewWGA.zip' { 'CW.eXe' }
-        'DriverStoreExplorer*' { 'Rapr.exe' }
         'Office_2013-2019.zip' { 'OInstall.exe' }
-        'AAct.zip' { "AAct$(if ($OS_ARCH -eq '64-bit') {'_x64'}).exe" }
-        'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_ARCH -eq '64-bit') {' x64'}).exe" }
-        'hwmonitor_*' { "HWMonitor_$(if ($OS_ARCH -eq '64-bit') {'x64'} else {'x32'}).exe" }
-        'Recuva.zip' { "$ExtractionPath\recuva$(if ($OS_ARCH -eq '64-bit') {'64'}).exe" }
-        'SDI_R*' { "$ExtractionPath\$(if ($OS_ARCH -eq '64-bit') {"$($ExtractionPath.Split('_') -Join '_x64_').exe"} else {"$ExtractionPath.exe"})" }
-        Default { $FileName.TrimEnd('.zip') + '.exe' }
+        'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
+        'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
+        'hwmonitor_*' { "HWMonitor_$(if ($OS_64_BIT) {'x64'} else {'x32'}).exe" }
+        'DriverStoreExplorer*' { "$ExtractionDir\Rapr.exe" }
+        'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
+        Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
 
-    Remove-Item -Force -ErrorAction SilentlyContinue $Executable
+    Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -Like "$ExtractionDir\*")
+    Set-Variable -Option Constant TemporaryExe "$TemporaryPath\$Executable"
+    Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
+
+    Remove-Item -Force -ErrorAction SilentlyContinue $TemporaryExe
+    if ($MultiFileArchive) {
+        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $TemporaryPath
+        New-Item -Force -ItemType Directory $TemporaryPath | Out-Null
+    }
+
+    Add-Log $INF "Extracting $ZipPath..."
 
     try {
-        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($FileName, $TargetDirName) }
-        else { ForEach ($Item In $Shell.NameSpace($FileName).Items()) { $Shell.NameSpace($TargetDirName).CopyHere($Item) } }
+        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
+        else { ForEach ($Item In $Shell.NameSpace($ZipPath).Items()) { $Shell.NameSpace($TemporaryPath).CopyHere($Item) } }
     }
     catch [Exception] {
-        Add-Log $ERR "Failed to extract' $FileName': $($_.Exception.Message)"
+        Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
         Return
     }
 
-    if ($FileName -eq 'AAct.zip' -or $FileName -eq 'KMSAuto_Lite.zip' -or $FileName -Match 'hwmonitor_*') {
-        Set-Variable -Option Constant TempDir $TargetDirName
-        [String]$TargetDirName = $CURRENT_DIR
+    Remove-Item -Force -ErrorAction SilentlyContinue $ZipPath
 
-        Move-Item "$TempDir\$Executable" "$TargetDirName\$Executable"
-        Remove-Item -Recurse -Force $TempDir
+    if (-not $IsDirectory) {
+        Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
+        if ($ExtractionPath) { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath }
+    }
+
+    if ( -not $Execute -and $IsDirectory) {
+        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse "$TargetPath\$ExtractionDir"
+        Move-Item -Force -ErrorAction SilentlyContinue $TemporaryPath $TargetPath
     }
 
     Out-Success
-    Add-Log $INF "Files extracted to $TargetDirName"
+    Add-Log $INF "Files extracted to $TemporaryPath"
 
-    Add-Log $INF "Removing $FileName..."
-    Remove-Item -Force $FileName
-    Out-Success
-
-    Return $Executable
+    Return $TargetExe
 }
 
 
@@ -1401,7 +1405,7 @@ Function Start-File {
 
         try {
             if ($Switches) { Start-Process $Executable $Switches }
-            elseif ($Executable -Match 'SDI_R*') { Start-Process $Executable -WorkingDirectory $Executable.Split('\')[0] }
+            elseif ($Executable -Match 'SDI_R') { Start-Process $Executable -WorkingDirectory $Executable.Split('\')[0] }
             else { Start-Process $Executable }
         }
         catch [Exception] { Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"; Return }
@@ -1434,11 +1438,11 @@ Function Get-SystemInfo {
 
     Set-Variable -Option Constant -Scope Script OS_NAME $OperatingSystem.Caption
     Set-Variable -Option Constant -Scope Script OS_BUILD $OperatingSystem.Version
-    Set-Variable -Option Constant -Scope Script OS_ARCH $(if ($OperatingSystem.OSArchitecture -like '64-*') { '64-bit' } else { '32-bit' })
+    Set-Variable -Option Constant -Scope Script OS_64_BIT $(if ($OperatingSystem.OSArchitecture -Like '64-*') { $True })
     Set-Variable -Option Constant -Scope Script OS_VERSION $(Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } })
 
     Set-Variable -Option Constant -Scope Script CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
-    Set-Variable -Option Constant -Scope Script PROGRAM_FILES_86 $(if ($OS_ARCH -eq '64-bit') { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
+    Set-Variable -Option Constant -Scope Script PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
 
     New-PSDrive HKCR Registry HKEY_CLASSES_ROOT
     Set-Variable -Option Constant WordRegPath (Get-ItemProperty 'HKCR:\Word.Application\CurVer' -ErrorAction SilentlyContinue)
@@ -1446,8 +1450,8 @@ Function Get-SystemInfo {
     Set-Variable -Option Constant -Scope Script OfficeC2RClientExe "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
     Set-Variable -Option Constant -Scope Script OfficeInstallType $(if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
 
-    Set-Variable -Option Constant -Scope Script CCleanerExe "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
-    Set-Variable -Option Constant -Scope Script DefragglerExe "$env:ProgramFiles\Defraggler\df$(if ($OS_ARCH -eq '64-bit') {'64'}).exe"
+    Set-Variable -Option Constant -Scope Script CCleanerExe "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_64_BIT) {'64'}).exe"
+    Set-Variable -Option Constant -Scope Script DefragglerExe "$env:ProgramFiles\Defraggler\df$(if ($OS_64_BIT) {'64'}).exe"
     Set-Variable -Option Constant -Scope Script DefenderExe "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
     Set-Variable -Option Constant -Scope Script ChromeExe "$PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
 
@@ -1506,7 +1510,7 @@ Function Out-SystemInfo {
     Add-Log $INF '  Software'
     Add-Log $INF "    BIOS version:  $((Get-WmiObject Win32_BIOS).SMBIOSBIOSVersion)"
     Add-Log $INF "    Operation system:  $OS_NAME"
-    Add-Log $INF "    OS architecture:  $OS_ARCH"
+    Add-Log $INF "    OS architecture:  $(if ($OS_64_BIT) { '64-bit' } else { '32-bit' })"
     Add-Log $INF "    $(if ($OS_VERSION -eq 10) {'OS release / '})Build number:  $(if ($OS_VERSION -eq 10) {"v$Win10Release / "})$OS_BUILD"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OfficeInstallType) {`"($OfficeInstallType installation type)`"})"
     Add-Log $INF "    PowerShell version:  $PS_VERSION.$($PSVersionTable.PSVersion.Minor)"
@@ -1738,7 +1742,7 @@ Function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue }
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Force -ErrorAction SilentlyContinue -Recurse }
             Out-Success
         }
     }
@@ -1777,7 +1781,6 @@ Function Start-FileCleanup {
         "$env:SystemDrive\temp\*"
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
-        "$env:ProgramData\Kollective\*.log"
         "$env:ProgramData\SymEFASI"
         "$env:ProgramData\SymEFASI\*"
         "$env:ProgramData\UIU"
@@ -2169,7 +2172,7 @@ Function Start-FileCleanup {
     ForEach ($Item In $ItemsToDelete) {
         if (Test-Path $Item) {
             Add-Log $INF "Removing $Item"
-            Remove-Item $Item -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $Item
             if (Test-Path $Item) { Out-Failure } else { Out-Success }
         }
     }

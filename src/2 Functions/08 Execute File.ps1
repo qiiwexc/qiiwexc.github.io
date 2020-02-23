@@ -22,7 +22,7 @@ Function Start-File {
 
         try {
             if ($Switches) { Start-Process $Executable $Switches }
-            elseif ($Executable -Match 'SDI_R*') { Start-Process $Executable -WorkingDirectory $Executable.Split('\')[0] }
+            elseif ($Executable -Match 'SDI_R') { Start-Process $Executable -WorkingDirectory $Executable.Split('\')[0] }
             else { Start-Process $Executable }
         }
         catch [Exception] { Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"; Return }

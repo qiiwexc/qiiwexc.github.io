@@ -33,7 +33,7 @@ $BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
 
 $BTN_HardwareMonitor.Text = "CPUID HWMonitor$REQUIRES_ELEVATION"
 $BTN_HardwareMonitor.Location = $BTN_CheckRAM.Location + $SHIFT_BTN_NORMAL
-$BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute -MultiFile 'http://download.cpuid.com/hwmonitor/hwmonitor_1.40.zip' -Execute:$CBOX_HardwareMonitor.Checked } )
+$BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_HardwareMonitor.Checked 'http://download.cpuid.com/hwmonitor/hwmonitor_1.41.zip' } )
 
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_HardwareMonitor.Checked = $True
