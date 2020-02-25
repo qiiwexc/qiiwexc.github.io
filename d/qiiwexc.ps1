@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.2.24')
+Set-Variable -Option Constant Version ([Version]'20.2.26')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1214,6 +1214,16 @@ Function Get-Update {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Common #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
+Function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
+
+Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
+
+Function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
+
+Function Reset-StateOnExit { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $TEMP_DIR; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
+
+Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
+
 Function Open-InBrowser {
     Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
     if (-not $URL) { Return }
@@ -1233,16 +1243,17 @@ Function Set-ButtonState {
     $BTN_HTTPSEverywhere.Enabled = $BTN_AdBlock.Enabled = Test-Path $ChromeExe
 }
 
+Function Start-ExternalProcess {
+    Param(
+        [String][Parameter(Position = 0)]$Command = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No command specified"),
+        [String][Parameter(Position = 1)]$Title,
+        [Switch]$Elevated, [Switch]$Wait, [Switch]$Hidden
+    )
+    if (-not $Command) { Return }
 
-Function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
-
-Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
-
-Function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
-
-Function Reset-StateOnExit { Remove-Item $TEMP_DIR -Force -ErrorAction SilentlyContinue -Recurse; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
-
-Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
+    Set-Variable -Option Constant FullCommand "$(if ($Title) { "(Get-Host).UI.RawUI.WindowTitle = '$Title';" }) $Command"
+    Start-Process 'PowerShell' "-Command $FullCommand" -Wait:$Wait -Verb:$(if ($Elevated) { 'RunAs' } else { 'Open' }) -WindowStyle:$(if ($Hidden) { 'Hidden' } else { 'Normal' })
+}
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download Extract Execute #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1251,7 +1262,8 @@ Function Start-DownloadExtractExecute {
     Param(
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"),
         [String][Parameter(Position = 1)]$FileName,
-        [String]$Params, [Switch]$AVWarning, [Switch]$Execute, [Switch]$SilentInstall
+        [String][Parameter(Position = 2)]$Params,
+        [Switch]$AVWarning, [Switch]$Execute, [Switch]$SilentInstall
     )
     if (-not $URL) { Return }
 
@@ -1404,9 +1416,8 @@ Function Start-File {
         Add-Log $INF "Starting '$Executable'..."
 
         try {
-            if ($Switches) { Start-Process $Executable $Switches }
-            elseif ($Executable -Match 'SDI_R') { Start-Process $Executable -WorkingDirectory $Executable.Split('\')[0] }
-            else { Start-Process $Executable }
+            if ($Switches) { Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) }
+            else { Start-Process $Executable -WorkingDirectory (Split-Path $Executable) }
         }
         catch [Exception] { Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"; Return }
 
@@ -1421,7 +1432,7 @@ Function Start-Elevated {
     if (-not $IS_ELEVATED) {
         Add-Log $INF 'Requesting administrator privileges...'
 
-        try { Start-Process -Verb RunAs 'PowerShell' "$($MyInvocation.ScriptName)$(if ($HIDE_CONSOLE) {' -HideConsole'})" }
+        try { Start-ExternalProcess -Elevated "$($MyInvocation.ScriptName)$(if ($HIDE_CONSOLE) {' -HideConsole'})" }
         catch [Exception] { Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"; Return }
 
         Exit-Script
@@ -1558,9 +1569,8 @@ Function Start-DiskCheck {
 
     Add-Log $INF 'Starting (C:) disk health check...'
 
-    Set-Variable -Option Constant Parameters $(if ($FullScan) { "'/B'" } elseif ($OS_VERSION -gt 7) { "'/scan /perf'" })
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Disk check running...'; Start-Process 'chkdsk' $Parameters -NoNewWindow`"" }
+    Set-Variable -Option Constant Command "Start-Process 'chkdsk' $(if ($FullScan) { "'/B'" } elseif ($OS_VERSION -gt 7) { "'/scan /perf'" }) -NoNewWindow"
+    try { Start-ExternalProcess -Elevated $Command 'Disk check running...' }
     catch [Exception] { Add-Log $ERR "Failed to check (C:) disk health: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1584,9 +1594,7 @@ Function Start-MemoryCheckTool {
 Function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
 
-    Set-Variable -Option Constant SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Checking Windows health...'"
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' "Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1596,9 +1604,7 @@ Function Test-WindowsHealth {
 Function Repair-Windows {
     Add-Log $INF 'Starting Windows repair...'
 
-    Set-Variable -Option Constant SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Repairing Windows...'"
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Elevated -Title:'Repairing Windows...' "Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to repair Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1608,7 +1614,7 @@ Function Repair-Windows {
 Function Repair-SystemFiles {
     Add-Log $INF 'Starting system file integrity check...'
 
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command (Get-Host).UI.RawUI.WindowTitle = 'Checking system files...'; Start-Process 'sfc' '/scannow' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Elevated -Title:'Checking system files...' "Start-Process 'sfc' '/scannow' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to check system file integrity: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1621,9 +1627,7 @@ Function Start-SecurityScan {
     if ($OS_VERSION -gt 7) {
         Add-Log $INF 'Updating security signatures...'
 
-        [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Updating security signatures...'"
-
-        try { Start-Process -Wait 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow`"" }
+        try { Start-ExternalProcess -Wait -Title:'Updating security signatures...' "Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow" }
         catch [Exception] { Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"; Return }
 
         Out-Success
@@ -1631,9 +1635,7 @@ Function Start-SecurityScan {
 
     Add-Log $INF "Performing a security scan..."
 
-    [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Security scan is running...'"
-
-    try { Start-Process -Wait 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType 2' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Title:'Security scan is running...' "Start-Process '$DefenderExe' '-Scan -ScanType 2' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to perform a security scan: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1645,8 +1647,10 @@ Function Start-SecurityScan {
 Function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
 
+    Set-Variable -Option Constant WindowTitle 'Checking for Windows Store app updates...'
     Set-Variable -Option Constant Command "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
-    try { Start-Process -Verb RunAs -Wait -WindowStyle Hidden 'PowerShell' "-Command `"$Command`"" }
+
+    try { Start-ExternalProcess -Elevated -Title:$WindowTitle "Write-Host 'Checking for updates...'; $Command" }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1657,8 +1661,8 @@ Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
     try {
-        Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs
-        Start-Process $OfficeC2RClientExe '/update user' -Wait
+        Start-Process -Wait $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs
+        Start-Process -Wait $OfficeC2RClientExe '/update user'
     }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
 
@@ -1706,7 +1710,7 @@ Function Start-FileCleanup {
             Add-Log $INF "Removing older versions from $Path"
 
             [String]$Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
-            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item $_ -Recurse -Force }
+            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item -Force -Recurse $_ }
 
             if (Test-Path $Path) { Out-Failure } else { Out-Success }
         }
@@ -1742,7 +1746,7 @@ Function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Force -ErrorAction SilentlyContinue -Recurse }
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $_ }
             Out-Success
         }
     }
@@ -1783,7 +1787,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Adobe\*"
         "$env:ProgramData\SymEFASI"
         "$env:ProgramData\SymEFASI\*"
-        "$env:ProgramData\UIU"
         "$env:ProgramData\UIU\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
@@ -2196,8 +2199,8 @@ Function Remove-Trash {
     try {
         if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
         else {
-            Set-Variable -Option Constant Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }'
-            Start-Process -Verb RunAs -WindowStyle Hidden 'PowerShell' "-Command `"$Command`""
+            Set-Variable -Option Constant Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item -Force -Recurse $_.Path }'
+            Start-ExternalProcess -Elevated $Command 'Emptying Recycle Bin...'
         }
     }
     catch [Exception] { Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"; Return }
@@ -2236,9 +2239,7 @@ Function Start-CCleaner {
 Function Start-WindowsCleanup {
     Add-Log $INF 'Starting Windows update cleanup...'
 
-    Set-Variable -Option Constant SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Cleaning Windows...'"
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Elevated -Title:'Cleaning Windows...' "Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -2248,9 +2249,7 @@ Function Start-WindowsCleanup {
 Function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
-    Set-Variable -Option Constant SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Deleting restore points...'"
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"$SetTitle; Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Elevated -Title:'Deleting restore points...' "Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -2269,8 +2268,10 @@ Function Set-CloudFlareDNS {
         Return
     }
 
+    Set-Variable -Option Constant WindowTitle 'Changing DNS server to CloudFlare DNS...'
     Set-Variable -Option Constant Command "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))"
-    try { Start-Process -Verb RunAs -WindowStyle Hidden 'PowerShell' "-Command `"$Command`"" }
+
+    try { Start-ExternalProcess -Elevated -Title:$WindowTitle $Command }
     catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -2278,11 +2279,10 @@ Function Set-CloudFlareDNS {
 
 
 Function Start-DriveOptimization {
-    Add-Log $INF 'Starting drive optimization...'
+    Add-Log $INF "Starting $(if ($OS_VERSION -le 7) { '(C:) ' })drive optimization..."
 
-    Set-Variable -Option Constant Parameters $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" })
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Optimizing drives...'; Start-Process 'defrag' $Parameters -NoNewWindow`"" }
+    Set-Variable -Option Constant Command "Start-Process -NoNewWindow 'defrag' $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" })"
+    try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' $Command }
     catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -2292,7 +2292,7 @@ Function Start-DriveOptimization {
 Function Start-Defraggler {
     Add-Log $INF 'Starting (C:) drive optimization with Defraggler...'
 
-    try { Start-Process -Verb RunAs $DefragglerExe 'C:' }
+    try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' "Start-Process -NoNewWindow $DefragglerExe 'C:'" }
     catch [Exception] { Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"; Return }
 
     Out-Success

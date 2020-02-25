@@ -4,8 +4,8 @@ Function Remove-Trash {
     try {
         if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
         else {
-            Set-Variable -Option Constant Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item $_.Path -Recurse -Force }'
-            Start-Process -Verb RunAs -WindowStyle Hidden 'PowerShell' "-Command `"$Command`""
+            Set-Variable -Option Constant Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item -Force -Recurse $_.Path }'
+            Start-ExternalProcess -Elevated $Command 'Emptying Recycle Bin...'
         }
     }
     catch [Exception] { Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"; Return }
@@ -44,9 +44,7 @@ Function Start-CCleaner {
 Function Start-WindowsCleanup {
     Add-Log $INF 'Starting Windows update cleanup...'
 
-    Set-Variable -Option Constant SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Cleaning Windows...'"
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"$SetTitle; Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Elevated -Title:'Cleaning Windows...' "Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -56,9 +54,7 @@ Function Start-WindowsCleanup {
 Function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
-    Set-Variable -Option Constant SetTitle "(Get-Host).UI.RawUI.WindowTitle = 'Deleting restore points...'"
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"$SetTitle; Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Elevated -Title:'Deleting restore points...' "Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
 
     Out-Success
