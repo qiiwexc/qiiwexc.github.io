@@ -1,8 +1,10 @@
 Function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
 
+    Set-Variable -Option Constant WindowTitle 'Checking for Windows Store app updates...'
     Set-Variable -Option Constant Command "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
-    try { Start-Process -Verb RunAs -Wait -WindowStyle Hidden 'PowerShell' "-Command `"$Command`"" }
+
+    try { Start-ExternalProcess -Elevated -Title:$WindowTitle "Write-Host 'Checking for updates...'; $Command" }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -13,8 +15,8 @@ Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
     try {
-        Start-Process $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs
-        Start-Process $OfficeC2RClientExe '/update user' -Wait
+        Start-Process -Wait $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs
+        Start-Process -Wait $OfficeC2RClientExe '/update user'
     }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
 

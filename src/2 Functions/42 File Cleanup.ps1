@@ -26,7 +26,7 @@ Function Start-FileCleanup {
             Add-Log $INF "Removing older versions from $Path"
 
             [String]$Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
-            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item $_ -Recurse -Force }
+            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item -Force -Recurse $_ }
 
             if (Test-Path $Path) { Out-Failure } else { Out-Success }
         }
@@ -62,7 +62,7 @@ Function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item $_ -Force -ErrorAction SilentlyContinue -Recurse }
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $_ }
             Out-Success
         }
     }
@@ -103,7 +103,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Adobe\*"
         "$env:ProgramData\SymEFASI"
         "$env:ProgramData\SymEFASI\*"
-        "$env:ProgramData\UIU"
         "$env:ProgramData\UIU\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"

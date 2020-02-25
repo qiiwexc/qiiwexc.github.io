@@ -1,3 +1,13 @@
+Function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
+
+Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
+
+Function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
+
+Function Reset-StateOnExit { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $TEMP_DIR; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
+
+Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
+
 Function Open-InBrowser {
     Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
     if (-not $URL) { Return }
@@ -17,13 +27,14 @@ Function Set-ButtonState {
     $BTN_HTTPSEverywhere.Enabled = $BTN_AdBlock.Enabled = Test-Path $ChromeExe
 }
 
+Function Start-ExternalProcess {
+    Param(
+        [String][Parameter(Position = 0)]$Command = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No command specified"),
+        [String][Parameter(Position = 1)]$Title,
+        [Switch]$Elevated, [Switch]$Wait, [Switch]$Hidden
+    )
+    if (-not $Command) { Return }
 
-Function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
-
-Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
-
-Function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
-
-Function Reset-StateOnExit { Remove-Item $TEMP_DIR -Force -ErrorAction SilentlyContinue -Recurse; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
-
-Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
+    Set-Variable -Option Constant FullCommand "$(if ($Title) { "(Get-Host).UI.RawUI.WindowTitle = '$Title';" }) $Command"
+    Start-Process 'PowerShell' "-Command $FullCommand" -Wait:$Wait -Verb:$(if ($Elevated) { 'RunAs' } else { 'Open' }) -WindowStyle:$(if ($Hidden) { 'Hidden' } else { 'Normal' })
+}

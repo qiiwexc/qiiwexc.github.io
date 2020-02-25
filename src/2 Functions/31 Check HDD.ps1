@@ -3,9 +3,8 @@ Function Start-DiskCheck {
 
     Add-Log $INF 'Starting (C:) disk health check...'
 
-    Set-Variable -Option Constant Parameters $(if ($FullScan) { "'/B'" } elseif ($OS_VERSION -gt 7) { "'/scan /perf'" })
-
-    try { Start-Process -Verb RunAs 'PowerShell' "-Command `"(Get-Host).UI.RawUI.WindowTitle = 'Disk check running...'; Start-Process 'chkdsk' $Parameters -NoNewWindow`"" }
+    Set-Variable -Option Constant Command "Start-Process 'chkdsk' $(if ($FullScan) { "'/B'" } elseif ($OS_VERSION -gt 7) { "'/scan /perf'" }) -NoNewWindow"
+    try { Start-ExternalProcess -Elevated $Command 'Disk check running...' }
     catch [Exception] { Add-Log $ERR "Failed to check (C:) disk health: $($_.Exception.Message)"; Return }
 
     Out-Success

@@ -2,9 +2,7 @@ Function Start-SecurityScan {
     if ($OS_VERSION -gt 7) {
         Add-Log $INF 'Updating security signatures...'
 
-        [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Updating security signatures...'"
-
-        try { Start-Process -Wait 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow`"" }
+        try { Start-ExternalProcess -Wait -Title:'Updating security signatures...' "Start-Process '$DefenderExe' '-SignatureUpdate' -NoNewWindow" }
         catch [Exception] { Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"; Return }
 
         Out-Success
@@ -12,9 +10,7 @@ Function Start-SecurityScan {
 
     Add-Log $INF "Performing a security scan..."
 
-    [String]$SetTitle = "(Get-Host).UI.RawUI.WindowTitle = 'Security scan is running...'"
-
-    try { Start-Process -Wait 'PowerShell' "-Command `"$SetTitle; Start-Process '$DefenderExe' '-Scan -ScanType 2' -NoNewWindow`"" }
+    try { Start-ExternalProcess -Title:'Security scan is running...' "Start-Process '$DefenderExe' '-Scan -ScanType 2' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to perform a security scan: $($_.Exception.Message)"; Return }
 
     Out-Success

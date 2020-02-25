@@ -56,8 +56,10 @@ Function Start-Build {
 
     Add-Log $INF 'Finished'
 
-    if ($AndRun) { Add-Log $INF "Running $TargetFile"; Start-Process 'PowerShell' ".\$TargetFile" }
+    if ($AndRun) {
+        Add-Log $INF "Running $TargetFile"
+        Start-Process 'PowerShell' ".\$TargetFile"
+    }
 }
 
-
-if ($args[0] -eq '--and-run') { Start-Build -AndRun } else { Start-Build }
+Start-Build -AndRun:$($args[0] -eq '--and-run')
