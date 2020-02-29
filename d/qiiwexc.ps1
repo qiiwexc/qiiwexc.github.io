@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.2.26')
+Set-Variable -Option Constant Version ([Version]'20.2.29')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -951,7 +951,7 @@ $BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
 
 Set-Variable -Option Constant GRP_Cleanup           (New-Object System.Windows.Forms.GroupBox)
 $GRP_Cleanup.Text = 'Cleanup'
-$GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 6
+$GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 5
 $GRP_Cleanup.Width = $GRP_WIDTH
 $GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
@@ -960,21 +960,19 @@ Set-Variable -Option Constant BTN_EmptyRecycleBin     (New-Object System.Windows
 Set-Variable -Option Constant BTN_FileCleanup         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_DiskCleanup         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_RunCCleaner         (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_WindowsCleanup      (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_DeleteRestorePoints (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_EmptyRecycleBin, 'Empty Recycle Bin')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_FileCleanup, 'Remove temporary files, some log files and empty directories, and some other unnecessary files')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DiskCleanup, 'Start Windows built-in disk cleanup utility')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RunCCleaner, 'Clean the system in the background with CCleaner')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsCleanup, 'Remove old versions of system files, which have been changed via updates')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DeleteRestorePoints, 'Delete all restore points (shadow copies)')
 
-$BTN_EmptyRecycleBin.Font = $BTN_FileCleanup.Font = $BTN_DiskCleanup.Font = $BTN_RunCCleaner.Font = $BTN_WindowsCleanup.Font = $BTN_DeleteRestorePoints.Font = $BTN_FONT
-$BTN_EmptyRecycleBin.Height = $BTN_FileCleanup.Height = $BTN_DiskCleanup.Height = $BTN_RunCCleaner.Height = $BTN_WindowsCleanup.Height = $BTN_DeleteRestorePoints.Height = $BTN_HEIGHT
-$BTN_EmptyRecycleBin.Width = $BTN_FileCleanup.Width = $BTN_DiskCleanup.Width = $BTN_RunCCleaner.Width = $BTN_WindowsCleanup.Width = $BTN_DeleteRestorePoints.Width = $BTN_WIDTH
+$BTN_EmptyRecycleBin.Font = $BTN_FileCleanup.Font = $BTN_DiskCleanup.Font = $BTN_RunCCleaner.Font = $BTN_DeleteRestorePoints.Font = $BTN_FONT
+$BTN_EmptyRecycleBin.Height = $BTN_FileCleanup.Height = $BTN_DiskCleanup.Height = $BTN_RunCCleaner.Height = $BTN_DeleteRestorePoints.Height = $BTN_HEIGHT
+$BTN_EmptyRecycleBin.Width = $BTN_FileCleanup.Width = $BTN_DiskCleanup.Width = $BTN_RunCCleaner.Width = $BTN_DeleteRestorePoints.Width = $BTN_WIDTH
 
-$GRP_Cleanup.Controls.AddRange(@($BTN_EmptyRecycleBin, $BTN_FileCleanup, $BTN_DiskCleanup, $BTN_RunCCleaner, $BTN_WindowsCleanup, $BTN_DeleteRestorePoints))
+$GRP_Cleanup.Controls.AddRange(@($BTN_EmptyRecycleBin, $BTN_FileCleanup, $BTN_DiskCleanup, $BTN_RunCCleaner, $BTN_DeleteRestorePoints))
 
 
 
@@ -998,13 +996,8 @@ $BTN_RunCCleaner.Location = $BTN_DiskCleanup.Location + $SHIFT_BTN_NORMAL
 $BTN_RunCCleaner.Add_Click( { Start-CCleaner } )
 
 
-$BTN_WindowsCleanup.Text = "Cleanup Windows files$REQUIRES_ELEVATION"
-$BTN_WindowsCleanup.Location = $BTN_RunCCleaner.Location + $SHIFT_BTN_NORMAL
-$BTN_WindowsCleanup.Add_Click( { Start-WindowsCleanup } )
-
-
 $BTN_DeleteRestorePoints.Text = "Delete all restore points$REQUIRES_ELEVATION"
-$BTN_DeleteRestorePoints.Location = $BTN_WindowsCleanup.Location + $SHIFT_BTN_NORMAL
+$BTN_DeleteRestorePoints.Location = $BTN_RunCCleaner.Location + $SHIFT_BTN_NORMAL
 $BTN_DeleteRestorePoints.Add_Click( { Remove-RestorePoints } )
 
 
@@ -1066,7 +1059,7 @@ Function Initialize-Startup {
         $CBOX_StartKMSAuto.Checked = $CBOX_StartKMSAuto.Enabled = $CBOX_StartOffice.Checked = $CBOX_StartOffice.Enabled = `
         $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
 
-    $BTN_WindowsCleanup.Enabled = $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
+    $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
     $BTN_StartSecurityScan.Enabled = Test-Path $DefenderExe
 
     Set-ButtonState
@@ -1245,13 +1238,15 @@ Function Set-ButtonState {
 
 Function Start-ExternalProcess {
     Param(
-        [String][Parameter(Position = 0)]$Command = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No command specified"),
+        [String[]][Parameter(Position = 0)]$Commands = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No commands specified"),
         [String][Parameter(Position = 1)]$Title,
         [Switch]$Elevated, [Switch]$Wait, [Switch]$Hidden
     )
-    if (-not $Command) { Return }
+    if (-not $Commands) { Return }
 
-    Set-Variable -Option Constant FullCommand "$(if ($Title) { "(Get-Host).UI.RawUI.WindowTitle = '$Title';" }) $Command"
+    if ($Title) { $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands }
+    Set-Variable -Option Constant FullCommand $([String]$($Commands | ForEach-Object { "$_;" }))
+
     Start-Process 'PowerShell' "-Command $FullCommand" -Wait:$Wait -Verb:$(if ($Elevated) { 'RunAs' } else { 'Open' }) -WindowStyle:$(if ($Hidden) { 'Hidden' } else { 'Normal' })
 }
 
@@ -1594,7 +1589,10 @@ Function Start-MemoryCheckTool {
 Function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
 
-    try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' "Start-Process 'DISM' '/Online /Cleanup-Image /ScanHealth' -NoNewWindow" }
+    Set-Variable -Option Constant -Scope Script ComponentCleanup $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /StartComponentCleanup'" })
+    Set-Variable -Option Constant -Scope Script ScanHealth "Start-Process -NoNewWindow 'DISM' '/Online /Cleanup-Image /StartComponentCleanup'"
+
+    try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' @($ComponentCleanup, $ScanHealth) }
     catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1604,7 +1602,7 @@ Function Test-WindowsHealth {
 Function Repair-Windows {
     Add-Log $INF 'Starting Windows repair...'
 
-    try { Start-ExternalProcess -Elevated -Title:'Repairing Windows...' "Start-Process 'DISM' '/Online /Cleanup-Image /RestoreHealth' -NoNewWindow" }
+    try { Start-ExternalProcess -Elevated -Title:'Repairing Windows...' "Start-Process -NoNewWindow 'DISM' '/Online /Cleanup-Image /RestoreHealth'" }
     catch [Exception] { Add-Log $ERR "Failed to repair Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1614,7 +1612,7 @@ Function Repair-Windows {
 Function Repair-SystemFiles {
     Add-Log $INF 'Starting system file integrity check...'
 
-    try { Start-ExternalProcess -Elevated -Title:'Checking system files...' "Start-Process 'sfc' '/scannow' -NoNewWindow" }
+    try { Start-ExternalProcess -Elevated -Title:'Checking system files...' "Start-Process -NoNewWindow 'sfc' '/scannow'" }
     catch [Exception] { Add-Log $ERR "Failed to check system file integrity: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1647,10 +1645,7 @@ Function Start-SecurityScan {
 Function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
 
-    Set-Variable -Option Constant WindowTitle 'Checking for Windows Store app updates...'
-    Set-Variable -Option Constant Command "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
-
-    try { Start-ExternalProcess -Elevated -Title:$WindowTitle "Write-Host 'Checking for updates...'; $Command" }
+    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()" }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1787,7 +1782,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Adobe\*"
         "$env:ProgramData\SymEFASI"
         "$env:ProgramData\SymEFASI\*"
-        "$env:ProgramData\UIU\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
@@ -2236,16 +2230,6 @@ Function Start-CCleaner {
 }
 
 
-Function Start-WindowsCleanup {
-    Add-Log $INF 'Starting Windows update cleanup...'
-
-    try { Start-ExternalProcess -Elevated -Title:'Cleaning Windows...' "Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow" }
-    catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 Function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
@@ -2268,10 +2252,7 @@ Function Set-CloudFlareDNS {
         Return
     }
 
-    Set-Variable -Option Constant WindowTitle 'Changing DNS server to CloudFlare DNS...'
-    Set-Variable -Option Constant Command "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))"
-
-    try { Start-ExternalProcess -Elevated -Title:$WindowTitle $Command }
+    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))" }
     catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
 
     Out-Success

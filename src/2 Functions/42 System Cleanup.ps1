@@ -41,16 +41,6 @@ Function Start-CCleaner {
 }
 
 
-Function Start-WindowsCleanup {
-    Add-Log $INF 'Starting Windows update cleanup...'
-
-    try { Start-ExternalProcess -Elevated -Title:'Cleaning Windows...' "Start-Process 'DISM' '/Online /Cleanup-Image /StartComponentCleanup' -NoNewWindow" }
-    catch [Exception] { Add-Log $ERR "Failed to cleanup Windows updates: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 Function Remove-RestorePoints {
     Add-Log $INF 'Deleting all restore points...'
 
