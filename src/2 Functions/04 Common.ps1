@@ -29,12 +29,14 @@ Function Set-ButtonState {
 
 Function Start-ExternalProcess {
     Param(
-        [String][Parameter(Position = 0)]$Command = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No command specified"),
+        [String[]][Parameter(Position = 0)]$Commands = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No commands specified"),
         [String][Parameter(Position = 1)]$Title,
         [Switch]$Elevated, [Switch]$Wait, [Switch]$Hidden
     )
-    if (-not $Command) { Return }
+    if (-not $Commands) { Return }
 
-    Set-Variable -Option Constant FullCommand "$(if ($Title) { "(Get-Host).UI.RawUI.WindowTitle = '$Title';" }) $Command"
+    if ($Title) { $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands }
+    Set-Variable -Option Constant FullCommand $([String]$($Commands | ForEach-Object { "$_;" }))
+
     Start-Process 'PowerShell' "-Command $FullCommand" -Wait:$Wait -Verb:$(if ($Elevated) { 'RunAs' } else { 'Open' }) -WindowStyle:$(if ($Hidden) { 'Hidden' } else { 'Normal' })
 }

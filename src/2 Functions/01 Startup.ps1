@@ -14,7 +14,7 @@ Function Initialize-Startup {
         $CBOX_StartKMSAuto.Checked = $CBOX_StartKMSAuto.Enabled = $CBOX_StartOffice.Checked = $CBOX_StartOffice.Enabled = `
         $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
 
-    $BTN_WindowsCleanup.Enabled = $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
+    $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
     $BTN_StartSecurityScan.Enabled = Test-Path $DefenderExe
 
     Set-ButtonState

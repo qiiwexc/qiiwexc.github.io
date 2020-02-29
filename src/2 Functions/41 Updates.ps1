@@ -1,10 +1,7 @@
 Function Start-StoreAppUpdate {
     Add-Log $INF 'Starting Microsoft Store apps update...'
 
-    Set-Variable -Option Constant WindowTitle 'Checking for Windows Store app updates...'
-    Set-Variable -Option Constant Command "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
-
-    try { Start-ExternalProcess -Elevated -Title:$WindowTitle "Write-Host 'Checking for updates...'; $Command" }
+    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()" }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
 
     Out-Success

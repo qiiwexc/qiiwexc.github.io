@@ -8,10 +8,7 @@ Function Set-CloudFlareDNS {
         Return
     }
 
-    Set-Variable -Option Constant WindowTitle 'Changing DNS server to CloudFlare DNS...'
-    Set-Variable -Option Constant Command "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))"
-
-    try { Start-ExternalProcess -Elevated -Title:$WindowTitle $Command }
+    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))" }
     catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
 
     Out-Success
