@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.2.29')
+Set-Variable -Option Constant Version ([Version]'20.3.22')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -307,7 +307,7 @@ $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BT
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_INIT_LOCATION
-$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.8/rufus-3.8.exe' -Params:'-g' } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.9/rufus-3.9p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -499,7 +499,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'sdi-tool.org/releases/SDI_R1909.zip' } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'sdi-tool.org/releases/SDI_R2000.zip' } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
@@ -602,8 +602,8 @@ Set-Variable -Option Constant BTN_WindowsXPRUS   (New-Object System.Windows.Form
 Set-Variable -Option Constant LBL_WindowsXPRUS   (New-Object System.Windows.Forms.Label)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1909) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 with Update 3 RUS-ENG x86-x64 -16in1- Activated (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v5 (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 RUS-ENG x86-x64 -20in1- SevenMod v3 (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXPENG, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXPRUS, 'Download Windows XP SP3 (RUS) + Office 2010 SP2 (RUS) [v17.5.6] ISO image')
 
@@ -628,7 +628,7 @@ $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows8.Text = 'Windows 8.1 (Update 3)'
 $BTN_Windows8.Location = $BTN_Windows10.Location + $SHIFT_BTN_LONG
-$BTN_Windows8.Add_Click( { Open-InBrowser 'rutracker.org/forum/viewtopic.php?t=5109222' } )
+$BTN_Windows8.Add_Click( { Open-InBrowser 'http://w13.monkrus.ws/2020/03/windows-81-rus-eng-x86-x64-20in1.html' } )
 
 $LBL_Windows8.Location = $BTN_Windows8.Location + $SHIFT_LBL_BROWSER
 
@@ -1781,7 +1781,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
         "$env:ProgramData\SymEFASI"
-        "$env:ProgramData\SymEFASI\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
