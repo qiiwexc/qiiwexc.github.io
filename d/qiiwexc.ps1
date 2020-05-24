@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.3.22')
+Set-Variable -Option Constant Version ([Version]'20.5.24')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -307,7 +307,7 @@ $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BT
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_INIT_LOCATION
-$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.9/rufus-3.9p.exe' -Params:'-g' } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.10/rufus-3.10p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -951,38 +951,31 @@ $BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
 
 Set-Variable -Option Constant GRP_Cleanup           (New-Object System.Windows.Forms.GroupBox)
 $GRP_Cleanup.Text = 'Cleanup'
-$GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 5
+$GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4
 $GRP_Cleanup.Width = $GRP_WIDTH
 $GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
-Set-Variable -Option Constant BTN_EmptyRecycleBin     (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_FileCleanup         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_DiskCleanup         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_RunCCleaner         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_DeleteRestorePoints (New-Object System.Windows.Forms.Button)
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_EmptyRecycleBin, 'Empty Recycle Bin')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_FileCleanup, 'Remove temporary files, some log files and empty directories, and some other unnecessary files')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DiskCleanup, 'Start Windows built-in disk cleanup utility')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RunCCleaner, 'Clean the system in the background with CCleaner')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DeleteRestorePoints, 'Delete all restore points (shadow copies)')
 
-$BTN_EmptyRecycleBin.Font = $BTN_FileCleanup.Font = $BTN_DiskCleanup.Font = $BTN_RunCCleaner.Font = $BTN_DeleteRestorePoints.Font = $BTN_FONT
-$BTN_EmptyRecycleBin.Height = $BTN_FileCleanup.Height = $BTN_DiskCleanup.Height = $BTN_RunCCleaner.Height = $BTN_DeleteRestorePoints.Height = $BTN_HEIGHT
-$BTN_EmptyRecycleBin.Width = $BTN_FileCleanup.Width = $BTN_DiskCleanup.Width = $BTN_RunCCleaner.Width = $BTN_DeleteRestorePoints.Width = $BTN_WIDTH
+$BTN_FileCleanup.Font = $BTN_DiskCleanup.Font = $BTN_RunCCleaner.Font = $BTN_DeleteRestorePoints.Font = $BTN_FONT
+$BTN_FileCleanup.Height = $BTN_DiskCleanup.Height = $BTN_RunCCleaner.Height = $BTN_DeleteRestorePoints.Height = $BTN_HEIGHT
+$BTN_FileCleanup.Width = $BTN_DiskCleanup.Width = $BTN_RunCCleaner.Width = $BTN_DeleteRestorePoints.Width = $BTN_WIDTH
 
-$GRP_Cleanup.Controls.AddRange(@($BTN_EmptyRecycleBin, $BTN_FileCleanup, $BTN_DiskCleanup, $BTN_RunCCleaner, $BTN_DeleteRestorePoints))
+$GRP_Cleanup.Controls.AddRange(@($BTN_FileCleanup, $BTN_DiskCleanup, $BTN_RunCCleaner, $BTN_DeleteRestorePoints))
 
-
-
-$BTN_EmptyRecycleBin.Text = "Empty Recycle Bin$(if($PS_VERSION -le 2) {$REQUIRES_ELEVATION})"
-$BTN_EmptyRecycleBin.Location = $BTN_INIT_LOCATION
-$BTN_EmptyRecycleBin.Add_Click( { Remove-Trash } )
 
 
 $BTN_FileCleanup.Text = "File cleanup$REQUIRES_ELEVATION"
-$BTN_FileCleanup.Location = $BTN_EmptyRecycleBin.Location + $SHIFT_BTN_NORMAL
+$BTN_FileCleanup.Location = $BTN_INIT_LOCATION
 $BTN_FileCleanup.Add_Click( { Start-FileCleanup } )
 
 
@@ -1780,7 +1773,6 @@ Function Start-FileCleanup {
         "$env:SystemDrive\temp\*"
         "$env:ProgramData\Adobe"
         "$env:ProgramData\Adobe\*"
-        "$env:ProgramData\SymEFASI"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Quick\*"
         "$env:ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource\*"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\7-Zip\7-Zip Help.lnk"
@@ -2185,22 +2177,6 @@ Function Start-FileCleanup {
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# System Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Remove-Trash {
-    Add-Log $INF 'Emptying Recycle Bin...'
-
-    try {
-        if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
-        else {
-            Set-Variable -Option Constant Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item -Force -Recurse $_.Path }'
-            Start-ExternalProcess -Elevated $Command 'Emptying Recycle Bin...'
-        }
-    }
-    catch [Exception] { Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
 
 Function Start-DiskCleanup {
     Add-Log $INF 'Starting disk cleanup utility...'
