@@ -1,19 +1,3 @@
-Function Remove-Trash {
-    Add-Log $INF 'Emptying Recycle Bin...'
-
-    try {
-        if ($PS_VERSION -ge 5) { Clear-RecycleBin -Force }
-        else {
-            Set-Variable -Option Constant Command '(New-Object -ComObject Shell.Application).Namespace(0xA).Items() | ForEach-Object { Remove-Item -Force -Recurse $_.Path }'
-            Start-ExternalProcess -Elevated $Command 'Emptying Recycle Bin...'
-        }
-    }
-    catch [Exception] { Add-Log $ERR "Failed to empty Recycle Bin: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 Function Start-DiskCleanup {
     Add-Log $INF 'Starting disk cleanup utility...'
 
