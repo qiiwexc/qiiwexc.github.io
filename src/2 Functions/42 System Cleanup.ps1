@@ -23,13 +23,3 @@ Function Start-CCleaner {
 
     Out-Success
 }
-
-
-Function Remove-RestorePoints {
-    Add-Log $INF 'Deleting all restore points...'
-
-    try { Start-ExternalProcess -Elevated -Title:'Deleting restore points...' "Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow" }
-    catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}

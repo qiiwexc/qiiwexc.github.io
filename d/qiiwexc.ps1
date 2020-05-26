@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.5.24')
+Set-Variable -Option Constant Version ([Version]'20.5.26')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -601,7 +601,7 @@ Set-Variable -Option Constant LBL_WindowsXPENG   (New-Object System.Windows.Form
 Set-Variable -Option Constant BTN_WindowsXPRUS   (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant LBL_WindowsXPRUS   (New-Object System.Windows.Forms.Label)
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v1909) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v2004) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 RUS-ENG x86-x64 -20in1- SevenMod v3 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXPENG, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
@@ -620,9 +620,9 @@ $GRP_DownloadWindows.Controls.AddRange(
 
 
 
-$BTN_Windows10.Text = 'Windows 10 (v1909)'
+$BTN_Windows10.Text = 'Windows 10 (v2004)'
 $BTN_Windows10.Location = $BTN_INIT_LOCATION
-$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2019/12/windows-10-v1909-rus-eng-x86-x64-28in1.html' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/05/windows-10-v2004-rus-eng-x86-x64-28in1.html' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
@@ -951,7 +951,7 @@ $BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
 
 Set-Variable -Option Constant GRP_Cleanup           (New-Object System.Windows.Forms.GroupBox)
 $GRP_Cleanup.Text = 'Cleanup'
-$GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4
+$GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Cleanup.Width = $GRP_WIDTH
 $GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
@@ -959,18 +959,16 @@ $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 Set-Variable -Option Constant BTN_FileCleanup         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_DiskCleanup         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_RunCCleaner         (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_DeleteRestorePoints (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_FileCleanup, 'Remove temporary files, some log files and empty directories, and some other unnecessary files')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DiskCleanup, 'Start Windows built-in disk cleanup utility')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RunCCleaner, 'Clean the system in the background with CCleaner')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DeleteRestorePoints, 'Delete all restore points (shadow copies)')
 
-$BTN_FileCleanup.Font = $BTN_DiskCleanup.Font = $BTN_RunCCleaner.Font = $BTN_DeleteRestorePoints.Font = $BTN_FONT
-$BTN_FileCleanup.Height = $BTN_DiskCleanup.Height = $BTN_RunCCleaner.Height = $BTN_DeleteRestorePoints.Height = $BTN_HEIGHT
-$BTN_FileCleanup.Width = $BTN_DiskCleanup.Width = $BTN_RunCCleaner.Width = $BTN_DeleteRestorePoints.Width = $BTN_WIDTH
+$BTN_FileCleanup.Font = $BTN_DiskCleanup.Font = $BTN_RunCCleaner.Font = $BTN_FONT
+$BTN_FileCleanup.Height = $BTN_DiskCleanup.Height = $BTN_RunCCleaner.Height = $BTN_HEIGHT
+$BTN_FileCleanup.Width = $BTN_DiskCleanup.Width = $BTN_RunCCleaner.Width = $BTN_WIDTH
 
-$GRP_Cleanup.Controls.AddRange(@($BTN_FileCleanup, $BTN_DiskCleanup, $BTN_RunCCleaner, $BTN_DeleteRestorePoints))
+$GRP_Cleanup.Controls.AddRange(@($BTN_FileCleanup, $BTN_DiskCleanup, $BTN_RunCCleaner))
 
 
 
@@ -987,11 +985,6 @@ $BTN_DiskCleanup.Add_Click( { Start-DiskCleanup } )
 $BTN_RunCCleaner.Text = "Run CCleaner silently$REQUIRES_ELEVATION"
 $BTN_RunCCleaner.Location = $BTN_DiskCleanup.Location + $SHIFT_BTN_NORMAL
 $BTN_RunCCleaner.Add_Click( { Start-CCleaner } )
-
-
-$BTN_DeleteRestorePoints.Text = "Delete all restore points$REQUIRES_ELEVATION"
-$BTN_DeleteRestorePoints.Location = $BTN_RunCCleaner.Location + $SHIFT_BTN_NORMAL
-$BTN_DeleteRestorePoints.Add_Click( { Remove-RestorePoints } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -2150,7 +2143,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
         "$env:LocalAppData\Microsoft\Windows\WebCache\*.log"
         "$env:LocalAppData\PeerDistRepub"
-        "$env:LocalAppData\PeerDistRepub\*"
         "$env:LocalAppData\Razer\Synapse3\Log"
         "$env:LocalAppData\Razer\Synapse3\Log\*"
         "$env:LocalAppData\VirtualStore"
@@ -2200,16 +2192,6 @@ Function Start-CCleaner {
 
     try { Start-Process $CCleanerExe '/auto' }
     catch [Exception] { Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Remove-RestorePoints {
-    Add-Log $INF 'Deleting all restore points...'
-
-    try { Start-ExternalProcess -Elevated -Title:'Deleting restore points...' "Start-Process 'vssadmin' 'delete shadows /all /quiet' -NoNewWindow" }
-    catch [Exception] { Add-Log $ERR "Failed to delete all restore points: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
