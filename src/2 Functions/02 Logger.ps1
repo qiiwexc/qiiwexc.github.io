@@ -19,7 +19,7 @@ Function Write-Log {
     Write-Host -NoNewline $Text
     $LOG.AppendText($Text)
     $LOG.SelectionColor = 'black'
-    $LOG.ScrollToCaret();
+    $LOG.ScrollToCaret()
 }
 
 

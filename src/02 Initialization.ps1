@@ -19,3 +19,5 @@ try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not su
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 Set-Variable -Option Constant PS_VERSION $($PSVersionTable.PSVersion.Major)
+
+Set-Variable -Option Constant SHELL $(New-Object -com Shell.Application)

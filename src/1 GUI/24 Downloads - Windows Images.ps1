@@ -60,12 +60,12 @@ $LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
 
 $BTN_WindowsXPENG.Text = 'Windows XP SP3 (ENG)'
 $BTN_WindowsXPENG.Location = $BTN_Windows7.Location + $SHIFT_BTN_NORMAL + $SHIFT_CBOX_SHORT
-$BTN_WindowsXPENG.Add_Click( { Open-InBrowser 'drive.google.com/file/d/1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
+$BTN_WindowsXPENG.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
 
 $LBL_WindowsXPENG.Location = $BTN_WindowsXPENG.Location + $SHIFT_LBL_BROWSER
 
 $BTN_WindowsXPRUS.Text = 'Windows XP SP3 (RUS)'
 $BTN_WindowsXPRUS.Location = $BTN_WindowsXPENG.Location + $SHIFT_BTN_LONG
-$BTN_WindowsXPRUS.Add_Click( { Open-InBrowser 'drive.google.com/file/d/1mgs56mX2-dQMk9e5KaXhODLBWXipmLCR' } )
+$BTN_WindowsXPRUS.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1mgs56mX2-dQMk9e5KaXhODLBWXipmLCR' } )
 
 $LBL_WindowsXPRUS.Location = $BTN_WindowsXPRUS.Location + $SHIFT_LBL_BROWSER

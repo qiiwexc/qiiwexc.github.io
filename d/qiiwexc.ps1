@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.7.28')
+Set-Variable -Option Constant Version ([Version]'20.7.29')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -47,6 +47,8 @@ try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not su
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 Set-Variable -Option Constant PS_VERSION $($PSVersionTable.PSVersion.Major)
+
+Set-Variable -Option Constant SHELL $(New-Object -com Shell.Application)
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -311,7 +313,7 @@ $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (boot
 
 $BTN_WindowsPE.Text = 'Windows PE (Live CD)'
 $BTN_WindowsPE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
-$BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/file/d/1HfjCrylPOOmwQf31yTl94VCSi4quoliF' } )
+$BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1HfjCrylPOOmwQf31yTl94VCSi4quoliF' } )
 
 $LBL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
 $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
@@ -625,13 +627,13 @@ $LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
 
 $BTN_WindowsXPENG.Text = 'Windows XP SP3 (ENG)'
 $BTN_WindowsXPENG.Location = $BTN_Windows7.Location + $SHIFT_BTN_NORMAL + $SHIFT_CBOX_SHORT
-$BTN_WindowsXPENG.Add_Click( { Open-InBrowser 'drive.google.com/file/d/1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
+$BTN_WindowsXPENG.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
 
 $LBL_WindowsXPENG.Location = $BTN_WindowsXPENG.Location + $SHIFT_LBL_BROWSER
 
 $BTN_WindowsXPRUS.Text = 'Windows XP SP3 (RUS)'
 $BTN_WindowsXPRUS.Location = $BTN_WindowsXPENG.Location + $SHIFT_BTN_LONG
-$BTN_WindowsXPRUS.Add_Click( { Open-InBrowser 'drive.google.com/file/d/1mgs56mX2-dQMk9e5KaXhODLBWXipmLCR' } )
+$BTN_WindowsXPRUS.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1mgs56mX2-dQMk9e5KaXhODLBWXipmLCR' } )
 
 $LBL_WindowsXPRUS.Location = $BTN_WindowsXPRUS.Location + $SHIFT_LBL_BROWSER
 
@@ -690,7 +692,7 @@ $RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_
 
 $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
 $BTN_DownloadVictoria.Location = $BTN_CheckDisk.Location + $SHIFT_BTN_LONG
-$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'qiiwexc.github.io/d/Victoria.zip' } )
+$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'hdd.by/Victoria/Victoria528.zip' } )
 
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
@@ -758,35 +760,32 @@ $LBL_StressTest.Size = $CBOX_SIZE
 $LBL_StressTest.Location = $BTN_StressTest.Location + $SHIFT_LBL_BROWSER
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Perepherals #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Peripherals #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Perepherals  (New-Object System.Windows.Forms.GroupBox)
-$GRP_Perepherals.Text = 'Perepherals'
-$GRP_Perepherals.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
-$GRP_Perepherals.Width = $GRP_WIDTH
-$GRP_Perepherals.Location = $GRP_RAMandCPU.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Perepherals)
+Set-Variable -Option Constant GRP_Peripherals  (New-Object System.Windows.Forms.GroupBox)
+$GRP_Peripherals.Text = 'Peripherals'
+$GRP_Peripherals.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
+$GRP_Peripherals.Width = $GRP_WIDTH
+$GRP_Peripherals.Location = $GRP_RAMandCPU.Location + $SHIFT_GRP_HOR_NORMAL
+$TAB_DIAGNOSTICS.Controls.Add($GRP_Peripherals)
 
 Set-Variable -Option Constant BTN_CheckKeyboard (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_CheckMic      (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_CheckWebCam   (New-Object System.Windows.Forms.Button)
 
 Set-Variable -Option Constant LBL_CheckKeyboard (New-Object System.Windows.Forms.Label)
 Set-Variable -Option Constant LBL_CheckMic      (New-Object System.Windows.Forms.Label)
-Set-Variable -Option Constant LBL_CheckWebCam   (New-Object System.Windows.Forms.Label)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Open webpage with a keyboard test')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckMic, 'Open webpage with a microphone test')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWebCam, 'Open webpage with a webcam test')
 
-$BTN_CheckKeyboard.Font = $BTN_CheckMic.Font = $BTN_CheckWebCam.Font = $BTN_FONT
-$BTN_CheckKeyboard.Height = $BTN_CheckMic.Height = $BTN_CheckWebCam.Height = $BTN_HEIGHT
-$BTN_CheckKeyboard.Width = $BTN_CheckMic.Width = $BTN_CheckWebCam.Width = $BTN_WIDTH
+$BTN_CheckKeyboard.Font = $BTN_CheckMic.Font = $BTN_FONT
+$BTN_CheckKeyboard.Height = $BTN_CheckMic.Height = $BTN_HEIGHT
+$BTN_CheckKeyboard.Width = $BTN_CheckMic.Width = $BTN_WIDTH
 
-$LBL_CheckKeyboard.Size = $LBL_CheckMic.Size = $LBL_CheckWebCam.Size = $CBOX_HardwareMonitor.Size = $CBOX_SIZE
-$LBL_CheckKeyboard.Text = $LBL_CheckMic.Text = $LBL_CheckWebCam.Text = $TXT_OPENS_IN_BROWSER
+$LBL_CheckKeyboard.Size = $LBL_CheckMic.Size = $CBOX_HardwareMonitor.Size = $CBOX_SIZE
+$LBL_CheckKeyboard.Text = $LBL_CheckMic.Text = $TXT_OPENS_IN_BROWSER
 
-$GRP_Perepherals.Controls.AddRange(@($BTN_CheckKeyboard, $LBL_CheckKeyboard, $BTN_CheckMic, $LBL_CheckMic, $BTN_CheckWebCam, $LBL_CheckWebCam))
+$GRP_Peripherals.Controls.AddRange(@($BTN_CheckKeyboard, $LBL_CheckKeyboard, $BTN_CheckMic, $LBL_CheckMic))
 
 
 
@@ -802,13 +801,6 @@ $BTN_CheckMic.Location = $BTN_CheckKeyboard.Location + $SHIFT_BTN_LONG
 $BTN_CheckMic.Add_Click( { Open-InBrowser 'www.onlinemictest.com' } )
 
 $LBL_CheckMic.Location = $BTN_CheckMic.Location + $SHIFT_LBL_BROWSER
-
-
-$BTN_CheckWebCam.Text = 'Check webcam'
-$BTN_CheckWebCam.Location = $BTN_CheckMic.Location + $SHIFT_BTN_LONG
-$BTN_CheckWebCam.Add_Click( { Open-InBrowser 'www.onlinemictest.com/webcam-test' } )
-
-$LBL_CheckWebCam.Location = $BTN_CheckWebCam.Location + $SHIFT_LBL_BROWSER
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -975,24 +967,31 @@ $BTN_RunCCleaner.Add_Click( { Start-CCleaner } )
 
 Set-Variable -Option Constant GRP_Optimization (New-Object System.Windows.Forms.GroupBox)
 $GRP_Optimization.Text = 'Optimization'
-$GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
+$GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2 + $INT_BTN_LONG + $INT_CBOX_SHORT - $INT_SHORT
 $GRP_Optimization.Width = $GRP_WIDTH
 $GRP_Optimization.Location = $GRP_Cleanup.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Optimization)
 
 Set-Variable -Option Constant BTN_CloudFlareDNS (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_CloudFlareAntiMalware    (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_CloudFlareFamilyFriendly (New-Object System.Windows.Forms.CheckBox)
+
 Set-Variable -Option Constant BTN_OptimizeDrive (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_RunDefraggler (New-Object System.Windows.Forms.Button)
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CloudFlareDNS, 'Set DNS server to CouldFlare DNS (1.1.1.1 / 1.0.0.1)')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CloudFlareDNS, 'Set DNS server to CouldFlare DNS')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_CloudFlareAntiMalware, 'Use CloudFlare DNS variation with malware protection (1.1.1.2)')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_CloudFlareFamilyFriendly, 'Use CloudFlare DNS variation with malware protection and adult content filtering (1.1.1.3)')
+
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RunDefraggler, 'Perform (C:) drive defragmentation with Defraggler')
 
 $BTN_CloudFlareDNS.Font = $BTN_OptimizeDrive.Font = $BTN_RunDefraggler.Font = $BTN_FONT
 $BTN_CloudFlareDNS.Height = $BTN_OptimizeDrive.Height = $BTN_RunDefraggler.Height = $BTN_HEIGHT
 $BTN_CloudFlareDNS.Width = $BTN_OptimizeDrive.Width = $BTN_RunDefraggler.Width = $BTN_WIDTH
+$CBOX_CloudFlareAntiMalware.Size = $CBOX_CloudFlareFamilyFriendly.Size = $CBOX_SIZE
 
-$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $BTN_OptimizeDrive, $BTN_RunDefraggler))
+$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $CBOX_CloudFlareAntiMalware, $CBOX_CloudFlareFamilyFriendly, $BTN_OptimizeDrive, $BTN_RunDefraggler))
 
 
 
@@ -1000,9 +999,17 @@ $BTN_CloudFlareDNS.Text = "Setup CloudFlare DNS$REQUIRES_ELEVATION"
 $BTN_CloudFlareDNS.Location = $BTN_INIT_LOCATION
 $BTN_CloudFlareDNS.Add_Click( { Set-CloudFlareDNS } )
 
+$CBOX_CloudFlareAntiMalware.Text = 'Malware protection'
+$CBOX_CloudFlareAntiMalware.Checked = $True
+$CBOX_CloudFlareAntiMalware.Location = $BTN_CloudFlareDNS.Location + "$($INT_LONG - $INT_SHORT), $($INT_BTN_SHORT - $INT_SHORT)"
+$CBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CBOX_CloudFlareFamilyFriendly.Enabled = $CBOX_CloudFlareAntiMalware.Checked } )
+
+$CBOX_CloudFlareFamilyFriendly.Text = 'Adult content filtering'
+$CBOX_CloudFlareFamilyFriendly.Location = $CBOX_CloudFlareAntiMalware.Location + "0, $CBOX_HEIGHT"
+
 
 $BTN_OptimizeDrive.Text = "Optimize / defrag drives$REQUIRES_ELEVATION"
-$BTN_OptimizeDrive.Location = $BTN_CloudFlareDNS.Location + $SHIFT_BTN_NORMAL
+$BTN_OptimizeDrive.Location = $BTN_CloudFlareDNS.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
 $BTN_OptimizeDrive.Add_Click( { Start-DriveOptimization } )
 
 
@@ -1044,13 +1051,14 @@ Function Initialize-Startup {
         try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
         catch [Exception] { Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
 
-        try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
+        try {
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED $True
+        }
         catch [Exception] {
             Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
-            Set-Variable -Option Constant -Scope Script Shell $(New-Object -com Shell.Application)
         }
     }
-    else { Set-Variable -Option Constant -Scope Script Shell $(New-Object -com Shell.Application) }
 
     Get-CurrentVersion
 
@@ -1078,7 +1086,7 @@ Function Initialize-Startup {
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
     if ($NetworkAdapter) {
         Set-Variable -Option Constant CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder
-        if (-not ($CurrentDnsServer -Contains '1.1.1.1' -or $CurrentDnsServer -Contains '1.0.0.1')) {
+        if (-not ($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
             Add-Log $INF '  privacy online (see Maintenance -> Optimization -> Setup CouldFlare DNS).'
@@ -1110,7 +1118,7 @@ Function Write-Log {
     Write-Host -NoNewline $Text
     $LOG.AppendText($Text)
     $LOG.SelectionColor = 'black'
-    $LOG.ScrollToCaret();
+    $LOG.ScrollToCaret()
 }
 
 
@@ -1298,7 +1306,7 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or $ZipName -eq 'KMSAuto_Lite.zip' -or `
-            $URL -Match 'hwmonitor_' -or $URL -Match 'DriverStoreExplorer' -or $URL -Match 'SDI_R')
+            $URL -Match 'hwmonitor_' -or $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
     Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $TEMP_DIR })
@@ -1310,8 +1318,8 @@ Function Start-Extraction {
         'Office_2013-2019.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
+        'Victoria*' { 'Victoria.exe' }
         'hwmonitor_*' { "HWMonitor_$(if ($OS_64_BIT) {'x64'} else {'x32'}).exe" }
-        'DriverStoreExplorer*' { "$ExtractionDir\Rapr.exe" }
         'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
@@ -1329,8 +1337,8 @@ Function Start-Extraction {
     Add-Log $INF "Extracting $ZipPath..."
 
     try {
-        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
-        else { ForEach ($Item In $Shell.NameSpace($ZipPath).Items()) { $Shell.NameSpace($TemporaryPath).CopyHere($Item) } }
+        if ($ZIP_SUPPORTED) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
+        else { ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) { $SHELL.NameSpace($TemporaryPath).CopyHere($Item) } }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
@@ -1675,7 +1683,7 @@ Function Start-FileCleanup {
             Add-Log $INF "Removing older versions from $Path"
 
             [String]$Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
-            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item -Force -Recurse $_ }
+            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { $SHELL.Namespace(0).ParseName($_).InvokeVerb('delete') }
 
             if (Test-Path $Path) { Out-Failure } else { Out-Success }
         }
@@ -1711,7 +1719,7 @@ Function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $_ }
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { $SHELL.Namespace(0).ParseName($_).InvokeVerb('delete') }
             Out-Success
         }
     }
@@ -2129,7 +2137,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Razer\Synapse3\Log"
         "$env:LocalAppData\Razer\Synapse3\Log\*"
         "$env:LocalAppData\VirtualStore"
-        "$env:LocalAppData\VirtualStore\*"
     )
 
     ForEach ($Item In $ItemsToDelete) {
@@ -2183,8 +2190,11 @@ Function Start-CCleaner {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Set-CloudFlareDNS {
+    [String]$PreferredDnsServer = if ($CBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
+    [String]$AlternateDnsServer = if ($CBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+
     Add-Log $WRN 'Internet connection may get interrupted briefly'
-    Add-Log $INF 'Changing DNS server to CloudFlare DNS (1.1.1.1 / 1.0.0.1)...'
+    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
 
     if (-not (Get-NetworkAdapter)) {
         Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
@@ -2192,7 +2202,7 @@ Function Set-CloudFlareDNS {
         Return
     }
 
-    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))" }
+    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))" }
     catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
 
     Out-Success

@@ -7,7 +7,7 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or $ZipName -eq 'KMSAuto_Lite.zip' -or `
-            $URL -Match 'hwmonitor_' -or $URL -Match 'DriverStoreExplorer' -or $URL -Match 'SDI_R')
+            $URL -Match 'hwmonitor_' -or $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
     Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $TEMP_DIR })
@@ -19,8 +19,8 @@ Function Start-Extraction {
         'Office_2013-2019.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
+        'Victoria*' { 'Victoria.exe' }
         'hwmonitor_*' { "HWMonitor_$(if ($OS_64_BIT) {'x64'} else {'x32'}).exe" }
-        'DriverStoreExplorer*' { "$ExtractionDir\Rapr.exe" }
         'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
@@ -38,8 +38,8 @@ Function Start-Extraction {
     Add-Log $INF "Extracting $ZipPath..."
 
     try {
-        if (-not $Shell) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
-        else { ForEach ($Item In $Shell.NameSpace($ZipPath).Items()) { $Shell.NameSpace($TemporaryPath).CopyHere($Item) } }
+        if ($ZIP_SUPPORTED) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
+        else { ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) { $SHELL.NameSpace($TemporaryPath).CopyHere($Item) } }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
