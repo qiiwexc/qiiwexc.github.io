@@ -35,7 +35,7 @@ $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (boot
 
 $BTN_WindowsPE.Text = 'Windows PE (Live CD)'
 $BTN_WindowsPE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
-$BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/file/d/1HfjCrylPOOmwQf31yTl94VCSi4quoliF' } )
+$BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1HfjCrylPOOmwQf31yTl94VCSi4quoliF' } )
 
 $LBL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
 $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER

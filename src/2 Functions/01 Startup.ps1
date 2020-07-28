@@ -29,13 +29,14 @@ Function Initialize-Startup {
         try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
         catch [Exception] { Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
 
-        try { Add-Type -AssemblyName System.IO.Compression.FileSystem }
+        try {
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED $True
+        }
         catch [Exception] {
             Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
-            Set-Variable -Option Constant -Scope Script Shell $(New-Object -com Shell.Application)
         }
     }
-    else { Set-Variable -Option Constant -Scope Script Shell $(New-Object -com Shell.Application) }
 
     Get-CurrentVersion
 
@@ -63,7 +64,7 @@ Function Initialize-Startup {
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
     if ($NetworkAdapter) {
         Set-Variable -Option Constant CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder
-        if (-not ($CurrentDnsServer -Contains '1.1.1.1' -or $CurrentDnsServer -Contains '1.0.0.1')) {
+        if (-not ($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
             Add-Log $INF '  privacy online (see Maintenance -> Optimization -> Setup CouldFlare DNS).'

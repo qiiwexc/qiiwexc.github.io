@@ -26,7 +26,7 @@ Function Start-FileCleanup {
             Add-Log $INF "Removing older versions from $Path"
 
             [String]$Newest = (Get-ChildItem $Path -Exclude $NonVersionedDirectories | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime | Select-Object -Last 1).Name
-            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { Remove-Item -Force -Recurse $_ }
+            Get-ChildItem $Path -Exclude $NonVersionedDirectories $Newest | Where-Object { $_.PSIsContainer } | ForEach-Object { $SHELL.Namespace(0).ParseName($_).InvokeVerb('delete') }
 
             if (Test-Path $Path) { Out-Failure } else { Out-Success }
         }
@@ -62,7 +62,7 @@ Function Start-FileCleanup {
 
         if (Test-Path $Path) {
             Add-Log $INF "Cleaning $Path"
-            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $_ }
+            Get-ChildItem $Path -Exclude $Exclusions.Split(',') | ForEach-Object { $SHELL.Namespace(0).ParseName($_).InvokeVerb('delete') }
             Out-Success
         }
     }
@@ -480,7 +480,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Razer\Synapse3\Log"
         "$env:LocalAppData\Razer\Synapse3\Log\*"
         "$env:LocalAppData\VirtualStore"
-        "$env:LocalAppData\VirtualStore\*"
     )
 
     ForEach ($Item In $ItemsToDelete) {

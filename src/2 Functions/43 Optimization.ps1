@@ -1,6 +1,9 @@
 Function Set-CloudFlareDNS {
+    [String]$PreferredDnsServer = if ($CBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
+    [String]$AlternateDnsServer = if ($CBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+
     Add-Log $WRN 'Internet connection may get interrupted briefly'
-    Add-Log $INF 'Changing DNS server to CloudFlare DNS (1.1.1.1 / 1.0.0.1)...'
+    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
 
     if (-not (Get-NetworkAdapter)) {
         Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
@@ -8,7 +11,7 @@ Function Set-CloudFlareDNS {
         Return
     }
 
-    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('1.1.1.1', '1.0.0.1'))" }
+    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))" }
     catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
 
     Out-Success
