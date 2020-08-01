@@ -478,7 +478,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
         "$env:LocalAppData\Microsoft\Windows\WebCache\*.log"
         "$env:LocalAppData\Razer\Synapse3\Log"
-        "$env:LocalAppData\Razer\Synapse3\Log\*"
     )
 
     ForEach ($Item In $ItemsToDelete) {

@@ -1,4 +1,4 @@
-Set-Variable -Option Constant GRP_Ninite       (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Ninite (New-Object System.Windows.Forms.GroupBox)
 $GRP_Ninite.Text = 'Ninite'
 $GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 6 + $INT_SHORT + $INT_BTN_LONG * 2
 $GRP_Ninite.Width = $GRP_WIDTH

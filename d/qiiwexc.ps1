@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.7.29')
+Set-Variable -Option Constant Version ([Version]'20.8.1')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -214,7 +214,7 @@ $BTN_SystemInfo.Add_Click( { Out-SystemInfo } )
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Activators      (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Activators (New-Object System.Windows.Forms.GroupBox)
 $GRP_Activators.Text = 'Activators'
 $GRP_Activators.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
 $GRP_Activators.Width = $GRP_WIDTH
@@ -352,7 +352,7 @@ $BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'https://chrome.google.com/we
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Ninite       (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Ninite (New-Object System.Windows.Forms.GroupBox)
 $GRP_Ninite.Text = 'Ninite'
 $GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 6 + $INT_SHORT + $INT_BTN_LONG * 2
 $GRP_Ninite.Width = $GRP_WIDTH
@@ -443,7 +443,7 @@ $LBL_OpenNiniteInBrowser.Location = $BTN_OpenNiniteInBrowser.Location + $SHIFT_L
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Essentials #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Essentials     (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Essentials (New-Object System.Windows.Forms.GroupBox)
 $GRP_Essentials.Text = 'Essentials'
 $GRP_Essentials.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3 + $INT_CBOX_SHORT - $INT_SHORT
 $GRP_Essentials.Width = $GRP_WIDTH
@@ -516,7 +516,7 @@ $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 20
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_InstallTools    (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_InstallTools (New-Object System.Windows.Forms.GroupBox)
 $GRP_InstallTools.Text = 'Tools'
 $GRP_InstallTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_InstallTools.Width = $GRP_WIDTH
@@ -640,7 +640,7 @@ $LBL_WindowsXPRUS.Location = $BTN_WindowsXPRUS.Location + $SHIFT_LBL_BROWSER
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - HDD #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_HDD        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_HDD (New-Object System.Windows.Forms.GroupBox)
 $GRP_HDD.Text = 'HDD'
 $GRP_HDD.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
 $GRP_HDD.Width = $GRP_WIDTH
@@ -708,7 +708,7 @@ $CBOX_StartRecuva.Add_CheckStateChanged( { $BTN_DownloadRecuva.Text = "Recuva (r
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - RAM and CPU #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_RAMandCPU        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_RAMandCPU (New-Object System.Windows.Forms.GroupBox)
 $GRP_RAMandCPU.Text = 'RAM and CPU'
 $GRP_RAMandCPU.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG * 2
 $GRP_RAMandCPU.Width = $GRP_WIDTH
@@ -747,6 +747,7 @@ $BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_Ha
 
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_HardwareMonitor.Checked = $True
+$CBOX_HardwareMonitor.Size = $CBOX_SIZE
 $CBOX_HardwareMonitor.Location = $BTN_HardwareMonitor.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_HardwareMonitor.Add_CheckStateChanged( { $BTN_HardwareMonitor.Text = "CPUID HWMonitor$(if ($CBOX_HardwareMonitor.Checked) {$REQUIRES_ELEVATION})" } )
 
@@ -760,42 +761,13 @@ $LBL_StressTest.Size = $CBOX_SIZE
 $LBL_StressTest.Location = $BTN_StressTest.Location + $SHIFT_LBL_BROWSER
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Peripherals #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant GRP_Peripherals  (New-Object System.Windows.Forms.GroupBox)
-$GRP_Peripherals.Text = 'Peripherals'
-$GRP_Peripherals.Height = $INT_GROUP_TOP + $INT_BTN_LONG
-$GRP_Peripherals.Width = $GRP_WIDTH
-$GRP_Peripherals.Location = $GRP_RAMandCPU.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Peripherals)
-
-Set-Variable -Option Constant BTN_CheckKeyboard (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_CheckKeyboard (New-Object System.Windows.Forms.Label)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckKeyboard, 'Open webpage with a keyboard test')
-
-$GRP_Peripherals.Controls.AddRange(@($BTN_CheckKeyboard, $LBL_CheckKeyboard))
-
-
-$BTN_CheckKeyboard.Text = 'Check keyboard'
-$BTN_CheckKeyboard.Font = $BTN_FONT
-$BTN_CheckKeyboard.Height = $BTN_HEIGHT
-$BTN_CheckKeyboard.Width = $BTN_WIDTH
-$BTN_CheckKeyboard.Location = $BTN_INIT_LOCATION
-$BTN_CheckKeyboard.Add_Click( { Open-InBrowser 'www.onlinemictest.com/keyboard-test' } )
-
-$LBL_CheckKeyboard.Location = $BTN_CheckKeyboard.Location + $SHIFT_LBL_BROWSER
-$LBL_CheckKeyboard.Size = $CBOX_HardwareMonitor.Size = $CBOX_SIZE
-$LBL_CheckKeyboard.Text = $TXT_OPENS_IN_BROWSER
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Windows        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Windows (New-Object System.Windows.Forms.GroupBox)
 $GRP_Windows.Text = 'Windows'
 $GRP_Windows.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Windows.Width = $GRP_WIDTH
-$GRP_Windows.Location = $GRP_HDD.Location + "0, $($GRP_HDD.Height + $INT_NORMAL)"
+$GRP_Windows.Location = $GRP_RAMandCPU.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Windows)
 
 Set-Variable -Option Constant BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button)
@@ -831,11 +803,11 @@ $BTN_CheckSystemFiles.Add_Click( { Repair-SystemFiles } )
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Security #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Malware        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Malware (New-Object System.Windows.Forms.GroupBox)
 $GRP_Malware.Text = 'Security'
 $GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_LONG + $INT_BTN_NORMAL
 $GRP_Malware.Width = $GRP_WIDTH
-$GRP_Malware.Location = $GRP_Windows.Location + $SHIFT_GRP_HOR_NORMAL
+$GRP_Malware.Location = $GRP_HDD.Location + "0, $($GRP_HDD.Height + $INT_NORMAL)"
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Malware)
 
 Set-Variable -Option Constant BTN_StartSecurityScan    (New-Object System.Windows.Forms.Button)
@@ -871,7 +843,7 @@ $CBOX_StartMalwarebytes.Add_CheckStateChanged( { $BTN_DownloadMalwarebytes.Text 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Updates        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Updates (New-Object System.Windows.Forms.GroupBox)
 $GRP_Updates.Text = 'Updates'
 $GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Updates.Width = $GRP_WIDTH
@@ -911,7 +883,7 @@ $BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Cleanup           (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Cleanup (New-Object System.Windows.Forms.GroupBox)
 $GRP_Cleanup.Text = 'Cleanup'
 $GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Cleanup.Width = $GRP_WIDTH
@@ -2121,7 +2093,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
         "$env:LocalAppData\Microsoft\Windows\WebCache\*.log"
         "$env:LocalAppData\Razer\Synapse3\Log"
-        "$env:LocalAppData\Razer\Synapse3\Log\*"
     )
 
     ForEach ($Item In $ItemsToDelete) {

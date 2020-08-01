@@ -1,8 +1,8 @@
-Set-Variable -Option Constant GRP_Windows        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Windows (New-Object System.Windows.Forms.GroupBox)
 $GRP_Windows.Text = 'Windows'
 $GRP_Windows.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Windows.Width = $GRP_WIDTH
-$GRP_Windows.Location = $GRP_HDD.Location + "0, $($GRP_HDD.Height + $INT_NORMAL)"
+$GRP_Windows.Location = $GRP_RAMandCPU.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_DIAGNOSTICS.Controls.Add($GRP_Windows)
 
 Set-Variable -Option Constant BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button)

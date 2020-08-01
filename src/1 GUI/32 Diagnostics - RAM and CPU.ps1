@@ -1,4 +1,4 @@
-Set-Variable -Option Constant GRP_RAMandCPU        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_RAMandCPU (New-Object System.Windows.Forms.GroupBox)
 $GRP_RAMandCPU.Text = 'RAM and CPU'
 $GRP_RAMandCPU.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG * 2
 $GRP_RAMandCPU.Width = $GRP_WIDTH
@@ -37,6 +37,7 @@ $BTN_HardwareMonitor.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_Ha
 
 $CBOX_HardwareMonitor.Text = $TXT_START_AFTER_DOWNLOAD
 $CBOX_HardwareMonitor.Checked = $True
+$CBOX_HardwareMonitor.Size = $CBOX_SIZE
 $CBOX_HardwareMonitor.Location = $BTN_HardwareMonitor.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_HardwareMonitor.Add_CheckStateChanged( { $BTN_HardwareMonitor.Text = "CPUID HWMonitor$(if ($CBOX_HardwareMonitor.Checked) {$REQUIRES_ELEVATION})" } )
 

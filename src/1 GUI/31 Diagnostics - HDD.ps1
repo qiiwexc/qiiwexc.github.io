@@ -1,4 +1,4 @@
-Set-Variable -Option Constant GRP_HDD        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_HDD (New-Object System.Windows.Forms.GroupBox)
 $GRP_HDD.Text = 'HDD'
 $GRP_HDD.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
 $GRP_HDD.Width = $GRP_WIDTH

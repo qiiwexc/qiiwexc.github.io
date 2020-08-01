@@ -1,4 +1,4 @@
-Set-Variable -Option Constant GRP_Updates        (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Updates (New-Object System.Windows.Forms.GroupBox)
 $GRP_Updates.Text = 'Updates'
 $GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Updates.Width = $GRP_WIDTH
