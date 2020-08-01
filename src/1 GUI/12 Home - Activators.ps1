@@ -1,4 +1,4 @@
-Set-Variable -Option Constant GRP_Activators      (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Activators (New-Object System.Windows.Forms.GroupBox)
 $GRP_Activators.Text = 'Activators'
 $GRP_Activators.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
 $GRP_Activators.Width = $GRP_WIDTH

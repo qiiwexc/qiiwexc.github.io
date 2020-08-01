@@ -1,4 +1,4 @@
-Set-Variable -Option Constant GRP_Essentials     (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Essentials (New-Object System.Windows.Forms.GroupBox)
 $GRP_Essentials.Text = 'Essentials'
 $GRP_Essentials.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3 + $INT_CBOX_SHORT - $INT_SHORT
 $GRP_Essentials.Width = $GRP_WIDTH

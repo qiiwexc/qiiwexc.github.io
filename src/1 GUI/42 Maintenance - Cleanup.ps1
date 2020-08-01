@@ -1,4 +1,4 @@
-Set-Variable -Option Constant GRP_Cleanup           (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_Cleanup (New-Object System.Windows.Forms.GroupBox)
 $GRP_Cleanup.Text = 'Cleanup'
 $GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Cleanup.Width = $GRP_WIDTH

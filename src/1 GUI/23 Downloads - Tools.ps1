@@ -1,4 +1,4 @@
-Set-Variable -Option Constant GRP_InstallTools    (New-Object System.Windows.Forms.GroupBox)
+Set-Variable -Option Constant GRP_InstallTools (New-Object System.Windows.Forms.GroupBox)
 $GRP_InstallTools.Text = 'Tools'
 $GRP_InstallTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_InstallTools.Width = $GRP_WIDTH
