@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.8.1')
+Set-Variable -Option Constant Version ([Version]'20.10.6')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1407,7 +1407,7 @@ Function Out-SystemInfo {
     if ($Processors) {
         ForEach ($Item In $Processors) {
             Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Name:  $($Item.Name)"
-            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Cores / Threads:  $($Item.NumberOfCores) / $($Item.NumberOfLogicalProcessors)"
+            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)): $($Item.NumberOfCores) Cores / $($Item.NumberOfLogicalProcessors) Threads"
         }
     }
 
@@ -1415,17 +1415,17 @@ Function Out-SystemInfo {
     if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU $([Array]::IndexOf($VideoControllers, $Item)):  $Item" } }
 
     if ($OS_VERSION -gt 7) {
-        [Array]$Storage = (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, FirmwareVersion, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
+        [Array]$Storage = (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
         if ($Storage) {
             ForEach ($Item In $Storage) {
-                $Details = "$($Item.BusType)$(if ($Item.MediaType -ne 'Unspecified') {' ' + $Item.MediaType}), $($Item.Size) GB, $($Item.HealthStatus), Firmware: $($Item.FirmwareVersion)"
+                $Details = "$($Item.BusType)$(if ($Item.MediaType -ne 'Unspecified') {' ' + $Item.MediaType}), $($Item.Size) GB, $($Item.HealthStatus)"
                 Add-Log $INF "    Storage $([Array]::IndexOf($Storage, $Item)):  $($Item.FriendlyName) ($Details)"
             }
         }
     }
     else {
-        [Array]$Storage = (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, FirmwareRevision, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
-        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status), Firmware: $($Item.FirmwareRevision))" } }
+        [Array]$Storage = (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
+        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status))" } }
     }
 
     if ($SystemPartition) {
@@ -2010,7 +2010,6 @@ Function Start-FileCleanup {
         "$env:AppData\Google"
         "$env:AppData\Google\*"
         "$env:AppData\hpqLog"
-        "$env:AppData\hpqLog\*"
         "$env:AppData\Microsoft\Office\Recent"
         "$env:AppData\Microsoft\Office\Recent\*"
         "$env:AppData\Microsoft\Skype for Desktop\logs"
