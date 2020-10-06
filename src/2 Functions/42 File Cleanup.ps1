@@ -408,7 +408,6 @@ Function Start-FileCleanup {
         "$env:AppData\Google"
         "$env:AppData\Google\*"
         "$env:AppData\hpqLog"
-        "$env:AppData\hpqLog\*"
         "$env:AppData\Microsoft\Office\Recent"
         "$env:AppData\Microsoft\Office\Recent\*"
         "$env:AppData\Microsoft\Skype for Desktop\logs"
