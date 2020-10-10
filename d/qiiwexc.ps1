@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.10.6')
+Set-Variable -Option Constant Version ([Version]'20.10.10')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -2075,7 +2075,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Microsoft\Teams\previous"
         "$env:LocalAppData\Microsoft\Teams\previous\*"
         "$env:LocalAppData\Microsoft\Windows\Explorer\thumbcache_*.db"
-        "$env:LocalAppData\Microsoft\Windows\SettingSync\metastore\*.log"
         "$env:LocalAppData\Microsoft\Windows\SettingSync\remotemetastore\v1\*.log"
         "$env:LocalAppData\Microsoft\Windows\WebCache\*.log"
     )
