@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.10.10')
+Set-Variable -Option Constant Version ([Version]'20.10.14')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -2009,7 +2009,6 @@ Function Start-FileCleanup {
         "$env:AppData\Code\logs\*"
         "$env:AppData\Google"
         "$env:AppData\Google\*"
-        "$env:AppData\hpqLog"
         "$env:AppData\Microsoft\Office\Recent"
         "$env:AppData\Microsoft\Office\Recent\*"
         "$env:AppData\Microsoft\Skype for Desktop\logs"
