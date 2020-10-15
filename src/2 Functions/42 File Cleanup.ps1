@@ -283,7 +283,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$env:ProgramFiles\CCleaner\Setup"
         "$env:ProgramFiles\CCleaner\Setup\*"
-        "$env:ProgramFiles\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\FileZilla FTP Client\AUTHORS"
         "$env:ProgramFiles\FileZilla FTP Client\GPL.html"
