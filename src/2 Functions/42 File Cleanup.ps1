@@ -131,7 +131,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Microsoft\Windows\WER\ReportArchive\*"
         "$env:ProgramData\Mozilla"
         "$env:ProgramData\Mozilla\*"
-        "$env:ProgramData\NVIDIA Corporation\NvFBCPlugin"
         "$env:ProgramData\NVIDIA Corporation\umdlogs"
         "$env:ProgramData\NVIDIA Corporation\umdlogs\*"
         "$env:ProgramData\NVIDIA\*.log_backup1"

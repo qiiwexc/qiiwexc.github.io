@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.10.15')
+Set-Variable -Option Constant Version ([Version]'20.11.10')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -303,7 +303,7 @@ $GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BT
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_INIT_LOCATION
-$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.11/rufus-3.11p.exe' -Params:'-g' } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.12/rufus-3.12p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -380,7 +380,7 @@ $BTN_DownloadNinite.Font = $BTN_OpenNiniteInBrowser.Font = $BTN_FONT
 $BTN_DownloadNinite.Height = $BTN_OpenNiniteInBrowser.Height = $BTN_HEIGHT
 $BTN_DownloadNinite.Width = $BTN_OpenNiniteInBrowser.Width = $BTN_WIDTH
 
-$CBOX_Chrome.Checked = $CBOX_7zip.Checked = $CBOX_VLC.Checked = $CBOX_TeamViewer.Checked = $CBOX_Skype.Checked = $CBOX_StartNinite.Checked = $True
+$CBOX_Chrome.Checked = $CBOX_7zip.Checked = $CBOX_VLC.Checked = $CBOX_TeamViewer.Checked = $CBOX_StartNinite.Checked = $True
 $CBOX_Chrome.Size = $CBOX_7zip.Size = $CBOX_VLC.Size = $CBOX_TeamViewer.Size = $CBOX_Skype.Size = `
     $CBOX_qBittorrent.Size = $CBOX_StartNinite.Size = $LBL_OpenNiniteInBrowser.Size = $CBOX_SIZE
 
@@ -485,7 +485,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'sdi-tool.org/releases/SDI_R2000.zip' } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'sdi-tool.org/releases/SDI_R2009.zip' } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
@@ -518,7 +518,7 @@ $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 20
 
 Set-Variable -Option Constant GRP_InstallTools (New-Object System.Windows.Forms.GroupBox)
 $GRP_InstallTools.Text = 'Tools'
-$GRP_InstallTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
+$GRP_InstallTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG
 $GRP_InstallTools.Width = $GRP_WIDTH
 $GRP_InstallTools.Location = $GRP_Essentials.Location + "0, $($GRP_Essentials.Height + $INT_NORMAL)"
 $TAB_INSTALLERS.Controls.Add($GRP_InstallTools)
@@ -526,24 +526,19 @@ $TAB_INSTALLERS.Controls.Add($GRP_InstallTools)
 Set-Variable -Option Constant BTN_DownloadCCleaner   (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartCCleaner     (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable -Option Constant BTN_DownloadDefraggler (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartDefraggler   (New-Object System.Windows.Forms.CheckBox)
-
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadDefraggler, 'Download Defraggler installer')
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartCCleaner, $TIP_START_AFTER_DOWNLOAD)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartDefraggler, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_DownloadCCleaner.Font = $BTN_DownloadDefraggler.Font = $BTN_FONT
-$BTN_DownloadCCleaner.Height = $BTN_DownloadDefraggler.Height = $BTN_HEIGHT
-$BTN_DownloadCCleaner.Width = $BTN_DownloadDefraggler.Width = $BTN_WIDTH
+$BTN_DownloadCCleaner.Font = $BTN_FONT
+$BTN_DownloadCCleaner.Height = $BTN_HEIGHT
+$BTN_DownloadCCleaner.Width = $BTN_WIDTH
 
-$CBOX_StartCCleaner.Checked = $CBOX_StartDefraggler.Checked = $True
-$CBOX_StartCCleaner.Size = $CBOX_StartDefraggler.Size = $CBOX_SIZE
-$CBOX_StartCCleaner.Text = $CBOX_StartDefraggler.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartCCleaner.Checked = $True
+$CBOX_StartCCleaner.Size = $CBOX_SIZE
+$CBOX_StartCCleaner.Text = $TXT_START_AFTER_DOWNLOAD
 
-$GRP_InstallTools.Controls.AddRange(@($BTN_DownloadCCleaner, $CBOX_StartCCleaner, $BTN_DownloadDefraggler, $CBOX_StartDefraggler))
+$GRP_InstallTools.Controls.AddRange(@($BTN_DownloadCCleaner, $CBOX_StartCCleaner))
 
 
 
@@ -553,14 +548,6 @@ $BTN_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_S
 
 $CBOX_StartCCleaner.Location = $BTN_DownloadCCleaner.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CCleaner$(if ($CBOX_StartCCleaner.Checked) {$REQUIRES_ELEVATION})" } )
-
-
-$BTN_DownloadDefraggler.Text = "Defraggler$REQUIRES_ELEVATION"
-$BTN_DownloadDefraggler.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
-$BTN_DownloadDefraggler.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartDefraggler.Checked 'download.ccleaner.com/dfsetup.exe' } )
-
-$CBOX_StartDefraggler.Location = $BTN_DownloadDefraggler.Location + $SHIFT_CBOX_EXECUTE
-$CBOX_StartDefraggler.Add_CheckStateChanged( { $BTN_DownloadDefraggler.Text = "Defraggler$(if ($CBOX_StartDefraggler.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -587,7 +574,7 @@ Set-Variable -Option Constant LBL_WindowsXPENG   (New-Object System.Windows.Form
 Set-Variable -Option Constant BTN_WindowsXPRUS   (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant LBL_WindowsXPRUS   (New-Object System.Windows.Forms.Label)
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v2004) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v20H2) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 RUS-ENG x86-x64 -20in1- SevenMod v3 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXPENG, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
@@ -606,9 +593,9 @@ $GRP_DownloadWindows.Controls.AddRange(
 
 
 
-$BTN_Windows10.Text = 'Windows 10 (v2004)'
+$BTN_Windows10.Text = 'Windows 10 (v20H2)'
 $BTN_Windows10.Location = $BTN_INIT_LOCATION
-$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/05/windows-10-v2004-rus-eng-x86-x64-28in1.html' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/11/windows-10-v20h2-rus-eng-x86-x64-28in1.html' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
@@ -912,7 +899,7 @@ $BTN_RunCCleaner.Add_Click( { Start-CCleaner } )
 
 Set-Variable -Option Constant GRP_Optimization (New-Object System.Windows.Forms.GroupBox)
 $GRP_Optimization.Text = 'Optimization'
-$GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2 + $INT_BTN_LONG + $INT_CBOX_SHORT - $INT_SHORT
+$GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG + $INT_CBOX_SHORT - $INT_SHORT
 $GRP_Optimization.Width = $GRP_WIDTH
 $GRP_Optimization.Location = $GRP_Cleanup.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Optimization)
@@ -929,14 +916,13 @@ Set-Variable -Option Constant BTN_RunDefraggler (New-Object System.Windows.Forms
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_CloudFlareFamilyFriendly, 'Use CloudFlare DNS variation with malware protection and adult content filtering (1.1.1.3)')
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RunDefraggler, 'Perform (C:) drive defragmentation with Defraggler')
 
-$BTN_CloudFlareDNS.Font = $BTN_OptimizeDrive.Font = $BTN_RunDefraggler.Font = $BTN_FONT
-$BTN_CloudFlareDNS.Height = $BTN_OptimizeDrive.Height = $BTN_RunDefraggler.Height = $BTN_HEIGHT
-$BTN_CloudFlareDNS.Width = $BTN_OptimizeDrive.Width = $BTN_RunDefraggler.Width = $BTN_WIDTH
+$BTN_CloudFlareDNS.Font = $BTN_OptimizeDrive.Font = $BTN_FONT
+$BTN_CloudFlareDNS.Height = $BTN_OptimizeDrive.Height = $BTN_HEIGHT
+$BTN_CloudFlareDNS.Width = $BTN_OptimizeDrive.Width = $BTN_WIDTH
 $CBOX_CloudFlareAntiMalware.Size = $CBOX_CloudFlareFamilyFriendly.Size = $CBOX_SIZE
 
-$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $CBOX_CloudFlareAntiMalware, $CBOX_CloudFlareFamilyFriendly, $BTN_OptimizeDrive, $BTN_RunDefraggler))
+$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $CBOX_CloudFlareAntiMalware, $CBOX_CloudFlareFamilyFriendly, $BTN_OptimizeDrive))
 
 
 
@@ -956,11 +942,6 @@ $CBOX_CloudFlareFamilyFriendly.Location = $CBOX_CloudFlareAntiMalware.Location +
 $BTN_OptimizeDrive.Text = "Optimize / defrag drives$REQUIRES_ELEVATION"
 $BTN_OptimizeDrive.Location = $BTN_CloudFlareDNS.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
 $BTN_OptimizeDrive.Add_Click( { Start-DriveOptimization } )
-
-
-$BTN_RunDefraggler.Text = "Run Defraggler for (C:)$REQUIRES_ELEVATION"
-$BTN_RunDefraggler.Location = $BTN_OptimizeDrive.Location + $SHIFT_BTN_NORMAL
-$BTN_RunDefraggler.Add_Click( { Start-Defraggler } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1403,11 +1384,10 @@ Function Out-SystemInfo {
         Add-Log $INF "    RAM:  $($Computer.RAM) GB"
     }
 
-    [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors)
+    [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name)
     if ($Processors) {
         ForEach ($Item In $Processors) {
             Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Name:  $($Item.Name)"
-            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)): $($Item.NumberOfCores) Cores / $($Item.NumberOfLogicalProcessors) Threads"
         }
     }
 
@@ -1733,7 +1713,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Microsoft\Windows\WER\ReportArchive\*"
         "$env:ProgramData\Mozilla"
         "$env:ProgramData\Mozilla\*"
-        "$env:ProgramData\NVIDIA Corporation\NvFBCPlugin"
         "$env:ProgramData\NVIDIA Corporation\umdlogs"
         "$env:ProgramData\NVIDIA Corporation\umdlogs\*"
         "$env:ProgramData\NVIDIA\*.log_backup1"
@@ -2153,16 +2132,6 @@ Function Start-DriveOptimization {
     Set-Variable -Option Constant Command "Start-Process -NoNewWindow 'defrag' $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" })"
     try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' $Command }
     catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-Defraggler {
-    Add-Log $INF 'Starting (C:) drive optimization with Defraggler...'
-
-    try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' "Start-Process -NoNewWindow $DefragglerExe 'C:'" }
-    catch [Exception] { Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"; Return }
 
     Out-Success
 }

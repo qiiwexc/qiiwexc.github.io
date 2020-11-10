@@ -27,13 +27,3 @@ Function Start-DriveOptimization {
 
     Out-Success
 }
-
-
-Function Start-Defraggler {
-    Add-Log $INF 'Starting (C:) drive optimization with Defraggler...'
-
-    try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' "Start-Process -NoNewWindow $DefragglerExe 'C:'" }
-    catch [Exception] { Add-Log $ERR "Failed start Defraggler: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}

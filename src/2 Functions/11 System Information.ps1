@@ -41,11 +41,10 @@ Function Out-SystemInfo {
         Add-Log $INF "    RAM:  $($Computer.RAM) GB"
     }
 
-    [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors)
+    [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name)
     if ($Processors) {
         ForEach ($Item In $Processors) {
             Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Name:  $($Item.Name)"
-            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)): $($Item.NumberOfCores) Cores / $($Item.NumberOfLogicalProcessors) Threads"
         }
     }
 
