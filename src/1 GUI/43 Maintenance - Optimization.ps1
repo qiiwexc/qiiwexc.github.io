@@ -5,7 +5,7 @@ $GRP_Optimization.Width = $GRP_WIDTH
 $GRP_Optimization.Location = $GRP_Cleanup.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Optimization)
 
-Set-Variable -Option Constant BTN_CloudFlareDNS (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_CloudFlareDNS             (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_CloudFlareAntiMalware    (New-Object System.Windows.Forms.CheckBox)
 Set-Variable -Option Constant CBOX_CloudFlareFamilyFriendly (New-Object System.Windows.Forms.CheckBox)
 

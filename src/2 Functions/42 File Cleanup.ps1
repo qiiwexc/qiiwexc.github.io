@@ -358,7 +358,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\WinRAR\WhatsNew.txt"
         "$env:ProgramFiles\WinRAR\WinRAR.chm"
         "$env:ProgramFiles\WinSCP\license.txt"
-        "$env:ProgramFiles\WinSCP\PuTTY\LICENCE"
         "$env:ProgramFiles\WinSCP\PuTTY\putty.chm"
         "$env:WinDir\*.log"
         "$env:WinDir\debug\*.log"

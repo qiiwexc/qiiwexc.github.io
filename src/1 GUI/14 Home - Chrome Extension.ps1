@@ -5,8 +5,8 @@ $GRP_ChromeExtensions.Width = $GRP_WIDTH
 $GRP_ChromeExtensions.Location = $GRP_ThisUtility.Location + "0, $($GRP_ThisUtility.Height + $INT_NORMAL)"
 $TAB_HOME.Controls.Add($GRP_ChromeExtensions)
 
-Set-Variable -Option Constant BTN_HTTPSEverywhere  (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_AdBlock          (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_HTTPSEverywhere (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_AdBlock         (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HTTPSEverywhere, 'Automatically use HTTPS security on many sites')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_AdBlock, 'Block ads and pop-ups on websites')
