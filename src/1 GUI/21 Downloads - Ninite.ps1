@@ -5,15 +5,15 @@ $GRP_Ninite.Width = $GRP_WIDTH
 $GRP_Ninite.Location = $GRP_INIT_LOCATION
 $TAB_INSTALLERS.Controls.Add($GRP_Ninite)
 
-Set-Variable -Option Constant CBOX_Chrome       (New-Object System.Windows.Forms.CheckBox)
-Set-Variable -Option Constant CBOX_7zip         (New-Object System.Windows.Forms.CheckBox)
-Set-Variable -Option Constant CBOX_VLC          (New-Object System.Windows.Forms.CheckBox)
-Set-Variable -Option Constant CBOX_TeamViewer   (New-Object System.Windows.Forms.CheckBox)
-Set-Variable -Option Constant CBOX_Skype        (New-Object System.Windows.Forms.CheckBox)
-Set-Variable -Option Constant CBOX_qBittorrent  (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_Chrome        (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_7zip          (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_VLC           (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_TeamViewer    (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_Skype         (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_qBittorrent   (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable -Option Constant BTN_DownloadNinite   (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartNinite     (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant BTN_DownloadNinite (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartNinite   (New-Object System.Windows.Forms.CheckBox)
 
 Set-Variable -Option Constant BTN_OpenNiniteInBrowser (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant LBL_OpenNiniteInBrowser (New-Object System.Windows.Forms.Label)

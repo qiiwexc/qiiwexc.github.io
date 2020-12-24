@@ -9,10 +9,7 @@ Double click will simply open the file in Notepad.
 -=-=-=-= TROUBLESHOOTING =-=-=-=-
 
 If a window briefly opens and closes, press Win+R on the keyboard, paste the following and click OK:
-    PowerShell -Command "Start-Process 'PowerShell' -Verb RunAs"
-
-Then paste the following and hit Enter:
-    Set-ExecutionPolicy RemoteSigned -Force; Exit
+    PowerShell -Command "Start-Process 'PowerShell' -Verb RunAs '-Command Set-ExecutionPolicy RemoteSigned -Force'"
 
 Now you can try starting the utility again
 

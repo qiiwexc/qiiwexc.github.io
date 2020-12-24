@@ -5,9 +5,9 @@ $GRP_Cleanup.Width = $GRP_WIDTH
 $GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
-Set-Variable -Option Constant BTN_FileCleanup         (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_DiskCleanup         (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_RunCCleaner         (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_FileCleanup (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_DiskCleanup (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_RunCCleaner (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_FileCleanup, 'Remove temporary files, some log files and empty directories, and some other unnecessary files')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DiskCleanup, 'Start Windows built-in disk cleanup utility')
