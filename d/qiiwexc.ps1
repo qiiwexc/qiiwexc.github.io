@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.12.24')
+Set-Variable -Option Constant Version ([Version]'20.12.25')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1886,7 +1886,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Mozilla Firefox\install.log"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs\*"
-        "$env:ProgramFiles\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
         "$env:ProgramFiles\NVIDIA Corporation\license.txt"
         "$env:ProgramFiles\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$env:ProgramFiles\Oracle\VirtualBox\doc"
