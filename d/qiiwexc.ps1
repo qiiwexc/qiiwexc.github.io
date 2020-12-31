@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.12.25')
+Set-Variable -Option Constant Version ([Version]'20.12.31')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -310,7 +310,7 @@ $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (boot
 
 $BTN_WindowsPE.Text = 'Windows PE (Live CD)'
 $BTN_WindowsPE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
-$BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1HfjCrylPOOmwQf31yTl94VCSi4quoliF' } )
+$BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_' } )
 
 $LBL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
 $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
@@ -843,24 +843,22 @@ $BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
 
 Set-Variable -Option Constant GRP_Cleanup (New-Object System.Windows.Forms.GroupBox)
 $GRP_Cleanup.Text = 'Cleanup'
-$GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
+$GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2
 $GRP_Cleanup.Width = $GRP_WIDTH
 $GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
 Set-Variable -Option Constant BTN_FileCleanup (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_DiskCleanup (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_RunCCleaner (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_FileCleanup, 'Remove temporary files, some log files and empty directories, and some other unnecessary files')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DiskCleanup, 'Start Windows built-in disk cleanup utility')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RunCCleaner, 'Clean the system in the background with CCleaner')
 
-$BTN_FileCleanup.Font = $BTN_DiskCleanup.Font = $BTN_RunCCleaner.Font = $BTN_FONT
-$BTN_FileCleanup.Height = $BTN_DiskCleanup.Height = $BTN_RunCCleaner.Height = $BTN_HEIGHT
-$BTN_FileCleanup.Width = $BTN_DiskCleanup.Width = $BTN_RunCCleaner.Width = $BTN_WIDTH
+$BTN_FileCleanup.Font = $BTN_DiskCleanup.Font = $BTN_FONT
+$BTN_FileCleanup.Height = $BTN_DiskCleanup.Height = $BTN_HEIGHT
+$BTN_FileCleanup.Width = $BTN_DiskCleanup.Width = $BTN_WIDTH
 
-$GRP_Cleanup.Controls.AddRange(@($BTN_FileCleanup, $BTN_DiskCleanup, $BTN_RunCCleaner))
+$GRP_Cleanup.Controls.AddRange(@($BTN_FileCleanup, $BTN_DiskCleanup))
 
 
 
@@ -872,11 +870,6 @@ $BTN_FileCleanup.Add_Click( { Start-FileCleanup } )
 $BTN_DiskCleanup.Text = 'Start disk cleanup'
 $BTN_DiskCleanup.Location = $BTN_FileCleanup.Location + $SHIFT_BTN_NORMAL
 $BTN_DiskCleanup.Add_Click( { Start-DiskCleanup } )
-
-
-$BTN_RunCCleaner.Text = "Run CCleaner silently$REQUIRES_ELEVATION"
-$BTN_RunCCleaner.Location = $BTN_DiskCleanup.Location + $SHIFT_BTN_NORMAL
-$BTN_RunCCleaner.Add_Click( { Start-CCleaner } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1119,8 +1112,6 @@ Function Open-InBrowser {
 
 Function Set-ButtonState {
     $BTN_UpdateOffice.Enabled = $OfficeInstallType -eq 'C2R'
-    $BTN_RunCCleaner.Enabled = Test-Path $CCleanerExe
-    $BTN_RunDefraggler.Enabled = Test-Path $DefragglerExe
     $BTN_HTTPSEverywhere.Enabled = $BTN_AdBlock.Enabled = Test-Path $ChromeExe
 }
 
@@ -1344,8 +1335,6 @@ Function Get-SystemInfo {
     Set-Variable -Option Constant -Scope Script OfficeC2RClientExe "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
     Set-Variable -Option Constant -Scope Script OfficeInstallType $(if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
 
-    Set-Variable -Option Constant -Scope Script CCleanerExe "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_64_BIT) {'64'}).exe"
-    Set-Variable -Option Constant -Scope Script DefragglerExe "$env:ProgramFiles\Defraggler\df$(if ($OS_64_BIT) {'64'}).exe"
     Set-Variable -Option Constant -Scope Script DefenderExe "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
     Set-Variable -Option Constant -Scope Script ChromeExe "$PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
 
@@ -1371,7 +1360,7 @@ Function Out-SystemInfo {
     [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name)
     if ($Processors) {
         ForEach ($Item In $Processors) {
-            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Name:  $($Item.Name)"
+            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)):  $($Item.Name)"
         }
     }
 
@@ -1475,8 +1464,8 @@ Function Start-MemoryCheckTool {
 Function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
 
-    Set-Variable -Option Constant -Scope Script ComponentCleanup $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /StartComponentCleanup'" })
-    Set-Variable -Option Constant -Scope Script ScanHealth "Start-Process -NoNewWindow 'DISM' '/Online /Cleanup-Image /StartComponentCleanup'"
+    Set-Variable -Option Constant ComponentCleanup $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /StartComponentCleanup'" })
+    Set-Variable -Option Constant ScanHealth "Start-Process -NoNewWindow 'DISM' '/Online /Cleanup-Image /StartComponentCleanup'"
 
     try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' @($ComponentCleanup, $ScanHealth) }
     catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
@@ -1921,7 +1910,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\WinRAR\ReadMe.txt"
         "$env:ProgramFiles\WinRAR\WhatsNew.txt"
         "$env:ProgramFiles\WinRAR\WinRAR.chm"
-        "$env:ProgramFiles\WinSCP\license.txt"
         "$env:ProgramFiles\WinSCP\PuTTY\putty.chm"
         "$env:WinDir\*.log"
         "$env:WinDir\debug\*.log"
@@ -2063,23 +2051,6 @@ Function Start-DiskCleanup {
 
     try { Start-Process -Verb RunAs 'cleanmgr' '/lowdisk' }
     catch [Exception] { Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-CCleaner {
-    if (-not $CCleanerWarningShown) {
-        Add-Log $WRN 'This task runs silent cleanup with CCleaner using current CCleaner settings'
-        Add-Log $WRN 'Click the button again to continue'
-        Set-Variable -Option Constant -Scope Script CCleanerWarningShown $True
-        Return
-    }
-
-    Add-Log $INF 'Starting CCleaner background task...'
-
-    try { Start-Process $CCleanerExe '/auto' }
-    catch [Exception] { Add-Log $ERR "Failed to start CCleaner: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
