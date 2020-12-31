@@ -17,8 +17,6 @@ Function Get-SystemInfo {
     Set-Variable -Option Constant -Scope Script OfficeC2RClientExe "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
     Set-Variable -Option Constant -Scope Script OfficeInstallType $(if ($OfficeVersion) { if (Test-Path $OfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
 
-    Set-Variable -Option Constant -Scope Script CCleanerExe "$env:ProgramFiles\CCleaner\CCleaner$(if ($OS_64_BIT) {'64'}).exe"
-    Set-Variable -Option Constant -Scope Script DefragglerExe "$env:ProgramFiles\Defraggler\df$(if ($OS_64_BIT) {'64'}).exe"
     Set-Variable -Option Constant -Scope Script DefenderExe "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
     Set-Variable -Option Constant -Scope Script ChromeExe "$PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
 
@@ -44,7 +42,7 @@ Function Out-SystemInfo {
     [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name)
     if ($Processors) {
         ForEach ($Item In $Processors) {
-            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)) Name:  $($Item.Name)"
+            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)):  $($Item.Name)"
         }
     }
 
