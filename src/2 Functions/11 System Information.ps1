@@ -32,10 +32,9 @@ Function Out-SystemInfo {
     Add-Log $INF '  Hardware'
 
     Set-Variable -Option Constant ComputerSystem (Get-WmiObject Win32_ComputerSystem)
-    Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } })
+    Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } })
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
-        Add-Log $INF "    Computer model:  $($Computer.Manufacturer) $($Computer.Model) $(if ($Computer.SystemSKUNumber) {"($($Computer.SystemSKUNumber))"})"
         Add-Log $INF "    RAM:  $($Computer.RAM) GB"
     }
 

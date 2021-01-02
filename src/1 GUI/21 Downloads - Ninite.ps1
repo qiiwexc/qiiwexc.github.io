@@ -3,7 +3,7 @@ $GRP_Ninite.Text = 'Ninite'
 $GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 7 + $INT_SHORT + $INT_BTN_LONG * 2
 $GRP_Ninite.Width = $GRP_WIDTH
 $GRP_Ninite.Location = $GRP_INIT_LOCATION
-$TAB_INSTALLERS.Controls.Add($GRP_Ninite)
+$TAB_DOWNLOADS.Controls.Add($GRP_Ninite)
 
 Set-Variable -Option Constant CBOX_Chrome        (New-Object System.Windows.Forms.CheckBox)
 Set-Variable -Option Constant CBOX_7zip          (New-Object System.Windows.Forms.CheckBox)

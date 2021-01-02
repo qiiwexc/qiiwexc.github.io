@@ -132,14 +132,12 @@ Set-Variable -Option Constant LOG         (New-Object System.Windows.Forms.RichT
 Set-Variable -Option Constant TAB_CONTROL (New-Object System.Windows.Forms.TabControl)
 
 Set-Variable -Option Constant TAB_HOME        (New-Object System.Windows.Forms.TabPage)
-Set-Variable -Option Constant TAB_INSTALLERS  (New-Object System.Windows.Forms.TabPage)
-Set-Variable -Option Constant TAB_DIAGNOSTICS (New-Object System.Windows.Forms.TabPage)
+Set-Variable -Option Constant TAB_DOWNLOADS   (New-Object System.Windows.Forms.TabPage)
 Set-Variable -Option Constant TAB_MAINTENANCE (New-Object System.Windows.Forms.TabPage)
 
-$TAB_HOME.UseVisualStyleBackColor = $TAB_INSTALLERS.UseVisualStyleBackColor = `
-    $TAB_DIAGNOSTICS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
+$TAB_HOME.UseVisualStyleBackColor = $TAB_DOWNLOADS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
 
-$TAB_CONTROL.Controls.AddRange(@($TAB_HOME, $TAB_INSTALLERS, $TAB_DIAGNOSTICS, $TAB_MAINTENANCE))
+$TAB_CONTROL.Controls.AddRange(@($TAB_HOME, $TAB_DOWNLOADS, $TAB_MAINTENANCE))
 $FORM.Controls.AddRange(@($LOG, $TAB_CONTROL))
 
 
@@ -167,8 +165,7 @@ $TAB_CONTROL.Location = "$INT_SHORT, $INT_SHORT"
 
 
 $TAB_HOME.Text = 'Home'
-$TAB_INSTALLERS.Text = 'Downloads'
-$TAB_DIAGNOSTICS.Text = 'Diagnostics'
+$TAB_DOWNLOADS.Text = 'Downloads'
 $TAB_MAINTENANCE.Text = 'Maintenance'
 
 
@@ -417,7 +414,7 @@ $GRP_Ninite.Text = 'Ninite'
 $GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 7 + $INT_SHORT + $INT_BTN_LONG * 2
 $GRP_Ninite.Width = $GRP_WIDTH
 $GRP_Ninite.Location = $GRP_INIT_LOCATION
-$TAB_INSTALLERS.Controls.Add($GRP_Ninite)
+$TAB_DOWNLOADS.Controls.Add($GRP_Ninite)
 
 Set-Variable -Option Constant CBOX_Chrome        (New-Object System.Windows.Forms.CheckBox)
 Set-Variable -Option Constant CBOX_7zip          (New-Object System.Windows.Forms.CheckBox)
@@ -514,7 +511,7 @@ $GRP_Essentials.Text = 'Essentials'
 $GRP_Essentials.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3 + $INT_CBOX_SHORT - $INT_SHORT
 $GRP_Essentials.Width = $GRP_WIDTH
 $GRP_Essentials.Location = $GRP_Ninite.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_INSTALLERS.Controls.Add($GRP_Essentials)
+$TAB_DOWNLOADS.Controls.Add($GRP_Essentials)
 
 Set-Variable -Option Constant BTN_DownloadSDI (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartSDI   (New-Object System.Windows.Forms.CheckBox)
@@ -580,14 +577,54 @@ $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2019$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Hardware #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant GRP_Updates (New-Object System.Windows.Forms.GroupBox)
+$GRP_Updates.Text = 'Updates'
+$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
+$GRP_Updates.Width = $GRP_WIDTH
+$GRP_Updates.Location = $GRP_Essentials.Location + $SHIFT_GRP_HOR_NORMAL
+$TAB_DOWNLOADS.Controls.Add($GRP_Updates)
+
+Set-Variable -Option Constant BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_UpdateOffice    (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_WindowsUpdate   (New-Object System.Windows.Forms.Button)
+
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateStoreApps, 'Update Microsoft Store apps')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateOffice, 'Update Microsoft Office (for C2R installations only)')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsUpdate, 'Check for Windows updates, download and install if available')
+
+$BTN_UpdateStoreApps.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
+$BTN_UpdateStoreApps.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
+$BTN_UpdateStoreApps.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
+
+$GRP_Updates.Controls.AddRange(@($BTN_UpdateStoreApps, $BTN_UpdateOffice, $BTN_WindowsUpdate))
+
+
+
+$BTN_UpdateStoreApps.Text = "Update Store apps$REQUIRES_ELEVATION"
+$BTN_UpdateStoreApps.Location = $BTN_INIT_LOCATION
+$BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
+
+
+$BTN_UpdateOffice.Text = "Update Microsoft Office"
+$BTN_UpdateOffice.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
+$BTN_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
+
+
+$BTN_WindowsUpdate.Text = 'Start Windows Update'
+$BTN_WindowsUpdate.Location = $BTN_UpdateOffice.Location + $SHIFT_BTN_NORMAL
+$BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Hardware Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant GRP_Hardware (New-Object System.Windows.Forms.GroupBox)
-$GRP_Hardware.Text = 'Hardware'
+$GRP_Hardware.Text = 'Hardware Diagnostics'
 $GRP_Hardware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3 + $INT_BTN_NORMAL
 $GRP_Hardware.Width = $GRP_WIDTH
 $GRP_Hardware.Location = $GRP_INIT_LOCATION
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Hardware)
+$TAB_MAINTENANCE.Controls.Add($GRP_Hardware)
 
 Set-Variable -Option Constant BTN_CheckDisk        (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant RBTN_QuickDiskCheck  (New-Object System.Windows.Forms.RadioButton)
@@ -663,14 +700,14 @@ $CBOX_HardwareMonitor.Location = $BTN_HardwareMonitor.Location + $SHIFT_CBOX_EXE
 $CBOX_HardwareMonitor.Add_CheckStateChanged( { $BTN_HardwareMonitor.Text = "CPUID HWMonitor$(if ($CBOX_HardwareMonitor.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Software #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant GRP_Software (New-Object System.Windows.Forms.GroupBox)
-$GRP_Software.Text = 'Software'
-$GRP_Software.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
+$GRP_Software.Text = 'Software Diagnostics'
+$GRP_Software.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4
 $GRP_Software.Width = $GRP_WIDTH
 $GRP_Software.Location = $GRP_Hardware.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Software)
+$TAB_MAINTENANCE.Controls.Add($GRP_Software)
 
 Set-Variable -Option Constant BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_RepairWindows      (New-Object System.Windows.Forms.Button)
@@ -710,53 +747,13 @@ $BTN_StartSecurityScan.Location = $BTN_CheckSystemFiles.Location + $SHIFT_BTN_NO
 $BTN_StartSecurityScan.Add_Click( { Start-SecurityScan } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant GRP_Updates (New-Object System.Windows.Forms.GroupBox)
-$GRP_Updates.Text = 'Updates'
-$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
-$GRP_Updates.Width = $GRP_WIDTH
-$GRP_Updates.Location = $GRP_INIT_LOCATION
-$TAB_MAINTENANCE.Controls.Add($GRP_Updates)
-
-Set-Variable -Option Constant BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_UpdateOffice    (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_WindowsUpdate   (New-Object System.Windows.Forms.Button)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateStoreApps, 'Update Microsoft Store apps')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateOffice, 'Update Microsoft Office (for C2R installations only)')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsUpdate, 'Check for Windows updates, download and install if available')
-
-$BTN_UpdateStoreApps.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
-$BTN_UpdateStoreApps.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
-$BTN_UpdateStoreApps.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
-
-$GRP_Updates.Controls.AddRange(@($BTN_UpdateStoreApps, $BTN_UpdateOffice, $BTN_WindowsUpdate))
-
-
-
-$BTN_UpdateStoreApps.Text = "Update Store apps$REQUIRES_ELEVATION"
-$BTN_UpdateStoreApps.Location = $BTN_INIT_LOCATION
-$BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
-
-
-$BTN_UpdateOffice.Text = "Update Microsoft Office"
-$BTN_UpdateOffice.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
-$BTN_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
-
-
-$BTN_WindowsUpdate.Text = 'Start Windows Update'
-$BTN_WindowsUpdate.Location = $BTN_UpdateOffice.Location + $SHIFT_BTN_NORMAL
-$BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant GRP_Cleanup (New-Object System.Windows.Forms.GroupBox)
 $GRP_Cleanup.Text = 'Cleanup'
 $GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2
 $GRP_Cleanup.Width = $GRP_WIDTH
-$GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
+$GRP_Cleanup.Location = $GRP_Software.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
 Set-Variable -Option Constant BTN_FileCleanup (New-Object System.Windows.Forms.Button)
@@ -789,7 +786,7 @@ Set-Variable -Option Constant GRP_Optimization (New-Object System.Windows.Forms.
 $GRP_Optimization.Text = 'Optimization'
 $GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG + $INT_CBOX_SHORT - $INT_SHORT
 $GRP_Optimization.Width = $GRP_WIDTH
-$GRP_Optimization.Location = $GRP_Cleanup.Location + $SHIFT_GRP_HOR_NORMAL
+$GRP_Optimization.Location = $GRP_Cleanup.Location + "0, $($GRP_Cleanup.Height + $INT_NORMAL)"
 $TAB_MAINTENANCE.Controls.Add($GRP_Optimization)
 
 Set-Variable -Option Constant BTN_CloudFlareDNS             (New-Object System.Windows.Forms.Button)
@@ -1264,10 +1261,9 @@ Function Out-SystemInfo {
     Add-Log $INF '  Hardware'
 
     Set-Variable -Option Constant ComputerSystem (Get-WmiObject Win32_ComputerSystem)
-    Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object Manufacturer, Model, SystemSKUNumber, PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } })
+    Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } })
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
-        Add-Log $INF "    Computer model:  $($Computer.Manufacturer) $($Computer.Model) $(if ($Computer.SystemSKUNumber) {"($($Computer.SystemSKUNumber))"})"
         Add-Log $INF "    RAM:  $($Computer.RAM) GB"
     }
 
@@ -1348,6 +1344,38 @@ Function Set-NiniteFileName {
 }
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Start-StoreAppUpdate {
+    Add-Log $INF 'Starting Microsoft Store apps update...'
+
+    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()" }
+    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+Function Start-OfficeUpdate {
+    Add-Log $INF 'Starting Microsoft Office update...'
+
+    try { Start-Process $OfficeC2RClientExe '/update user' }
+    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+Function Start-WindowsUpdate {
+    Add-Log $INF 'Starting Windows Update...'
+
+    try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
+    catch [Exception] { Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Hardware #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-DiskCheck {
@@ -1422,38 +1450,6 @@ Function Start-SecurityScan {
 
     try { Start-ExternalProcess -Title:'Security scan is running...' "Start-Process '$DefenderExe' '-Scan -ScanType 2' -NoNewWindow" }
     catch [Exception] { Add-Log $ERR "Failed to perform a security scan: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Start-StoreAppUpdate {
-    Add-Log $INF 'Starting Microsoft Store apps update...'
-
-    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()" }
-    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-OfficeUpdate {
-    Add-Log $INF 'Starting Microsoft Office update...'
-
-    try { Start-Process $OfficeC2RClientExe '/update user' }
-    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-WindowsUpdate {
-    Add-Log $INF 'Starting Windows Update...'
-
-    try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
-    catch [Exception] { Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1745,7 +1741,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$env:ProgramFiles\CCleaner\Setup"
         "$env:ProgramFiles\CCleaner\Setup\*"
-        "$env:ProgramFiles\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$env:ProgramFiles\FileZilla FTP Client\AUTHORS"
         "$env:ProgramFiles\FileZilla FTP Client\GPL.html"
         "$env:ProgramFiles\FileZilla FTP Client\NEWS"

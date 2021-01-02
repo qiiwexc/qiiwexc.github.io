@@ -3,14 +3,12 @@ Set-Variable -Option Constant LOG         (New-Object System.Windows.Forms.RichT
 Set-Variable -Option Constant TAB_CONTROL (New-Object System.Windows.Forms.TabControl)
 
 Set-Variable -Option Constant TAB_HOME        (New-Object System.Windows.Forms.TabPage)
-Set-Variable -Option Constant TAB_INSTALLERS  (New-Object System.Windows.Forms.TabPage)
-Set-Variable -Option Constant TAB_DIAGNOSTICS (New-Object System.Windows.Forms.TabPage)
+Set-Variable -Option Constant TAB_DOWNLOADS   (New-Object System.Windows.Forms.TabPage)
 Set-Variable -Option Constant TAB_MAINTENANCE (New-Object System.Windows.Forms.TabPage)
 
-$TAB_HOME.UseVisualStyleBackColor = $TAB_INSTALLERS.UseVisualStyleBackColor = `
-    $TAB_DIAGNOSTICS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
+$TAB_HOME.UseVisualStyleBackColor = $TAB_DOWNLOADS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
 
-$TAB_CONTROL.Controls.AddRange(@($TAB_HOME, $TAB_INSTALLERS, $TAB_DIAGNOSTICS, $TAB_MAINTENANCE))
+$TAB_CONTROL.Controls.AddRange(@($TAB_HOME, $TAB_DOWNLOADS, $TAB_MAINTENANCE))
 $FORM.Controls.AddRange(@($LOG, $TAB_CONTROL))
 
 
@@ -38,6 +36,5 @@ $TAB_CONTROL.Location = "$INT_SHORT, $INT_SHORT"
 
 
 $TAB_HOME.Text = 'Home'
-$TAB_INSTALLERS.Text = 'Downloads'
-$TAB_DIAGNOSTICS.Text = 'Diagnostics'
+$TAB_DOWNLOADS.Text = 'Downloads'
 $TAB_MAINTENANCE.Text = 'Maintenance'

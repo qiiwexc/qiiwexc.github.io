@@ -1,9 +1,9 @@
 Set-Variable -Option Constant GRP_Software (New-Object System.Windows.Forms.GroupBox)
-$GRP_Software.Text = 'Software'
-$GRP_Software.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
+$GRP_Software.Text = 'Software Diagnostics'
+$GRP_Software.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4
 $GRP_Software.Width = $GRP_WIDTH
 $GRP_Software.Location = $GRP_Hardware.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Software)
+$TAB_MAINTENANCE.Controls.Add($GRP_Software)
 
 Set-Variable -Option Constant BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_RepairWindows      (New-Object System.Windows.Forms.Button)
