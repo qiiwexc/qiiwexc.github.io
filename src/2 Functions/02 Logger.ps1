@@ -7,7 +7,12 @@ Function Add-Log {
 
     $LOG.SelectionStart = $LOG.TextLength
 
-    Switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
+    Switch ($Level) {
+        $WRN { $LOG.SelectionColor = 'blue' }
+        $ERR { $LOG.SelectionColor = 'red' }
+        Default { $LOG.SelectionColor = 'black' }
+    }
+
     Write-Log "`n[$((Get-Date).ToString())] $Message"
 }
 

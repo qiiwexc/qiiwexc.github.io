@@ -16,7 +16,7 @@ Double click will simply open the file in Notepad.
 
 If a window briefly opens and closes, press Win+R on the keyboard, paste the following and click OK:
 
-  PowerShell -Command "Start-Process 'PowerShell' -Verb RunAs '-Command Set-ExecutionPolicy RemoteSigned -Force'"
+    PowerShell -Command "Start-Process 'PowerShell' -Verb RunAs '-Command Set-ExecutionPolicy RemoteSigned -Force'"
 
 Now you can try starting the utility again
 
@@ -136,7 +136,8 @@ Set-Variable -Option Constant TAB_INSTALLERS  (New-Object System.Windows.Forms.T
 Set-Variable -Option Constant TAB_DIAGNOSTICS (New-Object System.Windows.Forms.TabPage)
 Set-Variable -Option Constant TAB_MAINTENANCE (New-Object System.Windows.Forms.TabPage)
 
-$TAB_HOME.UseVisualStyleBackColor = $TAB_INSTALLERS.UseVisualStyleBackColor = $TAB_DIAGNOSTICS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
+$TAB_HOME.UseVisualStyleBackColor = $TAB_INSTALLERS.UseVisualStyleBackColor = `
+    $TAB_DIAGNOSTICS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
 
 $TAB_CONTROL.Controls.AddRange(@($TAB_HOME, $TAB_INSTALLERS, $TAB_DIAGNOSTICS, $TAB_MAINTENANCE))
 $FORM.Controls.AddRange(@($LOG, $TAB_CONTROL))
@@ -413,7 +414,7 @@ $BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'https://chrome.google.com/we
 
 Set-Variable -Option Constant GRP_Ninite (New-Object System.Windows.Forms.GroupBox)
 $GRP_Ninite.Text = 'Ninite'
-$GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 6 + $INT_SHORT + $INT_BTN_LONG * 2
+$GRP_Ninite.Height = $INT_GROUP_TOP + $INT_CBOX_SHORT * 7 + $INT_SHORT + $INT_BTN_LONG * 2
 $GRP_Ninite.Width = $GRP_WIDTH
 $GRP_Ninite.Location = $GRP_INIT_LOCATION
 $TAB_INSTALLERS.Controls.Add($GRP_Ninite)
@@ -424,6 +425,7 @@ Set-Variable -Option Constant CBOX_VLC           (New-Object System.Windows.Form
 Set-Variable -Option Constant CBOX_TeamViewer    (New-Object System.Windows.Forms.CheckBox)
 Set-Variable -Option Constant CBOX_Skype         (New-Object System.Windows.Forms.CheckBox)
 Set-Variable -Option Constant CBOX_qBittorrent   (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant CBOX_Malwarebytes  (New-Object System.Windows.Forms.CheckBox)
 
 Set-Variable -Option Constant BTN_DownloadNinite (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartNinite   (New-Object System.Windows.Forms.CheckBox)
@@ -441,11 +443,11 @@ $BTN_DownloadNinite.Width = $BTN_OpenNiniteInBrowser.Width = $BTN_WIDTH
 
 $CBOX_Chrome.Checked = $CBOX_7zip.Checked = $CBOX_VLC.Checked = $CBOX_TeamViewer.Checked = $CBOX_StartNinite.Checked = $True
 $CBOX_Chrome.Size = $CBOX_7zip.Size = $CBOX_VLC.Size = $CBOX_TeamViewer.Size = $CBOX_Skype.Size = `
-    $CBOX_qBittorrent.Size = $CBOX_StartNinite.Size = $LBL_OpenNiniteInBrowser.Size = $CBOX_SIZE
+    $CBOX_qBittorrent.Size = $CBOX_Malwarebytes.Size = $CBOX_StartNinite.Size = $LBL_OpenNiniteInBrowser.Size = $CBOX_SIZE
 
 $GRP_Ninite.Controls.AddRange(
     @($BTN_DownloadNinite, $BTN_OpenNiniteInBrowser, $LBL_OpenNiniteInBrowser, $CBOX_StartNinite,
-        $CBOX_7zip, $CBOX_VLC, $CBOX_TeamViewer, $CBOX_Skype, $CBOX_Chrome, $CBOX_qBittorrent)
+        $CBOX_7zip, $CBOX_VLC, $CBOX_TeamViewer, $CBOX_Skype, $CBOX_Chrome, $CBOX_qBittorrent, $CBOX_Malwarebytes)
 )
 
 
@@ -480,9 +482,14 @@ $CBOX_qBittorrent.Name = 'qbittorrent'
 $CBOX_qBittorrent.Location = $CBOX_Skype.Location + $SHIFT_CBOX_SHORT
 $CBOX_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
+$CBOX_Malwarebytes.Text = 'Malwarebytes'
+$CBOX_Malwarebytes.Name = 'malwarebytes'
+$CBOX_Malwarebytes.Location = $CBOX_qBittorrent.Location + $SHIFT_CBOX_SHORT
+$CBOX_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
+
 
 $BTN_DownloadNinite.Text = "Download selected$REQUIRES_ELEVATION"
-$BTN_DownloadNinite.Location = $CBOX_qBittorrent.Location + $SHIFT_BTN_SHORT
+$BTN_DownloadNinite.Location = $CBOX_Malwarebytes.Location + $SHIFT_BTN_SHORT
 $BTN_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartNinite.Checked "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
 
 $CBOX_StartNinite.Text = $TXT_START_AFTER_DOWNLOAD
@@ -509,8 +516,8 @@ $GRP_Essentials.Width = $GRP_WIDTH
 $GRP_Essentials.Location = $GRP_Ninite.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_INSTALLERS.Controls.Add($GRP_Essentials)
 
-Set-Variable -Option Constant BTN_DownloadSDI    (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartSDI      (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant BTN_DownloadSDI (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartSDI   (New-Object System.Windows.Forms.CheckBox)
 
 Set-Variable -Option Constant BTN_DownloadUnchecky         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartUnchecky           (New-Object System.Windows.Forms.CheckBox)
@@ -573,14 +580,14 @@ $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2019$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - HDD #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Hardware #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_HDD (New-Object System.Windows.Forms.GroupBox)
-$GRP_HDD.Text = 'HDD'
-$GRP_HDD.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
-$GRP_HDD.Width = $GRP_WIDTH
-$GRP_HDD.Location = $GRP_INIT_LOCATION
-$TAB_DIAGNOSTICS.Controls.Add($GRP_HDD)
+Set-Variable -Option Constant GRP_Hardware (New-Object System.Windows.Forms.GroupBox)
+$GRP_Hardware.Text = 'Hardware'
+$GRP_Hardware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3 + $INT_BTN_NORMAL
+$GRP_Hardware.Width = $GRP_WIDTH
+$GRP_Hardware.Location = $GRP_INIT_LOCATION
+$TAB_DIAGNOSTICS.Controls.Add($GRP_Hardware)
 
 Set-Variable -Option Constant BTN_CheckDisk        (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant RBTN_QuickDiskCheck  (New-Object System.Windows.Forms.RadioButton)
@@ -589,6 +596,11 @@ Set-Variable -Option Constant RBTN_FullDiskCheck   (New-Object System.Windows.Fo
 Set-Variable -Option Constant BTN_DownloadVictoria (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartVictoria   (New-Object System.Windows.Forms.CheckBox)
 
+Set-Variable -Option Constant BTN_CheckRAM         (New-Object System.Windows.Forms.Button)
+
+Set-Variable -Option Constant BTN_HardwareMonitor  (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_HardwareMonitor (New-Object System.Windows.Forms.CheckBox)
+
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDisk, 'Start (C:) disk health check')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
 
@@ -596,16 +608,23 @@ Set-Variable -Option Constant CBOX_StartVictoria   (New-Object System.Windows.Fo
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_FullDiskCheck, 'Schedule a full disk scan on next restart')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartVictoria, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_CheckDisk.Font = $BTN_DownloadVictoria.Font = $BTN_FONT
-$BTN_CheckDisk.Height = $BTN_DownloadVictoria.Height = $BTN_HEIGHT
-$BTN_CheckDisk.Width = $BTN_DownloadVictoria.Width = $BTN_WIDTH
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckRAM, 'Start RAM checking utility')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temperature, voltage and frequency')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_HardwareMonitor, $TIP_START_AFTER_DOWNLOAD)
+
+$BTN_CheckDisk.Font = $BTN_DownloadVictoria.Font = $BTN_CheckRAM.Font = $BTN_HardwareMonitor.Font = $BTN_FONT
+$BTN_CheckDisk.Height = $BTN_DownloadVictoria.Height = $BTN_CheckRAM.Height = $BTN_HardwareMonitor.Height = $BTN_HEIGHT
+$BTN_CheckDisk.Width = $BTN_DownloadVictoria.Width = $BTN_CheckRAM.Width = $BTN_HardwareMonitor.Width = $BTN_WIDTH
 
 $CBOX_StartVictoria.Checked = $RBTN_QuickDiskCheck.Checked = $True
 $CBOX_StartVictoria.Size = $CBOX_SIZE
 $RBTN_QuickDiskCheck.Size = $RBTN_FullDiskCheck.Size = $RBTN_SIZE
 $CBOX_StartVictoria.Text = $TXT_START_AFTER_DOWNLOAD
 
-$GRP_HDD.Controls.AddRange(@($BTN_CheckDisk, $RBTN_QuickDiskCheck, $RBTN_FullDiskCheck, $BTN_DownloadVictoria, $CBOX_StartVictoria))
+$GRP_Hardware.Controls.AddRange(
+    @($BTN_CheckDisk, $RBTN_QuickDiskCheck, $RBTN_FullDiskCheck, $BTN_DownloadVictoria,
+        $CBOX_StartVictoria, $BTN_CheckRAM, $BTN_HardwareMonitor, $CBOX_HardwareMonitor)
+)
 
 
 
@@ -628,34 +647,8 @@ $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXEC
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - RAM and CPU #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant GRP_RAMandCPU (New-Object System.Windows.Forms.GroupBox)
-$GRP_RAMandCPU.Text = 'RAM and CPU'
-$GRP_RAMandCPU.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG
-$GRP_RAMandCPU.Width = $GRP_WIDTH
-$GRP_RAMandCPU.Location = $GRP_HDD.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_DIAGNOSTICS.Controls.Add($GRP_RAMandCPU)
-
-Set-Variable -Option Constant BTN_CheckRAM         (New-Object System.Windows.Forms.Button)
-
-Set-Variable -Option Constant BTN_HardwareMonitor  (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_HardwareMonitor (New-Object System.Windows.Forms.CheckBox)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckRAM, 'Start RAM checking utility')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HardwareMonitor, 'A utility for measuring CPU and GPU temperature, voltage and frequency')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_HardwareMonitor, $TIP_START_AFTER_DOWNLOAD)
-
-$BTN_CheckRAM.Font = $BTN_HardwareMonitor.Font = $BTN_FONT
-$BTN_CheckRAM.Height = $BTN_HardwareMonitor.Height = $BTN_HEIGHT
-$BTN_CheckRAM.Width = $BTN_HardwareMonitor.Width = $BTN_WIDTH
-
-$GRP_RAMandCPU.Controls.AddRange(@($BTN_CheckRAM, $BTN_HardwareMonitor, $CBOX_HardwareMonitor))
-
-
-
 $BTN_CheckRAM.Text = 'RAM checking utility'
-$BTN_CheckRAM.Location = $BTN_INIT_LOCATION
+$BTN_CheckRAM.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
 $BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
 
 
@@ -670,28 +663,30 @@ $CBOX_HardwareMonitor.Location = $BTN_HardwareMonitor.Location + $SHIFT_CBOX_EXE
 $CBOX_HardwareMonitor.Add_CheckStateChanged( { $BTN_HardwareMonitor.Text = "CPUID HWMonitor$(if ($CBOX_HardwareMonitor.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Software #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_Windows (New-Object System.Windows.Forms.GroupBox)
-$GRP_Windows.Text = 'Windows'
-$GRP_Windows.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
-$GRP_Windows.Width = $GRP_WIDTH
-$GRP_Windows.Location = $GRP_RAMandCPU.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Windows)
+Set-Variable -Option Constant GRP_Software (New-Object System.Windows.Forms.GroupBox)
+$GRP_Software.Text = 'Software'
+$GRP_Software.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
+$GRP_Software.Width = $GRP_WIDTH
+$GRP_Software.Location = $GRP_Hardware.Location + $SHIFT_GRP_HOR_NORMAL
+$TAB_DIAGNOSTICS.Controls.Add($GRP_Software)
 
 Set-Variable -Option Constant BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_RepairWindows      (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_CheckSystemFiles   (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_StartSecurityScan  (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWindowsHealth, 'Check Windows health')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RepairWindows, 'Attempt to restore Windows health')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckSystemFiles, 'Check system file integrity')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StartSecurityScan, 'Start security scan')
 
-$BTN_CheckWindowsHealth.Font = $BTN_RepairWindows.Font = $BTN_CheckSystemFiles.Font = $BTN_FONT
-$BTN_CheckWindowsHealth.Height = $BTN_RepairWindows.Height = $BTN_CheckSystemFiles.Height = $BTN_HEIGHT
-$BTN_CheckWindowsHealth.Width = $BTN_RepairWindows.Width = $BTN_CheckSystemFiles.Width = $BTN_WIDTH
+$BTN_CheckWindowsHealth.Font = $BTN_RepairWindows.Font = $BTN_CheckSystemFiles.Font = $BTN_StartSecurityScan.Font = $BTN_FONT
+$BTN_CheckWindowsHealth.Height = $BTN_RepairWindows.Height = $BTN_CheckSystemFiles.Height = $BTN_StartSecurityScan.Height = $BTN_HEIGHT
+$BTN_CheckWindowsHealth.Width = $BTN_RepairWindows.Width = $BTN_CheckSystemFiles.Width = $BTN_StartSecurityScan.Width = $BTN_WIDTH
 
-$GRP_Windows.Controls.AddRange(@($BTN_CheckWindowsHealth, $BTN_RepairWindows, $BTN_CheckSystemFiles))
+$GRP_Software.Controls.AddRange(@($BTN_CheckWindowsHealth, $BTN_RepairWindows, $BTN_CheckSystemFiles, $BTN_StartSecurityScan))
 
 
 
@@ -710,44 +705,9 @@ $BTN_CheckSystemFiles.Location = $BTN_RepairWindows.Location + $SHIFT_BTN_NORMAL
 $BTN_CheckSystemFiles.Add_Click( { Repair-SystemFiles } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - Security #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant GRP_Malware (New-Object System.Windows.Forms.GroupBox)
-$GRP_Malware.Text = 'Security'
-$GRP_Malware.Height = $INT_GROUP_TOP + $INT_BTN_LONG + $INT_BTN_NORMAL
-$GRP_Malware.Width = $GRP_WIDTH
-$GRP_Malware.Location = $GRP_HDD.Location + "0, $($GRP_HDD.Height + $INT_NORMAL)"
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Malware)
-
-Set-Variable -Option Constant BTN_StartSecurityScan    (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_DownloadMalwarebytes (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartMalwarebytes   (New-Object System.Windows.Forms.CheckBox)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StartSecurityScan, 'Start security scan')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadMalwarebytes, "Download Malwarebytes installer`nMalwarebytes helps remove malware and adware")
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartMalwarebytes, $TIP_START_AFTER_DOWNLOAD)
-
-$BTN_StartSecurityScan.Font = $BTN_DownloadMalwarebytes.Font = $BTN_FONT
-$BTN_StartSecurityScan.Height = $BTN_DownloadMalwarebytes.Height = $BTN_HEIGHT
-$BTN_StartSecurityScan.Width = $BTN_DownloadMalwarebytes.Width = $BTN_WIDTH
-
-$GRP_Malware.Controls.AddRange(@($BTN_StartSecurityScan, $BTN_DownloadMalwarebytes, $CBOX_StartMalwarebytes))
-
-
 $BTN_StartSecurityScan.Text = 'Perform a security scan'
-$BTN_StartSecurityScan.Location = $BTN_INIT_LOCATION
+$BTN_StartSecurityScan.Location = $BTN_CheckSystemFiles.Location + $SHIFT_BTN_NORMAL
 $BTN_StartSecurityScan.Add_Click( { Start-SecurityScan } )
-
-
-$BTN_DownloadMalwarebytes.Text = "Malwarebytes$REQUIRES_ELEVATION"
-$BTN_DownloadMalwarebytes.Location = $BTN_StartSecurityScan.Location + $SHIFT_BTN_NORMAL
-$BTN_DownloadMalwarebytes.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartMalwarebytes.Checked 'ninite.com/malwarebytes/ninite.exe' 'Ninite Malwarebytes Installer.exe' } )
-
-$CBOX_StartMalwarebytes.Text = $TXT_START_AFTER_DOWNLOAD
-$CBOX_StartMalwarebytes.Checked = $True
-$CBOX_StartMalwarebytes.Size = $CBOX_SIZE
-$CBOX_StartMalwarebytes.Location = $BTN_DownloadMalwarebytes.Location + $SHIFT_CBOX_EXECUTE
-$CBOX_StartMalwarebytes.Add_CheckStateChanged( { $BTN_DownloadMalwarebytes.Text = "Malwarebytes$(if ($CBOX_StartMalwarebytes.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -926,15 +886,6 @@ Function Initialize-Startup {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
         Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
         Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2019).'
-        Add-Log $INF 'C2R versions of Office install updates silently in the background with no need to restart computer.'
-    }
-
-    if ($SystemPartition) {
-        Set-Variable -Option Constant FreeDiskSpace (Get-FreeDiskSpace)
-        if ($FreeDiskSpace -le 0.15) {
-            Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
-            Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
-        }
     }
 
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
@@ -960,7 +911,12 @@ Function Add-Log {
 
     $LOG.SelectionStart = $LOG.TextLength
 
-    Switch ($Level) { $WRN { $LOG.SelectionColor = 'blue' } $ERR { $LOG.SelectionColor = 'red' } Default { $LOG.SelectionColor = 'black' } }
+    Switch ($Level) {
+        $WRN { $LOG.SelectionColor = 'blue' }
+        $ERR { $LOG.SelectionColor = 'red' }
+        Default { $LOG.SelectionColor = 'black' }
+    }
+
     Write-Log "`n[$((Get-Date).ToString())] $Message"
 }
 
@@ -1070,7 +1026,9 @@ Function Start-ExternalProcess {
     Param(
         [String[]][Parameter(Position = 0)]$Commands = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No commands specified"),
         [String][Parameter(Position = 1)]$Title,
-        [Switch]$Elevated, [Switch]$Wait, [Switch]$Hidden
+        [Switch]$Elevated,
+        [Switch]$Wait,
+        [Switch]$Hidden
     )
     if (-not $Commands) { Return }
 
@@ -1088,7 +1046,9 @@ Function Start-DownloadExtractExecute {
         [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"),
         [String][Parameter(Position = 1)]$FileName,
         [String][Parameter(Position = 2)]$Params,
-        [Switch]$AVWarning, [Switch]$Execute, [Switch]$SilentInstall
+        [Switch]$AVWarning,
+        [Switch]$Execute,
+        [Switch]$SilentInstall
     )
     if (-not $URL) { Return }
 
@@ -1132,7 +1092,10 @@ Function Start-Download {
     Add-Log $INF "Downloading from $DownloadURL"
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
-    if ($IsNotConnected) { Add-Log $ERR "Download failed: $IsNotConnected"; Return }
+    if ($IsNotConnected) {
+        Add-Log $ERR "Download failed: $IsNotConnected"
+        if (Test-Path $SavePath) { Add-Log $WRN "Previous download found, returning it"; Return $SavePath } else { Return }
+    }
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $TempPath)
@@ -1220,7 +1183,8 @@ Function Start-Extraction {
 Function Start-File {
     Param(
         [String][Parameter(Position = 0)]$Executable = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No executable specified"),
-        [String][Parameter(Position = 1)]$Switches, [Switch]$SilentInstall
+        [String][Parameter(Position = 1)]$Switches,
+        [Switch]$SilentInstall
     )
     if (-not $Executable) { Return }
 
@@ -1366,6 +1330,7 @@ Function Set-NiniteQuery {
     if ($CBOX_Skype.Checked) { $Array += $CBOX_Skype.Name }
     if ($CBOX_Chrome.Checked) { $Array += $CBOX_Chrome.Name }
     if ($CBOX_qBittorrent.Checked) { $Array += $CBOX_qBittorrent.Name }
+    if ($CBOX_Malwarebytes.Checked) { $Array += $CBOX_Malwarebytes.Name }
     Return $Array -Join '-'
 }
 
@@ -1378,11 +1343,12 @@ Function Set-NiniteFileName {
     if ($CBOX_Skype.Checked) { $Array += $CBOX_Skype.Text }
     if ($CBOX_Chrome.Checked) { $Array += $CBOX_Chrome.Text }
     if ($CBOX_qBittorrent.Checked) { $Array += $CBOX_qBittorrent.Text }
+    if ($CBOX_Malwarebytes.Checked) { $Array += $CBOX_Malwarebytes.Text }
     Return "Ninite $($Array -Join ' ') Installer.exe"
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check HDD #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Hardware #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-DiskCheck {
     Param([Switch][Parameter(Position = 0)]$FullScan)
@@ -1397,8 +1363,6 @@ Function Start-DiskCheck {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check RAM #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
 Function Start-MemoryCheckTool {
     Add-Log $INF 'Starting memory checking tool...'
 
@@ -1409,7 +1373,7 @@ Function Start-MemoryCheckTool {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Windows Health #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Software #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
@@ -1443,8 +1407,6 @@ Function Repair-SystemFiles {
     Out-Success
 }
 
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Security #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-SecurityScan {
     if ($OS_VERSION -gt 7) {
@@ -1828,7 +1790,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
         "$env:ProgramFiles\Oracle\VirtualBox\License_en_US.rtf"
         "$env:ProgramFiles\Oracle\VirtualBox\VirtualBox.chm"
-        "$env:ProgramFiles\paint.net\License.txt"
         "$env:ProgramFiles\PuTTY\LICENCE"
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"

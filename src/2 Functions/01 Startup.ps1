@@ -50,15 +50,6 @@ Function Initialize-Startup {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
         Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
         Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2019).'
-        Add-Log $INF 'C2R versions of Office install updates silently in the background with no need to restart computer.'
-    }
-
-    if ($SystemPartition) {
-        Set-Variable -Option Constant FreeDiskSpace (Get-FreeDiskSpace)
-        if ($FreeDiskSpace -le 0.15) {
-            Add-Log $WRN "System partition has only $($FreeDiskSpace.ToString('P')) of free space."
-            Add-Log $INF 'It is recommended to clean up the disk (see Maintenance -> Cleanup).'
-        }
     }
 
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)

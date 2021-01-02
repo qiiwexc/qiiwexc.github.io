@@ -12,6 +12,7 @@ Function Set-NiniteQuery {
     if ($CBOX_Skype.Checked) { $Array += $CBOX_Skype.Name }
     if ($CBOX_Chrome.Checked) { $Array += $CBOX_Chrome.Name }
     if ($CBOX_qBittorrent.Checked) { $Array += $CBOX_qBittorrent.Name }
+    if ($CBOX_Malwarebytes.Checked) { $Array += $CBOX_Malwarebytes.Name }
     Return $Array -Join '-'
 }
 
@@ -24,5 +25,6 @@ Function Set-NiniteFileName {
     if ($CBOX_Skype.Checked) { $Array += $CBOX_Skype.Text }
     if ($CBOX_Chrome.Checked) { $Array += $CBOX_Chrome.Text }
     if ($CBOX_qBittorrent.Checked) { $Array += $CBOX_qBittorrent.Text }
+    if ($CBOX_Malwarebytes.Checked) { $Array += $CBOX_Malwarebytes.Text }
     Return "Ninite $($Array -Join ' ') Installer.exe"
 }

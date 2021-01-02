@@ -29,7 +29,9 @@ Function Start-ExternalProcess {
     Param(
         [String[]][Parameter(Position = 0)]$Commands = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No commands specified"),
         [String][Parameter(Position = 1)]$Title,
-        [Switch]$Elevated, [Switch]$Wait, [Switch]$Hidden
+        [Switch]$Elevated,
+        [Switch]$Wait,
+        [Switch]$Hidden
     )
     if (-not $Commands) { Return }
 
