@@ -1,9 +1,9 @@
 Set-Variable -Option Constant GRP_Hardware (New-Object System.Windows.Forms.GroupBox)
-$GRP_Hardware.Text = 'Hardware'
+$GRP_Hardware.Text = 'Hardware Diagnostics'
 $GRP_Hardware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3 + $INT_BTN_NORMAL
 $GRP_Hardware.Width = $GRP_WIDTH
 $GRP_Hardware.Location = $GRP_INIT_LOCATION
-$TAB_DIAGNOSTICS.Controls.Add($GRP_Hardware)
+$TAB_MAINTENANCE.Controls.Add($GRP_Hardware)
 
 Set-Variable -Option Constant BTN_CheckDisk        (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant RBTN_QuickDiskCheck  (New-Object System.Windows.Forms.RadioButton)

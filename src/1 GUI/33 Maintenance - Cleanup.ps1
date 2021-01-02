@@ -2,7 +2,7 @@ Set-Variable -Option Constant GRP_Cleanup (New-Object System.Windows.Forms.Group
 $GRP_Cleanup.Text = 'Cleanup'
 $GRP_Cleanup.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2
 $GRP_Cleanup.Width = $GRP_WIDTH
-$GRP_Cleanup.Location = $GRP_Updates.Location + $SHIFT_GRP_HOR_NORMAL
+$GRP_Cleanup.Location = $GRP_Software.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_MAINTENANCE.Controls.Add($GRP_Cleanup)
 
 Set-Variable -Option Constant BTN_FileCleanup (New-Object System.Windows.Forms.Button)

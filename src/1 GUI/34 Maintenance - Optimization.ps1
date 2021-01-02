@@ -2,7 +2,7 @@ Set-Variable -Option Constant GRP_Optimization (New-Object System.Windows.Forms.
 $GRP_Optimization.Text = 'Optimization'
 $GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG + $INT_CBOX_SHORT - $INT_SHORT
 $GRP_Optimization.Width = $GRP_WIDTH
-$GRP_Optimization.Location = $GRP_Cleanup.Location + $SHIFT_GRP_HOR_NORMAL
+$GRP_Optimization.Location = $GRP_Cleanup.Location + "0, $($GRP_Cleanup.Height + $INT_NORMAL)"
 $TAB_MAINTENANCE.Controls.Add($GRP_Optimization)
 
 Set-Variable -Option Constant BTN_CloudFlareDNS             (New-Object System.Windows.Forms.Button)

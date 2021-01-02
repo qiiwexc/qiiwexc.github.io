@@ -2,8 +2,8 @@ Set-Variable -Option Constant GRP_Updates (New-Object System.Windows.Forms.Group
 $GRP_Updates.Text = 'Updates'
 $GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
 $GRP_Updates.Width = $GRP_WIDTH
-$GRP_Updates.Location = $GRP_INIT_LOCATION
-$TAB_MAINTENANCE.Controls.Add($GRP_Updates)
+$GRP_Updates.Location = $GRP_Essentials.Location + $SHIFT_GRP_HOR_NORMAL
+$TAB_DOWNLOADS.Controls.Add($GRP_Updates)
 
 Set-Variable -Option Constant BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant BTN_UpdateOffice    (New-Object System.Windows.Forms.Button)
