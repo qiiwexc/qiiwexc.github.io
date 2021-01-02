@@ -327,7 +327,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
         "$env:ProgramFiles\Oracle\VirtualBox\License_en_US.rtf"
         "$env:ProgramFiles\Oracle\VirtualBox\VirtualBox.chm"
-        "$env:ProgramFiles\paint.net\License.txt"
         "$env:ProgramFiles\PuTTY\LICENCE"
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"

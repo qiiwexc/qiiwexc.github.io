@@ -16,7 +16,10 @@ Function Start-Download {
     Add-Log $INF "Downloading from $DownloadURL"
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
-    if ($IsNotConnected) { Add-Log $ERR "Download failed: $IsNotConnected"; Return }
+    if ($IsNotConnected) {
+        Add-Log $ERR "Download failed: $IsNotConnected"
+        if (Test-Path $SavePath) { Add-Log $WRN "Previous download found, returning it"; Return $SavePath } else { Return }
+    }
 
     try {
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $TempPath)

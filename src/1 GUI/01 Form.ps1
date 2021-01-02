@@ -7,7 +7,8 @@ Set-Variable -Option Constant TAB_INSTALLERS  (New-Object System.Windows.Forms.T
 Set-Variable -Option Constant TAB_DIAGNOSTICS (New-Object System.Windows.Forms.TabPage)
 Set-Variable -Option Constant TAB_MAINTENANCE (New-Object System.Windows.Forms.TabPage)
 
-$TAB_HOME.UseVisualStyleBackColor = $TAB_INSTALLERS.UseVisualStyleBackColor = $TAB_DIAGNOSTICS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
+$TAB_HOME.UseVisualStyleBackColor = $TAB_INSTALLERS.UseVisualStyleBackColor = `
+    $TAB_DIAGNOSTICS.UseVisualStyleBackColor = $TAB_MAINTENANCE.UseVisualStyleBackColor = $True
 
 $TAB_CONTROL.Controls.AddRange(@($TAB_HOME, $TAB_INSTALLERS, $TAB_DIAGNOSTICS, $TAB_MAINTENANCE))
 $FORM.Controls.AddRange(@($LOG, $TAB_CONTROL))

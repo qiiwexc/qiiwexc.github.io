@@ -1,7 +1,8 @@
 Function Start-File {
     Param(
         [String][Parameter(Position = 0)]$Executable = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No executable specified"),
-        [String][Parameter(Position = 1)]$Switches, [Switch]$SilentInstall
+        [String][Parameter(Position = 1)]$Switches,
+        [Switch]$SilentInstall
     )
     if (-not $Executable) { Return }
 

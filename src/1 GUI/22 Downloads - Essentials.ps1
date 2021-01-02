@@ -5,8 +5,8 @@ $GRP_Essentials.Width = $GRP_WIDTH
 $GRP_Essentials.Location = $GRP_Ninite.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_INSTALLERS.Controls.Add($GRP_Essentials)
 
-Set-Variable -Option Constant BTN_DownloadSDI    (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartSDI      (New-Object System.Windows.Forms.CheckBox)
+Set-Variable -Option Constant BTN_DownloadSDI (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartSDI   (New-Object System.Windows.Forms.CheckBox)
 
 Set-Variable -Option Constant BTN_DownloadUnchecky         (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartUnchecky           (New-Object System.Windows.Forms.CheckBox)
