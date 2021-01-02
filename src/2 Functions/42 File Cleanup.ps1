@@ -356,7 +356,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\WinRAR\ReadMe.txt"
         "$env:ProgramFiles\WinRAR\WhatsNew.txt"
         "$env:ProgramFiles\WinRAR\WinRAR.chm"
-        "$env:ProgramFiles\WinSCP\PuTTY\putty.chm"
         "$env:WinDir\*.log"
         "$env:WinDir\debug\*.log"
         "$env:WinDir\INF\*.log"

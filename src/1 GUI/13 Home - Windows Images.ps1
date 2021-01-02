@@ -2,8 +2,8 @@ Set-Variable -Option Constant GRP_DownloadWindows (New-Object System.Windows.For
 $GRP_DownloadWindows.Text = 'Windows Images'
 $GRP_DownloadWindows.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 4
 $GRP_DownloadWindows.Width = $GRP_WIDTH
-$GRP_DownloadWindows.Location = $GRP_Essentials.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_INSTALLERS.Controls.Add($GRP_DownloadWindows)
+$GRP_DownloadWindows.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
+$TAB_HOME.Controls.Add($GRP_DownloadWindows)
 
 Set-Variable -Option Constant BTN_Windows10 (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant LBL_Windows10 (New-Object System.Windows.Forms.Label)

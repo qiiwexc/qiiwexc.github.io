@@ -2,7 +2,7 @@ Set-Variable -Option Constant GRP_ChromeExtensions (New-Object System.Windows.Fo
 $GRP_ChromeExtensions.Text = 'Chrome Extensions'
 $GRP_ChromeExtensions.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2
 $GRP_ChromeExtensions.Width = $GRP_WIDTH
-$GRP_ChromeExtensions.Location = $GRP_ThisUtility.Location + "0, $($GRP_ThisUtility.Height + $INT_NORMAL)"
+$GRP_ChromeExtensions.Location = $GRP_Activators.Location + "0, $($GRP_Activators.Height + $INT_NORMAL)"
 $TAB_HOME.Controls.Add($GRP_ChromeExtensions)
 
 Set-Variable -Option Constant BTN_HTTPSEverywhere (New-Object System.Windows.Forms.Button)

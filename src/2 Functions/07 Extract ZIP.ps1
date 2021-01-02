@@ -15,7 +15,6 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'ChewWGA.zip' { 'CW.eXe' }
         'Office_2013-2019.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }

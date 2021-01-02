@@ -26,7 +26,7 @@ $BTN_UpdateStoreApps.Location = $BTN_INIT_LOCATION
 $BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
 
 
-$BTN_UpdateOffice.Text = "Update Microsoft Office$REQUIRES_ELEVATION"
+$BTN_UpdateOffice.Text = "Update Microsoft Office"
 $BTN_UpdateOffice.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
 $BTN_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
 

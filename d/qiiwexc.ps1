@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'20.12.31')
+Set-Variable -Option Constant Version ([Version]'21.1.3')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -8,13 +8,15 @@ Set-Variable -Option Constant Version ([Version]'20.12.31')
 -=-=-=-=-=-= README =-=-=-=-=-=-
 
 To execute, right-click the file, then select "Run with PowerShell".
+
 Double click will simply open the file in Notepad.
 
 
 -=-=-=-= TROUBLESHOOTING =-=-=-=-
 
 If a window briefly opens and closes, press Win+R on the keyboard, paste the following and click OK:
-    PowerShell -Command "Start-Process 'PowerShell' -Verb RunAs '-Command Set-ExecutionPolicy RemoteSigned -Force'"
+
+  PowerShell -Command "Start-Process 'PowerShell' -Verb RunAs '-Command Set-ExecutionPolicy RemoteSigned -Force'"
 
 Now you can try starting the utility again
 
@@ -169,28 +171,26 @@ $TAB_DIAGNOSTICS.Text = 'Diagnostics'
 $TAB_MAINTENANCE.Text = 'Maintenance'
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - This Utility #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - General #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_ThisUtility (New-Object System.Windows.Forms.GroupBox)
-$GRP_ThisUtility.Text = 'This utility'
-$GRP_ThisUtility.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
-$GRP_ThisUtility.Width = $GRP_WIDTH
-$GRP_ThisUtility.Location = $GRP_INIT_LOCATION
-$TAB_HOME.Controls.Add($GRP_ThisUtility)
+Set-Variable -Option Constant GRP_General (New-Object System.Windows.Forms.GroupBox)
+$GRP_General.Text = 'General'
+$GRP_General.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2
+$GRP_General.Width = $GRP_WIDTH
+$GRP_General.Location = $GRP_INIT_LOCATION
+$TAB_HOME.Controls.Add($GRP_General)
 
-Set-Variable -Option Constant BTN_Elevate     (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_BrowserHome (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_SystemInfo  (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_Elevate    (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant BTN_SystemInfo (New-Object System.Windows.Forms.Button)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Elevate, 'Restart this utility with administrator privileges')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_BrowserHome, 'Open utility web page in the default browser')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_SystemInfo, 'Print system information to the log')
 
-$BTN_Elevate.Font = $BTN_BrowserHome.Font = $BTN_SystemInfo.Font = $BTN_FONT
-$BTN_Elevate.Height = $BTN_BrowserHome.Height = $BTN_SystemInfo.Height = $BTN_HEIGHT
-$BTN_Elevate.Width = $BTN_BrowserHome.Width = $BTN_SystemInfo.Width = $BTN_WIDTH
+$BTN_Elevate.Font = $BTN_SystemInfo.Font = $BTN_FONT
+$BTN_Elevate.Height = $BTN_SystemInfo.Height = $BTN_HEIGHT
+$BTN_Elevate.Width = $BTN_SystemInfo.Width = $BTN_WIDTH
 
-$GRP_ThisUtility.Controls.AddRange(@($BTN_Elevate, $BTN_BrowserHome, $BTN_SystemInfo))
+$GRP_General.Controls.AddRange(@($BTN_Elevate, $BTN_SystemInfo))
 
 
 
@@ -199,13 +199,8 @@ $BTN_Elevate.Location = $BTN_INIT_LOCATION
 $BTN_Elevate.Add_Click( { Start-Elevated } )
 
 
-$BTN_BrowserHome.Text = 'Open in the browser'
-$BTN_BrowserHome.Location = $BTN_Elevate.Location + $SHIFT_BTN_NORMAL
-$BTN_BrowserHome.Add_Click( { Open-InBrowser 'qiiwexc.github.io' } )
-
-
 $BTN_SystemInfo.Text = 'System information'
-$BTN_SystemInfo.Location = $BTN_BrowserHome.Location + $SHIFT_BTN_NORMAL
+$BTN_SystemInfo.Location = $BTN_Elevate.Location + $SHIFT_BTN_NORMAL
 $BTN_SystemInfo.Add_Click( { Out-SystemInfo } )
 
 
@@ -213,9 +208,9 @@ $BTN_SystemInfo.Add_Click( { Out-SystemInfo } )
 
 Set-Variable -Option Constant GRP_Activators (New-Object System.Windows.Forms.GroupBox)
 $GRP_Activators.Text = 'Activators'
-$GRP_Activators.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
+$GRP_Activators.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_Activators.Width = $GRP_WIDTH
-$GRP_Activators.Location = $GRP_ThisUtility.Location + $SHIFT_GRP_HOR_NORMAL
+$GRP_Activators.Location = $GRP_General.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_Activators)
 
 Set-Variable -Option Constant BTN_DownloadKMSAuto (New-Object System.Windows.Forms.Button)
@@ -224,26 +219,21 @@ Set-Variable -Option Constant CBOX_StartKMSAuto   (New-Object System.Windows.For
 Set-Variable -Option Constant BTN_DownloadAAct    (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartAAct      (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable -Option Constant BTN_DownloadChewWGA (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartChewWGA   (New-Object System.Windows.Forms.CheckBox)
-
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadAAct, "Download AAct`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadChewWGA, "Download ChewWGA`nLast resort for activating hopeless Windows 7 cases`n`n$TXT_AV_WARNING")
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartKMSAuto, $TIP_START_AFTER_DOWNLOAD)
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartAAct, $TIP_START_AFTER_DOWNLOAD)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartChewWGA, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_DownloadKMSAuto.Font = $BTN_DownloadAAct.Font = $BTN_DownloadChewWGA.Font = $BTN_FONT
-$BTN_DownloadKMSAuto.Height = $BTN_DownloadAAct.Height = $BTN_DownloadChewWGA.Height = $BTN_HEIGHT
-$BTN_DownloadKMSAuto.Width = $BTN_DownloadAAct.Width = $BTN_DownloadChewWGA.Width = $BTN_WIDTH
+$BTN_DownloadKMSAuto.Font = $BTN_DownloadAAct.Font = $BTN_FONT
+$BTN_DownloadKMSAuto.Height = $BTN_DownloadAAct.Height = $BTN_HEIGHT
+$BTN_DownloadKMSAuto.Width = $BTN_DownloadAAct.Width = $BTN_WIDTH
 
-$CBOX_StartKMSAuto.Checked = $CBOX_StartAAct.Checked = $CBOX_StartChewWGA.Checked = $True
-$CBOX_StartKMSAuto.Size = $CBOX_StartAAct.Size = $CBOX_StartChewWGA.Size = $CBOX_SIZE
-$CBOX_StartKMSAuto.Text = $CBOX_StartAAct.Text = $CBOX_StartChewWGA.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartKMSAuto.Checked = $CBOX_StartAAct.Checked = $True
+$CBOX_StartKMSAuto.Size = $CBOX_StartAAct.Size = $CBOX_SIZE
+$CBOX_StartKMSAuto.Text = $CBOX_StartAAct.Text = $TXT_START_AFTER_DOWNLOAD
 
-$GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $BTN_DownloadAAct, $CBOX_StartAAct, $BTN_DownloadChewWGA, $CBOX_StartChewWGA))
+$GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $BTN_DownloadAAct, $CBOX_StartAAct))
 
 
 
@@ -263,43 +253,115 @@ $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$REQUIRES_ELEVATION"
-$BTN_DownloadChewWGA.Location = $BTN_DownloadAAct.Location + $SHIFT_BTN_LONG
-$BTN_DownloadChewWGA.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartChewWGA.Checked 'qiiwexc.github.io/d/ChewWGA.zip' } )
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-$CBOX_StartChewWGA.Location = $BTN_DownloadChewWGA.Location + $SHIFT_CBOX_EXECUTE
-$CBOX_StartChewWGA.Add_CheckStateChanged( { $BTN_DownloadChewWGA.Text = "ChewWGA (Win 7)$(if ($CBOX_StartChewWGA.Checked) {$REQUIRES_ELEVATION})" } )
+Set-Variable -Option Constant GRP_DownloadWindows (New-Object System.Windows.Forms.GroupBox)
+$GRP_DownloadWindows.Text = 'Windows Images'
+$GRP_DownloadWindows.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 4
+$GRP_DownloadWindows.Width = $GRP_WIDTH
+$GRP_DownloadWindows.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
+$TAB_HOME.Controls.Add($GRP_DownloadWindows)
+
+Set-Variable -Option Constant BTN_Windows10 (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_Windows10 (New-Object System.Windows.Forms.Label)
+
+Set-Variable -Option Constant BTN_Windows8  (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_Windows8  (New-Object System.Windows.Forms.Label)
+
+Set-Variable -Option Constant BTN_Windows7  (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_Windows7  (New-Object System.Windows.Forms.Label)
+
+Set-Variable -Option Constant BTN_WindowsXP (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_WindowsXP (New-Object System.Windows.Forms.Label)
+
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v20H2) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 RUS-ENG x86-x64 -20in1- SevenMod v3 (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXP, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
+
+$BTN_Windows10.Font = $BTN_Windows8.Font = $BTN_Windows7.Font = $BTN_WindowsXP.Font = $BTN_FONT
+$BTN_Windows10.Height = $BTN_Windows8.Height = $BTN_Windows7.Height = $BTN_WindowsXP.Height = $BTN_HEIGHT
+$BTN_Windows10.Width = $BTN_Windows8.Width = $BTN_Windows7.Width = $BTN_WindowsXP.Width = $BTN_WIDTH
+
+$LBL_Windows10.Size = $LBL_Windows8.Size = $LBL_Windows7.Size = $LBL_WindowsXP.Size = $CBOX_SIZE
+$LBL_Windows10.Text = $LBL_Windows8.Text = $LBL_Windows7.Text = $LBL_WindowsXP.Text = $TXT_OPENS_IN_BROWSER
+
+$GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows10, $LBL_Windows10, $BTN_Windows8, $LBL_Windows8, $BTN_Windows7, $LBL_Windows7, $BTN_WindowsXP, $LBL_WindowsXP))
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Tools (General) #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant GRP_DownloadTools (New-Object System.Windows.Forms.GroupBox)
-$GRP_DownloadTools.Text = 'Tools (General)'
-$GRP_DownloadTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
-$GRP_DownloadTools.Width = $GRP_WIDTH
-$GRP_DownloadTools.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_HOME.Controls.Add($GRP_DownloadTools)
+$BTN_Windows10.Text = 'Windows 10 (v20H2)'
+$BTN_Windows10.Location = $BTN_INIT_LOCATION
+$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/11/windows-10-v20h2-rus-eng-x86-x64-28in1.html' } )
 
-Set-Variable -Option Constant BTN_DownloadRufus (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartRufus   (New-Object System.Windows.Forms.CheckBox)
+$LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
-Set-Variable -Option Constant BTN_WindowsPE     (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_WindowsPE     (New-Object System.Windows.Forms.Label)
+$BTN_Windows8.Text = 'Windows 8.1 (Update 3)'
+$BTN_Windows8.Location = $BTN_Windows10.Location + $SHIFT_BTN_LONG
+$BTN_Windows8.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/03/windows-81-rus-eng-x86-x64-20in1.html' } )
+
+$LBL_Windows8.Location = $BTN_Windows8.Location + $SHIFT_LBL_BROWSER
+
+$BTN_Windows7.Text = 'Windows 7 SP1'
+$BTN_Windows7.Location = $BTN_Windows8.Location + $SHIFT_BTN_LONG
+$BTN_Windows7.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' } )
+
+$LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
+
+$BTN_WindowsXP.Text = 'Windows XP SP3 (ENG)'
+$BTN_WindowsXP.Location = $BTN_Windows7.Location + $SHIFT_BTN_LONG
+$BTN_WindowsXP.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
+
+$LBL_WindowsXP.Location = $BTN_WindowsXP.Location + $SHIFT_LBL_BROWSER
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant GRP_Tools (New-Object System.Windows.Forms.GroupBox)
+$GRP_Tools.Text = 'Tools'
+$GRP_Tools.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
+$GRP_Tools.Width = $GRP_WIDTH
+$GRP_Tools.Location = $GRP_General.Location + "0, $($GRP_General.Height + $INT_NORMAL)"
+$TAB_HOME.Controls.Add($GRP_Tools)
+
+Set-Variable -Option Constant BTN_DownloadCCleaner (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartCCleaner   (New-Object System.Windows.Forms.CheckBox)
+
+Set-Variable -Option Constant BTN_DownloadRufus    (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant CBOX_StartRufus      (New-Object System.Windows.Forms.CheckBox)
+
+Set-Variable -Option Constant BTN_WindowsPE        (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_WindowsPE        (New-Object System.Windows.Forms.Label)
+
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartCCleaner, $TIP_START_AFTER_DOWNLOAD)
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRufus, 'Download Rufus - a bootable USB creator')
+
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsPE, 'Download Windows PE (Live CD) ISO image based on Windows 10')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartRufus, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_DownloadRufus.Font = $BTN_WindowsPE.Font = $BTN_FONT
-$BTN_DownloadRufus.Height = $BTN_WindowsPE.Height = $BTN_HEIGHT
-$BTN_DownloadRufus.Width = $BTN_WindowsPE.Width = $BTN_WIDTH
-$CBOX_StartRufus.Size = $LBL_WindowsPE.Size = $CBOX_SIZE
+$BTN_DownloadCCleaner.Font = $BTN_DownloadRufus.Font = $BTN_WindowsPE.Font = $BTN_FONT
+$BTN_DownloadCCleaner.Height = $BTN_DownloadRufus.Height = $BTN_WindowsPE.Height = $BTN_HEIGHT
+$BTN_DownloadCCleaner.Width = $BTN_DownloadRufus.Width = $BTN_WindowsPE.Width = $BTN_WIDTH
+$CBOX_StartCCleaner.Size = $CBOX_StartRufus.Size = $LBL_WindowsPE.Size = $CBOX_SIZE
 
-$GRP_DownloadTools.Controls.AddRange(@($BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
+$GRP_Tools.Controls.AddRange(@($BTN_DownloadCCleaner, $CBOX_StartCCleaner, $BTN_DownloadRufus, $CBOX_StartRufus, $BTN_WindowsPE, $LBL_WindowsPE))
+
+
+
+$BTN_DownloadCCleaner.Text = "CCleaner$REQUIRES_ELEVATION"
+$BTN_DownloadCCleaner.Location = $BTN_INIT_LOCATION
+$BTN_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartCCleaner.Checked 'download.ccleaner.com/ccsetup.exe' } )
+
+$CBOX_StartCCleaner.Checked = $True
+$CBOX_StartCCleaner.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartCCleaner.Location = $BTN_DownloadCCleaner.Location + $SHIFT_CBOX_EXECUTE
+$CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CCleaner$(if ($CBOX_StartCCleaner.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
-$BTN_DownloadRufus.Location = $BTN_INIT_LOCATION
+$BTN_DownloadRufus.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
 $BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.13/rufus-3.13p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
@@ -322,7 +384,7 @@ Set-Variable -Option Constant GRP_ChromeExtensions (New-Object System.Windows.Fo
 $GRP_ChromeExtensions.Text = 'Chrome Extensions'
 $GRP_ChromeExtensions.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2
 $GRP_ChromeExtensions.Width = $GRP_WIDTH
-$GRP_ChromeExtensions.Location = $GRP_ThisUtility.Location + "0, $($GRP_ThisUtility.Height + $INT_NORMAL)"
+$GRP_ChromeExtensions.Location = $GRP_Activators.Location + "0, $($GRP_Activators.Height + $INT_NORMAL)"
 $TAB_HOME.Controls.Add($GRP_ChromeExtensions)
 
 Set-Variable -Option Constant BTN_HTTPSEverywhere (New-Object System.Windows.Forms.Button)
@@ -511,109 +573,11 @@ $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2019$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant GRP_InstallTools (New-Object System.Windows.Forms.GroupBox)
-$GRP_InstallTools.Text = 'Tools'
-$GRP_InstallTools.Height = $INT_GROUP_TOP + $INT_BTN_LONG
-$GRP_InstallTools.Width = $GRP_WIDTH
-$GRP_InstallTools.Location = $GRP_Essentials.Location + "0, $($GRP_Essentials.Height + $INT_NORMAL)"
-$TAB_INSTALLERS.Controls.Add($GRP_InstallTools)
-
-Set-Variable -Option Constant BTN_DownloadCCleaner (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartCCleaner   (New-Object System.Windows.Forms.CheckBox)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadCCleaner, 'Download CCleaner installer')
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartCCleaner, $TIP_START_AFTER_DOWNLOAD)
-
-$BTN_DownloadCCleaner.Font = $BTN_FONT
-$BTN_DownloadCCleaner.Height = $BTN_HEIGHT
-$BTN_DownloadCCleaner.Width = $BTN_WIDTH
-
-$CBOX_StartCCleaner.Checked = $True
-$CBOX_StartCCleaner.Size = $CBOX_SIZE
-$CBOX_StartCCleaner.Text = $TXT_START_AFTER_DOWNLOAD
-
-$GRP_InstallTools.Controls.AddRange(@($BTN_DownloadCCleaner, $CBOX_StartCCleaner))
-
-
-
-$BTN_DownloadCCleaner.Text = "CCleaner$REQUIRES_ELEVATION"
-$BTN_DownloadCCleaner.Location = $BTN_INIT_LOCATION
-$BTN_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartCCleaner.Checked 'download.ccleaner.com/ccsetup.exe' } )
-
-$CBOX_StartCCleaner.Location = $BTN_DownloadCCleaner.Location + $SHIFT_CBOX_EXECUTE
-$CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CCleaner$(if ($CBOX_StartCCleaner.Checked) {$REQUIRES_ELEVATION})" } )
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant GRP_DownloadWindows (New-Object System.Windows.Forms.GroupBox)
-$GRP_DownloadWindows.Text = 'Windows Images'
-$GRP_DownloadWindows.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 4
-$GRP_DownloadWindows.Width = $GRP_WIDTH
-$GRP_DownloadWindows.Location = $GRP_Essentials.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_INSTALLERS.Controls.Add($GRP_DownloadWindows)
-
-Set-Variable -Option Constant BTN_Windows10 (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_Windows10 (New-Object System.Windows.Forms.Label)
-
-Set-Variable -Option Constant BTN_Windows8  (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_Windows8  (New-Object System.Windows.Forms.Label)
-
-Set-Variable -Option Constant BTN_Windows7  (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_Windows7  (New-Object System.Windows.Forms.Label)
-
-Set-Variable -Option Constant BTN_WindowsXP (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_WindowsXP (New-Object System.Windows.Forms.Label)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v20H2) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows8, 'Download Windows 8.1 RUS-ENG x86-x64 -20in1- SevenMod v3 (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXP, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
-
-$BTN_Windows10.Font = $BTN_Windows8.Font = $BTN_Windows7.Font = $BTN_WindowsXP.Font = $BTN_FONT
-$BTN_Windows10.Height = $BTN_Windows8.Height = $BTN_Windows7.Height = $BTN_WindowsXP.Height = $BTN_HEIGHT
-$BTN_Windows10.Width = $BTN_Windows8.Width = $BTN_Windows7.Width = $BTN_WindowsXP.Width = $BTN_WIDTH
-
-$LBL_Windows10.Size = $LBL_Windows8.Size = $LBL_Windows7.Size = $LBL_WindowsXP.Size = $CBOX_SIZE
-$LBL_Windows10.Text = $LBL_Windows8.Text = $LBL_Windows7.Text = $LBL_WindowsXP.Text = $TXT_OPENS_IN_BROWSER
-
-$GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows10, $LBL_Windows10, $BTN_Windows8, $LBL_Windows8, $BTN_Windows7, $LBL_Windows7, $BTN_WindowsXP, $LBL_WindowsXP))
-
-
-
-$BTN_Windows10.Text = 'Windows 10 (v20H2)'
-$BTN_Windows10.Location = $BTN_INIT_LOCATION
-$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/11/windows-10-v20h2-rus-eng-x86-x64-28in1.html' } )
-
-$LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
-
-$BTN_Windows8.Text = 'Windows 8.1 (Update 3)'
-$BTN_Windows8.Location = $BTN_Windows10.Location + $SHIFT_BTN_LONG
-$BTN_Windows8.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/03/windows-81-rus-eng-x86-x64-20in1.html' } )
-
-$LBL_Windows8.Location = $BTN_Windows8.Location + $SHIFT_LBL_BROWSER
-
-$BTN_Windows7.Text = 'Windows 7 SP1'
-$BTN_Windows7.Location = $BTN_Windows8.Location + $SHIFT_BTN_LONG
-$BTN_Windows7.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' } )
-
-$LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
-
-$BTN_WindowsXP.Text = 'Windows XP SP3 (ENG)'
-$BTN_WindowsXP.Location = $BTN_Windows7.Location + $SHIFT_BTN_LONG
-$BTN_WindowsXP.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
-
-$LBL_WindowsXP.Location = $BTN_WindowsXP.Location + $SHIFT_LBL_BROWSER
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - HDD #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant GRP_HDD (New-Object System.Windows.Forms.GroupBox)
 $GRP_HDD.Text = 'HDD'
-$GRP_HDD.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
+$GRP_HDD.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2
 $GRP_HDD.Width = $GRP_WIDTH
 $GRP_HDD.Location = $GRP_INIT_LOCATION
 $TAB_DIAGNOSTICS.Controls.Add($GRP_HDD)
@@ -625,28 +589,23 @@ Set-Variable -Option Constant RBTN_FullDiskCheck   (New-Object System.Windows.Fo
 Set-Variable -Option Constant BTN_DownloadVictoria (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartVictoria   (New-Object System.Windows.Forms.CheckBox)
 
-Set-Variable -Option Constant BTN_DownloadRecuva   (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartRecuva     (New-Object System.Windows.Forms.CheckBox)
-
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDisk, 'Start (C:) disk health check')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadRecuva, "Download Recuva installer`nRecuva helps restore deleted files")
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_QuickDiskCheck, 'Perform a quick disk scan')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_FullDiskCheck, 'Schedule a full disk scan on next restart')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartVictoria, $TIP_START_AFTER_DOWNLOAD)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartRecuva, $TIP_START_AFTER_DOWNLOAD)
 
-$BTN_CheckDisk.Font = $BTN_DownloadVictoria.Font = $BTN_DownloadRecuva.Font = $BTN_FONT
-$BTN_CheckDisk.Height = $BTN_DownloadVictoria.Height = $BTN_DownloadRecuva.Height = $BTN_HEIGHT
-$BTN_CheckDisk.Width = $BTN_DownloadVictoria.Width = $BTN_DownloadRecuva.Width = $BTN_WIDTH
+$BTN_CheckDisk.Font = $BTN_DownloadVictoria.Font = $BTN_FONT
+$BTN_CheckDisk.Height = $BTN_DownloadVictoria.Height = $BTN_HEIGHT
+$BTN_CheckDisk.Width = $BTN_DownloadVictoria.Width = $BTN_WIDTH
 
-$CBOX_StartVictoria.Checked = $CBOX_StartRecuva.Checked = $RBTN_QuickDiskCheck.Checked = $True
-$CBOX_StartVictoria.Size = $CBOX_StartRecuva.Size = $CBOX_SIZE
+$CBOX_StartVictoria.Checked = $RBTN_QuickDiskCheck.Checked = $True
+$CBOX_StartVictoria.Size = $CBOX_SIZE
 $RBTN_QuickDiskCheck.Size = $RBTN_FullDiskCheck.Size = $RBTN_SIZE
-$CBOX_StartVictoria.Text = $CBOX_StartRecuva.Text = $TXT_START_AFTER_DOWNLOAD
+$CBOX_StartVictoria.Text = $TXT_START_AFTER_DOWNLOAD
 
-$GRP_HDD.Controls.AddRange(@($BTN_CheckDisk, $RBTN_QuickDiskCheck, $RBTN_FullDiskCheck, $BTN_DownloadVictoria, $CBOX_StartVictoria, $BTN_DownloadRecuva, $CBOX_StartRecuva))
+$GRP_HDD.Controls.AddRange(@($BTN_CheckDisk, $RBTN_QuickDiskCheck, $RBTN_FullDiskCheck, $BTN_DownloadVictoria, $CBOX_StartVictoria))
 
 
 
@@ -667,14 +626,6 @@ $BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_S
 
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
-
-
-$BTN_DownloadRecuva.Text = "Recuva (restore data)$REQUIRES_ELEVATION"
-$BTN_DownloadRecuva.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
-$BTN_DownloadRecuva.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRecuva.Checked 'download.ccleaner.com/rcsetup.exe' } )
-
-$CBOX_StartRecuva.Location = $BTN_DownloadRecuva.Location + $SHIFT_CBOX_EXECUTE
-$CBOX_StartRecuva.Add_CheckStateChanged( { $BTN_DownloadRecuva.Text = "Recuva (restore data)$(if ($CBOX_StartRecuva.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics - RAM and CPU #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -829,7 +780,7 @@ $BTN_UpdateStoreApps.Location = $BTN_INIT_LOCATION
 $BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
 
 
-$BTN_UpdateOffice.Text = "Update Microsoft Office$REQUIRES_ELEVATION"
+$BTN_UpdateOffice.Text = "Update Microsoft Office"
 $BTN_UpdateOffice.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
 $BTN_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
 
@@ -935,9 +886,9 @@ Function Initialize-Startup {
 
     Get-SystemInfo
 
-    $CBOX_StartAAct.Checked = $CBOX_StartAAct.Enabled = $CBOX_StartChewWGA.Checked = $CBOX_StartChewWGA.Enabled = `
-        $CBOX_StartKMSAuto.Checked = $CBOX_StartKMSAuto.Enabled = $CBOX_StartOffice.Checked = $CBOX_StartOffice.Enabled = `
-        $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
+    $CBOX_StartAAct.Checked = $CBOX_StartAAct.Enabled = $CBOX_StartKMSAuto.Checked = $CBOX_StartKMSAuto.Enabled = `
+        $CBOX_StartOffice.Checked = $CBOX_StartOffice.Enabled = $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = `
+        $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
 
     $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
     $BTN_StartSecurityScan.Enabled = Test-Path $DefenderExe
@@ -1215,7 +1166,6 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'ChewWGA.zip' { 'CW.eXe' }
         'Office_2013-2019.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
@@ -1530,10 +1480,7 @@ Function Start-StoreAppUpdate {
 Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
-    try {
-        Start-Process -Wait $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs
-        Start-Process -Wait $OfficeC2RClientExe '/update user'
-    }
+    try { Start-Process $OfficeC2RClientExe '/update user' }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1543,7 +1490,7 @@ Function Start-OfficeUpdate {
 Function Start-WindowsUpdate {
     Add-Log $INF 'Starting Windows Update...'
 
-    try { if ($OS_VERSION -gt 7) { Start-Process -Wait 'UsoClient' 'StartInteractiveScan' } else { Start-Process -Wait 'wuauclt' '/detectnow /updatenow' } }
+    try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
     catch [Exception] { Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -1910,7 +1857,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\WinRAR\ReadMe.txt"
         "$env:ProgramFiles\WinRAR\WhatsNew.txt"
         "$env:ProgramFiles\WinRAR\WinRAR.chm"
-        "$env:ProgramFiles\WinSCP\PuTTY\putty.chm"
         "$env:WinDir\*.log"
         "$env:WinDir\debug\*.log"
         "$env:WinDir\INF\*.log"

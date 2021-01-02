@@ -11,10 +11,7 @@ Function Start-StoreAppUpdate {
 Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
-    try {
-        Start-Process -Wait $OfficeC2RClientExe '/changesetting Channel="InsiderFast"' -Verb RunAs
-        Start-Process -Wait $OfficeC2RClientExe '/update user'
-    }
+    try { Start-Process $OfficeC2RClientExe '/update user' }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
 
     Out-Success
@@ -24,7 +21,7 @@ Function Start-OfficeUpdate {
 Function Start-WindowsUpdate {
     Add-Log $INF 'Starting Windows Update...'
 
-    try { if ($OS_VERSION -gt 7) { Start-Process -Wait 'UsoClient' 'StartInteractiveScan' } else { Start-Process -Wait 'wuauclt' '/detectnow /updatenow' } }
+    try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
     catch [Exception] { Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
