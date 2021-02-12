@@ -181,7 +181,6 @@ Function Start-FileCleanup {
         "$PROGRAM_FILES_86\CCleaner\Setup"
         "$PROGRAM_FILES_86\CCleaner\Setup\*"
         "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
-        "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\x86\Microsoft.VC90.CRT\README_ENU.txt"
         "$PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
         "$PROGRAM_FILES_86\FileZilla FTP Client\GPL.html"
         "$PROGRAM_FILES_86\FileZilla FTP Client\NEWS"
