@@ -1,6 +1,6 @@
 Function Set-NiniteButtonState {
     $CBOX_StartNinite.Enabled = $BTN_DownloadNinite.Enabled = $CBOX_7zip.Checked -or $CBOX_VLC.Checked -or `
-        $CBOX_TeamViewer.Checked -or $CBOX_Skype.Checked -or $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked
+        $CBOX_TeamViewer.Checked -or $CBOX_Skype.Checked -or $CBOX_Chrome.Checked -or $CBOX_qBittorrent.Checked -or $CBOX_Malwarebytes.Checked
 }
 
 
