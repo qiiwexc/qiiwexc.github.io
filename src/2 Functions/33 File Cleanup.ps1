@@ -456,7 +456,6 @@ Function Start-FileCleanup {
         "$env:LocalAppData\Microsoft\OneDrive\setup\*"
         "$env:LocalAppData\Microsoft\Teams\*.log"
         "$env:LocalAppData\Microsoft\Teams\*.log"
-        "$env:LocalAppData\Microsoft\Teams\current\resources\ThirdPartyNotices.txt"
         "$env:LocalAppData\Microsoft\Teams\packages\*.nupkg"
         "$env:LocalAppData\Microsoft\Teams\packages\SquirrelTemp"
         "$env:LocalAppData\Microsoft\Teams\packages\SquirrelTemp\*"
