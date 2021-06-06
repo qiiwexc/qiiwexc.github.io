@@ -269,7 +269,7 @@ Set-Variable -Option Constant LBL_Windows7  (New-Object System.Windows.Forms.Lab
 Set-Variable -Option Constant BTN_WindowsXP (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant LBL_WindowsXP (New-Object System.Windows.Forms.Label)
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v20H2) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXP, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
 
@@ -284,9 +284,9 @@ $GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows10, $LBL_Windows10, $BTN_Wi
 
 
 
-$BTN_Windows10.Text = 'Windows 10 (v20H2)'
+$BTN_Windows10.Text = 'Windows 10 (v21H1)'
 $BTN_Windows10.Location = $BTN_INIT_LOCATION
-$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/11/windows-10-v20h2-rus-eng-x86-x64-28in1.html' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2021/06/windows-10-v21h1-rus-eng-x86-x64-28in1.html' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
@@ -350,7 +350,7 @@ $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CClea
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
-$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.13/rufus-3.13p.exe' -Params:'-g' } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.14/rufus-3.14p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -559,12 +559,12 @@ $CBOX_SilentlyInstallUnchecky.Location = $CBOX_StartUnchecky.Location + "0, $CBO
 $CBOX_StartUnchecky.Add_CheckStateChanged( { $BTN_DownloadUnchecky.Text = "Unchecky$(if ($CBOX_StartUnchecky.Checked) {$REQUIRES_ELEVATION})" } )
 
 
-$BTN_DownloadOffice.Text = "Office 2013 - 2019$REQUIRES_ELEVATION"
+$BTN_DownloadOffice.Text = "Office 2013 - 2021$REQUIRES_ELEVATION"
 $BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
-$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartOffice.Checked 'qiiwexc.github.io/d/Office_2013-2019.zip' } )
+$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartOffice.Checked 'qiiwexc.github.io/d/Office_2013-2021.zip' } )
 
 $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
-$CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2019$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
+$CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2021$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1845,7 +1845,6 @@ Function Start-FileCleanup {
         "$env:AppData\Sun"
         "$env:AppData\Sun\*"
         "$env:AppData\Synapse3"
-        "$env:AppData\Synapse3\*"
         "$env:AppData\TeamViewer\*.log"
         "$env:AppData\Visual Studio Code"
         "$env:AppData\Visual Studio Code\*"
