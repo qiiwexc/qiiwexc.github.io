@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.6.6')
+Set-Variable -Option Constant Version ([Version]'21.6.23')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -217,8 +217,8 @@ Set-Variable -Option Constant CBOX_StartKMSAuto   (New-Object System.Windows.For
 Set-Variable -Option Constant BTN_DownloadAAct    (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant CBOX_StartAAct      (New-Object System.Windows.Forms.CheckBox)
 
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadAAct, "Download AAct`nActivates Windows 7 - 10 and Office 2010 - 2019`n`n$TXT_AV_WARNING")
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadKMSAuto, "Download KMSAuto Lite`nActivates Windows 7 - 10 and Office 2010 - 2021`n`n$TXT_AV_WARNING")
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadAAct, "Download AAct`nActivates Windows 7 - 10 and Office 2010 - 2021`n`n$TXT_AV_WARNING")
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartKMSAuto, $TIP_START_AFTER_DOWNLOAD)
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartAAct, $TIP_START_AFTER_DOWNLOAD)
@@ -515,7 +515,7 @@ Set-Variable -Option Constant CBOX_StartOffice   (New-Object System.Windows.Form
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadSDI, 'Download Snappy Driver Installer')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadUnchecky, "Download Unchecky installer`n$TXT_UNCHECKY_INFO")
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadOffice, "Download Microsoft Office 2013 - 2019 C2R installer and activator`n`n$TXT_AV_WARNING")
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadOffice, "Download Microsoft Office 2013 - 2021 C2R installer and activator`n`n$TXT_AV_WARNING")
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_SilentlyInstallUnchecky, 'Perform silent installation with no prompts')
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartSDI, $TIP_START_AFTER_DOWNLOAD)
@@ -856,7 +856,7 @@ Function Initialize-Startup {
     if ($OfficeInstallType -eq 'MSI' -and $OfficeVersion -ge 15) {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
         Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
-        Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2019).'
+        Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2021).'
     }
 
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
@@ -1100,11 +1100,10 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'Office_2013-2019.zip' { 'OInstall.exe' }
+        'Office_2013-2021.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
-        'hwmonitor_*' { "HWMonitor_$(if ($OS_64_BIT) {'x64'} else {'x32'}).exe" }
         'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
@@ -1269,7 +1268,7 @@ Function Out-SystemInfo {
         Add-Log $INF "    Free space on system partition: $($SystemPartition.FreeSpace) GB / $($SystemPartition.Size) GB ($((Get-FreeDiskSpace).ToString('P')))"
     }
 
-    Set-Variable -Option Constant OfficeYear $(Switch ($OfficeVersion) { 16 { '2016 / 2019' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
+    Set-Variable -Option Constant OfficeYear $(Switch ($OfficeVersion) { 16 { '2016 / 2019 / 2021' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
     Set-Variable -Option Constant OfficeName $(if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' })
     Set-Variable -Option Constant Win10Release ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId)
 
@@ -1844,7 +1843,6 @@ Function Start-FileCleanup {
         "$env:AppData\Skype\*"
         "$env:AppData\Sun"
         "$env:AppData\Sun\*"
-        "$env:AppData\Synapse3"
         "$env:AppData\TeamViewer\*.log"
         "$env:AppData\Visual Studio Code"
         "$env:AppData\Visual Studio Code\*"
