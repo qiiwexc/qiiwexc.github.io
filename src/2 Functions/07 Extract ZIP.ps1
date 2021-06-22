@@ -15,11 +15,10 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'Office_2013-2019.zip' { 'OInstall.exe' }
+        'Office_2013-2021.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
-        'hwmonitor_*' { "HWMonitor_$(if ($OS_64_BIT) {'x64'} else {'x32'}).exe" }
         'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }

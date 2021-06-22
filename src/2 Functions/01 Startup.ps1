@@ -49,7 +49,7 @@ Function Initialize-Startup {
     if ($OfficeInstallType -eq 'MSI' -and $OfficeVersion -ge 15) {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
         Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
-        Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2019).'
+        Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2021).'
     }
 
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)

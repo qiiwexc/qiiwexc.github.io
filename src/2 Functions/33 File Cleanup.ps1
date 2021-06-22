@@ -411,7 +411,6 @@ Function Start-FileCleanup {
         "$env:AppData\Skype\*"
         "$env:AppData\Sun"
         "$env:AppData\Sun\*"
-        "$env:AppData\Synapse3"
         "$env:AppData\TeamViewer\*.log"
         "$env:AppData\Visual Studio Code"
         "$env:AppData\Visual Studio Code\*"
