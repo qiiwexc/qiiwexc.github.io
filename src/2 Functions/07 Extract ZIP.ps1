@@ -16,7 +16,7 @@ Function Start-Extraction {
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
         'Office_2013-2021.zip' { 'OInstall.exe' }
-        'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
+        'qiiwexc_AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
         'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }

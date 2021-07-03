@@ -7,7 +7,7 @@ Set-Variable -Option Constant TargetFile  "$DistPath\qiiwexc.ps1"
 Set-Variable -Option Constant WebPageFile ".\index.html"
 
 Set-Variable -Option Constant HtmlTitle   "<title>qiiwexc $Version</title>"
-Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"d/qiiwexc.ps1`">qiiwexc $Version</a></h2>"
+Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"https://bit.ly/qiiwexc_web`">qiiwexc $Version</a></h2>"
 
 Set-Variable -Option Constant INF 'INF'
 Set-Variable -Option Constant WRN 'WRN'

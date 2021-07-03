@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.7.1')
+Set-Variable -Option Constant Version ([Version]'21.7.4')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -237,7 +237,7 @@ $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $B
 
 $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$REQUIRES_ELEVATION"
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
-$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartKMSAuto.Checked 'qiiwexc.github.io/d/KMSAuto_Lite.zip' } )
+$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartKMSAuto.Checked 'bit.ly/KMSAuto_Lite_zip' } )
 
 $CBOX_StartKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})" } )
@@ -245,7 +245,7 @@ $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto
 
 $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$REQUIRES_ELEVATION"
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
-$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartAAct.Checked 'qiiwexc.github.io/d/AAct.zip' } )
+$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartAAct.Checked 'bit.ly/qiiwexc_AAct_zip' } )
 
 $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
@@ -286,19 +286,19 @@ $GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows10, $LBL_Windows10, $BTN_Wi
 
 $BTN_Windows10.Text = 'Windows 10 (v21H1)'
 $BTN_Windows10.Location = $BTN_INIT_LOCATION
-$BTN_Windows10.Add_Click( { Open-InBrowser 'http://monkrus.ws/2021/06/windows-10-v21h1-rus-eng-x86-x64-28in1.html' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'bit.ly/Windows_10_21H1' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows7.Text = 'Windows 7 SP1'
 $BTN_Windows7.Location = $BTN_Windows10.Location + $SHIFT_BTN_LONG
-$BTN_Windows7.Add_Click( { Open-InBrowser 'http://monkrus.ws/2020/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' } )
+$BTN_Windows7.Add_Click( { Open-InBrowser 'bit.ly/Windows_7_2020' } )
 
 $LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
 
 $BTN_WindowsXP.Text = 'Windows XP SP3 (ENG)'
 $BTN_WindowsXP.Location = $BTN_Windows7.Location + $SHIFT_BTN_LONG
-$BTN_WindowsXP.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
+$BTN_WindowsXP.Add_Click( { Open-InBrowser 'bit.ly/Windows_XP_SP3_ENG' } )
 
 $LBL_WindowsXP.Location = $BTN_WindowsXP.Location + $SHIFT_LBL_BROWSER
 
@@ -360,7 +360,7 @@ $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (boot
 
 $BTN_WindowsPE.Text = 'Windows PE (Live CD)'
 $BTN_WindowsPE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
-$BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_' } )
+$BTN_WindowsPE.Add_Click( { Open-InBrowser 'bit.ly/Live_CD' } )
 
 $LBL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
 $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
@@ -390,11 +390,11 @@ $GRP_ChromeExtensions.Controls.AddRange(@($BTN_HTTPSEverywhere, $BTN_AdBlock))
 
 $BTN_HTTPSEverywhere.Text = 'HTTPS Everywhere'
 $BTN_HTTPSEverywhere.Location = $BTN_INIT_LOCATION
-$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'https://chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp' } )
+$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'bit.ly/HTTPS_Everywhere' } )
 
 $BTN_AdBlock.Text = 'AdBlock'
 $BTN_AdBlock.Location = $BTN_HTTPSEverywhere.Location + $SHIFT_BTN_NORMAL
-$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom' } )
+$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'bit.ly/AdBlock_Chrome_Store' } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -538,7 +538,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'sdi-tool.org/releases/SDI_R2102.zip' } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'bit.ly/SDI_R2102_zip' } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
@@ -561,7 +561,7 @@ $CBOX_StartUnchecky.Add_CheckStateChanged( { $BTN_DownloadUnchecky.Text = "Unche
 
 $BTN_DownloadOffice.Text = "Office 2013 - 2021$REQUIRES_ELEVATION"
 $BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
-$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartOffice.Checked 'qiiwexc.github.io/d/Office_2013-2021.zip' } )
+$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartOffice.Checked 'bit.ly/Office_2013-2021_zip' } )
 
 $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2021$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
@@ -663,7 +663,7 @@ $RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_
 
 $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
 $BTN_DownloadVictoria.Location = $BTN_CheckDisk.Location + $SHIFT_BTN_LONG
-$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'hdd.by/Victoria/Victoria536.zip' } )
+$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'bit.ly/Victoria_536_zip' } )
 
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
@@ -934,7 +934,7 @@ Function Get-CurrentVersion {
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
 
-    try { Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://qiiwexc.github.io/d/version').ToString()) }
+    try { Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString()) }
     catch [Exception] { Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"; Return }
 
     if ($LatestVersion -gt $VERSION) { Add-Log $WRN "Newer version available: v$LatestVersion"; Get-Update }
@@ -943,7 +943,7 @@ Function Get-CurrentVersion {
 
 
 Function Get-Update {
-    Set-Variable -Option Constant DownloadURL 'https://qiiwexc.github.io/d/qiiwexc.ps1'
+    Set-Variable -Option Constant DownloadURL 'https://bit.ly/qiiwexc_ps1'
     Set-Variable -Option Constant TargetFile $MyInvocation.ScriptName
 
     Add-Log $WRN 'Downloading new version...'
@@ -1032,7 +1032,8 @@ Function Start-DownloadExtractExecute {
 
     if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
     else {
-        Set-Variable -Option Constant IsZip ($URL.Substring($URL.Length - 4) -eq '.zip')
+        Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
+        Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip' -or $UrlEnding -eq '_zip')
         Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 
         if ($DownloadedFile) {
@@ -1054,7 +1055,7 @@ Function Start-Download {
     if (-not $URL) { Return }
 
     Set-Variable -Option Constant DownloadURL $(if ($URL -Like 'http*') { $URL } else { 'https://' + $URL })
-    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $DownloadURL })
+    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { (Split-Path -Leaf $DownloadURL) -Replace '_zip', '.zip' })
     Set-Variable -Option Constant TempPath "$TEMP_DIR\$FileName"
     Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$CURRENT_DIR\$FileName" })
 
@@ -1101,7 +1102,7 @@ Function Start-Extraction {
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
         'Office_2013-2021.zip' { 'OInstall.exe' }
-        'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
+        'qiiwexc_AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
         'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
@@ -1760,7 +1761,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"
         "$env:ProgramFiles\PuTTY\website.url"
-        "$env:ProgramFiles\Razer\Razer Services\Razer Central\Licenses"
         "$env:ProgramFiles\Steam\dumps"
         "$env:ProgramFiles\Steam\dumps\*"
         "$env:ProgramFiles\Steam\logs"

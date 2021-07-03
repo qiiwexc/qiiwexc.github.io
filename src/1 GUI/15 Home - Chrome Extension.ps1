@@ -20,8 +20,8 @@ $GRP_ChromeExtensions.Controls.AddRange(@($BTN_HTTPSEverywhere, $BTN_AdBlock))
 
 $BTN_HTTPSEverywhere.Text = 'HTTPS Everywhere'
 $BTN_HTTPSEverywhere.Location = $BTN_INIT_LOCATION
-$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'https://chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp' } )
+$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'bit.ly/HTTPS_Everywhere' } )
 
 $BTN_AdBlock.Text = 'AdBlock'
 $BTN_AdBlock.Location = $BTN_HTTPSEverywhere.Location + $SHIFT_BTN_NORMAL
-$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom' } )
+$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'bit.ly/AdBlock_Chrome_Store' } )
