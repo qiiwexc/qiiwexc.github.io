@@ -328,7 +328,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"
         "$env:ProgramFiles\PuTTY\website.url"
-        "$env:ProgramFiles\Razer\Razer Services\Razer Central\Licenses"
         "$env:ProgramFiles\Steam\dumps"
         "$env:ProgramFiles\Steam\dumps\*"
         "$env:ProgramFiles\Steam\logs"
