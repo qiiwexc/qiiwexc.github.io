@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.7.4')
+Set-Variable -Option Constant Version ([Version]'21.7.7')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1092,7 +1092,7 @@ Function Start-Extraction {
     if (-not $ZipPath) { Return }
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
-    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or $ZipName -eq 'KMSAuto_Lite.zip' -or `
+    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'qiiwexc_AAct.zip' -or $ZipName -eq 'KMSAuto_Lite.zip' -or `
             $URL -Match 'hwmonitor_' -or $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
@@ -1613,7 +1613,6 @@ Function Start-FileCleanup {
         "$PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$PROGRAM_FILES_86\CCleaner\Setup"
         "$PROGRAM_FILES_86\CCleaner\Setup\*"
-        "$PROGRAM_FILES_86\Dolby\Dolby DAX3\API\amd64\Microsoft.VC90.CRT\README_ENU.txt"
         "$PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
         "$PROGRAM_FILES_86\FileZilla FTP Client\GPL.html"
         "$PROGRAM_FILES_86\FileZilla FTP Client\NEWS"
