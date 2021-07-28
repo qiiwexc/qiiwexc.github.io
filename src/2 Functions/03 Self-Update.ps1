@@ -6,8 +6,16 @@ Function Get-CurrentVersion {
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
 
-    try { Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString()) }
-    catch [Exception] { Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"; Return }
+    $ProgressPreference = 'SilentlyContinue'
+    try {
+        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString())
+        $ProgressPreference = 'Continue'
+    }
+    catch [Exception] {
+        $ProgressPreference = 'Continue'
+        Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
+        Return
+    }
 
     if ($LatestVersion -gt $VERSION) { Add-Log $WRN "Newer version available: v$LatestVersion"; Get-Update }
     else { Out-Status 'No updates available' }

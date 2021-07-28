@@ -241,7 +241,6 @@ Function Start-FileCleanup {
         "$PROGRAM_FILES_86\PuTTY\README.txt"
         "$PROGRAM_FILES_86\PuTTY\website.url"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses"
-        "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses\*"
         "$PROGRAM_FILES_86\Steam\dumps"
         "$PROGRAM_FILES_86\Steam\dumps\*"
         "$PROGRAM_FILES_86\Steam\logs"
