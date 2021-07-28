@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.7.7')
+Set-Variable -Option Constant Version ([Version]'21.7.29')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -813,6 +813,10 @@ Function Initialize-Startup {
         $FORM.Text = "$($FORM.Text): Administrator"
         $BTN_Elevate.Text = 'Running as administrator'
         $BTN_Elevate.Enabled = $False
+
+        Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
+        if (!(Test-Path $IE_Registry_Key)) { New-Item $IE_Registry_Key -Force | Out-Null }
+        Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
     }
 
     Get-SystemInfo
@@ -934,8 +938,16 @@ Function Get-CurrentVersion {
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
 
-    try { Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString()) }
-    catch [Exception] { Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"; Return }
+    $ProgressPreference = 'SilentlyContinue'
+    try {
+        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString())
+        $ProgressPreference = 'Continue'
+    }
+    catch [Exception] {
+        $ProgressPreference = 'Continue'
+        Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
+        Return
+    }
 
     if ($LatestVersion -gt $VERSION) { Add-Log $WRN "Newer version available: v$LatestVersion"; Get-Update }
     else { Out-Status 'No updates available' }
@@ -1070,6 +1082,7 @@ Function Start-Download {
     }
 
     try {
+        Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
         (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $TempPath)
         if (-not $Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
 
@@ -1674,7 +1687,6 @@ Function Start-FileCleanup {
         "$PROGRAM_FILES_86\PuTTY\README.txt"
         "$PROGRAM_FILES_86\PuTTY\website.url"
         "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses"
-        "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses\*"
         "$PROGRAM_FILES_86\Steam\dumps"
         "$PROGRAM_FILES_86\Steam\dumps\*"
         "$PROGRAM_FILES_86\Steam\logs"

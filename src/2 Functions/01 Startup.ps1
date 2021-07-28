@@ -6,6 +6,10 @@ Function Initialize-Startup {
         $FORM.Text = "$($FORM.Text): Administrator"
         $BTN_Elevate.Text = 'Running as administrator'
         $BTN_Elevate.Enabled = $False
+
+        Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
+        if (!(Test-Path $IE_Registry_Key)) { New-Item $IE_Registry_Key -Force | Out-Null }
+        Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
     }
 
     Get-SystemInfo
