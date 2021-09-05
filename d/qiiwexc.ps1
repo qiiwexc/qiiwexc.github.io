@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.7.29')
+Set-Variable -Option Constant Version ([Version]'21.9.5')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -350,7 +350,7 @@ $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CClea
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
-$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.14/rufus-3.14p.exe' -Params:'-g' } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.15/rufus-3.15p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -1686,7 +1686,6 @@ Function Start-FileCleanup {
         "$PROGRAM_FILES_86\PuTTY\putty.chm"
         "$PROGRAM_FILES_86\PuTTY\README.txt"
         "$PROGRAM_FILES_86\PuTTY\website.url"
-        "$PROGRAM_FILES_86\Razer\Razer Services\Razer Central\Licenses"
         "$PROGRAM_FILES_86\Steam\dumps"
         "$PROGRAM_FILES_86\Steam\dumps\*"
         "$PROGRAM_FILES_86\Steam\logs"
