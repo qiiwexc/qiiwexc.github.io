@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.9.5')
+Set-Variable -Option Constant Version ([Version]'21.10.17')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -255,7 +255,7 @@ $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+,
 
 Set-Variable -Option Constant GRP_DownloadWindows (New-Object System.Windows.Forms.GroupBox)
 $GRP_DownloadWindows.Text = 'Windows Images'
-$GRP_DownloadWindows.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 3
+$GRP_DownloadWindows.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 4
 $GRP_DownloadWindows.Width = $GRP_WIDTH
 $GRP_DownloadWindows.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
 $TAB_HOME.Controls.Add($GRP_DownloadWindows)
@@ -263,29 +263,39 @@ $TAB_HOME.Controls.Add($GRP_DownloadWindows)
 Set-Variable -Option Constant BTN_Windows10 (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant LBL_Windows10 (New-Object System.Windows.Forms.Label)
 
+Set-Variable -Option Constant BTN_Windows11 (New-Object System.Windows.Forms.Button)
+Set-Variable -Option Constant LBL_Windows11 (New-Object System.Windows.Forms.Label)
+
 Set-Variable -Option Constant BTN_Windows7  (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant LBL_Windows7  (New-Object System.Windows.Forms.Label)
 
 Set-Variable -Option Constant BTN_WindowsXP (New-Object System.Windows.Forms.Button)
 Set-Variable -Option Constant LBL_WindowsXP (New-Object System.Windows.Forms.Label)
 
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows11, 'Download Windows 11 (v21H2) RUS-ENG -26in1- HWID-act v2 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXP, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
 
-$BTN_Windows10.Font = $BTN_Windows7.Font = $BTN_WindowsXP.Font = $BTN_FONT
-$BTN_Windows10.Height = $BTN_Windows7.Height = $BTN_WindowsXP.Height = $BTN_HEIGHT
-$BTN_Windows10.Width = $BTN_Windows7.Width = $BTN_WindowsXP.Width = $BTN_WIDTH
+$BTN_Windows11.Font = $BTN_Windows10.Font = $BTN_Windows7.Font = $BTN_WindowsXP.Font = $BTN_FONT
+$BTN_Windows11.Height = $BTN_Windows10.Height = $BTN_Windows7.Height = $BTN_WindowsXP.Height = $BTN_HEIGHT
+$BTN_Windows11.Width = $BTN_Windows10.Width = $BTN_Windows7.Width = $BTN_WindowsXP.Width = $BTN_WIDTH
 
-$LBL_Windows10.Size = $LBL_Windows7.Size = $LBL_WindowsXP.Size = $CBOX_SIZE
-$LBL_Windows10.Text = $LBL_Windows7.Text = $LBL_WindowsXP.Text = $TXT_OPENS_IN_BROWSER
+$LBL_Windows11.Size = $LBL_Windows10.Size = $LBL_Windows7.Size = $LBL_WindowsXP.Size = $CBOX_SIZE
+$LBL_Windows11.Text = $LBL_Windows10.Text = $LBL_Windows7.Text = $LBL_WindowsXP.Text = $TXT_OPENS_IN_BROWSER
 
-$GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows10, $LBL_Windows10, $BTN_Windows7, $LBL_Windows7, $BTN_WindowsXP, $LBL_WindowsXP))
+$GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows11, $LBL_Windows11, $BTN_Windows10, $LBL_Windows10, $BTN_Windows7, $LBL_Windows7, $BTN_WindowsXP, $LBL_WindowsXP))
 
 
+
+$BTN_Windows11.Text = 'Windows 11 (v21H2)'
+$BTN_Windows11.Location = $BTN_INIT_LOCATION
+$BTN_Windows11.Add_Click( { Open-InBrowser 'bit.ly/Windows_11_21H2' } )
+
+$LBL_Windows11.Location = $BTN_Windows11.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows10.Text = 'Windows 10 (v21H1)'
-$BTN_Windows10.Location = $BTN_INIT_LOCATION
+$BTN_Windows10.Location = $BTN_Windows11.Location + $SHIFT_BTN_LONG
 $BTN_Windows10.Add_Click( { Open-InBrowser 'bit.ly/Windows_10_21H1' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
@@ -350,7 +360,7 @@ $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CClea
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
-$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.15/rufus-3.15p.exe' -Params:'-g' } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.16/rufus-3.16p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -663,7 +673,7 @@ $RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_
 
 $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
 $BTN_DownloadVictoria.Location = $BTN_CheckDisk.Location + $SHIFT_BTN_LONG
-$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'bit.ly/Victoria_536_zip' } )
+$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'bit.ly/Victoria_537_zip' } )
 
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
@@ -1585,7 +1595,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Package Cache"
         "$env:ProgramData\Package Cache\*"
         "$env:ProgramData\Razer\GameManager\Logs"
-        "$env:ProgramData\Razer\GameManager\Logs\*"
         "$env:ProgramData\Razer\Installer\Logs"
         "$env:ProgramData\Razer\Installer\Logs\*"
         "$env:ProgramData\Razer\Razer Central\Logs"
