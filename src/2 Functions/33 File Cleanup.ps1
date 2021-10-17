@@ -139,7 +139,6 @@ Function Start-FileCleanup {
         "$env:ProgramData\Package Cache"
         "$env:ProgramData\Package Cache\*"
         "$env:ProgramData\Razer\GameManager\Logs"
-        "$env:ProgramData\Razer\GameManager\Logs\*"
         "$env:ProgramData\Razer\Installer\Logs"
         "$env:ProgramData\Razer\Installer\Logs\*"
         "$env:ProgramData\Razer\Razer Central\Logs"
