@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.10.17')
+Set-Variable -Option Constant Version ([Version]'21.11.21')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -360,7 +360,7 @@ $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CClea
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
-$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.16/rufus-3.16p.exe' -Params:'-g' } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.17/rufus-3.17p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
@@ -548,7 +548,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'bit.ly/SDI_R2102_zip' } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'bit.ly/SDI_R2111_zip' } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
@@ -1115,8 +1115,8 @@ Function Start-Extraction {
     if (-not $ZipPath) { Return }
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
-    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'qiiwexc_AAct.zip' -or $ZipName -eq 'KMSAuto_Lite.zip' -or `
-            $URL -Match 'hwmonitor_' -or $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
+    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'qiiwexc_AAct.zip' -or `
+            $ZipName -eq 'KMSAuto_Lite.zip' -or $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
     Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $TEMP_DIR })
@@ -1796,7 +1796,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\VideoLAN\VLC\THANKS.txt"
         "$env:ProgramFiles\VideoLAN\VLC\VideoLAN Website.url"
         "$env:ProgramFiles\WinRAR\Descript.ion"
-        "$env:ProgramFiles\WinRAR\License.txt"
         "$env:ProgramFiles\WinRAR\Order.htm"
         "$env:ProgramFiles\WinRAR\Rar.txt"
         "$env:ProgramFiles\WinRAR\ReadMe.txt"
