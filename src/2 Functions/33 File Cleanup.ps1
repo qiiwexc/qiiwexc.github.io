@@ -340,7 +340,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\VideoLAN\VLC\THANKS.txt"
         "$env:ProgramFiles\VideoLAN\VLC\VideoLAN Website.url"
         "$env:ProgramFiles\WinRAR\Descript.ion"
-        "$env:ProgramFiles\WinRAR\License.txt"
         "$env:ProgramFiles\WinRAR\Order.htm"
         "$env:ProgramFiles\WinRAR\Rar.txt"
         "$env:ProgramFiles\WinRAR\ReadMe.txt"
