@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.11.21')
+Set-Variable -Option Constant Version ([Version]'21.11.28')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1776,7 +1776,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
         "$env:ProgramFiles\Oracle\VirtualBox\License_en_US.rtf"
         "$env:ProgramFiles\Oracle\VirtualBox\VirtualBox.chm"
-        "$env:ProgramFiles\PuTTY\LICENCE"
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"
         "$env:ProgramFiles\PuTTY\website.url"
