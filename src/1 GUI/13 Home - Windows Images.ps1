@@ -39,9 +39,9 @@ $BTN_Windows11.Add_Click( { Open-InBrowser 'bit.ly/Windows_11_21H2' } )
 
 $LBL_Windows11.Location = $BTN_Windows11.Location + $SHIFT_LBL_BROWSER
 
-$BTN_Windows10.Text = 'Windows 10 (v21H1)'
+$BTN_Windows10.Text = 'Windows 10 (v21H2)'
 $BTN_Windows10.Location = $BTN_Windows11.Location + $SHIFT_BTN_LONG
-$BTN_Windows10.Add_Click( { Open-InBrowser 'bit.ly/Windows_10_21H1' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'bit.ly/Windows_10_21H2' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
