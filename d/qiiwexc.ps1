@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.11.28')
+Set-Variable -Option Constant Version ([Version]'21.12.1')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -294,9 +294,9 @@ $BTN_Windows11.Add_Click( { Open-InBrowser 'bit.ly/Windows_11_21H2' } )
 
 $LBL_Windows11.Location = $BTN_Windows11.Location + $SHIFT_LBL_BROWSER
 
-$BTN_Windows10.Text = 'Windows 10 (v21H1)'
+$BTN_Windows10.Text = 'Windows 10 (v21H2)'
 $BTN_Windows10.Location = $BTN_Windows11.Location + $SHIFT_BTN_LONG
-$BTN_Windows10.Add_Click( { Open-InBrowser 'bit.ly/Windows_10_21H1' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'bit.ly/Windows_10_21H2' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
@@ -1787,7 +1787,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\TeamViewer\*.txt"
         "$env:ProgramFiles\TeamViewer\TeamViewer_Note.exe"
         "$env:ProgramFiles\VideoLAN\VLC\AUTHORS.txt"
-        "$env:ProgramFiles\VideoLAN\VLC\COPYING.txt"
         "$env:ProgramFiles\VideoLAN\VLC\Documentation.url"
         "$env:ProgramFiles\VideoLAN\VLC\New_Skins.url"
         "$env:ProgramFiles\VideoLAN\VLC\NEWS.txt"
