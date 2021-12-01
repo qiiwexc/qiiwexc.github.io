@@ -330,7 +330,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\TeamViewer\*.log"
         "$env:ProgramFiles\TeamViewer\*.txt"
         "$env:ProgramFiles\TeamViewer\TeamViewer_Note.exe"
-        "$env:ProgramFiles\VideoLAN\VLC\AUTHORS.txt"
         "$env:ProgramFiles\VideoLAN\VLC\Documentation.url"
         "$env:ProgramFiles\VideoLAN\VLC\New_Skins.url"
         "$env:ProgramFiles\VideoLAN\VLC\NEWS.txt"
