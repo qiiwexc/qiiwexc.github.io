@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'21.12.1')
+Set-Variable -Option Constant Version ([Version]'21.12.9')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1774,7 +1774,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$env:ProgramFiles\Oracle\VirtualBox\doc"
         "$env:ProgramFiles\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
-        "$env:ProgramFiles\Oracle\VirtualBox\License_en_US.rtf"
         "$env:ProgramFiles\Oracle\VirtualBox\VirtualBox.chm"
         "$env:ProgramFiles\PuTTY\putty.chm"
         "$env:ProgramFiles\PuTTY\README.txt"
