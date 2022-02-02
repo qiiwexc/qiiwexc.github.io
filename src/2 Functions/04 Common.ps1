@@ -22,7 +22,7 @@ Function Open-InBrowser {
 
 Function Set-ButtonState {
     $BTN_UpdateOffice.Enabled = $OfficeInstallType -eq 'C2R'
-    $BTN_HTTPSEverywhere.Enabled = $BTN_AdBlock.Enabled = Test-Path $ChromeExe
+    $BTN_YouTube_Dislike.Enabled = $BTN_HTTPSEverywhere.Enabled = $BTN_AdBlock.Enabled = Test-Path $ChromeExe
 }
 
 Function Start-ExternalProcess {
