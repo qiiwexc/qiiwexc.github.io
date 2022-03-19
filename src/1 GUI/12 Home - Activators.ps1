@@ -31,7 +31,7 @@ $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $B
 
 $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$REQUIRES_ELEVATION"
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
-$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartKMSAuto.Checked 'bit.ly/KMSAuto_Lite_zip' } )
+$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartKMSAuto.Checked 'qiiwexc.github.io/d/KMSAuto_Lite.zip' } )
 
 $CBOX_StartKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})" } )
@@ -39,7 +39,7 @@ $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto
 
 $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$REQUIRES_ELEVATION"
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
-$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartAAct.Checked 'bit.ly/qiiwexc_AAct_zip' } )
+$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartAAct.Checked 'qiiwexc.github.io/d/AAct.zip' } )
 
 $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
