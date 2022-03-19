@@ -262,7 +262,6 @@ Function Start-FileCleanup {
         "$PROGRAM_FILES_86\WinRAR\WhatsNew.txt"
         "$PROGRAM_FILES_86\WinRAR\WinRAR.chm"
         "$PROGRAM_FILES_86\WinSCP\license.txt"
-        "$PROGRAM_FILES_86\WinSCP\PuTTY\LICENCE"
         "$PROGRAM_FILES_86\WinSCP\PuTTY\putty.chm"
         "$env:ProgramFiles\7-Zip\7-zip.chm"
         "$env:ProgramFiles\7-Zip\7-zip.dll.tmp"

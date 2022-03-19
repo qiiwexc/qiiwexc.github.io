@@ -19,7 +19,7 @@ Set-Variable -Option Constant LBL_WindowsXP (New-Object System.Windows.Forms.Lab
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows11, 'Download Windows 11 (v21H2) RUS-ENG -26in1- HWID-act v2 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXP, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
 
 $BTN_Windows11.Font = $BTN_Windows10.Font = $BTN_Windows7.Font = $BTN_WindowsXP.Font = $BTN_FONT
@@ -35,24 +35,24 @@ $GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows11, $LBL_Windows11, $BTN_Wi
 
 $BTN_Windows11.Text = 'Windows 11 (v21H2)'
 $BTN_Windows11.Location = $BTN_INIT_LOCATION
-$BTN_Windows11.Add_Click( { Open-InBrowser 'bit.ly/Windows_11_21H2' } )
+$BTN_Windows11.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2021/10/windows-11-v21h2-rus-eng-26in1-hwid-act_14.html' } )
 
 $LBL_Windows11.Location = $BTN_Windows11.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows10.Text = 'Windows 10 (v21H2)'
 $BTN_Windows10.Location = $BTN_Windows11.Location + $SHIFT_BTN_LONG
-$BTN_Windows10.Add_Click( { Open-InBrowser 'bit.ly/Windows_10_21H2' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows7.Text = 'Windows 7 SP1'
 $BTN_Windows7.Location = $BTN_Windows10.Location + $SHIFT_BTN_LONG
-$BTN_Windows7.Add_Click( { Open-InBrowser 'bit.ly/Windows_7_2020' } )
+$BTN_Windows7.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' } )
 
 $LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
 
 $BTN_WindowsXP.Text = 'Windows XP SP3 (ENG)'
 $BTN_WindowsXP.Location = $BTN_Windows7.Location + $SHIFT_BTN_LONG
-$BTN_WindowsXP.Add_Click( { Open-InBrowser 'bit.ly/Windows_XP_SP3_ENG' } )
+$BTN_WindowsXP.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
 
 $LBL_WindowsXP.Location = $BTN_WindowsXP.Location + $SHIFT_LBL_BROWSER

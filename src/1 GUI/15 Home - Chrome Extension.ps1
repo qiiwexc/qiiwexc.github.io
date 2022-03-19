@@ -22,11 +22,11 @@ $GRP_ChromeExtensions.Controls.AddRange(@($BTN_YouTube_Dislike, $BTN_HTTPSEveryw
 
 $BTN_HTTPSEverywhere.Text = 'HTTPS Everywhere'
 $BTN_HTTPSEverywhere.Location = $BTN_INIT_LOCATION
-$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'bit.ly/HTTPS_Everywhere' } )
+$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp' } )
 
 $BTN_AdBlock.Text = 'AdBlock'
 $BTN_AdBlock.Location = $BTN_HTTPSEverywhere.Location + $SHIFT_BTN_NORMAL
-$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'bit.ly/AdBlock_Chrome_Store' } )
+$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom' } )
 
 $BTN_YouTube_Dislike.Text = 'Return YouTube Dislike'
 $BTN_YouTube_Dislike.Location = $BTN_AdBlock.Location + $SHIFT_BTN_NORMAL

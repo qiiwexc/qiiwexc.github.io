@@ -237,7 +237,7 @@ $GRP_Activators.Controls.AddRange(@($BTN_DownloadKMSAuto, $CBOX_StartKMSAuto, $B
 
 $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$REQUIRES_ELEVATION"
 $BTN_DownloadKMSAuto.Location = $BTN_INIT_LOCATION
-$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartKMSAuto.Checked 'bit.ly/KMSAuto_Lite_zip' } )
+$BTN_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartKMSAuto.Checked 'qiiwexc.github.io/d/KMSAuto_Lite.zip' } )
 
 $CBOX_StartKMSAuto.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CBOX_StartKMSAuto.Checked) {$REQUIRES_ELEVATION})" } )
@@ -245,7 +245,7 @@ $CBOX_StartKMSAuto.Add_CheckStateChanged( { $BTN_DownloadKMSAuto.Text = "KMSAuto
 
 $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$REQUIRES_ELEVATION"
 $BTN_DownloadAAct.Location = $BTN_DownloadKMSAuto.Location + $SHIFT_BTN_LONG
-$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartAAct.Checked 'bit.ly/qiiwexc_AAct_zip' } )
+$BTN_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartAAct.Checked 'qiiwexc.github.io/d/AAct.zip' } )
 
 $CBOX_StartAAct.Location = $BTN_DownloadAAct.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartAAct.Add_CheckStateChanged( { $BTN_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CBOX_StartAAct.Checked) {$REQUIRES_ELEVATION})" } )
@@ -274,7 +274,7 @@ Set-Variable -Option Constant LBL_WindowsXP (New-Object System.Windows.Forms.Lab
 
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows11, 'Download Windows 11 (v21H2) RUS-ENG -26in1- HWID-act v2 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- (AIO) ISO image')
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image')
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXP, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
 
 $BTN_Windows11.Font = $BTN_Windows10.Font = $BTN_Windows7.Font = $BTN_WindowsXP.Font = $BTN_FONT
@@ -290,25 +290,25 @@ $GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows11, $LBL_Windows11, $BTN_Wi
 
 $BTN_Windows11.Text = 'Windows 11 (v21H2)'
 $BTN_Windows11.Location = $BTN_INIT_LOCATION
-$BTN_Windows11.Add_Click( { Open-InBrowser 'bit.ly/Windows_11_21H2' } )
+$BTN_Windows11.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2021/10/windows-11-v21h2-rus-eng-26in1-hwid-act_14.html' } )
 
 $LBL_Windows11.Location = $BTN_Windows11.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows10.Text = 'Windows 10 (v21H2)'
 $BTN_Windows10.Location = $BTN_Windows11.Location + $SHIFT_BTN_LONG
-$BTN_Windows10.Add_Click( { Open-InBrowser 'bit.ly/Windows_10_21H2' } )
+$BTN_Windows10.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html' } )
 
 $LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
 
 $BTN_Windows7.Text = 'Windows 7 SP1'
 $BTN_Windows7.Location = $BTN_Windows10.Location + $SHIFT_BTN_LONG
-$BTN_Windows7.Add_Click( { Open-InBrowser 'bit.ly/Windows_7_2020' } )
+$BTN_Windows7.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' } )
 
 $LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
 
 $BTN_WindowsXP.Text = 'Windows XP SP3 (ENG)'
 $BTN_WindowsXP.Location = $BTN_Windows7.Location + $SHIFT_BTN_LONG
-$BTN_WindowsXP.Add_Click( { Open-InBrowser 'bit.ly/Windows_XP_SP3_ENG' } )
+$BTN_WindowsXP.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
 
 $LBL_WindowsXP.Location = $BTN_WindowsXP.Location + $SHIFT_LBL_BROWSER
 
@@ -370,7 +370,7 @@ $CBOX_StartRufus.Add_CheckStateChanged( { $BTN_DownloadRufus.Text = "Rufus (boot
 
 $BTN_WindowsPE.Text = 'Windows PE (Live CD)'
 $BTN_WindowsPE.Location = $BTN_DownloadRufus.Location + $SHIFT_BTN_LONG
-$BTN_WindowsPE.Add_Click( { Open-InBrowser 'bit.ly/Live_CD' } )
+$BTN_WindowsPE.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_' } )
 
 $LBL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
 $LBL_WindowsPE.Location = $BTN_WindowsPE.Location + $SHIFT_LBL_BROWSER
@@ -402,11 +402,11 @@ $GRP_ChromeExtensions.Controls.AddRange(@($BTN_YouTube_Dislike, $BTN_HTTPSEveryw
 
 $BTN_HTTPSEverywhere.Text = 'HTTPS Everywhere'
 $BTN_HTTPSEverywhere.Location = $BTN_INIT_LOCATION
-$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'bit.ly/HTTPS_Everywhere' } )
+$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp' } )
 
 $BTN_AdBlock.Text = 'AdBlock'
 $BTN_AdBlock.Location = $BTN_HTTPSEverywhere.Location + $SHIFT_BTN_NORMAL
-$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'bit.ly/AdBlock_Chrome_Store' } )
+$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom' } )
 
 $BTN_YouTube_Dislike.Text = 'Return YouTube Dislike'
 $BTN_YouTube_Dislike.Location = $BTN_AdBlock.Location + $SHIFT_BTN_NORMAL
@@ -554,7 +554,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'bit.ly/SDI_R2201_zip' } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'sdi-tool.org/releases/SDI_R2201.zip' } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
@@ -577,7 +577,7 @@ $CBOX_StartUnchecky.Add_CheckStateChanged( { $BTN_DownloadUnchecky.Text = "Unche
 
 $BTN_DownloadOffice.Text = "Office 2013 - 2021$REQUIRES_ELEVATION"
 $BTN_DownloadOffice.Location = $BTN_DownloadUnchecky.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
-$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartOffice.Checked 'bit.ly/Office_2013-2021_zip' } )
+$BTN_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CBOX_StartOffice.Checked 'qiiwexc.github.io/d/Office_2013-2021.zip' } )
 
 $CBOX_StartOffice.Location = $BTN_DownloadOffice.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartOffice.Add_CheckStateChanged( { $BTN_DownloadOffice.Text = "Office 2013 - 2021$(if ($CBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
@@ -679,7 +679,7 @@ $RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_
 
 $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
 $BTN_DownloadVictoria.Location = $BTN_CheckDisk.Location + $SHIFT_BTN_LONG
-$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'bit.ly/Victoria_537_zip' } )
+$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'hdd.by/Victoria/Victoria537.zip' } )
 
 $CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
@@ -1724,7 +1724,6 @@ Function Start-FileCleanup {
         "$PROGRAM_FILES_86\WinRAR\WhatsNew.txt"
         "$PROGRAM_FILES_86\WinRAR\WinRAR.chm"
         "$PROGRAM_FILES_86\WinSCP\license.txt"
-        "$PROGRAM_FILES_86\WinSCP\PuTTY\LICENCE"
         "$PROGRAM_FILES_86\WinSCP\PuTTY\putty.chm"
         "$env:ProgramFiles\7-Zip\7-zip.chm"
         "$env:ProgramFiles\7-Zip\7-zip.dll.tmp"
