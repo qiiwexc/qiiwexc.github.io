@@ -40,7 +40,7 @@ $GRP_Essentials.Controls.AddRange(
 
 $BTN_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BTN_DownloadSDI.Location = $BTN_INIT_LOCATION
-$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'bit.ly/SDI_R2111_zip' } )
+$BTN_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartSDI.Checked 'bit.ly/SDI_R2201_zip' } )
 
 $CBOX_StartSDI.Location = $BTN_DownloadSDI.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartSDI.Add_CheckStateChanged( { $BTN_DownloadSDI.Text = "Snappy Driver Installer$(if ($CBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )

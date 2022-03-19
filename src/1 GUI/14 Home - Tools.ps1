@@ -43,7 +43,7 @@ $CBOX_StartCCleaner.Add_CheckStateChanged( { $BTN_DownloadCCleaner.Text = "CClea
 
 $BTN_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
 $BTN_DownloadRufus.Location = $BTN_DownloadCCleaner.Location + $SHIFT_BTN_LONG
-$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.17/rufus-3.17p.exe' -Params:'-g' } )
+$BTN_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartRufus.Checked 'github.com/pbatard/rufus/releases/download/v3.18/rufus-3.18p.exe' -Params:'-g' } )
 
 $CBOX_StartRufus.Location = $BTN_DownloadRufus.Location + $SHIFT_CBOX_EXECUTE
 $CBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
