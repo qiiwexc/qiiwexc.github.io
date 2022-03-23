@@ -1161,7 +1161,7 @@ Function Start-DownloadExtractExecute {
     if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
     else {
         Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
-        Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip' -or $UrlEnding -eq '_zip')
+        Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
         Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 
         if ($DownloadedFile) {
@@ -1221,7 +1221,7 @@ Function Start-Extraction {
     if (-not $ZipPath) { Return }
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
-    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'qiiwexc_AAct.zip' -or `
+    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
             $ZipName -eq 'KMSAuto_Lite.zip' -or $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
@@ -1231,7 +1231,7 @@ Function Start-Extraction {
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
         'Office_2013-2021.zip' { 'OInstall.exe' }
-        'qiiwexc_AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
+        'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
         'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
