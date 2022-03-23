@@ -1,43 +1,40 @@
-Set-Variable -Option Constant GRP_Software (New-Object System.Windows.Forms.GroupBox)
-$GRP_Software.Text = 'Software Diagnostics'
-$GRP_Software.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 4
-$GRP_Software.Width = $GRP_WIDTH
-$GRP_Software.Location = $GRP_Hardware.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_MAINTENANCE.Controls.Add($GRP_Software)
-
-Set-Variable -Option Constant BTN_CheckWindowsHealth (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_RepairWindows      (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_CheckSystemFiles   (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_StartSecurityScan  (New-Object System.Windows.Forms.Button)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckWindowsHealth, 'Check Windows health')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_RepairWindows, 'Attempt to restore Windows health')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckSystemFiles, 'Check system file integrity')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_StartSecurityScan, 'Start security scan')
-
-$BTN_CheckWindowsHealth.Font = $BTN_RepairWindows.Font = $BTN_CheckSystemFiles.Font = $BTN_StartSecurityScan.Font = $BTN_FONT
-$BTN_CheckWindowsHealth.Height = $BTN_RepairWindows.Height = $BTN_CheckSystemFiles.Height = $BTN_StartSecurityScan.Height = $BTN_HEIGHT
-$BTN_CheckWindowsHealth.Width = $BTN_RepairWindows.Width = $BTN_CheckSystemFiles.Width = $BTN_StartSecurityScan.Width = $BTN_WIDTH
-
-$GRP_Software.Controls.AddRange(@($BTN_CheckWindowsHealth, $BTN_RepairWindows, $BTN_CheckSystemFiles, $BTN_StartSecurityScan))
+Set-Variable -Option Constant GROUP_Software (New-Object System.Windows.Forms.GroupBox)
+$GROUP_Software.Text = 'Software Diagnostics'
+$GROUP_Software.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 3
+$GROUP_Software.Width = $WIDTH_GROUP
+$GROUP_Software.Location = $GROUP_Hardware.Location + $SHIFT_GROUP_HORIZONTAL
+$TAB_MAINTENANCE.Controls.Add($GROUP_Software)
 
 
-
-$BTN_CheckWindowsHealth.Text = "Check Windows health$REQUIRES_ELEVATION"
-$BTN_CheckWindowsHealth.Location = $BTN_INIT_LOCATION
-$BTN_CheckWindowsHealth.Add_Click( { Test-WindowsHealth } )
-
-
-$BTN_RepairWindows.Text = "Repair Windows$REQUIRES_ELEVATION"
-$BTN_RepairWindows.Location = $BTN_CheckWindowsHealth.Location + $SHIFT_BTN_NORMAL
-$BTN_RepairWindows.Add_Click( { Repair-Windows } )
-
-
-$BTN_CheckSystemFiles.Text = "Check system files$REQUIRES_ELEVATION"
-$BTN_CheckSystemFiles.Location = $BTN_RepairWindows.Location + $SHIFT_BTN_NORMAL
-$BTN_CheckSystemFiles.Add_Click( { Repair-SystemFiles } )
+Set-Variable -Option Constant BUTTON_CheckWindowsHealth (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_CheckWindowsHealth, 'Check Windows health')
+$BUTTON_CheckWindowsHealth.Font = $BUTTON_FONT
+$BUTTON_CheckWindowsHealth.Height = $HEIGHT_BUTTON
+$BUTTON_CheckWindowsHealth.Width = $WIDTH_BUTTON
+$BUTTON_CheckWindowsHealth.Text = "Check Windows health$REQUIRES_ELEVATION"
+$BUTTON_CheckWindowsHealth.Location = $INITIAL_LOCATION_BUTTON
+$BUTTON_CheckWindowsHealth.Add_Click( { Test-WindowsHealth } )
+$GROUP_Software.Controls.Add($BUTTON_CheckWindowsHealth)
 
 
-$BTN_StartSecurityScan.Text = 'Perform a security scan'
-$BTN_StartSecurityScan.Location = $BTN_CheckSystemFiles.Location + $SHIFT_BTN_NORMAL
-$BTN_StartSecurityScan.Add_Click( { Start-SecurityScan } )
+Set-Variable -Option Constant BUTTON_CheckSystemFiles (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_CheckSystemFiles, 'Check system file integrity')
+$BUTTON_CheckSystemFiles.Font = $BUTTON_FONT
+$BUTTON_CheckSystemFiles.Height = $HEIGHT_BUTTON
+$BUTTON_CheckSystemFiles.Width = $WIDTH_BUTTON
+$BUTTON_CheckSystemFiles.Text = "Check system files$REQUIRES_ELEVATION"
+$BUTTON_CheckSystemFiles.Location = $BUTTON_CheckWindowsHealth.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_CheckSystemFiles.Add_Click( { Repair-SystemFiles } )
+$GROUP_Software.Controls.Add($BUTTON_CheckSystemFiles)
+
+
+Set-Variable -Option Constant BUTTON_StartSecurityScan (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_StartSecurityScan, 'Start security scan')
+$BUTTON_StartSecurityScan.Enabled = Test-Path $PATH_DEFENDER_EXE
+$BUTTON_StartSecurityScan.Font = $BUTTON_FONT
+$BUTTON_StartSecurityScan.Height = $HEIGHT_BUTTON
+$BUTTON_StartSecurityScan.Width = $WIDTH_BUTTON
+$BUTTON_StartSecurityScan.Text = 'Perform a security scan'
+$BUTTON_StartSecurityScan.Location = $BUTTON_CheckSystemFiles.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_StartSecurityScan.Add_Click( { Start-SecurityScan } )
+$GROUP_Software.Controls.Add($BUTTON_StartSecurityScan)

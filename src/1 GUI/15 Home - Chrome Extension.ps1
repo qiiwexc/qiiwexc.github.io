@@ -1,33 +1,42 @@
-Set-Variable -Option Constant GRP_ChromeExtensions (New-Object System.Windows.Forms.GroupBox)
-$GRP_ChromeExtensions.Text = 'Chrome Extensions'
-$GRP_ChromeExtensions.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
-$GRP_ChromeExtensions.Width = $GRP_WIDTH
-$GRP_ChromeExtensions.Location = $GRP_Activators.Location + "0, $($GRP_Activators.Height + $INT_NORMAL)"
-$TAB_HOME.Controls.Add($GRP_ChromeExtensions)
-
-Set-Variable -Option Constant BTN_HTTPSEverywhere (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_AdBlock         (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_YouTube_Dislike (New-Object System.Windows.Forms.Button)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_HTTPSEverywhere, 'Automatically use HTTPS security on many sites')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_AdBlock, 'Block ads and pop-ups on websites')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_YouTube_Dislike, 'Return YouTube Dislike restores the ability to see dislikes on YouTube')
-
-$BTN_HTTPSEverywhere.Font = $BTN_AdBlock.Font = $BTN_YouTube_Dislike.Font = $BTN_FONT
-$BTN_HTTPSEverywhere.Height = $BTN_AdBlock.Height = $BTN_YouTube_Dislike.Height = $BTN_HEIGHT
-$BTN_HTTPSEverywhere.Width = $BTN_AdBlock.Width = $BTN_YouTube_Dislike.Width = $BTN_WIDTH
-
-$GRP_ChromeExtensions.Controls.AddRange(@($BTN_YouTube_Dislike, $BTN_HTTPSEverywhere, $BTN_AdBlock))
+Set-Variable -Option Constant GROUP_ChromeExtensions (New-Object System.Windows.Forms.GroupBox)
+$GROUP_ChromeExtensions.Text = 'Chrome Extensions'
+$GROUP_ChromeExtensions.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 3
+$GROUP_ChromeExtensions.Width = $WIDTH_GROUP
+$GROUP_ChromeExtensions.Location = $GROUP_Activators.Location + "0, $($GROUP_Activators.Height + $INTERVAL_NORMAL)"
+$TAB_HOME.Controls.Add($GROUP_ChromeExtensions)
 
 
-$BTN_HTTPSEverywhere.Text = 'HTTPS Everywhere'
-$BTN_HTTPSEverywhere.Location = $BTN_INIT_LOCATION
-$BTN_HTTPSEverywhere.Add_Click( { Start-Process $ChromeExe 'chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp' } )
+Set-Variable -Option Constant BUTTON_HTTPSEverywhere (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_HTTPSEverywhere, 'Automatically use HTTPS security on many sites')
+$BUTTON_HTTPSEverywhere.Enabled = Test-Path $PATH_CHROME_EXE
+$BUTTON_HTTPSEverywhere.Font = $BUTTON_FONT
+$BUTTON_HTTPSEverywhere.Height = $HEIGHT_BUTTON
+$BUTTON_HTTPSEverywhere.Width = $WIDTH_BUTTON
+$BUTTON_HTTPSEverywhere.Text = 'HTTPS Everywhere'
+$BUTTON_HTTPSEverywhere.Location = $INITIAL_LOCATION_BUTTON
+$BUTTON_HTTPSEverywhere.Add_Click( { Start-Process $PATH_CHROME_EXE $URL_CHROME_HTTPS } )
+$GROUP_ChromeExtensions.Controls.Add($BUTTON_HTTPSEverywhere)
 
-$BTN_AdBlock.Text = 'AdBlock'
-$BTN_AdBlock.Location = $BTN_HTTPSEverywhere.Location + $SHIFT_BTN_NORMAL
-$BTN_AdBlock.Add_Click( { Start-Process $ChromeExe 'chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom' } )
 
-$BTN_YouTube_Dislike.Text = 'Return YouTube Dislike'
-$BTN_YouTube_Dislike.Location = $BTN_AdBlock.Location + $SHIFT_BTN_NORMAL
-$BTN_YouTube_Dislike.Add_Click( { Start-Process $ChromeExe 'chrome.google.com/webstore/detail/gebbhagfogifgggkldgodflihgfeippi' } )
+Set-Variable -Option Constant BUTTON_AdBlock (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_AdBlock, 'Block ads and pop-ups on websites')
+$BUTTON_AdBlock.Enabled = Test-Path $PATH_CHROME_EXE
+$BUTTON_AdBlock.Font = $BUTTON_FONT
+$BUTTON_AdBlock.Height = $HEIGHT_BUTTON
+$BUTTON_AdBlock.Width = $WIDTH_BUTTON
+$BUTTON_AdBlock.Text = 'AdBlock'
+$BUTTON_AdBlock.Location = $BUTTON_HTTPSEverywhere.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_AdBlock.Add_Click( { Start-Process $PATH_CHROME_EXE $URL_CHROME_ADBLOCK } )
+$GROUP_ChromeExtensions.Controls.Add($BUTTON_AdBlock)
+
+
+Set-Variable -Option Constant BUTTON_YouTube_Dislike (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_YouTube_Dislike, 'Return YouTube Dislike restores the ability to see dislikes on YouTube')
+$BUTTON_YouTube_Dislike.Enabled = Test-Path $PATH_CHROME_EXE
+$BUTTON_YouTube_Dislike.Font = $BUTTON_FONT
+$BUTTON_YouTube_Dislike.Height = $HEIGHT_BUTTON
+$BUTTON_YouTube_Dislike.Width = $WIDTH_BUTTON
+$BUTTON_YouTube_Dislike.Text = 'Return YouTube Dislike'
+$BUTTON_YouTube_Dislike.Location = $BUTTON_AdBlock.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_YouTube_Dislike.Add_Click( { Start-Process $PATH_CHROME_EXE $URL_CHROME_YOUTUBE } )
+$GROUP_ChromeExtensions.Controls.Add($BUTTON_YouTube_Dislike)

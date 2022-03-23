@@ -11,7 +11,7 @@ Function Start-StoreAppUpdate {
 Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
-    try { Start-Process $OfficeC2RClientExe '/update user' }
+    try { Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user' }
     catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
 
     Out-Success

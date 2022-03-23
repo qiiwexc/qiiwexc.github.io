@@ -1,29 +1,29 @@
-Set-Variable -Option Constant GRP_General (New-Object System.Windows.Forms.GroupBox)
-$GRP_General.Text = 'General'
-$GRP_General.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 2
-$GRP_General.Width = $GRP_WIDTH
-$GRP_General.Location = $GRP_INIT_LOCATION
-$TAB_HOME.Controls.Add($GRP_General)
-
-Set-Variable -Option Constant BTN_Elevate    (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_SystemInfo (New-Object System.Windows.Forms.Button)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Elevate, 'Restart this utility with administrator privileges')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_SystemInfo, 'Print system information to the log')
-
-$BTN_Elevate.Font = $BTN_SystemInfo.Font = $BTN_FONT
-$BTN_Elevate.Height = $BTN_SystemInfo.Height = $BTN_HEIGHT
-$BTN_Elevate.Width = $BTN_SystemInfo.Width = $BTN_WIDTH
-
-$GRP_General.Controls.AddRange(@($BTN_Elevate, $BTN_SystemInfo))
+Set-Variable -Option Constant GROUP_General (New-Object System.Windows.Forms.GroupBox)
+$GROUP_General.Text = 'General'
+$GROUP_General.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 2
+$GROUP_General.Width = $WIDTH_GROUP
+$GROUP_General.Location = $INITIAL_LOCATION_GROUP
+$TAB_HOME.Controls.Add($GROUP_General)
 
 
+Set-Variable -Option Constant BUTTON_Elevate (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_Elevate, 'Restart this utility with administrator privileges')
+$BUTTON_Elevate.Font = $BUTTON_FONT
+$BUTTON_Elevate.Height = $HEIGHT_BUTTON
+$BUTTON_Elevate.Width = $WIDTH_BUTTON
+$BUTTON_Elevate.Text = "$(if ($IS_ELEVATED) {'Running as administrator'} else {"Run as administrator$REQUIRES_ELEVATION"})"
+$BUTTON_Elevate.Location = $INITIAL_LOCATION_BUTTON
+$BUTTON_Elevate.Enabled = -not $IS_ELEVATED
+$BUTTON_Elevate.Add_Click( { Start-Elevated } )
+$GROUP_General.Controls.Add($BUTTON_Elevate)
 
-$BTN_Elevate.Text = "Run as administrator$REQUIRES_ELEVATION"
-$BTN_Elevate.Location = $BTN_INIT_LOCATION
-$BTN_Elevate.Add_Click( { Start-Elevated } )
 
-
-$BTN_SystemInfo.Text = 'System information'
-$BTN_SystemInfo.Location = $BTN_Elevate.Location + $SHIFT_BTN_NORMAL
-$BTN_SystemInfo.Add_Click( { Out-SystemInfo } )
+Set-Variable -Option Constant BUTTON_SystemInfo (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_SystemInfo, 'Print system information to the log')
+$BUTTON_SystemInfo.Font = $BUTTON_FONT
+$BUTTON_SystemInfo.Height = $HEIGHT_BUTTON
+$BUTTON_SystemInfo.Width = $WIDTH_BUTTON
+$BUTTON_SystemInfo.Text = 'System information'
+$BUTTON_SystemInfo.Location = $BUTTON_Elevate.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_SystemInfo.Add_Click( { Out-SystemInfo } )
+$GROUP_General.Controls.Add($BUTTON_SystemInfo)
