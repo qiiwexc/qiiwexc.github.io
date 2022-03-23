@@ -1,63 +1,67 @@
-Set-Variable -Option Constant GRP_Hardware (New-Object System.Windows.Forms.GroupBox)
-$GRP_Hardware.Text = 'Hardware Diagnostics'
-$GRP_Hardware.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 2 + $INT_BTN_NORMAL
-$GRP_Hardware.Width = $GRP_WIDTH
-$GRP_Hardware.Location = $GRP_INIT_LOCATION
-$TAB_MAINTENANCE.Controls.Add($GRP_Hardware)
-
-Set-Variable -Option Constant BTN_CheckDisk        (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant RBTN_QuickDiskCheck  (New-Object System.Windows.Forms.RadioButton)
-Set-Variable -Option Constant RBTN_FullDiskCheck   (New-Object System.Windows.Forms.RadioButton)
-
-Set-Variable -Option Constant BTN_DownloadVictoria (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_StartVictoria   (New-Object System.Windows.Forms.CheckBox)
-
-Set-Variable -Option Constant BTN_CheckRAM         (New-Object System.Windows.Forms.Button)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckDisk, 'Start (C:) disk health check')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_DownloadVictoria, 'Download Victoria HDD scanner')
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_QuickDiskCheck, 'Perform a quick disk scan')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($RBTN_FullDiskCheck, 'Schedule a full disk scan on next restart')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_StartVictoria, $TIP_START_AFTER_DOWNLOAD)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CheckRAM, 'Start RAM checking utility')
-
-$BTN_CheckDisk.Font = $BTN_DownloadVictoria.Font = $BTN_CheckRAM.Font = $BTN_FONT
-$BTN_CheckDisk.Height = $BTN_DownloadVictoria.Height = $BTN_CheckRAM.Height = $BTN_HEIGHT
-$BTN_CheckDisk.Width = $BTN_DownloadVictoria.Width = $BTN_CheckRAM.Width = $BTN_WIDTH
-
-$CBOX_StartVictoria.Checked = $RBTN_QuickDiskCheck.Checked = $True
-$CBOX_StartVictoria.Size = $CBOX_SIZE
-$RBTN_QuickDiskCheck.Size = $RBTN_FullDiskCheck.Size = $RBTN_SIZE
-$CBOX_StartVictoria.Text = $TXT_START_AFTER_DOWNLOAD
-
-$GRP_Hardware.Controls.AddRange(
-    @($BTN_CheckDisk, $RBTN_QuickDiskCheck, $RBTN_FullDiskCheck,
-        $BTN_DownloadVictoria, $CBOX_StartVictoria, $BTN_CheckRAM)
-)
+Set-Variable -Option Constant GROUP_Hardware (New-Object System.Windows.Forms.GroupBox)
+$GROUP_Hardware.Text = 'Hardware Diagnostics'
+$GROUP_Hardware.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 2 + $INTERVAL_BUTTON_NORMAL
+$GROUP_Hardware.Width = $WIDTH_GROUP
+$GROUP_Hardware.Location = $INITIAL_LOCATION_GROUP
+$TAB_MAINTENANCE.Controls.Add($GROUP_Hardware)
 
 
-
-$BTN_CheckDisk.Text = "Check (C:) disk health$REQUIRES_ELEVATION"
-$BTN_CheckDisk.Location = $BTN_INIT_LOCATION
-$BTN_CheckDisk.Add_Click( { Start-DiskCheck $RBTN_FullDiskCheck.Checked } )
-
-$RBTN_QuickDiskCheck.Text = 'Quick scan'
-$RBTN_QuickDiskCheck.Location = $BTN_CheckDisk.Location + $SHIFT_RBTN_QUICK_SCAN
-
-$RBTN_FullDiskCheck.Text = 'Full scan'
-$RBTN_FullDiskCheck.Location = $RBTN_QuickDiskCheck.Location + $SHIFT_RBTN_FULL_SCAN
-
-
-$BTN_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
-$BTN_DownloadVictoria.Location = $BTN_CheckDisk.Location + $SHIFT_BTN_LONG
-$BTN_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CBOX_StartVictoria.Checked 'hdd.by/Victoria/Victoria537.zip' } )
-
-$CBOX_StartVictoria.Location = $BTN_DownloadVictoria.Location + $SHIFT_CBOX_EXECUTE
-$CBOX_StartVictoria.Add_CheckStateChanged( { $BTN_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
+Set-Variable -Option Constant BUTTON_CheckDisk (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_CheckDisk, 'Start (C:) disk health check')
+$BUTTON_CheckDisk.Font = $BUTTON_FONT
+$BUTTON_CheckDisk.Height = $HEIGHT_BUTTON
+$BUTTON_CheckDisk.Width = $WIDTH_BUTTON
+$BUTTON_CheckDisk.Text = "Check (C:) disk health$REQUIRES_ELEVATION"
+$BUTTON_CheckDisk.Location = $INITIAL_LOCATION_BUTTON
+$BUTTON_CheckDisk.Add_Click( { Start-DiskCheck $RADIO_FullDiskCheck.Checked } )
+$GROUP_Hardware.Controls.Add($BUTTON_CheckDisk)
 
 
-$BTN_CheckRAM.Text = 'RAM checking utility'
-$BTN_CheckRAM.Location = $BTN_DownloadVictoria.Location + $SHIFT_BTN_LONG
-$BTN_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
+Set-Variable -Option Constant RADIO_QuickDiskCheck (New-Object System.Windows.Forms.RadioButton)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($RADIO_QuickDiskCheck, 'Perform a quick disk scan')
+$RADIO_QuickDiskCheck.Checked = $True
+$RADIO_QuickDiskCheck.Text = 'Quick scan'
+$RADIO_QuickDiskCheck.Location = $BUTTON_CheckDisk.Location + "10, $($INTERVAL_BUTTON_SHORT - $INTERVAL_SHORT)"
+$RADIO_QuickDiskCheck.Size = "80, 20"
+$GROUP_Hardware.Controls.Add($RADIO_QuickDiskCheck)
+
+
+Set-Variable -Option Constant RADIO_FullDiskCheck (New-Object System.Windows.Forms.RadioButton)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($RADIO_FullDiskCheck, 'Schedule a full disk scan on next restart')
+$RADIO_FullDiskCheck.Text = 'Full scan'
+$RADIO_FullDiskCheck.Location = $RADIO_QuickDiskCheck.Location + "80, 0"
+$RADIO_FullDiskCheck.Size = "80, 20"
+$GROUP_Hardware.Controls.Add($RADIO_FullDiskCheck)
+
+
+Set-Variable -Option Constant BUTTON_DownloadVictoria (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_DownloadVictoria, 'Download Victoria HDD scanner')
+$BUTTON_DownloadVictoria.Font = $BUTTON_FONT
+$BUTTON_DownloadVictoria.Height = $HEIGHT_BUTTON
+$BUTTON_DownloadVictoria.Width = $WIDTH_BUTTON
+$BUTTON_DownloadVictoria.Text = "Victoria (HDD scan)$REQUIRES_ELEVATION"
+$BUTTON_DownloadVictoria.Location = $BUTTON_CheckDisk.Location + $SHIFT_BUTTON_LONG
+$BUTTON_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA } )
+$GROUP_Hardware.Controls.Add($BUTTON_DownloadVictoria)
+
+
+Set-Variable -Option Constant CHECKBOX_StartVictoria (New-Object System.Windows.Forms.CheckBox)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CHECKBOX_StartVictoria, $TXT_TIP_START_AFTER_DOWNLOAD)
+$CHECKBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
+$CHECKBOX_StartVictoria.Checked = $PS_VERSION -gt 2
+$CHECKBOX_StartVictoria.Size = $CHECKBOX_SIZE
+$CHECKBOX_StartVictoria.Text = $TXT_START_AFTER_DOWNLOAD
+$CHECKBOX_StartVictoria.Location = $BUTTON_DownloadVictoria.Location + $SHIFT_CHECKBOX_EXECUTE
+$CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CHECKBOX_StartVictoria.Checked) {$REQUIRES_ELEVATION})" } )
+$GROUP_Hardware.Controls.Add($CHECKBOX_StartVictoria)
+
+
+Set-Variable -Option Constant BUTTON_CheckRAM (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_CheckRAM, 'Start RAM checking utility')
+$BUTTON_CheckRAM.Font = $BUTTON_FONT
+$BUTTON_CheckRAM.Height = $HEIGHT_BUTTON
+$BUTTON_CheckRAM.Width = $WIDTH_BUTTON
+$BUTTON_CheckRAM.Text = 'RAM checking utility'
+$BUTTON_CheckRAM.Location = $BUTTON_DownloadVictoria.Location + $SHIFT_BUTTON_LONG
+$BUTTON_CheckRAM.Add_Click( { Start-MemoryCheckTool } )
+$GROUP_Hardware.Controls.Add($BUTTON_CheckRAM)

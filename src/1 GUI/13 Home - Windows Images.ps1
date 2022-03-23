@@ -1,58 +1,78 @@
-Set-Variable -Option Constant GRP_DownloadWindows (New-Object System.Windows.Forms.GroupBox)
-$GRP_DownloadWindows.Text = 'Windows Images'
-$GRP_DownloadWindows.Height = $INT_GROUP_TOP + $INT_BTN_LONG * 4
-$GRP_DownloadWindows.Width = $GRP_WIDTH
-$GRP_DownloadWindows.Location = $GRP_Activators.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_HOME.Controls.Add($GRP_DownloadWindows)
-
-Set-Variable -Option Constant BTN_Windows10 (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_Windows10 (New-Object System.Windows.Forms.Label)
-
-Set-Variable -Option Constant BTN_Windows11 (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_Windows11 (New-Object System.Windows.Forms.Label)
-
-Set-Variable -Option Constant BTN_Windows7  (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_Windows7  (New-Object System.Windows.Forms.Label)
-
-Set-Variable -Option Constant BTN_WindowsXP (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant LBL_WindowsXP (New-Object System.Windows.Forms.Label)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows11, 'Download Windows 11 (v21H2) RUS-ENG -26in1- HWID-act v2 (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows10, 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsXP, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
-
-$BTN_Windows11.Font = $BTN_Windows10.Font = $BTN_Windows7.Font = $BTN_WindowsXP.Font = $BTN_FONT
-$BTN_Windows11.Height = $BTN_Windows10.Height = $BTN_Windows7.Height = $BTN_WindowsXP.Height = $BTN_HEIGHT
-$BTN_Windows11.Width = $BTN_Windows10.Width = $BTN_Windows7.Width = $BTN_WindowsXP.Width = $BTN_WIDTH
-
-$LBL_Windows11.Size = $LBL_Windows10.Size = $LBL_Windows7.Size = $LBL_WindowsXP.Size = $CBOX_SIZE
-$LBL_Windows11.Text = $LBL_Windows10.Text = $LBL_Windows7.Text = $LBL_WindowsXP.Text = $TXT_OPENS_IN_BROWSER
-
-$GRP_DownloadWindows.Controls.AddRange(@($BTN_Windows11, $LBL_Windows11, $BTN_Windows10, $LBL_Windows10, $BTN_Windows7, $LBL_Windows7, $BTN_WindowsXP, $LBL_WindowsXP))
+Set-Variable -Option Constant GROUP_DownloadWindows (New-Object System.Windows.Forms.GroupBox)
+$GROUP_DownloadWindows.Text = 'Windows Images'
+$GROUP_DownloadWindows.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 4
+$GROUP_DownloadWindows.Width = $WIDTH_GROUP
+$GROUP_DownloadWindows.Location = $GROUP_Activators.Location + $SHIFT_GROUP_HORIZONTAL
+$TAB_HOME.Controls.Add($GROUP_DownloadWindows)
 
 
+Set-Variable -Option Constant BUTTON_Windows11 (New-Object System.Windows.Forms.Button)
+$BUTTON_Windows11.Font = $BUTTON_FONT
+$BUTTON_Windows11.Height = $HEIGHT_BUTTON
+$BUTTON_Windows11.Width = $WIDTH_BUTTON
+$BUTTON_Windows11.Text = 'Windows 11 (v21H2)'
+$BUTTON_Windows11.Location = $INITIAL_LOCATION_BUTTON
+$BUTTON_Windows11.Add_Click( { Open-InBrowser $URL_WINDOWS_11 } )
+$GROUP_DownloadWindows.Controls.Add($BUTTON_Windows11)
 
-$BTN_Windows11.Text = 'Windows 11 (v21H2)'
-$BTN_Windows11.Location = $BTN_INIT_LOCATION
-$BTN_Windows11.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2021/10/windows-11-v21h2-rus-eng-26in1-hwid-act_14.html' } )
 
-$LBL_Windows11.Location = $BTN_Windows11.Location + $SHIFT_LBL_BROWSER
+Set-Variable -Option Constant LABEL_Windows11 (New-Object System.Windows.Forms.Label)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_Windows11, 'Download Windows 11 (v21H2) RUS-ENG -26in1- HWID-act v2 (AIO) ISO image')
+$LABEL_Windows11.Size = $CHECKBOX_SIZE
+$LABEL_Windows11.Text = $TXT_OPENS_IN_BROWSER
+$LABEL_Windows11.Location = $BUTTON_Windows11.Location + $SHIFT_LABEL_BROWSER
+$GROUP_DownloadWindows.Controls.Add($LABEL_Windows11)
 
-$BTN_Windows10.Text = 'Windows 10 (v21H2)'
-$BTN_Windows10.Location = $BTN_Windows11.Location + $SHIFT_BTN_LONG
-$BTN_Windows10.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html' } )
 
-$LBL_Windows10.Location = $BTN_Windows10.Location + $SHIFT_LBL_BROWSER
+Set-Variable -Option Constant BUTTON_Windows10 (New-Object System.Windows.Forms.Button)
+$BUTTON_Windows10.Font = $BUTTON_FONT
+$BUTTON_Windows10.Height = $HEIGHT_BUTTON
+$BUTTON_Windows10.Width = $WIDTH_BUTTON
+$BUTTON_Windows10.Text = 'Windows 10 (v21H2)'
+$BUTTON_Windows10.Location = $BUTTON_Windows11.Location + $SHIFT_BUTTON_LONG
+$BUTTON_Windows10.Add_Click( { Open-InBrowser $URL_WINDOWS_10 } )
+$GROUP_DownloadWindows.Controls.Add($BUTTON_Windows10)
 
-$BTN_Windows7.Text = 'Windows 7 SP1'
-$BTN_Windows7.Location = $BTN_Windows10.Location + $SHIFT_BTN_LONG
-$BTN_Windows7.Add_Click( { Open-InBrowser 'w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' } )
 
-$LBL_Windows7.Location = $BTN_Windows7.Location + $SHIFT_LBL_BROWSER
+Set-Variable -Option Constant LABEL_Windows10 (New-Object System.Windows.Forms.Label)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_Windows10, 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image')
+$LABEL_Windows10.Size = $CHECKBOX_SIZE
+$LABEL_Windows10.Text = $TXT_OPENS_IN_BROWSER
+$LABEL_Windows10.Location = $BUTTON_Windows10.Location + $SHIFT_LABEL_BROWSER
+$GROUP_DownloadWindows.Controls.Add($LABEL_Windows10)
 
-$BTN_WindowsXP.Text = 'Windows XP SP3 (ENG)'
-$BTN_WindowsXP.Location = $BTN_Windows7.Location + $SHIFT_BTN_LONG
-$BTN_WindowsXP.Add_Click( { Open-InBrowser 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF' } )
 
-$LBL_WindowsXP.Location = $BTN_WindowsXP.Location + $SHIFT_LBL_BROWSER
+Set-Variable -Option Constant BUTTON_Windows7 (New-Object System.Windows.Forms.Button)
+$BUTTON_Windows7.Font = $BUTTON_FONT
+$BUTTON_Windows7.Height = $HEIGHT_BUTTON
+$BUTTON_Windows7.Width = $WIDTH_BUTTON
+$BUTTON_Windows7.Text = 'Windows 7 SP1'
+$BUTTON_Windows7.Location = $BUTTON_Windows10.Location + $SHIFT_BUTTON_LONG
+$BUTTON_Windows7.Add_Click( { Open-InBrowser $URL_WINDOWS_7 } )
+$GROUP_DownloadWindows.Controls.Add($BUTTON_Windows7)
+
+
+Set-Variable -Option Constant LABEL_Windows7 (New-Object System.Windows.Forms.Label)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_Windows7, 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image')
+$LABEL_Windows7.Size = $CHECKBOX_SIZE
+$LABEL_Windows7.Text = $TXT_OPENS_IN_BROWSER
+$LABEL_Windows7.Location = $BUTTON_Windows7.Location + $SHIFT_LABEL_BROWSER
+$GROUP_DownloadWindows.Controls.Add($LABEL_Windows7)
+
+
+Set-Variable -Option Constant BUTTON_WindowsXP (New-Object System.Windows.Forms.Button)
+$BUTTON_WindowsXP.Font = $BUTTON_FONT
+$BUTTON_WindowsXP.Height = $HEIGHT_BUTTON
+$BUTTON_WindowsXP.Width = $WIDTH_BUTTON
+$BUTTON_WindowsXP.Text = 'Windows XP SP3 (ENG)'
+$BUTTON_WindowsXP.Location = $BUTTON_Windows7.Location + $SHIFT_BUTTON_LONG
+$BUTTON_WindowsXP.Add_Click( { Open-InBrowser $URL_WINDOWS_XP } )
+$GROUP_DownloadWindows.Controls.Add($BUTTON_WindowsXP)
+
+
+Set-Variable -Option Constant LABEL_WindowsXP (New-Object System.Windows.Forms.Label)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_WindowsXP, 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image')
+$LABEL_WindowsXP.Size = $CHECKBOX_SIZE
+$LABEL_WindowsXP.Text = $TXT_OPENS_IN_BROWSER
+$LABEL_WindowsXP.Location = $BUTTON_WindowsXP.Location + $SHIFT_LABEL_BROWSER
+$GROUP_DownloadWindows.Controls.Add($LABEL_WindowsXP)

@@ -3,25 +3,12 @@ Function Initialize-Startup {
     Write-Log "[$((Get-Date).ToString())] Initializing..."
 
     if ($IS_ELEVATED) {
-        $FORM.Text = "$($FORM.Text): Administrator"
-        $BTN_Elevate.Text = 'Running as administrator'
-        $BTN_Elevate.Enabled = $False
-
         Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
         if (!(Test-Path $IE_Registry_Key)) { New-Item $IE_Registry_Key -Force | Out-Null }
         Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
     }
 
-    Get-SystemInfo
-
-    $CBOX_StartAAct.Checked = $CBOX_StartAAct.Enabled = $CBOX_StartKMSAuto.Checked = $CBOX_StartKMSAuto.Enabled = `
-        $CBOX_StartOffice.Checked = $CBOX_StartOffice.Enabled = $CBOX_StartRufus.Checked = $CBOX_StartRufus.Enabled = `
-        $CBOX_StartVictoria.Checked = $CBOX_StartVictoria.Enabled = $PS_VERSION -gt 2
-
-    $BTN_RepairWindows.Enabled = $BTN_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
-    $BTN_StartSecurityScan.Enabled = Test-Path $DefenderExe
-
-    Set-ButtonState
+    Set-Variable -Option Constant -Scope Script CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
 
     if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
     elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
@@ -50,7 +37,7 @@ Function Initialize-Startup {
         Add-Log $INF "$TXT_UNCHECKY_INFO."
     }
 
-    if ($OfficeInstallType -eq 'MSI' -and $OfficeVersion -ge 15) {
+    if ($OFFICE_INSTALL_TYPE -eq 'MSI' -and $OFFICE_VERSION -ge 15) {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
         Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
         Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2021).'

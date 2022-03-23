@@ -1,6 +1,6 @@
 Function Set-CloudFlareDNS {
-    [String]$PreferredDnsServer = if ($CBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
-    [String]$AlternateDnsServer = if ($CBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
+    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
 
     Add-Log $WRN 'Internet connection may get interrupted briefly'
     Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."

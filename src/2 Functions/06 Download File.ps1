@@ -8,10 +8,10 @@ Function Start-Download {
 
     Set-Variable -Option Constant DownloadURL $(if ($URL -Like 'http*') { $URL } else { 'https://' + $URL })
     Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { (Split-Path -Leaf $DownloadURL) -Replace '_zip', '.zip' })
-    Set-Variable -Option Constant TempPath "$TEMP_DIR\$FileName"
+    Set-Variable -Option Constant TempPath "$PATH_TEMP_DIR\$FileName"
     Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$CURRENT_DIR\$FileName" })
 
-    New-Item -Force -ItemType Directory $TEMP_DIR | Out-Null
+    New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null
 
     Add-Log $INF "Downloading from $DownloadURL"
 

@@ -1,45 +1,46 @@
-Set-Variable -Option Constant GRP_Optimization (New-Object System.Windows.Forms.GroupBox)
-$GRP_Optimization.Text = 'Optimization'
-$GRP_Optimization.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL + $INT_BTN_LONG + $INT_CBOX_SHORT - $INT_SHORT
-$GRP_Optimization.Width = $GRP_WIDTH
-$GRP_Optimization.Location = $GRP_Cleanup.Location + "0, $($GRP_Cleanup.Height + $INT_NORMAL)"
-$TAB_MAINTENANCE.Controls.Add($GRP_Optimization)
-
-Set-Variable -Option Constant BTN_CloudFlareDNS             (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant CBOX_CloudFlareAntiMalware    (New-Object System.Windows.Forms.CheckBox)
-Set-Variable -Option Constant CBOX_CloudFlareFamilyFriendly (New-Object System.Windows.Forms.CheckBox)
-
-Set-Variable -Option Constant BTN_OptimizeDrive (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_RunDefraggler (New-Object System.Windows.Forms.Button)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_CloudFlareDNS, 'Set DNS server to CouldFlare DNS')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_CloudFlareAntiMalware, 'Use CloudFlare DNS variation with malware protection (1.1.1.2)')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($CBOX_CloudFlareFamilyFriendly, 'Use CloudFlare DNS variation with malware protection and adult content filtering (1.1.1.3)')
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_OptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
-
-$BTN_CloudFlareDNS.Font = $BTN_OptimizeDrive.Font = $BTN_FONT
-$BTN_CloudFlareDNS.Height = $BTN_OptimizeDrive.Height = $BTN_HEIGHT
-$BTN_CloudFlareDNS.Width = $BTN_OptimizeDrive.Width = $BTN_WIDTH
-$CBOX_CloudFlareAntiMalware.Size = $CBOX_CloudFlareFamilyFriendly.Size = $CBOX_SIZE
-
-$GRP_Optimization.Controls.AddRange(@($BTN_CloudFlareDNS, $CBOX_CloudFlareAntiMalware, $CBOX_CloudFlareFamilyFriendly, $BTN_OptimizeDrive))
+Set-Variable -Option Constant GROUP_Optimization (New-Object System.Windows.Forms.GroupBox)
+$GROUP_Optimization.Text = 'Optimization'
+$GROUP_Optimization.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL + $INTERVAL_BUTTON_LONG + $INTERVAL_CHECKBOX_SHORT - $INTERVAL_SHORT
+$GROUP_Optimization.Width = $WIDTH_GROUP
+$GROUP_Optimization.Location = $GROUP_Cleanup.Location + "0, $($GROUP_Cleanup.Height + $INTERVAL_NORMAL)"
+$TAB_MAINTENANCE.Controls.Add($GROUP_Optimization)
 
 
-
-$BTN_CloudFlareDNS.Text = "Setup CloudFlare DNS$REQUIRES_ELEVATION"
-$BTN_CloudFlareDNS.Location = $BTN_INIT_LOCATION
-$BTN_CloudFlareDNS.Add_Click( { Set-CloudFlareDNS } )
-
-$CBOX_CloudFlareAntiMalware.Text = 'Malware protection'
-$CBOX_CloudFlareAntiMalware.Checked = $True
-$CBOX_CloudFlareAntiMalware.Location = $BTN_CloudFlareDNS.Location + "$($INT_LONG - $INT_SHORT), $($INT_BTN_SHORT - $INT_SHORT)"
-$CBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CBOX_CloudFlareFamilyFriendly.Enabled = $CBOX_CloudFlareAntiMalware.Checked } )
-
-$CBOX_CloudFlareFamilyFriendly.Text = 'Adult content filtering'
-$CBOX_CloudFlareFamilyFriendly.Location = $CBOX_CloudFlareAntiMalware.Location + "0, $CBOX_HEIGHT"
+Set-Variable -Option Constant BUTTON_CloudFlareDNS (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_CloudFlareDNS, 'Set DNS server to CouldFlare DNS')
+$BUTTON_CloudFlareDNS.Font = $BUTTON_FONT
+$BUTTON_CloudFlareDNS.Height = $HEIGHT_BUTTON
+$BUTTON_CloudFlareDNS.Width = $WIDTH_BUTTON
+$BUTTON_CloudFlareDNS.Text = "Setup CloudFlare DNS$REQUIRES_ELEVATION"
+$BUTTON_CloudFlareDNS.Location = $INITIAL_LOCATION_BUTTON
+$BUTTON_CloudFlareDNS.Add_Click( { Set-CloudFlareDNS } )
+$GROUP_Optimization.Controls.Add($BUTTON_CloudFlareDNS)
 
 
-$BTN_OptimizeDrive.Text = "Optimize / defrag drives$REQUIRES_ELEVATION"
-$BTN_OptimizeDrive.Location = $BTN_CloudFlareDNS.Location + $SHIFT_BTN_SHORT + $SHIFT_BTN_NORMAL
-$BTN_OptimizeDrive.Add_Click( { Start-DriveOptimization } )
+Set-Variable -Option Constant CHECKBOX_CloudFlareAntiMalware (New-Object System.Windows.Forms.CheckBox)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CHECKBOX_CloudFlareAntiMalware, 'Use CloudFlare DNS variation with malware protection (1.1.1.2)')
+$CHECKBOX_CloudFlareAntiMalware.Size = $CHECKBOX_SIZE
+$CHECKBOX_CloudFlareAntiMalware.Text = 'Malware protection'
+$CHECKBOX_CloudFlareAntiMalware.Checked = $True
+$CHECKBOX_CloudFlareAntiMalware.Location = $BUTTON_CloudFlareDNS.Location + "$($INTERVAL_LONG - $INTERVAL_SHORT), $($INTERVAL_BUTTON_SHORT - $INTERVAL_SHORT)"
+$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked } )
+$GROUP_Optimization.Controls.Add($CHECKBOX_CloudFlareAntiMalware)
+
+
+Set-Variable -Option Constant CHECKBOX_CloudFlareFamilyFriendly (New-Object System.Windows.Forms.CheckBox)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($CHECKBOX_CloudFlareFamilyFriendly, 'Use CloudFlare DNS variation with malware protection and adult content filtering (1.1.1.3)')
+$CHECKBOX_CloudFlareFamilyFriendly.Size = $CHECKBOX_SIZE
+$CHECKBOX_CloudFlareFamilyFriendly.Text = 'Adult content filtering'
+$CHECKBOX_CloudFlareFamilyFriendly.Location = $CHECKBOX_CloudFlareAntiMalware.Location + "0, $HEIGHT_CHECKBOX"
+$GROUP_Optimization.Controls.Add($CHECKBOX_CloudFlareFamilyFriendly)
+
+
+Set-Variable -Option Constant BUTTON_OptimizeDrive (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_OptimizeDrive, 'Perform drive optimization (SSD) or defragmentation (HDD)')
+$BUTTON_OptimizeDrive.Font = $BUTTON_FONT
+$BUTTON_OptimizeDrive.Height = $HEIGHT_BUTTON
+$BUTTON_OptimizeDrive.Width = $WIDTH_BUTTON
+$BUTTON_OptimizeDrive.Text = "Optimize / defrag drives$REQUIRES_ELEVATION"
+$BUTTON_OptimizeDrive.Location = $BUTTON_CloudFlareDNS.Location + $SHIFT_BUTTON_SHORT + $SHIFT_BUTTON_NORMAL
+$BUTTON_OptimizeDrive.Add_Click( { Start-DriveOptimization } )
+$GROUP_Optimization.Controls.Add($BUTTON_OptimizeDrive)

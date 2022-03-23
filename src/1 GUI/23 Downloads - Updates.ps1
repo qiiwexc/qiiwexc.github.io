@@ -1,36 +1,41 @@
-Set-Variable -Option Constant GRP_Updates (New-Object System.Windows.Forms.GroupBox)
-$GRP_Updates.Text = 'Updates'
-$GRP_Updates.Height = $INT_GROUP_TOP + $INT_BTN_NORMAL * 3
-$GRP_Updates.Width = $GRP_WIDTH
-$GRP_Updates.Location = $GRP_Essentials.Location + $SHIFT_GRP_HOR_NORMAL
-$TAB_DOWNLOADS.Controls.Add($GRP_Updates)
-
-Set-Variable -Option Constant BTN_UpdateStoreApps (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_UpdateOffice    (New-Object System.Windows.Forms.Button)
-Set-Variable -Option Constant BTN_WindowsUpdate   (New-Object System.Windows.Forms.Button)
-
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateStoreApps, 'Update Microsoft Store apps')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_UpdateOffice, 'Update Microsoft Office (for C2R installations only)')
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BTN_WindowsUpdate, 'Check for Windows updates, download and install if available')
-
-$BTN_UpdateStoreApps.Font = $BTN_UpdateOffice.Font = $BTN_WindowsUpdate.Font = $BTN_FONT
-$BTN_UpdateStoreApps.Height = $BTN_UpdateOffice.Height = $BTN_WindowsUpdate.Height = $BTN_HEIGHT
-$BTN_UpdateStoreApps.Width = $BTN_UpdateOffice.Width = $BTN_WindowsUpdate.Width = $BTN_WIDTH
-
-$GRP_Updates.Controls.AddRange(@($BTN_UpdateStoreApps, $BTN_UpdateOffice, $BTN_WindowsUpdate))
+Set-Variable -Option Constant GROUP_Updates (New-Object System.Windows.Forms.GroupBox)
+$GROUP_Updates.Text = 'Updates'
+$GROUP_Updates.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 3
+$GROUP_Updates.Width = $WIDTH_GROUP
+$GROUP_Updates.Location = $GROUP_Essentials.Location + $SHIFT_GROUP_HORIZONTAL
+$TAB_DOWNLOADS.Controls.Add($GROUP_Updates)
 
 
+Set-Variable -Option Constant BUTTON_UpdateStoreApps (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_UpdateStoreApps, 'Update Microsoft Store apps')
+$BUTTON_UpdateStoreApps.Enabled = $OS_VERSION -gt 7
+$BUTTON_UpdateStoreApps.Font = $BUTTON_FONT
+$BUTTON_UpdateStoreApps.Height = $HEIGHT_BUTTON
+$BUTTON_UpdateStoreApps.Width = $WIDTH_BUTTON
+$BUTTON_UpdateStoreApps.Text = "Update Store apps$REQUIRES_ELEVATION"
+$BUTTON_UpdateStoreApps.Location = $INITIAL_LOCATION_BUTTON
+$BUTTON_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
+$GROUP_Updates.Controls.Add($BUTTON_UpdateStoreApps)
 
-$BTN_UpdateStoreApps.Text = "Update Store apps$REQUIRES_ELEVATION"
-$BTN_UpdateStoreApps.Location = $BTN_INIT_LOCATION
-$BTN_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
+
+Set-Variable -Option Constant BUTTON_UpdateOffice (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_UpdateOffice, 'Update Microsoft Office (for C2R installations only)')
+$BUTTON_UpdateOffice.Enabled = $OFFICE_INSTALL_TYPE -eq 'C2R'
+$BUTTON_UpdateOffice.Font = $BUTTON_FONT
+$BUTTON_UpdateOffice.Height = $HEIGHT_BUTTON
+$BUTTON_UpdateOffice.Width = $WIDTH_BUTTON
+$BUTTON_UpdateOffice.Text = "Update Microsoft Office"
+$BUTTON_UpdateOffice.Location = $BUTTON_UpdateStoreApps.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
+$GROUP_Updates.Controls.Add($BUTTON_UpdateOffice)
 
 
-$BTN_UpdateOffice.Text = "Update Microsoft Office"
-$BTN_UpdateOffice.Location = $BTN_UpdateStoreApps.Location + $SHIFT_BTN_NORMAL
-$BTN_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
-
-
-$BTN_WindowsUpdate.Text = 'Start Windows Update'
-$BTN_WindowsUpdate.Location = $BTN_UpdateOffice.Location + $SHIFT_BTN_NORMAL
-$BTN_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
+Set-Variable -Option Constant BUTTON_WindowsUpdate (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_WindowsUpdate, 'Check for Windows updates, download and install if available')
+$BUTTON_WindowsUpdate.Font = $BUTTON_FONT
+$BUTTON_WindowsUpdate.Height = $HEIGHT_BUTTON
+$BUTTON_WindowsUpdate.Width = $WIDTH_BUTTON
+$BUTTON_WindowsUpdate.Text = 'Start Windows Update'
+$BUTTON_WindowsUpdate.Location = $BUTTON_UpdateOffice.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
+$GROUP_Updates.Controls.Add($BUTTON_WindowsUpdate)

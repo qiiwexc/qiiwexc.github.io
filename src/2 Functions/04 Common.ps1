@@ -1,12 +1,13 @@
-Function Get-FreeDiskSpace { Return ($SystemPartition.FreeSpace / $SystemPartition.Size) }
+Function Get-FreeDiskSpace { Return ($SYSTEM_PARTITION.FreeSpace / $SYSTEM_PARTITION.Size) }
 
 Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
 
 Function Get-ConnectionStatus { if (-not (Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
 
-Function Reset-StateOnExit { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $TEMP_DIR; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
+Function Reset-StateOnExit { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_TEMP_DIR; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
 
 Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
+
 
 Function Open-InBrowser {
     Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
@@ -19,11 +20,6 @@ Function Open-InBrowser {
     catch [Exception] { Add-Log $ERR "Could not open the URL: $($_.Exception.Message)" }
 }
 
-
-Function Set-ButtonState {
-    $BTN_UpdateOffice.Enabled = $OfficeInstallType -eq 'C2R'
-    $BTN_YouTube_Dislike.Enabled = $BTN_HTTPSEverywhere.Enabled = $BTN_AdBlock.Enabled = Test-Path $ChromeExe
-}
 
 Function Start-ExternalProcess {
     Param(
