@@ -4,6 +4,7 @@ $GROUP_Optimization.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL + $IN
 $GROUP_Optimization.Width = $WIDTH_GROUP
 $GROUP_Optimization.Location = $GROUP_Cleanup.Location + "0, $($GROUP_Cleanup.Height + $INTERVAL_NORMAL)"
 $TAB_MAINTENANCE.Controls.Add($GROUP_Optimization)
+$GROUP = $GROUP_Optimization
 
 
 Set-Variable -Option Constant BUTTON_CloudFlareDNS (New-Object System.Windows.Forms.Button)

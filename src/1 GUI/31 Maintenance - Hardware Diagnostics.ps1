@@ -4,6 +4,7 @@ $GROUP_Hardware.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 2 + $INTE
 $GROUP_Hardware.Width = $WIDTH_GROUP
 $GROUP_Hardware.Location = $INITIAL_LOCATION_GROUP
 $TAB_MAINTENANCE.Controls.Add($GROUP_Hardware)
+$GROUP = $GROUP_Hardware
 
 
 Set-Variable -Option Constant BUTTON_CheckDisk (New-Object System.Windows.Forms.Button)

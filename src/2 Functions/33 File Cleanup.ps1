@@ -254,7 +254,6 @@ Function Start-FileCleanup {
         "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\THANKS.txt"
         "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\VideoLAN Website.url"
         "$PATH_PROGRAM_FILES_86\WinRAR\Descript.ion"
-        "$PATH_PROGRAM_FILES_86\WinRAR\License.txt"
         "$PATH_PROGRAM_FILES_86\WinRAR\Order.htm"
         "$PATH_PROGRAM_FILES_86\WinRAR\Rar.txt"
         "$PATH_PROGRAM_FILES_86\WinRAR\ReadMe.txt"

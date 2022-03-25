@@ -4,6 +4,7 @@ $GROUP_Activators.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 2
 $GROUP_Activators.Width = $WIDTH_GROUP
 $GROUP_Activators.Location = $GROUP_General.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_HOME.Controls.Add($GROUP_Activators)
+$GROUP = $GROUP_Activators
 
 
 Set-Variable -Option Constant BUTTON_DownloadKMSAuto (New-Object System.Windows.Forms.Button)

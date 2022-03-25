@@ -4,6 +4,7 @@ $GROUP_Tools.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 3
 $GROUP_Tools.Width = $WIDTH_GROUP
 $GROUP_Tools.Location = $GROUP_General.Location + "0, $($GROUP_General.Height + $INTERVAL_NORMAL)"
 $TAB_HOME.Controls.Add($GROUP_Tools)
+$GROUP = $GROUP_Tools
 
 
 Set-Variable -Option Constant BUTTON_DownloadCCleaner (New-Object System.Windows.Forms.Button)

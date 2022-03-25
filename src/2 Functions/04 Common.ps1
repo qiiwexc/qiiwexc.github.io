@@ -13,10 +13,9 @@ Function Open-InBrowser {
     Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
     if (-not $URL) { Return }
 
-    Set-Variable -Option Constant UrlToOpen $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL })
-    Add-Log $INF "Opening URL in the default browser: $UrlToOpen"
+    Add-Log $INF "Opening URL in the default browser: $URL"
 
-    try { [System.Diagnostics.Process]::Start($UrlToOpen) }
+    try { [System.Diagnostics.Process]::Start($URL) }
     catch [Exception] { Add-Log $ERR "Could not open the URL: $($_.Exception.Message)" }
 }
 

@@ -4,6 +4,7 @@ $GROUP_Software.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 4
 $GROUP_Software.Width = $WIDTH_GROUP
 $GROUP_Software.Location = $GROUP_Hardware.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_MAINTENANCE.Controls.Add($GROUP_Software)
+$GROUP = $GROUP_Software
 
 
 Set-Variable -Option Constant BUTTON_CheckWindowsHealth (New-Object System.Windows.Forms.Button)

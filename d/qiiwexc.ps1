@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.3.25')
+Set-Variable -Option Constant Version ([Version]'22.3.26')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -49,13 +49,19 @@ Set-Variable -Option Constant PS_VERSION $($PSVersionTable.PSVersion.Major)
 
 Set-Variable -Option Constant SHELL $(New-Object -com Shell.Application)
 
+Set-Variable -Option Constant OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
+Set-Variable -Option Constant OS_NAME $OperatingSystem.Caption
+Set-Variable -Option Constant OS_BUILD $OperatingSystem.Version
+Set-Variable -Option Constant OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -Like '*64') { $True })
+Set-Variable -Option Constant OS_VERSION $(Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } })
 
-Write-Host -NoNewline "`n[$((Get-Date).ToString())] StartedFromGUI = $StartedFromGUI"
-Write-Host -NoNewline "`n[$((Get-Date).ToString())] args = $($args)"
-Write-Host "`n[$((Get-Date).ToString())] MyInvocation = $($MyInvocation.Line)"
+Set-Variable -Option Constant LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'")
+Set-Variable -Option Constant SYSTEM_PARTITION ($LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
 
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+Set-Variable -Option Constant WordRegPath (Get-ItemProperty "$(New-PSDrive HKCR Registry HKEY_CLASSES_ROOT):\Word.Application\CurVer" -ErrorAction SilentlyContinue)
+Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
+Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
+Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' } })
 
 Set-Variable -Option Constant INF 'INF'
 Set-Variable -Option Constant WRN 'WRN'
@@ -63,6 +69,14 @@ Set-Variable -Option Constant ERR 'ERR'
 
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (-not $IS_ELEVATED) { '*' })
 
+Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
+Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
+Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
+Set-Variable -Option Constant PATH_CHROME_EXE "$PATH_PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
+Set-Variable -Option Constant PATH_MRT_EXE "$env:windir\System32\MRT.exe"
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant WIDTH_BUTTON    170
 Set-Variable -Option Constant HEIGHT_BUTTON   30
@@ -111,31 +125,6 @@ Set-Variable -Option Constant FONT_NAME   'Microsoft Sans Serif'
 Set-Variable -Option Constant BUTTON_FONT "$FONT_NAME, 10"
 
 
-Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
-Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-Set-Variable -Option Constant PATH_CHROME_EXE "$PATH_PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
-Set-Variable -Option Constant PATH_MRT_EXE "$env:windir\System32\MRT.exe"
-Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
-
-
-Set-Variable -Option Constant OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
-
-Set-Variable -Option Constant OS_NAME $OperatingSystem.Caption
-Set-Variable -Option Constant OS_BUILD $OperatingSystem.Version
-Set-Variable -Option Constant OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -Like '*64') { $True })
-Set-Variable -Option Constant OS_VERSION $(Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } })
-
-
-Set-Variable -Option Constant LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'")
-Set-Variable -Option Constant SYSTEM_PARTITION ($LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
-
-
-Set-Variable -Option Constant WordRegPath (Get-ItemProperty "$(New-PSDrive HKCR Registry HKEY_CLASSES_ROOT):\Word.Application\CurVer" -ErrorAction SilentlyContinue)
-Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
-Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
-Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' } })
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Texts #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant TXT_START_AFTER_DOWNLOAD 'Start after download'
@@ -146,27 +135,61 @@ Set-Variable -Option Constant TXT_AV_WARNING "This file may trigger anti-virus f
 Set-Variable -Option Constant TXT_TIP_START_AFTER_DOWNLOAD "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
 
 
-Set-Variable -Option Constant URL_KMS_AUTO_LITE 'qiiwexc.github.io/d/KMSAuto_Lite.zip'
-Set-Variable -Option Constant URL_AACT          'qiiwexc.github.io/d/AAct.zip'
+Set-Variable -Option Constant URL_KMS_AUTO_LITE 'https://qiiwexc.github.io/d/KMSAuto_Lite.zip'
+Set-Variable -Option Constant URL_AACT          'https://qiiwexc.github.io/d/AAct.zip'
 
-Set-Variable -Option Constant URL_WINDOWS_11 'w14.monkrus.ws/2021/10/windows-11-v21h2-rus-eng-26in1-hwid-act_14.html'
-Set-Variable -Option Constant URL_WINDOWS_10 'w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html'
-Set-Variable -Option Constant URL_WINDOWS_7  'w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
-Set-Variable -Option Constant URL_WINDOWS_XP 'drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'
+Set-Variable -Option Constant URL_WINDOWS_11 'https://w14.monkrus.ws/2021/10/windows-11-v21h2-rus-eng-26in1-hwid-act_14.html'
+Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html'
+Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
+Set-Variable -Option Constant URL_WINDOWS_XP 'https://drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'
 
-Set-Variable -Option Constant URL_CCLEANER   'download.ccleaner.com/ccsetup.exe'
-Set-Variable -Option Constant URL_RUFUS      'github.com/pbatard/rufus/releases/download/v3.18/rufus-3.18p.exe'
-Set-Variable -Option Constant URL_WINDOWS_PE 'drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
+Set-Variable -Option Constant URL_CCLEANER   'https://download.ccleaner.com/ccsetup.exe'
+Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.18/rufus-3.18p.exe'
+Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
-Set-Variable -Option Constant URL_CHROME_HTTPS   'chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp'
-Set-Variable -Option Constant URL_CHROME_ADBLOCK 'chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
-Set-Variable -Option Constant URL_CHROME_YOUTUBE 'chrome.google.com/webstore/detail/gebbhagfogifgggkldgodflihgfeippi'
+Set-Variable -Option Constant URL_CHROME_HTTPS   'https://chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp'
+Set-Variable -Option Constant URL_CHROME_ADBLOCK 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
+Set-Variable -Option Constant URL_CHROME_YOUTUBE 'https://chrome.google.com/webstore/detail/gebbhagfogifgggkldgodflihgfeippi'
 
-Set-Variable -Option Constant URL_SDI      'sdi-tool.org/releases/SDI_R2201.zip'
-Set-Variable -Option Constant URL_UNCHECKY 'unchecky.com/files/unchecky_setup.exe'
-Set-Variable -Option Constant URL_OFFICE   'qiiwexc.github.io/d/Office_2013-2021.zip'
+Set-Variable -Option Constant URL_SDI      'https://sdi-tool.org/releases/SDI_R2201.zip'
+Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
+Set-Variable -Option Constant URL_OFFICE   'https://qiiwexc.github.io/d/Office_2013-2021.zip'
 
-Set-Variable -Option Constant URL_VICTORIA 'hdd.by/Victoria/Victoria537.zip'
+Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function New-Button {
+    Param(
+        [System.Windows.Forms.GroupBox][Parameter(Position = 0)]$GroupBox,
+        [String][Parameter(Position = 1)]$Text,
+        [System.Drawing.Point][Parameter(Position = 2)]$Location,
+        [ScriptBlock][Parameter(Position = 3)]$Function,
+        [Switch]$Disabled = $False,
+        [Switch]$UAC = $False,
+        [String]$ToolTip
+    )
+
+    Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
+
+    $Button.Font = $BUTTON_FONT
+    $Button.Height = $HEIGHT_BUTTON
+    $Button.Width = $WIDTH_BUTTON
+
+    $Button.Enabled = -not $Disabled
+    $Button.Location = $Location
+
+    $Button.Text = "$(if (-not $UAC -or $IS_ELEVATED) { $Text } else { "$Text *" })"
+
+    if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($Button, $ToolTip) }
+
+    $Button.Add_Click($Function)
+
+    $GROUP.Controls.Add($Button)
+
+    Return $Button
+}
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Form #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -222,65 +245,22 @@ $GROUP_General.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 2
 $GROUP_General.Width = $WIDTH_GROUP
 $GROUP_General.Location = $INITIAL_LOCATION_GROUP
 $TAB_HOME.Controls.Add($GROUP_General)
+$GROUP = $GROUP_General
 
 
-Function New-Button {
-    Param(
-        [System.Windows.Forms.GroupBox][Parameter(Position = 0)]$Box,
-        [String][Parameter(Position = 1)]$Text,
-        [String][Parameter(Position = 2)]$Location,
-        [Switch]$Enabled,
-        [Switch]$UAC = $False,
-        [String]$ToolTip
-        # [Function]$Click
-    )
-
-    Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
-
-    $Button.Font = $BUTTON_FONT
-    $Button.Height = $HEIGHT_BUTTON
-    $Button.Width = $WIDTH_BUTTON
-
-    $Button.Enabled = $Enabled
-    $Button.Location = $Location
-
-    $Button.Text = "$(if (-not $UAC -or $IS_ELEVATED) { $Text } else { "$Text *" })"
-
-    if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($Button, $ToolTip) }
-
-    $Button.Add_Click( { Start-Elevated } )
-
-    $Box.Controls.Add($Button)
-
-    Return $Button
-}
-
-$AdminButtonName = "$(if ($IS_ELEVATED) {'Running as administrator'} else {'Run as administrator'})"
-$PREVIOUS_BUTTON = New-Button $GROUP_General $AdminButtonName $INITIAL_LOCATION_BUTTON -Enabled:(-not $IS_ELEVATED) -UAC -ToolTip 'Restart this utility with administrator privileges'
-
-# Set-Variable -Option Constant BUTTON_Elevate (New-Object System.Windows.Forms.Button)
-# (New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_Elevate, 'Restart this utility with administrator privileges')
-# $BUTTON_Elevate.Font = $BUTTON_FONT
-# $BUTTON_Elevate.Height = $HEIGHT_BUTTON
-# $BUTTON_Elevate.Width = $WIDTH_BUTTON
-# $BUTTON_Elevate.Text = "$(if ($IS_ELEVATED) {'Running as administrator'} else {"Run as administrator$REQUIRES_ELEVATION"})"
-# $BUTTON_Elevate.Location = $INITIAL_LOCATION_BUTTON
-# $BUTTON_Elevate.Enabled = -not $IS_ELEVATED
-# $BUTTON_Elevate.Add_Click( { Start-Elevated } )
-# $GROUP_General.Controls.Add($BUTTON_Elevate)
-# $PREVIOUS_BUTTON = $BUTTON_Elevate
+$BUTTON_DISABLED = $IS_ELEVATED
+$BUTTON_LOCATION = $INITIAL_LOCATION_BUTTON
+$BUTTON_NAME = "$(if ($IS_ELEVATED) {'Running as administrator'} else {'Run as administrator'})"
+$BUTTON_FUNCTION = { Start-Elevated }
+$TOOLTIP_TEXT = 'Restart this utility with administrator privileges'
+$PREVIOUS_BUTTON = New-Button $GROUP $BUTTON_NAME $BUTTON_LOCATION $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED -UAC -ToolTip $TOOLTIP_TEXT
 
 
-Set-Variable -Option Constant BUTTON_SystemInfo (New-Object System.Windows.Forms.Button)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_SystemInfo, 'Print system information to the log')
-$BUTTON_SystemInfo.Font = $BUTTON_FONT
-$BUTTON_SystemInfo.Height = $HEIGHT_BUTTON
-$BUTTON_SystemInfo.Width = $WIDTH_BUTTON
-$BUTTON_SystemInfo.Text = 'System information'
-$BUTTON_SystemInfo.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_NORMAL
-$BUTTON_SystemInfo.Add_Click( { Out-SystemInfo } )
-$GROUP_General.Controls.Add($BUTTON_SystemInfo)
-$PREVIOUS_BUTTON = $BUTTON_Elevate
+$BUTTON_LOCATION = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_NAME = 'System information'
+$BUTTON_FUNCTION = { Out-SystemInfo }
+$TOOLTIP_TEXT = 'Print system information to the log'
+$PREVIOUS_BUTTON = New-Button $GROUP $BUTTON_NAME $BUTTON_LOCATION $BUTTON_FUNCTION -ToolTip $TOOLTIP_TEXT
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -291,6 +271,7 @@ $GROUP_Activators.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 2
 $GROUP_Activators.Width = $WIDTH_GROUP
 $GROUP_Activators.Location = $GROUP_General.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_HOME.Controls.Add($GROUP_Activators)
+$GROUP = $GROUP_Activators
 
 
 Set-Variable -Option Constant BUTTON_DownloadKMSAuto (New-Object System.Windows.Forms.Button)
@@ -349,6 +330,7 @@ $GROUP_DownloadWindows.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 4
 $GROUP_DownloadWindows.Width = $WIDTH_GROUP
 $GROUP_DownloadWindows.Location = $GROUP_Activators.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_HOME.Controls.Add($GROUP_DownloadWindows)
+$GROUP = $GROUP_DownloadWindows
 
 
 Set-Variable -Option Constant BUTTON_Windows11 (New-Object System.Windows.Forms.Button)
@@ -435,6 +417,7 @@ $GROUP_Tools.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 3
 $GROUP_Tools.Width = $WIDTH_GROUP
 $GROUP_Tools.Location = $GROUP_General.Location + "0, $($GROUP_General.Height + $INTERVAL_NORMAL)"
 $TAB_HOME.Controls.Add($GROUP_Tools)
+$GROUP = $GROUP_Tools
 
 
 Set-Variable -Option Constant BUTTON_DownloadCCleaner (New-Object System.Windows.Forms.Button)
@@ -512,6 +495,7 @@ $GROUP_ChromeExtensions.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL *
 $GROUP_ChromeExtensions.Width = $WIDTH_GROUP
 $GROUP_ChromeExtensions.Location = $GROUP_Activators.Location + "0, $($GROUP_Activators.Height + $INTERVAL_NORMAL)"
 $TAB_HOME.Controls.Add($GROUP_ChromeExtensions)
+$GROUP = $GROUP_ChromeExtensions
 
 
 Set-Variable -Option Constant BUTTON_HTTPSEverywhere (New-Object System.Windows.Forms.Button)
@@ -561,6 +545,7 @@ $GROUP_Ninite.Height = $INTERVAL_GROUP_TOP + $INTERVAL_CHECKBOX_SHORT * 6 + $INT
 $GROUP_Ninite.Width = $WIDTH_GROUP
 $GROUP_Ninite.Location = $INITIAL_LOCATION_GROUP
 $TAB_DOWNLOADS.Controls.Add($GROUP_Ninite)
+$GROUP = $GROUP_Ninite
 
 
 Set-Variable -Option Constant CHECKBOX_Chrome (New-Object System.Windows.Forms.CheckBox)
@@ -634,7 +619,7 @@ $BUTTON_DownloadNinite.Height = $HEIGHT_BUTTON
 $BUTTON_DownloadNinite.Width = $WIDTH_BUTTON
 $BUTTON_DownloadNinite.Text = "Download selected$REQUIRES_ELEVATION"
 $BUTTON_DownloadNinite.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_SHORT
-$BUTTON_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
+$BUTTON_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "https://ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
 $GROUP_Ninite.Controls.Add($BUTTON_DownloadNinite)
 $PREVIOUS_BUTTON = $BUTTON_DownloadNinite
 
@@ -656,7 +641,7 @@ $BUTTON_OpenNiniteInBrowser.Height = $HEIGHT_BUTTON
 $BUTTON_OpenNiniteInBrowser.Width = $WIDTH_BUTTON
 $BUTTON_OpenNiniteInBrowser.Text = 'View other'
 $BUTTON_OpenNiniteInBrowser.Location = $PREVIOUS_BUTTON.Location - $SHIFT_CHECKBOX_EXECUTE + $SHIFT_BUTTON_LONG
-$BUTTON_OpenNiniteInBrowser.Add_Click( { Open-InBrowser "ninite.com/?select=$(Set-NiniteQuery)" } )
+$BUTTON_OpenNiniteInBrowser.Add_Click( { Open-InBrowser "https://ninite.com/?select=$(Set-NiniteQuery)" } )
 $GROUP_Ninite.Controls.Add($BUTTON_OpenNiniteInBrowser)
 $PREVIOUS_BUTTON = $BUTTON_OpenNiniteInBrowser
 
@@ -678,6 +663,7 @@ $GROUP_Essentials.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 3 + $IN
 $GROUP_Essentials.Width = $WIDTH_GROUP
 $GROUP_Essentials.Location = $GROUP_Ninite.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_DOWNLOADS.Controls.Add($GROUP_Essentials)
+$GROUP = $GROUP_Essentials
 
 
 Set-Variable -Option Constant BUTTON_DownloadSDI (New-Object System.Windows.Forms.Button)
@@ -771,6 +757,7 @@ $GROUP_Updates.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 3
 $GROUP_Updates.Width = $WIDTH_GROUP
 $GROUP_Updates.Location = $GROUP_Essentials.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_DOWNLOADS.Controls.Add($GROUP_Updates)
+$GROUP = $GROUP_Updates
 
 
 Set-Variable -Option Constant BUTTON_UpdateStoreApps (New-Object System.Windows.Forms.Button)
@@ -819,6 +806,7 @@ $GROUP_Hardware.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 2 + $INTE
 $GROUP_Hardware.Width = $WIDTH_GROUP
 $GROUP_Hardware.Location = $INITIAL_LOCATION_GROUP
 $TAB_MAINTENANCE.Controls.Add($GROUP_Hardware)
+$GROUP = $GROUP_Hardware
 
 
 Set-Variable -Option Constant BUTTON_CheckDisk (New-Object System.Windows.Forms.Button)
@@ -890,6 +878,7 @@ $GROUP_Software.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 4
 $GROUP_Software.Width = $WIDTH_GROUP
 $GROUP_Software.Location = $GROUP_Hardware.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_MAINTENANCE.Controls.Add($GROUP_Software)
+$GROUP = $GROUP_Software
 
 
 Set-Variable -Option Constant BUTTON_CheckWindowsHealth (New-Object System.Windows.Forms.Button)
@@ -946,6 +935,7 @@ $GROUP_Cleanup.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 2
 $GROUP_Cleanup.Width = $WIDTH_GROUP
 $GROUP_Cleanup.Location = $GROUP_Software.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_MAINTENANCE.Controls.Add($GROUP_Cleanup)
+$GROUP = $GROUP_Cleanup
 
 
 Set-Variable -Option Constant BUTTON_FileCleanup (New-Object System.Windows.Forms.Button)
@@ -978,6 +968,7 @@ $GROUP_Optimization.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL + $IN
 $GROUP_Optimization.Width = $WIDTH_GROUP
 $GROUP_Optimization.Location = $GROUP_Cleanup.Location + "0, $($GROUP_Cleanup.Height + $INTERVAL_NORMAL)"
 $TAB_MAINTENANCE.Controls.Add($GROUP_Optimization)
+$GROUP = $GROUP_Optimization
 
 
 Set-Variable -Option Constant BUTTON_CloudFlareDNS (New-Object System.Windows.Forms.Button)
@@ -1032,7 +1023,7 @@ Function Initialize-Startup {
         Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
     }
 
-    Set-Variable -Option Constant -Scope Script CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
+    Set-Variable -Option Constant -Scope Script PATH_CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
 
     if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
     elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
@@ -1197,10 +1188,9 @@ Function Open-InBrowser {
     Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
     if (-not $URL) { Return }
 
-    Set-Variable -Option Constant UrlToOpen $(if ($URL -like 'http*') { $URL } else { 'https://' + $URL })
-    Add-Log $INF "Opening URL in the default browser: $UrlToOpen"
+    Add-Log $INF "Opening URL in the default browser: $URL"
 
-    try { [System.Diagnostics.Process]::Start($UrlToOpen) }
+    try { [System.Diagnostics.Process]::Start($URL) }
     catch [Exception] { Add-Log $ERR "Could not open the URL: $($_.Exception.Message)" }
 }
 
@@ -1242,7 +1232,7 @@ Function Start-DownloadExtractExecute {
         Return
     }
 
-    if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
+    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) { Open-InBrowser $URL }
     else {
         Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
         Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
@@ -1266,14 +1256,13 @@ Function Start-Download {
     )
     if (-not $URL) { Return }
 
-    Set-Variable -Option Constant DownloadURL $(if ($URL -Like 'http*') { $URL } else { 'https://' + $URL })
-    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { (Split-Path -Leaf $DownloadURL) -Replace '_zip', '.zip' })
+    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
     Set-Variable -Option Constant TempPath "$PATH_TEMP_DIR\$FileName"
-    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$CURRENT_DIR\$FileName" })
+    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_CURRENT_DIR\$FileName" })
 
     New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null
 
-    Add-Log $INF "Downloading from $DownloadURL"
+    Add-Log $INF "Downloading from $URL"
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) {
@@ -1283,7 +1272,7 @@ Function Start-Download {
 
     try {
         Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
-        (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $TempPath)
+        (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
         if (-not $Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
 
         if (Test-Path $SavePath) { Out-Success }
@@ -1310,7 +1299,7 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
     Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $PATH_TEMP_DIR })
-    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $CURRENT_DIR })
+    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
@@ -1868,7 +1857,6 @@ Function Start-FileCleanup {
         "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\THANKS.txt"
         "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\VideoLAN Website.url"
         "$PATH_PROGRAM_FILES_86\WinRAR\Descript.ion"
-        "$PATH_PROGRAM_FILES_86\WinRAR\License.txt"
         "$PATH_PROGRAM_FILES_86\WinRAR\Order.htm"
         "$PATH_PROGRAM_FILES_86\WinRAR\Rar.txt"
         "$PATH_PROGRAM_FILES_86\WinRAR\ReadMe.txt"

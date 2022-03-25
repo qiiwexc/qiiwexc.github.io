@@ -4,6 +4,7 @@ $GROUP_Updates.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 3
 $GROUP_Updates.Width = $WIDTH_GROUP
 $GROUP_Updates.Location = $GROUP_Essentials.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_DOWNLOADS.Controls.Add($GROUP_Updates)
+$GROUP = $GROUP_Updates
 
 
 Set-Variable -Option Constant BUTTON_UpdateStoreApps (New-Object System.Windows.Forms.Button)

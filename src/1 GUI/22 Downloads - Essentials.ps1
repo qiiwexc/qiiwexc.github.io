@@ -4,6 +4,7 @@ $GROUP_Essentials.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 3 + $IN
 $GROUP_Essentials.Width = $WIDTH_GROUP
 $GROUP_Essentials.Location = $GROUP_Ninite.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_DOWNLOADS.Controls.Add($GROUP_Essentials)
+$GROUP = $GROUP_Essentials
 
 
 Set-Variable -Option Constant BUTTON_DownloadSDI (New-Object System.Windows.Forms.Button)
