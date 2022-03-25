@@ -1173,7 +1173,7 @@ Function Get-Update {
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try { Start-Process 'PowerShell' $TargetFile '-HideConsole' }
+    try { Start-ExternalProcess "PowerShell '$TargetFile' '-HideConsole'" }
     catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
 
     Exit-Script
@@ -1874,7 +1874,6 @@ Function Start-FileCleanup {
         "$PATH_PROGRAM_FILES_86\WinRAR\ReadMe.txt"
         "$PATH_PROGRAM_FILES_86\WinRAR\WhatsNew.txt"
         "$PATH_PROGRAM_FILES_86\WinRAR\WinRAR.chm"
-        "$PATH_PROGRAM_FILES_86\WinSCP\license.txt"
         "$PATH_PROGRAM_FILES_86\WinSCP\PuTTY\putty.chm"
         "$env:ProgramFiles\7-Zip\7-zip.chm"
         "$env:ProgramFiles\7-Zip\7-zip.dll.tmp"
