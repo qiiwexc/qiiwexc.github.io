@@ -15,6 +15,7 @@ $BUTTON_DownloadCCleaner.Text = "CCleaner$REQUIRES_ELEVATION"
 $BUTTON_DownloadCCleaner.Location = $INITIAL_LOCATION_BUTTON
 $BUTTON_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCCleaner.Checked $URL_CCLEANER } )
 $GROUP_Tools.Controls.Add($BUTTON_DownloadCCleaner)
+$PREVIOUS_BUTTON = $BUTTON_DownloadCCleaner
 
 
 Set-Variable -Option Constant CHECKBOX_StartCCleaner (New-Object System.Windows.Forms.CheckBox)
@@ -22,9 +23,10 @@ Set-Variable -Option Constant CHECKBOX_StartCCleaner (New-Object System.Windows.
 $CHECKBOX_StartCCleaner.Size = $CHECKBOX_SIZE
 $CHECKBOX_StartCCleaner.Checked = $True
 $CHECKBOX_StartCCleaner.Text = $TXT_START_AFTER_DOWNLOAD
-$CHECKBOX_StartCCleaner.Location = $BUTTON_DownloadCCleaner.Location + $SHIFT_CHECKBOX_EXECUTE
+$CHECKBOX_StartCCleaner.Location = $PREVIOUS_BUTTON.Location + $SHIFT_CHECKBOX_EXECUTE
 $CHECKBOX_StartCCleaner.Add_CheckStateChanged( { $BUTTON_DownloadCCleaner.Text = "CCleaner$(if ($CHECKBOX_StartCCleaner.Checked) {$REQUIRES_ELEVATION})" } )
 $GROUP_Tools.Controls.Add($CHECKBOX_StartCCleaner)
+$PREVIOUS_BUTTON = $BUTTON_DownloadCCleaner
 
 
 Set-Variable -Option Constant BUTTON_DownloadRufus (New-Object System.Windows.Forms.Button)
@@ -33,9 +35,10 @@ $BUTTON_DownloadRufus.Font = $BUTTON_FONT
 $BUTTON_DownloadRufus.Height = $HEIGHT_BUTTON
 $BUTTON_DownloadRufus.Width = $WIDTH_BUTTON
 $BUTTON_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
-$BUTTON_DownloadRufus.Location = $BUTTON_DownloadCCleaner.Location + $SHIFT_BUTTON_LONG
+$BUTTON_DownloadRufus.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_LONG
 $BUTTON_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' } )
 $GROUP_Tools.Controls.Add($BUTTON_DownloadRufus)
+$PREVIOUS_BUTTON = $BUTTON_DownloadRufus
 
 
 Set-Variable -Option Constant CHECKBOX_StartRufus (New-Object System.Windows.Forms.CheckBox)
@@ -43,10 +46,11 @@ Set-Variable -Option Constant CHECKBOX_StartRufus (New-Object System.Windows.For
 $CHECKBOX_StartRufus.Enabled = $PS_VERSION -gt 2
 $CHECKBOX_StartRufus.Checked = $PS_VERSION -gt 2
 $CHECKBOX_StartRufus.Size = $CHECKBOX_SIZE
-$CHECKBOX_StartRufus.Location = $BUTTON_DownloadRufus.Location + $SHIFT_CHECKBOX_EXECUTE
+$CHECKBOX_StartRufus.Location = $PREVIOUS_BUTTON.Location + $SHIFT_CHECKBOX_EXECUTE
 $CHECKBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
 $CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufus (bootable USB)$(if ($CHECKBOX_StartRufus.Checked) {$REQUIRES_ELEVATION})" } )
 $GROUP_Tools.Controls.Add($CHECKBOX_StartRufus)
+$PREVIOUS_BUTTON = $BUTTON_DownloadRufus
 
 
 Set-Variable -Option Constant BUTTON_WindowsPE (New-Object System.Windows.Forms.Button)
@@ -55,13 +59,15 @@ $BUTTON_WindowsPE.Font = $BUTTON_FONT
 $BUTTON_WindowsPE.Height = $HEIGHT_BUTTON
 $BUTTON_WindowsPE.Width = $WIDTH_BUTTON
 $BUTTON_WindowsPE.Text = 'Windows PE (Live CD)'
-$BUTTON_WindowsPE.Location = $BUTTON_DownloadRufus.Location + $SHIFT_BUTTON_LONG
+$BUTTON_WindowsPE.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_LONG
 $BUTTON_WindowsPE.Add_Click( { Open-InBrowser $URL_WINDOWS_PE } )
 $GROUP_Tools.Controls.Add($BUTTON_WindowsPE)
+$PREVIOUS_BUTTON = $BUTTON_WindowsPE
 
 
 Set-Variable -Option Constant LABEL_WindowsPE (New-Object System.Windows.Forms.Label)
 $LABEL_WindowsPE.Size = $CHECKBOX_SIZE
 $LABEL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
-$LABEL_WindowsPE.Location = $BUTTON_WindowsPE.Location + $SHIFT_LABEL_BROWSER
+$LABEL_WindowsPE.Location = $PREVIOUS_BUTTON.Location + $SHIFT_LABEL_BROWSER
 $GROUP_Tools.Controls.Add($LABEL_WindowsPE)
+$PREVIOUS_BUTTON = $BUTTON_WindowsPE

@@ -1,6 +1,6 @@
 Set-Variable -Option Constant GROUP_Software (New-Object System.Windows.Forms.GroupBox)
 $GROUP_Software.Text = 'Software Diagnostics'
-$GROUP_Software.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 3
+$GROUP_Software.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 4
 $GROUP_Software.Width = $WIDTH_GROUP
 $GROUP_Software.Location = $GROUP_Hardware.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_MAINTENANCE.Controls.Add($GROUP_Software)
@@ -38,3 +38,15 @@ $BUTTON_StartSecurityScan.Text = 'Perform a security scan'
 $BUTTON_StartSecurityScan.Location = $BUTTON_CheckSystemFiles.Location + $SHIFT_BUTTON_NORMAL
 $BUTTON_StartSecurityScan.Add_Click( { Start-SecurityScan } )
 $GROUP_Software.Controls.Add($BUTTON_StartSecurityScan)
+
+
+Set-Variable -Option Constant BUTTON_StartMalwareScan (New-Object System.Windows.Forms.Button)
+(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_StartMalwareScan, 'Start malware scan')
+$BUTTON_StartMalwareScan.Enabled = Test-Path $PATH_DEFENDER_EXE
+$BUTTON_StartMalwareScan.Font = $BUTTON_FONT
+$BUTTON_StartMalwareScan.Height = $HEIGHT_BUTTON
+$BUTTON_StartMalwareScan.Width = $WIDTH_BUTTON
+$BUTTON_StartMalwareScan.Text = "Perform a malware scan$REQUIRES_ELEVATION"
+$BUTTON_StartMalwareScan.Location = $BUTTON_StartSecurityScan.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_StartMalwareScan.Add_Click( { Start-MalwareScan } )
+$GROUP_Software.Controls.Add($BUTTON_StartMalwareScan)

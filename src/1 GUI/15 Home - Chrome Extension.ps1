@@ -16,6 +16,7 @@ $BUTTON_HTTPSEverywhere.Text = 'HTTPS Everywhere'
 $BUTTON_HTTPSEverywhere.Location = $INITIAL_LOCATION_BUTTON
 $BUTTON_HTTPSEverywhere.Add_Click( { Start-Process $PATH_CHROME_EXE $URL_CHROME_HTTPS } )
 $GROUP_ChromeExtensions.Controls.Add($BUTTON_HTTPSEverywhere)
+$PREVIOUS_BUTTON = $BUTTON_HTTPSEverywhere
 
 
 Set-Variable -Option Constant BUTTON_AdBlock (New-Object System.Windows.Forms.Button)
@@ -25,9 +26,10 @@ $BUTTON_AdBlock.Font = $BUTTON_FONT
 $BUTTON_AdBlock.Height = $HEIGHT_BUTTON
 $BUTTON_AdBlock.Width = $WIDTH_BUTTON
 $BUTTON_AdBlock.Text = 'AdBlock'
-$BUTTON_AdBlock.Location = $BUTTON_HTTPSEverywhere.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_AdBlock.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_NORMAL
 $BUTTON_AdBlock.Add_Click( { Start-Process $PATH_CHROME_EXE $URL_CHROME_ADBLOCK } )
 $GROUP_ChromeExtensions.Controls.Add($BUTTON_AdBlock)
+$PREVIOUS_BUTTON = $BUTTON_AdBlock
 
 
 Set-Variable -Option Constant BUTTON_YouTube_Dislike (New-Object System.Windows.Forms.Button)
@@ -37,6 +39,7 @@ $BUTTON_YouTube_Dislike.Font = $BUTTON_FONT
 $BUTTON_YouTube_Dislike.Height = $HEIGHT_BUTTON
 $BUTTON_YouTube_Dislike.Width = $WIDTH_BUTTON
 $BUTTON_YouTube_Dislike.Text = 'Return YouTube Dislike'
-$BUTTON_YouTube_Dislike.Location = $BUTTON_AdBlock.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_YouTube_Dislike.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_NORMAL
 $BUTTON_YouTube_Dislike.Add_Click( { Start-Process $PATH_CHROME_EXE $URL_CHROME_YOUTUBE } )
 $GROUP_ChromeExtensions.Controls.Add($BUTTON_YouTube_Dislike)
+$PREVIOUS_BUTTON = $BUTTON_YouTube_Dislike

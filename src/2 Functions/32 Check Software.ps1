@@ -39,3 +39,13 @@ Function Start-SecurityScan {
 
     Out-Success
 }
+
+
+Function Start-MalwareScan {
+    Add-Log $INF "Starting malware scan..."
+
+    try { Start-Process -Verb RunAs 'mrt' '/q /f:y' }
+    catch [Exception] { Add-Log $ERR "Failed to perform malware scan: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
