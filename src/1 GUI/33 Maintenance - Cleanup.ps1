@@ -4,6 +4,7 @@ $GROUP_Cleanup.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL * 2
 $GROUP_Cleanup.Width = $WIDTH_GROUP
 $GROUP_Cleanup.Location = $GROUP_Software.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_MAINTENANCE.Controls.Add($GROUP_Cleanup)
+$GROUP = $GROUP_Cleanup
 
 
 Set-Variable -Option Constant BUTTON_FileCleanup (New-Object System.Windows.Forms.Button)

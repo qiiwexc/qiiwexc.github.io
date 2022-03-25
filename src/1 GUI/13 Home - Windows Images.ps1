@@ -4,6 +4,7 @@ $GROUP_DownloadWindows.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 4
 $GROUP_DownloadWindows.Width = $WIDTH_GROUP
 $GROUP_DownloadWindows.Location = $GROUP_Activators.Location + $SHIFT_GROUP_HORIZONTAL
 $TAB_HOME.Controls.Add($GROUP_DownloadWindows)
+$GROUP = $GROUP_DownloadWindows
 
 
 Set-Variable -Option Constant BUTTON_Windows11 (New-Object System.Windows.Forms.Button)

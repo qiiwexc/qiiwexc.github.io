@@ -6,14 +6,13 @@ Function Start-Download {
     )
     if (-not $URL) { Return }
 
-    Set-Variable -Option Constant DownloadURL $(if ($URL -Like 'http*') { $URL } else { 'https://' + $URL })
-    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { (Split-Path -Leaf $DownloadURL) -Replace '_zip', '.zip' })
+    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
     Set-Variable -Option Constant TempPath "$PATH_TEMP_DIR\$FileName"
-    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$CURRENT_DIR\$FileName" })
+    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_CURRENT_DIR\$FileName" })
 
     New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null
 
-    Add-Log $INF "Downloading from $DownloadURL"
+    Add-Log $INF "Downloading from $URL"
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) {
@@ -23,7 +22,7 @@ Function Start-Download {
 
     try {
         Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
-        (New-Object System.Net.WebClient).DownloadFile($DownloadURL, $TempPath)
+        (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
         if (-not $Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
 
         if (Test-Path $SavePath) { Out-Success }

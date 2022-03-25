@@ -4,6 +4,7 @@ $GROUP_Ninite.Height = $INTERVAL_GROUP_TOP + $INTERVAL_CHECKBOX_SHORT * 6 + $INT
 $GROUP_Ninite.Width = $WIDTH_GROUP
 $GROUP_Ninite.Location = $INITIAL_LOCATION_GROUP
 $TAB_DOWNLOADS.Controls.Add($GROUP_Ninite)
+$GROUP = $GROUP_Ninite
 
 
 Set-Variable -Option Constant CHECKBOX_Chrome (New-Object System.Windows.Forms.CheckBox)
@@ -77,7 +78,7 @@ $BUTTON_DownloadNinite.Height = $HEIGHT_BUTTON
 $BUTTON_DownloadNinite.Width = $WIDTH_BUTTON
 $BUTTON_DownloadNinite.Text = "Download selected$REQUIRES_ELEVATION"
 $BUTTON_DownloadNinite.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_SHORT
-$BUTTON_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
+$BUTTON_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "https://ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
 $GROUP_Ninite.Controls.Add($BUTTON_DownloadNinite)
 $PREVIOUS_BUTTON = $BUTTON_DownloadNinite
 
@@ -99,7 +100,7 @@ $BUTTON_OpenNiniteInBrowser.Height = $HEIGHT_BUTTON
 $BUTTON_OpenNiniteInBrowser.Width = $WIDTH_BUTTON
 $BUTTON_OpenNiniteInBrowser.Text = 'View other'
 $BUTTON_OpenNiniteInBrowser.Location = $PREVIOUS_BUTTON.Location - $SHIFT_CHECKBOX_EXECUTE + $SHIFT_BUTTON_LONG
-$BUTTON_OpenNiniteInBrowser.Add_Click( { Open-InBrowser "ninite.com/?select=$(Set-NiniteQuery)" } )
+$BUTTON_OpenNiniteInBrowser.Add_Click( { Open-InBrowser "https://ninite.com/?select=$(Set-NiniteQuery)" } )
 $GROUP_Ninite.Controls.Add($BUTTON_OpenNiniteInBrowser)
 $PREVIOUS_BUTTON = $BUTTON_OpenNiniteInBrowser
 

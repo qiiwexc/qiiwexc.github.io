@@ -16,7 +16,7 @@ Function Start-DownloadExtractExecute {
         Return
     }
 
-    if ($PS_VERSION -le 2 -and ($URL -Match 'github.com/*' -or $URL -Match 'github.io/*')) { Open-InBrowser $URL }
+    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) { Open-InBrowser $URL }
     else {
         Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
         Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')

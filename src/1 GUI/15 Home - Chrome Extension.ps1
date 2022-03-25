@@ -4,6 +4,7 @@ $GROUP_ChromeExtensions.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_NORMAL *
 $GROUP_ChromeExtensions.Width = $WIDTH_GROUP
 $GROUP_ChromeExtensions.Location = $GROUP_Activators.Location + "0, $($GROUP_Activators.Height + $INTERVAL_NORMAL)"
 $TAB_HOME.Controls.Add($GROUP_ChromeExtensions)
+$GROUP = $GROUP_ChromeExtensions
 
 
 Set-Variable -Option Constant BUTTON_HTTPSEverywhere (New-Object System.Windows.Forms.Button)
