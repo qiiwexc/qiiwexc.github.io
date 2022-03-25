@@ -16,6 +16,7 @@ $BUTTON_UpdateStoreApps.Text = "Update Store apps$REQUIRES_ELEVATION"
 $BUTTON_UpdateStoreApps.Location = $INITIAL_LOCATION_BUTTON
 $BUTTON_UpdateStoreApps.Add_Click( { Start-StoreAppUpdate } )
 $GROUP_Updates.Controls.Add($BUTTON_UpdateStoreApps)
+$PREVIOUS_BUTTON = $BUTTON_UpdateStoreApps
 
 
 Set-Variable -Option Constant BUTTON_UpdateOffice (New-Object System.Windows.Forms.Button)
@@ -25,9 +26,10 @@ $BUTTON_UpdateOffice.Font = $BUTTON_FONT
 $BUTTON_UpdateOffice.Height = $HEIGHT_BUTTON
 $BUTTON_UpdateOffice.Width = $WIDTH_BUTTON
 $BUTTON_UpdateOffice.Text = "Update Microsoft Office"
-$BUTTON_UpdateOffice.Location = $BUTTON_UpdateStoreApps.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_UpdateOffice.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_NORMAL
 $BUTTON_UpdateOffice.Add_Click( { Start-OfficeUpdate } )
 $GROUP_Updates.Controls.Add($BUTTON_UpdateOffice)
+$PREVIOUS_BUTTON = $BUTTON_UpdateOffice
 
 
 Set-Variable -Option Constant BUTTON_WindowsUpdate (New-Object System.Windows.Forms.Button)
@@ -36,6 +38,7 @@ $BUTTON_WindowsUpdate.Font = $BUTTON_FONT
 $BUTTON_WindowsUpdate.Height = $HEIGHT_BUTTON
 $BUTTON_WindowsUpdate.Width = $WIDTH_BUTTON
 $BUTTON_WindowsUpdate.Text = 'Start Windows Update'
-$BUTTON_WindowsUpdate.Location = $BUTTON_UpdateOffice.Location + $SHIFT_BUTTON_NORMAL
+$BUTTON_WindowsUpdate.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_NORMAL
 $BUTTON_WindowsUpdate.Add_Click( { Start-WindowsUpdate } )
 $GROUP_Updates.Controls.Add($BUTTON_WindowsUpdate)
+$PREVIOUS_BUTTON = $BUTTON_WindowsUpdate

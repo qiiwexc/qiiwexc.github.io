@@ -2,7 +2,7 @@ Set-Variable -Option Constant INF 'INF'
 Set-Variable -Option Constant WRN 'WRN'
 Set-Variable -Option Constant ERR 'ERR'
 
-Set-Variable -Option Constant REQUIRES_ELEVATION $(if (-not $IS_ELEVATED) { ' *' })
+Set-Variable -Option Constant REQUIRES_ELEVATION $(if (-not $IS_ELEVATED) { '*' })
 
 
 Set-Variable -Option Constant WIDTH_BUTTON    170
@@ -52,21 +52,20 @@ Set-Variable -Option Constant FONT_NAME   'Microsoft Sans Serif'
 Set-Variable -Option Constant BUTTON_FONT "$FONT_NAME, 10"
 
 
+Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
 Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-Set-Variable -Option Constant PATH_CHROME_EXE "$PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
-
+Set-Variable -Option Constant PATH_CHROME_EXE "$PATH_PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
+Set-Variable -Option Constant PATH_MRT_EXE "$env:windir\System32\MRT.exe"
 Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
 
 
-Set-Variable -Option Constant OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, OSArchitecture, Version)
+Set-Variable -Option Constant OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
 
 Set-Variable -Option Constant OS_NAME $OperatingSystem.Caption
 Set-Variable -Option Constant OS_BUILD $OperatingSystem.Version
-Set-Variable -Option Constant OS_64_BIT $(if ($OperatingSystem.OSArchitecture -Like '64-*') { $True })
+Set-Variable -Option Constant OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -Like '*64') { $True })
 Set-Variable -Option Constant OS_VERSION $(Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } })
 
-
-Set-Variable -Option Constant PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
 
 Set-Variable -Option Constant LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'")
 Set-Variable -Option Constant SYSTEM_PARTITION ($LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
@@ -74,5 +73,5 @@ Set-Variable -Option Constant SYSTEM_PARTITION ($LogicalDisk | Select-Object @{L
 
 Set-Variable -Option Constant WordRegPath (Get-ItemProperty "$(New-PSDrive HKCR Registry HKEY_CLASSES_ROOT):\Word.Application\CurVer" -ErrorAction SilentlyContinue)
 Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
-Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:ProgramFiles\Common Files\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
+Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' } })

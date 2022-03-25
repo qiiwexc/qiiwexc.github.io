@@ -31,7 +31,7 @@ Function Initialize-Startup {
 
     Get-CurrentVersion
 
-    if (-not (Test-Path "$PROGRAM_FILES_86\Unchecky\unchecky.exe")) {
+    if (-not (Test-Path "$PATH_PROGRAM_FILES_86\Unchecky\unchecky.exe")) {
         Add-Log $WRN 'Unchecky is not installed.'
         Add-Log $INF 'It is highly recommended to install Unchecky (see Downloads -> Essentials -> Unchecky).'
         Add-Log $INF "$TXT_UNCHECKY_INFO."

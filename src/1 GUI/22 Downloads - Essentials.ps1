@@ -15,6 +15,7 @@ $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$REQUIRES_ELEVATION"
 $BUTTON_DownloadSDI.Location = $INITIAL_LOCATION_BUTTON
 $BUTTON_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDI } )
 $GROUP_Essentials.Controls.Add($BUTTON_DownloadSDI)
+$PREVIOUS_BUTTON = $BUTTON_DownloadSDI
 
 
 Set-Variable -Option Constant CHECKBOX_StartSDI (New-Object System.Windows.Forms.CheckBox)
@@ -22,7 +23,7 @@ Set-Variable -Option Constant CHECKBOX_StartSDI (New-Object System.Windows.Forms
 $CHECKBOX_StartSDI.Checked = $True
 $CHECKBOX_StartSDI.Size = $CHECKBOX_SIZE
 $CHECKBOX_StartSDI.Text = $TXT_START_AFTER_DOWNLOAD
-$CHECKBOX_StartSDI.Location = $BUTTON_DownloadSDI.Location + $SHIFT_CHECKBOX_EXECUTE
+$CHECKBOX_StartSDI.Location = $PREVIOUS_BUTTON.Location + $SHIFT_CHECKBOX_EXECUTE
 $CHECKBOX_StartSDI.Add_CheckStateChanged( { $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) {$REQUIRES_ELEVATION})" } )
 $GROUP_Essentials.Controls.Add($CHECKBOX_StartSDI)
 
@@ -33,12 +34,13 @@ $BUTTON_DownloadUnchecky.Font = $BUTTON_FONT
 $BUTTON_DownloadUnchecky.Height = $HEIGHT_BUTTON
 $BUTTON_DownloadUnchecky.Width = $WIDTH_BUTTON
 $BUTTON_DownloadUnchecky.Text = "Unchecky$REQUIRES_ELEVATION"
-$BUTTON_DownloadUnchecky.Location = $BUTTON_DownloadSDI.Location + $SHIFT_BUTTON_LONG
+$BUTTON_DownloadUnchecky.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_LONG
 $BUTTON_DownloadUnchecky.Add_Click( {
         Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
         Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked $URL_UNCHECKY -Params:$Params -SilentInstall:$CHECKBOX_SilentlyInstallUnchecky.Checked
     } )
 $GROUP_Essentials.Controls.Add($BUTTON_DownloadUnchecky)
+$PREVIOUS_BUTTON = $BUTTON_DownloadUnchecky
 
 
 Set-Variable -Option Constant CHECKBOX_StartUnchecky (New-Object System.Windows.Forms.CheckBox)
@@ -46,9 +48,10 @@ Set-Variable -Option Constant CHECKBOX_StartUnchecky (New-Object System.Windows.
 $CHECKBOX_StartUnchecky.Checked = $True
 $CHECKBOX_StartUnchecky.Size = $CHECKBOX_SIZE
 $CHECKBOX_StartUnchecky.Text = $TXT_START_AFTER_DOWNLOAD
-$CHECKBOX_StartUnchecky.Location = $BUTTON_DownloadUnchecky.Location + $SHIFT_CHECKBOX_EXECUTE
+$CHECKBOX_StartUnchecky.Location = $PREVIOUS_BUTTON.Location + $SHIFT_CHECKBOX_EXECUTE
 $CHECKBOX_StartUnchecky.Add_CheckStateChanged( { $BUTTON_DownloadUnchecky.Text = "Unchecky$(if ($CHECKBOX_StartUnchecky.Checked) {$REQUIRES_ELEVATION})" } )
 $GROUP_Essentials.Controls.Add($CHECKBOX_StartUnchecky)
+$PREVIOUS_BUTTON = $CHECKBOX_StartUnchecky
 
 
 Set-Variable -Option Constant CHECKBOX_SilentlyInstallUnchecky (New-Object System.Windows.Forms.CheckBox)
@@ -56,7 +59,7 @@ Set-Variable -Option Constant CHECKBOX_SilentlyInstallUnchecky (New-Object Syste
 $CHECKBOX_SilentlyInstallUnchecky.Checked = $True
 $CHECKBOX_SilentlyInstallUnchecky.Size = $CHECKBOX_SIZE
 $CHECKBOX_SilentlyInstallUnchecky.Text = 'Install silently'
-$CHECKBOX_SilentlyInstallUnchecky.Location = $CHECKBOX_StartUnchecky.Location + "0, $HEIGHT_CHECKBOX"
+$CHECKBOX_SilentlyInstallUnchecky.Location = $PREVIOUS_BUTTON.Location + "0, $HEIGHT_CHECKBOX"
 $GROUP_Essentials.Controls.Add($CHECKBOX_SilentlyInstallUnchecky)
 
 
@@ -69,13 +72,14 @@ $BUTTON_DownloadOffice.Text = "Office 2013 - 2021$REQUIRES_ELEVATION"
 $BUTTON_DownloadOffice.Location = $BUTTON_DownloadUnchecky.Location + $SHIFT_BUTTON_SHORT + $SHIFT_BUTTON_NORMAL
 $BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE } )
 $GROUP_Essentials.Controls.Add($BUTTON_DownloadOffice)
+$PREVIOUS_BUTTON = $BUTTON_DownloadOffice
 
 
 Set-Variable -Option Constant CHECKBOX_StartOffice (New-Object System.Windows.Forms.CheckBox)
 (New-Object System.Windows.Forms.ToolTip).SetToolTip($CHECKBOX_StartOffice, $TXT_TIP_START_AFTER_DOWNLOAD)
 $CHECKBOX_StartOffice.Enabled = $PS_VERSION -gt 2
 $CHECKBOX_StartOffice.Checked = $PS_VERSION -gt 2
-$CHECKBOX_StartOffice.Location = $BUTTON_DownloadOffice.Location + $SHIFT_CHECKBOX_EXECUTE
+$CHECKBOX_StartOffice.Location = $PREVIOUS_BUTTON.Location + $SHIFT_CHECKBOX_EXECUTE
 $CHECKBOX_StartOffice.Size = $CHECKBOX_SIZE
 $CHECKBOX_StartOffice.Text = $TXT_START_AFTER_DOWNLOAD
 $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2021$(if ($CHECKBOX_StartOffice.Checked) {$REQUIRES_ELEVATION})" } )
