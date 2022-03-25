@@ -37,7 +37,7 @@ Function Get-Update {
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try { Start-Process 'PowerShell' $TargetFile }
+    try { Start-Process 'PowerShell' $TargetFile '-HideConsole' }
     catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
 
     Exit-Script
