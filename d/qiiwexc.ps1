@@ -35,11 +35,11 @@ $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administr
 Set-Variable -Option Constant StartedFromGUI $($MyInvocation.Line -Match 'if((Get-ExecutionPolicy ) -ne ''AllSigned'')*')
 Set-Variable -Option Constant HIDE_CONSOLE ($args[0] -eq '-HideConsole' -or $StartedFromGUI -or -not $MyInvocation.Line)
 
-# if ($HIDE_CONSOLE) {
-#     Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
-#                                                                 [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
-#     [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
-# }
+if ($HIDE_CONSOLE) {
+    Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
+                                                                [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
+    [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
+}
 
 try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not supported' }
 
@@ -1173,7 +1173,7 @@ Function Get-Update {
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try { Start-Process 'PowerShell' $TargetFile }
+    try { Start-Process 'PowerShell' $TargetFile '-HideConsole' }
     catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
 
     Exit-Script
@@ -1917,7 +1917,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Google\Update\Offline"
         "$env:ProgramFiles\Google\Update\Offline\*"
         "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
-        "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses\*"
