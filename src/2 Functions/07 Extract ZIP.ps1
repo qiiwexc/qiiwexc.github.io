@@ -1,9 +1,8 @@
 Function Start-Extraction {
     Param(
-        [String][Parameter(Position = 0)]$ZipPath = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No file name specified"),
+        [String][Parameter(Position = 0, Mandatory = $True)]$ZipPath,
         [Switch]$Execute
     )
-    if (-not $ZipPath) { Return }
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `

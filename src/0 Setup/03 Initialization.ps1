@@ -18,6 +18,7 @@ try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not su
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
+
 Set-Variable -Option Constant PS_VERSION $($PSVersionTable.PSVersion.Major)
 
 Set-Variable -Option Constant SHELL $(New-Object -com Shell.Application)
@@ -35,15 +36,3 @@ Set-Variable -Option Constant WordRegPath (Get-ItemProperty "$(New-PSDrive HKCR 
 Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
 Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' } })
-
-Set-Variable -Option Constant INF 'INF'
-Set-Variable -Option Constant WRN 'WRN'
-Set-Variable -Option Constant ERR 'ERR'
-
-Set-Variable -Option Constant REQUIRES_ELEVATION $(if (-not $IS_ELEVATED) { '*' })
-
-Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
-Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
-Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-Set-Variable -Option Constant PATH_CHROME_EXE "$PATH_PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
-Set-Variable -Option Constant PATH_MRT_EXE "$env:windir\System32\MRT.exe"

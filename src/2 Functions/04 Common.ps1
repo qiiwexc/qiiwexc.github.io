@@ -10,8 +10,7 @@ Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
 
 
 Function Open-InBrowser {
-    Param([String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"))
-    if (-not $URL) { Return }
+    Param([String][Parameter(Position = 0, Mandatory = $True)]$URL)
 
     Add-Log $INF "Opening URL in the default browser: $URL"
 
@@ -22,13 +21,12 @@ Function Open-InBrowser {
 
 Function Start-ExternalProcess {
     Param(
-        [String[]][Parameter(Position = 0)]$Commands = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No commands specified"),
+        [String[]][Parameter(Position = 0, Mandatory = $True)]$Commands,
         [String][Parameter(Position = 1)]$Title,
         [Switch]$Elevated,
         [Switch]$Wait,
         [Switch]$Hidden
     )
-    if (-not $Commands) { Return }
 
     if ($Title) { $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands }
     Set-Variable -Option Constant FullCommand $([String]$($Commands | ForEach-Object { "$_;" }))

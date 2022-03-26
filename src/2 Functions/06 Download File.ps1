@@ -1,10 +1,9 @@
 Function Start-Download {
     Param(
-        [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No download URL specified"),
+        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
         [String][Parameter(Position = 1)]$SaveAs,
         [Switch]$Temp
     )
-    if (-not $URL) { Return }
 
     Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
     Set-Variable -Option Constant TempPath "$PATH_TEMP_DIR\$FileName"

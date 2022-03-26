@@ -1,9 +1,8 @@
 Function Add-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
-        [String][Parameter(Position = 1)]$Message = $(Write-Host -NoNewline "`n$($MyInvocation.MyCommand.Name): Log message missing")
+        [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
-    if (-not $Message) { Return }
 
     $LOG.SelectionStart = $LOG.TextLength
 
@@ -18,8 +17,7 @@ Function Add-Log {
 
 
 Function Write-Log {
-    Param([String]$Text = $(Write-Host -NoNewline "`n$($MyInvocation.MyCommand.Name): Log message missing"))
-    if (-not $Text) { Return }
+    Param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
 
     Write-Host -NoNewline $Text
     $LOG.AppendText($Text)
@@ -29,8 +27,7 @@ Function Write-Log {
 
 
 Function Out-Status {
-    Param([String]$Status = $(Write-Host -NoNewline "`n$($MyInvocation.MyCommand.Name): No status specified"))
-    if (-not $Status) { Return }
+    Param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
 
     Write-Log ' '
 
