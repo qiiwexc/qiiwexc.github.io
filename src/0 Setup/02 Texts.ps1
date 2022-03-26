@@ -1,5 +1,4 @@
 Set-Variable -Option Constant TXT_START_AFTER_DOWNLOAD 'Start after download'
-Set-Variable -Option Constant TXT_OPENS_IN_BROWSER 'Opens in the browser'
 Set-Variable -Option Constant TXT_UNCHECKY_INFO 'Unchecky clears adware checkboxes when installing software'
 Set-Variable -Option Constant TXT_AV_WARNING "This file may trigger anti-virus false positive!`nIt is recommended to disable anti-virus software for download and subsequent use of this file!"
 

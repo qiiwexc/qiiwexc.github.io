@@ -1,22 +1,12 @@
-Set-Variable -Option Constant GROUP_Tools (New-Object System.Windows.Forms.GroupBox)
-$GROUP_Tools.Text = 'Tools'
-$GROUP_Tools.Height = $INTERVAL_GROUP_TOP + $INTERVAL_BUTTON_LONG * 3
-$GROUP_Tools.Width = $WIDTH_GROUP
-$GROUP_Tools.Location = $GROUP_General.Location + "0, $($GROUP_General.Height + $INTERVAL_NORMAL)"
-$TAB_HOME.Controls.Add($GROUP_Tools)
-$GROUP = $GROUP_Tools
+$GROUP_TEXT = 'Tools'
+$GROUP_LOCATION = $GROUP_General.Location + "0, $($GROUP_General.Height + $INTERVAL_NORMAL)"
+$GROUP_Tools = New-GroupBox $GROUP_TEXT $GROUP_LOCATION
 
 
-Set-Variable -Option Constant BUTTON_DownloadCCleaner (New-Object System.Windows.Forms.Button)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_DownloadCCleaner, 'Download CCleaner installer')
-$BUTTON_DownloadCCleaner.Font = $BUTTON_FONT
-$BUTTON_DownloadCCleaner.Height = $HEIGHT_BUTTON
-$BUTTON_DownloadCCleaner.Width = $WIDTH_BUTTON
-$BUTTON_DownloadCCleaner.Text = "CCleaner$REQUIRES_ELEVATION"
-$BUTTON_DownloadCCleaner.Location = $INITIAL_LOCATION_BUTTON
-$BUTTON_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCCleaner.Checked $URL_CCLEANER } )
-$GROUP_Tools.Controls.Add($BUTTON_DownloadCCleaner)
-$PREVIOUS_BUTTON = $BUTTON_DownloadCCleaner
+$BUTTON_TEXT = 'CCleaner'
+$TOOLTIP_TEXT = 'Download CCleaner installer'
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCCleaner.Checked $URL_CCLEANER }
+$BUTTON_DownloadCCleaner = New-ButtonUAC $BUTTON_TEXT $BUTTON_FUNCTION -ToolTip $TOOLTIP_TEXT
 
 
 Set-Variable -Option Constant CHECKBOX_StartCCleaner (New-Object System.Windows.Forms.CheckBox)
@@ -27,19 +17,12 @@ $CHECKBOX_StartCCleaner.Text = $TXT_START_AFTER_DOWNLOAD
 $CHECKBOX_StartCCleaner.Location = $PREVIOUS_BUTTON.Location + $SHIFT_CHECKBOX_EXECUTE
 $CHECKBOX_StartCCleaner.Add_CheckStateChanged( { $BUTTON_DownloadCCleaner.Text = "CCleaner$(if ($CHECKBOX_StartCCleaner.Checked) {$REQUIRES_ELEVATION})" } )
 $GROUP_Tools.Controls.Add($CHECKBOX_StartCCleaner)
-$PREVIOUS_BUTTON = $BUTTON_DownloadCCleaner
 
 
-Set-Variable -Option Constant BUTTON_DownloadRufus (New-Object System.Windows.Forms.Button)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_DownloadRufus, 'Download Rufus - a bootable USB creator')
-$BUTTON_DownloadRufus.Font = $BUTTON_FONT
-$BUTTON_DownloadRufus.Height = $HEIGHT_BUTTON
-$BUTTON_DownloadRufus.Width = $WIDTH_BUTTON
-$BUTTON_DownloadRufus.Text = "Rufus (bootable USB)$REQUIRES_ELEVATION"
-$BUTTON_DownloadRufus.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_LONG
-$BUTTON_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' } )
-$GROUP_Tools.Controls.Add($BUTTON_DownloadRufus)
-$PREVIOUS_BUTTON = $BUTTON_DownloadRufus
+$BUTTON_TEXT = 'Rufus (bootable USB)'
+$TOOLTIP_TEXT = 'Download Rufus - a bootable USB creator'
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' }
+$BUTTON_DownloadRufus = New-ButtonUAC $BUTTON_TEXT $BUTTON_FUNCTION -ToolTip $TOOLTIP_TEXT
 
 
 Set-Variable -Option Constant CHECKBOX_StartRufus (New-Object System.Windows.Forms.CheckBox)
@@ -51,24 +34,9 @@ $CHECKBOX_StartRufus.Location = $PREVIOUS_BUTTON.Location + $SHIFT_CHECKBOX_EXEC
 $CHECKBOX_StartRufus.Text = $TXT_START_AFTER_DOWNLOAD
 $CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufus (bootable USB)$(if ($CHECKBOX_StartRufus.Checked) {$REQUIRES_ELEVATION})" } )
 $GROUP_Tools.Controls.Add($CHECKBOX_StartRufus)
-$PREVIOUS_BUTTON = $BUTTON_DownloadRufus
 
 
-Set-Variable -Option Constant BUTTON_WindowsPE (New-Object System.Windows.Forms.Button)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($BUTTON_WindowsPE, 'Download Windows PE (Live CD) ISO image based on Windows 10')
-$BUTTON_WindowsPE.Font = $BUTTON_FONT
-$BUTTON_WindowsPE.Height = $HEIGHT_BUTTON
-$BUTTON_WindowsPE.Width = $WIDTH_BUTTON
-$BUTTON_WindowsPE.Text = 'Windows PE (Live CD)'
-$BUTTON_WindowsPE.Location = $PREVIOUS_BUTTON.Location + $SHIFT_BUTTON_LONG
-$BUTTON_WindowsPE.Add_Click( { Open-InBrowser $URL_WINDOWS_PE } )
-$GROUP_Tools.Controls.Add($BUTTON_WindowsPE)
-$PREVIOUS_BUTTON = $BUTTON_WindowsPE
-
-
-Set-Variable -Option Constant LABEL_WindowsPE (New-Object System.Windows.Forms.Label)
-$LABEL_WindowsPE.Size = $CHECKBOX_SIZE
-$LABEL_WindowsPE.Text = $TXT_OPENS_IN_BROWSER
-$LABEL_WindowsPE.Location = $PREVIOUS_BUTTON.Location + $SHIFT_LABEL_BROWSER
-$GROUP_Tools.Controls.Add($LABEL_WindowsPE)
-$PREVIOUS_BUTTON = $BUTTON_WindowsPE
+$BUTTON_TEXT = 'Windows PE (Live CD)'
+$TOOLTIP_TEXT = 'Download Windows PE (Live CD) ISO image based on Windows 10'
+$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_PE }
+New-ButtonBrowser $BUTTON_TEXT $BUTTON_FUNCTION -ToolTip $TOOLTIP_TEXT > $Null

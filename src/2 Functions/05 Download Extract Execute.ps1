@@ -1,13 +1,12 @@
 Function Start-DownloadExtractExecute {
     Param(
-        [String][Parameter(Position = 0)]$URL = $(Add-Log $ERR "$($MyInvocation.MyCommand.Name): No URL specified"),
+        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
         [String][Parameter(Position = 1)]$FileName,
         [String][Parameter(Position = 2)]$Params,
         [Switch]$AVWarning,
         [Switch]$Execute,
         [Switch]$SilentInstall
     )
-    if (-not $URL) { Return }
 
     if ($AVWarning -and -not $AVWarningShown) {
         Add-Log $WRN $TXT_AV_WARNING
