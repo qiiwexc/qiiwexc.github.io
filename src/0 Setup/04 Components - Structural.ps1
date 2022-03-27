@@ -1,36 +1,54 @@
 Function New-Tab {
     Param(
-        [String][Parameter(Position = 0)]$Text
+        [String][Parameter(Position = 0, Mandatory = $True)]$Text
     )
 
-    Set-Variable -Option Constant Tab (New-Object System.Windows.Forms.TabPage)
+    Set-Variable -Option Constant TabPage (New-Object System.Windows.Forms.TabPage)
 
-    $Tab.UseVisualStyleBackColor = $True
-    $Tab.Text = $Text
+    $TabPage.UseVisualStyleBackColor = $True
+    $TabPage.Text = $Text
 
-    $TAB_CONTROL.Controls.Add($Tab)
+    $TAB_CONTROL.Controls.Add($TabPage)
 
-    Set-Variable -Scope Script CURRENT_TAB $Tab
+    Set-Variable -Scope Script PREVIOUS_GROUP $Null
+    Set-Variable -Scope Script CURRENT_TAB $TabPage
 }
 
 Function New-GroupBox {
     Param(
-        [String][Parameter(Position = 0)]$Text,
-        [System.Drawing.Point][Parameter(Position = 1)]$Location
+        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+        [Int][Parameter(Position = 1)]$IndexOverride
     )
 
     Set-Variable -Option Constant GroupBox (New-Object System.Windows.Forms.GroupBox)
 
-    $GroupBox.Width = $GROUP_WIDTH
+    Set-Variable -Scope Script PREVIOUS_GROUP $CURRENT_GROUP
 
+    [Int]$GroupIndex = 0
+
+    if ($IndexOverride) {
+        $GroupIndex = $IndexOverride
+    }
+    else {
+        $CURRENT_TAB.Controls | ForEach-Object { $GroupIndex += $_.Length }
+    }
+
+    if ($GroupIndex -lt 3) {
+        Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { "$INTERVAL_NORMAL, $INTERVAL_NORMAL" } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + $INTERVAL_NORMAL), 0" })
+    }
+    else {
+        Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
+        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + $INTERVAL_NORMAL)")
+    }
+
+    $GroupBox.Width = $GROUP_WIDTH
     $GroupBox.Text = $Text
-    $GroupBox.Height = 20
     $GroupBox.Location = $Location
 
     $CURRENT_TAB.Controls.Add($GroupBox)
 
-    Set-Variable -Scope Script PREVIOUS_BUTTON $False
+    Set-Variable -Scope Script PREVIOUS_BUTTON $Null
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
 
     Set-Variable -Scope Script CURRENT_GROUP $GroupBox
-    Return $GroupBox
 }

@@ -8,7 +8,7 @@ Function Start-DownloadExtractExecute {
         [Switch]$SilentInstall
     )
 
-    if ($AVWarning -and -not $AVWarningShown) {
+    if ($AVWarning -and !$AVWarningShown) {
         Add-Log $WRN $TXT_AV_WARNING
         Add-Log $WRN 'Click the button again to continue'
         Set-Variable -Option Constant -Scope Script AVWarningShown $True

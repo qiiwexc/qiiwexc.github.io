@@ -22,7 +22,7 @@ Function Start-Download {
     try {
         Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
         (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
-        if (-not $Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
+        if (!$Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
 
         if (Test-Path $SavePath) { Out-Success }
         else { Throw 'Possibly computer is offline or disk is full' }

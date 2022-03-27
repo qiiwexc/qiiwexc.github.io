@@ -16,9 +16,8 @@ Set-Variable -Option Constant WRN 'WRN'
 Function Add-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN')]$Level,
-        [String][Parameter(Position = 1)]$Message = (Write-Host -NoNewline "`n$($MyInvocation.MyCommand.Name): Log message missing")
+        [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
-    if (-not $Message) { Return }
 
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
     Switch ($Level) { $WRN { Write-Warning $Text } $INF { Write-Host $Text } Default { Write-Host $Message } }

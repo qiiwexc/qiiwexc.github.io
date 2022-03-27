@@ -31,7 +31,7 @@ Function Initialize-Startup {
 
     Get-CurrentVersion
 
-    if (-not (Test-Path "$PATH_PROGRAM_FILES_86\Unchecky\unchecky.exe")) {
+    if (!(Test-Path "$PATH_PROGRAM_FILES_86\Unchecky\unchecky.exe")) {
         Add-Log $WRN 'Unchecky is not installed.'
         Add-Log $INF 'It is highly recommended to install Unchecky (see Downloads -> Essentials -> Unchecky).'
         Add-Log $INF "$TXT_UNCHECKY_INFO."
@@ -46,7 +46,7 @@ Function Initialize-Startup {
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
     if ($NetworkAdapter) {
         Set-Variable -Option Constant CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder
-        if (-not ($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
+        if (!($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
             Add-Log $INF '  privacy online (see Maintenance -> Optimization -> Setup CouldFlare DNS).'
