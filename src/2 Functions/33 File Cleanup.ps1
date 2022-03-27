@@ -259,7 +259,6 @@ Function Start-FileCleanup {
         "$PATH_PROGRAM_FILES_86\WinRAR\ReadMe.txt"
         "$PATH_PROGRAM_FILES_86\WinRAR\WhatsNew.txt"
         "$PATH_PROGRAM_FILES_86\WinRAR\WinRAR.chm"
-        "$PATH_PROGRAM_FILES_86\WinSCP\PuTTY\putty.chm"
         "$env:ProgramFiles\7-Zip\7-zip.chm"
         "$env:ProgramFiles\7-Zip\7-zip.dll.tmp"
         "$env:ProgramFiles\7-Zip\descript.ion"
@@ -452,7 +451,7 @@ Function Start-FileCleanup {
         }
     }
 
-    if (-not $IS_ELEVATED) {
+    if (!$IS_ELEVATED) {
         Add-Log $WRN 'Removal of certain files requires administrator privileges. To remove them, restart the utility'
         Add-Log $WRN '  as administrator (see Home -> This utility -> Run as administrator) and run this task again.'
     }

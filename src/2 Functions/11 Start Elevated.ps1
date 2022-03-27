@@ -1,5 +1,5 @@
 Function Start-Elevated {
-    if (-not $IS_ELEVATED) {
+    if (!$IS_ELEVATED) {
         Add-Log $INF 'Requesting administrator privileges...'
 
         try { Start-ExternalProcess -Elevated "$($MyInvocation.ScriptName)$(if ($HIDE_CONSOLE) {' -HideConsole'})" }

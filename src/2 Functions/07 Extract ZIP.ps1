@@ -45,12 +45,12 @@ Function Start-Extraction {
 
     Remove-Item -Force -ErrorAction SilentlyContinue $ZipPath
 
-    if (-not $IsDirectory) {
+    if (!$IsDirectory) {
         Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
         if ($ExtractionPath) { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath }
     }
 
-    if ( -not $Execute -and $IsDirectory) {
+    if (!$Execute -and $IsDirectory) {
         Remove-Item -Force -ErrorAction SilentlyContinue -Recurse "$TargetPath\$ExtractionDir"
         Move-Item -Force -ErrorAction SilentlyContinue $TemporaryPath $TargetPath
     }

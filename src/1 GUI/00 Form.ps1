@@ -1,4 +1,4 @@
-Set-Variable -Option Constant FORM (New-Object System.Windows.Forms.Form) > $Null
+Set-Variable -Option Constant FORM (New-Object System.Windows.Forms.Form)
 $FORM.Text = $HOST.UI.RawUI.WindowTitle
 $FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
 $FORM.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\PowerShell.exe')
