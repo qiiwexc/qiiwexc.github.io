@@ -29,7 +29,7 @@ $CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -NoInterval -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED -ToolTip 'Perform silent installation with no prompts'
+$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED -ToolTip 'Perform silent installation with no prompts'
 $CHECKBOX_SilentlyInstallUnchecky.Add_CheckStateChanged( { $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) { $REQUIRES_ELEVATION })" } )
 
 

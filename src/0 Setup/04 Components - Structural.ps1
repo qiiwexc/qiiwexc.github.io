@@ -48,7 +48,7 @@ Function New-GroupBox {
     $CURRENT_TAB.Controls.Add($GroupBox)
 
     Set-Variable -Scope Script PREVIOUS_BUTTON $Null
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $Null
 
     Set-Variable -Scope Script CURRENT_GROUP $GroupBox
 }
