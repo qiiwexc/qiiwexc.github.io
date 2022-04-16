@@ -21,8 +21,19 @@ Function New-Button {
 
     Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
 
-    [System.Drawing.Point]$InitialLocation = if ($PREVIOUS_BUTTON) { $PREVIOUS_BUTTON.Location } else { $INITIAL_LOCATION_BUTTON }
-    [System.Drawing.Point]$Shift = "0, $(if ($PREVIOUS_LABEL_OR_CHECKBOX) { $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y } elseif ($PREVIOUS_BUTTON) { $INTERVAL_BUTTON_NORMAL } else { 0 })"
+    [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
+    [System.Drawing.Point]$Shift = "0, 0"
+
+    if ($PREVIOUS_BUTTON) {
+        $InitialLocation = $PREVIOUS_BUTTON.Location
+        $Shift = "0, $INTERVAL_BUTTON_NORMAL"
+    }
+
+    if ($PREVIOUS_LABEL_OR_INTERACTIVE) {
+        $InitialLocation.Y = $PREVIOUS_LABEL_OR_INTERACTIVE.Location.Y
+        $Shift = "0, $INTERVAL_BUTTON_SHORT"
+    }
+
     [System.Drawing.Point]$Location = $InitialLocation + $Shift
 
     $Button.Font = $BUTTON_FONT
@@ -39,7 +50,7 @@ Function New-Button {
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON_NORMAL
     $CURRENT_GROUP.Controls.Add($Button)
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $Null
     Set-Variable -Scope Script PREVIOUS_BUTTON $Button
 
     Return $Button

@@ -7,21 +7,13 @@ $BUTTON_FUNCTION = { Start-DiskCheck $RADIO_FullDiskCheck.Checked }
 New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
-Set-Variable -Option Constant RADIO_QuickDiskCheck (New-Object System.Windows.Forms.RadioButton)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($RADIO_QuickDiskCheck, 'Perform a quick disk scan')
-$RADIO_QuickDiskCheck.Checked = $True
-$RADIO_QuickDiskCheck.Text = 'Quick scan'
-$RADIO_QuickDiskCheck.Location = $PREVIOUS_BUTTON.Location + "10, $($INTERVAL_BUTTON_SHORT - $INTERVAL_SHORT)"
-$RADIO_QuickDiskCheck.Size = "80, 20"
-$CURRENT_GROUP.Controls.Add($RADIO_QuickDiskCheck)
+$RADIO_TEXT = 'Quick scan'
+$RADIO_TOOLTIP_TEXT = 'Perform a quick disk scan'
+$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -ToolTip $RADIO_TOOLTIP_TEXT -Checked
 
-
-Set-Variable -Option Constant RADIO_FullDiskCheck (New-Object System.Windows.Forms.RadioButton)
-(New-Object System.Windows.Forms.ToolTip).SetToolTip($RADIO_FullDiskCheck, 'Schedule a full disk scan on next restart')
-$RADIO_FullDiskCheck.Text = 'Full scan'
-$RADIO_FullDiskCheck.Location = $RADIO_QuickDiskCheck.Location + "80, 0"
-$RADIO_FullDiskCheck.Size = "80, 20"
-$CURRENT_GROUP.Controls.Add($RADIO_FullDiskCheck)
+$RADIO_TEXT = 'Full scan'
+$RADIO_TOOLTIP_TEXT = 'Schedule a full disk scan on next restart'
+$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT -ToolTip $RADIO_TOOLTIP_TEXT
 
 
 $BUTTON_DownloadVictoria = New-Button -UAC 'Victoria (HDD scan)' -ToolTip 'Download Victoria HDD scanner'
