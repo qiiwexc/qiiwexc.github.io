@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.4.27')
+Set-Variable -Option Constant Version ([Version]'22.4.28')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -697,15 +697,8 @@ New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP
 
 
 $BUTTON_TOOLTIP_TEXT = 'Start security scan'
-$BUTTON_DISABLED = !(Test-Path $PATH_DEFENDER_EXE)
 $BUTTON_FUNCTION = { Start-SecurityScan }
-New-Button 'Perform a security scan' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT -Disabled:$BUTTON_DISABLED > $Null
-
-
-$BUTTON_TOOLTIP_TEXT = 'Start malware scan'
-$BUTTON_DISABLED = !(Test-Path $PATH_DEFENDER_EXE)
-$BUTTON_FUNCTION = { Start-MalwareScan }
-New-Button -UAC 'Perform a malware scan' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT -Disabled:$BUTTON_DISABLED > $Null
+New-Button 'Perform security scans' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1289,29 +1282,13 @@ Function Test-WindowsHealth {
 
 
 Function Start-SecurityScan {
-    if ($OS_VERSION -gt 7) {
-        Add-Log $INF 'Updating security signatures...'
-
-        try { Start-ExternalProcess -Wait -Title:'Updating security signatures...' "Start-Process '$PATH_DEFENDER_EXE' '-SignatureUpdate' -NoNewWindow" }
-        catch [Exception] { Add-Log $ERR "Failed to update security signatures: $($_.Exception.Message)"; Return }
-
-        Out-Success
-    }
+    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and !(Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate' -NoNewWindow" })
+    Set-Variable -Option Constant Scan $(if (!(Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2' -NoNewWindow" })
+    Set-Variable -Option Constant MRT "Start-Process -Verb RunAs 'mrt' '/q /f:y'"
 
     Add-Log $INF "Performing a security scan..."
-
-    try { Start-ExternalProcess -Title:'Security scan is running...' "Start-Process '$PATH_DEFENDER_EXE' '-Scan -ScanType 2' -NoNewWindow" }
+    try { Start-ExternalProcess -Title:'Performing a security scan...' @($SignatureUpdate, $Scan, $MRT) }
     catch [Exception] { Add-Log $ERR "Failed to perform a security scan: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-MalwareScan {
-    Add-Log $INF "Starting malware scan..."
-
-    try { Start-Process -Verb RunAs 'mrt' '/q /f:y' }
-    catch [Exception] { Add-Log $ERR "Failed to perform malware scan: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1619,7 +1596,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Google\Update\Offline"
         "$env:ProgramFiles\Google\Update\Offline\*"
         "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
-        "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses\*"
         "$env:ProgramFiles\Mozilla Firefox\install.log"
