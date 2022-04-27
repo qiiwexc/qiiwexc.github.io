@@ -298,7 +298,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Google\Update\Offline"
         "$env:ProgramFiles\Google\Update\Offline\*"
         "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
-        "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses\*"
         "$env:ProgramFiles\Mozilla Firefox\install.log"
