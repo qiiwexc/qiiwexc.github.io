@@ -302,7 +302,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
         "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses\*"
-        "$env:ProgramFiles\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$env:ProgramFiles\Mozilla Firefox\install.log"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs\*"
