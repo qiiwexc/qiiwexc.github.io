@@ -229,7 +229,6 @@ Function Start-FileCleanup {
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc\*"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
-        "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\License_en_US.rtf"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\VirtualBox.chm"
         "$PATH_PROGRAM_FILES_86\paint.net\Staging"
         "$PATH_PROGRAM_FILES_86\paint.net\Staging\*"
