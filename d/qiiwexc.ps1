@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.4.28')
+Set-Variable -Option Constant Version ([Version]'22.5.2')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -696,29 +696,19 @@ $BUTTON_FUNCTION = { Test-WindowsHealth }
 New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
-$BUTTON_TOOLTIP_TEXT = 'Start security scan'
-$BUTTON_FUNCTION = { Start-SecurityScan }
-New-Button 'Perform security scans' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Cleanup'
-
-
-$BUTTON_TOOLTIP_TEXT = 'Remove temporary files, some log files and empty directories, and some other unnecessary files'
-$BUTTON_FUNCTION = { Start-FileCleanup }
-New-Button -UAC 'File cleanup' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
-
-
-$BUTTON_TOOLTIP_TEXT = 'Start Windows built-in disk cleanup utility'
+$BUTTON_TOOLTIP_TEXT = 'Remove temporary files, some log files and empty directories, and some other unnecessary files; start Windows built-in disk cleanup utility'
 $BUTTON_FUNCTION = { Start-DiskCleanup }
 New-Button 'Start disk cleanup' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
+$BUTTON_TOOLTIP_TEXT = 'Start security scans'
+$BUTTON_FUNCTION = { Start-SecurityScans }
+New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Optimization' 5
+New-GroupBox 'Optimization'
 
 
 $BUTTON_TOOLTIP_TEXT = 'Set DNS server to CouldFlare DNS'
@@ -930,7 +920,7 @@ Function Start-ExternalProcess {
     )
 
     if ($Title) { $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands }
-    Set-Variable -Option Constant FullCommand $([String]$($Commands | ForEach-Object { "$_;" }))
+    Set-Variable -Option Constant FullCommand $([String]$($Commands | Where-Object { $_ -ne '' } | ForEach-Object { "$_;" }))
 
     Start-Process 'PowerShell' "-Command $FullCommand" -Wait:$Wait -Verb:$(if ($Elevated) { 'RunAs' } else { 'Open' }) -WindowStyle:$(if ($Hidden) { 'Hidden' } else { 'Normal' })
 }
@@ -1269,9 +1259,9 @@ Function Start-MemoryCheckTool {
 Function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
 
-    Set-Variable -Option Constant ComponentCleanup $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /StartComponentCleanup'" })
+    Set-Variable -Option Constant ComponentCleanup $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /StartComponentCleanup'" } else { '' })
     Set-Variable -Option Constant ScanHealth "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /ScanHealth'"
-    Set-Variable -Option Constant RestoreHealth $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /RestoreHealth'" })
+    Set-Variable -Option Constant RestoreHealth $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /RestoreHealth'" } else { '' })
     Set-Variable -Option Constant SFC "Start-Process -NoNewWindow 'sfc' '/scannow'"
 
     try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' @($ComponentCleanup, $ScanHealth, $RestoreHealth, $SFC) }
@@ -1281,22 +1271,22 @@ Function Test-WindowsHealth {
 }
 
 
-Function Start-SecurityScan {
-    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and !(Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate' -NoNewWindow" })
-    Set-Variable -Option Constant Scan $(if (!(Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2' -NoNewWindow" })
+Function Start-SecurityScans {
+    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and !(Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate' -NoNewWindow" } else { '' })
+    Set-Variable -Option Constant Scan $(if (!(Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
     Set-Variable -Option Constant MRT "Start-Process -Verb RunAs 'mrt' '/q /f:y'"
 
-    Add-Log $INF "Performing a security scan..."
-    try { Start-ExternalProcess -Title:'Performing a security scan...' @($SignatureUpdate, $Scan, $MRT) }
-    catch [Exception] { Add-Log $ERR "Failed to perform a security scan: $($_.Exception.Message)"; Return }
+    Add-Log $INF "Performing security scans..."
+    try { Start-ExternalProcess -Elevated -Title:'Performing security scans...' @($SignatureUpdate, $Scan, $MRT) }
+    catch [Exception] { Add-Log $ERR "Failed to perform security scans: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# File Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Disk Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Function Start-FileCleanup {
+Function Start-DiskCleanup {
     Set-Variable -Option Constant LogMessage 'Removing unnecessary files...'
     Add-Log $INF $LogMessage
 
@@ -1563,7 +1553,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\7-Zip\readme.txt"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
-        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$env:ProgramFiles\CCleaner\Setup"
@@ -1753,12 +1742,7 @@ Function Start-FileCleanup {
 
     Add-Log $INF $LogMessage
     Out-Success
-}
 
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# System Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Start-DiskCleanup {
     Add-Log $INF 'Starting disk cleanup utility...'
 
     try { Start-Process -Verb RunAs 'cleanmgr' '/lowdisk' }

@@ -1,4 +1,4 @@
-Function Start-FileCleanup {
+Function Start-DiskCleanup {
     Set-Variable -Option Constant LogMessage 'Removing unnecessary files...'
     Add-Log $INF $LogMessage
 
@@ -265,7 +265,6 @@ Function Start-FileCleanup {
         "$env:ProgramFiles\7-Zip\readme.txt"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
-        "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$env:ProgramFiles\CCleaner\Setup"
@@ -454,5 +453,12 @@ Function Start-FileCleanup {
     else { Add-Log $INF 'Some files are in use, so they cannot be deleted.' }
 
     Add-Log $INF $LogMessage
+    Out-Success
+
+    Add-Log $INF 'Starting disk cleanup utility...'
+
+    try { Start-Process -Verb RunAs 'cleanmgr' '/lowdisk' }
+    catch [Exception] { Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"; Return }
+
     Out-Success
 }

@@ -1,4 +1,4 @@
-New-GroupBox 'Optimization' 5
+New-GroupBox 'Optimization'
 
 
 $BUTTON_TOOLTIP_TEXT = 'Set DNS server to CouldFlare DNS'
