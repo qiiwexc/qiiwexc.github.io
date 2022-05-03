@@ -14,8 +14,8 @@ Function Test-WindowsHealth {
 
 
 Function Start-SecurityScans {
-    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and !(Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate' -NoNewWindow" } else { '' })
-    Set-Variable -Option Constant Scan $(if (!(Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
+    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and (Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate'" } else { '' })
+    Set-Variable -Option Constant Scan $(if (Test-Path $PATH_DEFENDER_EXE) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
     Set-Variable -Option Constant MRT "Start-Process -Verb RunAs 'mrt' '/q /f:y'"
 
     Add-Log $INF "Performing security scans..."
