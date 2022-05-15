@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.5.3')
+Set-Variable -Option Constant Version ([Version]'22.5.15')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1274,7 +1274,7 @@ Function Test-WindowsHealth {
 Function Start-SecurityScans {
     Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and (Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate'" } else { '' })
     Set-Variable -Option Constant Scan $(if (Test-Path $PATH_DEFENDER_EXE) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
-    Set-Variable -Option Constant MRT "Start-Process -Verb RunAs 'mrt' '/q /f:y'"
+    Set-Variable -Option Constant MRT "Start-Process -NoNewWindow -Wait 'mrt' '/q /f:y'"
 
     Add-Log $INF "Performing security scans..."
     try { Start-ExternalProcess -Elevated -Title:'Performing security scans...' @($SignatureUpdate, $Scan, $MRT) }
@@ -1549,7 +1549,6 @@ Function Start-DiskCleanup {
         "$env:ProgramFiles\7-Zip\7-zip.dll.tmp"
         "$env:ProgramFiles\7-Zip\descript.ion"
         "$env:ProgramFiles\7-Zip\History.txt"
-        "$env:ProgramFiles\7-Zip\License.txt"
         "$env:ProgramFiles\7-Zip\readme.txt"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
