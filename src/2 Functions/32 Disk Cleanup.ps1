@@ -261,7 +261,6 @@ Function Start-DiskCleanup {
         "$env:ProgramFiles\7-Zip\7-zip.dll.tmp"
         "$env:ProgramFiles\7-Zip\descript.ion"
         "$env:ProgramFiles\7-Zip\History.txt"
-        "$env:ProgramFiles\7-Zip\License.txt"
         "$env:ProgramFiles\7-Zip\readme.txt"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$env:ProgramFiles\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
