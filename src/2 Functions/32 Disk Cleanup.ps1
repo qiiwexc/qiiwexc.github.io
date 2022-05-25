@@ -244,7 +244,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\TeamViewer\*.txt"
         "$PATH_PROGRAM_FILES_86\TeamViewer\TeamViewer_Note.exe"
         "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\AUTHORS.txt"
-        "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\COPYING.txt"
         "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\Documentation.url"
         "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\New_Skins.url"
         "$PATH_PROGRAM_FILES_86\VideoLAN\VLC\NEWS.txt"
