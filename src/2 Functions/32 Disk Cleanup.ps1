@@ -232,7 +232,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\VirtualBox.chm"
         "$PATH_PROGRAM_FILES_86\paint.net\Staging"
         "$PATH_PROGRAM_FILES_86\paint.net\Staging\*"
-        "$PATH_PROGRAM_FILES_86\PuTTY\LICENCE"
         "$PATH_PROGRAM_FILES_86\PuTTY\putty.chm"
         "$PATH_PROGRAM_FILES_86\PuTTY\README.txt"
         "$PATH_PROGRAM_FILES_86\PuTTY\website.url"
