@@ -17,7 +17,6 @@ Set-Variable -Option Constant URL_CCLEANER   'https://download.ccleaner.com/ccse
 Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.18/rufus-3.18p.exe'
 Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
-Set-Variable -Option Constant URL_CHROME_HTTPS   'https://chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp'
 Set-Variable -Option Constant URL_CHROME_ADBLOCK 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
 Set-Variable -Option Constant URL_CHROME_YOUTUBE 'https://chrome.google.com/webstore/detail/gebbhagfogifgggkldgodflihgfeippi'
 
