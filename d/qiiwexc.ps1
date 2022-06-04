@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.5.30')
+Set-Variable -Option Constant Version ([Version]'22.6.4')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -91,7 +91,6 @@ Set-Variable -Option Constant URL_CCLEANER   'https://download.ccleaner.com/ccse
 Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.18/rufus-3.18p.exe'
 Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
-Set-Variable -Option Constant URL_CHROME_HTTPS   'https://chrome.google.com/webstore/detail/gcbommkclmclpchllfjekcdonpmejbdp'
 Set-Variable -Option Constant URL_CHROME_ADBLOCK 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
 Set-Variable -Option Constant URL_CHROME_YOUTUBE 'https://chrome.google.com/webstore/detail/gebbhagfogifgggkldgodflihgfeippi'
 
@@ -1503,7 +1502,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Mozilla Maintenance Service\logs\*"
         "$PATH_PROGRAM_FILES_86\Notepad++\change.log"
         "$PATH_PROGRAM_FILES_86\Notepad++\readme.txt"
-        "$PATH_PROGRAM_FILES_86\Notepad++\updater\LICENSE"
         "$PATH_PROGRAM_FILES_86\Notepad++\updater\README.md"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\license.txt"

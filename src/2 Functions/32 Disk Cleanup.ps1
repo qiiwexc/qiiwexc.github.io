@@ -221,7 +221,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Mozilla Maintenance Service\logs\*"
         "$PATH_PROGRAM_FILES_86\Notepad++\change.log"
         "$PATH_PROGRAM_FILES_86\Notepad++\readme.txt"
-        "$PATH_PROGRAM_FILES_86\Notepad++\updater\LICENSE"
         "$PATH_PROGRAM_FILES_86\Notepad++\updater\README.md"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\license.txt"
