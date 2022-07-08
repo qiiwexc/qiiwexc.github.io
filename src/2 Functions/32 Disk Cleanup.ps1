@@ -223,7 +223,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PATH_PROGRAM_FILES_86\Notepad++\updater\README.md"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
-        "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\license.txt"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc\*"

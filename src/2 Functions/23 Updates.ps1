@@ -1,13 +1,3 @@
-Function Start-StoreAppUpdate {
-    Add-Log $INF 'Starting Microsoft Store apps update...'
-
-    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()" }
-    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
@@ -19,6 +9,13 @@ Function Start-OfficeUpdate {
 
 
 Function Start-WindowsUpdate {
+    try {
+        Add-Log $INF 'Starting Microsoft Store apps update...'
+        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
+        Out-Success
+    }
+    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
+
     Add-Log $INF 'Starting Windows Update...'
 
     try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
