@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.6.4')
+Set-Variable -Option Constant Version ([Version]'22.7.8')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -88,7 +88,7 @@ Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/win
 Set-Variable -Option Constant URL_WINDOWS_XP 'https://drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'
 
 Set-Variable -Option Constant URL_CCLEANER   'https://download.ccleaner.com/ccsetup.exe'
-Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.18/rufus-3.18p.exe'
+Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.19/rufus-3.19p.exe'
 Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
 Set-Variable -Option Constant URL_CHROME_ADBLOCK 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
@@ -622,19 +622,13 @@ $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Of
 New-GroupBox 'Updates'
 
 
-$BUTTON_TOOLTIP_TEXT = 'Update Microsoft Store apps'
-$BUTTON_DISABLED = $OS_VERSION -le 7
-$BUTTON_FUNCTION = { Start-StoreAppUpdate }
-New-Button -UAC 'Update Store apps' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT -Disabled:$BUTTON_DISABLED > $Null
-
-
 $BUTTON_TOOLTIP_TEXT = 'Update Microsoft Office (for C2R installations only)'
 $BUTTON_DISABLED = !$OFFICE_INSTALL_TYPE -eq 'C2R'
 $BUTTON_FUNCTION = { Start-OfficeUpdate }
 New-Button 'Update Microsoft Office' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT -Disabled:$BUTTON_DISABLED > $Null
 
 
-$BUTTON_TOOLTIP_TEXT = 'Check for Windows updates, download and install if available'
+$BUTTON_TOOLTIP_TEXT = 'Check for Windows and Microsoft Store apps updates, download and install if available'
 $BUTTON_FUNCTION = { Start-WindowsUpdate }
 New-Button -UAC 'Start Windows Update' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
@@ -1192,16 +1186,6 @@ Function Set-NiniteFileName {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Function Start-StoreAppUpdate {
-    Add-Log $INF 'Starting Microsoft Store apps update...'
-
-    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()" }
-    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 Function Start-OfficeUpdate {
     Add-Log $INF 'Starting Microsoft Office update...'
 
@@ -1213,6 +1197,13 @@ Function Start-OfficeUpdate {
 
 
 Function Start-WindowsUpdate {
+    try {
+        Add-Log $INF 'Starting Microsoft Store apps update...'
+        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
+        Out-Success
+    }
+    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
+
     Add-Log $INF 'Starting Windows Update...'
 
     try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
@@ -1504,7 +1495,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PATH_PROGRAM_FILES_86\Notepad++\updater\README.md"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
-        "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\license.txt"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc\*"

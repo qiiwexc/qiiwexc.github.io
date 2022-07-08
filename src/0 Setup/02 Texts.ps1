@@ -14,7 +14,7 @@ Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/win
 Set-Variable -Option Constant URL_WINDOWS_XP 'https://drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'
 
 Set-Variable -Option Constant URL_CCLEANER   'https://download.ccleaner.com/ccsetup.exe'
-Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.18/rufus-3.18p.exe'
+Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.19/rufus-3.19p.exe'
 Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
 Set-Variable -Option Constant URL_CHROME_ADBLOCK 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
