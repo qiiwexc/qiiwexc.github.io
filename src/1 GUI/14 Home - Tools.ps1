@@ -1,14 +1,6 @@
 New-GroupBox 'Tools'
 
 
-$BUTTON_DownloadCCleaner = New-Button -UAC 'CCleaner' -ToolTip 'Download CCleaner installer'
-$BUTTON_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCCleaner.Checked $URL_CCLEANER } )
-
-
-$CHECKBOX_StartCCleaner = New-CheckBoxRunAfterDownload -Checked
-$CHECKBOX_StartCCleaner.Add_CheckStateChanged( { $BUTTON_DownloadCCleaner.Text = "CCleaner$(if ($CHECKBOX_StartCCleaner.Checked) { $REQUIRES_ELEVATION })" } )
-
-
 $BUTTON_DownloadRufus = New-Button -UAC 'Rufus (bootable USB)' -ToolTip 'Download Rufus - a bootable USB creator'
 $BUTTON_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' } )
 

@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.7.8')
+Set-Variable -Option Constant Version ([Version]'22.7.23')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -44,7 +44,7 @@ Set-Variable -Option Constant INTERVAL_CHECKBOX ($CHECKBOX_HEIGHT + $INTERVAL_SH
 Set-Variable -Option Constant GROUP_WIDTH ($INTERVAL_NORMAL + $BUTTON_WIDTH + $INTERVAL_NORMAL)
 
 Set-Variable -Option Constant FORM_WIDTH  (($GROUP_WIDTH + $INTERVAL_NORMAL) * 3 + ($INTERVAL_NORMAL * 2))
-Set-Variable -Option Constant FORM_HEIGHT ($INTERVAL_BUTTON_NORMAL * 14)
+Set-Variable -Option Constant FORM_HEIGHT ($INTERVAL_BUTTON_NORMAL * 13)
 
 Set-Variable -Option Constant INITIAL_LOCATION_BUTTON "$INTERVAL_NORMAL, 20"
 
@@ -87,7 +87,6 @@ Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/win
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 Set-Variable -Option Constant URL_WINDOWS_XP 'https://drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'
 
-Set-Variable -Option Constant URL_CCLEANER   'https://download.ccleaner.com/ccsetup.exe'
 Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.19/rufus-3.19p.exe'
 Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
@@ -483,14 +482,6 @@ New-ButtonBrowser 'Windows XP SP3 (ENG)' $BUTTON_FUNCTION -ToolTip 'Download Win
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Tools'
-
-
-$BUTTON_DownloadCCleaner = New-Button -UAC 'CCleaner' -ToolTip 'Download CCleaner installer'
-$BUTTON_DownloadCCleaner.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCCleaner.Checked $URL_CCLEANER } )
-
-
-$CHECKBOX_StartCCleaner = New-CheckBoxRunAfterDownload -Checked
-$CHECKBOX_StartCCleaner.Add_CheckStateChanged( { $BUTTON_DownloadCCleaner.Text = "CCleaner$(if ($CHECKBOX_StartCCleaner.Checked) { $REQUIRES_ELEVATION })" } )
 
 
 $BUTTON_DownloadRufus = New-Button -UAC 'Rufus (bootable USB)' -ToolTip 'Download Rufus - a bootable USB creator'
@@ -1494,7 +1485,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Notepad++\change.log"
         "$PATH_PROGRAM_FILES_86\Notepad++\readme.txt"
         "$PATH_PROGRAM_FILES_86\Notepad++\updater\README.md"
-        "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\Ansel\Tools\tools_licenses.txt"
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc\*"
