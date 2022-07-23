@@ -13,7 +13,6 @@ Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/win
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 Set-Variable -Option Constant URL_WINDOWS_XP 'https://drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'
 
-Set-Variable -Option Constant URL_CCLEANER   'https://download.ccleaner.com/ccsetup.exe'
 Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.19/rufus-3.19p.exe'
 Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
