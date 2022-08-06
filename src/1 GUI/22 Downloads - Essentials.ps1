@@ -41,3 +41,8 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2021$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })" } )
+
+
+$BUTTON_TOOLTIP_TEXT = 'Check for Microsoft Windows, Microsoft Office and Microsoft Store apps updates, download and install if available'
+$BUTTON_FUNCTION = { Start-Updates }
+New-Button -UAC 'Check for Updates' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null

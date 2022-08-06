@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.7.23')
+Set-Variable -Option Constant Version ([Version]'22.8.6')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -87,7 +87,7 @@ Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/win
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 Set-Variable -Option Constant URL_WINDOWS_XP 'https://drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'
 
-Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.19/rufus-3.19p.exe'
+Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20p.exe'
 Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
 Set-Variable -Option Constant URL_CHROME_ADBLOCK 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
@@ -458,27 +458,6 @@ $CHECKBOX_StartAAct = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED 
 $CHECKBOX_StartAAct.Add_CheckStateChanged( { $BUTTON_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CHECKBOX_StartAAct.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Windows Images'
-
-
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_11 }
-New-ButtonBrowser 'Windows 11 (v21H2)' $BUTTON_FUNCTION -ToolTip 'Download Windows 11 (v21H2) RUS-ENG -26in1- HWID-act v2 (AIO) ISO image'
-
-
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_10 }
-New-ButtonBrowser 'Windows 10 (v21H2)' $BUTTON_FUNCTION -ToolTip 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image'
-
-
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
-New-ButtonBrowser 'Windows 7 SP1' $BUTTON_FUNCTION -ToolTip 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image'
-
-
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_XP }
-New-ButtonBrowser 'Windows XP SP3 (ENG)' $BUTTON_FUNCTION -ToolTip 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image'
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Tools'
@@ -496,6 +475,61 @@ $CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufu
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_PE }
 New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION -ToolTip 'Download Windows PE (Live CD) ISO image based on Windows 10'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Hardware Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Hardware Diagnostics'
+
+
+$BUTTON_TEXT = 'Check (C:) disk health'
+$BUTTON_TOOLTIP_TEXT = 'Start (C:) disk health check'
+$BUTTON_FUNCTION = { Start-DiskCheck $RADIO_FullDiskCheck.Checked }
+New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+
+
+$RADIO_TEXT = 'Quick scan'
+$RADIO_TOOLTIP_TEXT = 'Perform a quick disk scan'
+$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -ToolTip $RADIO_TOOLTIP_TEXT -Checked
+
+$RADIO_TEXT = 'Full scan'
+$RADIO_TOOLTIP_TEXT = 'Schedule a full disk scan on next restart'
+$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT -ToolTip $RADIO_TOOLTIP_TEXT
+
+
+$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria (HDD scan)' -ToolTip 'Download Victoria HDD scanner'
+$BUTTON_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA } )
+
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })" } )
+
+
+$BUTTON_TOOLTIP_TEXT = 'Start RAM checking utility'
+$BUTTON_FUNCTION = { Start-MemoryCheckTool }
+New-Button 'RAM checking utility' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Software Diagnostics'
+
+
+$BUTTON_TOOLTIP_TEXT = 'Check Windows health'
+$BUTTON_FUNCTION = { Test-WindowsHealth }
+New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+
+
+$BUTTON_TOOLTIP_TEXT = 'Remove temporary files, some log files and empty directories, and some other unnecessary files; start Windows built-in disk cleanup utility'
+$BUTTON_FUNCTION = { Start-DiskCleanup }
+New-Button 'Start disk cleanup' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+
+
+$BUTTON_TOOLTIP_TEXT = 'Start security scans'
+$BUTTON_FUNCTION = { Start-SecurityScans }
+New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Chrome Extension #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -608,83 +642,38 @@ $CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLE
 $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2021$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Updates'
-
-
-$BUTTON_TOOLTIP_TEXT = 'Update Microsoft Office (for C2R installations only)'
-$BUTTON_DISABLED = !$OFFICE_INSTALL_TYPE -eq 'C2R'
-$BUTTON_FUNCTION = { Start-OfficeUpdate }
-New-Button 'Update Microsoft Office' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT -Disabled:$BUTTON_DISABLED > $Null
+$BUTTON_TOOLTIP_TEXT = 'Check for Microsoft Windows, Microsoft Office and Microsoft Store apps updates, download and install if available'
+$BUTTON_FUNCTION = { Start-Updates }
+New-Button -UAC 'Check for Updates' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
-$BUTTON_TOOLTIP_TEXT = 'Check for Windows and Microsoft Store apps updates, download and install if available'
-$BUTTON_FUNCTION = { Start-WindowsUpdate }
-New-Button -UAC 'Start Windows Update' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Windows Images'
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant TAB_MAINTENANCE (New-Tab 'Maintenance')
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Hardware Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Hardware Diagnostics'
+$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_11 }
+New-ButtonBrowser 'Windows 11 (v21H2)' $BUTTON_FUNCTION -ToolTip 'Download Windows 11 (v21H2) RUS-ENG -26in1- HWID-act v2 (AIO) ISO image'
 
 
-$BUTTON_TEXT = 'Check (C:) disk health'
-$BUTTON_TOOLTIP_TEXT = 'Start (C:) disk health check'
-$BUTTON_FUNCTION = { Start-DiskCheck $RADIO_FullDiskCheck.Checked }
-New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_10 }
+New-ButtonBrowser 'Windows 10 (v21H2)' $BUTTON_FUNCTION -ToolTip 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image'
 
 
-$RADIO_TEXT = 'Quick scan'
-$RADIO_TOOLTIP_TEXT = 'Perform a quick disk scan'
-$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -ToolTip $RADIO_TOOLTIP_TEXT -Checked
-
-$RADIO_TEXT = 'Full scan'
-$RADIO_TOOLTIP_TEXT = 'Schedule a full disk scan on next restart'
-$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT -ToolTip $RADIO_TOOLTIP_TEXT
+$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
+New-ButtonBrowser 'Windows 7 SP1' $BUTTON_FUNCTION -ToolTip 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image'
 
 
-$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria (HDD scan)' -ToolTip 'Download Victoria HDD scanner'
-$BUTTON_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA } )
+$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_XP }
+New-ButtonBrowser 'Windows XP SP3 (ENG)' $BUTTON_FUNCTION -ToolTip 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image'
 
 
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })" } )
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant TAB_OPTIMIZATION (New-Tab 'Optimization')
 
 
-$BUTTON_TOOLTIP_TEXT = 'Start RAM checking utility'
-$BUTTON_FUNCTION = { Start-MemoryCheckTool }
-New-Button 'RAM checking utility' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Software Diagnostics'
-
-
-$BUTTON_TOOLTIP_TEXT = 'Check Windows health'
-$BUTTON_FUNCTION = { Test-WindowsHealth }
-New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
-
-
-$BUTTON_TOOLTIP_TEXT = 'Remove temporary files, some log files and empty directories, and some other unnecessary files; start Windows built-in disk cleanup utility'
-$BUTTON_FUNCTION = { Start-DiskCleanup }
-New-Button 'Start disk cleanup' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
-
-
-$BUTTON_TOOLTIP_TEXT = 'Start security scans'
-$BUTTON_FUNCTION = { Start-SecurityScans }
-New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Optimization'
 
@@ -1143,67 +1132,6 @@ Function Out-SystemInfo {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Set-NiniteButtonState {
-    $CHECKBOX_StartNinite.Enabled = $BUTTON_DownloadNinite.Enabled = $CHECKBOX_7zip.Checked -or $CHECKBOX_VLC.Checked -or `
-        $CHECKBOX_TeamViewer.Checked -or $CHECKBOX_Chrome.Checked -or $CHECKBOX_qBittorrent.Checked -or $CHECKBOX_Malwarebytes.Checked
-}
-
-
-Function Set-NiniteQuery {
-    [String[]]$Array = @()
-    if ($CHECKBOX_7zip.Checked) { $Array += $CHECKBOX_7zip.Name }
-    if ($CHECKBOX_VLC.Checked) { $Array += $CHECKBOX_VLC.Name }
-    if ($CHECKBOX_TeamViewer.Checked) { $Array += $CHECKBOX_TeamViewer.Name }
-    if ($CHECKBOX_Chrome.Checked) { $Array += $CHECKBOX_Chrome.Name }
-    if ($CHECKBOX_qBittorrent.Checked) { $Array += $CHECKBOX_qBittorrent.Name }
-    if ($CHECKBOX_Malwarebytes.Checked) { $Array += $CHECKBOX_Malwarebytes.Name }
-    Return $Array -Join '-'
-}
-
-
-Function Set-NiniteFileName {
-    [String[]]$Array = @()
-    if ($CHECKBOX_7zip.Checked) { $Array += $CHECKBOX_7zip.Text }
-    if ($CHECKBOX_VLC.Checked) { $Array += $CHECKBOX_VLC.Text }
-    if ($CHECKBOX_TeamViewer.Checked) { $Array += $CHECKBOX_TeamViewer.Text }
-    if ($CHECKBOX_Chrome.Checked) { $Array += $CHECKBOX_Chrome.Text }
-    if ($CHECKBOX_qBittorrent.Checked) { $Array += $CHECKBOX_qBittorrent.Text }
-    if ($CHECKBOX_Malwarebytes.Checked) { $Array += $CHECKBOX_Malwarebytes.Text }
-    Return "Ninite $($Array -Join ' ') Installer.exe"
-}
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Start-OfficeUpdate {
-    Add-Log $INF 'Starting Microsoft Office update...'
-
-    try { Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user' }
-    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-WindowsUpdate {
-    try {
-        Add-Log $INF 'Starting Microsoft Store apps update...'
-        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
-        Out-Success
-    }
-    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
-
-    Add-Log $INF 'Starting Windows Update...'
-
-    try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
-    catch [Exception] { Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Hardware #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-DiskCheck {
@@ -1331,7 +1259,6 @@ Function Start-DiskCleanup {
     }
 
     Set-Variable -Option Constant ItemsToDelete -Value @(
-        "$NewestJava86\COPYRIGHT"
         "$NewestJava86\LICENSE"
         "$NewestJava86\release"
         "$NewestJava86\*.html"
@@ -1716,6 +1643,65 @@ Function Start-DiskCleanup {
 
     try { Start-Process -Verb RunAs 'cleanmgr' '/lowdisk' }
     catch [Exception] { Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Set-NiniteButtonState {
+    $CHECKBOX_StartNinite.Enabled = $BUTTON_DownloadNinite.Enabled = $CHECKBOX_7zip.Checked -or $CHECKBOX_VLC.Checked -or `
+        $CHECKBOX_TeamViewer.Checked -or $CHECKBOX_Chrome.Checked -or $CHECKBOX_qBittorrent.Checked -or $CHECKBOX_Malwarebytes.Checked
+}
+
+
+Function Set-NiniteQuery {
+    [String[]]$Array = @()
+    if ($CHECKBOX_7zip.Checked) { $Array += $CHECKBOX_7zip.Name }
+    if ($CHECKBOX_VLC.Checked) { $Array += $CHECKBOX_VLC.Name }
+    if ($CHECKBOX_TeamViewer.Checked) { $Array += $CHECKBOX_TeamViewer.Name }
+    if ($CHECKBOX_Chrome.Checked) { $Array += $CHECKBOX_Chrome.Name }
+    if ($CHECKBOX_qBittorrent.Checked) { $Array += $CHECKBOX_qBittorrent.Name }
+    if ($CHECKBOX_Malwarebytes.Checked) { $Array += $CHECKBOX_Malwarebytes.Name }
+    Return $Array -Join '-'
+}
+
+
+Function Set-NiniteFileName {
+    [String[]]$Array = @()
+    if ($CHECKBOX_7zip.Checked) { $Array += $CHECKBOX_7zip.Text }
+    if ($CHECKBOX_VLC.Checked) { $Array += $CHECKBOX_VLC.Text }
+    if ($CHECKBOX_TeamViewer.Checked) { $Array += $CHECKBOX_TeamViewer.Text }
+    if ($CHECKBOX_Chrome.Checked) { $Array += $CHECKBOX_Chrome.Text }
+    if ($CHECKBOX_qBittorrent.Checked) { $Array += $CHECKBOX_qBittorrent.Text }
+    if ($CHECKBOX_Malwarebytes.Checked) { $Array += $CHECKBOX_Malwarebytes.Text }
+    Return "Ninite $($Array -Join ' ') Installer.exe"
+}
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Start-Updates {
+    try {
+        Add-Log $INF 'Starting Microsoft Store apps update...'
+        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
+        Out-Success
+    }
+    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
+
+    if ($OS_VERSION -gt 7) {
+        Add-Log $INF 'Starting Microsoft Office update...'
+
+        try { Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user' }
+        catch [Exception] { Add-Log $ERR "Failed to update Microsoft Office: $($_.Exception.Message)"; Return }
+
+        Out-Success
+    }
+    Add-Log $INF 'Starting Windows Update...'
+
+    try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
+    catch [Exception] { Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
