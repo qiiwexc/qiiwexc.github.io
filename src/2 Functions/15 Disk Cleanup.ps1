@@ -68,7 +68,6 @@ Function Start-DiskCleanup {
     }
 
     Set-Variable -Option Constant ItemsToDelete -Value @(
-        "$NewestJava86\COPYRIGHT"
         "$NewestJava86\LICENSE"
         "$NewestJava86\release"
         "$NewestJava86\*.html"
