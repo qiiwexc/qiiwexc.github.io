@@ -72,7 +72,6 @@ Function Start-DiskCleanup {
         "$NewestJava86\release"
         "$NewestJava86\*.html"
         "$NewestJava86\*.txt"
-        "$NewestJava\COPYRIGHT"
         "$NewestJava\LICENSE"
         "$NewestJava\release"
         "$NewestJava\*.html"
