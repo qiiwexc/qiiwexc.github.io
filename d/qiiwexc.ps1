@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.8.15')
+Set-Variable -Option Constant Version ([Version]'22.8.27')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -85,13 +85,11 @@ Set-Variable -Option Constant URL_AACT          'https://qiiwexc.github.io/d/AAc
 Set-Variable -Option Constant URL_WINDOWS_11 'https://w14.monkrus.ws/2021/10/windows-11-v21h2-rus-eng-26in1-hwid-act_14.html'
 Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html'
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
-Set-Variable -Option Constant URL_WINDOWS_XP 'https://drive.google.com/uc?id=1TO6cR3QiicCcAxcRba65L7nMvWTaFQaF'
 
 Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20p.exe'
 Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
 
 Set-Variable -Option Constant URL_CHROME_ADBLOCK 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
-Set-Variable -Option Constant URL_CHROME_YOUTUBE 'https://chrome.google.com/webstore/detail/gebbhagfogifgggkldgodflihgfeippi'
 
 Set-Variable -Option Constant URL_SDI      'https://sdi-tool.org/releases/SDI_R2201.zip'
 Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
@@ -532,21 +530,28 @@ $BUTTON_FUNCTION = { Start-SecurityScans }
 New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Chrome Extension #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Chrome Extensions'
-
-
-$BUTTON_TOOLTIP_TEXT = 'Block ads and pop-ups on websites'
-$BUTTON_DISABLED = !(Test-Path $PATH_CHROME_EXE)
-$BUTTON_FUNCTION = { Start-Process $PATH_CHROME_EXE $URL_CHROME_ADBLOCK }
-New-Button 'AdBlock' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-GroupBox 'Optimization'
 
 
-$BUTTON_TOOLTIP_TEXT = 'Return YouTube Dislike restores the ability to see dislikes on YouTube'
-$BUTTON_DISABLED = !(Test-Path $PATH_CHROME_EXE)
-$BUTTON_FUNCTION = { Start-Process $PATH_CHROME_EXE $URL_CHROME_YOUTUBE }
-New-Button 'Return YouTube Dislike' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+$BUTTON_TOOLTIP_TEXT = 'Set DNS server to CouldFlare DNS'
+$BUTTON_FUNCTION = { Set-CloudFlareDNS }
+New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+
+
+$CHECKBOX_TOOLTIP = 'Use CloudFlare DNS variation with malware protection (1.1.1.2)'
+$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked -ToolTip $CHECKBOX_TOOLTIP
+$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked } )
+
+
+$CHECKBOX_TOOLTIP = 'Use CloudFlare DNS variation with malware protection and adult content filtering (1.1.1.3)'
+$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering' -ToolTip $CHECKBOX_TOOLTIP
+
+
+$BUTTON_TOOLTIP_TEXT = 'Perform drive optimization (SSD) or defragmentation (HDD)'
+$BUTTON_FUNCTION = { Start-DriveOptimization }
+New-Button -UAC 'Optimize / defrag drives' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -647,7 +652,13 @@ $BUTTON_FUNCTION = { Start-Updates }
 New-Button -UAC 'Check for Updates' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+$BUTTON_TOOLTIP_TEXT = 'Block ads and pop-ups on websites'
+$BUTTON_DISABLED = !(Test-Path $PATH_CHROME_EXE)
+$BUTTON_FUNCTION = { Start-Process $PATH_CHROME_EXE $URL_CHROME_ADBLOCK }
+New-Button 'AdBlock' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Windows Images'
 
@@ -662,39 +673,6 @@ New-ButtonBrowser 'Windows 10 (v21H2)' $BUTTON_FUNCTION -ToolTip 'Download Windo
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
 New-ButtonBrowser 'Windows 7 SP1' $BUTTON_FUNCTION -ToolTip 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image'
-
-
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_XP }
-New-ButtonBrowser 'Windows XP SP3 (ENG)' $BUTTON_FUNCTION -ToolTip 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image'
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant TAB_OPTIMIZATION (New-Tab 'Optimization')
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Optimization'
-
-
-$BUTTON_TOOLTIP_TEXT = 'Set DNS server to CouldFlare DNS'
-$BUTTON_FUNCTION = { Set-CloudFlareDNS }
-New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
-
-
-$CHECKBOX_TOOLTIP = 'Use CloudFlare DNS variation with malware protection (1.1.1.2)'
-$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked -ToolTip $CHECKBOX_TOOLTIP
-$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked } )
-
-
-$CHECKBOX_TOOLTIP = 'Use CloudFlare DNS variation with malware protection and adult content filtering (1.1.1.3)'
-$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering' -ToolTip $CHECKBOX_TOOLTIP
-
-
-$BUTTON_TOOLTIP_TEXT = 'Perform drive optimization (SSD) or defragmentation (HDD)'
-$BUTTON_FUNCTION = { Start-DriveOptimization }
-New-Button -UAC 'Optimize / defrag drives' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1262,7 +1240,6 @@ Function Start-DiskCleanup {
         "$NewestJava86\release"
         "$NewestJava86\*.html"
         "$NewestJava86\*.txt"
-        "$NewestJava\LICENSE"
         "$NewestJava\release"
         "$NewestJava\*.html"
         "$NewestJava\*.txt"
@@ -1646,6 +1623,39 @@ Function Start-DiskCleanup {
 }
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Set-CloudFlareDNS {
+    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
+    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+
+    Add-Log $WRN 'Internet connection may get interrupted briefly'
+    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+
+    if (!(Get-NetworkAdapter)) {
+        Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
+        Add-Log $ERR 'This could mean that computer is not connected'
+        Return
+    }
+
+    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))" }
+    catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+Function Start-DriveOptimization {
+    Add-Log $INF "Starting $(if ($OS_VERSION -le 7) { '(C:) ' })drive optimization..."
+
+    Set-Variable -Option Constant Command "Start-Process -NoNewWindow 'defrag' $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" })"
+    try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' $Command }
+    catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Set-NiniteButtonState {
@@ -1700,39 +1710,6 @@ Function Start-Updates {
 
     try { if ($OS_VERSION -gt 7) { Start-Process 'UsoClient' 'StartInteractiveScan' } else { Start-Process 'wuauclt' '/detectnow /updatenow' } }
     catch [Exception] { Add-Log $ERR "Failed to update Windows: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Set-CloudFlareDNS {
-    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
-    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
-
-    Add-Log $WRN 'Internet connection may get interrupted briefly'
-    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
-
-    if (!(Get-NetworkAdapter)) {
-        Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
-        Add-Log $ERR 'This could mean that computer is not connected'
-        Return
-    }
-
-    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))" }
-    catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-DriveOptimization {
-    Add-Log $INF "Starting $(if ($OS_VERSION -le 7) { '(C:) ' })drive optimization..."
-
-    Set-Variable -Option Constant Command "Start-Process -NoNewWindow 'defrag' $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" })"
-    try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' $Command }
-    catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
