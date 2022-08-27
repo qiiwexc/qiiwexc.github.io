@@ -11,7 +11,3 @@ New-ButtonBrowser 'Windows 10 (v21H2)' $BUTTON_FUNCTION -ToolTip 'Download Windo
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
 New-ButtonBrowser 'Windows 7 SP1' $BUTTON_FUNCTION -ToolTip 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image'
-
-
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_XP }
-New-ButtonBrowser 'Windows XP SP3 (ENG)' $BUTTON_FUNCTION -ToolTip 'Download Windows XP SP3 (ENG) + Office 2010 SP2 (ENG) [v17.5.6] ISO image'

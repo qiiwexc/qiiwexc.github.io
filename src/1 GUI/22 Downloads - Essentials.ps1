@@ -46,3 +46,9 @@ $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Of
 $BUTTON_TOOLTIP_TEXT = 'Check for Microsoft Windows, Microsoft Office and Microsoft Store apps updates, download and install if available'
 $BUTTON_FUNCTION = { Start-Updates }
 New-Button -UAC 'Check for Updates' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+
+
+$BUTTON_TOOLTIP_TEXT = 'Block ads and pop-ups on websites'
+$BUTTON_DISABLED = !(Test-Path $PATH_CHROME_EXE)
+$BUTTON_FUNCTION = { Start-Process $PATH_CHROME_EXE $URL_CHROME_ADBLOCK }
+New-Button 'AdBlock' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
