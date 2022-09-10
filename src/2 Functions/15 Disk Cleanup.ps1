@@ -292,7 +292,6 @@ Function Start-DiskCleanup {
         "$env:ProgramFiles\Mozilla Firefox\install.log"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs\*"
-        "$env:ProgramFiles\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$env:ProgramFiles\Oracle\VirtualBox\doc"
         "$env:ProgramFiles\Oracle\VirtualBox\VirtualBox.chm"
         "$env:ProgramFiles\PuTTY\putty.chm"
