@@ -66,7 +66,7 @@ Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defen
 Set-Variable -Option Constant PATH_CHROME_EXE "$PATH_PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
 Set-Variable -Option Constant PATH_MRT_EXE "$env:windir\System32\MRT.exe"
 
-
+Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })
 
 
@@ -101,8 +101,6 @@ Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Initialization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Write-Host 'Initializing...'
-
-Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 
 Set-Variable -Option Constant OLD_WINDOW_TITLE $($HOST.UI.RawUI.WindowTitle)
 $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administrator'})"
@@ -244,7 +242,7 @@ Function New-Button {
     $Button.Enabled = !$Disabled
     $Button.Location = $Location
 
-    $Button.Text = if (!$UAC -or $IS_ELEVATED) { $Text } else { "$Text$REQUIRES_ELEVATION" }
+    $Button.Text = if ($UAC) { "$Text$REQUIRES_ELEVATION" } else { $Text }
 
     if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($Button, $ToolTip) }
     if ($Function) { $Button.Add_Click($Function) }
@@ -1347,7 +1345,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
         "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\GPL.html"
         "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\NEWS"
-        "$PATH_PROGRAM_FILES_86\Git\LICENSE.txt"
         "$PATH_PROGRAM_FILES_86\Git\mingw64\doc"
         "$PATH_PROGRAM_FILES_86\Git\mingw64\doc\*"
         "$PATH_PROGRAM_FILES_86\Git\ReleaseNotes.html"
