@@ -166,7 +166,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\7-Zip\7-zip.dll.tmp"
         "$PATH_PROGRAM_FILES_86\7-Zip\descript.ion"
         "$PATH_PROGRAM_FILES_86\7-Zip\History.txt"
-        "$PATH_PROGRAM_FILES_86\7-Zip\License.txt"
         "$PATH_PROGRAM_FILES_86\7-Zip\readme.txt"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
