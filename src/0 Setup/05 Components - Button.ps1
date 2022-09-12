@@ -42,7 +42,7 @@ Function New-Button {
     $Button.Enabled = !$Disabled
     $Button.Location = $Location
 
-    $Button.Text = if (!$UAC -or $IS_ELEVATED) { $Text } else { "$Text$REQUIRES_ELEVATION" }
+    $Button.Text = if ($UAC) { "$Text$REQUIRES_ELEVATION" } else { $Text }
 
     if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($Button, $ToolTip) }
     if ($Function) { $Button.Add_Click($Function) }

@@ -39,5 +39,5 @@ Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defen
 Set-Variable -Option Constant PATH_CHROME_EXE "$PATH_PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
 Set-Variable -Option Constant PATH_MRT_EXE "$env:windir\System32\MRT.exe"
 
-
+Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })

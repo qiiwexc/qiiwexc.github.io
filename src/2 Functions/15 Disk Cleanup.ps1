@@ -177,7 +177,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
         "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\GPL.html"
         "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\NEWS"
-        "$PATH_PROGRAM_FILES_86\Git\LICENSE.txt"
         "$PATH_PROGRAM_FILES_86\Git\mingw64\doc"
         "$PATH_PROGRAM_FILES_86\Git\mingw64\doc\*"
         "$PATH_PROGRAM_FILES_86\Git\ReleaseNotes.html"
