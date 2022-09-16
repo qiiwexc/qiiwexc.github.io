@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.9.12')
+Set-Variable -Option Constant Version ([Version]'22.9.16')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -70,31 +70,14 @@ Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipa
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Texts #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant TXT_START_AFTER_DOWNLOAD 'Start after download'
-Set-Variable -Option Constant TXT_UNCHECKY_INFO 'Unchecky clears adware checkboxes when installing software'
-Set-Variable -Option Constant TXT_AV_WARNING "This file may trigger anti-virus false positive!`nIt is recommended to disable anti-virus software for download and subsequent use of this file!"
-
-Set-Variable -Option Constant TXT_TIP_START_AFTER_DOWNLOAD "Execute after download has finished`nIf download is a ZIP file, it will get extracted first"
-
-
-Set-Variable -Option Constant URL_KMS_AUTO_LITE 'https://qiiwexc.github.io/d/KMSAuto_Lite.zip'
-Set-Variable -Option Constant URL_AACT          'https://qiiwexc.github.io/d/AAct.zip'
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# URLs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant URL_WINDOWS_11 'https://w14.monkrus.ws/2021/10/windows-11-v21h2-rus-eng-26in1-hwid-act_14.html'
 Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html'
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 
-Set-Variable -Option Constant URL_RUFUS      'https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20p.exe'
-Set-Variable -Option Constant URL_WINDOWS_PE 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_'
-
-Set-Variable -Option Constant URL_CHROME_ADBLOCK 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom'
-
+Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20p.exe'
 Set-Variable -Option Constant URL_SDI      'https://sdi-tool.org/releases/SDI_R2201.zip'
-Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
-Set-Variable -Option Constant URL_OFFICE   'https://qiiwexc.github.io/d/Office_2013-2021.zip'
-
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
 
@@ -201,11 +184,10 @@ Function New-GroupBox {
 Function New-ButtonBrowser {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
-        [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function,
-        [String]$ToolTip
+        [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
     )
 
-    New-Button $Text $Function -ToolTip $ToolTip > $Null
+    New-Button $Text $Function > $Null
 
     New-Label 'Opens in the browser' > $Null
 }
@@ -215,8 +197,7 @@ Function New-Button {
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [ScriptBlock][Parameter(Position = 1)]$Function,
         [Switch]$Disabled,
-        [Switch]$UAC,
-        [String]$ToolTip
+        [Switch]$UAC
     )
 
     Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
@@ -244,7 +225,6 @@ Function New-Button {
 
     $Button.Text = if ($UAC) { "$Text$REQUIRES_ELEVATION" } else { $Text }
 
-    if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($Button, $ToolTip) }
     if ($Function) { $Button.Add_Click($Function) }
 
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON_NORMAL
@@ -265,7 +245,7 @@ Function New-CheckBoxRunAfterDownload {
         [Switch]$Checked
     )
 
-    Return New-CheckBox $TXT_START_AFTER_DOWNLOAD  -Disabled:$Disabled -Checked:$Checked -ToolTip $TXT_TIP_START_AFTER_DOWNLOAD
+    Return New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
 }
 
 Function New-CheckBox {
@@ -273,8 +253,7 @@ Function New-CheckBox {
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [String][Parameter(Position = 1)]$Name,
         [Switch]$Disabled,
-        [Switch]$Checked,
-        [String]$ToolTip
+        [Switch]$Checked
     )
 
     Set-Variable -Option Constant CheckBox (New-Object System.Windows.Forms.CheckBox)
@@ -306,8 +285,6 @@ Function New-CheckBox {
     $CheckBox.Enabled = !$Disabled
     $CheckBox.Size = "145, $CHECKBOX_HEIGHT"
     $CheckBox.Location = $Location
-
-    if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBox, $ToolTip) }
 
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_LONG
     $CURRENT_GROUP.Controls.Add($CheckBox)
@@ -343,7 +320,7 @@ Function New-RadioButton {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [Switch]$Checked,
-        [String]$ToolTip
+        [Switch]$Disabled
     )
 
     Set-Variable -Option Constant RadioButton (New-Object System.Windows.Forms.RadioButton)
@@ -365,10 +342,9 @@ Function New-RadioButton {
 
     $RadioButton.Text = $Text
     $RadioButton.Checked = $Checked
+    $RadioButton.Enabled = !$Disabled
     $RadioButton.Size = "80, $CHECKBOX_HEIGHT"
     $RadioButton.Location = $Location
-
-    if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($RadioButton, $ToolTip) }
 
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_LONG
     $CURRENT_GROUP.Controls.Add($RadioButton)
@@ -418,15 +394,13 @@ Set-Variable -Option Constant TAB_HOME (New-Tab 'Home')
 New-GroupBox 'General'
 
 
-$BUTTON_TEXT = "$(if ($IS_ELEVATED) {'Running as administrator'} else {'Run as administrator'})"
-$BUTTON_TOOLTIP_TEXT = 'Restart this utility with administrator privileges'
+$BUTTON_TEXT = "$(if ($IS_ELEVATED) {'Running as administrator'} else {'Restart as administrator'})"
 $BUTTON_FUNCTION = { Start-Elevated }
-New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT -Disabled:$IS_ELEVATED > $Null
+New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -Disabled:$IS_ELEVATED > $Null
 
 
-$BUTTON_TOOLTIP_TEXT = 'Print system information to the log'
 $BUTTON_FUNCTION = { Out-SystemInfo }
-New-Button 'System information' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-Button 'Get system information' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -434,19 +408,24 @@ New-Button 'System information' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT >
 New-GroupBox 'Activators'
 
 
-$BUTTON_DownloadKMSAuto = New-Button -UAC 'KMSAuto Lite' -ToolTip "Download KMSAuto Lite`nActivates Windows 7 - 11 and Office 2010 - 2021`n`n$TXT_AV_WARNING"
-$BUTTON_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartKMSAuto.Checked $URL_KMS_AUTO_LITE } )
-
+$BUTTON_DownloadKMSAuto = New-Button -UAC 'KMSAuto Lite'
+$BUTTON_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartKMSAuto.Checked 'https://qiiwexc.github.io/d/KMSAuto_Lite.zip' -Silent:$CHECKBOX_SilentlyRunKMSAuto.Checked } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartKMSAuto = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartKMSAuto.Add_CheckStateChanged( { $BUTTON_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CHECKBOX_StartKMSAuto.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartKMSAuto.Add_CheckStateChanged( {
+        $BUTTON_DownloadKMSAuto.Text = "KMSAuto Lite$(if ($CHECKBOX_StartKMSAuto.Checked) { $REQUIRES_ELEVATION })"
+        $CHECKBOX_SilentlyRunKMSAuto.Enabled = $CHECKBOX_StartKMSAuto.Checked
+    } )
+
+# $CHECKBOX_DISABLED = $PS_VERSION -le 2
+# $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+# $CHECKBOX_SilentlyRunKMSAuto = New-CheckBox 'Activate silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 
 
-$BUTTON_DownloadAAct = New-Button -UAC 'AAct (Win 7+, Office)' -ToolTip "Download AAct`nActivates Windows 7 - 11 and Office 2010 - 2021`n`n$TXT_AV_WARNING"
-$BUTTON_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked $URL_AACT } )
-
+$BUTTON_DownloadAAct = New-Button -UAC 'AAct (Win 7+, Office)'
+$BUTTON_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked 'https://qiiwexc.github.io/d/AAct.zip' } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -459,9 +438,8 @@ $CHECKBOX_StartAAct.Add_CheckStateChanged( { $BUTTON_DownloadAAct.Text = "AAct (
 New-GroupBox 'Tools'
 
 
-$BUTTON_DownloadRufus = New-Button -UAC 'Rufus (bootable USB)' -ToolTip 'Download Rufus - a bootable USB creator'
+$BUTTON_DownloadRufus = New-Button -UAC 'Rufus (bootable USB)'
 $BUTTON_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' } )
-
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -469,8 +447,8 @@ $CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED
 $CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufus (bootable USB)$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_PE }
-New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION -ToolTip 'Download Windows PE (Live CD) ISO image based on Windows 10'
+$BUTTON_FUNCTION = { Open-InBrowser 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_' }
+New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Hardware Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -479,23 +457,18 @@ New-GroupBox 'Hardware Diagnostics'
 
 
 $BUTTON_TEXT = 'Check (C:) disk health'
-$BUTTON_TOOLTIP_TEXT = 'Start (C:) disk health check'
 $BUTTON_FUNCTION = { Start-DiskCheck $RADIO_FullDiskCheck.Checked }
-New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
-
+New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION > $Null
 
 $RADIO_TEXT = 'Quick scan'
-$RADIO_TOOLTIP_TEXT = 'Perform a quick disk scan'
-$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -ToolTip $RADIO_TOOLTIP_TEXT -Checked
+$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -Checked
 
 $RADIO_TEXT = 'Full scan'
-$RADIO_TOOLTIP_TEXT = 'Schedule a full disk scan on next restart'
-$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT -ToolTip $RADIO_TOOLTIP_TEXT
+$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT
 
 
-$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria (HDD scan)' -ToolTip 'Download Victoria HDD scanner'
+$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria (HDD scan)'
 $BUTTON_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA } )
-
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -503,9 +476,8 @@ $CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISAB
 $CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_TOOLTIP_TEXT = 'Start RAM checking utility'
 $BUTTON_FUNCTION = { Start-MemoryCheckTool }
-New-Button 'RAM checking utility' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-Button 'RAM checking utility' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -513,19 +485,16 @@ New-Button 'RAM checking utility' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT
 New-GroupBox 'Software Diagnostics'
 
 
-$BUTTON_TOOLTIP_TEXT = 'Check Windows health'
 $BUTTON_FUNCTION = { Test-WindowsHealth }
-New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION > $Null
 
 
-$BUTTON_TOOLTIP_TEXT = 'Remove temporary files, some log files and empty directories, and some other unnecessary files; start Windows built-in disk cleanup utility'
 $BUTTON_FUNCTION = { Start-DiskCleanup }
-New-Button 'Start disk cleanup' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null
 
 
-$BUTTON_TOOLTIP_TEXT = 'Start security scans'
 $BUTTON_FUNCTION = { Start-SecurityScans }
-New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -533,23 +502,17 @@ New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLT
 New-GroupBox 'Optimization'
 
 
-$BUTTON_TOOLTIP_TEXT = 'Set DNS server to CouldFlare DNS'
 $BUTTON_FUNCTION = { Set-CloudFlareDNS }
-New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION > $Null
 
-
-$CHECKBOX_TOOLTIP = 'Use CloudFlare DNS variation with malware protection (1.1.1.2)'
-$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked -ToolTip $CHECKBOX_TOOLTIP
+$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked } )
 
-
-$CHECKBOX_TOOLTIP = 'Use CloudFlare DNS variation with malware protection and adult content filtering (1.1.1.3)'
-$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering' -ToolTip $CHECKBOX_TOOLTIP
+$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 
 
-$BUTTON_TOOLTIP_TEXT = 'Perform drive optimization (SSD) or defragmentation (HDD)'
 $BUTTON_FUNCTION = { Start-DriveOptimization }
-New-Button -UAC 'Optimize / defrag drives' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-Button -UAC 'Optimize / defrag drives' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -565,37 +528,29 @@ New-GroupBox 'Ninite'
 $CHECKBOX_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
 $CHECKBOX_Chrome.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-
 $CHECKBOX_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
 $CHECKBOX_7zip.Add_CheckStateChanged( { Set-NiniteButtonState } )
-
 
 $CHECKBOX_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
 $CHECKBOX_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-
 $CHECKBOX_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
 $CHECKBOX_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
-
 
 $CHECKBOX_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
 $CHECKBOX_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-
 $CHECKBOX_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
 $CHECKBOX_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-
-$BUTTON_DownloadNinite = New-Button -UAC 'Download selected' -ToolTip 'Download Ninite universal installer for selected applications'
+$BUTTON_DownloadNinite = New-Button -UAC 'Download selected'
 $BUTTON_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "https://ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
-
 
 $CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 $CHECKBOX_StartNinite.Add_CheckStateChanged( { $BUTTON_DownloadNinite.Text = "Download selected$(if ($CHECKBOX_StartNinite.Checked) { $REQUIRES_ELEVATION })" } )
 
-
 $BUTTON_FUNCTION = { Open-InBrowser "https://ninite.com/?select=$(Set-NiniteQuery)" }
-New-ButtonBrowser 'View other' $BUTTON_FUNCTION -ToolTip 'Open Ninite universal installer web page for other installation options'
+New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Essentials #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -603,9 +558,8 @@ New-ButtonBrowser 'View other' $BUTTON_FUNCTION -ToolTip 'Open Ninite universal 
 New-GroupBox 'Essentials'
 
 
-$BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer' -ToolTip 'Download Snappy Driver Installer'
+$BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer'
 $BUTTON_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDI } )
-
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -613,12 +567,11 @@ $CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -
 $CHECKBOX_StartSDI.Add_CheckStateChanged( { $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_DownloadUnchecky = New-Button -UAC 'Unchecky' -ToolTip "Download Unchecky installer`n$TXT_UNCHECKY_INFO"
+$BUTTON_DownloadUnchecky = New-Button -UAC 'Unchecky'
 $BUTTON_DownloadUnchecky.Add_Click( {
         Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
-        Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked $URL_UNCHECKY -Params:$Params -SilentInstall:$CHECKBOX_SilentlyInstallUnchecky.Checked
+        Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked 'https://unchecky.com/files/unchecky_setup.exe' -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
     } )
-
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -628,16 +581,13 @@ $CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
         $CHECKBOX_SilentlyInstallUnchecky.Enabled = $CHECKBOX_StartUnchecky.Checked
     } )
 
-
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED -ToolTip 'Perform silent installation with no prompts'
-$CHECKBOX_SilentlyInstallUnchecky.Add_CheckStateChanged( { $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 
 
-$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2021' -ToolTip "Download Microsoft Office 2013 - 2021 C2R installer and activator`n`n$TXT_AV_WARNING"
-$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE } )
-
+$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2021'
+$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked 'https://qiiwexc.github.io/d/Office_2013-2021.zip' } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -645,15 +595,13 @@ $CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLE
 $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2021$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_TOOLTIP_TEXT = 'Check for Microsoft Windows, Microsoft Office and Microsoft Store apps updates, download and install if available'
 $BUTTON_FUNCTION = { Start-Updates }
-New-Button -UAC 'Check for Updates' $BUTTON_FUNCTION -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+New-Button -UAC 'Check for updates' $BUTTON_FUNCTION > $Null
 
 
-$BUTTON_TOOLTIP_TEXT = 'Block ads and pop-ups on websites'
 $BUTTON_DISABLED = !(Test-Path $PATH_CHROME_EXE)
-$BUTTON_FUNCTION = { Start-Process $PATH_CHROME_EXE $URL_CHROME_ADBLOCK }
-New-Button 'AdBlock' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED -ToolTip $BUTTON_TOOLTIP_TEXT > $Null
+$BUTTON_FUNCTION = { Start-Process $PATH_CHROME_EXE 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom' }
+New-Button 'AdBlock (Chrome)' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -662,15 +610,13 @@ New-GroupBox 'Windows Images'
 
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_11 }
-New-ButtonBrowser 'Windows 11 (v21H2)' $BUTTON_FUNCTION -ToolTip 'Download Windows 11 (v21H2) RUS-ENG -26in1- HWID-act v2 (AIO) ISO image'
-
+New-ButtonBrowser 'Windows 11 (v21H2)' $BUTTON_FUNCTION
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_10 }
-New-ButtonBrowser 'Windows 10 (v21H2)' $BUTTON_FUNCTION -ToolTip 'Download Windows 10 (v21H1) RUS-ENG x86-x64 -28in1- HWID-act (AIO) ISO image'
-
+New-ButtonBrowser 'Windows 10 (v21H2)' $BUTTON_FUNCTION
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
-New-ButtonBrowser 'Windows 7 SP1' $BUTTON_FUNCTION -ToolTip 'Download Windows 7 SP1 RUS-ENG x86-x64 -18in1- Activated v10 (AIO) ISO image'
+New-ButtonBrowser 'Windows 7 SP1' $BUTTON_FUNCTION
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -711,7 +657,6 @@ Function Initialize-Startup {
     if (!(Test-Path "$PATH_PROGRAM_FILES_86\Unchecky\unchecky.exe")) {
         Add-Log $WRN 'Unchecky is not installed.'
         Add-Log $INF 'It is highly recommended to install Unchecky (see Downloads -> Essentials -> Unchecky).'
-        Add-Log $INF "$TXT_UNCHECKY_INFO."
     }
 
     if ($OFFICE_INSTALL_TYPE -eq 'MSI' -and $OFFICE_VERSION -ge 15) {
@@ -878,11 +823,12 @@ Function Start-DownloadExtractExecute {
         [String][Parameter(Position = 2)]$Params,
         [Switch]$AVWarning,
         [Switch]$Execute,
-        [Switch]$SilentInstall
+        [Switch]$Silent
     )
 
     if ($AVWarning -and !$AVWarningShown) {
-        Add-Log $WRN $TXT_AV_WARNING
+        Add-Log $WRN 'This file may trigger anti-virus false positive!'
+        Add-Log $WRN 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
         Add-Log $WRN 'Click the button again to continue'
         Set-Variable -Option Constant -Scope Script AVWarningShown $True
         Return
@@ -896,7 +842,7 @@ Function Start-DownloadExtractExecute {
 
         if ($DownloadedFile) {
             Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
-            if ($Execute) { Start-File $Executable $Params -SilentInstall:$SilentInstall }
+            if ($Execute) { Start-File $Executable $Params -Silent:$Silent }
         }
     }
 }
@@ -1012,10 +958,10 @@ Function Start-File {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Executable,
         [String][Parameter(Position = 1)]$Switches,
-        [Switch]$SilentInstall
+        [Switch]$Silent
     )
 
-    if ($Switches -and $SilentInstall) {
+    if ($Switches -and $Silent) {
         Add-Log $INF "Installing '$Executable' silently..."
 
         try { Start-Process -Wait $Executable $Switches }
@@ -1387,7 +1333,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\NVIDIA Corporation\NVSMI\nvidia-smi.1.pdf"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\doc\*"
-        "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\ExtensionPacks\Oracle_VM_VirtualBox_Extension_Pack\ExtPack-license.*"
         "$PATH_PROGRAM_FILES_86\Oracle\VirtualBox\VirtualBox.chm"
         "$PATH_PROGRAM_FILES_86\paint.net\Staging"
         "$PATH_PROGRAM_FILES_86\paint.net\Staging\*"

@@ -5,11 +5,12 @@ Function Start-DownloadExtractExecute {
         [String][Parameter(Position = 2)]$Params,
         [Switch]$AVWarning,
         [Switch]$Execute,
-        [Switch]$SilentInstall
+        [Switch]$Silent
     )
 
     if ($AVWarning -and !$AVWarningShown) {
-        Add-Log $WRN $TXT_AV_WARNING
+        Add-Log $WRN 'This file may trigger anti-virus false positive!'
+        Add-Log $WRN 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
         Add-Log $WRN 'Click the button again to continue'
         Set-Variable -Option Constant -Scope Script AVWarningShown $True
         Return
@@ -23,7 +24,7 @@ Function Start-DownloadExtractExecute {
 
         if ($DownloadedFile) {
             Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
-            if ($Execute) { Start-File $Executable $Params -SilentInstall:$SilentInstall }
+            if ($Execute) { Start-File $Executable $Params -Silent:$Silent }
         }
     }
 }

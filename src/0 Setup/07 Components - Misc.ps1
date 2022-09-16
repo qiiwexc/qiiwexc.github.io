@@ -21,7 +21,7 @@ Function New-RadioButton {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [Switch]$Checked,
-        [String]$ToolTip
+        [Switch]$Disabled
     )
 
     Set-Variable -Option Constant RadioButton (New-Object System.Windows.Forms.RadioButton)
@@ -43,10 +43,9 @@ Function New-RadioButton {
 
     $RadioButton.Text = $Text
     $RadioButton.Checked = $Checked
+    $RadioButton.Enabled = !$Disabled
     $RadioButton.Size = "80, $CHECKBOX_HEIGHT"
     $RadioButton.Location = $Location
-
-    if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($RadioButton, $ToolTip) }
 
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_LONG
     $CURRENT_GROUP.Controls.Add($RadioButton)

@@ -4,7 +4,7 @@ Function New-CheckBoxRunAfterDownload {
         [Switch]$Checked
     )
 
-    Return New-CheckBox $TXT_START_AFTER_DOWNLOAD  -Disabled:$Disabled -Checked:$Checked -ToolTip $TXT_TIP_START_AFTER_DOWNLOAD
+    Return New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
 }
 
 Function New-CheckBox {
@@ -12,8 +12,7 @@ Function New-CheckBox {
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [String][Parameter(Position = 1)]$Name,
         [Switch]$Disabled,
-        [Switch]$Checked,
-        [String]$ToolTip
+        [Switch]$Checked
     )
 
     Set-Variable -Option Constant CheckBox (New-Object System.Windows.Forms.CheckBox)
@@ -45,8 +44,6 @@ Function New-CheckBox {
     $CheckBox.Enabled = !$Disabled
     $CheckBox.Size = "145, $CHECKBOX_HEIGHT"
     $CheckBox.Location = $Location
-
-    if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($CheckBox, $ToolTip) }
 
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_LONG
     $CURRENT_GROUP.Controls.Add($CheckBox)
