@@ -1,11 +1,10 @@
 Function New-ButtonBrowser {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
-        [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function,
-        [String]$ToolTip
+        [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
     )
 
-    New-Button $Text $Function -ToolTip $ToolTip > $Null
+    New-Button $Text $Function > $Null
 
     New-Label 'Opens in the browser' > $Null
 }
@@ -15,8 +14,7 @@ Function New-Button {
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [ScriptBlock][Parameter(Position = 1)]$Function,
         [Switch]$Disabled,
-        [Switch]$UAC,
-        [String]$ToolTip
+        [Switch]$UAC
     )
 
     Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
@@ -44,7 +42,6 @@ Function New-Button {
 
     $Button.Text = if ($UAC) { "$Text$REQUIRES_ELEVATION" } else { $Text }
 
-    if ($ToolTip) { (New-Object System.Windows.Forms.ToolTip).SetToolTip($Button, $ToolTip) }
     if ($Function) { $Button.Add_Click($Function) }
 
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON_NORMAL

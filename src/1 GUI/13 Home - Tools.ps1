@@ -1,9 +1,8 @@
 New-GroupBox 'Tools'
 
 
-$BUTTON_DownloadRufus = New-Button -UAC 'Rufus (bootable USB)' -ToolTip 'Download Rufus - a bootable USB creator'
+$BUTTON_DownloadRufus = New-Button -UAC 'Rufus (bootable USB)'
 $BUTTON_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' } )
-
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -11,5 +10,5 @@ $CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED
 $CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufus (bootable USB)$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_PE }
-New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION -ToolTip 'Download Windows PE (Live CD) ISO image based on Windows 10'
+$BUTTON_FUNCTION = { Open-InBrowser 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_' }
+New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION

@@ -2,10 +2,10 @@ Function Start-File {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Executable,
         [String][Parameter(Position = 1)]$Switches,
-        [Switch]$SilentInstall
+        [Switch]$Silent
     )
 
-    if ($Switches -and $SilentInstall) {
+    if ($Switches -and $Silent) {
         Add-Log $INF "Installing '$Executable' silently..."
 
         try { Start-Process -Wait $Executable $Switches }
