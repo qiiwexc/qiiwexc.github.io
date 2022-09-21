@@ -205,7 +205,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Google\Update\Offline"
         "$PATH_PROGRAM_FILES_86\Google\Update\Offline\*"
         "$PATH_PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
-        "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSE.rtf"
         "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\LICENSES.chromium.html"
         "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
         "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses\*"

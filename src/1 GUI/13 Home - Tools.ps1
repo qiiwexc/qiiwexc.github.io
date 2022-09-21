@@ -10,5 +10,5 @@ $CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED
 $CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufus (bootable USB)$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_FUNCTION = { Open-InBrowser 'https://drive.google.com/uc?id=1IYwATgzmKmlc79lVi0ivmWM2aPJObmq_' }
+$BUTTON_FUNCTION = { Open-InBrowser 'https://rutracker.org/forum/viewtopic.php?t=4366725' }
 New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
