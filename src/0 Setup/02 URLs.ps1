@@ -1,4 +1,4 @@
-Set-Variable -Option Constant URL_WINDOWS_11 'https://w14.monkrus.ws/2021/10/windows-11-v21h2-rus-eng-26in1-hwid-act_14.html'
+Set-Variable -Option Constant URL_WINDOWS_11 'https://w14.monkrus.ws/2022/10/windows-11-v22h2-rus-eng-28in1-hwid-act.html'
 Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html'
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 
