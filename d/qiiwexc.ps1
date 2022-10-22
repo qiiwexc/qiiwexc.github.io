@@ -77,6 +77,7 @@ Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/win
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 
 Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20p.exe'
+Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.0.80/ventoy-1.0.80-windows.zip'
 Set-Variable -Option Constant URL_SDI      'https://sdi-tool.org/releases/SDI_R2201.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
@@ -435,20 +436,25 @@ $CHECKBOX_StartAAct.Add_CheckStateChanged( { $BUTTON_DownloadAAct.Text = "AAct (
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Tools'
+New-GroupBox 'Bootable USB Tools'
 
 
-$BUTTON_DownloadRufus = New-Button -UAC 'Rufus (bootable USB)'
+$BUTTON_DownloadRufus = New-Button -UAC 'Rufus'
 $BUTTON_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufus (bootable USB)$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufus$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_FUNCTION = { Open-InBrowser 'https://rutracker.org/forum/viewtopic.php?t=4366725' }
-New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
+$BUTTON_DownloadVentoy = New-Button -UAC 'Ventoy'
+$BUTTON_DownloadVentoy.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVentoy.Checked $URL_VENTOY $((Split-Path -Leaf $URL_VENTOY) -Replace '-windows', '') } )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartVentoy.Add_CheckStateChanged( { $BUTTON_DownloadVentoy.Text = "Ventoy$(if ($CHECKBOX_StartVentoy.Checked) { $REQUIRES_ELEVATION })" } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Hardware Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -617,6 +623,9 @@ New-ButtonBrowser 'Windows 10 (v21H2)' $BUTTON_FUNCTION
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
 New-ButtonBrowser 'Windows 7 SP1' $BUTTON_FUNCTION
+
+$BUTTON_FUNCTION = { Open-InBrowser 'https://rutracker.org/forum/viewtopic.php?t=4366725' }
+New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -908,6 +917,7 @@ Function Start-Extraction {
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
+        'ventoy*' { $ZipName.TrimEnd('.zip') + '\Ventoy2Disk.exe' }
         'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
@@ -1395,7 +1405,6 @@ Function Start-DiskCleanup {
         "$env:ProgramFiles\Google\Update\Offline"
         "$env:ProgramFiles\Google\Update\Offline\*"
         "$env:ProgramFiles\Microsoft\Skype for Desktop\*.html"
-        "$env:ProgramFiles\Microsoft VS Code\resources\app\licenses"
         "$env:ProgramFiles\Mozilla Firefox\install.log"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs"
         "$env:ProgramFiles\Mozilla Maintenance Service\logs\*"
