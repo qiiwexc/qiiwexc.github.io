@@ -11,18 +11,6 @@ Function Start-DiskCheck {
 # ForEach ($Item in Get-PSDrive -PSProvider 'FileSystem') { Write-Host "`n`nScanning drive $($Item.Name):`n`n"; Start-Process 'chkdsk' "$($Item.Name + ':') /scan /perf" -NoNewWindow -Wait }
 # $Parameters = '$($Item.Name + ":")' + $(if ($False) { ' /B' } elseif ($True) { ' /scan /perf' })
 
-c-windows-temp permissions
-
-KMSAuto
-/win=act /sched=win
-/ofs=act /sched=ofs
-
-AAct
-/win=act /taskwin
-/ofs=act /taskofs
-
-control userpasswords2
-
 OInstall
 /configure "d:\MyPath\Configuration.xml"    - Launch the program in hidden mode, and perform the installation.
 /proplus x64 en-us excludeExcel excludeOneNote /apps visio

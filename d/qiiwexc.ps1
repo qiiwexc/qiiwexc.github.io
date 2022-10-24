@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.10.22')
+Set-Variable -Option Constant Version ([Version]'22.10.24')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -28,27 +28,22 @@ Now you can try starting the utility again
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
 
-Set-Variable -Option Constant CHECKBOX_HEIGHT 20
-
-Set-Variable -Option Constant INTERVAL_SHORT  5
-Set-Variable -Option Constant INTERVAL_NORMAL 15
-Set-Variable -Option Constant INTERVAL_LONG   30
+Set-Variable -Option Constant CHECKBOX_HEIGHT ($BUTTON_HEIGHT - 10)
 
 
-Set-Variable -Option Constant INTERVAL_BUTTON_SHORT  ($BUTTON_HEIGHT + $INTERVAL_SHORT)
-Set-Variable -Option Constant INTERVAL_BUTTON_NORMAL ($BUTTON_HEIGHT + $INTERVAL_NORMAL)
+Set-Variable -Option Constant INTERVAL_BUTTON ($BUTTON_HEIGHT + 15)
 
-Set-Variable -Option Constant INTERVAL_CHECKBOX ($CHECKBOX_HEIGHT + $INTERVAL_SHORT)
+Set-Variable -Option Constant INTERVAL_CHECKBOX ($CHECKBOX_HEIGHT + 5)
 
 
-Set-Variable -Option Constant GROUP_WIDTH ($INTERVAL_NORMAL + $BUTTON_WIDTH + $INTERVAL_NORMAL)
+Set-Variable -Option Constant GROUP_WIDTH (15 + $BUTTON_WIDTH + 15)
 
-Set-Variable -Option Constant FORM_WIDTH  (($GROUP_WIDTH + $INTERVAL_NORMAL) * 3 + ($INTERVAL_NORMAL * 2))
-Set-Variable -Option Constant FORM_HEIGHT ($INTERVAL_BUTTON_NORMAL * 13)
+Set-Variable -Option Constant FORM_WIDTH  (($GROUP_WIDTH + 15) * 3 + 30)
+Set-Variable -Option Constant FORM_HEIGHT 600
 
-Set-Variable -Option Constant INITIAL_LOCATION_BUTTON "$INTERVAL_NORMAL, 20"
+Set-Variable -Option Constant INITIAL_LOCATION_BUTTON "15, 20"
 
-Set-Variable -Option Constant SHIFT_CHECKBOX "0, $($CHECKBOX_HEIGHT + $INTERVAL_SHORT)"
+Set-Variable -Option Constant SHIFT_CHECKBOX "0, $INTERVAL_CHECKBOX"
 
 
 Set-Variable -Option Constant FONT_NAME   'Microsoft Sans Serif'
@@ -160,11 +155,11 @@ Function New-GroupBox {
     }
 
     if ($GroupIndex -lt 3) {
-        Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { "$INTERVAL_NORMAL, $INTERVAL_NORMAL" } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + $INTERVAL_NORMAL), 0" })
+        Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { "15, 15" } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0" })
     }
     else {
         Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
-        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + $INTERVAL_NORMAL)")
+        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + 15)")
     }
 
     $GroupBox.Width = $GROUP_WIDTH
@@ -174,7 +169,8 @@ Function New-GroupBox {
     $CURRENT_TAB.Controls.Add($GroupBox)
 
     Set-Variable -Scope Script PREVIOUS_BUTTON $Null
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $Null
+    Set-Variable -Scope Script PREVIOUS_RADIO $Null
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
 
     Set-Variable -Scope Script CURRENT_GROUP $GroupBox
 }
@@ -206,15 +202,20 @@ Function New-Button {
     [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
     [System.Drawing.Point]$Shift = "0, 0"
 
-    if ($PREVIOUS_BUTTON) {
+    if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
+        $PreviousLabelOrCheckboxY = if ($PREVIOUS_LABEL_OR_CHECKBOX) { $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y } else { 0 }
+        $PreviousRadioY = if ($PREVIOUS_RADIO) { $PREVIOUS_RADIO.Location.Y } else { 0 }
+
+        $PreviousMiscElement = if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) { $PreviousLabelOrCheckboxY } else { $PreviousRadioY }
+
+        $InitialLocation.Y = $PreviousMiscElement
+        $Shift = "0, 30"
+    }
+    elseif ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
-        $Shift = "0, $INTERVAL_BUTTON_NORMAL"
+        $Shift = "0, $INTERVAL_BUTTON"
     }
 
-    if ($PREVIOUS_LABEL_OR_INTERACTIVE) {
-        $InitialLocation.Y = $PREVIOUS_LABEL_OR_INTERACTIVE.Location.Y
-        $Shift = "0, $INTERVAL_BUTTON_SHORT"
-    }
 
     [System.Drawing.Point]$Location = $InitialLocation + $Shift
 
@@ -228,10 +229,11 @@ Function New-Button {
 
     if ($Function) { $Button.Add_Click($Function) }
 
-    $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON_NORMAL
+    $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON
     $CURRENT_GROUP.Controls.Add($Button)
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $Null
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
+    Set-Variable -Scope Script PREVIOUS_RADIO $Null
     Set-Variable -Scope Script PREVIOUS_BUTTON $Button
 
     Return $Button
@@ -264,11 +266,11 @@ Function New-CheckBox {
 
     if ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
-        $Shift = "$INTERVAL_CHECKBOX, $INTERVAL_LONG"
+        $Shift = "$INTERVAL_CHECKBOX, 30"
     }
 
-    if ($PREVIOUS_LABEL_OR_INTERACTIVE) {
-        $InitialLocation.Y = $PREVIOUS_LABEL_OR_INTERACTIVE.Location.Y
+    if ($PREVIOUS_LABEL_OR_CHECKBOX) {
+        $InitialLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
 
         if ($CURRENT_GROUP.Text -eq "Ninite") {
             $Shift = "0, $INTERVAL_CHECKBOX"
@@ -287,10 +289,10 @@ Function New-CheckBox {
     $CheckBox.Size = "145, $CHECKBOX_HEIGHT"
     $CheckBox.Location = $Location
 
-    $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_LONG
+    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
     $CURRENT_GROUP.Controls.Add($CheckBox)
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $CheckBox
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $CheckBox
 
     Return $CheckBox
 }
@@ -305,16 +307,16 @@ Function New-Label {
 
     Set-Variable -Option Constant Label (New-Object System.Windows.Forms.Label)
 
-    [System.Drawing.Point]$Location = ($PREVIOUS_BUTTON.Location + "$INTERVAL_LONG, $($INTERVAL_BUTTON_SHORT - $INTERVAL_SHORT)")
+    [System.Drawing.Point]$Location = ($PREVIOUS_BUTTON.Location + "30, $BUTTON_HEIGHT")
 
     $Label.Size = "145, $CHECKBOX_HEIGHT"
     $Label.Text = $Text
     $Label.Location = $Location
 
-    $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_LONG
+    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
     $CURRENT_GROUP.Controls.Add($Label)
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $Label
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Label
 }
 
 Function New-RadioButton {
@@ -329,14 +331,18 @@ Function New-RadioButton {
     [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
     [System.Drawing.Point]$Shift = "0, 0"
 
-    if ($PREVIOUS_BUTTON) {
-        $InitialLocation = $PREVIOUS_BUTTON.Location
-        $Shift = "10, $($INTERVAL_BUTTON_SHORT - $INTERVAL_SHORT)"
+    if ($PREVIOUS_RADIO) {
+        $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
+        $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
+        $Shift = "90, 0"
     }
-
-    if ($PREVIOUS_LABEL_OR_INTERACTIVE) {
-        $InitialLocation.Y = $PREVIOUS_LABEL_OR_INTERACTIVE.Location.Y
-        $Shift = "95, 0"
+    elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
+        $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
+        $Shift = "-15, 20"
+    }
+    elseif ($PREVIOUS_BUTTON) {
+        $InitialLocation = $PREVIOUS_BUTTON.Location
+        $Shift = "10, $BUTTON_HEIGHT"
     }
 
     [System.Drawing.Point]$Location = $InitialLocation + $Shift
@@ -347,10 +353,10 @@ Function New-RadioButton {
     $RadioButton.Size = "80, $CHECKBOX_HEIGHT"
     $RadioButton.Location = $Location
 
-    $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_LONG
+    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
     $CURRENT_GROUP.Controls.Add($RadioButton)
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $RadioButton
+    Set-Variable -Scope Script PREVIOUS_RADIO $RadioButton
 
     Return $RadioButton
 }
@@ -372,16 +378,16 @@ $FORM.Add_FormClosing( { Reset-StateOnExit } )
 
 Set-Variable -Option Constant LOG (New-Object System.Windows.Forms.RichTextBox)
 $LOG.Height = 200
-$LOG.Width = - $INTERVAL_SHORT + $FORM_WIDTH - $INTERVAL_SHORT
-$LOG.Location = "$INTERVAL_SHORT, $($FORM_HEIGHT - $LOG.Height - $INTERVAL_SHORT)"
+$LOG.Width = $FORM_WIDTH - 10
+$LOG.Location = "5, $($FORM_HEIGHT - $LOG.Height - 5)"
 $LOG.Font = "$FONT_NAME, 9"
 $LOG.ReadOnly = $True
 $FORM.Controls.Add($LOG)
 
 
 Set-Variable -Option Constant TAB_CONTROL (New-Object System.Windows.Forms.TabControl)
-$TAB_CONTROL.Size = "$($LOG.Width + $INTERVAL_SHORT - 4), $($FORM_HEIGHT - $LOG.Height - $INTERVAL_SHORT - 4)"
-$TAB_CONTROL.Location = "$INTERVAL_SHORT, $INTERVAL_SHORT"
+$TAB_CONTROL.Size = "$($LOG.Width + 1), $($FORM_HEIGHT - $LOG.Height - 1)"
+$TAB_CONTROL.Location = "5, 5"
 $FORM.Controls.Add($TAB_CONTROL)
 
 
@@ -404,13 +410,58 @@ $BUTTON_FUNCTION = { Out-SystemInfo }
 New-Button 'Get system information' $BUTTON_FUNCTION > $Null
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'HDD Diagnostics'
+
+
+$BUTTON_TEXT = 'Check (C:) disk health'
+$BUTTON_FUNCTION = { Start-DiskCheck $RADIO_FullDiskCheck.Checked }
+New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION > $Null
+
+$RADIO_TEXT = 'Quick scan'
+$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -Checked
+
+$RADIO_TEXT = 'Full scan'
+$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT
+
+
+$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria'
+$BUTTON_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA } )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text = "Victoria$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })" } )
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Software Diagnostics'
+
+
+$BUTTON_FUNCTION = { Test-WindowsHealth }
+New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION > $Null
+
+
+$BUTTON_FUNCTION = { Start-DiskCleanup }
+New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null
+
+
+$BUTTON_FUNCTION = { Start-SecurityScans }
+New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION > $Null
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Activators'
+New-GroupBox 'Activators (Windows 7+, Office)'
 
 
 $BUTTON_DownloadKMSAuto = New-Button -UAC 'KMSAuto Lite'
-$BUTTON_DownloadKMSAuto.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartKMSAuto.Checked 'https://qiiwexc.github.io/d/KMSAuto_Lite.zip' -Silent:$CHECKBOX_SilentlyRunKMSAuto.Checked } )
+$BUTTON_DownloadKMSAuto.Add_Click( {
+        Set-Variable -Option Constant Params $(if ($RADIO_KMSAutoWindows.Checked) { '/win=act /sched=win' } elseif ($RADIO_KMSAutoOffice.Checked) { '/ofs=act /sched=ofs' })
+        Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartKMSAuto.Checked 'https://qiiwexc.github.io/d/KMSAuto_Lite.zip' -Params:$Params -Silent:$CHECKBOX_SilentlyRunKMSAuto.Checked
+    } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -420,18 +471,44 @@ $CHECKBOX_StartKMSAuto.Add_CheckStateChanged( {
         $CHECKBOX_SilentlyRunKMSAuto.Enabled = $CHECKBOX_StartKMSAuto.Checked
     } )
 
-# $CHECKBOX_DISABLED = $PS_VERSION -le 2
-# $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-# $CHECKBOX_SilentlyRunKMSAuto = New-CheckBox 'Activate silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_SilentlyRunKMSAuto = New-CheckBox 'Activate silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_SilentlyRunKMSAuto.Add_CheckStateChanged( {
+        $RADIO_KMSAutoWindows.Enabled = $CHECKBOX_SilentlyRunKMSAuto.Checked
+        $RADIO_KMSAutoOffice.Enabled = $OFFICE_VERSION -and $CHECKBOX_SilentlyRunKMSAuto.Checked
+    } )
+
+$RADIO_KMSAutoWindows = New-RadioButton 'Windows' -Checked
+
+$RADIO_DISABLED = !$OFFICE_VERSION
+$RADIO_KMSAutoOffice = New-RadioButton 'Office' -Disabled:$RADIO_DISABLED
 
 
-$BUTTON_DownloadAAct = New-Button -UAC 'AAct (Win 7+, Office)'
-$BUTTON_DownloadAAct.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked 'https://qiiwexc.github.io/d/AAct.zip' } )
+
+$BUTTON_DownloadAAct = New-Button -UAC 'AAct'
+$BUTTON_DownloadAAct.Add_Click( {
+        Set-Variable -Option Constant Params $(if ($RADIO_AActWindows.Checked) { '/win=act /taskwin' } elseif ($RADIO_AActOffice.Checked) { '/ofs=act /taskofs' })
+        Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked 'https://qiiwexc.github.io/d/AAct.zip' -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
+    } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartAAct = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartAAct.Add_CheckStateChanged( { $BUTTON_DownloadAAct.Text = "AAct (Win 7+, Office)$(if ($CHECKBOX_StartAAct.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartAAct.Add_CheckStateChanged( { $BUTTON_DownloadAAct.Text = "AAct$(if ($CHECKBOX_StartAAct.Checked) { $REQUIRES_ELEVATION })" } )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_SilentlyRunAAct = New-CheckBox 'Activate silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_SilentlyRunAAct.Add_CheckStateChanged( {
+        $RADIO_AActWindows.Enabled = $CHECKBOX_SilentlyRunAAct.Checked
+        $RADIO_AActOffice.Enabled = $OFFICE_VERSION -and $CHECKBOX_SilentlyRunAAct.Checked
+    } )
+
+$RADIO_AActWindows = New-RadioButton 'Windows' -Checked
+
+$RADIO_DISABLED = !$OFFICE_VERSION
+$RADIO_AActOffice = New-RadioButton 'Office' -Disabled:$RADIO_DISABLED
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -455,52 +532,6 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartVentoy.Add_CheckStateChanged( { $BUTTON_DownloadVentoy.Text = "Ventoy$(if ($CHECKBOX_StartVentoy.Checked) { $REQUIRES_ELEVATION })" } )
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Hardware Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Hardware Diagnostics'
-
-
-$BUTTON_TEXT = 'Check (C:) disk health'
-$BUTTON_FUNCTION = { Start-DiskCheck $RADIO_FullDiskCheck.Checked }
-New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION > $Null
-
-$RADIO_TEXT = 'Quick scan'
-$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -Checked
-
-$RADIO_TEXT = 'Full scan'
-$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT
-
-
-$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria (HDD scan)'
-$BUTTON_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA } )
-
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text = "Victoria (HDD scan)$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })" } )
-
-
-$BUTTON_FUNCTION = { Start-MemoryCheckTool }
-New-Button 'RAM checking utility' $BUTTON_FUNCTION > $Null
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Software Diagnostics'
-
-
-$BUTTON_FUNCTION = { Test-WindowsHealth }
-New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION > $Null
-
-
-$BUTTON_FUNCTION = { Start-DiskCleanup }
-New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null
-
-
-$BUTTON_FUNCTION = { Start-SecurityScans }
-New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -616,13 +647,13 @@ New-GroupBox 'Windows Images'
 
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_11 }
-New-ButtonBrowser 'Windows 11 (v21H2)' $BUTTON_FUNCTION
+New-ButtonBrowser 'Windows 11' $BUTTON_FUNCTION
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_10 }
-New-ButtonBrowser 'Windows 10 (v21H2)' $BUTTON_FUNCTION
+New-ButtonBrowser 'Windows 10' $BUTTON_FUNCTION
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
-New-ButtonBrowser 'Windows 7 SP1' $BUTTON_FUNCTION
+New-ButtonBrowser 'Windows 7' $BUTTON_FUNCTION
 
 $BUTTON_FUNCTION = { Open-InBrowser 'https://rutracker.org/forum/viewtopic.php?t=4366725' }
 New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
@@ -663,11 +694,6 @@ Function Initialize-Startup {
 
     Get-CurrentVersion
 
-    if (!(Test-Path "$PATH_PROGRAM_FILES_86\Unchecky\unchecky.exe")) {
-        Add-Log $WRN 'Unchecky is not installed.'
-        Add-Log $INF 'It is highly recommended to install Unchecky (see Downloads -> Essentials -> Unchecky).'
-    }
-
     if ($OFFICE_INSTALL_TYPE -eq 'MSI' -and $OFFICE_VERSION -ge 15) {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
         Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
@@ -680,7 +706,7 @@ Function Initialize-Startup {
         if (!($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
-            Add-Log $INF '  privacy online (see Maintenance -> Optimization -> Setup CouldFlare DNS).'
+            Add-Log $INF '  privacy online (see Home -> Optimization -> Setup CouldFlare DNS).'
         }
     }
 }
@@ -1065,7 +1091,7 @@ Function Out-SystemInfo {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Hardware #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-DiskCheck {
     Param([Switch][Parameter(Position = 0)]$FullScan)
@@ -1075,45 +1101,6 @@ Function Start-DiskCheck {
     Set-Variable -Option Constant Command "Start-Process 'chkdsk' $(if ($FullScan) { "'/B'" } elseif ($OS_VERSION -gt 7) { "'/scan /perf'" }) -NoNewWindow"
     try { Start-ExternalProcess -Elevated $Command 'Disk check running...' }
     catch [Exception] { Add-Log $ERR "Failed to check (C:) disk health: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-MemoryCheckTool {
-    Add-Log $INF 'Starting memory checking tool...'
-
-    try { Start-Process 'mdsched' }
-    catch [Exception] { Add-Log $ERR "Failed to start memory checking tool: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check Software #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Test-WindowsHealth {
-    Add-Log $INF 'Starting Windows health check...'
-
-    Set-Variable -Option Constant ScanHealth "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /ScanHealth'"
-    Set-Variable -Option Constant RestoreHealth $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /RestoreHealth'" } else { '' })
-    Set-Variable -Option Constant SFC "Start-Process -NoNewWindow 'sfc' '/scannow'"
-
-    try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' @($ScanHealth, $RestoreHealth, $SFC) }
-    catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-SecurityScans {
-    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and (Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate'" } else { '' })
-    Set-Variable -Option Constant Scan $(if (Test-Path $PATH_DEFENDER_EXE) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
-    Set-Variable -Option Constant MRT "Start-Process -NoNewWindow -Wait 'mrt' '/q /f:y'"
-
-    Add-Log $INF "Performing security scans..."
-    try { Start-ExternalProcess -Elevated -Title:'Performing security scans...' @($SignatureUpdate, $Scan, $MRT) }
-    catch [Exception] { Add-Log $ERR "Failed to perform security scans: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
@@ -1329,7 +1316,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Google\Update\Offline\*"
         "$PATH_PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
         "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
-        "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses\*"
         "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$PATH_PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PATH_PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
@@ -1564,6 +1550,35 @@ Function Start-DiskCleanup {
 
     try { Start-Process -Verb RunAs 'cleanmgr' '/lowdisk' }
     catch [Exception] { Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Test-WindowsHealth {
+    Add-Log $INF 'Starting Windows health check...'
+
+    Set-Variable -Option Constant ScanHealth "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /ScanHealth'"
+    Set-Variable -Option Constant RestoreHealth $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /RestoreHealth'" } else { '' })
+    Set-Variable -Option Constant SFC "Start-Process -NoNewWindow 'sfc' '/scannow'"
+
+    try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' @($ScanHealth, $RestoreHealth, $SFC) }
+    catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
+
+    Out-Success
+}
+
+
+Function Start-SecurityScans {
+    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and (Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate'" } else { '' })
+    Set-Variable -Option Constant Scan $(if (Test-Path $PATH_DEFENDER_EXE) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
+    Set-Variable -Option Constant MRT "Start-Process -NoNewWindow -Wait 'mrt' '/q /f:y'"
+
+    Add-Log $INF "Performing security scans..."
+    try { Start-ExternalProcess -Elevated -Title:'Performing security scans...' @($SignatureUpdate, $Scan, $MRT) }
+    catch [Exception] { Add-Log $ERR "Failed to perform security scans: $($_.Exception.Message)"; Return }
 
     Out-Success
 }

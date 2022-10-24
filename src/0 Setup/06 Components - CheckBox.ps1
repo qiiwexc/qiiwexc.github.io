@@ -22,11 +22,11 @@ Function New-CheckBox {
 
     if ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
-        $Shift = "$INTERVAL_CHECKBOX, $INTERVAL_LONG"
+        $Shift = "$INTERVAL_CHECKBOX, 30"
     }
 
-    if ($PREVIOUS_LABEL_OR_INTERACTIVE) {
-        $InitialLocation.Y = $PREVIOUS_LABEL_OR_INTERACTIVE.Location.Y
+    if ($PREVIOUS_LABEL_OR_CHECKBOX) {
+        $InitialLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
 
         if ($CURRENT_GROUP.Text -eq "Ninite") {
             $Shift = "0, $INTERVAL_CHECKBOX"
@@ -45,10 +45,10 @@ Function New-CheckBox {
     $CheckBox.Size = "145, $CHECKBOX_HEIGHT"
     $CheckBox.Location = $Location
 
-    $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_LONG
+    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
     $CURRENT_GROUP.Controls.Add($CheckBox)
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $CheckBox
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $CheckBox
 
     Return $CheckBox
 }
