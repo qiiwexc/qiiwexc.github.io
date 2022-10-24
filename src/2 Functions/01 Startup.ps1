@@ -31,11 +31,6 @@ Function Initialize-Startup {
 
     Get-CurrentVersion
 
-    if (!(Test-Path "$PATH_PROGRAM_FILES_86\Unchecky\unchecky.exe")) {
-        Add-Log $WRN 'Unchecky is not installed.'
-        Add-Log $INF 'It is highly recommended to install Unchecky (see Downloads -> Essentials -> Unchecky).'
-    }
-
     if ($OFFICE_INSTALL_TYPE -eq 'MSI' -and $OFFICE_VERSION -ge 15) {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
         Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
@@ -48,7 +43,7 @@ Function Initialize-Startup {
         if (!($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
             Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
-            Add-Log $INF '  privacy online (see Maintenance -> Optimization -> Setup CouldFlare DNS).'
+            Add-Log $INF '  privacy online (see Home -> Optimization -> Setup CouldFlare DNS).'
         }
     }
 }

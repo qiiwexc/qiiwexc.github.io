@@ -1,27 +1,22 @@
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
 
-Set-Variable -Option Constant CHECKBOX_HEIGHT 20
-
-Set-Variable -Option Constant INTERVAL_SHORT  5
-Set-Variable -Option Constant INTERVAL_NORMAL 15
-Set-Variable -Option Constant INTERVAL_LONG   30
+Set-Variable -Option Constant CHECKBOX_HEIGHT ($BUTTON_HEIGHT - 10)
 
 
-Set-Variable -Option Constant INTERVAL_BUTTON_SHORT  ($BUTTON_HEIGHT + $INTERVAL_SHORT)
-Set-Variable -Option Constant INTERVAL_BUTTON_NORMAL ($BUTTON_HEIGHT + $INTERVAL_NORMAL)
+Set-Variable -Option Constant INTERVAL_BUTTON ($BUTTON_HEIGHT + 15)
 
-Set-Variable -Option Constant INTERVAL_CHECKBOX ($CHECKBOX_HEIGHT + $INTERVAL_SHORT)
+Set-Variable -Option Constant INTERVAL_CHECKBOX ($CHECKBOX_HEIGHT + 5)
 
 
-Set-Variable -Option Constant GROUP_WIDTH ($INTERVAL_NORMAL + $BUTTON_WIDTH + $INTERVAL_NORMAL)
+Set-Variable -Option Constant GROUP_WIDTH (15 + $BUTTON_WIDTH + 15)
 
-Set-Variable -Option Constant FORM_WIDTH  (($GROUP_WIDTH + $INTERVAL_NORMAL) * 3 + ($INTERVAL_NORMAL * 2))
-Set-Variable -Option Constant FORM_HEIGHT ($INTERVAL_BUTTON_NORMAL * 13)
+Set-Variable -Option Constant FORM_WIDTH  (($GROUP_WIDTH + 15) * 3 + 30)
+Set-Variable -Option Constant FORM_HEIGHT 600
 
-Set-Variable -Option Constant INITIAL_LOCATION_BUTTON "$INTERVAL_NORMAL, 20"
+Set-Variable -Option Constant INITIAL_LOCATION_BUTTON "15, 20"
 
-Set-Variable -Option Constant SHIFT_CHECKBOX "0, $($CHECKBOX_HEIGHT + $INTERVAL_SHORT)"
+Set-Variable -Option Constant SHIFT_CHECKBOX "0, $INTERVAL_CHECKBOX"
 
 
 Set-Variable -Option Constant FONT_NAME   'Microsoft Sans Serif'

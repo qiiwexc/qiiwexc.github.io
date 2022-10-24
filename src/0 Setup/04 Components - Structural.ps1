@@ -34,11 +34,11 @@ Function New-GroupBox {
     }
 
     if ($GroupIndex -lt 3) {
-        Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { "$INTERVAL_NORMAL, $INTERVAL_NORMAL" } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + $INTERVAL_NORMAL), 0" })
+        Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { "15, 15" } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0" })
     }
     else {
         Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
-        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + $INTERVAL_NORMAL)")
+        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + 15)")
     }
 
     $GroupBox.Width = $GROUP_WIDTH
@@ -48,7 +48,8 @@ Function New-GroupBox {
     $CURRENT_TAB.Controls.Add($GroupBox)
 
     Set-Variable -Scope Script PREVIOUS_BUTTON $Null
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_INTERACTIVE $Null
+    Set-Variable -Scope Script PREVIOUS_RADIO $Null
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
 
     Set-Variable -Scope Script CURRENT_GROUP $GroupBox
 }

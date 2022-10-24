@@ -206,7 +206,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Google\Update\Offline\*"
         "$PATH_PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
         "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
-        "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses\*"
         "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$PATH_PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PATH_PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
