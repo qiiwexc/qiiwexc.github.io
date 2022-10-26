@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.10.24')
+Set-Variable -Option Constant Version ([Version]'22.10.27')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1315,7 +1315,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Google\Update\Offline"
         "$PATH_PROGRAM_FILES_86\Google\Update\Offline\*"
         "$PATH_PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
-        "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\licenses"
         "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$PATH_PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PATH_PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
@@ -1574,10 +1573,9 @@ Function Test-WindowsHealth {
 Function Start-SecurityScans {
     Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and (Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate'" } else { '' })
     Set-Variable -Option Constant Scan $(if (Test-Path $PATH_DEFENDER_EXE) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
-    Set-Variable -Option Constant MRT "Start-Process -NoNewWindow -Wait 'mrt' '/q /f:y'"
 
     Add-Log $INF "Performing security scans..."
-    try { Start-ExternalProcess -Elevated -Title:'Performing security scans...' @($SignatureUpdate, $Scan, $MRT) }
+    try { Start-ExternalProcess -Elevated -Title:'Performing security scans...' @($SignatureUpdate, $Scan) }
     catch [Exception] { Add-Log $ERR "Failed to perform security scans: $($_.Exception.Message)"; Return }
 
     Out-Success
