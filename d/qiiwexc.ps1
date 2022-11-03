@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.10.27')
+Set-Variable -Option Constant Version ([Version]'22.11.3')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -68,11 +68,11 @@ Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } e
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# URLs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant URL_WINDOWS_11 'https://w14.monkrus.ws/2022/10/windows-11-v22h2-rus-eng-28in1-hwid-act.html'
-Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2021/12/windows-10-v21h2-rus-eng-x86-x64-40in1.html'
+Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html'
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 
 Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20p.exe'
-Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.0.80/ventoy-1.0.80-windows.zip'
+Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.0.81/ventoy-1.0.81-windows.zip'
 Set-Variable -Option Constant URL_SDI      'https://sdi-tool.org/releases/SDI_R2201.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
@@ -1217,7 +1217,6 @@ Function Start-DiskCleanup {
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Defraggler\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\About Java.lnk"
-        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\License (English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (CHM, English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (PDF, English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PuTTY (64-bit)\PuTTY Manual.lnk"

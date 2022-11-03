@@ -107,7 +107,6 @@ Function Start-DiskCleanup {
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Defraggler\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\*.url"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Java\About Java.lnk"
-        "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\License (English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (CHM, English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Oracle VM VirtualBox\User manual (PDF, English).lnk"
         "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\PuTTY (64-bit)\PuTTY Manual.lnk"
