@@ -298,7 +298,6 @@ Function Start-DiskCleanup {
         "$env:ProgramFiles\VideoLAN\VLC\New_Skins.url"
         "$env:ProgramFiles\VideoLAN\VLC\NEWS.txt"
         "$env:ProgramFiles\VideoLAN\VLC\README.txt"
-        "$env:ProgramFiles\VideoLAN\VLC\THANKS.txt"
         "$env:ProgramFiles\VideoLAN\VLC\VideoLAN Website.url"
         "$env:ProgramFiles\WinRAR\Descript.ion"
         "$env:ProgramFiles\WinRAR\Order.htm"
