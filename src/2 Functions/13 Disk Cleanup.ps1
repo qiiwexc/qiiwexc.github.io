@@ -252,7 +252,6 @@ Function Start-DiskCleanup {
         "$env:ProgramFiles\CCleaner\Setup"
         "$env:ProgramFiles\CCleaner\Setup\*"
         "$env:ProgramFiles\FileZilla FTP Client\AUTHORS"
-        "$env:ProgramFiles\FileZilla FTP Client\GPL.html"
         "$env:ProgramFiles\FileZilla FTP Client\NEWS"
         "$env:ProgramFiles\Git\mingw64\doc"
         "$env:ProgramFiles\Git\ReleaseNotes.html"
