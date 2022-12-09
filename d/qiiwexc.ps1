@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.12.8')
+Set-Variable -Option Constant Version ([Version]'22.12.9')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -59,7 +59,6 @@ Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
 Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
 Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
 Set-Variable -Option Constant PATH_CHROME_EXE "$PATH_PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
-Set-Variable -Option Constant PATH_MRT_EXE "$env:windir\System32\MRT.exe"
 
 Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })
@@ -440,12 +439,12 @@ $CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text =
 New-GroupBox 'Software Diagnostics'
 
 
-$BUTTON_FUNCTION = { Test-WindowsHealth }
-New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION > $Null
-
-
 $BUTTON_FUNCTION = { Start-DiskCleanup }
 New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null
+
+
+$BUTTON_FUNCTION = { Test-WindowsHealth }
+New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION > $Null
 
 
 $BUTTON_FUNCTION = { Start-SecurityScans }
@@ -546,10 +545,6 @@ $CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked } )
 
 $CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
-
-
-$BUTTON_FUNCTION = { Start-DriveOptimization }
-New-Button -UAC 'Optimize / defrag drives' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1314,7 +1309,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\Google\Update\Offline"
         "$PATH_PROGRAM_FILES_86\Google\Update\Offline\*"
         "$PATH_PROGRAM_FILES_86\Microsoft\Skype for Desktop\*.html"
-        "$PATH_PROGRAM_FILES_86\Microsoft VS Code\resources\app\ThirdPartyNotices.txt"
         "$PATH_PROGRAM_FILES_86\Mozilla Firefox\install.log"
         "$PATH_PROGRAM_FILES_86\Mozilla Maintenance Service\logs"
         "$PATH_PROGRAM_FILES_86\Mozilla Maintenance Service\logs\*"
@@ -1596,17 +1590,6 @@ Function Set-CloudFlareDNS {
 
     try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))" }
     catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-DriveOptimization {
-    Add-Log $INF "Starting $(if ($OS_VERSION -le 7) { '(C:) ' })drive optimization..."
-
-    Set-Variable -Option Constant Command "Start-Process -NoNewWindow 'defrag' $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" })"
-    try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' $Command }
-    catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
 
     Out-Success
 }

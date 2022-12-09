@@ -16,14 +16,3 @@ Function Set-CloudFlareDNS {
 
     Out-Success
 }
-
-
-Function Start-DriveOptimization {
-    Add-Log $INF "Starting $(if ($OS_VERSION -le 7) { '(C:) ' })drive optimization..."
-
-    Set-Variable -Option Constant Command "Start-Process -NoNewWindow 'defrag' $(if ($OS_VERSION -gt 7) { "'/C /H /U /O'" } else { "'C: /H /U'" })"
-    try { Start-ExternalProcess -Elevated -Title:'Optimizing drives...' $Command }
-    catch [Exception] { Add-Log $ERR "Failed to optimize drives: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
