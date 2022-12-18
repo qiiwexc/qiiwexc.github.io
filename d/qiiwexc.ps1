@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.12.9')
+Set-Variable -Option Constant Version ([Version]'22.12.18')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -71,7 +71,7 @@ Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2022/11/win
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 
 Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v3.21/rufus-3.21p.exe'
-Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.0.84/ventoy-1.0.84-windows.zip'
+Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.0.85/ventoy-1.0.85-windows.zip'
 Set-Variable -Option Constant URL_SDI      'https://sdi-tool.org/releases/SDI_R2201.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
@@ -925,7 +925,8 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
-            $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2021.zip' -or `
+            $ZipName -eq 'KMSAuto_Lite.zip' -or `
+            # $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2021.zip' -or `
             $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
@@ -934,7 +935,7 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'Office_2013-2021.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
+        # 'Office_2013-2021.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
@@ -1273,7 +1274,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\7-Zip\readme.txt"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
-        "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$PATH_PROGRAM_FILES_86\CCleaner\Setup"
