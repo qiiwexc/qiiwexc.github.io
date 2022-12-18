@@ -168,7 +168,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\7-Zip\readme.txt"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\*.pdf"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\AcroCEF\*.txt"
-        "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Reader\Legal\ENU\*"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\ReadMe.htm"
         "$PATH_PROGRAM_FILES_86\Adobe\Acrobat Reader DC\Resource\ENUtxt.pdf"
         "$PATH_PROGRAM_FILES_86\CCleaner\Setup"
