@@ -57,7 +57,6 @@ Set-Variable -Option Constant ERR 'ERR'
 
 Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
 Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
-Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
 
 Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })
@@ -401,7 +400,7 @@ $BUTTON_FUNCTION = { Start-Elevated }
 New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -Disabled:$IS_ELEVATED > $Null
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'HDD Diagnostics'
 
@@ -420,7 +419,7 @@ $CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISAB
 $CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text = "Victoria$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Software Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Software Diagnostics'
 
@@ -431,10 +430,6 @@ New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null
 
 $BUTTON_FUNCTION = { Test-WindowsHealth }
 New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION > $Null
-
-
-$BUTTON_FUNCTION = { Start-SecurityScans }
-New-Button -UAC 'Perform security scans' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -519,7 +514,7 @@ $CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLE
 $CHECKBOX_StartVentoy.Add_CheckStateChanged( { $BUTTON_DownloadVentoy.Text = "Ventoy$(if ($CHECKBOX_StartVentoy.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Optimization'
 
@@ -1059,18 +1054,6 @@ Function Test-WindowsHealth {
 
     try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' @($ScanHealth, $RestoreHealth, $SFC) }
     catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-
-Function Start-SecurityScans {
-    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and (Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate'" } else { '' })
-    Set-Variable -Option Constant Scan $(if (Test-Path $PATH_DEFENDER_EXE) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
-
-    Add-Log $INF "Performing security scans..."
-    try { Start-ExternalProcess -Elevated -Title:'Performing security scans...' @($SignatureUpdate, $Scan) }
-    catch [Exception] { Add-Log $ERR "Failed to perform security scans: $($_.Exception.Message)"; Return }
 
     Out-Success
 }

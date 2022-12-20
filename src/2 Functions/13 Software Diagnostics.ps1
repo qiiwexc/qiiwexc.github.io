@@ -19,15 +19,3 @@ Function Test-WindowsHealth {
 
     Out-Success
 }
-
-
-Function Start-SecurityScans {
-    Set-Variable -Option Constant SignatureUpdate $(if ($OS_VERSION -gt 7 -and (Test-Path $PATH_DEFENDER_EXE)) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-SignatureUpdate'" } else { '' })
-    Set-Variable -Option Constant Scan $(if (Test-Path $PATH_DEFENDER_EXE) { "Start-Process -NoNewWindow -Wait '$PATH_DEFENDER_EXE' '-Scan -ScanType 2'" } else { '' })
-
-    Add-Log $INF "Performing security scans..."
-    try { Start-ExternalProcess -Elevated -Title:'Performing security scans...' @($SignatureUpdate, $Scan) }
-    catch [Exception] { Add-Log $ERR "Failed to perform security scans: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
