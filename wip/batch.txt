@@ -1,9 +1,0 @@
-@echo off
-
-rem Write the PowerShell script to a file
-echo $cdosys = New-Object -ComObject cdosys.cdoConfig > check-updates.ps1
-echo $result = $cdosys.CheckForUpdates() >> check-updates.ps1
-echo Write-Output "Result: $result" >> check-updates.ps1
-
-rem Execute the PowerShell script
-powershell -file check-updates.ps1

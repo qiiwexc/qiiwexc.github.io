@@ -40,8 +40,3 @@ $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Of
 
 $BUTTON_FUNCTION = { Start-Updates }
 New-Button -UAC 'Check for updates' $BUTTON_FUNCTION > $Null
-
-
-$BUTTON_DISABLED = !(Test-Path $PATH_CHROME_EXE)
-$BUTTON_FUNCTION = { Start-Process $PATH_CHROME_EXE 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom' }
-New-Button 'AdBlock (Chrome)' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED > $Null

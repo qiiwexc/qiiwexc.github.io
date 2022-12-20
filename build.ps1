@@ -7,7 +7,7 @@ Set-Variable -Option Constant TargetFile  "$DistPath\qiiwexc.ps1"
 Set-Variable -Option Constant WebPageFile ".\index.html"
 
 Set-Variable -Option Constant HtmlTitle   "<title>qiiwexc $Version</title>"
-Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"https://bit.ly/qiiwexc_web`">qiiwexc $Version</a></h2>"
+Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"d/qiiwexc.ps1`">qiiwexc $Version</a></h2>"
 
 Set-Variable -Option Constant INF 'INF'
 Set-Variable -Option Constant WRN 'WRN'
@@ -43,15 +43,21 @@ Function Start-Build {
     (Get-Content $WebPageFile) | ForEach-Object { $_ -Replace "<title>.+", $HtmlTitle -Replace "<h2>.+", $HtmlHeader } | Set-Content $WebPageFile
 
     Add-Log $INF 'Building...'
-    Add-Content $TargetFile "Set-Variable -Option Constant Version ([Version]'$Version')"
+
+    [String[]]$OutputStrings = "Set-Variable -Option Constant Version ([Version]'$Version')"
 
     ForEach ($File In Get-ChildItem -Recurse -File $SourcePath) {
         [String]$SectionName = $File.ToString().Replace('.ps1', '').Remove(0, 3)
         [String]$Spacer = '=-' * (30 - [Math]::Round(($SectionName.length + 1) / 4))
 
-        Add-Content $TargetFile "`n`n#$Spacer# $SectionName #$Spacer#`n"
-        Add-Content $TargetFile (Get-Content $File.FullName)
+        $OutputStrings += "`n`n#$Spacer# $SectionName #$Spacer#`n"
+
+        ForEach ($Line In (Get-Content $File.FullName)) {
+            $OutputStrings += $Line
+        }
     }
+
+    $OutputStrings | Out-File $TargetFile -Encoding ASCII
 
     Add-Log $INF 'Finished'
 

@@ -1,5 +1,3 @@
-Function Get-FreeDiskSpace { Return ($SYSTEM_PARTITION.FreeSpace / $SYSTEM_PARTITION.Size) }
-
 Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
 
 Function Get-ConnectionStatus { if (!(Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
