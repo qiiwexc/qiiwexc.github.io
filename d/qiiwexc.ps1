@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.12.18')
+Set-Variable -Option Constant Version ([Version]'22.12.20')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -39,7 +39,7 @@ Set-Variable -Option Constant INTERVAL_CHECKBOX ($CHECKBOX_HEIGHT + 5)
 Set-Variable -Option Constant GROUP_WIDTH (15 + $BUTTON_WIDTH + 15)
 
 Set-Variable -Option Constant FORM_WIDTH  (($GROUP_WIDTH + 15) * 3 + 30)
-Set-Variable -Option Constant FORM_HEIGHT 600
+Set-Variable -Option Constant FORM_HEIGHT 560
 
 Set-Variable -Option Constant INITIAL_LOCATION_BUTTON "15, 20"
 
@@ -58,7 +58,6 @@ Set-Variable -Option Constant ERR 'ERR'
 Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
 Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
 Set-Variable -Option Constant PATH_DEFENDER_EXE "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
-Set-Variable -Option Constant PATH_CHROME_EXE "$PATH_PROGRAM_FILES_86\Google\Chrome\Application\chrome.exe"
 
 Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })
@@ -106,9 +105,6 @@ Set-Variable -Option Constant OS_NAME $OperatingSystem.Caption
 Set-Variable -Option Constant OS_BUILD $OperatingSystem.Version
 Set-Variable -Option Constant OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -Like '*64') { $True })
 Set-Variable -Option Constant OS_VERSION $(Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } })
-
-Set-Variable -Option Constant LogicalDisk (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID = 'C:'")
-Set-Variable -Option Constant SYSTEM_PARTITION ($LogicalDisk | Select-Object @{L = 'FreeSpace'; E = { '{0:N2}' -f ($_.FreeSpace / 1GB) } }, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
 
 Set-Variable -Option Constant WordRegPath (Get-ItemProperty "$(New-PSDrive HKCR Registry HKEY_CLASSES_ROOT):\Word.Application\CurVer" -ErrorAction SilentlyContinue)
 Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
@@ -405,24 +401,14 @@ $BUTTON_FUNCTION = { Start-Elevated }
 New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -Disabled:$IS_ELEVATED > $Null
 
 
-$BUTTON_FUNCTION = { Out-SystemInfo }
-New-Button 'Get system information' $BUTTON_FUNCTION > $Null
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Maintenance - HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'HDD Diagnostics'
 
 
 $BUTTON_TEXT = 'Check (C:) disk health'
-$BUTTON_FUNCTION = { Start-DiskCheck $RADIO_FullDiskCheck.Checked }
+$BUTTON_FUNCTION = { Start-DiskCheck }
 New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION > $Null
-
-$RADIO_TEXT = 'Quick scan'
-$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -Checked
-
-$RADIO_TEXT = 'Full scan'
-$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT
 
 
 $BUTTON_DownloadVictoria = New-Button -UAC 'Victoria'
@@ -631,11 +617,6 @@ $BUTTON_FUNCTION = { Start-Updates }
 New-Button -UAC 'Check for updates' $BUTTON_FUNCTION > $Null
 
 
-$BUTTON_DISABLED = !(Test-Path $PATH_CHROME_EXE)
-$BUTTON_FUNCTION = { Start-Process $PATH_CHROME_EXE 'https://chrome.google.com/webstore/detail/gighmmpiobklfepjocnamgkkbiglidom' }
-New-Button 'AdBlock (Chrome)' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED > $Null
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Windows Images'
@@ -687,12 +668,12 @@ Function Initialize-Startup {
         }
     }
 
+    Out-SystemInfo
+
     Get-CurrentVersion
 
     if ($OFFICE_INSTALL_TYPE -eq 'MSI' -and $OFFICE_VERSION -ge 15) {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
-        Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
-        Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2021).'
     }
 
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
@@ -700,8 +681,6 @@ Function Initialize-Startup {
         Set-Variable -Option Constant CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder
         if (!($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
-            Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
-            Add-Log $INF '  privacy online (see Home -> Optimization -> Setup CouldFlare DNS).'
         }
     }
 }
@@ -806,8 +785,6 @@ Function Get-Update {
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Common #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Get-FreeDiskSpace { Return ($SYSTEM_PARTITION.FreeSpace / $SYSTEM_PARTITION.Size) }
 
 Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
 
@@ -1037,51 +1014,20 @@ Function Start-Elevated {
 
 Function Out-SystemInfo {
     Add-Log $INF 'Current system information:'
-    Add-Log $INF '  Hardware'
 
     Set-Variable -Option Constant ComputerSystem (Get-WmiObject Win32_ComputerSystem)
-    Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object PCSystemType, @{L = 'RAM'; E = { '{0:N2}' -f ($_.TotalPhysicalMemory / 1GB) } })
+    Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object PCSystemType)
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
-        Add-Log $INF "    RAM:  $($Computer.RAM) GB"
-    }
-
-    [Array]$Processors = (Get-WmiObject Win32_Processor | Select-Object Name)
-    if ($Processors) {
-        ForEach ($Item In $Processors) {
-            Add-Log $INF "    CPU $([Array]::IndexOf($Processors, $Item)):  $($Item.Name)"
-        }
-    }
-
-    [Array]$VideoControllers = ((Get-WmiObject Win32_VideoController).Name)
-    if ($VideoControllers) { ForEach ($Item In $VideoControllers) { Add-Log $INF "    GPU $([Array]::IndexOf($VideoControllers, $Item)):  $Item" } }
-
-    if ($OS_VERSION -gt 7) {
-        [Array]$Storage = (Get-PhysicalDisk | Select-Object BusType, FriendlyName, HealthStatus, MediaType, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
-        if ($Storage) {
-            ForEach ($Item In $Storage) {
-                $Details = "$($Item.BusType)$(if ($Item.MediaType -ne 'Unspecified') {' ' + $Item.MediaType}), $($Item.Size) GB, $($Item.HealthStatus)"
-                Add-Log $INF "    Storage $([Array]::IndexOf($Storage, $Item)):  $($Item.FriendlyName) ($Details)"
-            }
-        }
-    }
-    else {
-        [Array]$Storage = (Get-WmiObject Win32_DiskDrive | Select-Object Model, Status, @{L = 'Size'; E = { '{0:N2}' -f ($_.Size / 1GB) } })
-        if ($Storage) { ForEach ($Item In $Storage) { Add-Log $INF "    Storage:  $($Item.Model) ($($Item.Size) GB, Health: $($Item.Status))" } }
-    }
-
-    if ($SYSTEM_PARTITION) {
-        Add-Log $INF "    Free space on system partition: $($SYSTEM_PARTITION.FreeSpace) GB / $($SYSTEM_PARTITION.Size) GB ($((Get-FreeDiskSpace).ToString('P')))"
     }
 
     Set-Variable -Option Constant OfficeYear $(Switch ($OFFICE_VERSION) { 16 { '2016 / 2019 / 2021' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
     Set-Variable -Option Constant OfficeName $(if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' })
-    Set-Variable -Option Constant Win10Release ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId)
+    Set-Variable -Option Constant WindowsRelease ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId)
 
-    Add-Log $INF '  Software'
     Add-Log $INF "    Operation system:  $OS_NAME"
     Add-Log $INF "    OS architecture:  $(if ($OS_64_BIT) { '64-bit' } else { '32-bit' })"
-    Add-Log $INF "    $(if ($OS_VERSION -eq 10) {'OS release / '})Build number:  $(if ($OS_VERSION -eq 10) {"v$Win10Release / "})$OS_BUILD"
+    Add-Log $INF "    $(if ($OS_VERSION -eq 10) {'OS release / '})Build number:  $(if ($OS_VERSION -eq 10) {"v$WindowsRelease / "})$OS_BUILD"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})"
     Add-Log $INF "    PowerShell version:  $PS_VERSION.$($PSVersionTable.PSVersion.Minor)"
 }
@@ -1090,11 +1036,9 @@ Function Out-SystemInfo {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-DiskCheck {
-    Param([Switch][Parameter(Position = 0)]$FullScan)
-
     Add-Log $INF 'Starting (C:) disk health check...'
 
-    Set-Variable -Option Constant Command "Start-Process 'chkdsk' $(if ($FullScan) { "'/B'" } elseif ($OS_VERSION -gt 7) { "'/scan /perf'" }) -NoNewWindow"
+    Set-Variable -Option Constant Command "Start-Process 'chkdsk' $(if ($OS_VERSION -gt 7) { "'/scan /perf'" }) -NoNewWindow"
     try { Start-ExternalProcess -Elevated $Command 'Disk check running...' }
     catch [Exception] { Add-Log $ERR "Failed to check (C:) disk health: $($_.Exception.Message)"; Return }
 
@@ -1279,7 +1223,6 @@ Function Start-DiskCleanup {
         "$PATH_PROGRAM_FILES_86\CCleaner\Setup"
         "$PATH_PROGRAM_FILES_86\CCleaner\Setup\*"
         "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\AUTHORS"
-        "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\GPL.html"
         "$PATH_PROGRAM_FILES_86\FileZilla FTP Client\NEWS"
         "$PATH_PROGRAM_FILES_86\Git\mingw64\doc"
         "$PATH_PROGRAM_FILES_86\Git\mingw64\doc\*"

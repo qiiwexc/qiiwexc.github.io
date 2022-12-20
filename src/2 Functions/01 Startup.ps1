@@ -29,12 +29,12 @@ Function Initialize-Startup {
         }
     }
 
+    Out-SystemInfo
+
     Get-CurrentVersion
 
     if ($OFFICE_INSTALL_TYPE -eq 'MSI' -and $OFFICE_VERSION -ge 15) {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
-        Add-Log $INF 'It is highly recommended to install Click-To-Run (C2R) version instead'
-        Add-Log $INF '  (see Downloads -> Essentials -> Office 2013 - 2021).'
     }
 
     Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
@@ -42,8 +42,6 @@ Function Initialize-Startup {
         Set-Variable -Option Constant CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder
         if (!($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
             Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
-            Add-Log $INF 'It is recommended to use CouldFlare DNS for faster domain name resolution and improved'
-            Add-Log $INF '  privacy online (see Home -> Optimization -> Setup CouldFlare DNS).'
         }
     }
 }

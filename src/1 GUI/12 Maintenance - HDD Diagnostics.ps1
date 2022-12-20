@@ -2,14 +2,8 @@ New-GroupBox 'HDD Diagnostics'
 
 
 $BUTTON_TEXT = 'Check (C:) disk health'
-$BUTTON_FUNCTION = { Start-DiskCheck $RADIO_FullDiskCheck.Checked }
+$BUTTON_FUNCTION = { Start-DiskCheck }
 New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION > $Null
-
-$RADIO_TEXT = 'Quick scan'
-$RADIO_QuickDiskCheck = New-RadioButton $RADIO_TEXT -Checked
-
-$RADIO_TEXT = 'Full scan'
-$RADIO_FullDiskCheck = New-RadioButton $RADIO_TEXT
 
 
 $BUTTON_DownloadVictoria = New-Button -UAC 'Victoria'
