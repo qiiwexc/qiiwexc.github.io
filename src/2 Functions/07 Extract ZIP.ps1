@@ -6,8 +6,7 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
-            $ZipName -eq 'KMSAuto_Lite.zip' -or `
-            # $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2021.zip' -or `
+            $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2021.zip' -or `
             $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
@@ -16,7 +15,7 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        # 'Office_2013-2021.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
+        'Office_2013-2021.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
