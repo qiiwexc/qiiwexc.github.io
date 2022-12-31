@@ -1,11 +1,4 @@
 Function Start-Updates {
-    try {
-        Add-Log $INF 'Starting Microsoft Store apps update...'
-        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
-        Out-Success
-    }
-    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
-
     if ($OS_VERSION -gt 7) {
         Add-Log $INF 'Starting Microsoft Office update...'
 

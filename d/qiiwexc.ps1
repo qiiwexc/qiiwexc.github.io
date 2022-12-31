@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'22.12.27')
+Set-Variable -Option Constant Version ([Version]'22.12.31')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -70,7 +70,7 @@ Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2022/02/win
 
 Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v3.21/rufus-3.21p.exe'
 Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.0.86/ventoy-1.0.86-windows.zip'
-Set-Variable -Option Constant URL_SDI      'https://sdi-tool.org/releases/SDI_R2201.zip'
+Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.12.9.749.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
 
@@ -572,7 +572,7 @@ New-GroupBox 'Essentials'
 
 
 $BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer'
-$BUTTON_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDI } )
+$BUTTON_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDIO } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -914,7 +914,7 @@ Function Start-Extraction {
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
             $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2021.zip' -or `
-            $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
+            $URL -Match 'SDIO_' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
     Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $PATH_TEMP_DIR })
@@ -927,7 +927,7 @@ Function Start-Extraction {
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
         'ventoy*' { $ZipName.TrimEnd('.zip') + '\Ventoy2Disk.exe' }
-        'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
+        'SDIO_*' { "$ExtractionDir\$ExtractionDir\SDIO_auto.bat" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
 
@@ -1114,13 +1114,6 @@ Function Set-NiniteFileName {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-Updates {
-    try {
-        Add-Log $INF 'Starting Microsoft Store apps update...'
-        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
-        Out-Success
-    }
-    catch [Exception] { Add-Log $ERR "Failed to update Microsoft Store apps: $($_.Exception.Message)"; Return }
-
     if ($OS_VERSION -gt 7) {
         Add-Log $INF 'Starting Microsoft Office update...'
 
