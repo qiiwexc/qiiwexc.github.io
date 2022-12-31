@@ -7,7 +7,7 @@ Function Start-Extraction {
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
             $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2021.zip' -or `
-            $URL -Match 'SDI_R' -or $URL -Match 'Victoria')
+            $URL -Match 'SDIO_' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
     Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $PATH_TEMP_DIR })
@@ -20,7 +20,7 @@ Function Start-Extraction {
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
         'ventoy*' { $ZipName.TrimEnd('.zip') + '\Ventoy2Disk.exe' }
-        'SDI_R*' { "$ExtractionDir\$(if ($OS_64_BIT) {"$($ExtractionDir.Split('_') -Join '_x64_').exe"} else {"$ExtractionDir.exe"})" }
+        'SDIO_*' { "$ExtractionDir\$ExtractionDir\SDIO_auto.bat" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
 
