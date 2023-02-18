@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'23.1.13')
+Set-Variable -Option Constant Version ([Version]'23.2.18')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1047,10 +1047,14 @@ Function Start-DiskCleanup {
 Function Test-WindowsHealth {
     Add-Log $INF 'Starting Windows health check...'
 
-    Set-Variable -Option Constant ScanHealth "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /ScanHealth'"
-    Set-Variable -Option Constant RestoreHealth $(if ($OS_VERSION -gt 7) { "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /RestoreHealth'" } else { '' })
+    Set-Variable -Option Constant Command $(if ($OS_VERSION -gt 7) {
+            "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /RestoreHealth'"
+        }
+        else {
+            "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /ScanHealth'"
+        })
 
-    try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' @($ScanHealth, $RestoreHealth) }
+    try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' $Command }
     catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
 
     Out-Success
