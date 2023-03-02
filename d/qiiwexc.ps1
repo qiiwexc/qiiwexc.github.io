@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'23.2.18')
+Set-Variable -Option Constant Version ([Version]'23.3.2')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -426,10 +426,6 @@ New-GroupBox 'Software Diagnostics'
 
 $BUTTON_FUNCTION = { Start-DiskCleanup }
 New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null
-
-
-$BUTTON_FUNCTION = { Test-WindowsHealth }
-New-Button -UAC 'Check Windows health' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1040,22 +1036,6 @@ Function Start-DiskCleanup {
 
     try { Start-Process -Verb RunAs 'cleanmgr' '/lowdisk' }
     catch [Exception] { Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
-Function Test-WindowsHealth {
-    Add-Log $INF 'Starting Windows health check...'
-
-    Set-Variable -Option Constant Command $(if ($OS_VERSION -gt 7) {
-            "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /RestoreHealth'"
-        }
-        else {
-            "Start-Process -NoNewWindow -Wait 'DISM' '/Online /Cleanup-Image /ScanHealth'"
-        })
-
-    try { Start-ExternalProcess -Elevated -Title:'Checking Windows health...' $Command }
-    catch [Exception] { Add-Log $ERR "Failed to check Windows health: $($_.Exception.Message)"; Return }
 
     Out-Success
 }
