@@ -1,6 +1,10 @@
 New-GroupBox 'Optimization'
 
 
+$BUTTON_FUNCTION = { Start-DiskCleanup }
+New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null
+
+
 $BUTTON_FUNCTION = { Set-CloudFlareDNS }
 New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION > $Null
 
