@@ -1,11 +1,6 @@
 New-GroupBox 'HDD Diagnostics'
 
 
-$BUTTON_TEXT = 'Check (C:) disk health'
-$BUTTON_FUNCTION = { Start-DiskCheck }
-New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION > $Null
-
-
 $BUTTON_DownloadVictoria = New-Button -UAC 'Victoria'
 $BUTTON_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA } )
 
