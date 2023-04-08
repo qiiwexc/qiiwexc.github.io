@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'23.3.27')
+Set-Variable -Option Constant Version ([Version]'23.4.8')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -69,8 +69,8 @@ Set-Variable -Option Constant URL_WINDOWS_10 'https://w14.monkrus.ws/2022/11/win
 Set-Variable -Option Constant URL_WINDOWS_7  'https://w14.monkrus.ws/2023/03/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 
 Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v3.22/rufus-3.22p.exe'
-Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.0.90/ventoy-1.0.90-windows.zip'
-Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.12.9.749.zip'
+Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.0.91/ventoy-1.0.91-windows.zip'
+Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.12.10.750.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
 
