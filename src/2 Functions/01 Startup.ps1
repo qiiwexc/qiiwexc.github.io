@@ -45,19 +45,10 @@ Function Initialize-Startup {
     Add-Log $INF "    OS architecture:  $(if ($OS_64_BIT) { '64-bit' } else { '32-bit' })"
     Add-Log $INF "    $(if ($OS_VERSION -eq 10) {'OS release / '})Build number:  $(if ($OS_VERSION -eq 10) {"v$WindowsRelease / "})$OS_BUILD"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})"
-    Add-Log $INF "    PowerShell version:  $PS_VERSION.$($PSVersionTable.PSVersion.Minor)"
 
     Get-CurrentVersion
 
     if ($OFFICE_INSTALL_TYPE -eq 'MSI' -and $OFFICE_VERSION -ge 15) {
         Add-Log $WRN 'MSI installation of Microsoft Office is detected.'
-    }
-
-    Set-Variable -Option Constant NetworkAdapter (Get-NetworkAdapter)
-    if ($NetworkAdapter) {
-        Set-Variable -Option Constant CurrentDnsServer $NetworkAdapter.DNSServerSearchOrder
-        if (!($CurrentDnsServer -Match '1.1.1.*' -and $CurrentDnsServer -Match '1.0.0.*')) {
-            Add-Log $WRN 'System is not configured to use CouldFlare DNS.'
-        }
     }
 }
