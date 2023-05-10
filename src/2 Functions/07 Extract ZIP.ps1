@@ -20,7 +20,7 @@ Function Start-Extraction {
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }
         'ventoy*' { $ZipName.TrimEnd('.zip') + '\Ventoy2Disk.exe' }
-        'SDIO_*' { "$ExtractionDir\$ExtractionDir\SDIO_auto.bat" }
+        'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
 
