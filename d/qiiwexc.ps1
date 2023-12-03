@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'23.10.23')
+Set-Variable -Option Constant Version ([Version]'23.12.3')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -537,13 +537,13 @@ $CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -
 $CHECKBOX_StartSDI.Add_CheckStateChanged( { $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2021'
-$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked 'https://qiiwexc.github.io/d/Office_2013-2021.zip' } )
+$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
+$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked 'https://qiiwexc.github.io/d/Office_2013-2024.zip' } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2021$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2024$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })" } )
 
 
 
@@ -625,7 +625,7 @@ Function Initialize-Startup {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
     }
 
-    Set-Variable -Option Constant OfficeYear $(Switch ($OFFICE_VERSION) { 16 { '2016 / 2019 / 2021' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
+    Set-Variable -Option Constant OfficeYear $(Switch ($OFFICE_VERSION) { 16 { '2016 / 2019 / 2021 / 2024' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
     Set-Variable -Option Constant OfficeName $(if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' })
     Set-Variable -Option Constant WindowsRelease ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId)
 
@@ -858,7 +858,7 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
-            $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2021.zip' -or `
+            $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2024.zip' -or `
             $URL -Match 'SDIO_' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
@@ -867,7 +867,7 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'Office_2013-2021.zip' { 'OInstall.exe' }
+        'Office_2013-2024.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { 'Victoria.exe' }

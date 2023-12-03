@@ -10,13 +10,13 @@ $CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -
 $CHECKBOX_StartSDI.Add_CheckStateChanged( { $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) { $REQUIRES_ELEVATION })" } )
 
 
-$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2021'
-$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked 'https://qiiwexc.github.io/d/Office_2013-2021.zip' } )
+$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
+$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked 'https://qiiwexc.github.io/d/Office_2013-2024.zip' } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2021$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2024$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })" } )
 
 
 
