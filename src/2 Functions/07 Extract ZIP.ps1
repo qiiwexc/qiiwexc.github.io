@@ -6,7 +6,7 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
-            $ZipName -eq 'KMSAuto_Lite.zip' -or $ZipName -eq 'Office_2013-2024.zip' -or `
+            $ZipName -eq 'KMSAuto_Lite.zip' -or `
             $URL -Match 'SDIO_' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
