@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'23.12.29')
+Set-Variable -Option Constant Version ([Version]'24.1.11')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -870,7 +870,7 @@ Function Start-Extraction {
         'Office_2013-2024.zip' { 'OInstall.exe' }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
-        'Victoria*' { 'Victoria.exe' }
+        'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
         'ventoy*' { $ZipName.TrimEnd('.zip') + '\Ventoy2Disk.exe' }
         'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
