@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'24.5.2')
+Set-Variable -Option Constant Version ([Version]'24.5.3')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
