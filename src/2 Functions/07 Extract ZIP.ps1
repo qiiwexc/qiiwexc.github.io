@@ -15,7 +15,7 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'Office_2013-2024.zip' { 'OInstall.exe' }
+        'Office_2013-2024.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
