@@ -1,4 +1,6 @@
-if (navigator.appVersion.indexOf('Windows NT 10.0') !== -1) {
+if (navigator.appVersion.indexOf('Windows NT 10.0.2') !== -1) {
+    var systemVersion = 'Windows 11';
+} else if (navigator.appVersion.indexOf('Windows NT 10.0') !== -1) {
     var systemVersion = 'Windows 10';
 } else if (navigator.appVersion.indexOf('Windows NT 6.4') !== -1) {
     var systemVersion = 'Windows 10';
