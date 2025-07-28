@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'25.7.2')
+Set-Variable -Option Constant Version ([Version]'25.7.28')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -479,10 +479,6 @@ $CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked } )
 
 $CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
-
-
-$BUTTON_FUNCTION = { Start-DiskCleanup }
-New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -966,15 +962,6 @@ Function Start-Elevated {
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Start-DiskCleanup {
-    Add-Log $INF 'Starting disk cleanup utility...'
-
-    try { Start-Process -Verb RunAs 'cleanmgr' '/lowdisk' }
-    catch [Exception] { Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
 
 Function Set-CloudFlareDNS {
     [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };

@@ -8,7 +8,3 @@ $CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked } )
 
 $CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
-
-
-$BUTTON_FUNCTION = { Start-DiskCleanup }
-New-Button 'Start disk cleanup' $BUTTON_FUNCTION > $Null

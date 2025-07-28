@@ -1,12 +1,3 @@
-Function Start-DiskCleanup {
-    Add-Log $INF 'Starting disk cleanup utility...'
-
-    try { Start-Process -Verb RunAs 'cleanmgr' '/lowdisk' }
-    catch [Exception] { Add-Log $ERR "Failed to start disk cleanup utility: $($_.Exception.Message)"; Return }
-
-    Out-Success
-}
-
 Function Set-CloudFlareDNS {
     [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
     [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
