@@ -109,7 +109,7 @@ Function New-Batch {
     $BatchStrings += '    endlocal'
     $BatchStrings += '  )'
     $BatchStrings += ")`n"
-    $BatchStrings += 'powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%"'
+    $BatchStrings += 'powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"'
     $BatchStrings += "`n"
 
     ForEach ($String In $PowerShellStrings) {
