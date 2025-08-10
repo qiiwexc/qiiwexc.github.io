@@ -23,21 +23,29 @@ Function Get-CurrentVersion {
 
 
 Function Get-Update {
-    Set-Variable -Option Constant DownloadURL 'https://bit.ly/qiiwexc_ps1'
-    Set-Variable -Option Constant TargetFile $MyInvocation.ScriptName
+    Set-Variable -Option Constant DownloadUrlPs1 'https://bit.ly/qiiwexc_ps1'
+    Set-Variable -Option Constant DownloadUrlBat 'https://qiiwexc.github.io/d/qiiwexc.bat'
+
+    Set-Variable -Option Constant TargetFilePs1 $MyInvocation.ScriptName
 
     Add-Log $WRN 'Downloading new version...'
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) { Add-Log $ERR "Failed to download update: $IsNotConnected"; Return }
 
-    try { Invoke-WebRequest $DownloadURL -OutFile $TargetFile }
+    if ($PATH_CALLER) {
+        Set-Variable -Option Constant TargetFileBat $($PATH_CALLER + '\qiiwexc.bat')
+        try { Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat }
+        catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
+    }
+
+    try { Invoke-WebRequest $DownloadUrlPs1 -OutFile $TargetFilePs1 }
     catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
 
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try { Start-ExternalProcess "PowerShell '$TargetFile' '-HideConsole'" }
+    try { Start-ExternalProcess "PowerShell '$TargetFilePs1' '-HideConsole'" }
     catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
 
     Exit-Script
