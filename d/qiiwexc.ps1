@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'25.8.9')
+Set-Variable -Option Constant Version ([Version]'25.8.10')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -55,6 +55,7 @@ Set-Variable -Option Constant WRN 'WRN'
 Set-Variable -Option Constant ERR 'ERR'
 
 
+Set-Variable -Option Constant PATH_CALLER $($args[0])
 Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
 Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
 
@@ -715,21 +716,29 @@ Function Get-CurrentVersion {
 
 
 Function Get-Update {
-    Set-Variable -Option Constant DownloadURL 'https://bit.ly/qiiwexc_ps1'
-    Set-Variable -Option Constant TargetFile $MyInvocation.ScriptName
+    Set-Variable -Option Constant DownloadUrlPs1 'https://bit.ly/qiiwexc_ps1'
+    Set-Variable -Option Constant DownloadUrlBat 'https://qiiwexc.github.io/d/qiiwexc.bat'
+
+    Set-Variable -Option Constant TargetFilePs1 $MyInvocation.ScriptName
 
     Add-Log $WRN 'Downloading new version...'
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) { Add-Log $ERR "Failed to download update: $IsNotConnected"; Return }
 
-    try { Invoke-WebRequest $DownloadURL -OutFile $TargetFile }
+    if ($PATH_CALLER) {
+        Set-Variable -Option Constant TargetFileBat $($PATH_CALLER + '\qiiwexc.bat')
+        try { Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat }
+        catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
+    }
+
+    try { Invoke-WebRequest $DownloadUrlPs1 -OutFile $TargetFilePs1 }
     catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
 
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try { Start-ExternalProcess "PowerShell '$TargetFile' '-HideConsole'" }
+    try { Start-ExternalProcess "PowerShell '$TargetFilePs1' '-HideConsole'" }
     catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
 
     Exit-Script
@@ -1022,8 +1031,8 @@ Function Set-NiniteFileName {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUkDjBI+vSdjZohD0ILpKAZ05D
-# drmgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUhmvpk04CeT3vReo7wLOf+dhN
+# XA2gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1144,28 +1153,28 @@ Function Set-NiniteFileName {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBR36Ngb
-# 0r5Wdnquhc2Ha9yupKQjpjANBgkqhkiG9w0BAQEFAASCAQCyV0HrcIYQrsTM+JNq
-# mAIOzyPaPwCrQVPreKfDEMNWb1S3OFvBx8Heh/fQHnzAadultE8BU8HGf+IzZP1R
-# ztq03jRQYhuG0Ivl6L1mmq72XDg8nVWS32s31yd3WTvsxcmU7rWD3rqw11E9ikSP
-# OMSqfmoN4S22YC3qSHxXuJGXy2YkKkyMJT7ROSjZ9Hm3osg17KgzfEeZrmd17KAv
-# Cl4iyllO1q7IkjLwlUUkn/U8o400a8xene5FuDk1x7HtleEuf5gSw+NJifgjktf1
-# Oekt3eJzDX+EgttW40lc7QvZfR+BTcRq7/++6nRdmSPVJaLIatNYyaV0tBYJPl4S
-# KajSoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTgj2SJ
+# RrozUTwsbeFvaGW4KmQKHDANBgkqhkiG9w0BAQEFAASCAQC4HxceAYWKV/oCEQar
+# x0djT4DkQ9PGdoecwVwN5DFB1fRkeqxwJl3jlVmrpTWtY+e1/MSsmvEGK+3Nok78
+# 0sm+ggq2aphheEOiTGYx0QOaMWRqsDJdSruBB4Ow8MVr91wi/X/sBTSBUnu5c598
+# //WNuOfNDJS0IWRwz8g8XATpgUx5m2tRC8kW1o1Fqktd+sXQl/VncrocWssx7bqe
+# ShmvM0fQ28KGPLerP10tNftox67On595w/mwI6nW+meUJl5rI7tT0FL3HYwvLDfy
+# VOFcb0B4ZjIGJstnRpF8UlSeR6HfvG3kXLhY81zNnF8XaSRML9vNurkd3WvTRLNH
+# lNFeoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgwOTIzMDc0M1owLwYJKoZI
-# hvcNAQkEMSIEIB04m/UVkrfzZ/uCRO/JIJlllJ0pE4jWq/GcuT59VvjeMA0GCSqG
-# SIb3DQEBAQUABIICAM0f24itieLbPOAn1xKQ1W+m4wwLuh2YgU8a+BqKfEJFpxO7
-# aorsUCkoTQ6vy8Ys8KKOsEUmMEDD0Qz9Ene9lopn6RuUMGjMTATuc1LOw+S7hRSP
-# xY/lALaDyZ/zeMkz++wMTgddW+5NdR5k8mqvxuAwr9a8YsezRCZMdj+DyGE36HXj
-# rfxoFHyBS3dORtpjS0ApjNZlrsJ1U7ucc6P7eXGcKHxC2lCgmPc4L6wI1J1bDLaY
-# YQIGzd8mcWhNAv/NjBSjFN4BZ78atzgZmT+OwB3bDfaD1xN8k8FtKqNyHoKgzAi8
-# /hwqObOgtCjaEhZCuVOtCgnsQVi3FRZltEH1v0DzO0oQCcj6uWCkOvL1c8/fIHKh
-# rdLnP2xk6dm8tI5EIDj9UIpSBDk5LtfQoyQmCpcWhZ2KvgNiGSd/5N317QZDpbMd
-# EWEKQxPf7Sr/dFxUVfbng0YpSSZKUIX2S4sAArIWXZDZK5sjeQImzqAIcqM48yFM
-# 4MJp5RNTCQVG22jPK3Ej4xcUvRM5zt5v2Yj4SXtU2bzbOA3AIg79m9bH14UEHU/C
-# fgHx1IZi0gDfmHO+05XGagAoj4ZFZ57DRCn0JfvpzDQbXX45iRhjy4ugUmCPy07m
-# Qd40yAtd5hVOhInHqStmiazsVszTHoFbIueEEOtTfPgbmA2H8SGk+6E1JxQ6
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgxMDE5NTUwMVowLwYJKoZI
+# hvcNAQkEMSIEIPv/A6ZDh12nRw6jn9DWmtMXQak33jP8qJ/kLTFFZahrMA0GCSqG
+# SIb3DQEBAQUABIICAAc/jQ1V31SZlCU3QJei8Fh73N90A8D1UFwdf0Ow00iKRpnG
+# WL3Pn15sfVwgpeQnBZIwtWOQv9maxtp8hnJ66V66QoeCggqXpRr3joPs9gK/J2p5
+# NZ9Xr2aCivqrWgj0Yp3U5qCba/H4F5YX3HsMSx2IqSoXrIdo8oDhiWIqn8Za5FGI
+# hRj7Ei8XFA1HMCU+vS9jFeMmQzAutuh+BJMoCfpMtLOhL/1ndPogWilSBoZqtBtu
+# DW1UlGr4F6eL4g1tBQ3LNHrT8chJXNwFfkMOc5FvmHdlGDIFS/iQTFhRSOHJ5VoZ
+# U8xLZZvB3JpdbsRpiSsG1fP3NV2vMnDca6rE7k27xnGr8RitIrMmRl6RVd2qzV/J
+# N8J/XdHxMy49VLR4CGMVZaM/vblrgMOXilTLZN/N+HzOg6RKYGGp+MAMh/rlLPZS
+# +oa7bE/Ro2uqLtkIRFNI1vUk7M6kWDqX0WE7IBUwtne5i12tHDSUHWkMOTq4Y7vz
+# lpXFPhuKrj1ueC/vhTgRqsHQJo9zpMeccJ71GM6fhMhOZYB1XQ6a8NHoWPfmCt83
+# tQOhUyEvy78vuUmlkyq7VF8LqggILX8gnKxh/vElkp5iqD3tnuW28jhVb30Z/lxK
+# Sb4DHCKRsTdKzd2ozQOUcKz6xiIvcvKXN7ziBPbC3ytG04U/trdmfAcpm9vR
 # SIG # End signature block
