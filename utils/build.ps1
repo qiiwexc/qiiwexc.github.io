@@ -12,7 +12,7 @@ Set-Variable -Option Constant TimestampServer 'http://timestamp.digicert.com'
 
 Set-Variable -Option Constant WebPageFile ".\index.html"
 Set-Variable -Option Constant HtmlTitle   "<title>$ProjectName $Version</title>"
-Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"d/$ProjectName.ps1`">$ProjectName $Version</a></h2>"
+Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"d/$ProjectName.bat`">$ProjectName $Version</a></h2>"
 
 Set-Variable -Option Constant INF 'INF'
 Set-Variable -Option Constant WRN 'WRN'

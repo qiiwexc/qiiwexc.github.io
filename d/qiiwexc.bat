@@ -14,7 +14,7 @@ set "psfile=%temp%\qiiwexc.ps1"
 powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 
 
-::Set-Variable -Option Constant Version ([Version]'25.8.10')
+::Set-Variable -Option Constant Version ([Version]'25.8.11')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
