@@ -89,6 +89,57 @@
             >Rufus</a
           >
         </div>
+        <div class="SystemRescue">
+          <a target="_blank" href="https://www.system-rescue.org/"
+            >SystemRescue</a
+          >
+        </div>
+      </section>
+
+      <br />
+
+      <section class="content">
+        <article>
+          <details>
+            <summary>Installing Windows 11 with a local account</summary>
+            <ol>
+              <li>Start Windows 11 installation normally</li>
+              <li>
+                After the restart, when asked to sing in, press
+                <kbd>Shift + F10</kbd>
+              </li>
+              <li>
+                In the command prompt window type the
+                <code>start ms-chx:localonly</code> command
+              </li>
+              <li>
+                Close the command prompt window and proceed with creating a
+                local Windows account
+              </li>
+            </ol>
+            <details>
+              <summary>Older builds</summary>
+              <ol>
+                <li>Start Windows 11 installation normally</li>
+                <li>After the restart, press <kbd>Shift + F10</kbd></li>
+                <li>
+                  In the command prompt window type the
+                  <code>OOBE\BYPASSNRO</code> command to disable the Internet
+                  connection requirement (the computer will restart)
+                </li>
+                <li>After the restart, press <kbd>Shift + F10</kbd> again</li>
+                <li>
+                  Type <code>ipconfig /release</code> command to disable the
+                  Internet connection or just unplug the Ethernet cable
+                </li>
+                <li>
+                  Close the command prompt window and proceed with creating a
+                  local Windows account
+                </li>
+              </ol>
+            </details>
+          </details>
+        </article>
       </section>
     </main>
 
