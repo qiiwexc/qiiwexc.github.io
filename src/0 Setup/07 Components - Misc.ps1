@@ -33,12 +33,10 @@ Function New-RadioButton {
         $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
         $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
         $Shift = "90, 0"
-    }
-    elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
+    } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
         $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
         $Shift = "-15, 20"
-    }
-    elseif ($PREVIOUS_BUTTON) {
+    } elseif ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
         $Shift = "10, $BUTTON_HEIGHT"
     }

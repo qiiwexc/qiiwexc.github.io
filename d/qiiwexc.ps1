@@ -1,4 +1,4 @@
-Set-Variable -Option Constant Version ([Version]'25.8.11')
+Set-Variable -Option Constant Version ([Version]'25.8.17')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -91,7 +91,11 @@ if ($HIDE_CONSOLE) {
     [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
 }
 
-try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not supported' }
+try {
+    Add-Type -AssemblyName System.Windows.Forms
+} catch {
+    Throw 'System not supported'
+}
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
@@ -144,15 +148,13 @@ Function New-GroupBox {
 
     if ($IndexOverride) {
         $GroupIndex = $IndexOverride
-    }
-    else {
+    } else {
         $CURRENT_TAB.Controls | ForEach-Object { $GroupIndex += $_.Length }
     }
 
     if ($GroupIndex -lt 3) {
         Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { "15, 15" } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0" })
-    }
-    else {
+    } else {
         Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
         Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + 15)")
     }
@@ -205,8 +207,7 @@ Function New-Button {
 
         $InitialLocation.Y = $PreviousMiscElement
         $Shift = "0, 30"
-    }
-    elseif ($PREVIOUS_BUTTON) {
+    } elseif ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
         $Shift = "0, $INTERVAL_BUTTON"
     }
@@ -222,7 +223,9 @@ Function New-Button {
 
     $Button.Text = if ($UAC) { "$Text$REQUIRES_ELEVATION" } else { $Text }
 
-    if ($Function) { $Button.Add_Click($Function) }
+    if ($Function) {
+        $Button.Add_Click($Function)
+    }
 
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON
     $CURRENT_GROUP.Controls.Add($Button)
@@ -269,8 +272,7 @@ Function New-CheckBox {
 
         if ($CURRENT_GROUP.Text -eq "Ninite") {
             $Shift = "0, $INTERVAL_CHECKBOX"
-        }
-        else {
+        } else {
             $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
         }
     }
@@ -330,12 +332,10 @@ Function New-RadioButton {
         $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
         $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
         $Shift = "90, 0"
-    }
-    elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
+    } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
         $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
         $Shift = "-15, 20"
-    }
-    elseif ($PREVIOUS_BUTTON) {
+    } elseif ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
         $Shift = "10, $BUTTON_HEIGHT"
     }
@@ -589,27 +589,39 @@ Function Initialize-Startup {
 
     if ($IS_ELEVATED) {
         Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
-        if (!(Test-Path $IE_Registry_Key)) { New-Item $IE_Registry_Key -Force | Out-Null }
+
+        if (!(Test-Path $IE_Registry_Key)) {
+            New-Item $IE_Registry_Key -Force | Out-Null
+        }
+
         Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
     }
 
     Set-Variable -Option Constant -Scope Script PATH_CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
 
-    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
-    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+    if ($PS_VERSION -lt 2) {
+        Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly."
+    } elseif ($PS_VERSION -eq 2) {
+        Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled."
+    }
 
-    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
-    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
+    if ($OS_VERSION -lt 7) {
+        Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly."
+    } elseif ($OS_VERSION -lt 8) {
+        Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled."
+    }
 
     if ($PS_VERSION -gt 2) {
-        try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
-        catch [Exception] { Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
+        try {
+            [Net.ServicePointManager]::SecurityProtocol = 'Tls12'
+        } catch [Exception] {
+            Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)"
+        }
 
         try {
             Add-Type -AssemblyName System.IO.Compression.FileSystem
             Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED $True
-        }
-        catch [Exception] {
+        } catch [Exception] {
             Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
         }
     }
@@ -618,6 +630,7 @@ Function Initialize-Startup {
 
     Set-Variable -Option Constant ComputerSystem (Get-WmiObject Win32_ComputerSystem)
     Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object PCSystemType)
+
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
     }
@@ -650,9 +663,15 @@ Function Add-Log {
     $LOG.SelectionStart = $LOG.TextLength
 
     Switch ($Level) {
-        $WRN { $LOG.SelectionColor = 'blue' }
-        $ERR { $LOG.SelectionColor = 'red' }
-        Default { $LOG.SelectionColor = 'black' }
+        $WRN {
+            $LOG.SelectionColor = 'blue'
+        }
+        $ERR {
+            $LOG.SelectionColor = 'red'
+        }
+        Default {
+            $LOG.SelectionColor = 'black'
+        }
     }
 
     Write-Log "`n[$((Get-Date).ToString())] $Message"
@@ -692,26 +711,35 @@ Function Out-Failure { Out-Status 'Failed' }
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Self-Update #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Get-CurrentVersion {
-    if ($PS_VERSION -le 2) { Add-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"; Return }
+    if ($PS_VERSION -le 2) {
+        Add-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"
+        Return
+    }
 
     Add-Log $INF 'Checking for updates...'
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
-    if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
+    if ($IsNotConnected) {
+        Add-Log $ERR "Failed to check for updates: $IsNotConnected"
+        Return
+    }
 
     $ProgressPreference = 'SilentlyContinue'
     try {
         Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString())
         $ProgressPreference = 'Continue'
-    }
-    catch [Exception] {
+    } catch [Exception] {
         $ProgressPreference = 'Continue'
         Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
         Return
     }
 
-    if ($LatestVersion -gt $VERSION) { Add-Log $WRN "Newer version available: v$LatestVersion"; Get-Update }
-    else { Out-Status 'No updates available' }
+    if ($LatestVersion -gt $VERSION) {
+        Add-Log $WRN "Newer version available: v$LatestVersion"
+        Get-Update
+    } else {
+        Out-Status 'No updates available'
+    }
 }
 
 
@@ -724,22 +752,39 @@ Function Get-Update {
     Add-Log $WRN 'Downloading new version...'
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
-    if ($IsNotConnected) { Add-Log $ERR "Failed to download update: $IsNotConnected"; Return }
+
+    if ($IsNotConnected) {
+        Add-Log $ERR "Failed to download update: $IsNotConnected"
+        Return
+    }
 
     if ($PATH_CALLER) {
         Set-Variable -Option Constant TargetFileBat $($PATH_CALLER + '\qiiwexc.bat')
-        try { Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat }
-        catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
+
+        try {
+            Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat
+        } catch [Exception] {
+            Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
+            Return
+        }
     }
 
-    try { Invoke-WebRequest $DownloadUrlPs1 -OutFile $TargetFilePs1 }
-    catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
+    try {
+        Invoke-WebRequest $DownloadUrlPs1 -OutFile $TargetFilePs1
+    } catch [Exception] {
+        Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
+        Return
+    }
 
     Out-Success
     Add-Log $WRN 'Restarting...'
 
-    try { Start-ExternalProcess "PowerShell '$TargetFilePs1' '-HideConsole'" }
-    catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
+    try {
+        Start-ExternalProcess -BypassExecutionPolicy "$TargetFilePs1 -HideConsole"
+    } catch [Exception] {
+        Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
+        Return
+    }
 
     Exit-Script
 }
@@ -761,8 +806,11 @@ Function Open-InBrowser {
 
     Add-Log $INF "Opening URL in the default browser: $URL"
 
-    try { [System.Diagnostics.Process]::Start($URL) }
-    catch [Exception] { Add-Log $ERR "Could not open the URL: $($_.Exception.Message)" }
+    try {
+        [System.Diagnostics.Process]::Start($URL)
+    } catch [Exception] {
+        Add-Log $ERR "Could not open the URL: $($_.Exception.Message)"
+    }
 }
 
 
@@ -771,14 +819,22 @@ Function Start-ExternalProcess {
         [String[]][Parameter(Position = 0, Mandatory = $True)]$Commands,
         [String][Parameter(Position = 1)]$Title,
         [Switch]$Elevated,
+        [Switch]$BypassExecutionPolicy,
         [Switch]$Wait,
         [Switch]$Hidden
     )
 
-    if ($Title) { $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands }
+    Set-Variable -Option Constant ExecutionPolicy $(if ($BypassExecutionPolicy) { '-ExecutionPolicy Bypass' } else { '' })
+    Set-Variable -Option Constant Verb $(if ($Elevated) { 'RunAs' } else { 'Open' })
+    Set-Variable -Option Constant WindowStyle $(if ($Hidden) { 'Hidden' } else { 'Normal' })
+
+    if ($Title) {
+        $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands
+    }
+
     Set-Variable -Option Constant FullCommand $([String]$($Commands | Where-Object { $_ -ne '' } | ForEach-Object { "$_;" }))
 
-    Start-Process 'PowerShell' "-Command $FullCommand" -Wait:$Wait -Verb:$(if ($Elevated) { 'RunAs' } else { 'Open' }) -WindowStyle:$(if ($Hidden) { 'Hidden' } else { 'Normal' })
+    Start-Process 'PowerShell' "$ExecutionPolicy -Command $FullCommand" -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
 }
 
 
@@ -802,15 +858,19 @@ Function Start-DownloadExtractExecute {
         Return
     }
 
-    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) { Open-InBrowser $URL }
-    else {
+    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) {
+        Open-InBrowser $URL
+    } else {
         Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
         Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
         Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 
         if ($DownloadedFile) {
             Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
-            if ($Execute) { Start-File $Executable $Params -Silent:$Silent }
+
+            if ($Execute) {
+                Start-File $Executable $Params -Silent:$Silent
+            }
         }
     }
 }
@@ -836,18 +896,32 @@ Function Start-Download {
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) {
         Add-Log $ERR "Download failed: $IsNotConnected"
-        if (Test-Path $SavePath) { Add-Log $WRN "Previous download found, returning it"; Return $SavePath } else { Return }
+
+        if (Test-Path $SavePath) {
+            Add-Log $WRN "Previous download found, returning it"
+            Return $SavePath
+        } else {
+            Return
+        }
     }
 
     try {
         Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
         (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
-        if (!$Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
 
-        if (Test-Path $SavePath) { Out-Success }
-        else { Throw 'Possibly computer is offline or disk is full' }
+        if (!$Temp) {
+            Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath
+        }
+
+        if (Test-Path $SavePath) {
+            Out-Success
+        } else {
+            Throw 'Possibly computer is offline or disk is full'
+        }
+    } catch [Exception] {
+        Add-Log $ERR "Download failed: $($_.Exception.Message)"
+        Return
     }
-    catch [Exception] { Add-Log $ERR "Download failed: $($_.Exception.Message)"; Return }
 
     Return $SavePath
 }
@@ -894,8 +968,13 @@ Function Start-Extraction {
     Add-Log $INF "Extracting $ZipPath..."
 
     try {
-        if ($ZIP_SUPPORTED) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
-        else { ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) { $SHELL.NameSpace($TemporaryPath).CopyHere($Item) } }
+        if ($ZIP_SUPPORTED) {
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath)
+        } else {
+            ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) {
+                $SHELL.NameSpace($TemporaryPath).CopyHere($Item)
+            }
+        }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
@@ -906,7 +985,10 @@ Function Start-Extraction {
 
     if (!$IsDirectory) {
         Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
-        if ($ExtractionPath) { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath }
+
+        if ($ExtractionPath) {
+            Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
+        }
     }
 
     if (!$Execute -and $IsDirectory) {
@@ -933,8 +1015,12 @@ Function Start-File {
     if ($Switches -and $Silent) {
         Add-Log $INF "Installing '$Executable' silently..."
 
-        try { Start-Process -Wait $Executable $Switches }
-        catch [Exception] { Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"; Return }
+        try {
+            Start-Process -Wait $Executable $Switches
+        } catch [Exception] {
+            Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"
+            Return
+        }
 
         Out-Success
 
@@ -946,10 +1032,15 @@ Function Start-File {
         Add-Log $INF "Starting '$Executable'..."
 
         try {
-            if ($Switches) { Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) }
-            else { Start-Process $Executable -WorkingDirectory (Split-Path $Executable) }
+            if ($Switches) {
+                Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable)
+            } else {
+                Start-Process $Executable -WorkingDirectory (Split-Path $Executable)
+            }
+        } catch [Exception] {
+            Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"
+            Return
         }
-        catch [Exception] { Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"; Return }
 
         Out-Success
     }
@@ -962,8 +1053,12 @@ Function Start-Elevated {
     if (!$IS_ELEVATED) {
         Add-Log $INF 'Requesting administrator privileges...'
 
-        try { Start-ExternalProcess -Elevated "$($MyInvocation.ScriptName)$(if ($HIDE_CONSOLE) {' -HideConsole'})" }
-        catch [Exception] { Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"; Return }
+        try {
+            Start-ExternalProcess -Elevated -BypassExecutionPolicy "$($MyInvocation.ScriptName) $(if ($HIDE_CONSOLE) {' -HideConsole'})"
+        } catch [Exception] {
+            Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
+            Return
+        }
 
         Exit-Script
     }
@@ -985,8 +1080,12 @@ Function Set-CloudFlareDNS {
         Return
     }
 
-    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))" }
-    catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
+    try {
+        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+    } catch [Exception] {
+        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
+        Return
+    }
 
     Out-Success
 }
@@ -1002,24 +1101,48 @@ Function Set-NiniteButtonState {
 
 Function Set-NiniteQuery {
     [String[]]$Array = @()
-    if ($CHECKBOX_7zip.Checked) { $Array += $CHECKBOX_7zip.Name }
-    if ($CHECKBOX_VLC.Checked) { $Array += $CHECKBOX_VLC.Name }
-    if ($CHECKBOX_TeamViewer.Checked) { $Array += $CHECKBOX_TeamViewer.Name }
-    if ($CHECKBOX_Chrome.Checked) { $Array += $CHECKBOX_Chrome.Name }
-    if ($CHECKBOX_qBittorrent.Checked) { $Array += $CHECKBOX_qBittorrent.Name }
-    if ($CHECKBOX_Malwarebytes.Checked) { $Array += $CHECKBOX_Malwarebytes.Name }
+    if ($CHECKBOX_7zip.Checked) {
+        $Array += $CHECKBOX_7zip.Name
+    }
+    if ($CHECKBOX_VLC.Checked) {
+        $Array += $CHECKBOX_VLC.Name
+    }
+    if ($CHECKBOX_TeamViewer.Checked) {
+        $Array += $CHECKBOX_TeamViewer.Name
+    }
+    if ($CHECKBOX_Chrome.Checked) {
+        $Array += $CHECKBOX_Chrome.Name
+    }
+    if ($CHECKBOX_qBittorrent.Checked) {
+        $Array += $CHECKBOX_qBittorrent.Name
+    }
+    if ($CHECKBOX_Malwarebytes.Checked) {
+        $Array += $CHECKBOX_Malwarebytes.Name
+    }
     Return $Array -Join '-'
 }
 
 
 Function Set-NiniteFileName {
     [String[]]$Array = @()
-    if ($CHECKBOX_7zip.Checked) { $Array += $CHECKBOX_7zip.Text }
-    if ($CHECKBOX_VLC.Checked) { $Array += $CHECKBOX_VLC.Text }
-    if ($CHECKBOX_TeamViewer.Checked) { $Array += $CHECKBOX_TeamViewer.Text }
-    if ($CHECKBOX_Chrome.Checked) { $Array += $CHECKBOX_Chrome.Text }
-    if ($CHECKBOX_qBittorrent.Checked) { $Array += $CHECKBOX_qBittorrent.Text }
-    if ($CHECKBOX_Malwarebytes.Checked) { $Array += $CHECKBOX_Malwarebytes.Text }
+    if ($CHECKBOX_7zip.Checked) {
+        $Array += $CHECKBOX_7zip.Text
+    }
+    if ($CHECKBOX_VLC.Checked) {
+        $Array += $CHECKBOX_VLC.Text
+    }
+    if ($CHECKBOX_TeamViewer.Checked) {
+        $Array += $CHECKBOX_TeamViewer.Text
+    }
+    if ($CHECKBOX_Chrome.Checked) {
+        $Array += $CHECKBOX_Chrome.Text
+    }
+    if ($CHECKBOX_qBittorrent.Checked) {
+        $Array += $CHECKBOX_qBittorrent.Text
+    }
+    if ($CHECKBOX_Malwarebytes.Checked) {
+        $Array += $CHECKBOX_Malwarebytes.Text
+    }
     Return "Ninite $($Array -Join ' ') Installer.exe"
 }
 
@@ -1031,8 +1154,8 @@ Function Set-NiniteFileName {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUXOWVGYp/K5ByaTZFDKIdPghu
-# 4gagghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUDMTUHBC+31tppYIJQMdbBVg/
+# 0F6gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1153,28 +1276,28 @@ Function Set-NiniteFileName {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSVfCzS
-# w2elmpHM6zvNwWeoZRrX8zANBgkqhkiG9w0BAQEFAASCAQAqsHCT/lhtxSOFsvtc
-# ZCJ+AcgGhIL1vzleoQCckyufEb6ElxRxQqOht7EpGDhec60REU5Hcy1axJMtRznz
-# 7Rdv4DHvPepPxUcxEaVoXrOYX0XA2XcLepkdPrVBfYuenIt4dDcPN+ZYIpo17Jz9
-# b2S70oT6OHSdZmZiyeP1EYp1v34gThchezrzRhLHd+AgFFkLkrqcVAiOEXISzCuH
-# leLPb0PWrNRBMgtnJicFpPKyCnFlJk/fYCCrAlJxkX26R/3F4yl10aJkkOKC5AnF
-# 6OQBi+S0sNfpRC1r7he5gna34iLChYqCuH+dOMZMs77pZoiobgckTO8hKhVUTsoe
-# XcQYoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBR9pQ4s
+# m3lZ43WwMI7iStfbY2uQ0jANBgkqhkiG9w0BAQEFAASCAQBS4uqi7xppm/9V+j23
+# pRih5QjNNfL1WzaTVMd38pZ3jWkCJAAnav5vf+py9Gjpj3GMj2jMquO7mTm7d7cw
+# tJWfnGGc0Svdh+7rTytc6qGkZDMkWzTbnZD/wCeJePidMl6MrDhfYrTm4pORNikb
+# amoikPXRM72L9qjFVqX32f+OWnB3vNfOqOmdEP/b4TiNjhoepd79S+QQTKQ835W9
+# iyYvhEDaqhkDXRJwOaUuHwOD9oDrgjL4D0yix4o93VK0zj505csu1KpI+qJiajLz
+# SRG5qoDiMUeB3sx2Kb4PmVownU2SxB1IvsWUWaGLHqQEE1eWpXmrF40rvkeZf6bq
+# l7ieoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgxMTIzMTg1OFowLwYJKoZI
-# hvcNAQkEMSIEIJs3U3qsnfs9/s9geukDC++6DnzsXaP6KAMyli4DDIP3MA0GCSqG
-# SIb3DQEBAQUABIICAFTu0MnOU8dHt3Foc52B7yoqOWGy1mADtOTPRGfTdhXY368D
-# 8iQiLT/Pzcg6rCB1nWqnAwzawpkmgLsBg25lnPBddti9VjGm3JNEQX6NIVBhg2Oy
-# jjq8U2B09lNarvfcsF4MXwwngoAtHHRIjgjFtJk8Pizp7ayE6HHTd9fbPLeGjseE
-# /+4NYIoSQioqvFhqa47RiKK2RKZdYYPLtaunOzJyVDFv0NNzkBqnGD+hwEGsSoXI
-# gjJ8p2gK9NHxpXdBj9uiODZr1YTf/cRdhfNIzTPjne+JOkDmzonJRwpTuG+28zIs
-# pjRjK28uY8otMs/Om99rRzi6VkFuv7urq0bVN2xkKwn+/ScGW+QRJ2cnVHgdQuO1
-# i7F99C+6IfIXPrXpYE4UJPWD3a29OLDIGUCsRSi9KcjEcGhtsBXBemzdORZMzskk
-# OfNQw8n23HNvEfhlptHPOFeQoihIYG2KVapjSQoPOhvVtIIPkoBsiS8LBwcycSUf
-# jcAeI+V8bxOmX1+Nx5c8pJ9Q4L9xM1puKRyNGvZqjPmLKNBpEr8/ArEkqVzKgLWY
-# tQ1tNbU+AGsW8ineAKQykxIZKSf19FGNPHweXbTKfYW5TjYExJDGuYz4NQev/ABV
-# OhMvYXXI4YJZVx5lIMFy98vF0k/h2YbYt/lPh0CwL1cPpFV7wmsHK2ZAwp/2
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgxNzAwNTYxMlowLwYJKoZI
+# hvcNAQkEMSIEIHveDBXOTXr3M4e0kxjuc1w5H8YbWoPmAPbl9umNgDkhMA0GCSqG
+# SIb3DQEBAQUABIICAIUUGXZBRgolpM5oSWqfMpHANIjBnYe6w1z/jECqQXZtzs+G
+# wQWjbp8+LaOat+JVlXs1Ho26W9d2g4/+GrdTXZ6WKWT290DTmeNn+7L6hLywZIQN
+# kmFwWJ5yUNwGtkQevoVAxUIo5QHB+fa30a7oKbowvq1bAm/C5mh9bP+uDTduve4Q
+# Puxg8VexZu399aqawzq67xgu9YZCl/o/Hs7Am0FrUP8Da6iFQ6cn7oBtHPOoGIvr
+# dPV2TdiFsEPK8RCjMIkNHzK2Vxs3C7aDsf0w0gBqdZGj/146Wi9HWVKbAB1tS75W
+# UsWLUvD/7pldxlHd1nk03cWCdx98XwZtKpPmBW/PblckJi5ZLks2ARZmPRQjNM1T
+# vXtl0/dSMUfaLy6Ia/abPmyf30RBABhD1JwytiIZKaxAmVt3CLjbtSjCXOvdHVAl
+# gN/vfv/6TuzVbPPPi7OaSd06k2SXEnIT9rY/v9vix26GjfHumnlAmrp7ScQXs3+N
+# yZ3Q1XPaLto8vjfIImR7Dexadeos6vrYUvCLcRcjhmlOLfWhYA18BA8gRI8/1aDY
+# FUUJmqaMSkgnMPzfHWEeXOmUYSasEg1S/yNOlje6qxkoDaJVx72MajhCx0BmxlPi
+# fH3Qi/e33Lv6HX0QsThPbUBWVZRtYuO8NgvC6MR9qNq2MLJjkGAzkuewtYVx
 # SIG # End signature block

@@ -11,10 +11,10 @@ set "psfile=%temp%\qiiwexc.ps1"
   )
 )
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
+powershell -ExecutionPolicy Bypass "%psfile%" "%cd%"
 
 
-::Set-Variable -Option Constant Version ([Version]'25.8.11')
+::Set-Variable -Option Constant Version ([Version]'25.8.17')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -107,7 +107,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::    [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
 ::}
 ::
-::try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not supported' }
+::try {
+::    Add-Type -AssemblyName System.Windows.Forms
+::} catch {
+::    Throw 'System not supported'
+::}
 ::
 ::[System.Windows.Forms.Application]::EnableVisualStyles()
 ::
@@ -160,15 +164,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::    if ($IndexOverride) {
 ::        $GroupIndex = $IndexOverride
-::    }
-::    else {
+::    } else {
 ::        $CURRENT_TAB.Controls | ForEach-Object { $GroupIndex += $_.Length }
 ::    }
 ::
 ::    if ($GroupIndex -lt 3) {
 ::        Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { "15, 15" } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0" })
-::    }
-::    else {
+::    } else {
 ::        Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
 ::        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + 15)")
 ::    }
@@ -221,8 +223,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::        $InitialLocation.Y = $PreviousMiscElement
 ::        $Shift = "0, 30"
-::    }
-::    elseif ($PREVIOUS_BUTTON) {
+::    } elseif ($PREVIOUS_BUTTON) {
 ::        $InitialLocation = $PREVIOUS_BUTTON.Location
 ::        $Shift = "0, $INTERVAL_BUTTON"
 ::    }
@@ -238,7 +239,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::    $Button.Text = if ($UAC) { "$Text$REQUIRES_ELEVATION" } else { $Text }
 ::
-::    if ($Function) { $Button.Add_Click($Function) }
+::    if ($Function) {
+::        $Button.Add_Click($Function)
+::    }
 ::
 ::    $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON
 ::    $CURRENT_GROUP.Controls.Add($Button)
@@ -285,8 +288,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::        if ($CURRENT_GROUP.Text -eq "Ninite") {
 ::            $Shift = "0, $INTERVAL_CHECKBOX"
-::        }
-::        else {
+::        } else {
 ::            $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
 ::        }
 ::    }
@@ -346,12 +348,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::        $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
 ::        $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
 ::        $Shift = "90, 0"
-::    }
-::    elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
+::    } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
 ::        $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
 ::        $Shift = "-15, 20"
-::    }
-::    elseif ($PREVIOUS_BUTTON) {
+::    } elseif ($PREVIOUS_BUTTON) {
 ::        $InitialLocation = $PREVIOUS_BUTTON.Location
 ::        $Shift = "10, $BUTTON_HEIGHT"
 ::    }
@@ -605,27 +605,39 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::    if ($IS_ELEVATED) {
 ::        Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
-::        if (!(Test-Path $IE_Registry_Key)) { New-Item $IE_Registry_Key -Force | Out-Null }
+::
+::        if (!(Test-Path $IE_Registry_Key)) {
+::            New-Item $IE_Registry_Key -Force | Out-Null
+::        }
+::
 ::        Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
 ::    }
 ::
 ::    Set-Variable -Option Constant -Scope Script PATH_CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
 ::
-::    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
-::    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+::    if ($PS_VERSION -lt 2) {
+::        Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly."
+::    } elseif ($PS_VERSION -eq 2) {
+::        Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled."
+::    }
 ::
-::    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
-::    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
+::    if ($OS_VERSION -lt 7) {
+::        Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly."
+::    } elseif ($OS_VERSION -lt 8) {
+::        Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled."
+::    }
 ::
 ::    if ($PS_VERSION -gt 2) {
-::        try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
-::        catch [Exception] { Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
+::        try {
+::            [Net.ServicePointManager]::SecurityProtocol = 'Tls12'
+::        } catch [Exception] {
+::            Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)"
+::        }
 ::
 ::        try {
 ::            Add-Type -AssemblyName System.IO.Compression.FileSystem
 ::            Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED $True
-::        }
-::        catch [Exception] {
+::        } catch [Exception] {
 ::            Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
 ::        }
 ::    }
@@ -634,6 +646,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::    Set-Variable -Option Constant ComputerSystem (Get-WmiObject Win32_ComputerSystem)
 ::    Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object PCSystemType)
+::
 ::    if ($Computer) {
 ::        Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
 ::    }
@@ -666,9 +679,15 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::    $LOG.SelectionStart = $LOG.TextLength
 ::
 ::    Switch ($Level) {
-::        $WRN { $LOG.SelectionColor = 'blue' }
-::        $ERR { $LOG.SelectionColor = 'red' }
-::        Default { $LOG.SelectionColor = 'black' }
+::        $WRN {
+::            $LOG.SelectionColor = 'blue'
+::        }
+::        $ERR {
+::            $LOG.SelectionColor = 'red'
+::        }
+::        Default {
+::            $LOG.SelectionColor = 'black'
+::        }
 ::    }
 ::
 ::    Write-Log "`n[$((Get-Date).ToString())] $Message"
@@ -708,26 +727,35 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Self-Update #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Function Get-CurrentVersion {
-::    if ($PS_VERSION -le 2) { Add-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"; Return }
+::    if ($PS_VERSION -le 2) {
+::        Add-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"
+::        Return
+::    }
 ::
 ::    Add-Log $INF 'Checking for updates...'
 ::
 ::    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
-::    if ($IsNotConnected) { Add-Log $ERR "Failed to check for updates: $IsNotConnected"; Return }
+::    if ($IsNotConnected) {
+::        Add-Log $ERR "Failed to check for updates: $IsNotConnected"
+::        Return
+::    }
 ::
 ::    $ProgressPreference = 'SilentlyContinue'
 ::    try {
 ::        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString())
 ::        $ProgressPreference = 'Continue'
-::    }
-::    catch [Exception] {
+::    } catch [Exception] {
 ::        $ProgressPreference = 'Continue'
 ::        Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
 ::        Return
 ::    }
 ::
-::    if ($LatestVersion -gt $VERSION) { Add-Log $WRN "Newer version available: v$LatestVersion"; Get-Update }
-::    else { Out-Status 'No updates available' }
+::    if ($LatestVersion -gt $VERSION) {
+::        Add-Log $WRN "Newer version available: v$LatestVersion"
+::        Get-Update
+::    } else {
+::        Out-Status 'No updates available'
+::    }
 ::}
 ::
 ::
@@ -740,22 +768,39 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::    Add-Log $WRN 'Downloading new version...'
 ::
 ::    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
-::    if ($IsNotConnected) { Add-Log $ERR "Failed to download update: $IsNotConnected"; Return }
+::
+::    if ($IsNotConnected) {
+::        Add-Log $ERR "Failed to download update: $IsNotConnected"
+::        Return
+::    }
 ::
 ::    if ($PATH_CALLER) {
 ::        Set-Variable -Option Constant TargetFileBat $($PATH_CALLER + '\qiiwexc.bat')
-::        try { Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat }
-::        catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
+::
+::        try {
+::            Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat
+::        } catch [Exception] {
+::            Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
+::            Return
+::        }
 ::    }
 ::
-::    try { Invoke-WebRequest $DownloadUrlPs1 -OutFile $TargetFilePs1 }
-::    catch [Exception] { Add-Log $ERR "Failed to download update: $($_.Exception.Message)"; Return }
+::    try {
+::        Invoke-WebRequest $DownloadUrlPs1 -OutFile $TargetFilePs1
+::    } catch [Exception] {
+::        Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
+::        Return
+::    }
 ::
 ::    Out-Success
 ::    Add-Log $WRN 'Restarting...'
 ::
-::    try { Start-ExternalProcess "PowerShell '$TargetFilePs1' '-HideConsole'" }
-::    catch [Exception] { Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"; Return }
+::    try {
+::        Start-ExternalProcess -BypassExecutionPolicy "$TargetFilePs1 -HideConsole"
+::    } catch [Exception] {
+::        Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
+::        Return
+::    }
 ::
 ::    Exit-Script
 ::}
@@ -777,8 +822,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::    Add-Log $INF "Opening URL in the default browser: $URL"
 ::
-::    try { [System.Diagnostics.Process]::Start($URL) }
-::    catch [Exception] { Add-Log $ERR "Could not open the URL: $($_.Exception.Message)" }
+::    try {
+::        [System.Diagnostics.Process]::Start($URL)
+::    } catch [Exception] {
+::        Add-Log $ERR "Could not open the URL: $($_.Exception.Message)"
+::    }
 ::}
 ::
 ::
@@ -787,14 +835,22 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::        [String[]][Parameter(Position = 0, Mandatory = $True)]$Commands,
 ::        [String][Parameter(Position = 1)]$Title,
 ::        [Switch]$Elevated,
+::        [Switch]$BypassExecutionPolicy,
 ::        [Switch]$Wait,
 ::        [Switch]$Hidden
 ::    )
 ::
-::    if ($Title) { $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands }
+::    Set-Variable -Option Constant ExecutionPolicy $(if ($BypassExecutionPolicy) { '-ExecutionPolicy Bypass' } else { '' })
+::    Set-Variable -Option Constant Verb $(if ($Elevated) { 'RunAs' } else { 'Open' })
+::    Set-Variable -Option Constant WindowStyle $(if ($Hidden) { 'Hidden' } else { 'Normal' })
+::
+::    if ($Title) {
+::        $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands
+::    }
+::
 ::    Set-Variable -Option Constant FullCommand $([String]$($Commands | Where-Object { $_ -ne '' } | ForEach-Object { "$_;" }))
 ::
-::    Start-Process 'PowerShell' "-Command $FullCommand" -Wait:$Wait -Verb:$(if ($Elevated) { 'RunAs' } else { 'Open' }) -WindowStyle:$(if ($Hidden) { 'Hidden' } else { 'Normal' })
+::    Start-Process 'PowerShell' "$ExecutionPolicy -Command $FullCommand" -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
 ::}
 ::
 ::
@@ -818,15 +874,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::        Return
 ::    }
 ::
-::    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) { Open-InBrowser $URL }
-::    else {
+::    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) {
+::        Open-InBrowser $URL
+::    } else {
 ::        Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
 ::        Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
 ::        Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 ::
 ::        if ($DownloadedFile) {
 ::            Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
-::            if ($Execute) { Start-File $Executable $Params -Silent:$Silent }
+::
+::            if ($Execute) {
+::                Start-File $Executable $Params -Silent:$Silent
+::            }
 ::        }
 ::    }
 ::}
@@ -852,18 +912,32 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
 ::    if ($IsNotConnected) {
 ::        Add-Log $ERR "Download failed: $IsNotConnected"
-::        if (Test-Path $SavePath) { Add-Log $WRN "Previous download found, returning it"; Return $SavePath } else { Return }
+::
+::        if (Test-Path $SavePath) {
+::            Add-Log $WRN "Previous download found, returning it"
+::            Return $SavePath
+::        } else {
+::            Return
+::        }
 ::    }
 ::
 ::    try {
 ::        Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
 ::        (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
-::        if (!$Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
 ::
-::        if (Test-Path $SavePath) { Out-Success }
-::        else { Throw 'Possibly computer is offline or disk is full' }
+::        if (!$Temp) {
+::            Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath
+::        }
+::
+::        if (Test-Path $SavePath) {
+::            Out-Success
+::        } else {
+::            Throw 'Possibly computer is offline or disk is full'
+::        }
+::    } catch [Exception] {
+::        Add-Log $ERR "Download failed: $($_.Exception.Message)"
+::        Return
 ::    }
-::    catch [Exception] { Add-Log $ERR "Download failed: $($_.Exception.Message)"; Return }
 ::
 ::    Return $SavePath
 ::}
@@ -910,8 +984,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::    Add-Log $INF "Extracting $ZipPath..."
 ::
 ::    try {
-::        if ($ZIP_SUPPORTED) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
-::        else { ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) { $SHELL.NameSpace($TemporaryPath).CopyHere($Item) } }
+::        if ($ZIP_SUPPORTED) {
+::            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath)
+::        } else {
+::            ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) {
+::                $SHELL.NameSpace($TemporaryPath).CopyHere($Item)
+::            }
+::        }
 ::    }
 ::    catch [Exception] {
 ::        Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
@@ -922,7 +1001,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::    if (!$IsDirectory) {
 ::        Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
-::        if ($ExtractionPath) { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath }
+::
+::        if ($ExtractionPath) {
+::            Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
+::        }
 ::    }
 ::
 ::    if (!$Execute -and $IsDirectory) {
@@ -949,8 +1031,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::    if ($Switches -and $Silent) {
 ::        Add-Log $INF "Installing '$Executable' silently..."
 ::
-::        try { Start-Process -Wait $Executable $Switches }
-::        catch [Exception] { Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"; Return }
+::        try {
+::            Start-Process -Wait $Executable $Switches
+::        } catch [Exception] {
+::            Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"
+::            Return
+::        }
 ::
 ::        Out-Success
 ::
@@ -962,10 +1048,15 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::        Add-Log $INF "Starting '$Executable'..."
 ::
 ::        try {
-::            if ($Switches) { Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) }
-::            else { Start-Process $Executable -WorkingDirectory (Split-Path $Executable) }
+::            if ($Switches) {
+::                Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable)
+::            } else {
+::                Start-Process $Executable -WorkingDirectory (Split-Path $Executable)
+::            }
+::        } catch [Exception] {
+::            Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"
+::            Return
 ::        }
-::        catch [Exception] { Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"; Return }
 ::
 ::        Out-Success
 ::    }
@@ -978,8 +1069,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::    if (!$IS_ELEVATED) {
 ::        Add-Log $INF 'Requesting administrator privileges...'
 ::
-::        try { Start-ExternalProcess -Elevated "$($MyInvocation.ScriptName)$(if ($HIDE_CONSOLE) {' -HideConsole'})" }
-::        catch [Exception] { Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"; Return }
+::        try {
+::            Start-ExternalProcess -Elevated -BypassExecutionPolicy "$($MyInvocation.ScriptName) $(if ($HIDE_CONSOLE) {' -HideConsole'})"
+::        } catch [Exception] {
+::            Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
+::            Return
+::        }
 ::
 ::        Exit-Script
 ::    }
@@ -1001,8 +1096,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::        Return
 ::    }
 ::
-::    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))" }
-::    catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
+::    try {
+::        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+::    } catch [Exception] {
+::        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
+::        Return
+::    }
 ::
 ::    Out-Success
 ::}
@@ -1018,24 +1117,48 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"
 ::
 ::Function Set-NiniteQuery {
 ::    [String[]]$Array = @()
-::    if ($CHECKBOX_7zip.Checked) { $Array += $CHECKBOX_7zip.Name }
-::    if ($CHECKBOX_VLC.Checked) { $Array += $CHECKBOX_VLC.Name }
-::    if ($CHECKBOX_TeamViewer.Checked) { $Array += $CHECKBOX_TeamViewer.Name }
-::    if ($CHECKBOX_Chrome.Checked) { $Array += $CHECKBOX_Chrome.Name }
-::    if ($CHECKBOX_qBittorrent.Checked) { $Array += $CHECKBOX_qBittorrent.Name }
-::    if ($CHECKBOX_Malwarebytes.Checked) { $Array += $CHECKBOX_Malwarebytes.Name }
+::    if ($CHECKBOX_7zip.Checked) {
+::        $Array += $CHECKBOX_7zip.Name
+::    }
+::    if ($CHECKBOX_VLC.Checked) {
+::        $Array += $CHECKBOX_VLC.Name
+::    }
+::    if ($CHECKBOX_TeamViewer.Checked) {
+::        $Array += $CHECKBOX_TeamViewer.Name
+::    }
+::    if ($CHECKBOX_Chrome.Checked) {
+::        $Array += $CHECKBOX_Chrome.Name
+::    }
+::    if ($CHECKBOX_qBittorrent.Checked) {
+::        $Array += $CHECKBOX_qBittorrent.Name
+::    }
+::    if ($CHECKBOX_Malwarebytes.Checked) {
+::        $Array += $CHECKBOX_Malwarebytes.Name
+::    }
 ::    Return $Array -Join '-'
 ::}
 ::
 ::
 ::Function Set-NiniteFileName {
 ::    [String[]]$Array = @()
-::    if ($CHECKBOX_7zip.Checked) { $Array += $CHECKBOX_7zip.Text }
-::    if ($CHECKBOX_VLC.Checked) { $Array += $CHECKBOX_VLC.Text }
-::    if ($CHECKBOX_TeamViewer.Checked) { $Array += $CHECKBOX_TeamViewer.Text }
-::    if ($CHECKBOX_Chrome.Checked) { $Array += $CHECKBOX_Chrome.Text }
-::    if ($CHECKBOX_qBittorrent.Checked) { $Array += $CHECKBOX_qBittorrent.Text }
-::    if ($CHECKBOX_Malwarebytes.Checked) { $Array += $CHECKBOX_Malwarebytes.Text }
+::    if ($CHECKBOX_7zip.Checked) {
+::        $Array += $CHECKBOX_7zip.Text
+::    }
+::    if ($CHECKBOX_VLC.Checked) {
+::        $Array += $CHECKBOX_VLC.Text
+::    }
+::    if ($CHECKBOX_TeamViewer.Checked) {
+::        $Array += $CHECKBOX_TeamViewer.Text
+::    }
+::    if ($CHECKBOX_Chrome.Checked) {
+::        $Array += $CHECKBOX_Chrome.Text
+::    }
+::    if ($CHECKBOX_qBittorrent.Checked) {
+::        $Array += $CHECKBOX_qBittorrent.Text
+::    }
+::    if ($CHECKBOX_Malwarebytes.Checked) {
+::        $Array += $CHECKBOX_Malwarebytes.Text
+::    }
 ::    Return "Ninite $($Array -Join ' ') Installer.exe"
 ::}
 ::

@@ -1,7 +1,7 @@
 {
   "tasks": [
     {
-      "command": ".\\utils\\build.ps1 --and-run",
+      "command": "powershell -ExecutionPolicy Bypass .\\utils\\build.ps1 --and-run",
       "group": {
         "isDefault": true,
         "kind": "build"

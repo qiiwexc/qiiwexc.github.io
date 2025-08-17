@@ -30,8 +30,7 @@ Function New-CheckBox {
 
         if ($CURRENT_GROUP.Text -eq "Ninite") {
             $Shift = "0, $INTERVAL_CHECKBOX"
-        }
-        else {
+        } else {
             $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
         }
     }

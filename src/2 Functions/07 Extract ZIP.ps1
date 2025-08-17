@@ -37,8 +37,13 @@ Function Start-Extraction {
     Add-Log $INF "Extracting $ZipPath..."
 
     try {
-        if ($ZIP_SUPPORTED) { [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath) }
-        else { ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) { $SHELL.NameSpace($TemporaryPath).CopyHere($Item) } }
+        if ($ZIP_SUPPORTED) {
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath)
+        } else {
+            ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) {
+                $SHELL.NameSpace($TemporaryPath).CopyHere($Item)
+            }
+        }
     }
     catch [Exception] {
         Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
@@ -49,7 +54,10 @@ Function Start-Extraction {
 
     if (!$IsDirectory) {
         Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
-        if ($ExtractionPath) { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath }
+
+        if ($ExtractionPath) {
+            Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
+        }
     }
 
     if (!$Execute -and $IsDirectory) {

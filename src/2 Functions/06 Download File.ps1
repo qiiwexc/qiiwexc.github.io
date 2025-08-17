@@ -16,18 +16,32 @@ Function Start-Download {
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) {
         Add-Log $ERR "Download failed: $IsNotConnected"
-        if (Test-Path $SavePath) { Add-Log $WRN "Previous download found, returning it"; Return $SavePath } else { Return }
+
+        if (Test-Path $SavePath) {
+            Add-Log $WRN "Previous download found, returning it"
+            Return $SavePath
+        } else {
+            Return
+        }
     }
 
     try {
         Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
         (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
-        if (!$Temp) { Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath }
 
-        if (Test-Path $SavePath) { Out-Success }
-        else { Throw 'Possibly computer is offline or disk is full' }
+        if (!$Temp) {
+            Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath
+        }
+
+        if (Test-Path $SavePath) {
+            Out-Success
+        } else {
+            Throw 'Possibly computer is offline or disk is full'
+        }
+    } catch [Exception] {
+        Add-Log $ERR "Download failed: $($_.Exception.Message)"
+        Return
     }
-    catch [Exception] { Add-Log $ERR "Download failed: $($_.Exception.Message)"; Return }
 
     Return $SavePath
 }
