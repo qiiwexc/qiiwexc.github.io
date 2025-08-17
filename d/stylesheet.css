@@ -25,37 +25,41 @@ h2 {
   font-weight: normal;
 }
 
-p {
+header {
+  background: #00af85;
+  color: white;
+  display: block;
+  padding: 0.5rem 0 2.5rem 0;
+  width: 100%;
+}
+
+header p {
   font-style: italic;
   margin: 0;
-  padding: 0 16px;
+  padding: 0 1rem;
   text-align: right;
 }
 
-.content {
+main {
   margin: auto;
-  max-width: 1150px;
-  padding: 10px;
+  max-width: 50rem;
+  padding: 2rem 1rem 1rem 1rem;
 }
 
-.content div {
-  background-position: 5px;
+.downloads div {
+  background-position: 0.5rem;
   background-repeat: no-repeat;
-  background-size: 50px;
+  background-size: 3.125rem;
   display: inline-block;
   font-size: 26px;
-  margin: 5px;
-  padding: 10px 10px 10px 65px;
+  margin: 0.75rem;
+  padding: 0.75rem 0.75rem 0.75rem 4rem;
   text-align: left;
   vertical-align: middle;
 }
 
-.header {
-  background: #00af85;
-  color: white;
-  display: block;
-  padding: 10px 0 40px 0;
-  width: 100%;
+.content {
+  text-align: left;
 }
 
 .Activator {
