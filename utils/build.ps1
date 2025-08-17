@@ -26,7 +26,18 @@ Function Add-Log {
     )
 
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
-    Switch ($Level) { $WRN { Write-Warning $Text } $INF { Write-Host $Text } Default { Write-Host $Message } }
+
+    Switch ($Level) {
+        $WRN {
+            Write-Warning $Text
+        }
+        $INF {
+            Write-Host $Text
+        }
+        Default {
+            Write-Host $Message
+        }
+    }
 }
 
 
@@ -109,7 +120,7 @@ Function New-Batch {
     $BatchStrings += '    endlocal'
     $BatchStrings += '  )'
     $BatchStrings += ")`n"
-    $BatchStrings += 'powershell -NoProfile -ExecutionPolicy Bypass -File "%psfile%" "%cd%"'
+    $BatchStrings += 'powershell -ExecutionPolicy Bypass "%psfile%" "%cd%"'
     $BatchStrings += "`n"
 
     ForEach ($String In $PowerShellStrings) {

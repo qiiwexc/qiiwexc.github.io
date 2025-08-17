@@ -30,8 +30,7 @@ Function New-Button {
 
         $InitialLocation.Y = $PreviousMiscElement
         $Shift = "0, 30"
-    }
-    elseif ($PREVIOUS_BUTTON) {
+    } elseif ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
         $Shift = "0, $INTERVAL_BUTTON"
     }
@@ -47,7 +46,9 @@ Function New-Button {
 
     $Button.Text = if ($UAC) { "$Text$REQUIRES_ELEVATION" } else { $Text }
 
-    if ($Function) { $Button.Add_Click($Function) }
+    if ($Function) {
+        $Button.Add_Click($Function)
+    }
 
     $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON
     $CURRENT_GROUP.Controls.Add($Button)

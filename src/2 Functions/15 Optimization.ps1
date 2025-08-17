@@ -11,8 +11,12 @@ Function Set-CloudFlareDNS {
         Return
     }
 
-    try { Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))" }
-    catch [Exception] { Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"; Return }
+    try {
+        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+    } catch [Exception] {
+        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
+        Return
+    }
 
     Out-Success
 }

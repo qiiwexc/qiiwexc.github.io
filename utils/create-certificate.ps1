@@ -18,7 +18,18 @@ Function Add-Log {
     )
 
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
-    Switch ($Level) { $WRN { Write-Warning $Text } $INF { Write-Host $Text } Default { Write-Host $Message } }
+
+    Switch ($Level) {
+        $WRN {
+            Write-Warning $Text
+        }
+        $INF {
+            Write-Host $Text
+        }
+        Default {
+            Write-Host $Message
+        }
+    }
 }
 
 
@@ -26,8 +37,12 @@ Function Start-Elevated {
     if (!$IsElevated) {
         Add-Log $INF 'Requesting administrator privileges...'
 
-        try { Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`"" }
-        catch [Exception] { Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"; Return }
+        try {
+            Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`""
+        } catch [Exception] {
+            Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
+            Return
+        }
 
         Exit
     }
@@ -46,8 +61,12 @@ Function New-Certificate {
 
     Export-Certificate -Cert $Certificate -FilePath $CertificatePath
 
-    try { Get-Item $CertificatePath | Import-Certificate -CertStoreLocation "Cert:\LocalMachine\Root" }
-    catch [Exception] { Add-Log $ERR "Failed to import certificates: $($_.Exception.Message)"; Return }
+    try {
+        Get-Item $CertificatePath | Import-Certificate -CertStoreLocation "Cert:\LocalMachine\Root"
+    } catch [Exception] {
+        Add-Log $ERR "Failed to import certificates: $($_.Exception.Message)"
+        Return
+    }
 
     $Certificate.Thumbprint | Out-File $ThumbprintPath -Encoding ASCII
 }

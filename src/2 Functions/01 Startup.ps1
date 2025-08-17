@@ -4,27 +4,39 @@ Function Initialize-Startup {
 
     if ($IS_ELEVATED) {
         Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
-        if (!(Test-Path $IE_Registry_Key)) { New-Item $IE_Registry_Key -Force | Out-Null }
+
+        if (!(Test-Path $IE_Registry_Key)) {
+            New-Item $IE_Registry_Key -Force | Out-Null
+        }
+
         Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
     }
 
     Set-Variable -Option Constant -Scope Script PATH_CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
 
-    if ($PS_VERSION -lt 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly." }
-    elseif ($PS_VERSION -eq 2) { Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled." }
+    if ($PS_VERSION -lt 2) {
+        Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly."
+    } elseif ($PS_VERSION -eq 2) {
+        Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled."
+    }
 
-    if ($OS_VERSION -lt 7) { Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly." }
-    elseif ($OS_VERSION -lt 8) { Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled." }
+    if ($OS_VERSION -lt 7) {
+        Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly."
+    } elseif ($OS_VERSION -lt 8) {
+        Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled."
+    }
 
     if ($PS_VERSION -gt 2) {
-        try { [Net.ServicePointManager]::SecurityProtocol = 'Tls12' }
-        catch [Exception] { Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)" }
+        try {
+            [Net.ServicePointManager]::SecurityProtocol = 'Tls12'
+        } catch [Exception] {
+            Add-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)"
+        }
 
         try {
             Add-Type -AssemblyName System.IO.Compression.FileSystem
             Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED $True
-        }
-        catch [Exception] {
+        } catch [Exception] {
             Add-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
         }
     }
@@ -33,6 +45,7 @@ Function Initialize-Startup {
 
     Set-Variable -Option Constant ComputerSystem (Get-WmiObject Win32_ComputerSystem)
     Set-Variable -Option Constant Computer ($ComputerSystem | Select-Object PCSystemType)
+
     if ($Computer) {
         Add-Log $INF "    Computer type:  $(Switch ($Computer.PCSystemType) { 1 {'Desktop'} 2 {'Laptop'} Default {'Other'} })"
     }

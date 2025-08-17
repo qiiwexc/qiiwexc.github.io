@@ -12,7 +12,11 @@ if ($HIDE_CONSOLE) {
     [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
 }
 
-try { Add-Type -AssemblyName System.Windows.Forms } catch { Throw 'System not supported' }
+try {
+    Add-Type -AssemblyName System.Windows.Forms
+} catch {
+    Throw 'System not supported'
+}
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
 

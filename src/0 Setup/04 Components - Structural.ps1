@@ -28,15 +28,13 @@ Function New-GroupBox {
 
     if ($IndexOverride) {
         $GroupIndex = $IndexOverride
-    }
-    else {
+    } else {
         $CURRENT_TAB.Controls | ForEach-Object { $GroupIndex += $_.Length }
     }
 
     if ($GroupIndex -lt 3) {
         Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { "15, 15" } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0" })
-    }
-    else {
+    } else {
         Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
         Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + 15)")
     }
