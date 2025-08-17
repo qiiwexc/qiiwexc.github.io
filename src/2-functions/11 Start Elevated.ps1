@@ -3,7 +3,7 @@ Function Start-Elevated {
         Add-Log $INF 'Requesting administrator privileges...'
 
         try {
-            Start-ExternalProcess -Elevated -BypassExecutionPolicy "$($MyInvocation.ScriptName) $(if ($HIDE_CONSOLE) {' -HideConsole'})"
+            Start-ExternalProcess -Elevated -BypassExecutionPolicy -HideConsole:$HIDE_CONSOLE $MyInvocation.ScriptName
         } catch [Exception] {
             Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
             Return

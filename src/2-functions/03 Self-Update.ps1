@@ -47,7 +47,7 @@ Function Get-Update {
     }
 
     if ($PATH_CALLER) {
-        Set-Variable -Option Constant TargetFileBat $($PATH_CALLER + '\qiiwexc.bat')
+        Set-Variable -Option Constant TargetFileBat "$PATH_CALLER\qiiwexc.bat"
 
         try {
             Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat
@@ -68,7 +68,7 @@ Function Get-Update {
     Add-Log $WRN 'Restarting...'
 
     try {
-        Start-ExternalProcess -BypassExecutionPolicy "$TargetFilePs1 -HideConsole"
+        Start-ExternalProcess -BypassExecutionPolicy -HideConsole $TargetFilePs1
     } catch [Exception] {
         Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
         Return

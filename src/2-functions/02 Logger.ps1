@@ -47,6 +47,10 @@ Function Out-Status {
 }
 
 
-Function Out-Success { Out-Status 'Done' }
+Function Out-Success {
+    Out-Status 'Done'
+}
 
-Function Out-Failure { Out-Status 'Failed' }
+Function Out-Failure {
+    Out-Status 'Failed'
+}

@@ -1,4 +1,6 @@
-Set-Variable -Option Constant Version ([Version]'25.8.17')
+param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)
+
+Set-Variable -Option Constant Version ([Version]'25.8.18')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -55,8 +57,8 @@ Set-Variable -Option Constant WRN 'WRN'
 Set-Variable -Option Constant ERR 'ERR'
 
 
-Set-Variable -Option Constant PATH_CALLER $($args[0])
-Set-Variable -Option Constant PATH_TEMP_DIR "$env:TMP\qiiwexc"
+Set-Variable -Option Constant PATH_CALLER $CallerPath
+Set-Variable -Option Constant PATH_TEMP_DIR "$([System.IO.Path]::GetTempPath())\qiiwexc"
 Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
 
 Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
@@ -83,7 +85,7 @@ Set-Variable -Option Constant OLD_WINDOW_TITLE $($HOST.UI.RawUI.WindowTitle)
 $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administrator'})"
 
 Set-Variable -Option Constant StartedFromGUI $($MyInvocation.Line -Match 'if((Get-ExecutionPolicy ) -ne ''AllSigned'')*')
-Set-Variable -Option Constant HIDE_CONSOLE ($args[0] -eq '-HideConsole' -or $StartedFromGUI -or !$MyInvocation.Line)
+Set-Variable -Option Constant HIDE_CONSOLE ($HideConsole -or $StartedFromGUI -or !$MyInvocation.Line)
 
 if ($HIDE_CONSOLE) {
     Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
@@ -641,7 +643,7 @@ Function Initialize-Startup {
 
     Add-Log $INF "    Operation system:  $OS_NAME"
     Add-Log $INF "    OS architecture:  $(if ($OS_64_BIT) { '64-bit' } else { '32-bit' })"
-    Add-Log $INF "    $(if ($OS_VERSION -eq 10) {'OS release / '})Build number:  $(if ($OS_VERSION -eq 10) {"v$WindowsRelease / "})$OS_BUILD"
+    Add-Log $INF "    $(if ($OS_VERSION -ge 10) {'OS release / '})Build number:  $(if ($OS_VERSION -ge 10) {"v$WindowsRelease / "})$OS_BUILD"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})"
 
     Get-CurrentVersion
@@ -703,9 +705,13 @@ Function Out-Status {
 }
 
 
-Function Out-Success { Out-Status 'Done' }
+Function Out-Success {
+    Out-Status 'Done'
+}
 
-Function Out-Failure { Out-Status 'Failed' }
+Function Out-Failure {
+    Out-Status 'Failed'
+}
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Self-Update #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -759,7 +765,7 @@ Function Get-Update {
     }
 
     if ($PATH_CALLER) {
-        Set-Variable -Option Constant TargetFileBat $($PATH_CALLER + '\qiiwexc.bat')
+        Set-Variable -Option Constant TargetFileBat "$PATH_CALLER\qiiwexc.bat"
 
         try {
             Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat
@@ -780,7 +786,7 @@ Function Get-Update {
     Add-Log $WRN 'Restarting...'
 
     try {
-        Start-ExternalProcess -BypassExecutionPolicy "$TargetFilePs1 -HideConsole"
+        Start-ExternalProcess -BypassExecutionPolicy -HideConsole $TargetFilePs1
     } catch [Exception] {
         Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
         Return
@@ -792,13 +798,26 @@ Function Get-Update {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Common #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Function Get-NetworkAdapter { Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True') }
+Function Get-NetworkAdapter {
+    Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
+}
 
-Function Get-ConnectionStatus { if (!(Get-NetworkAdapter)) { Return 'Computer is not connected to the Internet' } }
+Function Get-ConnectionStatus {
+    if (!(Get-NetworkAdapter)) {
+        Return 'Computer is not connected to the Internet'
+    }
+}
 
-Function Reset-StateOnExit { Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_TEMP_DIR; $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE; Write-Host '' }
+Function Reset-StateOnExit {
+    Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_TEMP_DIR
+    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
+    Write-Host ''
+}
 
-Function Exit-Script { Reset-StateOnExit; $FORM.Close() }
+Function Exit-Script {
+    Reset-StateOnExit
+    $FORM.Close()
+}
 
 
 Function Open-InBrowser {
@@ -816,25 +835,22 @@ Function Open-InBrowser {
 
 Function Start-ExternalProcess {
     Param(
-        [String[]][Parameter(Position = 0, Mandatory = $True)]$Commands,
-        [String][Parameter(Position = 1)]$Title,
-        [Switch]$Elevated,
+        [String][Parameter(Position = 0, Mandatory = $True)]$Command,
         [Switch]$BypassExecutionPolicy,
-        [Switch]$Wait,
-        [Switch]$Hidden
+        [Switch]$Elevated,
+        [Switch]$HideConsole,
+        [Switch]$HideWindow,
+        [Switch]$Wait
     )
 
     Set-Variable -Option Constant ExecutionPolicy $(if ($BypassExecutionPolicy) { '-ExecutionPolicy Bypass' } else { '' })
+    Set-Variable -Option Constant ConsoleState $(if ($HideConsole) { '-HideConsole' } else { '' })
     Set-Variable -Option Constant Verb $(if ($Elevated) { 'RunAs' } else { 'Open' })
-    Set-Variable -Option Constant WindowStyle $(if ($Hidden) { 'Hidden' } else { 'Normal' })
+    Set-Variable -Option Constant WindowStyle $(if ($HideWindow) { 'Hidden' } else { 'Normal' })
 
-    if ($Title) {
-        $Commands = , "(Get-Host).UI.RawUI.WindowTitle = '$Title'" + $Commands
-    }
+    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $ConsoleState"
 
-    Set-Variable -Option Constant FullCommand $([String]$($Commands | Where-Object { $_ -ne '' } | ForEach-Object { "$_;" }))
-
-    Start-Process 'PowerShell' "$ExecutionPolicy -Command $FullCommand" -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
+    Start-Process 'PowerShell' $FullCommand -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
 }
 
 
@@ -1054,7 +1070,7 @@ Function Start-Elevated {
         Add-Log $INF 'Requesting administrator privileges...'
 
         try {
-            Start-ExternalProcess -Elevated -BypassExecutionPolicy "$($MyInvocation.ScriptName) $(if ($HIDE_CONSOLE) {' -HideConsole'})"
+            Start-ExternalProcess -Elevated -BypassExecutionPolicy -HideConsole:$HIDE_CONSOLE $MyInvocation.ScriptName
         } catch [Exception] {
             Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
             Return
@@ -1081,7 +1097,7 @@ Function Set-CloudFlareDNS {
     }
 
     try {
-        Start-ExternalProcess -Elevated -Hidden "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+        Start-ExternalProcess -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
     } catch [Exception] {
         Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
         Return
@@ -1154,8 +1170,8 @@ Function Set-NiniteFileName {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUDMTUHBC+31tppYIJQMdbBVg/
-# 0F6gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUUMhMRACvZqyfwB7DyJfuSw+2
+# wHSgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1276,28 +1292,28 @@ Function Set-NiniteFileName {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBR9pQ4s
-# m3lZ43WwMI7iStfbY2uQ0jANBgkqhkiG9w0BAQEFAASCAQBS4uqi7xppm/9V+j23
-# pRih5QjNNfL1WzaTVMd38pZ3jWkCJAAnav5vf+py9Gjpj3GMj2jMquO7mTm7d7cw
-# tJWfnGGc0Svdh+7rTytc6qGkZDMkWzTbnZD/wCeJePidMl6MrDhfYrTm4pORNikb
-# amoikPXRM72L9qjFVqX32f+OWnB3vNfOqOmdEP/b4TiNjhoepd79S+QQTKQ835W9
-# iyYvhEDaqhkDXRJwOaUuHwOD9oDrgjL4D0yix4o93VK0zj505csu1KpI+qJiajLz
-# SRG5qoDiMUeB3sx2Kb4PmVownU2SxB1IvsWUWaGLHqQEE1eWpXmrF40rvkeZf6bq
-# l7ieoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTPPgwW
+# vVU+PCh3ZYc93CPP9LSQKDANBgkqhkiG9w0BAQEFAASCAQBuv3E6RFzeqDVlTgyu
+# f+Nh0uv6l7qO2EIua1Rzflia4p8NsL1TDRmQg+UUfwZmcfK+XpyB6/iREAJGoJ/X
+# yYsuvbpCVY/tdkWfYeV2UgTzmU89r5NgmqJOZeFbXfFaNFwtIIdDrOQLa11JMK5X
+# eeRnZRyfu5IPzHVBTYykFxZkccu8hSeU6t1D8hePxtU/+H2omkiv+jQIR+lryDFC
+# GXIqo0gZejkISMjlDi8Cv7cUmDorU63LsRt+BCsxtiafTQhuDMLx3y5/obRmR35g
+# jpLcH/7YRbjZPDsEPB2I+B0TgLD6tORTL56zq4KMIKoDHp0w8cUvzf8oxTLc5wCS
+# HW4PoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgxNzE0NDI0MlowLwYJKoZI
-# hvcNAQkEMSIEIHveDBXOTXr3M4e0kxjuc1w5H8YbWoPmAPbl9umNgDkhMA0GCSqG
-# SIb3DQEBAQUABIICALefDjUchzfGpmKFqy5QmaazviCkLo1kJ2qqvZsY4mcPCgJC
-# iDqtp92lFaNvxm0pbWrrmdPjb2onuYGfRobCqZ+6YzxW+IT0tbtSzvmNqAQ8ZyhI
-# R6C0eOn24uENPbmaAG5LToy+H7M6VVscikPXtutPces0KIObF/VYySd/KLchGZT4
-# tHYhzn8KMW21MsroMzc0PnHpUjfz6MEMiQnJcHP6atqzKY3Ab8AGYEO3WwzuewJl
-# voINO7Tz3dS+BQEufv6UvMJ/9P0yqC5ZCPqlXJ2RC1mtMXAspdX71AgPjFYSG+ew
-# LIUkGm5NwwhGFTVGMMmhRwkp+fnRHhWyWjuj4HGclboU5uaYD+a3BeXY+ufjOYhd
-# M8xihbT8g6BKeeZ8W06/Fa1dPulM1qvqo/FznFGixqo+bahbqKgOSS0SJYt/G65U
-# tKwOqQ04ZXLl+wqzIcmsQaO7PnZ8gmjUREM8fAdwWBn8klMDCGQZ5i85h7JBmt0c
-# 3C0uGJ8wPhd8qIZ4Nq8r3PxLSEENdOHmGFaRoIodHep3C2W/CBWpQOrDdLI5i8f4
-# 17hn6VzA6VCq/3/9UF0cwl9R4wp2wVzETzavjACLYHrHhB7TggZICabvV5se8iX+
-# 0m1WF5fOE9uIswqpEVWWOeF5e+tfsUHZpR0X/J2ZmLzFzqdua2e1hi5/5TQu
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgxNzIxMDY0OVowLwYJKoZI
+# hvcNAQkEMSIEIMJXKyFiC7HzgaH3e1QiEggbxZ5smExp9CeqJc0etbeoMA0GCSqG
+# SIb3DQEBAQUABIICAIkwh1fA2ByLxPbyWlTu3lilVuUyF6C0d1Vs28xDsKA7x6lj
+# G3YLdp5Ew9QqU+7UndhDrlO2KQ6MrFTLDz+EvFHjBE5GgJYzTfkmfWczMXBPKHeg
+# 6DlPQghMcZtOD0V8XHA4sY0FMC8D7/3SqZCsPdd7rKXJbx7M818P7WbpMznjBxsx
+# LUzXfUOSTA8mpVAAH12VXnUno6OUChGLdvM6umOsiS7rrH8DP9I3svMCXDZDTU8I
+# FTDz5ehbmsySYgT/EDyVbt1EauIBV/3NHBb3WBCddJfjFFti6BRuDBY+hfzhzTTN
+# nU6fS2elc70BagmG9N5qP4ZC2FIXzfNXIJOH9db+QzQMsDTZ1ogLY3qcTOvTLva2
+# ZY1V76tzR868ml+ED2ZbZbQiWaU0hv3Pucw8mKGnKxU2AWNPT8eKARSLGQ+nL/ON
+# sITHdguKEjuJMIZaPQC0ndfB1bBfksNd1oMZ0/bwRCbeTFrCGHsXLD5ZID7Pd6Vs
+# Kb8egLhozIkBaWv/Iq4rGy+Qa8qTufdp9gLEwLa35Utx1nIDPDV1FYv+YoL1bP05
+# asRqQFX9Ye3BiPBfQvPYHKmcl//GLKXmy7m7jvhpzK0KSl1Yoq5DrMr/rRMvtwtH
+# steALTyW+jPuP/+Aoa+f/5yGjFZ0Ov+lONBfWmML8JMKghmYEU2Mk9IfzqSn
 # SIG # End signature block
