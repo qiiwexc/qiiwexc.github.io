@@ -11,7 +11,7 @@ $CHECKBOX_StartSDI.Add_CheckStateChanged( { $BUTTON_DownloadSDI.Text = "Snappy D
 
 
 $BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
-$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked 'https://qiiwexc.github.io/d/Office_2013-2024.zip' } )
+$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -23,7 +23,7 @@ $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Of
 $BUTTON_DownloadUnchecky = New-Button -UAC 'Unchecky'
 $BUTTON_DownloadUnchecky.Add_Click( {
         Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
-        Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked 'https://unchecky.com/files/unchecky_setup.exe' -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
+        Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked $URL_UNCHECKY -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
     } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2

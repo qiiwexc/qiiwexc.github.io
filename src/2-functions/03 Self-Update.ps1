@@ -14,7 +14,7 @@ Function Get-CurrentVersion {
 
     $ProgressPreference = 'SilentlyContinue'
     try {
-        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString())
+        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest $URL_VERSION_FILE).ToString())
         $ProgressPreference = 'Continue'
     } catch [Exception] {
         $ProgressPreference = 'Continue'
@@ -32,9 +32,6 @@ Function Get-CurrentVersion {
 
 
 Function Get-Update {
-    Set-Variable -Option Constant DownloadUrlPs1 'https://bit.ly/qiiwexc_ps1'
-    Set-Variable -Option Constant DownloadUrlBat 'https://qiiwexc.github.io/d/qiiwexc.bat'
-
     Set-Variable -Option Constant TargetFilePs1 $MyInvocation.ScriptName
 
     Add-Log $WRN 'Downloading new version...'
@@ -46,11 +43,11 @@ Function Get-Update {
         Return
     }
 
-    if ($PATH_CALLER) {
-        Set-Variable -Option Constant TargetFileBat "$PATH_CALLER\qiiwexc.bat"
+    if ($CallerPath) {
+        Set-Variable -Option Constant TargetFileBat "$CallerPath\qiiwexc.bat"
 
         try {
-            Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat
+            Invoke-WebRequest $URL_BAT_FILE -OutFile $TargetFileBat
         } catch [Exception] {
             Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
             Return
@@ -58,7 +55,7 @@ Function Get-Update {
     }
 
     try {
-        Invoke-WebRequest $DownloadUrlPs1 -OutFile $TargetFilePs1
+        Invoke-WebRequest $URL_PS1_FILE -OutFile $TargetFilePs1
     } catch [Exception] {
         Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
         Return

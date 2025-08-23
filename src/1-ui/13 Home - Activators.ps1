@@ -4,7 +4,7 @@ New-GroupBox 'Activators (Windows 7+, Office)'
 $BUTTON_DownloadAAct = New-Button -UAC 'AAct'
 $BUTTON_DownloadAAct.Add_Click( {
         Set-Variable -Option Constant Params $(if ($RADIO_AActWindows.Checked) { '/win=act /taskwin' } elseif ($RADIO_AActOffice.Checked) { '/ofs=act /taskofs' })
-        Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked 'https://qiiwexc.github.io/d/AAct.zip' -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
+        Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked $URL_AACT -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
     } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2

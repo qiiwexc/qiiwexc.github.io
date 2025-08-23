@@ -36,8 +36,8 @@ Function Start-Build {
     Add-Log $INF 'Build finished'
 
     if ($Run) {
-        Add-Log $INF "Running $Ps1File"
-        Start-Process 'PowerShell' ".\$Ps1File"
+        Add-Log $INF "Running $BatchFile"
+        Start-Process "PowerShell" ".\$BatchFile ShowConsole"
     }
 }
 
@@ -90,7 +90,7 @@ Function Update-Html {
 
     Set-Variable -Option Constant WebPageFile ".\index.html"
     Set-Variable -Option Constant HtmlTitle   "<title>$ProjectName $Version</title>"
-    Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"d/$ProjectName.bat`">$ProjectName $Version</a></h2>"
+    Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"https://bit.ly/$($ProjectName)_bat`">$ProjectName $Version</a></h2>"
 
     (Get-Content $WebPageFile) | ForEach-Object { $_ -Replace "<title>.+", $HtmlTitle -Replace "<h2>.+", $HtmlHeader } | Set-Content $WebPageFile
 
@@ -151,8 +151,11 @@ Function New-Batch {
     $BatchStrings += '    endlocal'
     $BatchStrings += '  )'
     $BatchStrings += ")`n"
-    $BatchStrings += 'powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%'
-    $BatchStrings += "`n"
+    $BatchStrings += 'if "%~1"=="ShowConsole" ('
+    $BatchStrings += '    powershell -ExecutionPolicy Bypass %psfile% -CallerPath %cd%'
+    $BatchStrings += ') else ('
+    $BatchStrings += '    powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%'
+    $BatchStrings += ")`n"
 
     ForEach ($String In $PowerShellStrings) {
         $BatchStrings += "::$($String -Replace "`n", "`n::")"

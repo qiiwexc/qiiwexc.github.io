@@ -11,12 +11,15 @@ set "psfile=%temp%\qiiwexc.ps1"
   )
 )
 
-powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
-
+if "%~1"=="ShowConsole" (
+    powershell -ExecutionPolicy Bypass %psfile% -CallerPath %cd%
+) else (
+    powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
+)
 
 ::param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)
 ::
-::Set-Variable -Option Constant Version ([Version]'25.8.20')
+::Set-Variable -Option Constant Version ([Version]'25.8.23')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -73,7 +76,6 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::Set-Variable -Option Constant ERR 'ERR'
 ::
 ::
-::Set-Variable -Option Constant PATH_CALLER $CallerPath
 ::Set-Variable -Option Constant PATH_TEMP_DIR "$([System.IO.Path]::GetTempPath())\qiiwexc"
 ::Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
 ::
@@ -82,6 +84,10 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# URLs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant URL_VERSION_FILE 'https://bit.ly/qiiwexc_version'
+::Set-Variable -Option Constant URL_PS1_FILE 'https://bit.ly/qiiwexc_ps1'
+::Set-Variable -Option Constant URL_BAT_FILE 'https://bit.ly/qiiwexc_bat'
 ::
 ::Set-Variable -Option Constant URL_WINDOWS_11 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html'
 ::Set-Variable -Option Constant URL_WINDOWS_10 'https://w16.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html'
@@ -92,6 +98,12 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.5.816.zip'
 ::Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 ::
+::Set-Variable -Option Constant URL_AACT 'https://qiiwexc.github.io/d/AAct.zip'
+::Set-Variable -Option Constant URL_OFFICE 'https://qiiwexc.github.io/d/Office_2013-2024.zip'
+::Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
+::Set-Variable -Option Constant URL_LIVE_CD 'https://rutracker.org/forum/viewtopic.php?t=4366725'
+::Set-Variable -Option Constant URL_NINITE 'https://ninite.com'
+::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Initialization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
@@ -100,10 +112,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::Set-Variable -Option Constant OLD_WINDOW_TITLE $($HOST.UI.RawUI.WindowTitle)
 ::$HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administrator'})"
 ::
-::Set-Variable -Option Constant StartedFromGUI $($MyInvocation.Line -Match 'if((Get-ExecutionPolicy ) -ne ''AllSigned'')*')
-::Set-Variable -Option Constant HIDE_CONSOLE ($HideConsole -or $StartedFromGUI -or !$MyInvocation.Line)
-::
-::if ($HIDE_CONSOLE) {
+::if ($HideConsole) {
 ::    Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
 ::                                                                [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
 ::    [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
@@ -134,7 +143,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PathOfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - Structural #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - Tab #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Function New-Tab {
 ::    Param(
@@ -151,6 +160,9 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::    Set-Variable -Scope Script PREVIOUS_GROUP $Null
 ::    Set-Variable -Scope Script CURRENT_TAB $TabPage
 ::}
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - GroupBox #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Function New-GroupBox {
 ::    Param(
@@ -313,7 +325,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - Misc #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - Label #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Function New-Label {
 ::    Param(
@@ -333,6 +345,9 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::
 ::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Label
 ::}
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - RadioButton #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Function New-RadioButton {
 ::    Param(
@@ -441,7 +456,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::$BUTTON_DownloadAAct = New-Button -UAC 'AAct'
 ::$BUTTON_DownloadAAct.Add_Click( {
 ::        Set-Variable -Option Constant Params $(if ($RADIO_AActWindows.Checked) { '/win=act /taskwin' } elseif ($RADIO_AActOffice.Checked) { '/ofs=act /taskofs' })
-::        Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked 'https://qiiwexc.github.io/d/AAct.zip' -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
+::        Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked $URL_AACT -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
 ::    } )
 ::
 ::$CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -529,12 +544,12 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::$CHECKBOX_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::$BUTTON_DownloadNinite = New-Button -UAC 'Download selected'
-::$BUTTON_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "https://ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
+::$BUTTON_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "$URL_NINITE/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
 ::
 ::$CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 ::$CHECKBOX_StartNinite.Add_CheckStateChanged( { $BUTTON_DownloadNinite.Text = "Download selected$(if ($CHECKBOX_StartNinite.Checked) { $REQUIRES_ELEVATION })" } )
 ::
-::$BUTTON_FUNCTION = { Open-InBrowser "https://ninite.com/?select=$(Set-NiniteQuery)" }
+::$BUTTON_FUNCTION = { Open-InBrowser "$URL_NINITE/?select=$(Set-NiniteQuery)" }
 ::New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 ::
 ::
@@ -553,7 +568,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::
 ::
 ::$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
-::$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked 'https://qiiwexc.github.io/d/Office_2013-2024.zip' } )
+::$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE } )
 ::
 ::$CHECKBOX_DISABLED = $PS_VERSION -le 2
 ::$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -565,7 +580,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::$BUTTON_DownloadUnchecky = New-Button -UAC 'Unchecky'
 ::$BUTTON_DownloadUnchecky.Add_Click( {
 ::        Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
-::        Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked 'https://unchecky.com/files/unchecky_setup.exe' -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
+::        Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked $URL_UNCHECKY -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
 ::    } )
 ::
 ::$CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -595,7 +610,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
 ::New-ButtonBrowser 'Windows 7' $BUTTON_FUNCTION
 ::
-::$BUTTON_FUNCTION = { Open-InBrowser 'https://rutracker.org/forum/viewtopic.php?t=4366725' }
+::$BUTTON_FUNCTION = { Open-InBrowser $URL_LIVE_CD }
 ::New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
 ::
 ::
@@ -748,7 +763,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::
 ::    $ProgressPreference = 'SilentlyContinue'
 ::    try {
-::        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString())
+::        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest $URL_VERSION_FILE).ToString())
 ::        $ProgressPreference = 'Continue'
 ::    } catch [Exception] {
 ::        $ProgressPreference = 'Continue'
@@ -766,9 +781,6 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::
 ::
 ::Function Get-Update {
-::    Set-Variable -Option Constant DownloadUrlPs1 'https://bit.ly/qiiwexc_ps1'
-::    Set-Variable -Option Constant DownloadUrlBat 'https://qiiwexc.github.io/d/qiiwexc.bat'
-::
 ::    Set-Variable -Option Constant TargetFilePs1 $MyInvocation.ScriptName
 ::
 ::    Add-Log $WRN 'Downloading new version...'
@@ -780,11 +792,11 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::        Return
 ::    }
 ::
-::    if ($PATH_CALLER) {
-::        Set-Variable -Option Constant TargetFileBat "$PATH_CALLER\qiiwexc.bat"
+::    if ($CallerPath) {
+::        Set-Variable -Option Constant TargetFileBat "$CallerPath\qiiwexc.bat"
 ::
 ::        try {
-::            Invoke-WebRequest $DownloadUrlBat -OutFile $TargetFileBat
+::            Invoke-WebRequest $URL_BAT_FILE -OutFile $TargetFileBat
 ::        } catch [Exception] {
 ::            Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
 ::            Return
@@ -792,7 +804,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::    }
 ::
 ::    try {
-::        Invoke-WebRequest $DownloadUrlPs1 -OutFile $TargetFilePs1
+::        Invoke-WebRequest $URL_PS1_FILE -OutFile $TargetFilePs1
 ::    } catch [Exception] {
 ::        Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
 ::        Return
@@ -848,6 +860,8 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::    }
 ::}
 ::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Process #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Function Start-ExternalProcess {
 ::    Param(
@@ -1086,7 +1100,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::        Add-Log $INF 'Requesting administrator privileges...'
 ::
 ::        try {
-::            Start-ExternalProcess -Elevated -BypassExecutionPolicy -HideConsole:$HIDE_CONSOLE $MyInvocation.ScriptName
+::            Start-ExternalProcess -Elevated -BypassExecutionPolicy -HideConsole:$HideConsole $MyInvocation.ScriptName
 ::        } catch [Exception] {
 ::            Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
 ::            Return
@@ -1097,7 +1111,7 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Function Set-CloudFlareDNS {
 ::    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
@@ -1186,8 +1200,8 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::# SIG # Begin signature block
 ::# MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 ::# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUhkx0IqKJsbZBOphTgI1lTeBO
-::# 2MygghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUpJ/Y8dHFu2HWlJJc+AtalC/F
+::# DW+gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 ::# AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 ::# OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 ::# ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1308,28 +1322,28 @@ powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%
 ::# ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 ::# DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 ::# AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTCe6AX
-::# VH5pVwE1rxhrQ3rxkJtYtzANBgkqhkiG9w0BAQEFAASCAQDB4Lh6Oa4N8vRHSjr4
-::# ABHVi0MIBLTKIkc3XzUW+wCIhL2culSr/o5W9E53H0JskTgpg02e16s45E299nog
-::# +YO4QCrIwFLqKFNFxCzJQo5r4E9hOxOl7R4DIJWJ18D3Usyl+IqDlJf04pyLFQ8w
-::# cyeufuc02CqST7Zq+KxWyk053jHCK29bEyMmh5De7ngx7AV9r7+/9mLFfYtDtQM7
-::# qMzYGDok6TJK1I3C1AiHfdA3gwxCItg1AZBwaT84auwPuvhZwLx0D4YKKi1j99vr
-::# okdJxnYciiobxcm0cvCVPycNEYLERooWKxsltPpL8tZEH7s3CBxGCjzPyFWqSw1r
-::# hVuBoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBR82lls
+::# pHmzt2JUolFPpHsgfY1jGzANBgkqhkiG9w0BAQEFAASCAQA5OPY9IVn2M3S3oItX
+::# nSXcM/ccWEx1KGhwwRRCI3aU+zjnMBVRzZ4+Ctpf6Jr6PUGjziCpTNhsOYt0CFSI
+::# 95oFm2SYPWRmlbFBQsvxlmnHahI5FaDXF5K76bb3Ynp1nfBAsUXUBA2kUjLeTfsP
+::# JYVrhmRofFp1Hfw18FVxPGf2BTxdzHGeV20lMs2/g0APTbir670OgyCv6OeOB+vn
+::# HcPIsckruzkNhgstGs0ciB/+A8gbT2KmrIY6Y9H5xo+d0sHs5krGYSIXGY7QM0f3
+::# iPglIHf4ngf+f4K2MHODzvL5tX9nonqFkjpCWE95jQmICB/cipHDOZMkYIH2XUm9
+::# EO1coYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 ::# VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 ::# cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 ::# CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyMDEwMDIxMVowLwYJKoZI
-::# hvcNAQkEMSIEIAp1D+bkkBvPC3jvtdAaTk5Oc3hjvAFwjTyWDWZ/TA1xMA0GCSqG
-::# SIb3DQEBAQUABIICAI2HJgizV0rMyrgiCbgUtY/HxINAe5AI4i5rgXKwS+hUACU9
-::# 3qPz9DMvXAJAjf3hqi/FC3kcebFpGlXbbLtn2T306wW3zKPsvoR6Wow04YN53Yj9
-::# y6uasIvAoWFSQ6V2xIUH1Ez5P2sdWqRFLMJgGHSpKuHU5B1HnsvIed2w7Hqf6G8k
-::# sxOUNweedYuaCWyeU6MwSHIPf2YG5bCjxniqXnG7PgqNWSs04Lwl6hOwbninzQRV
-::# uf1409Fn80n7XjiQb+gG6hYc6lq99DoGi3Jip//GN3sEu50QW0dNxx3PI6tiNWWy
-::# ZDeRKlQk+uX/8moKOHS2U8UjAPPrqhOSi7Jy+s+fv6dPZVXO4RpTG5Cg25ELnaUu
-::# UcgGDyt2/ZqJ+xJNZATQavyeYmxC2aguFoLVAulUrxnHD2VKY2quvS5mtoLG757E
-::# EkNrHvR5xNFGapy6aTu2Bhxu/qxX3m0ZOUyP2KR7NB1lSHsO1lxfdUF/LdyC52YT
-::# 4XENX9ZuJ4o6lr9bm+vFHR4JQakp9G5bVW9GIdUt8vEuy79AY/jcMVfR+wGt/AdM
-::# wDWTunL4aHuLp+upjm9MST2l7ur6W5ixgwzv98PFlrpFCda8anRBA+yn59APCRW1
-::# SMe61Y9tjOlro82UGERgs3ijxo+06gfs1T5VNshiwQxyhUKxvNa6VpoVslF0
+::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyMzE0NTMxMVowLwYJKoZI
+::# hvcNAQkEMSIEIJclpRT2TPJOCMrGccahdNkrCgglhP2dBHqjyTqJHtXbMA0GCSqG
+::# SIb3DQEBAQUABIICAFe6KfkAYJEPk//q0PNWEeu8ETmh3irDJMgtyJyFfQD69lf2
+::# dJeM5Z60UGeT/2ELCvDCry6ulhkACE1V/AH++lYzO3AwLRz1vV3ctGVgwXJnZEjF
+::# HU/CbV9nfWAwrYMeeGJX5UKeUpo7J3rfXizVWp+/Fd8k1mgJo+bvbr88FUN6Befi
+::# P/8aRzhJrlQBmDb7U6g3tnX/3xge0m1R09lckCbdUT/7tHi3ohIE1PGZsMjnXDWV
+::# SJ1RXLsd9DG21orCuHXSqCmOM9Agd2ZKinPMBVwWvpi+K+gjZcL9yj95ftuH8Mz9
+::# LMp25nZ5c3i9DM5d/rMhGcHsPlxTQ/9SNkPUMEchxslhElCIUzwyQax4Q/bMZI5k
+::# 8N9llfceFgJxl6ZBwEhsX7kYjKmgJkizYJU8Whs9fDEDQfVqnubHNPAbv8HoZ5+R
+::# gywqxNuoW9Tc3Rlr2SDcJ1BLjg5vwRd3vuG1MdxWwLGUOVJTR0aORfjKyALLGf4s
+::# TlUjaS7TLHGPJ+lcTF4j/E1HmPu1jdsHMdX5Ly3tPi4lZTpzLIqGh0HsgEzfqMUk
+::# hUUfUEmU8p98ppJ1yu62bK+NFWcWsWTAjbgcp/BypbwMOwSTXgWVDzJ9t1iosDgO
+::# +evIYV8pnSnbYQ3LgwTqXcGHL+/ZRtNqmgTVQu1iZXnszylEkxube1YmeT/J
 ::# SIG # End signature block

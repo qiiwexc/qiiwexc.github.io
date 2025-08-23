@@ -3,10 +3,7 @@ Write-Host 'Initializing...'
 Set-Variable -Option Constant OLD_WINDOW_TITLE $($HOST.UI.RawUI.WindowTitle)
 $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administrator'})"
 
-Set-Variable -Option Constant StartedFromGUI $($MyInvocation.Line -Match 'if((Get-ExecutionPolicy ) -ne ''AllSigned'')*')
-Set-Variable -Option Constant HIDE_CONSOLE ($HideConsole -or $StartedFromGUI -or !$MyInvocation.Line)
-
-if ($HIDE_CONSOLE) {
+if ($HideConsole) {
     Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
                                                                 [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
     [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
