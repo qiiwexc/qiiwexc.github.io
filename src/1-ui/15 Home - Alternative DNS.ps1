@@ -1,4 +1,4 @@
-New-GroupBox 'Optimization'
+New-GroupBox 'Alternative DNS'
 
 
 $BUTTON_FUNCTION = { Set-CloudFlareDNS }

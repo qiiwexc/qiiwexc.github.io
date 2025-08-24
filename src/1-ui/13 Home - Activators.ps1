@@ -24,3 +24,14 @@ $RADIO_AActWindows = New-RadioButton 'Windows' -Checked
 
 $RADIO_DISABLED = !$OFFICE_VERSION
 $RADIO_AActOffice = New-RadioButton 'Office' -Disabled:$RADIO_DISABLED
+
+
+$BUTTON_DownloadActivationProgram = New-Button -UAC 'Activation Program'
+$BUTTON_DownloadActivationProgram.Add_Click( {
+        Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked $URL_ACTIVATION_PROGRAM
+    } )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartActivationProgram.Add_CheckStateChanged( { $BUTTON_DownloadActivationProgram.Text = "Activation Program$(if ($CHECKBOX_StartActivationProgram.Checked) { $REQUIRES_ELEVATION })" } )

@@ -1,4 +1,4 @@
-New-GroupBox 'General'
+New-GroupBox 'Run as Administrator'
 
 
 $BUTTON_TEXT = "$(if ($IS_ELEVATED) {'Running as administrator'} else {'Restart as administrator'})"

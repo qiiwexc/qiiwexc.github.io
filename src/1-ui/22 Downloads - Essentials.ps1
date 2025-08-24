@@ -20,6 +20,16 @@ $CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Of
 
 
 
+$BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+'
+$BUTTON_DownloadOfficeInstaller.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOfficeInstaller.Checked $URL_OFFICE_INSTALLER } )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartOfficeInstaller.Add_CheckStateChanged( { $BUTTON_DownloadOfficeInstaller.Text = "Office Installer+$(if ($CHECKBOX_StartOfficeInstaller.Checked) { $REQUIRES_ELEVATION })" } )
+
+
+
 $BUTTON_DownloadUnchecky = New-Button -UAC 'Unchecky'
 $BUTTON_DownloadUnchecky.Add_Click( {
         Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
