@@ -6,8 +6,8 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
-            $ZipName -eq 'KMSAuto_Lite.zip' -or `
-            $URL -Match 'SDIO_' -or $URL -Match 'Victoria')
+        $ZipName -Match 'ActivationProgram' -or $ZipName -Match 'Office_Installer+' -or `
+        $URL -Match 'SDIO_' -or $URL -Match 'Victoria')
 
     Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
     Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $PATH_TEMP_DIR })
@@ -15,9 +15,10 @@ Function Start-Extraction {
     Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
+        'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
+        'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
         'Office_2013-2024.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
-        'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
         'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
         'ventoy*' { $ZipName.TrimEnd('.zip') + '\Ventoy2Disk.exe' }
         'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }

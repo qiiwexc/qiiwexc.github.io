@@ -13,6 +13,9 @@ Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.
 
 Set-Variable -Option Constant URL_AACT 'https://qiiwexc.github.io/d/AAct.zip'
 Set-Variable -Option Constant URL_OFFICE 'https://qiiwexc.github.io/d/Office_2013-2024.zip'
+Set-Variable -Option Constant URL_OFFICE_INSTALLER 'https://qiiwexc.github.io/d/Office_Installer+.zip'
+Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
+
 Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
 Set-Variable -Option Constant URL_LIVE_CD 'https://rutracker.org/forum/viewtopic.php?t=4366725'
 Set-Variable -Option Constant URL_NINITE 'https://ninite.com'

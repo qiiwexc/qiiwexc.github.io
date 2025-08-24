@@ -37,7 +37,7 @@ Function Start-Build {
 
     if ($Run) {
         Add-Log $INF "Running $BatchFile"
-        Start-Process "PowerShell" ".\$BatchFile ShowConsole"
+        Start-Process 'PowerShell' ".\$BatchFile ShowConsole"
     }
 }
 
