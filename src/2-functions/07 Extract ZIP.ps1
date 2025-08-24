@@ -16,7 +16,7 @@ Function Start-Extraction {
     [String]$Executable = Switch -Wildcard ($ZipName) {
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
-        'Office_2013-2024.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
+        'Office_2013-2024.zip' { 'OInstall.exe' }
         'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
         'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
         'ventoy*' { "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe" }
