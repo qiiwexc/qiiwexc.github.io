@@ -1,10 +1,8 @@
 New-GroupBox 'Essentials'
 
 
-$BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer'
-$BUTTON_DownloadSDI.Add_Click( {
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDIO
-} )
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDIO }
+$BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -14,10 +12,8 @@ $CHECKBOX_StartSDI.Add_CheckStateChanged( {
 } )
 
 
-$BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+'
-$BUTTON_DownloadOfficeInstaller.Add_Click( {
-    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOfficeInstaller.Checked $URL_OFFICE_INSTALLER
-} )
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOfficeInstaller.Checked $URL_OFFICE_INSTALLER }
+$BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -30,8 +26,9 @@ $CHECKBOX_StartOfficeInstaller.Add_CheckStateChanged( {
 
 $BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
 $BUTTON_DownloadOffice.Add_Click( {
-    Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallOffice.Checked) { '/Standard2024Volume x64 en-gb excludePublisher excludeGroove excludeOneNote excludeOutlook excludeOneDrive excludeTeams /activate' })
-    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE -Params:$Params
+    # Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallOffice.Checked) { '/Standard2024Volume x64 en-gb excludePublisher excludeGroove excludeOneNote excludeOutlook excludeOneDrive excludeTeams /activate' })
+    # Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE -Params:$Params
+    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE
 } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
