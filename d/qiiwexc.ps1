@@ -1,6 +1,6 @@
 param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)
 
-Set-Variable -Option Constant Version ([Version]'25.8.24')
+Set-Variable -Option Constant Version ([Version]'25.8.25')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -117,10 +117,11 @@ Set-Variable -Option Constant PS_VERSION $($PSVersionTable.PSVersion.Major)
 Set-Variable -Option Constant SHELL $(New-Object -com Shell.Application)
 
 Set-Variable -Option Constant OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
+Set-Variable -Option Constant IsWindows11 ($OperatingSystem.Caption -Match "Windows 11")
 Set-Variable -Option Constant OS_NAME $OperatingSystem.Caption
 Set-Variable -Option Constant OS_BUILD $OperatingSystem.Version
 Set-Variable -Option Constant OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -Like '*64') { $True })
-Set-Variable -Option Constant OS_VERSION $(Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } })
+Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
 
 Set-Variable -Option Constant WordRegPath (Get-ItemProperty "$(New-PSDrive HKCR Registry HKEY_CLASSES_ROOT):\Word.Application\CurVer" -ErrorAction SilentlyContinue)
 Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
@@ -423,27 +424,55 @@ $BUTTON_FUNCTION = { Start-Elevated }
 New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -Disabled:$IS_ELEVATED > $Null
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Bootable USB Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'HDD Diagnostics'
+New-GroupBox 'Bootable USB Tools'
 
 
-$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria'
-$BUTTON_DownloadVictoria.Add_Click( {
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA
+$BUTTON_DownloadVentoy = New-Button -UAC 'Ventoy'
+$BUTTON_DownloadVentoy.Add_Click( {
+    Set-Variable -Option Constant FileName $((Split-Path -Leaf $URL_VENTOY) -Replace '-windows', '')
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVentoy.Checked $URL_VENTOY -FileName:$FileName
 } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartVictoria.Add_CheckStateChanged( {
-    $BUTTON_DownloadVictoria.Text = "Victoria$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })"
+$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartVentoy.Add_CheckStateChanged( {
+    $BUTTON_DownloadVentoy.Text = "Ventoy$(if ($CHECKBOX_StartVentoy.Checked) { $REQUIRES_ELEVATION })"
+} )
+
+
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' }
+$BUTTON_DownloadRufus = New-Button -UAC 'Rufus' $BUTTON_FUNCTION
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartRufus.Add_CheckStateChanged( {
+    $BUTTON_DownloadRufus.Text = "Rufus$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })"
 } )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Activators (Windows 7+, Office)'
+
+$BUTTON_FUNCTION = { Start-Activator }
+$BUTTON_MASActivator = New-Button -UAC 'MAS Activator' $BUTTON_FUNCTION -Disabled:$($OS_VERSION -lt 7)
+
+
+
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked $URL_ACTIVATION_PROGRAM }
+$BUTTON_DownloadActivationProgram = New-Button -UAC 'Activation Program' $BUTTON_FUNCTION
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartActivationProgram.Add_CheckStateChanged( {
+    $BUTTON_DownloadActivationProgram.Text = "Activation Program$(if ($CHECKBOX_StartActivationProgram.Checked) { $REQUIRES_ELEVATION })"
+} )
+
 
 
 $BUTTON_DownloadAAct = New-Button -UAC 'AAct'
@@ -476,64 +505,20 @@ $RADIO_DISABLED = !$OFFICE_VERSION
 $RADIO_AActOffice = New-RadioButton 'Office' -Disabled:$RADIO_DISABLED
 
 
-$BUTTON_DownloadActivationProgram = New-Button -UAC 'Activation Program'
-$BUTTON_DownloadActivationProgram.Add_Click( {
-    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked $URL_ACTIVATION_PROGRAM
-} )
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'HDD Diagnostics'
+
+
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA }
+$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartActivationProgram.Add_CheckStateChanged( {
-    $BUTTON_DownloadActivationProgram.Text = "Activation Program$(if ($CHECKBOX_StartActivationProgram.Checked) { $REQUIRES_ELEVATION })"
+$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartVictoria.Add_CheckStateChanged( {
+    $BUTTON_DownloadVictoria.Text = "Victoria$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })"
 } )
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Bootable USB Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Bootable USB Tools'
-
-
-$BUTTON_DownloadVentoy = New-Button -UAC 'Ventoy'
-$BUTTON_DownloadVentoy.Add_Click( {
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVentoy.Checked $URL_VENTOY $((Split-Path -Leaf $URL_VENTOY) -Replace '-windows', '')
-} )
-
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartVentoy.Add_CheckStateChanged( {
-    $BUTTON_DownloadVentoy.Text = "Ventoy$(if ($CHECKBOX_StartVentoy.Checked) { $REQUIRES_ELEVATION })"
-} )
-
-
-$BUTTON_DownloadRufus = New-Button -UAC 'Rufus'
-$BUTTON_DownloadRufus.Add_Click( {
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g'
-} )
-
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartRufus.Add_CheckStateChanged( {
-    $BUTTON_DownloadRufus.Text = "Rufus$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })"
-} )
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Alternative DNS'
-
-
-$BUTTON_FUNCTION = { Set-CloudFlareDNS }
-New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION > $Null
-
-$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
-$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
-    $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
-} )
-
-$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -595,10 +580,8 @@ New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 New-GroupBox 'Essentials'
 
 
-$BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer'
-$BUTTON_DownloadSDI.Add_Click( {
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDIO
-} )
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDIO }
+$BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -608,10 +591,8 @@ $CHECKBOX_StartSDI.Add_CheckStateChanged( {
 } )
 
 
-$BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+'
-$BUTTON_DownloadOfficeInstaller.Add_Click( {
-    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOfficeInstaller.Checked $URL_OFFICE_INSTALLER
-} )
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOfficeInstaller.Checked $URL_OFFICE_INSTALLER }
+$BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -624,8 +605,9 @@ $CHECKBOX_StartOfficeInstaller.Add_CheckStateChanged( {
 
 $BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
 $BUTTON_DownloadOffice.Add_Click( {
-    Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallOffice.Checked) { '/Standard2024Volume x64 en-gb excludePublisher excludeGroove excludeOneNote excludeOutlook excludeOneDrive excludeTeams /activate' })
-    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE -Params:$Params
+    # Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallOffice.Checked) { '/Standard2024Volume x64 en-gb excludePublisher excludeGroove excludeOneNote excludeOutlook excludeOneDrive excludeTeams /activate' })
+    # Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE -Params:$Params
+    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE
 } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -677,6 +659,45 @@ New-ButtonBrowser 'Windows 7' $BUTTON_FUNCTION
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_LIVE_CD }
 New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Configuration')
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Alternative DNS'
+
+
+$BUTTON_FUNCTION = { Set-CloudFlareDNS }
+New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION > $Null
+
+$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
+$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
+    $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
+} )
+
+$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Deboat #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Debloat Windows'
+
+
+$BUTTON_FUNCTION = { Start-WindowsDebloat }
+New-Button -UAC 'Debloat Windows' $BUTTON_FUNCTION > $Null
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Windows Configurator'
+
+
+$BUTTON_FUNCTION = { Start-WindowsConfigurator }
+New-Button -UAC 'Windows Configurator' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1163,26 +1184,15 @@ Function Start-Elevated {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Activator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Function Set-CloudFlareDNS {
-    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
-    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+Function Start-Activator {
+    Add-Log $INF "Starting MAS activator..."
 
-    Add-Log $WRN 'Internet connection may get interrupted briefly'
-    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
-
-    if (!(Get-NetworkAdapter)) {
-        Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
-        Add-Log $ERR 'This could mean that computer is not connected'
-        Return
-    }
-
-    try {
-        Start-Script -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
-    } catch [Exception] {
-        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
-        Return
+    if ($OS_VERSION -eq 7) {
+        Start-Script -HideWindow "iex ((New-Object Net.WebClient).DownloadString('https://get.activated.win'))"
+    } else {
+        Start-Script -HideWindow "irm https://get.activated.win | iex"
     }
 
     Out-Success
@@ -1245,6 +1255,56 @@ Function Set-NiniteFileName {
 }
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Set-CloudFlareDNS {
+    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
+    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+
+    Add-Log $WRN 'Internet connection may get interrupted briefly'
+    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+
+    if (!(Get-NetworkAdapter)) {
+        Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
+        Add-Log $ERR 'This could mean that computer is not connected'
+        Return
+    }
+
+    try {
+        Start-Script -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+    } catch [Exception] {
+        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
+        Return
+    }
+
+    Out-Success
+}
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Start-WindowsDebloat {
+    Add-Log $INF "Starting Windows deboat utility..."
+
+    if ($OS_VERSION -eq 10) {
+        Start-Script "iwr -useb https://git.io/debloat | iex"
+    } else {
+        Start-Script -Elevated -HideWindow "& ([scriptblock]::Create((irm 'https://debloat.raphi.re/')))"
+    }
+
+    Out-Success
+}
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Start-WindowsConfigurator {
+    Add-Log $INF "Starting Windows configuration utility..."
+    Start-Script "irm 'https://christitus.com/win' | iex"
+    Out-Success
+}
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Draw Form #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 [Void]$FORM.ShowDialog()
@@ -1252,8 +1312,8 @@ Function Set-NiniteFileName {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUVs8yPxEQlUUIZeo1x1xKQWpk
-# 6FugghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUt8GM+i8iynknTw2cChKUj493
+# QaagghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1374,28 +1434,28 @@ Function Set-NiniteFileName {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSO47nT
-# 86tR2Y8ezsMe+a+Qu8tcCjANBgkqhkiG9w0BAQEFAASCAQAcdI/W82gAhSaExbh2
-# /7LFcdIBstP4ynIq8NCerNbMhL7WvHUSuP80IZ/6F+pLpVOoigOrBjyG/t1jp6dc
-# hJ6xRek5H+XuJJhDuKUhFvvYCk102g5yLY3nEiutg/le6qvxL8CsDr5QnR5Qtlp6
-# RccPHS6v/v6VwV4H+D1aNV6U+tRE57S10WtleE0GizSOX/aa/yUjXRlljQCKKmHw
-# XAJkYUsk5g0s+pRzqgxFno1COqVR57Bb2WTjh+taQ9u/srTqzbycpHj7aVBKBLi5
-# hQXrtXccSJLz14OcwbvF3UKZVkxJCDyKQCoS3tytmqXF1/G6wVrfp5ZKXxqWBEm6
-# bt94oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSGP31T
+# CAjvjiFGySGnlITCJyOy2zANBgkqhkiG9w0BAQEFAASCAQBdR1j8n6PU9W+KIic9
+# CoXDKb/r0I9PnaAqp9S/e/JzDD4Lrf5OZQXhW+Fuhd5xcSrfEJoUONTAzhjwUuKW
+# rZI78J5AKbQFrUWESUfy60xAbN8LDtfnCTV5dnsnYFaRLfbXd0eksZvnNCQirIjq
+# Q13cRsHJVc2tKMWEvtJzuTxz16FpC8vz5GhEiDZVRwHOWfDpSruwz5SXexOu1hFS
+# oXHkA0CTAUJscQo6YvKYEg5p0jIE7AoxCKsIvPDbC8RIp2tZ94dbH/IszUJNT+Yr
+# TRhte8jStWQbZHlU7eVHo277ZBpZcpG0uzDXeFLJLHyJS9Vx/gbnK2odZQg4oJ7g
+# R5floYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyNDE5NDgzNFowLwYJKoZI
-# hvcNAQkEMSIEIITEwHUE9Isp0zeTl37NHiMoN7ZbTOzCmokIvtJPWWTnMA0GCSqG
-# SIb3DQEBAQUABIICAIDGQ3zSKDhqU5VzjYtY/sf+sJIU/IyacLTMhZhhNsmU1i6r
-# eUnkdcAk1sCNo4kgy4OcetQiBfhnah7dPcNUSq5tBmZN/9w+bwSu0ymHPN7qEZKt
-# LZQMIdzTyMotnzrAuY17d0idIw4YyYx+rxZe87L6SBSlZ7REWlkid1uwAMVIT4MF
-# x7ItmLs+SLyQ+UeK2ydCkdbTZweNPd4q6tGGVig2dsTxEKqfsG6X+0FS/cKLuJ5F
-# LuWvWZRBlYbBR0I98ge8i/OPykZeeAwtpxb+ryFGICtRNomkbElNNImbG87FrXvR
-# Cpns1vnxNVUYBTZSE8pktNzcvE/YnbtiQpaqpP1qedLs2PRmCxAo06XKSxT57yoH
-# pE5iXG4iTUjR+yteZVI8QEZZnoaXLhkSELM1t8V+Moh+xuoZbJAX1YPK2+wgDPhW
-# JmLGasdax5dORw8lLocu/O3FD0rirqBfXKtd/ZGrOdjoG7IKpLRew644NMo0mpVD
-# EmOlfYdRUSwunoGa0WgbElVNHoB28dc6bAgvXRrw6k6FSHgv6qb0yI5V0vFLq048
-# NpiJvzZMdH2I/vE3HTT3xWwbBMf6dqTwQKpYXgITGXgTA6uI2h1/cU/WW80xNaHg
-# efOGr6hHxWF7nDwVMAhFFE1QkZDEjInjxE/iLeqTtUq0OeMl0bM3O8iDIZ46
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyNDIzNDQxMlowLwYJKoZI
+# hvcNAQkEMSIEICigKgiFmiDHp64s5ZHsH3devwTJ1MMwwUgqvnPkpuM5MA0GCSqG
+# SIb3DQEBAQUABIICAEXx7lcY7AckHuViUZxcDMSpTXDUtCQewNuOKCO7SAtDM/dC
+# cnyIYWhZuF/AucPwtKhkH2r+8I5GIhsuwoa7dx4ZLNB6e4pckoJrl+KWGhlxSUNm
+# avKiT7tbUeciOAuFQdPJ8cY2y5MfUgFmGR62oTbl+inLGJNRNTA7pJZrv5QGiZfx
+# x8+VpUm1p3gRxcvVPE0nWwz1kg+SyoJb6I/6+lx+wD/VD9Xn9o78nE3paY3hMWh3
+# CEKVnY0BNIH/LhypUgqlH6UCP43I6psoLpE/uLkYgLszgDIzxmdFUo1PBv4ZUPuF
+# JwvBtcAkSCmADVWj7Elb2WXnC7WZsM2KVD7TMs/nm77+396gYBWSItgZ/fNvDQrn
+# 0HZznUeSXGA7tS9TsejBxeptCetIuvhxB1sKw68TrLRVUhig201H7J7OOEAs6eVy
+# y/firZpSBxs6NdYrTFRKUPzePhM76QqEpYAyQGQqoncRD+F+a6+km2uVqorf1DMa
+# zYJFitJs8HvWIAMA7y4Yn6csixCaTi59jGtiI2FGKzt1q+naTSmxRTne2dypiDmC
+# 53SvMDQqsZwrlKt6yp+lInAdtkwh7louq6UQVsgLSyYvVDAFVdUqyh6HJXcnWsc5
+# TJYKnTyXHQhUfdMmsBFNcrf/PhA26VWB/i9Hywnx0SzWHmMpCz9c5kAo1ayW
 # SIG # End signature block

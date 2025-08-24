@@ -48,19 +48,15 @@ Function Add-Log {
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
-    Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
+    Write-Host -NoNewline "`n[$((Get-Date).ToString())] $Message"
+}
 
-    Switch ($Level) {
-        $WRN {
-            Write-Warning $Text
-        }
-        $INF {
-            Write-Host $Text
-        }
-        Default {
-            Write-Host $Message
-        }
-    }
+Function Out-Success {
+    Write-Host -NoNewline " Done"
+}
+
+Function Out-Failure {
+    Write-Host -NoNewline " Failed"
 }
 
 
@@ -76,7 +72,7 @@ Function Write-VersionFile {
 
     Set-Content $VersionFile "$Version`n" -NoNewline
 
-    Add-Log $INF 'Done'
+    Out-Success
 }
 
 
@@ -94,7 +90,7 @@ Function Update-Html {
 
     (Get-Content $WebPageFile) | ForEach-Object { $_ -Replace "<title>.+", $HtmlTitle -Replace "<h2>.+", $HtmlHeader } | Set-Content $WebPageFile
 
-    Add-Log $INF 'Done'
+    Out-Success
 }
 
 
@@ -125,7 +121,7 @@ Function New-PowerShell {
     Add-Log $INF "Writing output file $Ps1File"
     $OutputStrings | Out-File $Ps1File -Encoding ASCII
 
-    Add-Log $INF 'Done'
+    Out-Success
 }
 
 
@@ -164,7 +160,7 @@ Function New-Batch {
     Add-Log $INF "Writing batch file $BatchFile"
     $BatchStrings | Out-File $BatchFile -Encoding ASCII
 
-    Add-Log $INF 'Done'
+    Out-Success
 }
 
 Function Set-Signature {
@@ -184,7 +180,7 @@ Function Set-Signature {
 
     Set-AuthenticodeSignature -FilePath $Ps1File -Certificate $CodeSignCert -TimestampServer $TimestampServer | Out-Null
 
-    Add-Log $INF 'Done'
+    Out-Success
 }
 
 
