@@ -1,0 +1,9 @@
+/configure "d:\MyPath\Configuration.xml"    - Launch the program in hidden mode, and perform the installation.
+or
+/proplus x64 en-us excludeExcel excludeOneNote /apps visio
+or
+/apps x64 ru-ru en-us word excel visio
+or
+/proplus x86 en-us excludeOneNote /apps project /convert /activate
+
+/Standard2024Volume x64 en-gb excludePublisher excludeGroove excludeOneNote excludeOutlook excludeOneDrive excludeTeams /activate
