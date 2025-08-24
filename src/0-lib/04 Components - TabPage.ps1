@@ -1,4 +1,4 @@
-Function New-Tab {
+Function New-TabPage {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text
     )

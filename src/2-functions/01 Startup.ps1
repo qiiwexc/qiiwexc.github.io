@@ -1,6 +1,6 @@
 Function Initialize-Startup {
     $FORM.Activate()
-    Write-Log "[$((Get-Date).ToString())] Initializing..."
+    Write-LogMessage "[$((Get-Date).ToString())] Initializing..."
 
     if ($IS_ELEVATED) {
         Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
@@ -12,18 +12,14 @@ Function Initialize-Startup {
         Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
     }
 
-    Set-Variable -Option Constant -Scope Script PATH_CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
-
     if ($PS_VERSION -lt 2) {
         Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly."
     } elseif ($PS_VERSION -eq 2) {
         Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled."
     }
 
-    if ($OS_VERSION -lt 7) {
-        Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly."
-    } elseif ($OS_VERSION -lt 8) {
-        Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled."
+    if ($OS_VERSION -lt 8) {
+        Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported."
     }
 
     if ($PS_VERSION -gt 2) {

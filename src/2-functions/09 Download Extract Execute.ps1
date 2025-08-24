@@ -27,7 +27,7 @@ Function Start-DownloadExtractExecute {
             Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
 
             if ($Execute) {
-                Start-File $Executable $Params -Silent:$Silent
+                Start-Executable $Executable $Params -Silent:$Silent
             }
         }
     }

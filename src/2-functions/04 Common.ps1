@@ -8,14 +8,14 @@ Function Get-ConnectionStatus {
     }
 }
 
-Function Reset-StateOnExit {
+Function Reset-State {
     Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_TEMP_DIR
     $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
     Write-Host ''
 }
 
 Function Exit-Script {
-    Reset-StateOnExit
+    Reset-State
     $FORM.Close()
 }
 

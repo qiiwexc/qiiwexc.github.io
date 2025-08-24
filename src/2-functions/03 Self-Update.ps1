@@ -32,7 +32,7 @@ Function Get-CurrentVersion {
 
 
 Function Get-Update {
-    Set-Variable -Option Constant TargetFilePs1 $MyInvocation.ScriptName
+    Set-Variable -Option Constant TargetFileBat "$PATH_CURRENT_DIR\qiiwexc.bat"
 
     Add-Log $WRN 'Downloading new version...'
 
@@ -43,19 +43,8 @@ Function Get-Update {
         Return
     }
 
-    if ($CallerPath) {
-        Set-Variable -Option Constant TargetFileBat "$CallerPath\qiiwexc.bat"
-
-        try {
-            Invoke-WebRequest $URL_BAT_FILE -OutFile $TargetFileBat
-        } catch [Exception] {
-            Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
-            Return
-        }
-    }
-
     try {
-        Invoke-WebRequest $URL_PS1_FILE -OutFile $TargetFilePs1
+        Invoke-WebRequest $URL_BAT_FILE -OutFile $TargetFileBat
     } catch [Exception] {
         Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
         Return
@@ -65,7 +54,7 @@ Function Get-Update {
     Add-Log $WRN 'Restarting...'
 
     try {
-        Start-ExternalProcess -BypassExecutionPolicy -HideConsole $TargetFilePs1
+        Start-Script $TargetFileBat
     } catch [Exception] {
         Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
         Return

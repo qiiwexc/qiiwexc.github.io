@@ -1,1 +1,1 @@
-Set-Variable -Option Constant TAB_DOWNLOADS (New-Tab 'Downloads')
+Set-Variable -Option Constant TAB_DOWNLOADS (New-TabPage 'Downloads')
