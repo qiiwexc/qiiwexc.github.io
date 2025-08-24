@@ -14,20 +14,6 @@ $CHECKBOX_StartSDI.Add_CheckStateChanged( {
 } )
 
 
-$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
-$BUTTON_DownloadOffice.Add_Click( {
-    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE
-} )
-
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartOffice.Add_CheckStateChanged( {
-    $BUTTON_DownloadOffice.Text = "Office 2013 - 2024$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })"
-} )
-
-
-
 $BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+'
 $BUTTON_DownloadOfficeInstaller.Add_Click( {
     Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOfficeInstaller.Checked $URL_OFFICE_INSTALLER
@@ -39,6 +25,26 @@ $CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Disabled:$CHECKBO
 $CHECKBOX_StartOfficeInstaller.Add_CheckStateChanged( {
     $BUTTON_DownloadOfficeInstaller.Text = "Office Installer+$(if ($CHECKBOX_StartOfficeInstaller.Checked) { $REQUIRES_ELEVATION })"
 } )
+
+
+
+$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
+$BUTTON_DownloadOffice.Add_Click( {
+    Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallOffice.Checked) { '/Standard2024Volume x64 en-gb excludePublisher excludeGroove excludeOneNote excludeOutlook excludeOneDrive excludeTeams /activate' })
+    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE -Params:$Params
+} )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartOffice.Add_CheckStateChanged( {
+    $BUTTON_DownloadOffice.Text = "Office 2013 - 2024$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })"
+    # $CHECKBOX_SilentlyInstallOffice.Enabled = $CHECKBOX_StartOffice.Checked
+} )
+
+# $CHECKBOX_DISABLED = $PS_VERSION -le 2
+# $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+# $CHECKBOX_SilentlyInstallOffice = New-CheckBox 'Install silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 
 
 

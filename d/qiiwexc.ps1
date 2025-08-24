@@ -1,6 +1,6 @@
 param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)
 
-Set-Variable -Option Constant Version ([Version]'25.8.23')
+Set-Variable -Option Constant Version ([Version]'25.8.24')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -57,8 +57,10 @@ Set-Variable -Option Constant WRN 'WRN'
 Set-Variable -Option Constant ERR 'ERR'
 
 
-Set-Variable -Option Constant PATH_TEMP_DIR "$([System.IO.Path]::GetTempPath())\qiiwexc"
-Set-Variable -Option Constant PATH_PROGRAM_FILES_86 $(if ($OS_64_BIT) { ${env:ProgramFiles(x86)} } else { $env:ProgramFiles })
+Set-Variable -Option Constant PATH_CURRENT_DIR $CallerPath
+Set-Variable -Option Constant PATH_TEMP_DIR "$([System.IO.Path]::GetTempPath())qiiwexc"
+
+Set-Variable -Option Constant SYSTEM_LANGUAGE (Get-SystemLanguage)
 
 Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })
@@ -67,8 +69,7 @@ Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } e
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# URLs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant URL_VERSION_FILE 'https://bit.ly/qiiwexc_version'
-Set-Variable -Option Constant URL_PS1_FILE 'https://bit.ly/qiiwexc_ps1'
-Set-Variable -Option Constant URL_BAT_FILE 'https://bit.ly/qiiwexc_bat'
+Set-Variable -Option Constant URL_BAT_FILE     'https://bit.ly/qiiwexc_bat'
 
 Set-Variable -Option Constant URL_WINDOWS_11 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html'
 Set-Variable -Option Constant URL_WINDOWS_10 'https://w16.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html'
@@ -79,11 +80,14 @@ Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/rel
 Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.5.816.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
-Set-Variable -Option Constant URL_AACT 'https://qiiwexc.github.io/d/AAct.zip'
-Set-Variable -Option Constant URL_OFFICE 'https://qiiwexc.github.io/d/Office_2013-2024.zip'
+Set-Variable -Option Constant URL_AACT        'https://qiiwexc.github.io/d/AAct.zip'
+Set-Variable -Option Constant URL_OFFICE      'https://qiiwexc.github.io/d/Office_2013-2024.zip'
+Set-Variable -Option Constant URL_OFFICE_INSTALLER   'https://qiiwexc.github.io/d/Office_Installer+.zip'
+Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
+
 Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
-Set-Variable -Option Constant URL_LIVE_CD 'https://rutracker.org/forum/viewtopic.php?t=4366725'
-Set-Variable -Option Constant URL_NINITE 'https://ninite.com'
+Set-Variable -Option Constant URL_LIVE_CD  'https://rutracker.org/forum/viewtopic.php?t=4366725'
+Set-Variable -Option Constant URL_NINITE   'https://ninite.com'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Initialization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -124,9 +128,9 @@ Set-Variable -Option Constant PathOfficeC2RClientExe "$env:CommonProgramFiles\Mi
 Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PathOfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - Tab #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - TabPage #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Function New-Tab {
+Function New-TabPage {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text
     )
@@ -381,8 +385,12 @@ $FORM.FormBorderStyle = 'Fixed3D'
 $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
 $FORM.Top = $True
-$FORM.Add_Shown( { Initialize-Startup } )
-$FORM.Add_FormClosing( { Reset-StateOnExit } )
+$FORM.Add_Shown( {
+    Initialize-Startup
+} )
+$FORM.Add_FormClosing( {
+    Reset-State
+} )
 
 
 Set-Variable -Option Constant LOG (New-Object System.Windows.Forms.RichTextBox)
@@ -402,12 +410,12 @@ $FORM.Controls.Add($TAB_CONTROL)
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant TAB_HOME (New-Tab 'Home')
+Set-Variable -Option Constant TAB_HOME (New-TabPage 'Home')
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - General #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Run as Administrator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'General'
+New-GroupBox 'Run as Administrator'
 
 
 $BUTTON_TEXT = "$(if ($IS_ELEVATED) {'Running as administrator'} else {'Restart as administrator'})"
@@ -421,12 +429,16 @@ New-GroupBox 'HDD Diagnostics'
 
 
 $BUTTON_DownloadVictoria = New-Button -UAC 'Victoria'
-$BUTTON_DownloadVictoria.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA } )
+$BUTTON_DownloadVictoria.Add_Click( {
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartVictoria.Add_CheckStateChanged( { $BUTTON_DownloadVictoria.Text = "Victoria$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartVictoria.Add_CheckStateChanged( {
+    $BUTTON_DownloadVictoria.Text = "Victoria$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })"
+} )
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -436,22 +448,27 @@ New-GroupBox 'Activators (Windows 7+, Office)'
 
 $BUTTON_DownloadAAct = New-Button -UAC 'AAct'
 $BUTTON_DownloadAAct.Add_Click( {
-        Set-Variable -Option Constant Params $(if ($RADIO_AActWindows.Checked) { '/win=act /taskwin' } elseif ($RADIO_AActOffice.Checked) { '/ofs=act /taskofs' })
-        Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked $URL_AACT -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
-    } )
+    Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyRunAAct.Checked) {if ($RADIO_AActWindows.Checked) { '/win=act /taskwin' } elseif ($RADIO_AActOffice.Checked) { '/ofs=act /taskofs' }})
+    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked $URL_AACT -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartAAct = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartAAct.Add_CheckStateChanged( { $BUTTON_DownloadAAct.Text = "AAct$(if ($CHECKBOX_StartAAct.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartAAct.Add_CheckStateChanged( {
+    $BUTTON_DownloadAAct.Text = "AAct$(if ($CHECKBOX_StartAAct.Checked) { $REQUIRES_ELEVATION })"
+    $CHECKBOX_SilentlyRunAAct.Enabled = $CHECKBOX_StartAAct.Checked
+    $RADIO_AActWindows.Enabled = $CHECKBOX_StartAAct.Checked
+    $RADIO_AActOffice.Enabled = $CHECKBOX_StartAAct.Checked
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_SilentlyRunAAct = New-CheckBox 'Activate silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_SilentlyRunAAct.Add_CheckStateChanged( {
-        $RADIO_AActWindows.Enabled = $CHECKBOX_SilentlyRunAAct.Checked
-        $RADIO_AActOffice.Enabled = $OFFICE_VERSION -and $CHECKBOX_SilentlyRunAAct.Checked
-    } )
+    $RADIO_AActWindows.Enabled = $CHECKBOX_SilentlyRunAAct.Checked
+    $RADIO_AActOffice.Enabled = $OFFICE_VERSION -and $CHECKBOX_SilentlyRunAAct.Checked
+} )
 
 $RADIO_AActWindows = New-RadioButton 'Windows' -Checked
 
@@ -459,46 +476,69 @@ $RADIO_DISABLED = !$OFFICE_VERSION
 $RADIO_AActOffice = New-RadioButton 'Office' -Disabled:$RADIO_DISABLED
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+$BUTTON_DownloadActivationProgram = New-Button -UAC 'Activation Program'
+$BUTTON_DownloadActivationProgram.Add_Click( {
+    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked $URL_ACTIVATION_PROGRAM
+} )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartActivationProgram.Add_CheckStateChanged( {
+    $BUTTON_DownloadActivationProgram.Text = "Activation Program$(if ($CHECKBOX_StartActivationProgram.Checked) { $REQUIRES_ELEVATION })"
+} )
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Bootable USB Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Bootable USB Tools'
 
 
 $BUTTON_DownloadVentoy = New-Button -UAC 'Ventoy'
-$BUTTON_DownloadVentoy.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVentoy.Checked $URL_VENTOY $((Split-Path -Leaf $URL_VENTOY) -Replace '-windows', '') } )
+$BUTTON_DownloadVentoy.Add_Click( {
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVentoy.Checked $URL_VENTOY $((Split-Path -Leaf $URL_VENTOY) -Replace '-windows', '')
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartVentoy.Add_CheckStateChanged( { $BUTTON_DownloadVentoy.Text = "Ventoy$(if ($CHECKBOX_StartVentoy.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartVentoy.Add_CheckStateChanged( {
+    $BUTTON_DownloadVentoy.Text = "Ventoy$(if ($CHECKBOX_StartVentoy.Checked) { $REQUIRES_ELEVATION })"
+} )
 
 
 $BUTTON_DownloadRufus = New-Button -UAC 'Rufus'
-$BUTTON_DownloadRufus.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' } )
+$BUTTON_DownloadRufus.Add_Click( {
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g'
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartRufus.Add_CheckStateChanged( { $BUTTON_DownloadRufus.Text = "Rufus$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartRufus.Add_CheckStateChanged( {
+    $BUTTON_DownloadRufus.Text = "Rufus$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })"
+} )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Optimization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Optimization'
+New-GroupBox 'Alternative DNS'
 
 
 $BUTTON_FUNCTION = { Set-CloudFlareDNS }
 New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION > $Null
 
 $CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
-$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( { $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked } )
+$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
+    $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
+} )
 
 $CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant TAB_DOWNLOADS (New-Tab 'Downloads')
+Set-Variable -Option Constant TAB_DOWNLOADS (New-TabPage 'Downloads')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -507,28 +547,44 @@ New-GroupBox 'Ninite'
 
 
 $CHECKBOX_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
-$CHECKBOX_Chrome.Add_CheckStateChanged( { Set-NiniteButtonState } )
+$CHECKBOX_Chrome.Add_CheckStateChanged( {
+    Set-NiniteButtonState
+} )
 
 $CHECKBOX_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
-$CHECKBOX_7zip.Add_CheckStateChanged( { Set-NiniteButtonState } )
+$CHECKBOX_7zip.Add_CheckStateChanged( {
+    Set-NiniteButtonState
+} )
 
 $CHECKBOX_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
-$CHECKBOX_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
+$CHECKBOX_VLC.Add_CheckStateChanged( {
+    Set-NiniteButtonState
+} )
 
 $CHECKBOX_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
-$CHECKBOX_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
+$CHECKBOX_TeamViewer.Add_CheckStateChanged( {
+    Set-NiniteButtonState
+} )
 
 $CHECKBOX_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
-$CHECKBOX_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
+$CHECKBOX_qBittorrent.Add_CheckStateChanged( {
+    Set-NiniteButtonState
+} )
 
 $CHECKBOX_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
-$CHECKBOX_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
+$CHECKBOX_Malwarebytes.Add_CheckStateChanged( {
+    Set-NiniteButtonState
+} )
 
 $BUTTON_DownloadNinite = New-Button -UAC 'Download selected'
-$BUTTON_DownloadNinite.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "$URL_NINITE/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) } )
+$BUTTON_DownloadNinite.Add_Click( {
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "$URL_NINITE/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName)
+} )
 
 $CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
-$CHECKBOX_StartNinite.Add_CheckStateChanged( { $BUTTON_DownloadNinite.Text = "Download selected$(if ($CHECKBOX_StartNinite.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartNinite.Add_CheckStateChanged( {
+    $BUTTON_DownloadNinite.Text = "Download selected$(if ($CHECKBOX_StartNinite.Checked) { $REQUIRES_ELEVATION })"
+} )
 
 $BUTTON_FUNCTION = { Open-InBrowser "$URL_NINITE/?select=$(Set-NiniteQuery)" }
 New-ButtonBrowser 'View other' $BUTTON_FUNCTION
@@ -540,37 +596,65 @@ New-GroupBox 'Essentials'
 
 
 $BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer'
-$BUTTON_DownloadSDI.Add_Click( { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDIO } )
+$BUTTON_DownloadSDI.Add_Click( {
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDIO
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartSDI.Add_CheckStateChanged( { $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartSDI.Add_CheckStateChanged( {
+    $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) { $REQUIRES_ELEVATION })"
+} )
+
+
+$BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+'
+$BUTTON_DownloadOfficeInstaller.Add_Click( {
+    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOfficeInstaller.Checked $URL_OFFICE_INSTALLER
+} )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartOfficeInstaller.Add_CheckStateChanged( {
+    $BUTTON_DownloadOfficeInstaller.Text = "Office Installer+$(if ($CHECKBOX_StartOfficeInstaller.Checked) { $REQUIRES_ELEVATION })"
+} )
+
 
 
 $BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
-$BUTTON_DownloadOffice.Add_Click( { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE } )
+$BUTTON_DownloadOffice.Add_Click( {
+    Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallOffice.Checked) { '/Standard2024Volume x64 en-gb excludePublisher excludeGroove excludeOneNote excludeOutlook excludeOneDrive excludeTeams /activate' })
+    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE -Params:$Params
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartOffice.Add_CheckStateChanged( { $BUTTON_DownloadOffice.Text = "Office 2013 - 2024$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartOffice.Add_CheckStateChanged( {
+    $BUTTON_DownloadOffice.Text = "Office 2013 - 2024$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })"
+    # $CHECKBOX_SilentlyInstallOffice.Enabled = $CHECKBOX_StartOffice.Checked
+} )
+
+# $CHECKBOX_DISABLED = $PS_VERSION -le 2
+# $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+# $CHECKBOX_SilentlyInstallOffice = New-CheckBox 'Install silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 
 
 
 $BUTTON_DownloadUnchecky = New-Button -UAC 'Unchecky'
 $BUTTON_DownloadUnchecky.Add_Click( {
-        Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
-        Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked $URL_UNCHECKY -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
-    } )
+    Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked $URL_UNCHECKY -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
-        $BUTTON_DownloadUnchecky.Text = "Unchecky$(if ($CHECKBOX_StartUnchecky.Checked) { $REQUIRES_ELEVATION })"
-        $CHECKBOX_SilentlyInstallUnchecky.Enabled = $CHECKBOX_StartUnchecky.Checked
-    } )
+    $BUTTON_DownloadUnchecky.Text = "Unchecky$(if ($CHECKBOX_StartUnchecky.Checked) { $REQUIRES_ELEVATION })"
+    $CHECKBOX_SilentlyInstallUnchecky.Enabled = $CHECKBOX_StartUnchecky.Checked
+} )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -599,7 +683,7 @@ New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
 
 Function Initialize-Startup {
     $FORM.Activate()
-    Write-Log "[$((Get-Date).ToString())] Initializing..."
+    Write-LogMessage "[$((Get-Date).ToString())] Initializing..."
 
     if ($IS_ELEVATED) {
         Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
@@ -611,18 +695,14 @@ Function Initialize-Startup {
         Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
     }
 
-    Set-Variable -Option Constant -Scope Script PATH_CURRENT_DIR $(Split-Path $MyInvocation.ScriptName)
-
     if ($PS_VERSION -lt 2) {
         Add-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly."
     } elseif ($PS_VERSION -eq 2) {
         Add-Log $WRN "PowerShell $PS_VERSION detected, some features are not supported and are disabled."
     }
 
-    if ($OS_VERSION -lt 7) {
-        Add-Log $WRN "Windows $OS_VERSION detected, while Windows 7 and newer are supported. Some features might not work correctly."
-    } elseif ($OS_VERSION -lt 8) {
-        Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported and are disabled."
+    if ($OS_VERSION -lt 8) {
+        Add-Log $WRN "Windows $OS_VERSION detected, some features are not supported."
     }
 
     if ($PS_VERSION -gt 2) {
@@ -655,6 +735,7 @@ Function Initialize-Startup {
 
     Add-Log $INF "    Operation system:  $OS_NAME"
     Add-Log $INF "    OS architecture:  $(if ($OS_64_BIT) { '64-bit' } else { '32-bit' })"
+    Add-Log $INF "    OS language:  $SYSTEM_LANGUAGE"
     Add-Log $INF "    $(if ($OS_VERSION -ge 10) {'OS release / '})Build number:  $(if ($OS_VERSION -ge 10) {"v$WindowsRelease / "})$OS_BUILD"
     Add-Log $INF "    Office version:  $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})"
 
@@ -688,11 +769,11 @@ Function Add-Log {
         }
     }
 
-    Write-Log "`n[$((Get-Date).ToString())] $Message"
+    Write-LogMessage "`n[$((Get-Date).ToString())] $Message"
 }
 
 
-Function Write-Log {
+Function Write-LogMessage {
     Param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
 
     Write-Host -NoNewline $Text
@@ -705,12 +786,12 @@ Function Write-Log {
 Function Out-Status {
     Param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
 
-    Write-Log ' '
+    Write-LogMessage ' '
 
     Set-Variable -Option Constant LogDefaultFont $LOG.Font
     $LOG.SelectionFont = New-Object Drawing.Font($LogDefaultFont.FontFamily, $LogDefaultFont.Size, [Drawing.FontStyle]::Underline)
 
-    Write-Log $Status
+    Write-LogMessage $Status
 
     $LOG.SelectionFont = $LogDefaultFont
     $LOG.SelectionColor = 'black'
@@ -762,7 +843,7 @@ Function Get-CurrentVersion {
 
 
 Function Get-Update {
-    Set-Variable -Option Constant TargetFilePs1 $MyInvocation.ScriptName
+    Set-Variable -Option Constant TargetFileBat "$PATH_CURRENT_DIR\qiiwexc.bat"
 
     Add-Log $WRN 'Downloading new version...'
 
@@ -773,19 +854,8 @@ Function Get-Update {
         Return
     }
 
-    if ($CallerPath) {
-        Set-Variable -Option Constant TargetFileBat "$CallerPath\qiiwexc.bat"
-
-        try {
-            Invoke-WebRequest $URL_BAT_FILE -OutFile $TargetFileBat
-        } catch [Exception] {
-            Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
-            Return
-        }
-    }
-
     try {
-        Invoke-WebRequest $URL_PS1_FILE -OutFile $TargetFilePs1
+        Invoke-WebRequest $URL_BAT_FILE -OutFile $TargetFileBat
     } catch [Exception] {
         Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
         Return
@@ -795,7 +865,7 @@ Function Get-Update {
     Add-Log $WRN 'Restarting...'
 
     try {
-        Start-ExternalProcess -BypassExecutionPolicy -HideConsole $TargetFilePs1
+        Start-Script $TargetFileBat
     } catch [Exception] {
         Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
         Return
@@ -817,14 +887,14 @@ Function Get-ConnectionStatus {
     }
 }
 
-Function Reset-StateOnExit {
+Function Reset-State {
     Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_TEMP_DIR
     $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
     Write-Host ''
 }
 
 Function Exit-Script {
-    Reset-StateOnExit
+    Reset-State
     $FORM.Close()
 }
 
@@ -842,11 +912,12 @@ Function Open-InBrowser {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Process #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Script #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Function Start-ExternalProcess {
+Function Start-Script {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Command,
+        [String]$WorkingDirectory,
         [Switch]$BypassExecutionPolicy,
         [Switch]$Elevated,
         [Switch]$HideConsole,
@@ -856,50 +927,13 @@ Function Start-ExternalProcess {
 
     Set-Variable -Option Constant ExecutionPolicy $(if ($BypassExecutionPolicy) { '-ExecutionPolicy Bypass' } else { '' })
     Set-Variable -Option Constant ConsoleState $(if ($HideConsole) { '-HideConsole' } else { '' })
+    Set-Variable -Option Constant CallerPath $(if ($WorkingDirectory) { "-CallerPath:$WorkingDirectory" } else { '' })
     Set-Variable -Option Constant Verb $(if ($Elevated) { 'RunAs' } else { 'Open' })
     Set-Variable -Option Constant WindowStyle $(if ($HideWindow) { 'Hidden' } else { 'Normal' })
 
-    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $ConsoleState"
+    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $ConsoleState $CallerPath"
 
     Start-Process 'PowerShell' $FullCommand -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
-}
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download Extract Execute #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Start-DownloadExtractExecute {
-    Param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
-        [String][Parameter(Position = 1)]$FileName,
-        [String][Parameter(Position = 2)]$Params,
-        [Switch]$AVWarning,
-        [Switch]$Execute,
-        [Switch]$Silent
-    )
-
-    if ($AVWarning -and !$AVWarningShown) {
-        Add-Log $WRN 'This file may trigger anti-virus false positive!'
-        Add-Log $WRN 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
-        Add-Log $WRN 'Click the button again to continue'
-        Set-Variable -Option Constant -Scope Script AVWarningShown $True
-        Return
-    }
-
-    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) {
-        Open-InBrowser $URL
-    } else {
-        Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
-        Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
-        Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
-
-        if ($DownloadedFile) {
-            Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
-
-            if ($Execute) {
-                Start-File $Executable $Params -Silent:$Silent
-            }
-        }
-    }
 }
 
 
@@ -963,22 +997,22 @@ Function Start-Extraction {
     )
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
-    Set-Variable -Option Constant MultiFileArchive ($ZipName -eq 'AAct.zip' -or `
-            $ZipName -eq 'KMSAuto_Lite.zip' -or `
-            $URL -Match 'SDIO_' -or $URL -Match 'Victoria')
+    Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
 
-    Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
-    Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $PATH_TEMP_DIR })
+    [Switch]$MultiFileArchive = !($ZipName -eq 'AAct.zip' -or $ZipName -eq 'Office_2013-2024.zip')
+
+    Set-Variable -Option Constant TemporaryPath $(if ($MultiFileArchive) { $ExtractionPath } else { $PATH_TEMP_DIR })
     Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
-    Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
+    Set-Variable -Option Constant ExtractionDir $(if ($MultiFileArchive) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'Office_2013-2024.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
-        'KMSAuto_Lite.zip' { "KMSAuto$(if ($OS_64_BIT) {' x64'}).exe" }
-        'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
-        'ventoy*' { $ZipName.TrimEnd('.zip') + '\Ventoy2Disk.exe' }
+        'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
+        'Office_2013-2024.zip' { 'OInstall.exe' }
+        'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
         'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
+        'ventoy*' { "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe" }
+        'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
 
@@ -992,7 +1026,7 @@ Function Start-Extraction {
         New-Item -Force -ItemType Directory $TemporaryPath | Out-Null
     }
 
-    Add-Log $INF "Extracting $ZipPath..."
+    Add-Log $INF "Extracting '$ZipPath'..."
 
     try {
         if ($ZIP_SUPPORTED) {
@@ -1004,7 +1038,7 @@ Function Start-Extraction {
         }
     }
     catch [Exception] {
-        Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
+        Add-Log $ERR "Failed to extract '$ZipPath': $($_.Exception.Message)"
         Return
     }
 
@@ -1013,7 +1047,7 @@ Function Start-Extraction {
     if (!$IsDirectory) {
         Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
 
-        if ($ExtractionPath) {
+        if ($MultiFileArchive) {
             Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
         }
     }
@@ -1024,15 +1058,15 @@ Function Start-Extraction {
     }
 
     Out-Success
-    Add-Log $INF "Files extracted to $TemporaryPath"
+    Add-Log $INF "Files extracted to '$TargetPath'"
 
     Return $TargetExe
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Execute File #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Run Executable #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Function Start-File {
+Function Start-Executable {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Executable,
         [String][Parameter(Position = 1)]$Switches,
@@ -1040,23 +1074,22 @@ Function Start-File {
     )
 
     if ($Switches -and $Silent) {
-        Add-Log $INF "Installing '$Executable' silently..."
+        Add-Log $INF "Running '$Executable' silently..."
 
         try {
             Start-Process -Wait $Executable $Switches
         } catch [Exception] {
-            Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"
+            Add-Log $ERR "Failed to run '$Executable': $($_.Exception.Message)"
             Return
         }
 
         Out-Success
 
-        Add-Log $INF "Removing $Executable..."
+        Add-Log $INF "Removing '$Executable'..."
         Remove-Item -Force $Executable
         Out-Success
-    }
-    else {
-        Add-Log $INF "Starting '$Executable'..."
+    } else {
+        Add-Log $INF "Running '$Executable'..."
 
         try {
             if ($Switches) {
@@ -1074,6 +1107,44 @@ Function Start-File {
 }
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download Extract Execute #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Start-DownloadExtractExecute {
+    Param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
+        [String][Parameter(Position = 1)]$FileName,
+        [String][Parameter(Position = 2)]$Params,
+        [Switch]$AVWarning,
+        [Switch]$Execute,
+        [Switch]$Silent
+    )
+
+    if ($AVWarning -and !$AVWarningShown) {
+        Add-Log $WRN 'This file may trigger anti-virus false positive!'
+        Add-Log $WRN 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
+        Add-Log $WRN 'Click the button again to continue'
+        Set-Variable -Option Constant -Scope Script AVWarningShown $True
+        Return
+    }
+
+    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) {
+        Open-InBrowser $URL
+    } else {
+        Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
+        Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
+        Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
+
+        if ($DownloadedFile) {
+            Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
+
+            if ($Execute) {
+                Start-Executable $Executable $Params -Silent:$Silent
+            }
+        }
+    }
+}
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Elevated #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-Elevated {
@@ -1081,7 +1152,7 @@ Function Start-Elevated {
         Add-Log $INF 'Requesting administrator privileges...'
 
         try {
-            Start-ExternalProcess -Elevated -BypassExecutionPolicy -HideConsole:$HideConsole $MyInvocation.ScriptName
+            Start-Script -Elevated -BypassExecutionPolicy -WorkingDirectory:$PATH_CURRENT_DIR -HideConsole:$HideConsole $MyInvocation.ScriptName
         } catch [Exception] {
             Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
             Return
@@ -1108,7 +1179,7 @@ Function Set-CloudFlareDNS {
     }
 
     try {
-        Start-ExternalProcess -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+        Start-Script -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
     } catch [Exception] {
         Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
         Return
@@ -1181,8 +1252,8 @@ Function Set-NiniteFileName {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUpJ/Y8dHFu2HWlJJc+AtalC/F
-# DW+gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUVs8yPxEQlUUIZeo1x1xKQWpk
+# 6FugghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1303,28 +1374,28 @@ Function Set-NiniteFileName {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBR82lls
-# pHmzt2JUolFPpHsgfY1jGzANBgkqhkiG9w0BAQEFAASCAQA5OPY9IVn2M3S3oItX
-# nSXcM/ccWEx1KGhwwRRCI3aU+zjnMBVRzZ4+Ctpf6Jr6PUGjziCpTNhsOYt0CFSI
-# 95oFm2SYPWRmlbFBQsvxlmnHahI5FaDXF5K76bb3Ynp1nfBAsUXUBA2kUjLeTfsP
-# JYVrhmRofFp1Hfw18FVxPGf2BTxdzHGeV20lMs2/g0APTbir670OgyCv6OeOB+vn
-# HcPIsckruzkNhgstGs0ciB/+A8gbT2KmrIY6Y9H5xo+d0sHs5krGYSIXGY7QM0f3
-# iPglIHf4ngf+f4K2MHODzvL5tX9nonqFkjpCWE95jQmICB/cipHDOZMkYIH2XUm9
-# EO1coYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSO47nT
+# 86tR2Y8ezsMe+a+Qu8tcCjANBgkqhkiG9w0BAQEFAASCAQAcdI/W82gAhSaExbh2
+# /7LFcdIBstP4ynIq8NCerNbMhL7WvHUSuP80IZ/6F+pLpVOoigOrBjyG/t1jp6dc
+# hJ6xRek5H+XuJJhDuKUhFvvYCk102g5yLY3nEiutg/le6qvxL8CsDr5QnR5Qtlp6
+# RccPHS6v/v6VwV4H+D1aNV6U+tRE57S10WtleE0GizSOX/aa/yUjXRlljQCKKmHw
+# XAJkYUsk5g0s+pRzqgxFno1COqVR57Bb2WTjh+taQ9u/srTqzbycpHj7aVBKBLi5
+# hQXrtXccSJLz14OcwbvF3UKZVkxJCDyKQCoS3tytmqXF1/G6wVrfp5ZKXxqWBEm6
+# bt94oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyMzE0NTMxMVowLwYJKoZI
-# hvcNAQkEMSIEIJclpRT2TPJOCMrGccahdNkrCgglhP2dBHqjyTqJHtXbMA0GCSqG
-# SIb3DQEBAQUABIICAFe6KfkAYJEPk//q0PNWEeu8ETmh3irDJMgtyJyFfQD69lf2
-# dJeM5Z60UGeT/2ELCvDCry6ulhkACE1V/AH++lYzO3AwLRz1vV3ctGVgwXJnZEjF
-# HU/CbV9nfWAwrYMeeGJX5UKeUpo7J3rfXizVWp+/Fd8k1mgJo+bvbr88FUN6Befi
-# P/8aRzhJrlQBmDb7U6g3tnX/3xge0m1R09lckCbdUT/7tHi3ohIE1PGZsMjnXDWV
-# SJ1RXLsd9DG21orCuHXSqCmOM9Agd2ZKinPMBVwWvpi+K+gjZcL9yj95ftuH8Mz9
-# LMp25nZ5c3i9DM5d/rMhGcHsPlxTQ/9SNkPUMEchxslhElCIUzwyQax4Q/bMZI5k
-# 8N9llfceFgJxl6ZBwEhsX7kYjKmgJkizYJU8Whs9fDEDQfVqnubHNPAbv8HoZ5+R
-# gywqxNuoW9Tc3Rlr2SDcJ1BLjg5vwRd3vuG1MdxWwLGUOVJTR0aORfjKyALLGf4s
-# TlUjaS7TLHGPJ+lcTF4j/E1HmPu1jdsHMdX5Ly3tPi4lZTpzLIqGh0HsgEzfqMUk
-# hUUfUEmU8p98ppJ1yu62bK+NFWcWsWTAjbgcp/BypbwMOwSTXgWVDzJ9t1iosDgO
-# +evIYV8pnSnbYQ3LgwTqXcGHL+/ZRtNqmgTVQu1iZXnszylEkxube1YmeT/J
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyNDE5NDgzNFowLwYJKoZI
+# hvcNAQkEMSIEIITEwHUE9Isp0zeTl37NHiMoN7ZbTOzCmokIvtJPWWTnMA0GCSqG
+# SIb3DQEBAQUABIICAIDGQ3zSKDhqU5VzjYtY/sf+sJIU/IyacLTMhZhhNsmU1i6r
+# eUnkdcAk1sCNo4kgy4OcetQiBfhnah7dPcNUSq5tBmZN/9w+bwSu0ymHPN7qEZKt
+# LZQMIdzTyMotnzrAuY17d0idIw4YyYx+rxZe87L6SBSlZ7REWlkid1uwAMVIT4MF
+# x7ItmLs+SLyQ+UeK2ydCkdbTZweNPd4q6tGGVig2dsTxEKqfsG6X+0FS/cKLuJ5F
+# LuWvWZRBlYbBR0I98ge8i/OPykZeeAwtpxb+ryFGICtRNomkbElNNImbG87FrXvR
+# Cpns1vnxNVUYBTZSE8pktNzcvE/YnbtiQpaqpP1qedLs2PRmCxAo06XKSxT57yoH
+# pE5iXG4iTUjR+yteZVI8QEZZnoaXLhkSELM1t8V+Moh+xuoZbJAX1YPK2+wgDPhW
+# JmLGasdax5dORw8lLocu/O3FD0rirqBfXKtd/ZGrOdjoG7IKpLRew644NMo0mpVD
+# EmOlfYdRUSwunoGa0WgbElVNHoB28dc6bAgvXRrw6k6FSHgv6qb0yI5V0vFLq048
+# NpiJvzZMdH2I/vE3HTT3xWwbBMf6dqTwQKpYXgITGXgTA6uI2h1/cU/WW80xNaHg
+# efOGr6hHxWF7nDwVMAhFFE1QkZDEjInjxE/iLeqTtUq0OeMl0bM3O8iDIZ46
 # SIG # End signature block
