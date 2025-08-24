@@ -6,23 +6,22 @@ Function Start-Executable {
     )
 
     if ($Switches -and $Silent) {
-        Add-Log $INF "Installing '$Executable' silently..."
+        Add-Log $INF "Running '$Executable' silently..."
 
         try {
             Start-Process -Wait $Executable $Switches
         } catch [Exception] {
-            Add-Log $ERR "Failed to install '$Executable': $($_.Exception.Message)"
+            Add-Log $ERR "Failed to run '$Executable': $($_.Exception.Message)"
             Return
         }
 
         Out-Success
 
-        Add-Log $INF "Removing $Executable..."
+        Add-Log $INF "Removing '$Executable'..."
         Remove-Item -Force $Executable
         Out-Success
-    }
-    else {
-        Add-Log $INF "Starting '$Executable'..."
+    } else {
+        Add-Log $INF "Running '$Executable'..."
 
         try {
             if ($Switches) {

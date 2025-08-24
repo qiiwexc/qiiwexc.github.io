@@ -1,5 +1,4 @@
 Set-Variable -Option Constant URL_VERSION_FILE 'https://bit.ly/qiiwexc_version'
-Set-Variable -Option Constant URL_PS1_FILE     'https://bit.ly/qiiwexc_ps1'
 Set-Variable -Option Constant URL_BAT_FILE     'https://bit.ly/qiiwexc_bat'
 
 Set-Variable -Option Constant URL_WINDOWS_11 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html'

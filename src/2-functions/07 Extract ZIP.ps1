@@ -5,12 +5,13 @@ Function Start-Extraction {
     )
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
-    Set-Variable -Option Constant MultiFileArchive !($ZipName -eq 'Office_2013-2024.zip')
+    Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
 
-    Set-Variable -Option Constant ExtractionPath $(if ($MultiFileArchive) { $ZipPath.TrimEnd('.zip') })
-    Set-Variable -Option Constant TemporaryPath $(if ($ExtractionPath) { $ExtractionPath } else { $PATH_TEMP_DIR })
+    [Switch]$MultiFileArchive = !($ZipName -eq 'AAct.zip' -or $ZipName -eq 'Office_2013-2024.zip')
+
+    Set-Variable -Option Constant TemporaryPath $(if ($MultiFileArchive) { $ExtractionPath } else { $PATH_TEMP_DIR })
     Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
-    Set-Variable -Option Constant ExtractionDir $(if ($ExtractionPath) { Split-Path -Leaf $ExtractionPath })
+    Set-Variable -Option Constant ExtractionDir $(if ($MultiFileArchive) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
         'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
@@ -18,7 +19,7 @@ Function Start-Extraction {
         'Office_2013-2024.zip' { "OInstall$(if ($OS_64_BIT) {'_x64'}).exe" }
         'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
         'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
-        'ventoy*' { $ZipName.TrimEnd('.zip') + '\Ventoy2Disk.exe' }
+        'ventoy*' { "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe" }
         'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
         Default { $ZipName.TrimEnd('.zip') + '.exe' }
     }
@@ -33,7 +34,7 @@ Function Start-Extraction {
         New-Item -Force -ItemType Directory $TemporaryPath | Out-Null
     }
 
-    Add-Log $INF "Extracting $ZipPath..."
+    Add-Log $INF "Extracting '$ZipPath'..."
 
     try {
         if ($ZIP_SUPPORTED) {
@@ -45,7 +46,7 @@ Function Start-Extraction {
         }
     }
     catch [Exception] {
-        Add-Log $ERR "Failed to extract' $ZipPath': $($_.Exception.Message)"
+        Add-Log $ERR "Failed to extract '$ZipPath': $($_.Exception.Message)"
         Return
     }
 
@@ -54,7 +55,7 @@ Function Start-Extraction {
     if (!$IsDirectory) {
         Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
 
-        if ($ExtractionPath) {
+        if ($MultiFileArchive) {
             Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
         }
     }
@@ -65,7 +66,7 @@ Function Start-Extraction {
     }
 
     Out-Success
-    Add-Log $INF "Files extracted to $TemporaryPath"
+    Add-Log $INF "Files extracted to '$TargetPath'"
 
     Return $TargetExe
 }

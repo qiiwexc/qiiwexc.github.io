@@ -3,7 +3,7 @@ New-GroupBox 'Activators (Windows 7+, Office)'
 
 $BUTTON_DownloadAAct = New-Button -UAC 'AAct'
 $BUTTON_DownloadAAct.Add_Click( {
-    Set-Variable -Option Constant Params $(if ($RADIO_AActWindows.Checked) { '/win=act /taskwin' } elseif ($RADIO_AActOffice.Checked) { '/ofs=act /taskofs' })
+    Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyRunAAct.Checked) {if ($RADIO_AActWindows.Checked) { '/win=act /taskwin' } elseif ($RADIO_AActOffice.Checked) { '/ofs=act /taskofs' }})
     Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked $URL_AACT -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
 } )
 
@@ -39,4 +39,6 @@ $BUTTON_DownloadActivationProgram.Add_Click( {
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartActivationProgram.Add_CheckStateChanged( { $BUTTON_DownloadActivationProgram.Text = "Activation Program$(if ($CHECKBOX_StartActivationProgram.Checked) { $REQUIRES_ELEVATION })" } )
+$CHECKBOX_StartActivationProgram.Add_CheckStateChanged( {
+    $BUTTON_DownloadActivationProgram.Text = "Activation Program$(if ($CHECKBOX_StartActivationProgram.Checked) { $REQUIRES_ELEVATION })"
+} )
