@@ -1,6 +1,7 @@
-Function Start-ExternalProcess {
+Function Start-Script {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Command,
+        [String]$WorkingDirectory,
         [Switch]$BypassExecutionPolicy,
         [Switch]$Elevated,
         [Switch]$HideConsole,
@@ -10,10 +11,11 @@ Function Start-ExternalProcess {
 
     Set-Variable -Option Constant ExecutionPolicy $(if ($BypassExecutionPolicy) { '-ExecutionPolicy Bypass' } else { '' })
     Set-Variable -Option Constant ConsoleState $(if ($HideConsole) { '-HideConsole' } else { '' })
+    Set-Variable -Option Constant CallerPath $(if ($WorkingDirectory) { "-CallerPath:$WorkingDirectory" } else { '' })
     Set-Variable -Option Constant Verb $(if ($Elevated) { 'RunAs' } else { 'Open' })
     Set-Variable -Option Constant WindowStyle $(if ($HideWindow) { 'Hidden' } else { 'Normal' })
 
-    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $ConsoleState"
+    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $ConsoleState $CallerPath"
 
     Start-Process 'PowerShell' $FullCommand -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
 }

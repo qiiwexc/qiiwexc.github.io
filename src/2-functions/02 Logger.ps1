@@ -18,11 +18,11 @@ Function Add-Log {
         }
     }
 
-    Write-Log "`n[$((Get-Date).ToString())] $Message"
+    Write-LogMessage "`n[$((Get-Date).ToString())] $Message"
 }
 
 
-Function Write-Log {
+Function Write-LogMessage {
     Param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
 
     Write-Host -NoNewline $Text
@@ -35,12 +35,12 @@ Function Write-Log {
 Function Out-Status {
     Param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
 
-    Write-Log ' '
+    Write-LogMessage ' '
 
     Set-Variable -Option Constant LogDefaultFont $LOG.Font
     $LOG.SelectionFont = New-Object Drawing.Font($LogDefaultFont.FontFamily, $LogDefaultFont.Size, [Drawing.FontStyle]::Underline)
 
-    Write-Log $Status
+    Write-LogMessage $Status
 
     $LOG.SelectionFont = $LogDefaultFont
     $LOG.SelectionColor = 'black'

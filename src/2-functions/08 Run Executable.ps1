@@ -1,4 +1,4 @@
-Function Start-File {
+Function Start-Executable {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Executable,
         [String][Parameter(Position = 1)]$Switches,

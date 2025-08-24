@@ -152,9 +152,9 @@ Function New-Batch {
     $BatchStrings += '  )'
     $BatchStrings += ")`n"
     $BatchStrings += 'if "%~1"=="ShowConsole" ('
-    $BatchStrings += '    powershell -ExecutionPolicy Bypass %psfile% -CallerPath %cd%'
+    $BatchStrings += '  powershell -ExecutionPolicy Bypass %psfile% -CallerPath %cd%'
     $BatchStrings += ') else ('
-    $BatchStrings += '    powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%'
+    $BatchStrings += '  powershell -ExecutionPolicy Bypass %psfile% -HideConsole -CallerPath %cd%'
     $BatchStrings += ")`n"
 
     ForEach ($String In $PowerShellStrings) {
