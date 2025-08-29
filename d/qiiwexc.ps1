@@ -1,6 +1,6 @@
 param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)
 
-Set-Variable -Option Constant Version ([Version]'25.8.25')
+Set-Variable -Option Constant Version ([Version]'25.8.29')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -85,9 +85,10 @@ Set-Variable -Option Constant URL_OFFICE      'https://qiiwexc.github.io/d/Offic
 Set-Variable -Option Constant URL_OFFICE_INSTALLER   'https://qiiwexc.github.io/d/Office_Installer+.zip'
 Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
 
-Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
-Set-Variable -Option Constant URL_LIVE_CD  'https://rutracker.org/forum/viewtopic.php?t=4366725'
-Set-Variable -Option Constant URL_NINITE   'https://ninite.com'
+Set-Variable -Option Constant URL_UNCHECKY   'https://unchecky.com/files/unchecky_setup.exe'
+Set-Variable -Option Constant URL_LIVE_CD    'https://rutracker.org/forum/viewtopic.php?t=4366725'
+Set-Variable -Option Constant URL_NINITE     'https://ninite.com'
+Set-Variable -Option Constant URL_TRONSCRIPT 'https://github.com/bmrf/tron/blob/master/README.md#use'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Initialization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -663,7 +664,7 @@ New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Configuration')
+Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Config and misc')
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -698,6 +699,15 @@ New-GroupBox 'Windows Configurator'
 
 $BUTTON_FUNCTION = { Start-WindowsConfigurator }
 New-Button -UAC 'Windows Configurator' $BUTTON_FUNCTION > $Null
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - TronScript #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Windows Disinfection'
+
+
+$BUTTON_FUNCTION = { Open-InBrowser $URL_TRONSCRIPT }
+New-ButtonBrowser 'Download TronScript' $BUTTON_FUNCTION
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1312,8 +1322,8 @@ Function Start-WindowsConfigurator {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUt8GM+i8iynknTw2cChKUj493
-# QaagghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUzpoF0qVO9yQE8FAMj4Y4TpYC
+# W3mgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1434,28 +1444,28 @@ Function Start-WindowsConfigurator {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSGP31T
-# CAjvjiFGySGnlITCJyOy2zANBgkqhkiG9w0BAQEFAASCAQBdR1j8n6PU9W+KIic9
-# CoXDKb/r0I9PnaAqp9S/e/JzDD4Lrf5OZQXhW+Fuhd5xcSrfEJoUONTAzhjwUuKW
-# rZI78J5AKbQFrUWESUfy60xAbN8LDtfnCTV5dnsnYFaRLfbXd0eksZvnNCQirIjq
-# Q13cRsHJVc2tKMWEvtJzuTxz16FpC8vz5GhEiDZVRwHOWfDpSruwz5SXexOu1hFS
-# oXHkA0CTAUJscQo6YvKYEg5p0jIE7AoxCKsIvPDbC8RIp2tZ94dbH/IszUJNT+Yr
-# TRhte8jStWQbZHlU7eVHo277ZBpZcpG0uzDXeFLJLHyJS9Vx/gbnK2odZQg4oJ7g
-# R5floYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSM14wC
+# jiw3ez2Vjxh69EKmnoWOZjANBgkqhkiG9w0BAQEFAASCAQAeX5t3s85nM86QWbvp
+# jbsDioY3rIgHsLEQkEtF2md+7HfimeJTnxh3TTELEZteYMkQ2r0WEOnW38H3QOit
+# XlokdZ2l0XMCokbDnQQSd66Rk4/dokUisfG98UgwFBEwYymTAGvi+dGSSYiNC7t3
+# iOqME0CII14pYbVeIkcNoZQNvhN9c+xVtEbRPpqa+rPs7cpebyFR7vUSVVFDCcwa
+# qEV+nVaZXwGYAWIsOTFxGaT+XetHfoRKtSmpLQES2nXbyvDGXJzhUYKoQS0PtfxJ
+# LzsP7YQe1m63gZjRdMpCr3+eE4idJlpiwpdxRUXY2ccrgW862nW4wxUCIV9u8AbU
+# /JcBoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyNDIzNDQxMlowLwYJKoZI
-# hvcNAQkEMSIEICigKgiFmiDHp64s5ZHsH3devwTJ1MMwwUgqvnPkpuM5MA0GCSqG
-# SIb3DQEBAQUABIICAEXx7lcY7AckHuViUZxcDMSpTXDUtCQewNuOKCO7SAtDM/dC
-# cnyIYWhZuF/AucPwtKhkH2r+8I5GIhsuwoa7dx4ZLNB6e4pckoJrl+KWGhlxSUNm
-# avKiT7tbUeciOAuFQdPJ8cY2y5MfUgFmGR62oTbl+inLGJNRNTA7pJZrv5QGiZfx
-# x8+VpUm1p3gRxcvVPE0nWwz1kg+SyoJb6I/6+lx+wD/VD9Xn9o78nE3paY3hMWh3
-# CEKVnY0BNIH/LhypUgqlH6UCP43I6psoLpE/uLkYgLszgDIzxmdFUo1PBv4ZUPuF
-# JwvBtcAkSCmADVWj7Elb2WXnC7WZsM2KVD7TMs/nm77+396gYBWSItgZ/fNvDQrn
-# 0HZznUeSXGA7tS9TsejBxeptCetIuvhxB1sKw68TrLRVUhig201H7J7OOEAs6eVy
-# y/firZpSBxs6NdYrTFRKUPzePhM76QqEpYAyQGQqoncRD+F+a6+km2uVqorf1DMa
-# zYJFitJs8HvWIAMA7y4Yn6csixCaTi59jGtiI2FGKzt1q+naTSmxRTne2dypiDmC
-# 53SvMDQqsZwrlKt6yp+lInAdtkwh7louq6UQVsgLSyYvVDAFVdUqyh6HJXcnWsc5
-# TJYKnTyXHQhUfdMmsBFNcrf/PhA26VWB/i9Hywnx0SzWHmMpCz9c5kAo1ayW
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyOTEyMzExMVowLwYJKoZI
+# hvcNAQkEMSIEIPDXVSXqwCtLZLVs2DzKaWjGdTqwsvOf70L05x69EocaMA0GCSqG
+# SIb3DQEBAQUABIICAA6vmoqgP2OlX8GWEJbAT7ClgFCYmai3m4SlTloC04OTBfTC
+# bXBGmRQUOXsV5Dh+hqqxoEE+9hD2CrEnSn0SyQaoFXC5b5v8LOKm8A14jn3kqO7+
+# 4Ag8Om0KV0/khjSceHZqvnid71uSzCgWaQW7Z0cUaSsSvAvVSeS/t+ZFPtG/PG/G
+# S/c0u75grv8+AU0mesRxKmRstcIvJlKy1hKLWIt/NeOOeqJKmGR5XZ7dGRsXXb0S
+# v+BkML1ni65kBRXFDYk9nYHmiGldeFnvLtEubYLer0wL4jGxRNiVnhcbRa2sPrTz
+# nG7xk4O0hC3wvsq2TbwoRA2ZblmODa2hDm8jWzvJUdOHD6ZcrTASyb9NOFj1XHqJ
+# GfWzCP2A4bxgg0J7Mdkshgb8twWicEQSnbjmrUGX5BYCydkG7e6CHDi681c3ny1F
+# jYgb7pfyftdt2DwY0CoZnyso0O7I7GhMCYCT/FGYU+65jB4rxEcwIgoG0pLJqbYX
+# YRK1U6NxK78opJ9BAo/qzNtfWOMud7BrgJRX2KBib3i/FX7EzLAhwV6odDdpXHEC
+# G0Ht8WC8KqVq+tsvZe57HqcASsxfvDB4bkYxig3mezV+lXIyaHJbkGCpZV8k3vMI
+# +xDW6S6wUmdpUAsdZ2H+cTNO9GF3++VitrPXW7iNMFBPJHwcMwwRixPdzOnv
 # SIG # End signature block

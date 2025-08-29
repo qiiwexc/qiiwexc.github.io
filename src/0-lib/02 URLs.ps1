@@ -15,6 +15,7 @@ Set-Variable -Option Constant URL_OFFICE      'https://qiiwexc.github.io/d/Offic
 Set-Variable -Option Constant URL_OFFICE_INSTALLER   'https://qiiwexc.github.io/d/Office_Installer+.zip'
 Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
 
-Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
-Set-Variable -Option Constant URL_LIVE_CD  'https://rutracker.org/forum/viewtopic.php?t=4366725'
-Set-Variable -Option Constant URL_NINITE   'https://ninite.com'
+Set-Variable -Option Constant URL_UNCHECKY   'https://unchecky.com/files/unchecky_setup.exe'
+Set-Variable -Option Constant URL_LIVE_CD    'https://rutracker.org/forum/viewtopic.php?t=4366725'
+Set-Variable -Option Constant URL_NINITE     'https://ninite.com'
+Set-Variable -Option Constant URL_TRONSCRIPT 'https://github.com/bmrf/tron/blob/master/README.md#use'
