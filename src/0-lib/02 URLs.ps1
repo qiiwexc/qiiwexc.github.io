@@ -7,7 +7,7 @@ Set-Variable -Option Constant URL_WINDOWS_7  'https://w16.monkrus.ws/2024/02/win
 
 Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe'
 Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip'
-Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.5.816.zip'
+Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
 Set-Variable -Option Constant URL_AACT        'https://qiiwexc.github.io/d/AAct.zip'

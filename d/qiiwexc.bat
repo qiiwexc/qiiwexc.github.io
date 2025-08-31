@@ -19,7 +19,7 @@ if "%~1"=="ShowConsole" (
 
 ::param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)
 ::
-::Set-Variable -Option Constant Version ([Version]'25.8.29')
+::Set-Variable -Option Constant Version ([Version]'25.8.31')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -96,7 +96,7 @@ if "%~1"=="ShowConsole" (
 ::
 ::Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe'
 ::Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip'
-::Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.5.816.zip'
+::Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip'
 ::Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 ::
 ::Set-Variable -Option Constant URL_AACT        'https://qiiwexc.github.io/d/AAct.zip'
@@ -1341,8 +1341,8 @@ if "%~1"=="ShowConsole" (
 ::# SIG # Begin signature block
 ::# MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 ::# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUzpoF0qVO9yQE8FAMj4Y4TpYC
-::# W3mgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU6xB8FnITmQF+G5n3ZNeBXoxS
+::# Vm+gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 ::# AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 ::# OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 ::# ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1463,28 +1463,28 @@ if "%~1"=="ShowConsole" (
 ::# ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 ::# DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 ::# AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSM14wC
-::# jiw3ez2Vjxh69EKmnoWOZjANBgkqhkiG9w0BAQEFAASCAQAeX5t3s85nM86QWbvp
-::# jbsDioY3rIgHsLEQkEtF2md+7HfimeJTnxh3TTELEZteYMkQ2r0WEOnW38H3QOit
-::# XlokdZ2l0XMCokbDnQQSd66Rk4/dokUisfG98UgwFBEwYymTAGvi+dGSSYiNC7t3
-::# iOqME0CII14pYbVeIkcNoZQNvhN9c+xVtEbRPpqa+rPs7cpebyFR7vUSVVFDCcwa
-::# qEV+nVaZXwGYAWIsOTFxGaT+XetHfoRKtSmpLQES2nXbyvDGXJzhUYKoQS0PtfxJ
-::# LzsP7YQe1m63gZjRdMpCr3+eE4idJlpiwpdxRUXY2ccrgW862nW4wxUCIV9u8AbU
-::# /JcBoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBRGtL0M
+::# gmAkFAKOEdQD2yzbPAY0wzANBgkqhkiG9w0BAQEFAASCAQCRs4h9yRh9G1GQqCm8
+::# tsmQc66z3mOaP4YQU6s2LGSF6d5pqWXxZqZRN9s6U3WRM8htRNJImMVzKArnqnfs
+::# NC/QdzGXxefk4zY8BB1rp11Mk8Sn6y+zDUsutlvAFqp5wdYEBar2m+af7Gva/ztm
+::# jsxBVWIfn6mG4qO6AfX6EbtprESpKfdgPeLFpnKjaP6sBhWlY8AjbYFQFSHUmVCO
+::# gpJ4Y9KI38wl5ZwgxmTHDaTTj0jstaG+oivjxSneNULPh8ZfK2d0zC/Gboz2HLbq
+::# gONylwjLm/jU4a52AASMi0CpTi+DaS1tOhUELZI/dvaL8Su2ZquMgpxL+mrrDVpf
+::# MlNOoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 ::# VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 ::# cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 ::# CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgyOTEyMzExMVowLwYJKoZI
-::# hvcNAQkEMSIEIPDXVSXqwCtLZLVs2DzKaWjGdTqwsvOf70L05x69EocaMA0GCSqG
-::# SIb3DQEBAQUABIICAA6vmoqgP2OlX8GWEJbAT7ClgFCYmai3m4SlTloC04OTBfTC
-::# bXBGmRQUOXsV5Dh+hqqxoEE+9hD2CrEnSn0SyQaoFXC5b5v8LOKm8A14jn3kqO7+
-::# 4Ag8Om0KV0/khjSceHZqvnid71uSzCgWaQW7Z0cUaSsSvAvVSeS/t+ZFPtG/PG/G
-::# S/c0u75grv8+AU0mesRxKmRstcIvJlKy1hKLWIt/NeOOeqJKmGR5XZ7dGRsXXb0S
-::# v+BkML1ni65kBRXFDYk9nYHmiGldeFnvLtEubYLer0wL4jGxRNiVnhcbRa2sPrTz
-::# nG7xk4O0hC3wvsq2TbwoRA2ZblmODa2hDm8jWzvJUdOHD6ZcrTASyb9NOFj1XHqJ
-::# GfWzCP2A4bxgg0J7Mdkshgb8twWicEQSnbjmrUGX5BYCydkG7e6CHDi681c3ny1F
-::# jYgb7pfyftdt2DwY0CoZnyso0O7I7GhMCYCT/FGYU+65jB4rxEcwIgoG0pLJqbYX
-::# YRK1U6NxK78opJ9BAo/qzNtfWOMud7BrgJRX2KBib3i/FX7EzLAhwV6odDdpXHEC
-::# G0Ht8WC8KqVq+tsvZe57HqcASsxfvDB4bkYxig3mezV+lXIyaHJbkGCpZV8k3vMI
-::# +xDW6S6wUmdpUAsdZ2H+cTNO9GF3++VitrPXW7iNMFBPJHwcMwwRixPdzOnv
+::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgzMTEzNDk0MlowLwYJKoZI
+::# hvcNAQkEMSIEIEKRBVvFXq7/S5IoL9jByqQfFInwttLpyYp/oNqv9RXnMA0GCSqG
+::# SIb3DQEBAQUABIICAMLzY9sO4xHhkUiHLHzNvBsL4S+5FBLztyHOswQftLaltlAm
+::# AtqKSQyDhyWWtS78CRcTK2/wcn64VR51FbNHQyIMvwzsCCH40yHYZN/GAyUvYKRn
+::# rLbgs9oEAguo2EHVCo4SvCoxG85nqHIQnFh7O5SE6XDtLD01A5blxV+BZTB22D3P
+::# 9pYpvfwLiRSzjfu5fvP5i4i7NFTebBSGzNpQT1zwf+dQ4TOhhtz1wGjjgDBFmS+F
+::# eLsMeOek9xkpjrO1e4xuutxQH+Zd+NR17rBnQSpgNIfV6617DBD5YJA6OCI1zSoj
+::# +88T4UGh3u8HebnoSAGd5Vvb2RwASenaylGMjlpY/Xu4k1M3JpiImJwa0UX1Dptg
+::# La68d3j+uEjeAI32Yc5r/56v9yDCY0COJWiPu+KPDz0Gfcou5KX7Ok4ikd16Uc8K
+::# eFgN4iPmrj+C/9naMFdp1OgaiqL+7hj9QZbSf1jUK3KI9vv5TiKNGyqVxgRct/wK
+::# uqVPMX8nQ21qfi8AaI4ZysjuPPWMe8SBaq9RrAeOYcGeeJWCdqqsoVjqCldMDR4w
+::# fALB3XPtrOuLQFr6A4Wp8Z9933C7nPlK43cD3UNzIoMaJFadbMso/bf9AL2icBYt
+::# tRNXRzj/HORhLtWLSuD6TwKqfEUMdMpHoPIjASoiq70faTuDH7qhxRzHtj7P
 ::# SIG # End signature block
