@@ -1,7 +1,5 @@
 param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)
 
-Set-Variable -Option Constant Version ([Version]'25.8.31')
-
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
@@ -26,6 +24,8 @@ Now you can try starting the utility again
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant Version ([Version]'25.9.6')
 
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
@@ -69,25 +69,25 @@ Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } e
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# URLs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant URL_VERSION_FILE 'https://bit.ly/qiiwexc_version'
-Set-Variable -Option Constant URL_BAT_FILE     'https://bit.ly/qiiwexc_bat'
+Set-Variable -Option Constant URL_BAT_FILE 'https://bit.ly/qiiwexc_bat'
 
 Set-Variable -Option Constant URL_WINDOWS_11 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html'
 Set-Variable -Option Constant URL_WINDOWS_10 'https://w16.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html'
-Set-Variable -Option Constant URL_WINDOWS_7  'https://w16.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
+Set-Variable -Option Constant URL_WINDOWS_7 'https://w16.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
 
-Set-Variable -Option Constant URL_RUFUS    'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe'
-Set-Variable -Option Constant URL_VENTOY   'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip'
-Set-Variable -Option Constant URL_SDIO     'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip'
+Set-Variable -Option Constant URL_RUFUS 'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe'
+Set-Variable -Option Constant URL_VENTOY 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip'
+Set-Variable -Option Constant URL_SDIO 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
-Set-Variable -Option Constant URL_AACT        'https://qiiwexc.github.io/d/AAct.zip'
-Set-Variable -Option Constant URL_OFFICE      'https://qiiwexc.github.io/d/Office_2013-2024.zip'
-Set-Variable -Option Constant URL_OFFICE_INSTALLER   'https://qiiwexc.github.io/d/Office_Installer+.zip'
+Set-Variable -Option Constant URL_AACT 'https://qiiwexc.github.io/d/AAct.zip'
+Set-Variable -Option Constant URL_OFFICE 'https://qiiwexc.github.io/d/Office_2013-2024.zip'
+Set-Variable -Option Constant URL_OFFICE_INSTALLER 'https://qiiwexc.github.io/d/Office_Installer+.zip'
 Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
 
-Set-Variable -Option Constant URL_UNCHECKY   'https://unchecky.com/files/unchecky_setup.exe'
-Set-Variable -Option Constant URL_LIVE_CD    'https://rutracker.org/forum/viewtopic.php?t=4366725'
-Set-Variable -Option Constant URL_NINITE     'https://ninite.com'
+Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
+Set-Variable -Option Constant URL_LIVE_CD 'https://rutracker.org/forum/viewtopic.php?t=4366725'
+Set-Variable -Option Constant URL_NINITE 'https://ninite.com'
 Set-Variable -Option Constant URL_TRONSCRIPT 'https://github.com/bmrf/tron/blob/master/README.md#use'
 
 
@@ -1294,7 +1294,7 @@ Function Set-CloudFlareDNS {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-WindowsDebloat {
-    Add-Log $INF "Starting Windows deboat utility..."
+    Add-Log $INF "Starting Windows debloat utility..."
 
     if ($OS_VERSION -eq 10) {
         Start-Script "iwr -useb https://git.io/debloat | iex"
@@ -1322,8 +1322,8 @@ Function Start-WindowsConfigurator {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU6xB8FnITmQF+G5n3ZNeBXoxS
-# Vm+gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUT/8GNTorLwW/LqlLS3uo83PE
+# IfOgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1444,28 +1444,28 @@ Function Start-WindowsConfigurator {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBRGtL0M
-# gmAkFAKOEdQD2yzbPAY0wzANBgkqhkiG9w0BAQEFAASCAQCRs4h9yRh9G1GQqCm8
-# tsmQc66z3mOaP4YQU6s2LGSF6d5pqWXxZqZRN9s6U3WRM8htRNJImMVzKArnqnfs
-# NC/QdzGXxefk4zY8BB1rp11Mk8Sn6y+zDUsutlvAFqp5wdYEBar2m+af7Gva/ztm
-# jsxBVWIfn6mG4qO6AfX6EbtprESpKfdgPeLFpnKjaP6sBhWlY8AjbYFQFSHUmVCO
-# gpJ4Y9KI38wl5ZwgxmTHDaTTj0jstaG+oivjxSneNULPh8ZfK2d0zC/Gboz2HLbq
-# gONylwjLm/jU4a52AASMi0CpTi+DaS1tOhUELZI/dvaL8Su2ZquMgpxL+mrrDVpf
-# MlNOoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTxYnaY
+# LlnBsptpOq3xyxDVEmB73zANBgkqhkiG9w0BAQEFAASCAQBftv3uyIUaGbadG+OR
+# XflGG82iIYqnuryB+qjc17LLilluQpgOuiopIQhECbFTc/Y0KHwKOALnOigXSAfJ
+# NTQ4OIbGIkyfwDTGRF69IC7TGv3x8tcwjU7l++xfbESNy8TlTXLtCNUCrPZuH+Qm
+# CzYU0mM2yQlSICiLfKUrfMvdkIbI2H5QM4DMQo9vL2UQTTt4H8sYAjxTNOwxx01J
+# uNYPunfbVENu563VUC3ZoTAfpJ9y1N7iHcRN/cGui/rtwKcchggz90A0Sfoaah/0
+# 0wLhtMk+ptmfs4HSgsa45fIVRAIkrAYSbC4WCS5p2iPi+SxNQK2aN+/MAdCdEsqH
+# LiUOoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDgzMTEzNDk0MlowLwYJKoZI
-# hvcNAQkEMSIEIEKRBVvFXq7/S5IoL9jByqQfFInwttLpyYp/oNqv9RXnMA0GCSqG
-# SIb3DQEBAQUABIICAMLzY9sO4xHhkUiHLHzNvBsL4S+5FBLztyHOswQftLaltlAm
-# AtqKSQyDhyWWtS78CRcTK2/wcn64VR51FbNHQyIMvwzsCCH40yHYZN/GAyUvYKRn
-# rLbgs9oEAguo2EHVCo4SvCoxG85nqHIQnFh7O5SE6XDtLD01A5blxV+BZTB22D3P
-# 9pYpvfwLiRSzjfu5fvP5i4i7NFTebBSGzNpQT1zwf+dQ4TOhhtz1wGjjgDBFmS+F
-# eLsMeOek9xkpjrO1e4xuutxQH+Zd+NR17rBnQSpgNIfV6617DBD5YJA6OCI1zSoj
-# +88T4UGh3u8HebnoSAGd5Vvb2RwASenaylGMjlpY/Xu4k1M3JpiImJwa0UX1Dptg
-# La68d3j+uEjeAI32Yc5r/56v9yDCY0COJWiPu+KPDz0Gfcou5KX7Ok4ikd16Uc8K
-# eFgN4iPmrj+C/9naMFdp1OgaiqL+7hj9QZbSf1jUK3KI9vv5TiKNGyqVxgRct/wK
-# uqVPMX8nQ21qfi8AaI4ZysjuPPWMe8SBaq9RrAeOYcGeeJWCdqqsoVjqCldMDR4w
-# fALB3XPtrOuLQFr6A4Wp8Z9933C7nPlK43cD3UNzIoMaJFadbMso/bf9AL2icBYt
-# tRNXRzj/HORhLtWLSuD6TwKqfEUMdMpHoPIjASoiq70faTuDH7qhxRzHtj7P
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkwNjE1MTcwN1owLwYJKoZI
+# hvcNAQkEMSIEIM9X+E4r+pv68Bt5nYvDjK5PcXUaEibK2pOUST543h4wMA0GCSqG
+# SIb3DQEBAQUABIICACA7/VoIriXDiy5qVUSHBa+Yvn+BQPe8sfCJFjcHJcefTtJj
+# H6XPugCMM1ze6CKUTXmjrGGWZsJvXrVR/LAy8k4eN4uE0EMhjmflLXSyy5c4fz2w
+# XtZ14kJ19G7PweKSN53UJgJmUlr2U++rQIfoeZkSfXN2SSeZ+K9aFDw9SfI+WeTt
+# Jv0Khglz25ICBjnJdtsCHoEWVM8KJv3HZpmWimOI0PF/Cf0X3qYn0CVyK7dEZSC2
+# HvgZ86XivAg/vq0o2SHVOoCkvrMUN/GotDuDQ/sWCUo75TLfRJ1Q7sWObtPjUdUx
+# 68Rgb/8fFTyw0eOM9zDG4F1kwumDEpYH3UJcP6Mpf8TvaHD6y5JnlAy7nT2Dg3lM
+# CCi4sLqiaGcyC0T+R3e0tcADMtaxqoRzAXOeUQQuhkW87jasbPQ4QZat2yEINYsc
+# Lx+VDzgfvsAVSWhAjz9hS4nwdLEF63QLEq5hkLkwhAl3JGWmU6Ohd/0iYKPoirV5
+# UvtYgRwGexlWXF7uqwgQ2qeC4fucqTqKsvIq2nSe1aQRsZHeNO+6k6JMuCGmIyfQ
+# xKTrT2gtGoGWpHgNQtE9ROyOQHvY4xPgc+2C84eZGQBlCQynyoXzki5vPQR0vjTJ
+# /cHZqv30Gj0L7y9ELqXR+csvGec36W7PgQWzOnfLCYmrjZZKgYwb1mtU2w23
 # SIG # End signature block

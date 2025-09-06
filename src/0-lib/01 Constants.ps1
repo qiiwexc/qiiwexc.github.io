@@ -1,3 +1,5 @@
+Set-Variable -Option Constant Version ([Version]'{PROJECT_VERSION}')
+
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
 
