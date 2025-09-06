@@ -11,6 +11,7 @@ Function Start-Build {
     Set-Variable -Option Constant Version     (Get-Date -Format 'y.M.d')
     Set-Variable -Option Constant ProjectName 'qiiwexc'
 
+    Set-Variable -Option Constant AssetsPath '.\assets'
     Set-Variable -Option Constant SourcePath '.\src'
     Set-Variable -Option Constant DistPath   '.\d'
 
@@ -25,9 +26,11 @@ Function Start-Build {
 
     Write-VersionFile $Version $VersionFile
 
-    Update-Html $ProjectName $Version
+    Set-Variable -Option Constant Config (Get-Config $AssetsPath $Version)
 
-    New-PowerShell $Version $SourcePath $Ps1File
+    New-Html $AssetsPath $Config
+
+    New-PowerShell $SourcePath $Ps1File $Config
 
     Set-Signature $Ps1File $ProjectName
 
@@ -76,19 +79,43 @@ Function Write-VersionFile {
 }
 
 
-Function Update-Html {
+Function Get-Config {
     Param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$ProjectName,
+        [String][Parameter(Position = 0, Mandatory = $True)]$AssetsPath,
         [String][Parameter(Position = 1, Mandatory = $True)]$Version
     )
 
-    Add-Log $INF 'Updating version on the web page...'
+    Add-Log $INF 'Loading config...'
 
-    Set-Variable -Option Constant WebPageFile ".\index.html"
-    Set-Variable -Option Constant HtmlTitle   "<title>$ProjectName $Version</title>"
-    Set-Variable -Option Constant HtmlHeader  "<h2><a href=`"https://bit.ly/$($ProjectName)_bat`">$ProjectName $Version</a></h2>"
+    Set-Variable -Option Constant UrlsFile "$AssetsPath\urls.json"
 
-    (Get-Content $WebPageFile) | ForEach-Object { $_ -Replace "<title>.+", $HtmlTitle -Replace "<h2>.+", $HtmlHeader } | Set-Content $WebPageFile
+    [System.Object[]]$Config = Get-Content $UrlsFile | ConvertFrom-Json
+    $Config += @{key='PROJECT_VERSION'; value=$Version}
+
+    Out-Success
+
+    return $Config
+}
+
+
+Function New-Html {
+    Param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AssetsPath,
+        [System.Object[]][Parameter(Position = 1, Mandatory = $True)]$Config
+    )
+
+    Add-Log $INF 'Building the web page...'
+
+    Set-Variable -Option Constant TemplateFile "$AssetsPath\template.html"
+    Set-Variable -Option Constant OutputFile   ".\index.html"
+
+    [String[]]$TemplateContent = Get-Content $TemplateFile
+
+    $Config | ForEach-Object { $TemplateContent = $TemplateContent -Replace "{$($_.key)}", $_.value }
+
+    $TemplateContent = $TemplateContent -Replace "../d/stylesheet.css", "https://bit.ly/stylesheet_web"
+
+    Set-Content $OutputFile $TemplateContent
 
     Out-Success
 }
@@ -96,9 +123,9 @@ Function Update-Html {
 
 Function New-PowerShell {
     Param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Version,
-        [String][Parameter(Position = 1, Mandatory = $True)]$SourcePath,
-        [String][Parameter(Position = 2, Mandatory = $True)]$Ps1File
+        [String][Parameter(Position = 0, Mandatory = $True)]$SourcePath,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Ps1File,
+        [System.Object[]][Parameter(Position = 2, Mandatory = $True)]$Config
     )
 
     Add-Log $INF 'Building PowerShell script...'
@@ -108,7 +135,6 @@ Function New-PowerShell {
     New-Item -Force -ItemType Directory $DistPath | Out-Null
 
     [String[]]$OutputStrings = 'param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)'
-    $OutputStrings += "`nSet-Variable -Option Constant Version ([Version]'$Version')"
 
     ForEach ($File In Get-ChildItem -Recurse -File $SourcePath) {
         [String]$SectionName = $File.ToString().Replace('.ps1', '').Remove(0, 3)
@@ -117,6 +143,8 @@ Function New-PowerShell {
         $OutputStrings += "`n`n#$Spacer# $SectionName #$Spacer#`n"
         $OutputStrings += Get-Content $File.FullName
     }
+
+    $Config | ForEach-Object { $OutputStrings = $OutputStrings -Replace "{$($_.key)}", $_.value }
 
     Add-Log $INF "Writing output file $Ps1File"
     $OutputStrings | Out-File $Ps1File -Encoding ASCII

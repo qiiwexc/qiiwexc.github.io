@@ -1,5 +1,5 @@
 Function Start-WindowsDebloat {
-    Add-Log $INF "Starting Windows deboat utility..."
+    Add-Log $INF "Starting Windows debloat utility..."
 
     if ($OS_VERSION -eq 10) {
         Start-Script "iwr -useb https://git.io/debloat | iex"
