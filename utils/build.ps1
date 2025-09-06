@@ -134,7 +134,7 @@ Function New-PowerShell {
 
     New-Item -Force -ItemType Directory $DistPath | Out-Null
 
-    [String[]]$OutputStrings = 'param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)'
+    [String[]]$OutputStrings = @()
 
     ForEach ($File In Get-ChildItem -Recurse -File $SourcePath) {
         [String]$SectionName = $File.ToString().Replace('.ps1', '').Remove(0, 3)
