@@ -1,6 +1,6 @@
 Write-Host 'Initializing...'
 
-Set-Variable -Option Constant OLD_WINDOW_TITLE $($HOST.UI.RawUI.WindowTitle)
+Set-Variable -Option Constant OLD_WINDOW_TITLE ($HOST.UI.RawUI.WindowTitle)
 $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administrator'})"
 
 if ($HideConsole) {
@@ -18,9 +18,9 @@ try {
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 
-Set-Variable -Option Constant PS_VERSION $($PSVersionTable.PSVersion.Major)
+Set-Variable -Option Constant PS_VERSION $PSVersionTable.PSVersion.Major
 
-Set-Variable -Option Constant SHELL $(New-Object -com Shell.Application)
+Set-Variable -Option Constant SHELL (New-Object -com Shell.Application)
 
 Set-Variable -Option Constant OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
 Set-Variable -Option Constant IsWindows11 ($OperatingSystem.Caption -Match "Windows 11")
@@ -33,3 +33,5 @@ Set-Variable -Option Constant WordRegPath (Get-ItemProperty "$(New-PSDrive HKCR 
 Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
 Set-Variable -Option Constant PathOfficeC2RClientExe "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PathOfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
+
+New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null

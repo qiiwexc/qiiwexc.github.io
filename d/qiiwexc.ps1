@@ -1,4 +1,3 @@
-param([String][Parameter(Position = 0)]$CallerPath, [Switch]$HideConsole)
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -23,9 +22,17 @@ Now you can try starting the utility again
 #>
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Params #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+param(
+    [String][Parameter(Position = 0)]$CallerPath,
+    [Switch]$HideConsole
+)
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant Version ([Version]'25.9.6')
+Set-Variable -Option Constant Version ([Version]'25.9.7')
 
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
@@ -62,7 +69,7 @@ Set-Variable -Option Constant PATH_TEMP_DIR "$([System.IO.Path]::GetTempPath())q
 
 Set-Variable -Option Constant SYSTEM_LANGUAGE (Get-SystemLanguage)
 
-Set-Variable -Option Constant IS_ELEVATED $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+Set-Variable -Option Constant IS_ELEVATED (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })
 
 
@@ -81,7 +88,6 @@ Set-Variable -Option Constant URL_SDIO 'https://www.glenn.delahoy.com/downloads/
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
 Set-Variable -Option Constant URL_AACT 'https://qiiwexc.github.io/d/AAct.zip'
-Set-Variable -Option Constant URL_OFFICE 'https://qiiwexc.github.io/d/Office_2013-2024.zip'
 Set-Variable -Option Constant URL_OFFICE_INSTALLER 'https://qiiwexc.github.io/d/Office_Installer+.zip'
 Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
 
@@ -89,13 +95,14 @@ Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_
 Set-Variable -Option Constant URL_LIVE_CD 'https://rutracker.org/forum/viewtopic.php?t=4366725'
 Set-Variable -Option Constant URL_NINITE 'https://ninite.com'
 Set-Variable -Option Constant URL_TRONSCRIPT 'https://github.com/bmrf/tron/blob/master/README.md#use'
+Set-Variable -Option Constant URL_SHUTUP10 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Initialization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Write-Host 'Initializing...'
 
-Set-Variable -Option Constant OLD_WINDOW_TITLE $($HOST.UI.RawUI.WindowTitle)
+Set-Variable -Option Constant OLD_WINDOW_TITLE ($HOST.UI.RawUI.WindowTitle)
 $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION$(if ($IS_ELEVATED) {': Administrator'})"
 
 if ($HideConsole) {
@@ -113,9 +120,9 @@ try {
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 
-Set-Variable -Option Constant PS_VERSION $($PSVersionTable.PSVersion.Major)
+Set-Variable -Option Constant PS_VERSION $PSVersionTable.PSVersion.Major
 
-Set-Variable -Option Constant SHELL $(New-Object -com Shell.Application)
+Set-Variable -Option Constant SHELL (New-Object -com Shell.Application)
 
 Set-Variable -Option Constant OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
 Set-Variable -Option Constant IsWindows11 ($OperatingSystem.Caption -Match "Windows 11")
@@ -129,8 +136,328 @@ Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath
 Set-Variable -Option Constant PathOfficeC2RClientExe "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PathOfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
 
+New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - TabPage #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Office Installer #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER '
+[Configurations]
+NOSOUND = 1
+PosR = 1
+ArchR = 1
+DlndArch = 1
+CBBranch = 1
+Word = 1
+Excel = 1
+Access = 0
+Publisher = 0
+Teams = 0
+Groove = 0
+Lync = 0
+OneNote = 0
+OneDrive = 0
+Outlook = 0
+PowerPoint = 1
+Project = 0
+ProjectPro = 0
+ProjectMondo = 0
+Visio = 0
+VisioPro = 0
+VisioMondo = 0
+ProofingTools = 0
+OnOff = 1
+langs = en-GB|lv-LV|
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# WinUtil #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_WINUTIL '{
+    "WPFTweaks":  [
+                      "WPFTweaksRestorePoint",
+                      "WPFTweaksWifi",
+                      "WPFTweaksRightClickMenu",
+                      "WPFTweaksDisableLMS1",
+                      "WPFTweaksConsumerFeatures",
+                      "WPFTweaksDVR",
+                      "WPFTweaksRemoveGallery",
+                      "WPFTweaksTele",
+                      "WPFTweaksAH",
+                      "WPFTweaksEdgeDebloat",
+                      "WPFTweaksRemoveCopilot",
+                      "WPFTweaksLoc",
+                      "WPFTweaksRemoveOnedrive",
+                      "WPFTweaksDiskCleanup",
+                      "WPFTweaksHome",
+                      "WPFTweaksBraveDebloat",
+                      "WPFTweaksDeleteTempFiles",
+                      "WPFTweaksRecallOff"
+                  ],
+    "Install":  [
+
+                ],
+    "WPFInstall":  [
+
+                   ],
+    "WPFFeature":  [
+                       "WPFFeatureDisableSearchSuggestions",
+                       "WPFFeatureRegBackup"
+                   ]
+}
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# ShutUp10 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_SHUTUP10 "
+P001	+	# Disable sharing of handwriting data (Category: Privacy)
+P002	+	# Disable sharing of handwriting error reports (Category: Privacy)
+P003	+	# Disable Inventory Collector (Category: Privacy)
+P004	+	# Disable camera in logon screen (Category: Privacy)
+P005	+	# Disable and reset Advertising ID and info for the machine (Category: Privacy)
+P006	+	# Disable and reset Advertising ID and info (Category: Privacy)
+P008	+	# Disable transmission of typing information (Category: Privacy)
+P026	+	# Disable advertisements via Bluetooth (Category: Privacy)
+P027	+	# Disable the Windows Customer Experience Improvement Program (Category: Privacy)
+P028	+	# Disable backup of text messages into the cloud (Category: Privacy)
+P064	+	# Disable suggestions in the timeline (Category: Privacy)
+P065	+	# Disable suggestions in Start (Category: Privacy)
+P066	+	# Disable tips, tricks, and suggestions when using Windows (Category: Privacy)
+P067	+	# Disable showing suggested content in the Settings app (Category: Privacy)
+P070	+	# Disable the possibility of suggesting to finish the setup of the device (Category: Privacy)
+P069	+	# Disable Windows Error Reporting (Category: Privacy)
+P009	-	# Disable biometrical features (Category: Privacy)
+P010	-	# Disable app notifications (Category: Privacy)
+P015	-	# Disable access to local language for browsers (Category: Privacy)
+P068	-	# Disable text suggestions when typing on the software keyboard (Category: Privacy)
+P016	-	# Disable sending URLs from apps to Windows Store (Category: Privacy)
+A001	+	# Disable recordings of user activity (Category: Activity History and Clipboard)
+A002	+	# Disable storing users' activity history (Category: Activity History and Clipboard)
+A003	+	# Disable the submission of user activities to Microsoft (Category: Activity History and Clipboard)
+A004	+	# Disable storage of clipboard history for whole machine (Category: Activity History and Clipboard)
+A006	+	# Disable storage of clipboard history (Category: Activity History and Clipboard)
+A005	+	# Disable the transfer of the clipboard to other devices via the cloud (Category: Activity History and Clipboard)
+P007	+	# Disable app access to user account information (Category: App Privacy)
+P036	+	# Disable app access to user account information (Category: App Privacy)
+P025	+	# Disable Windows tracking of app starts (Category: App Privacy)
+P033	+	# Disable app access to diagnostics information (Category: App Privacy)
+P023	+	# Disable app access to diagnostics information (Category: App Privacy)
+P056	+	# Disable app access to device location (Category: App Privacy)
+P057	-	# Disable app access to device location (Category: App Privacy)
+P012	-	# Disable app access to camera (Category: App Privacy)
+P034	-	# Disable app access to camera (Category: App Privacy)
+P013	-	# Disable app access to microphone (Category: App Privacy)
+P035	-	# Disable app access to microphone (Category: App Privacy)
+P062	-	# Disable app access to use voice activation (Category: App Privacy)
+P063	-	# Disable app access to use voice activation when device is locked (Category: App Privacy)
+P081	-	# Disable the standard app for the headset button (Category: App Privacy)
+P047	-	# Disable app access to notifications (Category: App Privacy)
+P019	-	# Disable app access to notifications (Category: App Privacy)
+P048	-	# Disable app access to motion (Category: App Privacy)
+P049	-	# Disable app access to movements (Category: App Privacy)
+P020	-	# Disable app access to contacts (Category: App Privacy)
+P037	-	# Disable app access to contacts (Category: App Privacy)
+P011	-	# Disable app access to calendar (Category: App Privacy)
+P038	-	# Disable app access to calendar (Category: App Privacy)
+P050	-	# Disable app access to phone calls (Category: App Privacy)
+P051	-	# Disable app access to phone calls (Category: App Privacy)
+P018	-	# Disable app access to call history (Category: App Privacy)
+P039	-	# Disable app access to call history (Category: App Privacy)
+P021	-	# Disable app access to email (Category: App Privacy)
+P040	-	# Disable app access to email (Category: App Privacy)
+P022	-	# Disable app access to tasks (Category: App Privacy)
+P041	-	# Disable app access to tasks (Category: App Privacy)
+P014	-	# Disable app access to messages (Category: App Privacy)
+P042	-	# Disable app access to messages (Category: App Privacy)
+P052	-	# Disable app access to radios (Category: App Privacy)
+P053	-	# Disable app access to radios (Category: App Privacy)
+P054	-	# Disable app access to unpaired devices (Category: App Privacy)
+P055	-	# Disable app access to unpaired devices (Category: App Privacy)
+P029	-	# Disable app access to documents (Category: App Privacy)
+P043	-	# Disable app access to documents (Category: App Privacy)
+P030	-	# Disable app access to images (Category: App Privacy)
+P044	-	# Disable app access to images (Category: App Privacy)
+P031	-	# Disable app access to videos (Category: App Privacy)
+P045	-	# Disable app access to videos (Category: App Privacy)
+P032	-	# Disable app access to the file system (Category: App Privacy)
+P046	-	# Disable app access to the file system (Category: App Privacy)
+P058	-	# Disable app access to wireless equipment (Category: App Privacy)
+P059	-	# Disable app access to wireless technology (Category: App Privacy)
+P060	-	# Disable app access to eye tracking (Category: App Privacy)
+P061	-	# Disable app access to eye tracking (Category: App Privacy)
+P071	-	# Disable the ability for apps to take screenshots (Category: App Privacy)
+P072	-	# Disable the ability for apps to take screenshots (Category: App Privacy)
+P073	-	# Disable the ability for desktop apps to take screenshots (Category: App Privacy)
+P074	-	# Disable the ability for apps to take screenshots without borders (Category: App Privacy)
+P075	-	# Disable the ability for apps to take screenshots without borders (Category: App Privacy)
+P076	-	# Disable the ability for desktop apps to take screenshots without margins (Category: App Privacy)
+P077	-	# Disable app access to music libraries (Category: App Privacy)
+P078	-	# Disable app access to music libraries (Category: App Privacy)
+P079	-	# Disable app access to downloads folder (Category: App Privacy)
+P080	-	# Disable app access to downloads folder (Category: App Privacy)
+P024	-	# Prohibit apps from running in the background (Category: App Privacy)
+S001	-	# Disable password reveal button (Category: Security)
+S002	+	# Disable user steps recorder (Category: Security)
+S003	+	# Disable telemetry (Category: Security)
+S008	-	# Disable Internet access of Windows Media Digital Rights Management (DRM) (Category: Security)
+E101	+	# Disable tracking in the web (Category: Microsoft Edge (new version based on Chromium))
+E201	+	# Disable tracking in the web (Category: Microsoft Edge (new version based on Chromium))
+E115	+	# Disable check for saved payment methods by sites (Category: Microsoft Edge (new version based on Chromium))
+E215	-	# Disable check for saved payment methods by sites (Category: Microsoft Edge (new version based on Chromium))
+E118	+	# Disable personalizing advertising, search, news and other services (Category: Microsoft Edge (new version based on Chromium))
+E218	+	# Disable personalizing advertising, search, news and other services (Category: Microsoft Edge (new version based on Chromium))
+E107	-	# Disable automatic completion of web addresses in address bar (Category: Microsoft Edge (new version based on Chromium))
+E207	-	# Disable automatic completion of web addresses in address bar (Category: Microsoft Edge (new version based on Chromium))
+E111	+	# Disable user feedback in toolbar (Category: Microsoft Edge (new version based on Chromium))
+E211	+	# Disable user feedback in toolbar (Category: Microsoft Edge (new version based on Chromium))
+E112	+	# Disable storing and autocompleting of credit card data on websites (Category: Microsoft Edge (new version based on Chromium))
+E212	-	# Disable storing and autocompleting of credit card data on websites (Category: Microsoft Edge (new version based on Chromium))
+E109	-	# Disable form suggestions (Category: Microsoft Edge (new version based on Chromium))
+E209	-	# Disable form suggestions (Category: Microsoft Edge (new version based on Chromium))
+E121	-	# Disable suggestions from local providers (Category: Microsoft Edge (new version based on Chromium))
+E221	-	# Disable suggestions from local providers (Category: Microsoft Edge (new version based on Chromium))
+E103	-	# Disable search and website suggestions (Category: Microsoft Edge (new version based on Chromium))
+E203	-	# Disable search and website suggestions (Category: Microsoft Edge (new version based on Chromium))
+E123	+	# Disable shopping assistant in Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
+E223	+	# Disable shopping assistant in Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
+E124	-	# Disable Edge bar (Category: Microsoft Edge (new version based on Chromium))
+E224	+	# Disable Edge bar (Category: Microsoft Edge (new version based on Chromium))
+E128	-	# Disable Sidebar in Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
+E228	-	# Disable Sidebar in Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
+E129	-	# Disable the Microsoft Account Sign-In Button (Category: Microsoft Edge (new version based on Chromium))
+E229	-	# Disable the Microsoft Account Sign-In Button (Category: Microsoft Edge (new version based on Chromium))
+E130	-	# Disable Enhanced Spell Checking (Category: Microsoft Edge (new version based on Chromium))
+E230	-	# Disable Enhanced Spell Checking (Category: Microsoft Edge (new version based on Chromium))
+E119	-	# Disable use of web service to resolve navigation errors (Category: Microsoft Edge (new version based on Chromium))
+E219	-	# Disable use of web service to resolve navigation errors (Category: Microsoft Edge (new version based on Chromium))
+E120	-	# Disable suggestion of similar sites when website cannot be found (Category: Microsoft Edge (new version based on Chromium))
+E220	-	# Disable suggestion of similar sites when website cannot be found (Category: Microsoft Edge (new version based on Chromium))
+E122	-	# Disable preload of pages for faster browsing and searching (Category: Microsoft Edge (new version based on Chromium))
+E222	-	# Disable preload of pages for faster browsing and searching (Category: Microsoft Edge (new version based on Chromium))
+E125	-	# Disable saving passwords for websites (Category: Microsoft Edge (new version based on Chromium))
+E225	-	# Disable saving passwords for websites (Category: Microsoft Edge (new version based on Chromium))
+E126	-	# Disable site safety services for more information about a visited website (Category: Microsoft Edge (new version based on Chromium))
+E226	-	# Disable site safety services for more information about a visited website (Category: Microsoft Edge (new version based on Chromium))
+E131	-	# Disable automatic redirection from Internet Explorer to Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
+E106	-	# Disable SmartScreen Filter (Category: Microsoft Edge (new version based on Chromium))
+E206	-	# Disable SmartScreen Filter (Category: Microsoft Edge (new version based on Chromium))
+E127	-	# Disable typosquatting checker for site addresses (Category: Microsoft Edge (new version based on Chromium))
+E227	-	# Disable typosquatting checker for site addresses (Category: Microsoft Edge (new version based on Chromium))
+E001	+	# Disable tracking in the web (Category: Microsoft Edge (legacy version))
+E002	-	# Disable page prediction (Category: Microsoft Edge (legacy version))
+E003	-	# Disable search and website suggestions (Category: Microsoft Edge (legacy version))
+E008	+	# Disable Cortana in Microsoft Edge (Category: Microsoft Edge (legacy version))
+E007	+	# Disable automatic completion of web addresses in address bar (Category: Microsoft Edge (legacy version))
+E010	-	# Disable showing search history (Category: Microsoft Edge (legacy version))
+E011	+	# Disable user feedback in toolbar (Category: Microsoft Edge (legacy version))
+E012	-	# Disable storing and autocompleting of credit card data on websites (Category: Microsoft Edge (legacy version))
+E009	-	# Disable form suggestions (Category: Microsoft Edge (legacy version))
+E004	-	# Disable sites saving protected media licenses on my device (Category: Microsoft Edge (legacy version))
+E005	-	# Do not optimize web search results on the task bar for screen reader (Category: Microsoft Edge (legacy version))
+E013	+	# Disable Microsoft Edge launch in the background (Category: Microsoft Edge (legacy version))
+E014	-	# Disable loading the start and new tab pages in the background (Category: Microsoft Edge (legacy version))
+E006	-	# Disable SmartScreen Filter (Category: Microsoft Edge (legacy version))
+F002	+	# Disable telemetry for Microsoft Office (Category: Microsoft Office)
+F014	+	# Disable diagnostic data submission (Category: Microsoft Office)
+F015	+	# Disable participation in the Customer Experience Improvement Program (Category: Microsoft Office)
+F016	+	# Disable the display of LinkedIn information (Category: Microsoft Office)
+F001	+	# Disable inline text prediction in mails (Category: Microsoft Office)
+F003	+	# Disable logging for Microsoft Office Telemetry Agent (Category: Microsoft Office)
+F004	+	# Disable upload of data for Microsoft Office Telemetry Agent (Category: Microsoft Office)
+F005	+	# Obfuscate file names when uploading telemetry data (Category: Microsoft Office)
+F007	+	# Disable Microsoft Office surveys (Category: Microsoft Office)
+F008	+	# Disable feedback to Microsoft (Category: Microsoft Office)
+F009	+	# Disable Microsoft's feedback tracking (Category: Microsoft Office)
+F017	+	# Disable Microsoft's feedback tracking (Category: Microsoft Office)
+F006	-	# Disable automatic receipt of updates (Category: Microsoft Office)
+F010	-	# Disable connected experiences in Office (Category: Microsoft Office)
+F011	-	# Disable connected experiences with content analytics (Category: Microsoft Office)
+F012	-	# Disable online content downloading for connected experiences (Category: Microsoft Office)
+F013	-	# Disable optional connected experiences in Office (Category: Microsoft Office)
+Y001	-	# Disable synchronization of all settings (Category: Synchronization of Windows Settings)
+Y002	-	# Disable synchronization of design settings (Category: Synchronization of Windows Settings)
+Y003	-	# Disable synchronization of browser settings (Category: Synchronization of Windows Settings)
+Y004	-	# Disable synchronization of credentials (passwords) (Category: Synchronization of Windows Settings)
+Y005	-	# Disable synchronization of language settings (Category: Synchronization of Windows Settings)
+Y006	-	# Disable synchronization of accessibility settings (Category: Synchronization of Windows Settings)
+Y007	-	# Disable synchronization of advanced Windows settings (Category: Synchronization of Windows Settings)
+C012	+	# Disable and reset Cortana (Category: Cortana (Personal Assistant))
+C002	+	# Disable Input Personalization (Category: Cortana (Personal Assistant))
+C013	+	# Disable online speech recognition (Category: Cortana (Personal Assistant))
+C007	+	# Cortana and search are disallowed to use location (Category: Cortana (Personal Assistant))
+C008	+	# Disable web search from Windows Desktop Search (Category: Cortana (Personal Assistant))
+C009	+	# Disable display web results in Search (Category: Cortana (Personal Assistant))
+C010	+	# Disable download and updates of speech recognition and speech synthesis models (Category: Cortana (Personal Assistant))
+C011	+	# Disable cloud search (Category: Cortana (Personal Assistant))
+C014	+	# Disable Cortana above lock screen (Category: Cortana (Personal Assistant))
+C015	+	# Disable the search highlights in the taskbar (Category: Cortana (Personal Assistant))
+C101	+	# Disable the Windows Copilot (Category: Windows AI)
+C201	+	# Disable the Windows Copilot (Category: Windows AI)
+C204	+	# Disable the provision of recall functionality to all users (Category: Windows AI)
+C205	-	# Disable the Image Creator in Microsoft Paint (Category: Windows AI)
+C102	+	# Disable the Copilot button from the taskbar (Category: Windows AI)
+C103	+	# Disable Windows Copilot+ Recall (Category: Windows AI)
+C203	+	# Disable Windows Copilot+ Recall (Category: Windows AI)
+C206	-	# Disable Cocreator in Microsoft Paint (Category: Windows AI)
+C207	-	# Disable AI-powered image fill in Microsoft Paint (Category: Windows AI)
+L001	+	# Disable functionality to locate the system (Category: Location Services)
+L003	+	# Disable scripting functionality to locate the system (Category: Location Services)
+L004	-	# Disable sensors for locating the system and its orientation (Category: Location Services)
+L005	-	# Disable Windows Geolocation Service (Category: Location Services)
+U001	+	# Disable application telemetry (Category: User Behavior)
+U004	+	# Disable diagnostic data from customizing user experiences for whole machine (Category: User Behavior)
+U005	+	# Disable the use of diagnostic data for a tailor-made user experience (Category: User Behavior)
+U006	+	# Disable diagnostic log collection (Category: User Behavior)
+U007	+	# Disable downloading of OneSettings configuration settings (Category: User Behavior)
+W001	+	# Disable Windows Update via peer-to-peer (Category: Windows Update)
+W011	+	# Disable updates to the speech recognition and speech synthesis modules. (Category: Windows Update)
+W004	-	# Activate deferring of upgrades (Category: Windows Update)
+W005	-	# Disable automatic downloading manufacturers' apps and icons for devices (Category: Windows Update)
+W010	-	# Disable automatic driver updates through Windows Update (Category: Windows Update)
+W009	-	# Disable automatic app updates through Windows Update (Category: Windows Update)
+P017	-	# Disable Windows dynamic configuration and update rollouts (Category: Windows Update)
+W006	-	# Disable automatic Windows Updates (Category: Windows Update)
+W008	-	# Disable Windows Updates for other products (e.g. Microsoft Office) (Category: Windows Update)
+M006	+	# Disable occasionally showing app suggestions in Start menu (Category: Windows Explorer)
+M011	-	# Do not show recently opened items in Jump Lists on `"Start`" or the taskbar (Category: Windows Explorer)
+M010	+	# Disable ads in Windows Explorer/OneDrive (Category: Windows Explorer)
+O003	+	# Disable OneDrive access to network before login (Category: Windows Explorer)
+O001	+	# Disable Microsoft OneDrive (Category: Windows Explorer)
+S012	+	# Disable Microsoft SpyNet membership (Category: Microsoft Defender and Microsoft SpyNet)
+S013	+	# Disable submitting data samples to Microsoft (Category: Microsoft Defender and Microsoft SpyNet)
+S014	+	# Disable reporting of malware infection information (Category: Microsoft Defender and Microsoft SpyNet)
+K001	+	# Disable Windows Spotlight (Category: Lock Screen)
+K002	+	# Disable fun facts, tips, tricks, and more on your lock screen (Category: Lock Screen)
+K005	+	# Disable notifications on lock screen (Category: Lock Screen)
+D001	+	# Disable access to mobile devices (Category: Mobile Devices)
+D002	+	# Disable Phone Link app (Category: Mobile Devices)
+D003	+	# Disable showing suggestions for using mobile devices with Windows (Category: Mobile Devices)
+D104	+	# Disable connecting the PC to mobile devices (Category: Mobile Devices)
+M025	+	# Disable search with AI in search box (Category: Search)
+M003	+	# Disable extension of Windows search with Bing (Category: Search)
+M015	+	# Disable People icon in the taskbar (Category: Taskbar)
+M016	+	# Disable search box in task bar (Category: Taskbar)
+M017	+	# Disable `"Meet now`" in the task bar (Category: Taskbar)
+M018	+	# Disable `"Meet now`" in the task bar (Category: Taskbar)
+M019	+	# Disable news and interests in the task bar (Category: Taskbar)
+M021	+	# Disable widgets in Windows Explorer (Category: Taskbar)
+M022	+	# Disable feedback reminders (Category: Miscellaneous)
+M001	+	# Disable feedback reminders (Category: Miscellaneous)
+M004	+	# Disable automatic installation of recommended Windows Store Apps (Category: Miscellaneous)
+M005	+	# Disable tips, tricks, and suggestions while using Windows (Category: Miscellaneous)
+M024	+	# Disable Windows Media Player Diagnostics (Category: Miscellaneous)
+M026	+	# Disable remote assistance connections to this computer (Category: Miscellaneous)
+M027	+	# Disable remote connections to this computer (Category: Miscellaneous)
+M028	+	# Disable the desktop icon for information on `"Windows Spotlight`" (Category: Miscellaneous)
+M012	-	# Disable Key Management Service Online Activation (Category: Miscellaneous)
+M013	-	# Disable automatic download and update of map data (Category: Miscellaneous)
+M014	-	# Disable unsolicited network traffic on the offline maps settings page (Category: Miscellaneous)
+N001	-	# Disable Network Connectivity Status Indicator (Category: Miscellaneous)
+"
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TabPage #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function New-TabPage {
     Param(
@@ -149,7 +476,7 @@ Function New-TabPage {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - GroupBox #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# GroupBox #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function New-GroupBox {
     Param(
@@ -190,7 +517,7 @@ Function New-GroupBox {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - Button #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Button #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function New-ButtonBrowser {
     Param(
@@ -255,7 +582,7 @@ Function New-Button {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - CheckBox #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# CheckBox #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function New-CheckBoxRunAfterDownload {
     Param(
@@ -312,7 +639,7 @@ Function New-CheckBox {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - Label #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Label #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function New-Label {
     Param(
@@ -334,7 +661,7 @@ Function New-Label {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Components - RadioButton #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# RadioButton #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function New-RadioButton {
     Param(
@@ -592,7 +919,7 @@ $CHECKBOX_StartSDI.Add_CheckStateChanged( {
 } )
 
 
-$BUTTON_FUNCTION = { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOfficeInstaller.Checked $URL_OFFICE_INSTALLER }
+$BUTTON_FUNCTION = { Start-OfficeInstallerPlus -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
 $BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -601,27 +928,6 @@ $CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Disabled:$CHECKBO
 $CHECKBOX_StartOfficeInstaller.Add_CheckStateChanged( {
     $BUTTON_DownloadOfficeInstaller.Text = "Office Installer+$(if ($CHECKBOX_StartOfficeInstaller.Checked) { $REQUIRES_ELEVATION })"
 } )
-
-
-
-$BUTTON_DownloadOffice = New-Button -UAC 'Office 2013 - 2024'
-$BUTTON_DownloadOffice.Add_Click( {
-    # Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallOffice.Checked) { '/Standard2024Volume x64 en-gb excludePublisher excludeGroove excludeOneNote excludeOutlook excludeOneDrive excludeTeams /activate' })
-    # Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE -Params:$Params
-    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartOffice.Checked $URL_OFFICE
-} )
-
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartOffice = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartOffice.Add_CheckStateChanged( {
-    $BUTTON_DownloadOffice.Text = "Office 2013 - 2024$(if ($CHECKBOX_StartOffice.Checked) { $REQUIRES_ELEVATION })"
-    # $CHECKBOX_SilentlyInstallOffice.Enabled = $CHECKBOX_StartOffice.Checked
-} )
-
-# $CHECKBOX_DISABLED = $PS_VERSION -le 2
-# $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-# $CHECKBOX_SilentlyInstallOffice = New-CheckBox 'Install silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 
 
 
@@ -685,11 +991,26 @@ $CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Deboat #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Debloat Windows'
+New-GroupBox 'Debloat Windows and Privacy'
 
 
 $BUTTON_FUNCTION = { Start-WindowsDebloat }
-New-Button -UAC 'Debloat Windows' $BUTTON_FUNCTION > $Null
+New-Button -UAC 'Windows 10/11 debloat' $BUTTON_FUNCTION > $Null
+
+
+$BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
+$BUTTON_StartShutUp10 = New-Button -UAC 'ShutUp10++ privacy' $BUTTON_FUNCTION
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartShutUp10 = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartShutUp10.Add_CheckStateChanged( {
+    $CHECKBOX_SilentlyRunShutUp10.Enabled = $CHECKBOX_StartShutUp10.Checked
+    $BUTTON_StartShutUp10.Text = "ShutUp10++ privacy$(if ($CHECKBOX_StartShutUp10.Checked) { $REQUIRES_ELEVATION })"
+} )
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks' -Disabled:$CHECKBOX_DISABLED
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -697,8 +1018,11 @@ New-Button -UAC 'Debloat Windows' $BUTTON_FUNCTION > $Null
 New-GroupBox 'Windows Configurator'
 
 
-$BUTTON_FUNCTION = { Start-WindowsConfigurator }
-New-Button -UAC 'Windows Configurator' $BUTTON_FUNCTION > $Null
+$BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }
+New-Button -UAC 'WinUtil' $BUTTON_FUNCTION > $Null
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_SilentlyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Disabled:$CHECKBOX_DISABLED
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - TronScript #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1265,6 +1589,22 @@ Function Set-NiniteFileName {
 }
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Install Office #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Start-OfficeInstaller {
+    Param(
+        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute
+    )
+
+    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
+    Set-Variable -Option Constant Config $(if ($SYSTEM_LANGUAGE -Match 'ru') { $CONFIG_OFFICE_INSTALLER -Replace 'en-GB', 'ru-RU' } else { $CONFIG_OFFICE_INSTALLER })
+
+    Set-Content "$TargetPath\Office Installer+.ini" $Config
+
+    Start-DownloadExtractExecute -AVWarning -Execute:$Execute $URL_OFFICE
+}
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Set-CloudFlareDNS {
@@ -1294,23 +1634,53 @@ Function Set-CloudFlareDNS {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-WindowsDebloat {
-    Add-Log $INF "Starting Windows debloat utility..."
+    Add-Log $INF "Starting Windows 10/11 debloat utility..."
 
-    if ($OS_VERSION -eq 10) {
-        Start-Script "iwr -useb https://git.io/debloat | iex"
-    } else {
-        Start-Script -Elevated -HideWindow "& ([scriptblock]::Create((irm 'https://debloat.raphi.re/')))"
-    }
+    Start-Script -Elevated -HideWindow "irm https://debloat.raphi.re/ | iex"
 
     Out-Success
 }
 
 
+Function Start-ShutUp10 {
+    Param(
+        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
+        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+    )
+
+    Add-Log $INF "Starting ShutUp10++ utility..."
+
+    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
+    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
+
+    Set-Content $ConfigFile $CONFIG_SHUTUP10
+
+    if ($Silent) {
+        Start-DownloadExtractExecute -Execute:$Execute $URL_SHUTUP10 -Params $ConfigFile
+    } else {
+        Start-DownloadExtractExecute -Execute:$Execute $URL_SHUTUP10
+    }
+}
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Function Start-WindowsConfigurator {
-    Add-Log $INF "Starting Windows configuration utility..."
-    Start-Script "irm 'https://christitus.com/win' | iex"
+Function Start-WinUtil {
+    Param(
+        [Switch][Parameter(Position = 0, Mandatory = $True)]$Apply
+    )
+
+    Add-Log $INF "Starting WinUtil utility..."
+
+    Set-Variable -Option Constant ConfigFile "$PATH_TEMP_DIR\winutil.json"
+
+    Set-Content $ConfigFile $CONFIG_WINUTIL
+
+    Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
+    Set-Variable -Option Constant RunParam $(if ($Apply) { '-Run' } else { '' })
+
+    Start-Script "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
+
     Out-Success
 }
 
@@ -1322,8 +1692,8 @@ Function Start-WindowsConfigurator {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUT/8GNTorLwW/LqlLS3uo83PE
-# IfOgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUOS7ZjJVfWZEZFKf5fMe8X9/9
+# 0V+gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1444,28 +1814,28 @@ Function Start-WindowsConfigurator {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTxYnaY
-# LlnBsptpOq3xyxDVEmB73zANBgkqhkiG9w0BAQEFAASCAQBftv3uyIUaGbadG+OR
-# XflGG82iIYqnuryB+qjc17LLilluQpgOuiopIQhECbFTc/Y0KHwKOALnOigXSAfJ
-# NTQ4OIbGIkyfwDTGRF69IC7TGv3x8tcwjU7l++xfbESNy8TlTXLtCNUCrPZuH+Qm
-# CzYU0mM2yQlSICiLfKUrfMvdkIbI2H5QM4DMQo9vL2UQTTt4H8sYAjxTNOwxx01J
-# uNYPunfbVENu563VUC3ZoTAfpJ9y1N7iHcRN/cGui/rtwKcchggz90A0Sfoaah/0
-# 0wLhtMk+ptmfs4HSgsa45fIVRAIkrAYSbC4WCS5p2iPi+SxNQK2aN+/MAdCdEsqH
-# LiUOoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSRl/qM
+# siroMvOM8YCG62AWcufz9DANBgkqhkiG9w0BAQEFAASCAQAJ1nlk3gxtgZFZIT8I
+# 4Cf/7fBlMC2wHNGoAiCiv7XP3/K4vPDwbn4GthNN00opaEfNGSD6fXXJRfRkr4ku
+# ewjkNCsneZrQZuO5NKLdC34ugMGRFnWiswAObW6YOAJMTGOf2A/Ix0EYKx149gUC
+# liMXbmoxtGj9JUa/xxRMjHN49qcixHHePc/tN1vR+g21DN16r3Y7RboM06QF9ql5
+# E+9mj6bh5ggbp1KyhF2yrFBBs1S71yQdcjSJ2iH8kqbWdyVjr7pxVt6+poU/srxn
+# pO755053IRQ2LaCYK4GK3o7sdMFB1Rr7w6MrRHXQ6jBLcDSZTxyF+QsVqtdqVq2D
+# wQnaoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkwNjE1MTcwN1owLwYJKoZI
-# hvcNAQkEMSIEIM9X+E4r+pv68Bt5nYvDjK5PcXUaEibK2pOUST543h4wMA0GCSqG
-# SIb3DQEBAQUABIICACA7/VoIriXDiy5qVUSHBa+Yvn+BQPe8sfCJFjcHJcefTtJj
-# H6XPugCMM1ze6CKUTXmjrGGWZsJvXrVR/LAy8k4eN4uE0EMhjmflLXSyy5c4fz2w
-# XtZ14kJ19G7PweKSN53UJgJmUlr2U++rQIfoeZkSfXN2SSeZ+K9aFDw9SfI+WeTt
-# Jv0Khglz25ICBjnJdtsCHoEWVM8KJv3HZpmWimOI0PF/Cf0X3qYn0CVyK7dEZSC2
-# HvgZ86XivAg/vq0o2SHVOoCkvrMUN/GotDuDQ/sWCUo75TLfRJ1Q7sWObtPjUdUx
-# 68Rgb/8fFTyw0eOM9zDG4F1kwumDEpYH3UJcP6Mpf8TvaHD6y5JnlAy7nT2Dg3lM
-# CCi4sLqiaGcyC0T+R3e0tcADMtaxqoRzAXOeUQQuhkW87jasbPQ4QZat2yEINYsc
-# Lx+VDzgfvsAVSWhAjz9hS4nwdLEF63QLEq5hkLkwhAl3JGWmU6Ohd/0iYKPoirV5
-# UvtYgRwGexlWXF7uqwgQ2qeC4fucqTqKsvIq2nSe1aQRsZHeNO+6k6JMuCGmIyfQ
-# xKTrT2gtGoGWpHgNQtE9ROyOQHvY4xPgc+2C84eZGQBlCQynyoXzki5vPQR0vjTJ
-# /cHZqv30Gj0L7y9ELqXR+csvGec36W7PgQWzOnfLCYmrjZZKgYwb1mtU2w23
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkwNjIwMzEwOVowLwYJKoZI
+# hvcNAQkEMSIEIH5gAzboUFiudKfzUdfmzHA6iYec3yEDKoWb1Tmsgc4EMA0GCSqG
+# SIb3DQEBAQUABIICAK4qvYMZPoUgJBgIHqct8A5o1wvIMmpKMWARx7cyDIDAYBNV
+# 7CytfU054R2y6/OiiLUWw1U69dziDmC1pttkgbIlad1b0wH/RD1+T4RJnBZ7uRTz
+# Q8obr2lUJelMa15GQmdxP8q+GNt4jFInGnyRBFTcucDaNwOQPE5o5HTtXK39Srm2
+# iciZINox9tiN7jacacjBK0IqYRdNH6vvvb3QwRfgBAIHAhznn+Oz+Zkae+NdNzuE
+# 3oM8eQc0rylALEAb3uwqgKosmqWQvOmrkXxQHJz/rhw/XYO7LYQYOMCHpD7eKvSo
+# NwujqLuvTYRa0p8TfF9FKFvypBwbItDYiUlfR9OldBOYStbFPcDa6zITxcpVZzTd
+# wc/NxraqJQfxTDe8L793PhPXHU3LRfirFQwgc6CcR3coBCeF2p1kBc4wCIcFnY9q
+# fBd8ftGamq+QJfQejfZruDByBJiz5oMoLzKvVIBJ7LKq3M+GFGSVCU8hPo+V677S
+# dsm4zkjz8Mx7obhHGnTM8VcjbMJAHDCwv6llY6q/07Jf7YwFEaB7rHTrhKVMqlFJ
+# yVSqO3QfaTVYtcx79ca2KQIPToFu6pFbtaz55joMEoiddgZbOb++jy/l+xRg3ES8
+# Rfm1SOBMbjB5OSuKxB/LnXHWLwV6obNfAoizy9/P7pQ7sn4ZtXufmr8+UfBu
 # SIG # End signature block

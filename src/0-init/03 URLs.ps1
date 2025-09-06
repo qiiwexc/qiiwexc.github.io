@@ -11,7 +11,6 @@ Set-Variable -Option Constant URL_SDIO '{URL_SDIO}'
 Set-Variable -Option Constant URL_VICTORIA '{URL_VICTORIA}'
 
 Set-Variable -Option Constant URL_AACT '{URL_AACT}'
-Set-Variable -Option Constant URL_OFFICE '{URL_OFFICE}'
 Set-Variable -Option Constant URL_OFFICE_INSTALLER '{URL_OFFICE_INSTALLER}'
 Set-Variable -Option Constant URL_ACTIVATION_PROGRAM '{URL_ACTIVATION_PROGRAM}'
 
@@ -19,3 +18,4 @@ Set-Variable -Option Constant URL_UNCHECKY '{URL_UNCHECKY}'
 Set-Variable -Option Constant URL_LIVE_CD '{URL_LIVE_CD}'
 Set-Variable -Option Constant URL_NINITE '{URL_NINITE}'
 Set-Variable -Option Constant URL_TRONSCRIPT '{URL_TRONSCRIPT}'
+Set-Variable -Option Constant URL_SHUTUP10 '{URL_SHUTUP10}'

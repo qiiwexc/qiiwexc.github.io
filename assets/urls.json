@@ -40,10 +40,6 @@
     "value": "https://qiiwexc.github.io/d/AAct.zip"
   },
   {
-    "key": "URL_OFFICE",
-    "value": "https://qiiwexc.github.io/d/Office_2013-2024.zip"
-  },
-  {
     "key": "URL_OFFICE_INSTALLER",
     "value": "https://qiiwexc.github.io/d/Office_Installer+.zip"
   },
@@ -70,5 +66,9 @@
   {
     "key": "URL_SYSTEM_RESCUE",
     "value": "https://www.system-rescue.org/"
+  },
+  {
+    "key": "URL_SHUTUP10",
+    "value": "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe"
   }
 ]
