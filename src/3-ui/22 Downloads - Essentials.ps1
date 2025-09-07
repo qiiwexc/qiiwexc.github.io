@@ -12,7 +12,7 @@ $CHECKBOX_StartSDI.Add_CheckStateChanged( {
 } )
 
 
-$BUTTON_FUNCTION = { Start-OfficeInstallerPlus -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
+$BUTTON_FUNCTION = { Start-OfficeInstaller -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
 $BUTTON_DownloadOfficeInstaller = New-Button -UAC 'Office Installer+' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
