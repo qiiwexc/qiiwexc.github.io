@@ -32,7 +32,7 @@ param(
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant Version ([Version]'25.9.7')
+Set-Variable -Option Constant Version ([Version]'25.9.12')
 
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
@@ -71,31 +71,6 @@ Set-Variable -Option Constant SYSTEM_LANGUAGE (Get-SystemLanguage)
 
 Set-Variable -Option Constant IS_ELEVATED (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# URLs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant URL_VERSION_FILE 'https://bit.ly/qiiwexc_version'
-Set-Variable -Option Constant URL_BAT_FILE 'https://bit.ly/qiiwexc_bat'
-
-Set-Variable -Option Constant URL_WINDOWS_11 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html'
-Set-Variable -Option Constant URL_WINDOWS_10 'https://w16.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html'
-Set-Variable -Option Constant URL_WINDOWS_7 'https://w16.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
-
-Set-Variable -Option Constant URL_RUFUS 'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe'
-Set-Variable -Option Constant URL_VENTOY 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip'
-Set-Variable -Option Constant URL_SDIO 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip'
-Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
-
-Set-Variable -Option Constant URL_AACT 'https://qiiwexc.github.io/d/AAct.zip'
-Set-Variable -Option Constant URL_OFFICE_INSTALLER 'https://qiiwexc.github.io/d/Office_Installer+.zip'
-Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
-
-Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
-Set-Variable -Option Constant URL_LIVE_CD 'https://rutracker.org/forum/viewtopic.php?t=4366725'
-Set-Variable -Option Constant URL_NINITE 'https://ninite.com'
-Set-Variable -Option Constant URL_TRONSCRIPT 'https://github.com/bmrf/tron/blob/master/README.md#use'
-Set-Variable -Option Constant URL_SHUTUP10 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Initialization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -139,6 +114,31 @@ Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (T
 New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# URLs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant URL_VERSION_FILE 'https://bit.ly/qiiwexc_version'
+Set-Variable -Option Constant URL_BAT_FILE 'https://bit.ly/qiiwexc_bat'
+
+Set-Variable -Option Constant URL_WINDOWS_11 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html'
+Set-Variable -Option Constant URL_WINDOWS_10 'https://w16.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html'
+Set-Variable -Option Constant URL_WINDOWS_7 'https://w16.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
+
+Set-Variable -Option Constant URL_RUFUS 'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe'
+Set-Variable -Option Constant URL_VENTOY 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip'
+Set-Variable -Option Constant URL_SDIO 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip'
+Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
+
+Set-Variable -Option Constant URL_AACT 'https://qiiwexc.github.io/d/AAct.zip'
+Set-Variable -Option Constant URL_OFFICE_INSTALLER 'https://qiiwexc.github.io/d/Office_Installer+.zip'
+Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
+
+Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
+Set-Variable -Option Constant URL_LIVE_CD 'https://rutracker.org/forum/viewtopic.php?t=4366725'
+Set-Variable -Option Constant URL_NINITE 'https://ninite.com'
+Set-Variable -Option Constant URL_TRONSCRIPT 'https://github.com/bmrf/tron/blob/master/README.md#use'
+Set-Variable -Option Constant URL_SHUTUP10 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe'
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Office Installer #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER '
@@ -168,6 +168,200 @@ VisioMondo = 0
 ProofingTools = 0
 OnOff = 1
 langs = en-GB|lv-LV|
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# 7zip #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_7ZIP '
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\7-Zip]
+"LargePages"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\7-Zip\FM]
+"AlternativeSelection"=dword:00000001
+"Columns\RootFolder"=hex:01,00,00,00,00,00,00,00,01,00,00,00,04,00,00,00,01,00,00,00,A0,00,00,00
+"FlatViewArc0"=dword:00000000
+"FlatViewArc1"=dword:00000000
+"FolderHistory"=hex:00,00
+"FolderShortcuts"=""
+"FullRow"=dword:00000001
+"ListMode"=dword:00000303
+"PanelPath0"=""
+"PanelPath1"=""
+"Panels"=hex:02,00,00,00,00,00,00,00,BE,03,00,00
+"Position"=hex:B6,00,00,00,B6,00,00,00,56,06,00,00,49,03,00,00,01,00,00,00
+"ShowDots"=dword:00000001
+"ShowGrid"=dword:00000001
+"ShowRealFileIcons"=dword:00000001
+"ShowSystemMenu"=dword:00000001
+"SingleClick"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\7-Zip\Options]
+"ContextMenu"=dword:00001367
+"MenuIcons"=dword:00000001
+"WriteZoneIdExtract"=dword:00000001
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# VLC #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_VLC '
+[qt]
+qt-system-tray=0
+qt-updates-days=1
+qt-privacy-ask=0
+
+[core]
+video-title-show=0
+metadata-network-access=1
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TeamVIewer #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_TEAMVIEWER '
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\TeamViewer]
+"AutoHideServerControl"=dword:00000001
+"ColorScheme"=dword:00000001
+"CustomInvitationSubject"=" "
+"CustomInvitationText"=" "
+"Pres_Compression"=dword:00000064
+"Pres_DisableGuiAnimations"=dword:00000000
+"Pres_QualityMode"=dword:00000003
+"Remote_Colors"=dword:00000020
+"Remote_DisableGuiAnimations"=dword:00000000
+"Remote_QualityMode"=dword:00000003
+"Remote_RemoteCursor"=dword:00000001
+"Remote_RemoveWallpaper"=dword:00000000
+"RemotePrintingPreferPDFFormat"=dword:00000001
+"SsoKmsEnabled"=dword:00000002
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# qBittorrent Base #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_QBITTORRENT_BASE '
+[Appearance]
+Style=Fusion
+
+[Application]
+FileLogger\Age=1
+FileLogger\AgeType=0
+FileLogger\Backup=true
+FileLogger\DeleteOld=true
+FileLogger\Enabled=true
+FileLogger\MaxSizeBytes=1024
+GUI\Notifications\TorrentAdded=false
+
+[BitTorrent]
+MergeTrackersEnabled=true
+Session\AddExtensionToIncompleteFiles=true
+Session\GlobalMaxRatio=0
+Session\GlobalMaxSeedingMinutes=0
+Session\IDNSupportEnabled=true
+Session\IgnoreSlowTorrentsForQueueing=true
+Session\IncludeOverheadInLimits=true
+Session\MaxActiveDownloads=2
+Session\MaxActiveUploads=1
+Session\PerformanceWarning=true
+Session\PieceExtentAffinity=true
+Session\QueueingSystemEnabled=true
+Session\ReannounceWhenAddressChanged=true
+Session\RefreshInterval=500
+Session\SaveResumeDataInterval=1
+Session\SaveStatisticsInterval=5
+Session\ShareLimitAction=Remove
+Session\SlowTorrentsDownloadRate=1024
+Session\StartPaused=false
+Session\SuggestMode=true
+Session\TorrentStopCondition=FilesChecked
+TrackerEnabled=true
+
+[Core]
+AutoDeleteAddedTorrentFile=Never
+
+[LegalNotice]
+Accepted=true
+
+[MainWindow]
+geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x3\0\0\0\0\0\0\xff\xff\xff\xf8\0\0\a\x7f\0\0\x3\x8a\0\0\x1\xf7\0\0\0\xbb\0\0\x5\x88\0\0\x2\xed\0\0\0\0\x2\0\0\0\a\x80\0\0\0\0\0\0\0\x17\0\0\a\x7f\0\0\x3\x8a)
+
+[Meta]
+MigrationVersion=8
+
+[OptionsDialog]
+HorizontalSplitterSizes=197, 1032
+LastViewedPage=0
+Size=@Size(1255 829)
+
+[RSS]
+AutoDownloader\DownloadRepacks=true
+Session\MaxArticlesPerFeed=9999999
+Session\RefreshInterval=1
+
+[SpeedWidget]
+graph_enable_2=true
+graph_enable_3=true
+graph_enable_4=true
+graph_enable_5=true
+graph_enable_6=true
+graph_enable_7=true
+graph_enable_8=true
+graph_enable_9=true
+period=0
+
+[TorrentProperties]
+CurrentTab=0
+SplitterSizes="71,719"
+Visible=true
+
+[Preferences]
+Advanced\RecheckOnCompletion=true
+Connection\ResolvePeerHostNames=true
+General\CloseToTray=false
+General\CloseToTrayNotified=true
+General\PreventFromSuspendWhenDownloading=true
+General\SpeedInTitleBar=true
+General\StatusbarExternalIPDisplayed=true
+General\SystrayEnabled=false
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# qBittorrent English #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_QBITTORRENT_ENGLISH '
+General\Locale=en_GB
+
+[GUI]
+DownloadTrackerFavicon=true
+Log\Enabled=false
+MainWindow\FiltersSidebarWidth=153
+Qt6\TorrentProperties\FilesListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6\xd1\0\0\0\x6\x1\x1\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\x6\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0\x7f\0\0\0\x1\0\0\0\0\0\0\0U\0\0\0\x1\0\0\0\0\0\0\x5)\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0W\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
+Qt6\TorrentProperties\PeerListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\xf\0@\0\0\0\x1\0\0\0\xe\0\0\0\x64\0\0\x4Y\0\0\0\xf\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\xf\0\0\0r\0\0\0\x1\0\0\0\0\0\0\0V\0\0\0\x1\0\0\0\0\0\0\0\x32\0\0\0\x1\0\0\0\0\0\0\0Y\0\0\0\x1\0\0\0\0\0\0\0\x35\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0g\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0\x61\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0`\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0T\0\0\0\x1\0\0\0\0\0\0\0\x32\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
+Qt6\TorrentProperties\TrackerListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x3\xce\0\0\0\v\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\v\0\0\0\xa2\0\0\0\x1\0\0\0\0\0\0\0\x30\0\0\0\x1\0\0\0\0\0\0\0[\0\0\0\x1\0\0\0\0\0\0\0=\0\0\0\x1\0\0\0\0\0\0\0\x39\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0G\0\0\0\x1\0\0\0\0\0\0\0\x84\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0q\0\0\0\x1\0\0\0\0\0\0\0j\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
+Qt6\TransferList\HeaderState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0%\0\xf8\x8f\x66\x1f\0\0\0\x13\0\0\0$\0\0\0\x64\0\0\0!\0\0\0\x64\0\0\0\x1d\0\0\0\x64\0\0\0\x19\0\0\0\x64\0\0\0\x10\0\0\0\x64\0\0\0\x1e\0\0\0\x64\0\0\0 \0\0\0\x64\0\0\0\xf\0\0\0\x64\0\0\0#\0\0\0\x64\0\0\0\x1a\0\0\0\x64\0\0\0\v\0\0\0\x64\0\0\0\r\0\0\0\x64\0\0\0\x11\0\0\0\x64\0\0\0\x13\0\0\0\x64\0\0\0\xe\0\0\0\x64\0\0\0\x12\0\0\0\x64\0\0\0\f\0\0\0\x64\0\0\0\"\0\0\0\x64\0\0\0\x17\0\0\0\x64\0\0\x5<\0\0\0%\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0%\0\0\0!\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0\x31\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0=\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0\x39\0\0\0\x1\0\0\0\0\0\0\0\x61\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0.\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0`\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0~\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0U\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0V\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
+StartUpWindowState=Normal
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# qBittorrent Russian #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_QBITTORRENT_RUSSIAN '
+General\Locale=ru
+
+[GUI]
+DownloadTrackerFavicon=true
+Log\Enabled=false
+MainWindow\FiltersSidebarWidth=153
+Qt6\TorrentProperties\FilesListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6\xd1\0\0\0\x6\x1\x1\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\x6\0\0\0\x33\0\0\0\x1\0\0\0\0\0\0\0r\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0\x8f\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\x4\xfe\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0P\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
+Qt6\TorrentProperties\PeerListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\xf\0@\0\0\0\x1\0\0\0\xe\0\0\0\x64\0\0\x4:\0\0\0\xf\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\xf\0\0\0n\0\0\0\x1\0\0\0\0\0\0\0K\0\0\0\x1\0\0\0\0\0\0\0\x36\0\0\0\x1\0\0\0\0\0\0\0\x62\0\0\0\x1\0\0\0\0\0\0\0>\0\0\0\x1\0\0\0\0\0\0\0\x44\0\0\0\x1\0\0\0\0\0\0\0^\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0L\0\0\0\x1\0\0\0\0\0\0\0\x42\0\0\0\x1\0\0\0\0\0\0\0X\0\0\0\x1\0\0\0\0\0\0\0\x43\0\0\0\x1\0\0\0\0\0\0\0M\0\0\0\x1\0\0\0\0\0\0\0\x43\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
+Qt6\TorrentProperties\TrackerListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x4\x19\0\0\0\v\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\v\0\0\0\xb9\0\0\0\x1\0\0\0\0\0\0\0K\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0<\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0q\0\0\0\x1\0\0\0\0\0\0\0^\0\0\0\x1\0\0\0\0\0\0\0]\0\0\0\x1\0\0\0\0\0\0\0~\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
+Qt6\TransferList\HeaderState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0%\0\xf8\x8f\x66\x1f\0\0\0\x13\0\0\0\x11\0\0\0\x64\0\0\0\x12\0\0\0\x64\0\0\0\x10\0\0\0\x64\0\0\0\x1a\0\0\0\x64\0\0\0\x17\0\0\0\x64\0\0\0\v\0\0\0\x64\0\0\0\x1e\0\0\0\x64\0\0\0\x13\0\0\0\x64\0\0\0!\0\0\0\x64\0\0\0\x1d\0\0\0\x64\0\0\0 \0\0\0\x64\0\0\0\xf\0\0\0\x64\0\0\0$\0\0\0\x64\0\0\0\x19\0\0\0\x64\0\0\0\f\0\0\0\x64\0\0\0\"\0\0\0\x64\0\0\0\r\0\0\0\x64\0\0\0\xe\0\0\0\x64\0\0\0#\0\0\0\x64\0\0\x5\xfb\0\0\0%\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0%\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x33\0\0\0\x1\0\0\0\0\0\0\0\x44\0\0\0\x1\0\0\0\0\0\0\0\x65\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0<\0\0\0\x1\0\0\0\0\0\0\0L\0\0\0\x1\0\0\0\0\0\0\0\x42\0\0\0\x1\0\0\0\0\0\0\0_\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0X\0\0\0\x1\0\0\0\0\0\0\0\x43\0\0\0\x1\0\0\0\0\0\0\0\x8a\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0x\0\0\0\x1\0\0\0\0\0\0\0u\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
+StartUpWindowState=Normal
 '
 
 
@@ -487,6 +681,7 @@ Function New-GroupBox {
     Set-Variable -Option Constant GroupBox (New-Object System.Windows.Forms.GroupBox)
 
     Set-Variable -Scope Script PREVIOUS_GROUP $CURRENT_GROUP
+    Set-Variable -Scope Script PAD_CHECKBOXES $True
 
     [Int]$GroupIndex = 0
 
@@ -614,10 +809,10 @@ Function New-CheckBox {
     if ($PREVIOUS_LABEL_OR_CHECKBOX) {
         $InitialLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
 
-        if ($CURRENT_GROUP.Text -eq "Ninite") {
-            $Shift = "0, $INTERVAL_CHECKBOX"
-        } else {
+        if ($PAD_CHECKBOXES) {
             $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
+        } else {
+            $Shift = "0, $INTERVAL_CHECKBOX"
         }
     }
 
@@ -742,7 +937,7 @@ $FORM.Controls.Add($TAB_CONTROL)
 Set-Variable -Option Constant TAB_HOME (New-TabPage 'Home')
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Run as Administrator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Run as Administrator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Run as Administrator'
 
@@ -752,7 +947,7 @@ $BUTTON_FUNCTION = { Start-Elevated }
 New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -Disabled:$IS_ELEVATED > $Null
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Bootable USB Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Bootable USB Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Bootable USB Tools'
 
@@ -782,7 +977,7 @@ $CHECKBOX_StartRufus.Add_CheckStateChanged( {
 } )
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Activators (Windows 7+, Office)'
 
@@ -833,7 +1028,7 @@ $RADIO_DISABLED = !$OFFICE_VERSION
 $RADIO_AActOffice = New-RadioButton 'Office' -Disabled:$RADIO_DISABLED
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Home - HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'HDD Diagnostics'
 
@@ -854,38 +1049,40 @@ $CHECKBOX_StartVictoria.Add_CheckStateChanged( {
 Set-Variable -Option Constant TAB_DOWNLOADS (New-TabPage 'Downloads')
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Ninite'
 
+$PAD_CHECKBOXES = $False
 
-$CHECKBOX_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
-$CHECKBOX_Chrome.Add_CheckStateChanged( {
+
+$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
+$CHECKBOX_Ninite_Chrome.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
-$CHECKBOX_7zip.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
+$CHECKBOX_Ninite_7zip.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
-$CHECKBOX_VLC.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
+$CHECKBOX_Ninite_VLC.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
-$CHECKBOX_TeamViewer.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
+$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
-$CHECKBOX_qBittorrent.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
+$CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
-$CHECKBOX_Malwarebytes.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
+$CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
@@ -903,7 +1100,7 @@ $BUTTON_FUNCTION = { Open-InBrowser "$URL_NINITE/?select=$(Set-NiniteQuery)" }
 New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Essentials #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Essentials #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Essentials'
 
@@ -950,7 +1147,7 @@ $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads - Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Images #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Windows Images'
 
@@ -973,7 +1170,29 @@ New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
 Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Config and misc')
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apps Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Apps Configuration'
+
+$PAD_CHECKBOXES = $False
+
+
+$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
+
+$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
+
+$CHECKBOX_Config_TeamViewer = New-CheckBox 'TeamViewer' -Checked
+
+$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
+
+$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
+
+
+$BUTTON_FUNCTION = { Set-AppsConfiguration }
+New-Button 'Apply configuration' $BUTTON_FUNCTION > $Null
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Alternative DNS'
 
@@ -989,7 +1208,7 @@ $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
 $CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Deboat #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Deboat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Debloat Windows and Privacy'
 
@@ -1013,9 +1232,9 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks' -Disabled:$CHECKBOX_DISABLED
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Windows Configurator'
+New-GroupBox 'Windows Configurator' 4
 
 
 $BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }
@@ -1025,9 +1244,9 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_SilentlyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Disabled:$CHECKBOX_DISABLED
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration - TronScript #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TronScript #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Windows Disinfection'
+New-GroupBox 'Windows Disinfection' 5
 
 
 $BUTTON_FUNCTION = { Open-InBrowser $URL_TRONSCRIPT }
@@ -1536,30 +1755,30 @@ Function Start-Activator {
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Set-NiniteButtonState {
-    $CHECKBOX_StartNinite.Enabled = $BUTTON_DownloadNinite.Enabled = $CHECKBOX_7zip.Checked -or $CHECKBOX_VLC.Checked -or `
-        $CHECKBOX_TeamViewer.Checked -or $CHECKBOX_Chrome.Checked -or $CHECKBOX_qBittorrent.Checked -or $CHECKBOX_Malwarebytes.Checked
+    $CHECKBOX_StartNinite.Enabled = $BUTTON_DownloadNinite.Enabled = $CHECKBOX_Ninite_7zip.Checked -or $CHECKBOX_Ninite_VLC.Checked -or `
+        $CHECKBOX_Ninite_TeamViewer.Checked -or $CHECKBOX_Ninite_Chrome.Checked -or $CHECKBOX_Ninite_qBittorrent.Checked -or $CHECKBOX_Ninite_Malwarebytes.Checked
 }
 
 
 Function Set-NiniteQuery {
     [String[]]$Array = @()
-    if ($CHECKBOX_7zip.Checked) {
-        $Array += $CHECKBOX_7zip.Name
+    if ($CHECKBOX_Ninite_7zip.Checked) {
+        $Array += $CHECKBOX_Ninite_7zip.Name
     }
-    if ($CHECKBOX_VLC.Checked) {
-        $Array += $CHECKBOX_VLC.Name
+    if ($CHECKBOX_Ninite_VLC.Checked) {
+        $Array += $CHECKBOX_Ninite_VLC.Name
     }
-    if ($CHECKBOX_TeamViewer.Checked) {
-        $Array += $CHECKBOX_TeamViewer.Name
+    if ($CHECKBOX_Ninite_TeamViewer.Checked) {
+        $Array += $CHECKBOX_Ninite_TeamViewer.Name
     }
-    if ($CHECKBOX_Chrome.Checked) {
-        $Array += $CHECKBOX_Chrome.Name
+    if ($CHECKBOX_Ninite_Chrome.Checked) {
+        $Array += $CHECKBOX_Ninite_Chrome.Name
     }
-    if ($CHECKBOX_qBittorrent.Checked) {
-        $Array += $CHECKBOX_qBittorrent.Name
+    if ($CHECKBOX_Ninite_qBittorrent.Checked) {
+        $Array += $CHECKBOX_Ninite_qBittorrent.Name
     }
-    if ($CHECKBOX_Malwarebytes.Checked) {
-        $Array += $CHECKBOX_Malwarebytes.Name
+    if ($CHECKBOX_Ninite_Malwarebytes.Checked) {
+        $Array += $CHECKBOX_Ninite_Malwarebytes.Name
     }
     Return $Array -Join '-'
 }
@@ -1567,23 +1786,23 @@ Function Set-NiniteQuery {
 
 Function Set-NiniteFileName {
     [String[]]$Array = @()
-    if ($CHECKBOX_7zip.Checked) {
-        $Array += $CHECKBOX_7zip.Text
+    if ($CHECKBOX_Ninite_7zip.Checked) {
+        $Array += $CHECKBOX_Ninite_7zip.Text
     }
-    if ($CHECKBOX_VLC.Checked) {
-        $Array += $CHECKBOX_VLC.Text
+    if ($CHECKBOX_Ninite_VLC.Checked) {
+        $Array += $CHECKBOX_Ninite_VLC.Text
     }
-    if ($CHECKBOX_TeamViewer.Checked) {
-        $Array += $CHECKBOX_TeamViewer.Text
+    if ($CHECKBOX_Ninite_TeamViewer.Checked) {
+        $Array += $CHECKBOX_Ninite_TeamViewer.Text
     }
-    if ($CHECKBOX_Chrome.Checked) {
-        $Array += $CHECKBOX_Chrome.Text
+    if ($CHECKBOX_Ninite_Chrome.Checked) {
+        $Array += $CHECKBOX_Ninite_Chrome.Text
     }
-    if ($CHECKBOX_qBittorrent.Checked) {
-        $Array += $CHECKBOX_qBittorrent.Text
+    if ($CHECKBOX_Ninite_qBittorrent.Checked) {
+        $Array += $CHECKBOX_Ninite_qBittorrent.Text
     }
-    if ($CHECKBOX_Malwarebytes.Checked) {
-        $Array += $CHECKBOX_Malwarebytes.Text
+    if ($CHECKBOX_Ninite_Malwarebytes.Checked) {
+        $Array += $CHECKBOX_Ninite_Malwarebytes.Text
     }
     Return "Ninite $($Array -Join ' ') Installer.exe"
 }
@@ -1601,7 +1820,34 @@ Function Start-OfficeInstaller {
 
     Set-Content "$TargetPath\Office Installer+.ini" $Config
 
-    Start-DownloadExtractExecute -AVWarning -Execute:$Execute $URL_OFFICE
+    Start-DownloadExtractExecute -AVWarning -Execute:$Execute $URL_OFFICE_INSTALLER
+}
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apps Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Set-AppsConfiguration {
+    if ($CHECKBOX_Config_7zip.Checked) {
+        Set-Content "$PATH_TEMP_DIR\$($CHECKBOX_Config_7zip.Text).reg" $CONFIG_7ZIP
+    }
+
+    if ($CHECKBOX_Config_VLC.Checked) {
+        Set-Content "$PATH_TEMP_DIR\vlcrc" $CONFIG_VLC
+    }
+
+    if ($CHECKBOX_Config_TeamViewer.Checked) {
+        Set-Content "$PATH_TEMP_DIR\$($CHECKBOX_Config_TeamViewer.Text).reg" $CONFIG_TEAMVIEWER
+        $CONFIG_TEAMVIEWER
+    }
+
+    if ($CHECKBOX_Config_qBittorrent.Checked) {
+        $CONFIG_QBITTORRENT = $CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -Match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH })
+        Set-Content "$PATH_TEMP_DIR\$($CHECKBOX_Config_qBittorrent.Text).ini" $CONFIG_QBITTORRENT
+    }
+
+    if ($CHECKBOX_Config_Chrome.Checked) {
+        # $CONFIG_CHROME
+    }
 }
 
 
@@ -1692,8 +1938,8 @@ Function Start-WinUtil {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUOyRRU3aQt4GRpk7k5FCoyEFg
-# E/mgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU/tyjFdlINk/q/mARvEWwjxoV
+# 7hGgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -1814,28 +2060,28 @@ Function Start-WinUtil {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSM9tO/
-# M/OThAp2o/R8dxs8or0vyTANBgkqhkiG9w0BAQEFAASCAQBKrrw5nIb5+jsCwB7y
-# LhLER7I5uRHzISxpbip+CgO1Yq9GPXmf81ginoBIHdJmfPvNxOBnMMSHEIgXnQ1l
-# aNLCttv2oUQUo/L1FH0C73daJMXrsFTXj0x2p8UAsQfTDXUlXlcsBvq3eV9FYbmL
-# uAqODnoLKqwb/3ZSernq47cMucOQodTQwTyMGuqDI7VU/J0WOdNInAB3pEA5mXwW
-# IVHuJj+pp/I6JWKpLBDqak3AdcvzEqnnWCXdzJRBkiRuG7x/Y8ppWmnpXuvj76Iz
-# TuhBLQiKGlpWF7XGF8mc8xh7OTOBL8owMjMxTT5mBS4jrHkfv+qcU3ml2FbeCzQW
-# cl8PoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTYWkJ2
+# AZzVcHAhyHUf19btIETj/zANBgkqhkiG9w0BAQEFAASCAQAwDhn52O/i7E6yzK7A
+# r4eW0NumhOZ+Zj8U0XsYwJVroNgvBC80ybvclakhbnSd7cmRQLKzkbxo4c7vFOS5
+# 2rwBddLjGwfSnuwXzgtEzl3oyu5N9PY0ZIcZnspuGPrMosmlfDMglja1FzqVvmhz
+# 2aLaoDbpD+gepA/BKPucHozuursSKQRUE9T5cdOuCi6fGE9Tf/dgQW/cwWuc4SfF
+# Ql5b77qA2fF6QYfNUrAXrRRumq48sVeZ2c6uL5oAAjebuwnJa39y3OKioYUXp7sZ
+# UDrrONaivzj0rbhkaB7N5U3x/8jCMqz8WFMsOeFRPReHIDJlaP+q28CHXd+pjfCs
+# F541oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkwNzExMDMzOVowLwYJKoZI
-# hvcNAQkEMSIEIMbQceaMQr5Ip1R5I9XnXiUgYdwH4rjqyfjCVZTGdCbtMA0GCSqG
-# SIb3DQEBAQUABIICAKpIjB+BPV7C7ShKt6D/fTUfI39ZkrJWypbM2hnaFbdfU/tJ
-# 7tfLd6siQfAEmqmLncxTfVMbxJC+RDVgBF9nh86fugwsgaEPkRPb9Oel5k8DLZae
-# gJSQCjUBuJHwk+TSZ2xlC3XraU9tSoFHk8DIQEPkN962NF4R3sCGkcod4r52KQ1Q
-# SY04iVHS+keaMhrHXVdeCfHHsLp7/j9tTvb+yZsERU7pwvjsB9iAaN4cWIFPm79U
-# Pn3z7pm6KZqwuOu5TMZj6Pgl/suRasA0i6GdWshKnr76839oGiL1cTldar5Mt797
-# JtlUG8oEe4d6w9oZV2+JkAFYvQnC5iUcVnb5ScPtpAWrAntX1enB2UvnWjX3d4gy
-# lG6lFk3eul1OWc8RVULGb6eigheMWZbd9YoRA23NNMbuUsVgeaxMEM3/C+9VVBSL
-# XaFv7NbfZJNnXhXqU1npbqUwMZdjyXpMbQnFZZfGwtWc2/9BzgBmlpr0lznAQsQU
-# qVN/l+vh/HU3A6r/saqmhWcMrzVInRy2jMZyPh1tfJcIQPE2lB0/63QP1cOzbBWg
-# gZVUUwtlJ4rJ0Znp5kVk/HASa8Y0kWC8CscEu+w8PTvjINfosTbizyYMpcwKmOM9
-# iGF7or/AFUJ2scsjlO/6oFBqt5AzuMuwH3A1loUIV8cm2um+j01UYhOcoVV9
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkxMjIwNTMyNlowLwYJKoZI
+# hvcNAQkEMSIEIATZwDod3QXPcm6u5DDdJuQxjiMQDnO4LC8Ow+12smclMA0GCSqG
+# SIb3DQEBAQUABIICAEVjhxs5O7VnrZXcTJfMpl1MXYNrF5QQsjcNar/O0U6fumYV
+# xHIE7W7wMd3PGJ7o4YJR5I3IcdAS0GLbGJqNNQG5ej4hpTxPl/DwfS9qkDc5Vr4A
+# s6Bh4ekyU3mnXWzqEcnaSTYnRwLFa4QQD9Eej31UaYPAkgUxVkx8jbjNmQMnH+ee
+# zFl0MjnCcD2bFnq8aZTytA6pre4xX3kw5FckxaHomMGRabzJ9G15PzBhxqCDflRY
+# Zya1YsLw7X/3i8BHtc7a+AGyQi6e/8njg5T/JBgM30MWFwYQqHEaX/3iM2IZ823D
+# yyfgPhk++RdaqRciXpKANkLpeNAxrbZzXCbCcJjOMPYwr4WZyJoIdm2xzAxotcsR
+# mqo0ke7NDD7wbgENSyyHcHPSqxpIzmio5mqS8D/zWVqk8LNbm6Bu6J09M8jF53JM
+# e3SX2v/rrHqr9TWWgdMqUU3/7hyNhDZ5gLKH5D6iQ2OXjNVKCiZ//qcjUbAtstKM
+# E+Q2QvsaCfz71gmLGr8rUtqmWMdBtzxQyO0aL20aXGGr2kKGmC3xEnw8tOR8iaC9
+# CH48yXT31Aesj+mkvD2TwjQxQv/LpBZdQxTGVFcrpiwlwwSFP0X+AL1vgIETMo0c
+# 1+YxFmFivB9L0/wD814bKl5RGw6HhZH7p5B4YeYS9jvdOlGMejoMtFbWTP77
 # SIG # End signature block
