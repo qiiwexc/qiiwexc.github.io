@@ -28,10 +28,10 @@ Function New-CheckBox {
     if ($PREVIOUS_LABEL_OR_CHECKBOX) {
         $InitialLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
 
-        if ($CURRENT_GROUP.Text -eq "Ninite") {
-            $Shift = "0, $INTERVAL_CHECKBOX"
-        } else {
+        if ($PAD_CHECKBOXES) {
             $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
+        } else {
+            $Shift = "0, $INTERVAL_CHECKBOX"
         }
     }
 

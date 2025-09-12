@@ -1,33 +1,35 @@
 New-GroupBox 'Ninite'
 
+$PAD_CHECKBOXES = $False
 
-$CHECKBOX_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
-$CHECKBOX_Chrome.Add_CheckStateChanged( {
+
+$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
+$CHECKBOX_Ninite_Chrome.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
-$CHECKBOX_7zip.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
+$CHECKBOX_Ninite_7zip.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
-$CHECKBOX_VLC.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
+$CHECKBOX_Ninite_VLC.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
-$CHECKBOX_TeamViewer.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
+$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
-$CHECKBOX_qBittorrent.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
+$CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$CHECKBOX_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
-$CHECKBOX_Malwarebytes.Add_CheckStateChanged( {
+$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
+$CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
