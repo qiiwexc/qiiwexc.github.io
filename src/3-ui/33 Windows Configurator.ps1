@@ -1,4 +1,4 @@
-New-GroupBox 'Windows Configurator' 4
+New-GroupBox 'Windows Configurator'
 
 
 $BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }

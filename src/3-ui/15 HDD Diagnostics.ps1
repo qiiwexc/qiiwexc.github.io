@@ -1,4 +1,4 @@
-New-GroupBox 'HDD Diagnostics'
+New-GroupBox 'HDD Diagnostics' 5
 
 
 $BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA }

@@ -10,7 +10,6 @@ Set-Variable -Option Constant URL_VENTOY '{URL_VENTOY}'
 Set-Variable -Option Constant URL_SDIO '{URL_SDIO}'
 Set-Variable -Option Constant URL_VICTORIA '{URL_VICTORIA}'
 
-Set-Variable -Option Constant URL_AACT '{URL_AACT}'
 Set-Variable -Option Constant URL_OFFICE_INSTALLER '{URL_OFFICE_INSTALLER}'
 Set-Variable -Option Constant URL_ACTIVATION_PROGRAM '{URL_ACTIVATION_PROGRAM}'
 
