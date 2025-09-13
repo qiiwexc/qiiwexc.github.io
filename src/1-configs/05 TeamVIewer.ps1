@@ -1,5 +1,4 @@
-Set-Variable -Option Constant CONFIG_TEAMVIEWER '
-Windows Registry Editor Version 5.00
+Set-Variable -Option Constant CONFIG_TEAMVIEWER 'Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\TeamViewer]
 "AutoHideServerControl"=dword:00000001

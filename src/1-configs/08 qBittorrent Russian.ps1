@@ -1,5 +1,4 @@
-Set-Variable -Option Constant CONFIG_QBITTORRENT_RUSSIAN '
-General\Locale=ru
+Set-Variable -Option Constant CONFIG_QBITTORRENT_RUSSIAN 'General\Locale=ru
 
 [GUI]
 DownloadTrackerFavicon=true

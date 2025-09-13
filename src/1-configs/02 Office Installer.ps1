@@ -1,5 +1,4 @@
-Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER '
-[Configurations]
+Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER '[Configurations]
 NOSOUND = 1
 PosR = 1
 ArchR = 1
