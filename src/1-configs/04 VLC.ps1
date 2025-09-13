@@ -1,5 +1,4 @@
-Set-Variable -Option Constant CONFIG_VLC '
-[qt]
+Set-Variable -Option Constant CONFIG_VLC '[qt]
 qt-system-tray=0
 qt-updates-days=1
 qt-privacy-ask=0

@@ -32,7 +32,7 @@ param(
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant Version ([Version]'25.9.12')
+Set-Variable -Option Constant Version ([Version]'25.9.13')
 
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
@@ -66,6 +66,8 @@ Set-Variable -Option Constant ERR 'ERR'
 
 Set-Variable -Option Constant PATH_CURRENT_DIR $CallerPath
 Set-Variable -Option Constant PATH_TEMP_DIR "$([System.IO.Path]::GetTempPath())qiiwexc"
+Set-Variable -Option Constant PATH_PROFILE_ROAMING "$env:USERPROFILE\AppData\Roaming"
+Set-Variable -Option Constant PATH_PROFILE_LOCAL "$env:USERPROFILE\AppData\Local"
 
 Set-Variable -Option Constant SYSTEM_LANGUAGE (Get-SystemLanguage)
 
@@ -141,8 +143,7 @@ Set-Variable -Option Constant URL_SHUTUP10 'https://dl5.oo-software.com/files/oo
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Office Installer #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER '
-[Configurations]
+Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER '[Configurations]
 NOSOUND = 1
 PosR = 1
 ArchR = 1
@@ -173,8 +174,7 @@ langs = en-GB|lv-LV|
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# 7zip #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant CONFIG_7ZIP '
-Windows Registry Editor Version 5.00
+Set-Variable -Option Constant CONFIG_7ZIP 'Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\7-Zip]
 "LargePages"=dword:00000001
@@ -207,8 +207,7 @@ Windows Registry Editor Version 5.00
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# VLC #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant CONFIG_VLC '
-[qt]
+Set-Variable -Option Constant CONFIG_VLC '[qt]
 qt-system-tray=0
 qt-updates-days=1
 qt-privacy-ask=0
@@ -221,8 +220,7 @@ metadata-network-access=1
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TeamVIewer #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant CONFIG_TEAMVIEWER '
-Windows Registry Editor Version 5.00
+Set-Variable -Option Constant CONFIG_TEAMVIEWER 'Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\TeamViewer]
 "AutoHideServerControl"=dword:00000001
@@ -244,8 +242,7 @@ Windows Registry Editor Version 5.00
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# qBittorrent Base #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant CONFIG_QBITTORRENT_BASE '
-[Appearance]
+Set-Variable -Option Constant CONFIG_QBITTORRENT_BASE '[Appearance]
 Style=Fusion
 
 [Application]
@@ -333,25 +330,23 @@ General\SystrayEnabled=false
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# qBittorrent English #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant CONFIG_QBITTORRENT_ENGLISH '
-General\Locale=en_GB
+Set-Variable -Option Constant CONFIG_QBITTORRENT_ENGLISH 'General\Locale=en_GB
 
 [GUI]
 DownloadTrackerFavicon=true
 Log\Enabled=false
-MainWindow\FiltersSidebarWidth=153
+MainWindow\FiltersSidebarWidth=155
 Qt6\TorrentProperties\FilesListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6\xd1\0\0\0\x6\x1\x1\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\x6\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0\x7f\0\0\0\x1\0\0\0\0\0\0\0U\0\0\0\x1\0\0\0\0\0\0\x5)\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0W\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 Qt6\TorrentProperties\PeerListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\xf\0@\0\0\0\x1\0\0\0\xe\0\0\0\x64\0\0\x4Y\0\0\0\xf\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\xf\0\0\0r\0\0\0\x1\0\0\0\0\0\0\0V\0\0\0\x1\0\0\0\0\0\0\0\x32\0\0\0\x1\0\0\0\0\0\0\0Y\0\0\0\x1\0\0\0\0\0\0\0\x35\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0g\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0\x61\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0`\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0T\0\0\0\x1\0\0\0\0\0\0\0\x32\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
 Qt6\TorrentProperties\TrackerListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x3\xce\0\0\0\v\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\v\0\0\0\xa2\0\0\0\x1\0\0\0\0\0\0\0\x30\0\0\0\x1\0\0\0\0\0\0\0[\0\0\0\x1\0\0\0\0\0\0\0=\0\0\0\x1\0\0\0\0\0\0\0\x39\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0G\0\0\0\x1\0\0\0\0\0\0\0\x84\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0q\0\0\0\x1\0\0\0\0\0\0\0j\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
-Qt6\TransferList\HeaderState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0%\0\xf8\x8f\x66\x1f\0\0\0\x13\0\0\0$\0\0\0\x64\0\0\0!\0\0\0\x64\0\0\0\x1d\0\0\0\x64\0\0\0\x19\0\0\0\x64\0\0\0\x10\0\0\0\x64\0\0\0\x1e\0\0\0\x64\0\0\0 \0\0\0\x64\0\0\0\xf\0\0\0\x64\0\0\0#\0\0\0\x64\0\0\0\x1a\0\0\0\x64\0\0\0\v\0\0\0\x64\0\0\0\r\0\0\0\x64\0\0\0\x11\0\0\0\x64\0\0\0\x13\0\0\0\x64\0\0\0\xe\0\0\0\x64\0\0\0\x12\0\0\0\x64\0\0\0\f\0\0\0\x64\0\0\0\"\0\0\0\x64\0\0\0\x17\0\0\0\x64\0\0\x5<\0\0\0%\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0%\0\0\0!\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0\x31\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0=\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0\x39\0\0\0\x1\0\0\0\0\0\0\0\x61\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0.\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0`\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0~\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0U\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0V\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
+Qt6\TransferList\HeaderState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0%\0\xf8\x8f\x66\x1f\0\0\0\x13\0\0\0!\0\0\0\x64\0\0\0\x10\0\0\0\x64\0\0\0\v\0\0\0\x64\0\0\0$\0\0\0\x64\0\0\0\x11\0\0\0\x64\0\0\0\x1e\0\0\0\x64\0\0\0\x13\0\0\0\x64\0\0\0\"\0\0\0\x64\0\0\0\x19\0\0\0\x64\0\0\0\r\0\0\0\x64\0\0\0\x1d\0\0\0\x64\0\0\0\x1a\0\0\0\x64\0\0\0\xe\0\0\0\x64\0\0\0\x12\0\0\0\x64\0\0\0\x17\0\0\0\x64\0\0\0\f\0\0\0\x64\0\0\0\xf\0\0\0\x64\0\0\0#\0\0\0\x64\0\0\0 \0\0\0\x64\0\0\x5<\0\0\0%\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0%\0\0\0!\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0\x31\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0=\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0\x39\0\0\0\x1\0\0\0\0\0\0\0\x61\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0.\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0`\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0~\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0U\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0V\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 StartUpWindowState=Normal
 '
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# qBittorrent Russian #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant CONFIG_QBITTORRENT_RUSSIAN '
-General\Locale=ru
+Set-Variable -Option Constant CONFIG_QBITTORRENT_RUSSIAN 'General\Locale=ru
 
 [GUI]
 DownloadTrackerFavicon=true
@@ -362,6 +357,66 @@ Qt6\TorrentProperties\PeerListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0
 Qt6\TorrentProperties\TrackerListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x4\x19\0\0\0\v\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\v\0\0\0\xb9\0\0\0\x1\0\0\0\0\0\0\0K\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0<\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0q\0\0\0\x1\0\0\0\0\0\0\0^\0\0\0\x1\0\0\0\0\0\0\0]\0\0\0\x1\0\0\0\0\0\0\0~\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 Qt6\TransferList\HeaderState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0%\0\xf8\x8f\x66\x1f\0\0\0\x13\0\0\0\x11\0\0\0\x64\0\0\0\x12\0\0\0\x64\0\0\0\x10\0\0\0\x64\0\0\0\x1a\0\0\0\x64\0\0\0\x17\0\0\0\x64\0\0\0\v\0\0\0\x64\0\0\0\x1e\0\0\0\x64\0\0\0\x13\0\0\0\x64\0\0\0!\0\0\0\x64\0\0\0\x1d\0\0\0\x64\0\0\0 \0\0\0\x64\0\0\0\xf\0\0\0\x64\0\0\0$\0\0\0\x64\0\0\0\x19\0\0\0\x64\0\0\0\f\0\0\0\x64\0\0\0\"\0\0\0\x64\0\0\0\r\0\0\0\x64\0\0\0\xe\0\0\0\x64\0\0\0#\0\0\0\x64\0\0\x5\xfb\0\0\0%\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0%\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x33\0\0\0\x1\0\0\0\0\0\0\0\x44\0\0\0\x1\0\0\0\0\0\0\0\x65\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0<\0\0\0\x1\0\0\0\0\0\0\0L\0\0\0\x1\0\0\0\0\0\0\0\x42\0\0\0\x1\0\0\0\0\0\0\0_\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0X\0\0\0\x1\0\0\0\0\0\0\0\x43\0\0\0\x1\0\0\0\0\0\0\0\x8a\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0x\0\0\0\x1\0\0\0\0\0\0\0u\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 StartUpWindowState=Normal
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Chome Local State #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_CHROME_LOCAL_STATE '{
+  "background_mode": {
+    "enabled": false
+  },
+  "browser": {
+    "first_run_finished": true
+  },
+  "dns_over_https": {
+    "mode": "secure",
+    "templates": "https://chrome.cloudflare-dns.com/dns-query"
+  },
+  "hardware_acceleration_mode_previous": true,
+  "os_update_handler_enabled": true,
+  "performance_tuning": {
+    "battery_saver_mode": {
+      "state": 0
+    }
+  }
+}
+'
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Chome Preferences #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
+  "browser": {
+    "enable_spellchecking": true,
+    "window_placement": {
+      "maximized": true,
+      "work_area_left": 0,
+      "work_area_top": 0
+    }
+  },
+  "default_search_provider_data": {
+    "mirrored_template_url_data": {
+      "keyword": "google.lv",
+      "preconnect_to_search_url": true,
+      "prefetch_likely_navigations": true
+    }
+  },
+  "enable_do_not_track": true,
+  "https_only_mode_enabled": true,
+  "intl": {
+    "accept_languages": "lv,ru,en-GB",
+    "selected_languages": "lv,ru,en-GB"
+  },
+  "safebrowsing": {
+    "enabled": true,
+    "enhanced": true,
+    "esb_enabled_via_tailored_security": true
+  },
+  "spellcheck": {
+    "dictionaries": ["lv", "ru", "en-GB"]
+  }
+}
 '
 
 
@@ -1189,7 +1244,7 @@ $CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 
 
 $BUTTON_FUNCTION = { Set-AppsConfiguration }
-New-Button 'Apply configuration' $BUTTON_FUNCTION > $Null
+New-Button -UAC 'Apply configuration' $BUTTON_FUNCTION > $Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1719,6 +1774,52 @@ Function Start-DownloadExtractExecute {
 }
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Merge JSON #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Merge-JsonObjects {
+    Param(
+        [Parameter(Position = 0, Mandatory = $True)]$Source,
+        [Parameter(Position = 1, Mandatory = $True)]$Extend
+    )
+
+    if ($Source -is [PSCustomObject] -and $Extend -is [PSCustomObject]) {
+        $Merged = [Ordered] @{}
+
+        ForEach ($Property In $Source.PSObject.Properties) {
+            if ($Null -eq $Extend.$($Property.Name)) {
+                $Merged[$Property.Name] = $Property.Value
+            } else {
+                $Merged[$Property.Name] = Merge-JsonObjects $Property.Value $Extend.$($Property.Name)
+            }
+        }
+
+        ForEach ($Property In $Extend.PSObject.Properties) {
+            if ($Null -eq $Source.$($Property.Name)) {
+                $Merged[$Property.Name] = $Property.Value
+            }
+        }
+
+        [PSCustomObject] $Merged
+    } elseif ($Source -is [Collections.IList] -and $Extend -is [Collections.IList]) {
+        $MaxCount = [Math]::Max($Source.Count, $Extend.Count)
+
+        [Array]$Merged = for ($i = 0; $i -lt $MaxCount; ++$i) {
+            if ($i -ge $Source.Count) {
+                $Extend[$i]
+            } elseif ($i -ge $Extend.Count) {
+                $Source[$i]
+            } else {
+                Merge-JsonObjects $Source[$i] $Extend[$i]
+            }
+        }
+
+        , $Merged
+    } else {
+        $Extend
+    }
+}
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Elevated #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-Elevated {
@@ -1826,27 +1927,94 @@ Function Start-OfficeInstaller {
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apps Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
+Function Write-ConfigurationFile {
+    Param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Path,
+        [String][Parameter(Position = 2, Mandatory = $True)]$Content
+    )
+
+    Add-Log $INF "Writing $AppName configuration to '$Path'..."
+
+    Set-Content $Path $Content
+
+    Out-Success
+}
+
+
+Function Update-JsonFile {
+    Param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Path,
+        [String][Parameter(Position = 2, Mandatory = $True)]$Content
+    )
+
+    Add-Log $INF "Writing $AppName configuration to '$Path'..."
+
+    $CurrentConfig = Get-Content $Path -Raw | ConvertFrom-Json
+    $PatchConfig = $Content | ConvertFrom-Json
+
+    $UpdatedConfig = Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress
+
+    Set-Content $Path $UpdatedConfig
+
+    Out-Success
+}
+
+
+Function Import-RegistryConfiguration {
+    Param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Content
+    )
+
+    Add-Log $INF "Importing $AppName configuration into registry..."
+
+    Set-Variable -Option Constant RegFilePath "$PATH_TEMP_DIR\$AppName.reg"
+    Set-Content $RegFilePath $Content
+
+    try {
+        Start-Process -Verb RunAs -Wait 'regedit' "/s $RegFilePath"
+    } catch [Exception] {
+        Add-Log $ERR "Failed to import file: $($_.Exception.Message)"
+        Return
+    }
+
+    Out-Success
+}
+
+
 Function Set-AppsConfiguration {
-    if ($CHECKBOX_Config_7zip.Checked) {
-        Set-Content "$PATH_TEMP_DIR\$($CHECKBOX_Config_7zip.Text).reg" $CONFIG_7ZIP
-    }
-
     if ($CHECKBOX_Config_VLC.Checked) {
-        Set-Content "$PATH_TEMP_DIR\vlcrc" $CONFIG_VLC
-    }
-
-    if ($CHECKBOX_Config_TeamViewer.Checked) {
-        Set-Content "$PATH_TEMP_DIR\$($CHECKBOX_Config_TeamViewer.Text).reg" $CONFIG_TEAMVIEWER
-        $CONFIG_TEAMVIEWER
+        $AppName = $CHECKBOX_Config_VLC.Text
+        $Path = "$PATH_PROFILE_ROAMING\vlc\vlcrc"
+        $Content = $CONFIG_VLC
+        Write-ConfigurationFile $AppName $Path $Content
     }
 
     if ($CHECKBOX_Config_qBittorrent.Checked) {
-        $CONFIG_QBITTORRENT = $CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -Match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH })
-        Set-Content "$PATH_TEMP_DIR\$($CHECKBOX_Config_qBittorrent.Text).ini" $CONFIG_QBITTORRENT
+        $AppName = $CHECKBOX_Config_qBittorrent.Text
+        $Path = "$PATH_PROFILE_ROAMING\$AppName\$AppName.ini"
+        $Content = $CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -Match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH })
+        Write-ConfigurationFile $AppName $Path $Content
+    }
+
+    if ($CHECKBOX_Config_7zip.Checked) {
+        Import-RegistryConfiguration $CHECKBOX_Config_7zip.Text $CONFIG_7ZIP
+    }
+
+    if ($CHECKBOX_Config_TeamViewer.Checked) {
+        Import-RegistryConfiguration $CHECKBOX_Config_TeamViewer.Text $CONFIG_TEAMVIEWER
     }
 
     if ($CHECKBOX_Config_Chrome.Checked) {
-        # $CONFIG_CHROME
+        $AppName = $CHECKBOX_Config_Chrome.Text
+
+        $Path = "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Local State"
+        Update-JsonFile $AppName $Path $CONFIG_CHROME_LOCAL_STATE
+
+        $Path = "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Default\Preferences"
+        Update-JsonFile $AppName $Path $CONFIG_CHROME_PREFERENCES
     }
 }
 
@@ -1938,8 +2106,8 @@ Function Start-WinUtil {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU/tyjFdlINk/q/mARvEWwjxoV
-# 7hGgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUi4S8pjDK+Cg7GQI71Gq4OPNR
+# XGOgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -2060,28 +2228,28 @@ Function Start-WinUtil {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTYWkJ2
-# AZzVcHAhyHUf19btIETj/zANBgkqhkiG9w0BAQEFAASCAQAwDhn52O/i7E6yzK7A
-# r4eW0NumhOZ+Zj8U0XsYwJVroNgvBC80ybvclakhbnSd7cmRQLKzkbxo4c7vFOS5
-# 2rwBddLjGwfSnuwXzgtEzl3oyu5N9PY0ZIcZnspuGPrMosmlfDMglja1FzqVvmhz
-# 2aLaoDbpD+gepA/BKPucHozuursSKQRUE9T5cdOuCi6fGE9Tf/dgQW/cwWuc4SfF
-# Ql5b77qA2fF6QYfNUrAXrRRumq48sVeZ2c6uL5oAAjebuwnJa39y3OKioYUXp7sZ
-# UDrrONaivzj0rbhkaB7N5U3x/8jCMqz8WFMsOeFRPReHIDJlaP+q28CHXd+pjfCs
-# F541oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBT8xoQo
+# Q9nJQvc+tEHjzGtAfO+JEzANBgkqhkiG9w0BAQEFAASCAQBeqHMC5+75E2ppumEG
+# YG/LqKuBm9t3yFl029GimIuNaVvAZcNzcSbCPSx/MN9xDsTKNLjw7Ujl3RzG83+C
+# jTVa0gAtYscsToX3+mQghai7Gl+71mjY93umN7KBnaoSDZw/6FLVMzljRfBDLafF
+# ppoHXGIOZEHtFv4ZtQkRwtX4Cbx4hQ9rTYRPKJ/FY/Bd3NITcw0mGwPrZ90rwFej
+# FF7ULiHDTcIyA2DfKLm6g/k7GnDHn0iwq57vdLiwmRD+yggY3vNwfBwvL2Do2xbE
+# fVzhBCFzmi+VJRArVPgtyKISagDFVEgrCt8vin7ehkOAnb+0wLOIPH+D9O6s5KNS
+# 4Xi0oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkxMjIwNTMyNlowLwYJKoZI
-# hvcNAQkEMSIEIATZwDod3QXPcm6u5DDdJuQxjiMQDnO4LC8Ow+12smclMA0GCSqG
-# SIb3DQEBAQUABIICAEVjhxs5O7VnrZXcTJfMpl1MXYNrF5QQsjcNar/O0U6fumYV
-# xHIE7W7wMd3PGJ7o4YJR5I3IcdAS0GLbGJqNNQG5ej4hpTxPl/DwfS9qkDc5Vr4A
-# s6Bh4ekyU3mnXWzqEcnaSTYnRwLFa4QQD9Eej31UaYPAkgUxVkx8jbjNmQMnH+ee
-# zFl0MjnCcD2bFnq8aZTytA6pre4xX3kw5FckxaHomMGRabzJ9G15PzBhxqCDflRY
-# Zya1YsLw7X/3i8BHtc7a+AGyQi6e/8njg5T/JBgM30MWFwYQqHEaX/3iM2IZ823D
-# yyfgPhk++RdaqRciXpKANkLpeNAxrbZzXCbCcJjOMPYwr4WZyJoIdm2xzAxotcsR
-# mqo0ke7NDD7wbgENSyyHcHPSqxpIzmio5mqS8D/zWVqk8LNbm6Bu6J09M8jF53JM
-# e3SX2v/rrHqr9TWWgdMqUU3/7hyNhDZ5gLKH5D6iQ2OXjNVKCiZ//qcjUbAtstKM
-# E+Q2QvsaCfz71gmLGr8rUtqmWMdBtzxQyO0aL20aXGGr2kKGmC3xEnw8tOR8iaC9
-# CH48yXT31Aesj+mkvD2TwjQxQv/LpBZdQxTGVFcrpiwlwwSFP0X+AL1vgIETMo0c
-# 1+YxFmFivB9L0/wD814bKl5RGw6HhZH7p5B4YeYS9jvdOlGMejoMtFbWTP77
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkxMzE5NDE1OVowLwYJKoZI
+# hvcNAQkEMSIEIIaxuBfPS9EMGrq99O03/N9EkhGYbQ+ejBTlWR4j5/jKMA0GCSqG
+# SIb3DQEBAQUABIICAJFGZgxZaGARTJM23jn2dapnRIxnxCBCXUFKA4fR5jL2LgTs
+# vtht8BcABftG1egbJABXInpcRZI8va4TcULuoLiAPNI9AljU47PWf9mNDkp+7KoK
+# /lqSUXlq+UNCrs2RxIS3vgmj/hE/FYdpNaFnGS/SeflTIREmUC6cISOjZvYaRSd8
+# OgFENRUrkMlmjiUej6vHBwSl3JwgNIRndC/EYWURggahqeUXSUKDH0tYbUUAx+OW
+# 67WF57s9Hwp+nywAFOPU6CiL/2SUQtoSJ3h074XoQBiCFZsJRYdMZZCB9N/0vfBC
+# EwW4P0rQyzqSmiVuLFfnmICk+LNJseXSQaLfAxdFhPtaHhNcoFx6U2SKcooYmYES
+# fHEgPhFSCuZrRitThM3M9TbmugWyTq/REbMa0DuiUa7+avqf/4QH1zKmfRpCMkky
+# T4Ov5vimkR3PGn09m9iXYToNkUSZTrZLCWcwpfZ2b7K6uSmRS8r9ASlAa+sBDRJ3
+# p9UEN76DLGZndHzt8T2JFxecU57ir8GczqUbY4ygjugixr0oFbyBAusZuL1FlQgh
+# PKG2bFYanW/2ewXiTsYcsXmizAX23dai8ODsYYNmWY+b+9bPB8AlX/WPbBjBSzzm
+# a9TAiLLHL9Y+K44lDmsvvk0LMOI+XqLw9yR693Z/qQa5C06FWqTN0PKkq2Ma
 # SIG # End signature block

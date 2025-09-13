@@ -1,5 +1,4 @@
-Set-Variable -Option Constant CONFIG_7ZIP '
-Windows Registry Editor Version 5.00
+Set-Variable -Option Constant CONFIG_7ZIP 'Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\7-Zip]
 "LargePages"=dword:00000001

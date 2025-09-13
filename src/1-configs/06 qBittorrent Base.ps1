@@ -1,5 +1,4 @@
-Set-Variable -Option Constant CONFIG_QBITTORRENT_BASE '
-[Appearance]
+Set-Variable -Option Constant CONFIG_QBITTORRENT_BASE '[Appearance]
 Style=Fusion
 
 [Application]
