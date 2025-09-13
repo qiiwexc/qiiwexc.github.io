@@ -32,7 +32,7 @@ param(
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant Version ([Version]'25.9.13')
+Set-Variable -Option Constant Version ([Version]'25.9.14')
 
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
@@ -130,7 +130,6 @@ Set-Variable -Option Constant URL_VENTOY 'https://github.com/ventoy/Ventoy/relea
 Set-Variable -Option Constant URL_SDIO 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip'
 Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
 
-Set-Variable -Option Constant URL_AACT 'https://qiiwexc.github.io/d/AAct.zip'
 Set-Variable -Option Constant URL_OFFICE_INSTALLER 'https://qiiwexc.github.io/d/Office_Installer+.zip'
 Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
 
@@ -650,7 +649,7 @@ C103	+	# Disable Windows Copilot+ Recall (Category: Windows AI)
 C203	+	# Disable Windows Copilot+ Recall (Category: Windows AI)
 C206	-	# Disable Cocreator in Microsoft Paint (Category: Windows AI)
 C207	-	# Disable AI-powered image fill in Microsoft Paint (Category: Windows AI)
-L001	+	# Disable functionality to locate the system (Category: Location Services)
+L001	-	# Disable functionality to locate the system (Category: Location Services)
 L003	+	# Disable scripting functionality to locate the system (Category: Location Services)
 L004	-	# Disable sensors for locating the system and its orientation (Category: Location Services)
 L005	-	# Disable Windows Geolocation Service (Category: Location Services)
@@ -1052,40 +1051,25 @@ $CHECKBOX_StartActivationProgram.Add_CheckStateChanged( {
 } )
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-$BUTTON_DownloadAAct = New-Button -UAC 'AAct'
-$BUTTON_DownloadAAct.Add_Click( {
-    Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyRunAAct.Checked) {if ($RADIO_AActWindows.Checked) { '/win=act /taskwin' } elseif ($RADIO_AActOffice.Checked) { '/ofs=act /taskofs' }})
-    Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartAAct.Checked $URL_AACT -Params:$Params -Silent:$CHECKBOX_SilentlyRunAAct.Checked
+New-GroupBox 'Alternative DNS'
+
+
+$BUTTON_FUNCTION = { Set-CloudFlareDNS }
+New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION > $Null
+
+$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
+$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
+    $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
 } )
 
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartAAct = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartAAct.Add_CheckStateChanged( {
-    $BUTTON_DownloadAAct.Text = "AAct$(if ($CHECKBOX_StartAAct.Checked) { $REQUIRES_ELEVATION })"
-    $CHECKBOX_SilentlyRunAAct.Enabled = $CHECKBOX_StartAAct.Checked
-    $RADIO_AActWindows.Enabled = $CHECKBOX_StartAAct.Checked
-    $RADIO_AActOffice.Enabled = $CHECKBOX_StartAAct.Checked
-} )
-
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_SilentlyRunAAct = New-CheckBox 'Activate silently' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_SilentlyRunAAct.Add_CheckStateChanged( {
-    $RADIO_AActWindows.Enabled = $CHECKBOX_SilentlyRunAAct.Checked
-    $RADIO_AActOffice.Enabled = $OFFICE_VERSION -and $CHECKBOX_SilentlyRunAAct.Checked
-} )
-
-$RADIO_AActWindows = New-RadioButton 'Windows' -Checked
-
-$RADIO_DISABLED = !$OFFICE_VERSION
-$RADIO_AActOffice = New-RadioButton 'Office' -Disabled:$RADIO_DISABLED
+$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'HDD Diagnostics'
+New-GroupBox 'HDD Diagnostics' 5
 
 
 $BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA }
@@ -1247,22 +1231,6 @@ $BUTTON_FUNCTION = { Set-AppsConfiguration }
 New-Button -UAC 'Apply configuration' $BUTTON_FUNCTION > $Null
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-New-GroupBox 'Alternative DNS'
-
-
-$BUTTON_FUNCTION = { Set-CloudFlareDNS }
-New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION > $Null
-
-$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
-$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
-    $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
-} )
-
-$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Deboat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 New-GroupBox 'Debloat Windows and Privacy'
@@ -1289,7 +1257,7 @@ $CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks' -Disabled:$
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'Windows Configurator' 4
+New-GroupBox 'Windows Configurator'
 
 
 $BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }
@@ -1627,17 +1595,11 @@ Function Start-Extraction {
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
-
-    [Switch]$MultiFileArchive = !($ZipName -eq 'AAct.zip' -or $ZipName -eq 'Office_2013-2024.zip')
-
-    Set-Variable -Option Constant TemporaryPath $(if ($MultiFileArchive) { $ExtractionPath } else { $PATH_TEMP_DIR })
+    Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
     Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
-    Set-Variable -Option Constant ExtractionDir $(if ($MultiFileArchive) { Split-Path -Leaf $ExtractionPath })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
-        'AAct.zip' { "AAct$(if ($OS_64_BIT) {'_x64'}).exe" }
         'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
-        'Office_2013-2024.zip' { 'OInstall.exe' }
         'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
         'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
         'ventoy*' { "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe" }
@@ -1646,23 +1608,21 @@ Function Start-Extraction {
     }
 
     Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -Like "$ExtractionDir\*")
-    Set-Variable -Option Constant TemporaryExe "$TemporaryPath\$Executable"
+    Set-Variable -Option Constant TemporaryExe "$ExtractionPath\$Executable"
     Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
 
     Remove-Item -Force -ErrorAction SilentlyContinue $TemporaryExe
-    if ($MultiFileArchive) {
-        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $TemporaryPath
-        New-Item -Force -ItemType Directory $TemporaryPath | Out-Null
-    }
+    Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
+    New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 
     Add-Log $INF "Extracting '$ZipPath'..."
 
     try {
         if ($ZIP_SUPPORTED) {
-            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $TemporaryPath)
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
         } else {
             ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) {
-                $SHELL.NameSpace($TemporaryPath).CopyHere($Item)
+                $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
             }
         }
     }
@@ -1675,15 +1635,12 @@ Function Start-Extraction {
 
     if (!$IsDirectory) {
         Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
-
-        if ($MultiFileArchive) {
-            Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
-        }
+        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
     }
 
     if (!$Execute -and $IsDirectory) {
         Remove-Item -Force -ErrorAction SilentlyContinue -Recurse "$TargetPath\$ExtractionDir"
-        Move-Item -Force -ErrorAction SilentlyContinue $TemporaryPath $TargetPath
+        Move-Item -Force -ErrorAction SilentlyContinue $ExtractionPath $TargetPath
     }
 
     Out-Success
@@ -1847,6 +1804,32 @@ Function Start-Activator {
         Start-Script -HideWindow "iex ((New-Object Net.WebClient).DownloadString('https://get.activated.win'))"
     } else {
         Start-Script -HideWindow "irm https://get.activated.win | iex"
+    }
+
+    Out-Success
+}
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+Function Set-CloudFlareDNS {
+    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
+    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+
+    Add-Log $WRN 'Internet connection may get interrupted briefly'
+    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+
+    if (!(Get-NetworkAdapter)) {
+        Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
+        Add-Log $ERR 'This could mean that computer is not connected'
+        Return
+    }
+
+    try {
+        Start-Script -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+    } catch [Exception] {
+        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
+        Return
     }
 
     Out-Success
@@ -2019,32 +2002,6 @@ Function Set-AppsConfiguration {
 }
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Function Set-CloudFlareDNS {
-    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
-    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
-
-    Add-Log $WRN 'Internet connection may get interrupted briefly'
-    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
-
-    if (!(Get-NetworkAdapter)) {
-        Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
-        Add-Log $ERR 'This could mean that computer is not connected'
-        Return
-    }
-
-    try {
-        Start-Script -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
-    } catch [Exception] {
-        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
-        Return
-    }
-
-    Out-Success
-}
-
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 Function Start-WindowsDebloat {
@@ -2106,8 +2063,8 @@ Function Start-WinUtil {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUi4S8pjDK+Cg7GQI71Gq4OPNR
-# XGOgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU1qVyZJzKeFeR7FFEdeVfEBMB
+# 0VOgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -2228,28 +2185,28 @@ Function Start-WinUtil {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBT8xoQo
-# Q9nJQvc+tEHjzGtAfO+JEzANBgkqhkiG9w0BAQEFAASCAQBeqHMC5+75E2ppumEG
-# YG/LqKuBm9t3yFl029GimIuNaVvAZcNzcSbCPSx/MN9xDsTKNLjw7Ujl3RzG83+C
-# jTVa0gAtYscsToX3+mQghai7Gl+71mjY93umN7KBnaoSDZw/6FLVMzljRfBDLafF
-# ppoHXGIOZEHtFv4ZtQkRwtX4Cbx4hQ9rTYRPKJ/FY/Bd3NITcw0mGwPrZ90rwFej
-# FF7ULiHDTcIyA2DfKLm6g/k7GnDHn0iwq57vdLiwmRD+yggY3vNwfBwvL2Do2xbE
-# fVzhBCFzmi+VJRArVPgtyKISagDFVEgrCt8vin7ehkOAnb+0wLOIPH+D9O6s5KNS
-# 4Xi0oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBS1kvhh
+# PI1s7S6MfveVl3AS6uLWmTANBgkqhkiG9w0BAQEFAASCAQBQdoJ5LoWbYd6PaKE6
+# dr6bPBPn9Uk/Gy3H+zGWYXvQS2Kr0wqCbx/ECQexSeUuWrsVo+i3d9rkwM5PcOoD
+# RmYbDuYpBQfQlvc/0lT5fxgSoZesJjfs1kmBEepvTGnmImN2Gy6fneWLsz6RMMui
+# uFdPKKTg9qXldhvX30G252iJ8nciUMv+zK9mhTpxKF1M4eaE808VnU5hfvp42ooJ
+# orNv1mzogARvJoZZCk4dYEeqE2xEXPTE/ypk5B/PhiCqiTxPEX/QwP0IGYsDAf3V
+# jD/OqcQYRht1BqLXB9jdkSPR765ikcexuIEFBkUuobs3w/TTDYfrJaPLJ+Y+lUZr
+# gvP4oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkxMzE5NDE1OVowLwYJKoZI
-# hvcNAQkEMSIEIIaxuBfPS9EMGrq99O03/N9EkhGYbQ+ejBTlWR4j5/jKMA0GCSqG
-# SIb3DQEBAQUABIICAJFGZgxZaGARTJM23jn2dapnRIxnxCBCXUFKA4fR5jL2LgTs
-# vtht8BcABftG1egbJABXInpcRZI8va4TcULuoLiAPNI9AljU47PWf9mNDkp+7KoK
-# /lqSUXlq+UNCrs2RxIS3vgmj/hE/FYdpNaFnGS/SeflTIREmUC6cISOjZvYaRSd8
-# OgFENRUrkMlmjiUej6vHBwSl3JwgNIRndC/EYWURggahqeUXSUKDH0tYbUUAx+OW
-# 67WF57s9Hwp+nywAFOPU6CiL/2SUQtoSJ3h074XoQBiCFZsJRYdMZZCB9N/0vfBC
-# EwW4P0rQyzqSmiVuLFfnmICk+LNJseXSQaLfAxdFhPtaHhNcoFx6U2SKcooYmYES
-# fHEgPhFSCuZrRitThM3M9TbmugWyTq/REbMa0DuiUa7+avqf/4QH1zKmfRpCMkky
-# T4Ov5vimkR3PGn09m9iXYToNkUSZTrZLCWcwpfZ2b7K6uSmRS8r9ASlAa+sBDRJ3
-# p9UEN76DLGZndHzt8T2JFxecU57ir8GczqUbY4ygjugixr0oFbyBAusZuL1FlQgh
-# PKG2bFYanW/2ewXiTsYcsXmizAX23dai8ODsYYNmWY+b+9bPB8AlX/WPbBjBSzzm
-# a9TAiLLHL9Y+K44lDmsvvk0LMOI+XqLw9yR693Z/qQa5C06FWqTN0PKkq2Ma
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkxMzIzMTkyM1owLwYJKoZI
+# hvcNAQkEMSIEIJoOJX2OkFVBXl6mfRxabODVZEq3iPPtWih7RDODUmyGMA0GCSqG
+# SIb3DQEBAQUABIICALnun2aKXQqSm7ayNfkKhSEtQNKVsaHe9qAtNNrmlV1glxG3
+# g4ir3dtngvGJxmczwAZyHBVbl4N19oc2Jfe3Pzg3NY7sFecvq4TXSBw8qjrkcuds
+# ppoAC9OYTQjpG1+gozDOe2nitqvnfbTGHKN1IWuCUWFDuiK05OZna0Wi6deingS+
+# yHHx+4qKtVFB61fa/2M/M0SQTnTbgWU3JTr+tUEmf1Os6TlxESFm4YLtkuYgVmff
+# Qi/0QdBw18uK2HRvbV4DyhQTBHyyY1dkPI05/eKbUW2fU6q/FhobnGuWa5dxcDym
+# 7rYa0ADjl35XIVheKN4BEhTczjFTr5qsK5jYXqepJv6n5FejNE3NNIcKZ6AioZYQ
+# g3o/hq80cWAEGDGewQhDN26SLWUEySlpQhIuZ/EykdatRzUqoewyqDsnPc0oORbD
+# we6BDE+x8k++oDoFY9CwBbREfHR+/yI1kcA7vXGsiCnsv7YtJmvNbYZVBe7GqEG3
+# qK8r9O6OokVWE5y05MzeGcqQx+lRSm+Y9TkeWZCPHmwKgCnysplTNE7Be+m9zOgh
+# RiJ8YtUur1AUpoLkmneWV2SvXyhYJGGGeycxQVkvxAiIlRg+BuLCLtTdA1sJ78lP
+# Yzu09LmhzmZ7KMy3L1hFOkRyZhiaHXqYyB4YXC4UTWLpZstle7QoogNNg3pS
 # SIG # End signature block
