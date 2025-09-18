@@ -8,5 +8,5 @@ Function Start-OfficeInstaller {
 
     Set-Content "$TargetPath\Office Installer+.ini" $Config
 
-    Start-DownloadExtractExecute -AVWarning -Execute:$Execute $URL_OFFICE_INSTALLER
+    Start-DownloadExtractExecute -AVWarning -Execute:$Execute '{URL_OFFICE_INSTALLER}'
 }

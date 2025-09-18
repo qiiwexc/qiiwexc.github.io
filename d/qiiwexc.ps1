@@ -32,7 +32,7 @@ param(
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-Set-Variable -Option Constant Version ([Version]'25.9.14')
+Set-Variable -Option Constant Version ([Version]'25.9.19')
 
 Set-Variable -Option Constant BUTTON_WIDTH    170
 Set-Variable -Option Constant BUTTON_HEIGHT   30
@@ -114,30 +114,6 @@ Set-Variable -Option Constant PathOfficeC2RClientExe "$env:CommonProgramFiles\Mi
 Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PathOfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
 
 New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null
-
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# URLs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-
-Set-Variable -Option Constant URL_VERSION_FILE 'https://bit.ly/qiiwexc_version'
-Set-Variable -Option Constant URL_BAT_FILE 'https://bit.ly/qiiwexc_bat'
-
-Set-Variable -Option Constant URL_WINDOWS_11 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html'
-Set-Variable -Option Constant URL_WINDOWS_10 'https://w16.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html'
-Set-Variable -Option Constant URL_WINDOWS_7 'https://w16.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html'
-
-Set-Variable -Option Constant URL_RUFUS 'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe'
-Set-Variable -Option Constant URL_VENTOY 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip'
-Set-Variable -Option Constant URL_SDIO 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip'
-Set-Variable -Option Constant URL_VICTORIA 'https://hdd.by/Victoria/Victoria537.zip'
-
-Set-Variable -Option Constant URL_OFFICE_INSTALLER 'https://qiiwexc.github.io/d/Office_Installer+.zip'
-Set-Variable -Option Constant URL_ACTIVATION_PROGRAM 'https://qiiwexc.github.io/d/ActivationProgram.zip'
-
-Set-Variable -Option Constant URL_UNCHECKY 'https://unchecky.com/files/unchecky_setup.exe'
-Set-Variable -Option Constant URL_LIVE_CD 'https://rutracker.org/forum/viewtopic.php?t=4366725'
-Set-Variable -Option Constant URL_NINITE 'https://ninite.com'
-Set-Variable -Option Constant URL_TRONSCRIPT 'https://github.com/bmrf/tron/blob/master/README.md#use'
-Set-Variable -Option Constant URL_SHUTUP10 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe'
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Office Installer #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -407,13 +383,23 @@ Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
     "accept_languages": "lv,ru,en-GB",
     "selected_languages": "lv,ru,en-GB"
   },
+  "net": {
+    "network_prediction_options": 3
+  },
+  "privacy_sandbox": {
+    "m1": {
+      "ad_measurement_enabled": false,
+      "fledge_enabled": false
+    },
+  },
   "safebrowsing": {
     "enabled": true,
     "enhanced": true,
     "esb_enabled_via_tailored_security": true
   },
   "spellcheck": {
-    "dictionaries": ["lv", "ru", "en-GB"]
+    "dictionaries": ["lv", "ru", "en-GB"],
+    "use_spelling_service": true
   }
 }
 '
@@ -491,7 +477,7 @@ P036	+	# Disable app access to user account information (Category: App Privacy)
 P025	+	# Disable Windows tracking of app starts (Category: App Privacy)
 P033	+	# Disable app access to diagnostics information (Category: App Privacy)
 P023	+	# Disable app access to diagnostics information (Category: App Privacy)
-P056	+	# Disable app access to device location (Category: App Privacy)
+P056	-	# Disable app access to device location (Category: App Privacy)
 P057	-	# Disable app access to device location (Category: App Privacy)
 P012	-	# Disable app access to camera (Category: App Privacy)
 P034	-	# Disable app access to camera (Category: App Privacy)
@@ -774,9 +760,9 @@ Function New-ButtonBrowser {
         [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
     )
 
-    New-Button $Text $Function > $Null
+    New-Button $Text $Function | Out-Null
 
-    New-Label 'Opens in the browser' > $Null
+    New-Label 'Opens in the browser'
 }
 
 Function New-Button {
@@ -998,7 +984,7 @@ New-GroupBox 'Run as Administrator'
 
 $BUTTON_TEXT = "$(if ($IS_ELEVATED) {'Running as administrator'} else {'Restart as administrator'})"
 $BUTTON_FUNCTION = { Start-Elevated }
-New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -Disabled:$IS_ELEVATED > $Null
+New-Button -UAC $BUTTON_TEXT $BUTTON_FUNCTION -Disabled:$IS_ELEVATED | Out-Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Bootable USB Tools #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1008,8 +994,8 @@ New-GroupBox 'Bootable USB Tools'
 
 $BUTTON_DownloadVentoy = New-Button -UAC 'Ventoy'
 $BUTTON_DownloadVentoy.Add_Click( {
-    Set-Variable -Option Constant FileName $((Split-Path -Leaf $URL_VENTOY) -Replace '-windows', '')
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVentoy.Checked $URL_VENTOY -FileName:$FileName
+    Set-Variable -Option Constant FileName $((Split-Path -Leaf 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip') -Replace '-windows', '')
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVentoy.Checked 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip' -FileName:$FileName
 } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -1020,7 +1006,7 @@ $CHECKBOX_StartVentoy.Add_CheckStateChanged( {
 } )
 
 
-$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked $URL_RUFUS -Params:'-g' }
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked 'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe' -Params:'-g' }
 $BUTTON_DownloadRufus = New-Button -UAC 'Rufus' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -1036,11 +1022,11 @@ $CHECKBOX_StartRufus.Add_CheckStateChanged( {
 New-GroupBox 'Activators (Windows 7+, Office)'
 
 $BUTTON_FUNCTION = { Start-Activator }
-$BUTTON_MASActivator = New-Button -UAC 'MAS Activator' $BUTTON_FUNCTION -Disabled:$($OS_VERSION -lt 7)
+New-Button -UAC 'MAS Activator' $BUTTON_FUNCTION -Disabled:$($OS_VERSION -lt 7)  | Out-Null
 
 
 
-$BUTTON_FUNCTION = { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked $URL_ACTIVATION_PROGRAM }
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked 'https://qiiwexc.github.io/d/ActivationProgram.zip' }
 $BUTTON_DownloadActivationProgram = New-Button -UAC 'Activation Program' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -1057,7 +1043,7 @@ New-GroupBox 'Alternative DNS'
 
 
 $BUTTON_FUNCTION = { Set-CloudFlareDNS }
-New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION > $Null
+New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION | Out-Null
 
 $CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
@@ -1067,12 +1053,28 @@ $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
 $CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 
 
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Hardware Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+
+New-GroupBox 'Hardware Info'
+
+
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCpuZ.Checked 'https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip' }
+$BUTTON_DownloadCpuZ = New-Button -UAC 'CPU-Z' $BUTTON_FUNCTION
+
+$CHECKBOX_DISABLED = $PS_VERSION -le 2
+$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+$CHECKBOX_StartCpuZ = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+$CHECKBOX_StartCpuZ.Add_CheckStateChanged( {
+    $BUTTON_DownloadCpuZ.Text = "CPU-Z$(if ($CHECKBOX_StartCpuZ.Checked) { $REQUIRES_ELEVATION })"
+} )
+
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
-New-GroupBox 'HDD Diagnostics' 5
+New-GroupBox 'HDD Diagnostics'
 
 
-$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA }
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked 'https://hdd.by/Victoria/Victoria537.zip' }
 $BUTTON_DownloadVictoria = New-Button -UAC 'Victoria' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -1127,7 +1129,7 @@ $CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( {
 
 $BUTTON_DownloadNinite = New-Button -UAC 'Download selected'
 $BUTTON_DownloadNinite.Add_Click( {
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "$URL_NINITE/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName)
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "https://ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName)
 } )
 
 $CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
@@ -1135,7 +1137,7 @@ $CHECKBOX_StartNinite.Add_CheckStateChanged( {
     $BUTTON_DownloadNinite.Text = "Download selected$(if ($CHECKBOX_StartNinite.Checked) { $REQUIRES_ELEVATION })"
 } )
 
-$BUTTON_FUNCTION = { Open-InBrowser "$URL_NINITE/?select=$(Set-NiniteQuery)" }
+$BUTTON_FUNCTION = { Open-InBrowser "https://ninite.com/?select=$(Set-NiniteQuery)" }
 New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 
 
@@ -1144,7 +1146,7 @@ New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 New-GroupBox 'Essentials'
 
 
-$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked $URL_SDIO }
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip' }
 $BUTTON_DownloadSDI = New-Button -UAC 'Snappy Driver Installer' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -1170,7 +1172,7 @@ $CHECKBOX_StartOfficeInstaller.Add_CheckStateChanged( {
 $BUTTON_DownloadUnchecky = New-Button -UAC 'Unchecky'
 $BUTTON_DownloadUnchecky.Add_Click( {
     Set-Variable -Option Constant Params $(if ($CHECKBOX_SilentlyInstallUnchecky.Checked) { '-install -no_desktop_icon' })
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked $URL_UNCHECKY -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
+    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked 'https://unchecky.com/files/unchecky_setup.exe' -Params:$Params -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked
 } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -1191,16 +1193,16 @@ $CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Disabled:$C
 New-GroupBox 'Windows Images'
 
 
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_11 }
+$BUTTON_FUNCTION = { Open-InBrowser 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html' }
 New-ButtonBrowser 'Windows 11' $BUTTON_FUNCTION
 
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_10 }
+$BUTTON_FUNCTION = { Open-InBrowser 'https://w16.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html' }
 New-ButtonBrowser 'Windows 10' $BUTTON_FUNCTION
 
-$BUTTON_FUNCTION = { Open-InBrowser $URL_WINDOWS_7 }
+$BUTTON_FUNCTION = { Open-InBrowser 'https://w16.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' }
 New-ButtonBrowser 'Windows 7' $BUTTON_FUNCTION
 
-$BUTTON_FUNCTION = { Open-InBrowser $URL_LIVE_CD }
+$BUTTON_FUNCTION = { Open-InBrowser 'https://rutracker.org/forum/viewtopic.php?t=4366725' }
 New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
 
 
@@ -1228,7 +1230,7 @@ $CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 
 
 $BUTTON_FUNCTION = { Set-AppsConfiguration }
-New-Button -UAC 'Apply configuration' $BUTTON_FUNCTION > $Null
+New-Button -UAC 'Apply configuration' $BUTTON_FUNCTION | Out-Null
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Deboat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1237,7 +1239,7 @@ New-GroupBox 'Debloat Windows and Privacy'
 
 
 $BUTTON_FUNCTION = { Start-WindowsDebloat }
-New-Button -UAC 'Windows 10/11 debloat' $BUTTON_FUNCTION > $Null
+New-Button -UAC 'Windows 10/11 debloat' $BUTTON_FUNCTION | Out-Null
 
 
 $BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
@@ -1261,7 +1263,7 @@ New-GroupBox 'Windows Configurator'
 
 
 $BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }
-New-Button -UAC 'WinUtil' $BUTTON_FUNCTION > $Null
+New-Button -UAC 'WinUtil' $BUTTON_FUNCTION | Out-Null
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_SilentlyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Disabled:$CHECKBOX_DISABLED
@@ -1272,7 +1274,7 @@ $CHECKBOX_SilentlyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Disabled:$CHECK
 New-GroupBox 'Windows Disinfection' 5
 
 
-$BUTTON_FUNCTION = { Open-InBrowser $URL_TRONSCRIPT }
+$BUTTON_FUNCTION = { Open-InBrowser 'https://github.com/bmrf/tron/blob/master/README.md#use' }
 New-ButtonBrowser 'Download TronScript' $BUTTON_FUNCTION
 
 
@@ -1422,7 +1424,7 @@ Function Get-CurrentVersion {
 
     $ProgressPreference = 'SilentlyContinue'
     try {
-        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest $URL_VERSION_FILE).ToString())
+        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString())
         $ProgressPreference = 'Continue'
     } catch [Exception] {
         $ProgressPreference = 'Continue'
@@ -1452,7 +1454,7 @@ Function Get-Update {
     }
 
     try {
-        Invoke-WebRequest $URL_BAT_FILE -OutFile $TargetFileBat
+        Invoke-WebRequest 'https://bit.ly/qiiwexc_bat' -OutFile $TargetFileBat
     } catch [Exception] {
         Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
         Return
@@ -1601,6 +1603,7 @@ Function Start-Extraction {
     [String]$Executable = Switch -Wildcard ($ZipName) {
         'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
         'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
+        'cpu-z_*' { "$ExtractionDir\cpuz_x$(if ($OS_64_BIT) {'64'} else {'32'}).exe" }
         'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
         'ventoy*' { "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe" }
         'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
@@ -1625,8 +1628,7 @@ Function Start-Extraction {
                 $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
             }
         }
-    }
-    catch [Exception] {
+    } catch [Exception] {
         Add-Log $ERR "Failed to extract '$ZipPath': $($_.Exception.Message)"
         Return
     }
@@ -1904,7 +1906,7 @@ Function Start-OfficeInstaller {
 
     Set-Content "$TargetPath\Office Installer+.ini" $Config
 
-    Start-DownloadExtractExecute -AVWarning -Execute:$Execute $URL_OFFICE_INSTALLER
+    Start-DownloadExtractExecute -AVWarning -Execute:$Execute 'https://qiiwexc.github.io/d/Office_Installer+.zip'
 }
 
 
@@ -1918,6 +1920,8 @@ Function Write-ConfigurationFile {
     )
 
     Add-Log $INF "Writing $AppName configuration to '$Path'..."
+
+    New-Item -ItemType Directory $(Split-Path -Parent $Path)
 
     Set-Content $Path $Content
 
@@ -1933,6 +1937,8 @@ Function Update-JsonFile {
     )
 
     Add-Log $INF "Writing $AppName configuration to '$Path'..."
+
+    New-Item -ItemType Directory $(Split-Path -Parent $Path)
 
     $CurrentConfig = Get-Content $Path -Raw | ConvertFrom-Json
     $PatchConfig = $Content | ConvertFrom-Json
@@ -2027,9 +2033,9 @@ Function Start-ShutUp10 {
     Set-Content $ConfigFile $CONFIG_SHUTUP10
 
     if ($Silent) {
-        Start-DownloadExtractExecute -Execute:$Execute $URL_SHUTUP10 -Params $ConfigFile
+        Start-DownloadExtractExecute -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Params $ConfigFile
     } else {
-        Start-DownloadExtractExecute -Execute:$Execute $URL_SHUTUP10
+        Start-DownloadExtractExecute -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe'
     }
 }
 
@@ -2063,8 +2069,8 @@ Function Start-WinUtil {
 # SIG # Begin signature block
 # MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU1qVyZJzKeFeR7FFEdeVfEBMB
-# 0VOgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUHxZlkrQo9JnDybHHEJC5soB7
+# c6GgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 # AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 # OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 # ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -2185,28 +2191,28 @@ Function Start-WinUtil {
 # ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 # DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 # AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBS1kvhh
-# PI1s7S6MfveVl3AS6uLWmTANBgkqhkiG9w0BAQEFAASCAQBQdoJ5LoWbYd6PaKE6
-# dr6bPBPn9Uk/Gy3H+zGWYXvQS2Kr0wqCbx/ECQexSeUuWrsVo+i3d9rkwM5PcOoD
-# RmYbDuYpBQfQlvc/0lT5fxgSoZesJjfs1kmBEepvTGnmImN2Gy6fneWLsz6RMMui
-# uFdPKKTg9qXldhvX30G252iJ8nciUMv+zK9mhTpxKF1M4eaE808VnU5hfvp42ooJ
-# orNv1mzogARvJoZZCk4dYEeqE2xEXPTE/ypk5B/PhiCqiTxPEX/QwP0IGYsDAf3V
-# jD/OqcQYRht1BqLXB9jdkSPR765ikcexuIEFBkUuobs3w/TTDYfrJaPLJ+Y+lUZr
-# gvP4oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSAH2wX
+# dt5m3frr/QzykFILejGOOzANBgkqhkiG9w0BAQEFAASCAQAo9ehO4BMdSJwqaU+v
+# MW49pz5XTt/DsHyTkVQIzsPZkH2xxRyzyUNq/kQWk3NDYPg1xh8BldqGjFOscyXG
+# nufWwr9NlyVDgVrYBIEwScAjdwEK+iqXmG5hT8W31oklw7xBSJgaavvwhMzr0T7L
+# D2sPHtnaHK4TlhLie+BgecZuITAb6q7OKCnk10jGCqnt0IK6Col/GOxcFIsP3ecu
+# zRg/IW7pR11QA2QtxaXhk1YuhXqO7pLRX6ZUqCTTTDYMx2SOI3X63Ho63D6RuWCM
+# g0sFj4hASUNBv8BKQViQsy9XxQZpJp8PDBId0dRU4pdwslb8Hth3eRTN90SA4JNs
+# uZnDoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 # VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 # cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 # CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkxMzIzMTkyM1owLwYJKoZI
-# hvcNAQkEMSIEIJoOJX2OkFVBXl6mfRxabODVZEq3iPPtWih7RDODUmyGMA0GCSqG
-# SIb3DQEBAQUABIICALnun2aKXQqSm7ayNfkKhSEtQNKVsaHe9qAtNNrmlV1glxG3
-# g4ir3dtngvGJxmczwAZyHBVbl4N19oc2Jfe3Pzg3NY7sFecvq4TXSBw8qjrkcuds
-# ppoAC9OYTQjpG1+gozDOe2nitqvnfbTGHKN1IWuCUWFDuiK05OZna0Wi6deingS+
-# yHHx+4qKtVFB61fa/2M/M0SQTnTbgWU3JTr+tUEmf1Os6TlxESFm4YLtkuYgVmff
-# Qi/0QdBw18uK2HRvbV4DyhQTBHyyY1dkPI05/eKbUW2fU6q/FhobnGuWa5dxcDym
-# 7rYa0ADjl35XIVheKN4BEhTczjFTr5qsK5jYXqepJv6n5FejNE3NNIcKZ6AioZYQ
-# g3o/hq80cWAEGDGewQhDN26SLWUEySlpQhIuZ/EykdatRzUqoewyqDsnPc0oORbD
-# we6BDE+x8k++oDoFY9CwBbREfHR+/yI1kcA7vXGsiCnsv7YtJmvNbYZVBe7GqEG3
-# qK8r9O6OokVWE5y05MzeGcqQx+lRSm+Y9TkeWZCPHmwKgCnysplTNE7Be+m9zOgh
-# RiJ8YtUur1AUpoLkmneWV2SvXyhYJGGGeycxQVkvxAiIlRg+BuLCLtTdA1sJ78lP
-# Yzu09LmhzmZ7KMy3L1hFOkRyZhiaHXqYyB4YXC4UTWLpZstle7QoogNNg3pS
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkxODIxMTIyM1owLwYJKoZI
+# hvcNAQkEMSIEICvOTQmkF16yMmUU3aDmT5A+yi0pRuPd+LCA4s3OvoR1MA0GCSqG
+# SIb3DQEBAQUABIICAMgoZ90r9ioq+wGSQzR+iTn3X9VUHKEer9xQttmWRSoktgq9
+# 0RQTrNAOy7ktOpwUwnd2xgRKvCyH+077lflOW7odR4U6+KheTvas2jPeCQWgxLBO
+# OBIW8CCqZyf7jDK2y4yho1EPpkYgvsZD1SL8rzYLpAf9eTAkaNENieIZzpg171JF
+# K7ojXDtBCqqY7S12vKZWel8Xn62D9tRoV3abry22A/tkmonarpIvzaR7+1RrlfqY
+# 4rJGVtuTU83qdya70j3Z4nR+OyNnp1EM339p4HkM1271Ve9Bgtbc0ukgPcd2HU/M
+# 7mFV6zIlosXZUefRLbMi5ISmFI4jWfAVw1qV3vpBgjjsmHRRFqFtXDYOkvVyn7Jd
+# 0yI0KJ1SOae/Y4FDqzmTr3hUrC07xY7rsyBI14/ZxwxtbiBhIY590oK9ycUxNQlH
+# 577Av8oQQ3/we0cILeK6XW1NM7CUNia504HyShYcbtIRXWzmOD9VQ025+5HEju0A
+# J6KBb0rLs2jfv8gbaR8Ls3bMVfpx+yC36VTDWvMYNX8uscW7iDwR8G0j/KcJwz1G
+# KfQB7mJKO5lpIXPyBLVPgS5zVx81NXmgErowvI6ytYJkYFAruleCuGPRjjNNQSY3
+# r3Cgr8zeVzwhW3efyCmgd5Esox9PajYd+RSQUN3ojrBKjZ+loJtcn1/vdwHV
 # SIG # End signature block

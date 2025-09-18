@@ -7,6 +7,8 @@ Function Write-ConfigurationFile {
 
     Add-Log $INF "Writing $AppName configuration to '$Path'..."
 
+    New-Item -ItemType Directory $(Split-Path -Parent $Path)
+
     Set-Content $Path $Content
 
     Out-Success
@@ -21,6 +23,8 @@ Function Update-JsonFile {
     )
 
     Add-Log $INF "Writing $AppName configuration to '$Path'..."
+
+    New-Item -ItemType Directory $(Split-Path -Parent $Path)
 
     $CurrentConfig = Get-Content $Path -Raw | ConvertFrom-Json
     $PatchConfig = $Content | ConvertFrom-Json

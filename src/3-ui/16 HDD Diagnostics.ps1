@@ -1,7 +1,7 @@
-New-GroupBox 'HDD Diagnostics' 5
+New-GroupBox 'HDD Diagnostics'
 
 
-$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked $URL_VICTORIA }
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked '{URL_VICTORIA}' }
 $BUTTON_DownloadVictoria = New-Button -UAC 'Victoria' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2

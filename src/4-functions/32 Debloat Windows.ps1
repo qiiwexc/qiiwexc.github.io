@@ -21,8 +21,8 @@ Function Start-ShutUp10 {
     Set-Content $ConfigFile $CONFIG_SHUTUP10
 
     if ($Silent) {
-        Start-DownloadExtractExecute -Execute:$Execute $URL_SHUTUP10 -Params $ConfigFile
+        Start-DownloadExtractExecute -Execute:$Execute '{URL_SHUTUP10}' -Params $ConfigFile
     } else {
-        Start-DownloadExtractExecute -Execute:$Execute $URL_SHUTUP10
+        Start-DownloadExtractExecute -Execute:$Execute '{URL_SHUTUP10}'
     }
 }

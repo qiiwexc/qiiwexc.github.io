@@ -14,7 +14,7 @@ Function Get-CurrentVersion {
 
     $ProgressPreference = 'SilentlyContinue'
     try {
-        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest $URL_VERSION_FILE).ToString())
+        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest '{URL_VERSION_FILE}').ToString())
         $ProgressPreference = 'Continue'
     } catch [Exception] {
         $ProgressPreference = 'Continue'
@@ -44,7 +44,7 @@ Function Get-Update {
     }
 
     try {
-        Invoke-WebRequest $URL_BAT_FILE -OutFile $TargetFileBat
+        Invoke-WebRequest '{URL_BAT_FILE}' -OutFile $TargetFileBat
     } catch [Exception] {
         Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
         Return
