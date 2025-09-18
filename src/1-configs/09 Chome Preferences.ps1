@@ -20,13 +20,23 @@ Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
     "accept_languages": "lv,ru,en-GB",
     "selected_languages": "lv,ru,en-GB"
   },
+  "net": {
+    "network_prediction_options": 3
+  },
+  "privacy_sandbox": {
+    "m1": {
+      "ad_measurement_enabled": false,
+      "fledge_enabled": false
+    },
+  },
   "safebrowsing": {
     "enabled": true,
     "enhanced": true,
     "esb_enabled_via_tailored_security": true
   },
   "spellcheck": {
-    "dictionaries": ["lv", "ru", "en-GB"]
+    "dictionaries": ["lv", "ru", "en-GB"],
+    "use_spelling_service": true
   }
 }
 '

@@ -36,6 +36,10 @@
     "value": "https://hdd.by/Victoria/Victoria537.zip"
   },
   {
+    "key": "URL_CPU_Z",
+    "value": "https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip"
+  },
+  {
     "key": "URL_OFFICE_INSTALLER",
     "value": "https://qiiwexc.github.io/d/Office_Installer+.zip"
   },

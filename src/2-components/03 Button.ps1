@@ -4,9 +4,9 @@ Function New-ButtonBrowser {
         [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
     )
 
-    New-Button $Text $Function > $Null
+    New-Button $Text $Function | Out-Null
 
-    New-Label 'Opens in the browser' > $Null
+    New-Label 'Opens in the browser'
 }
 
 Function New-Button {

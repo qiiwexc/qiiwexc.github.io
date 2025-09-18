@@ -2,7 +2,7 @@ New-GroupBox 'Debloat Windows and Privacy'
 
 
 $BUTTON_FUNCTION = { Start-WindowsDebloat }
-New-Button -UAC 'Windows 10/11 debloat' $BUTTON_FUNCTION > $Null
+New-Button -UAC 'Windows 10/11 debloat' $BUTTON_FUNCTION | Out-Null
 
 
 $BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }

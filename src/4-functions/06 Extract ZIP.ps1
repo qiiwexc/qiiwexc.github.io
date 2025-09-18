@@ -12,6 +12,7 @@ Function Start-Extraction {
     [String]$Executable = Switch -Wildcard ($ZipName) {
         'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
         'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
+        'cpu-z_*' { "$ExtractionDir\cpuz_x$(if ($OS_64_BIT) {'64'} else {'32'}).exe" }
         'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
         'ventoy*' { "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe" }
         'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
@@ -36,8 +37,7 @@ Function Start-Extraction {
                 $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
             }
         }
-    }
-    catch [Exception] {
+    } catch [Exception] {
         Add-Log $ERR "Failed to extract '$ZipPath': $($_.Exception.Message)"
         Return
     }
