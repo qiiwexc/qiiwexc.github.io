@@ -51,7 +51,7 @@ if "%~1"=="ShowConsole" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Constants #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant Version ([Version]'25.9.19')
+::Set-Variable -Option Constant Version ([Version]'25.9.21')
 ::
 ::Set-Variable -Option Constant BUTTON_WIDTH    170
 ::Set-Variable -Option Constant BUTTON_HEIGHT   30
@@ -127,7 +127,7 @@ if "%~1"=="ShowConsole" (
 ::Set-Variable -Option Constant OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -Like '*64') { $True })
 ::Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
 ::
-::Set-Variable -Option Constant WordRegPath (Get-ItemProperty "$(New-PSDrive HKCR Registry HKEY_CLASSES_ROOT):\Word.Application\CurVer" -ErrorAction SilentlyContinue)
+::Set-Variable -Option Constant WordRegPath (Get-ItemProperty 'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer' -ErrorAction SilentlyContinue)
 ::Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
 ::Set-Variable -Option Constant PathOfficeC2RClientExe "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 ::Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PathOfficeC2RClientExe) { 'C2R' } else { 'MSI' } })
@@ -199,38 +199,200 @@ if "%~1"=="ShowConsole" (
 ::'
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# VLC #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Chrome Local State #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant CONFIG_VLC '[qt]
-::qt-system-tray=0
-::qt-updates-days=1
-::qt-privacy-ask=0
-::
-::[core]
-::video-title-show=0
-::metadata-network-access=1
+::Set-Variable -Option Constant CONFIG_CHROME_LOCAL_STATE '{
+::  "background_mode": {
+::    "enabled": false
+::  },
+::  "browser": {
+::    "first_run_finished": true
+::  },
+::  "dns_over_https": {
+::    "mode": "secure",
+::    "templates": "https://chrome.cloudflare-dns.com/dns-query"
+::  },
+::  "hardware_acceleration_mode_previous": true,
+::  "os_update_handler_enabled": true,
+::  "performance_tuning": {
+::    "battery_saver_mode": {
+::      "state": 0
+::    }
+::  }
+::}
 ::'
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TeamVIewer #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Chrome Preferences #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant CONFIG_TEAMVIEWER 'Windows Registry Editor Version 5.00
+::Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
+::  "browser": {
+::    "enable_spellchecking": true,
+::    "window_placement": {
+::      "maximized": true,
+::      "work_area_left": 0,
+::      "work_area_top": 0
+::    }
+::  },
+::  "default_search_provider_data": {
+::    "mirrored_template_url_data": {
+::      "preconnect_to_search_url": true,
+::      "prefetch_likely_navigations": true
+::    }
+::  },
+::  "enable_do_not_track": true,
+::  "https_first_balanced_mode_enabled": false,
+::  "https_only_mode_auto_enabled": false,
+::  "https_only_mode_enabled": true,
+::  "intl": {
+::    "accept_languages": "lv,ru,en-GB",
+::    "selected_languages": "lv,ru,en-GB"
+::  },
+::  "net": {
+::    "network_prediction_options": 3
+::  },
+::  "privacy_sandbox": {
+::    "m1": {
+::      "ad_measurement_enabled": false,
+::      "consent_decision_made": true,
+::      "eea_notice_acknowledged": true,
+::      "fledge_enabled": false,
+::      "topics_enabled": true
+::    }
+::  },
+::  "safebrowsing": {
+::    "enabled": true,
+::    "enhanced": true
+::  },
+::  "spellcheck": {
+::    "dictionaries": ["lv", "ru", "en-GB"],
+::    "use_spelling_service": true
+::  }
+::}
+::'
 ::
-::[HKEY_CURRENT_USER\Software\TeamViewer]
-::"AutoHideServerControl"=dword:00000001
-::"ColorScheme"=dword:00000001
-::"CustomInvitationSubject"=" "
-::"CustomInvitationText"=" "
-::"Pres_Compression"=dword:00000064
-::"Pres_DisableGuiAnimations"=dword:00000000
-::"Pres_QualityMode"=dword:00000003
-::"Remote_Colors"=dword:00000020
-::"Remote_DisableGuiAnimations"=dword:00000000
-::"Remote_QualityMode"=dword:00000003
-::"Remote_RemoteCursor"=dword:00000001
-::"Remote_RemoveWallpaper"=dword:00000000
-::"RemotePrintingPreferPDFFormat"=dword:00000001
-::"SsoKmsEnabled"=dword:00000002
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Edge Local State #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant CONFIG_EDGE_LOCAL_STATE '{
+::  "background_mode": {
+::    "enabled": false
+::  },
+::  "edge": {
+::    "perf_center": {
+::      "efficiency_mode_toggle": false,
+::      "efficiency_mode_v2_is_active": false,
+::      "perf_game_mode": false,
+::      "perf_game_mode_default_changed": true,
+::      "performance_mode": 3,
+::      "performance_mode_is_on": false
+::    }
+::  },
+::  "smartscreen": {
+::    "enabled": true,
+::    "pua_protection_enabled": true
+::  },
+::  "startup_boost": {
+::    "enabled": false
+::  }
+::}
+::'
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Edge Preferences #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant CONFIG_EDGE_PREFERENCES '{
+::  "browser": {
+::    "editor_proofing_languages": {
+::      "en-GB": {
+::        "Grammar": true,
+::        "Spelling": true
+::      },
+::      "lv": {
+::        "Grammar": true,
+::        "Spelling": true
+::      },
+::      "ru": {
+::        "Grammar": true,
+::        "Spelling": true
+::      }
+::    },
+::    "enable_editor_proofing": true,
+::    "enable_text_prediction_v2": true,
+::    "show_hubapps_personalization": false,
+::    "show_prompt_before_closing_tabs": true,
+::    "window_placement": {
+::      "maximized": true,
+::      "work_area_left": 0,
+::      "work_area_top": 0
+::    }
+::  },
+::  "edge": {
+::    "sleeping_tabs": {
+::      "enabled": false,
+::      "fade_tabs": false,
+::      "threshold": 43200
+::    },
+::    "super_duper_secure_mode": {
+::      "enabled": true,
+::      "state": 1,
+::      "strict_inprivate": true
+::    }
+::  },
+::  "enhanced_tracking_prevention": {
+::    "user_pref": 3
+::  },
+::  "https_only_mode_auto_enabled": false,
+::  "https_only_mode_enabled": true,
+::  "instrumentation": {
+::    "ntp": {
+::      "layout_mode": "updateLayout;3;1758293358211",
+::      "news_feed_display": "updateFeeds;off;1758293358217"
+::    }
+::  },
+::  "intl": {
+::    "accept_languages": "lv,ru,en-GB",
+::    "selected_languages": "lv,ru,en-GB"
+::  },
+::  "local_browser_data_share": {
+::    "pin_recommendations_eligible": false
+::  },
+::  "ntp": {
+::    "hide_default_top_sites": true,
+::    "layout_mode": 3,
+::    "news_feed_display": "off",
+::    "next_site_suggestions_available": false,
+::    "quick_links_options": 0,
+::    "record_user_choices": [
+::      {
+::        "setting": "layout_mode",
+::        "source": "ntp",
+::        "value": 3
+::      },
+::      {
+::        "setting": "ntp.news_feed_display",
+::        "source": "ntp",
+::        "value": "off"
+::      },
+::      {
+::        "setting": "tscollapsed",
+::        "source": "updatePrefTSCollapsed",
+::        "value": 0
+::      },
+::      {
+::        "setting": "quick_links_options",
+::        "source": "ntp",
+::        "value": "off"
+::      }
+::    ]
+::  },
+::  "spellcheck": {
+::    "dictionaries": ["lv", "ru", "en-GB"]
+::  },
+::  "video_enhancement": {
+::    "enabled": true
+::  }
+::}
 ::'
 ::
 ::
@@ -354,110 +516,502 @@ if "%~1"=="ShowConsole" (
 ::'
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Chome Local State #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TeamVIewer #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant CONFIG_CHROME_LOCAL_STATE '{
-::  "background_mode": {
-::    "enabled": false
-::  },
-::  "browser": {
-::    "first_run_finished": true
-::  },
-::  "dns_over_https": {
-::    "mode": "secure",
-::    "templates": "https://chrome.cloudflare-dns.com/dns-query"
-::  },
-::  "hardware_acceleration_mode_previous": true,
-::  "os_update_handler_enabled": true,
-::  "performance_tuning": {
-::    "battery_saver_mode": {
-::      "state": 0
-::    }
-::  }
-::}
+::Set-Variable -Option Constant CONFIG_TEAMVIEWER 'Windows Registry Editor Version 5.00
+::
+::[HKEY_CURRENT_USER\Software\TeamViewer]
+::"AutoHideServerControl"=dword:00000001
+::"ColorScheme"=dword:00000001
+::"CustomInvitationSubject"=" "
+::"CustomInvitationText"=" "
+::"Pres_Compression"=dword:00000064
+::"Pres_DisableGuiAnimations"=dword:00000000
+::"Pres_QualityMode"=dword:00000003
+::"Remote_Colors"=dword:00000020
+::"Remote_DisableGuiAnimations"=dword:00000000
+::"Remote_QualityMode"=dword:00000003
+::"Remote_RemoteCursor"=dword:00000001
+::"Remote_RemoveWallpaper"=dword:00000000
+::"RemotePrintingPreferPDFFormat"=dword:00000001
+::"SsoKmsEnabled"=dword:00000002
 ::'
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Chome Preferences #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# VLC #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
-::  "browser": {
-::    "enable_spellchecking": true,
-::    "window_placement": {
-::      "maximized": true,
-::      "work_area_left": 0,
-::      "work_area_top": 0
-::    }
-::  },
-::  "default_search_provider_data": {
-::    "mirrored_template_url_data": {
-::      "keyword": "google.lv",
-::      "preconnect_to_search_url": true,
-::      "prefetch_likely_navigations": true
-::    }
-::  },
-::  "enable_do_not_track": true,
-::  "https_only_mode_enabled": true,
-::  "intl": {
-::    "accept_languages": "lv,ru,en-GB",
-::    "selected_languages": "lv,ru,en-GB"
-::  },
-::  "net": {
-::    "network_prediction_options": 3
-::  },
-::  "privacy_sandbox": {
-::    "m1": {
-::      "ad_measurement_enabled": false,
-::      "fledge_enabled": false
-::    },
-::  },
-::  "safebrowsing": {
-::    "enabled": true,
-::    "enhanced": true,
-::    "esb_enabled_via_tailored_security": true
-::  },
-::  "spellcheck": {
-::    "dictionaries": ["lv", "ru", "en-GB"],
-::    "use_spelling_service": true
-::  }
-::}
+::Set-Variable -Option Constant CONFIG_VLC '[qt]
+::qt-system-tray=0
+::qt-updates-days=1
+::qt-privacy-ask=0
+::
+::[core]
+::video-title-show=0
+::metadata-network-access=1
 ::'
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# WinUtil #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Personalization #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant CONFIG_WINUTIL '{
-::    "WPFTweaks":  [
-::                      "WPFTweaksRestorePoint",
-::                      "WPFTweaksWifi",
-::                      "WPFTweaksRightClickMenu",
-::                      "WPFTweaksDisableLMS1",
-::                      "WPFTweaksConsumerFeatures",
-::                      "WPFTweaksDVR",
-::                      "WPFTweaksRemoveGallery",
-::                      "WPFTweaksTele",
-::                      "WPFTweaksAH",
-::                      "WPFTweaksEdgeDebloat",
-::                      "WPFTweaksRemoveCopilot",
-::                      "WPFTweaksLoc",
-::                      "WPFTweaksRemoveOnedrive",
-::                      "WPFTweaksDiskCleanup",
-::                      "WPFTweaksHome",
-::                      "WPFTweaksBraveDebloat",
-::                      "WPFTweaksDeleteTempFiles",
-::                      "WPFTweaksRecallOff"
-::                  ],
-::    "Install":  [
+::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALIZATION 'Windows Registry Editor Version 5.00
 ::
-::                ],
-::    "WPFInstall":  [
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications]
+::"GlobalUserDisabled"=dword:00000000
 ::
-::                   ],
-::    "WPFFeature":  [
-::                       "WPFFeatureDisableSearchSuggestions",
-::                       "WPFFeatureRegBackup"
-::                   ]
-::}
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\CloudContent]
+::"DisableSpotlightCollectionOnDesktop"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+::"ContentDeliveryAllowed"=dword:00000001
+::"RotatingLockScreenEnabled"=dword:00000001
+::"RotatingLockScreenOverlayEnabled"=dword:00000001
+::"RotatingLockScreenOverlayVisible"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+::"CreativeId"=""
+::"RotatingLockScreenEnabled"=dword:00000001
+::"RotatingLockScreenOverlayEnabled"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+::"NavPaneExpandToCurrentFolder"=dword:00000001
+::"NavPaneShowAllFolders"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers]
+::"BackgroundType"=dword:00000006
+::'
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.00
+::
+::[HKEY_CLASSES_ROOT\jpegfile\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\pngfile\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\open]
+::"MuiVerb"="@photoviewer.dll,-3043"
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\open\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap]
+::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
+::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
+::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
+::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
+::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,36,00,00,\
+::  00
+::"ImageOptionFlags"=dword:00000001
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\DefaultIcon]
+::@="%SystemRoot%\\System32\\imageres.dll,-70"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print]
+::"NeverDefault"=""
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print\DropTarget]
+::"Clsid"="{60fd46de-f830-4894-a628-6fa81bc0190d}"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF]
+::"EditFlags"=dword:00010000
+::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
+::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
+::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
+::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
+::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,35,00,00,\
+::  00
+::"ImageOptionFlags"=dword:00000001
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF\DefaultIcon]
+::@="%SystemRoot%\\System32\\imageres.dll,-72"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF\shell\open]
+::"MuiVerb"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
+::  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
+::  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
+::  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
+::  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF\shell\open\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg]
+::"EditFlags"=dword:00010000
+::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
+::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
+::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
+::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
+::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,35,00,00,\
+::  00
+::"ImageOptionFlags"=dword:00000001
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg\DefaultIcon]
+::@="%SystemRoot%\\System32\\imageres.dll,-72"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg\shell\open]
+::"MuiVerb"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
+::  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
+::  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
+::  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
+::  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg\shell\open\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Gif]
+::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
+::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
+::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
+::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
+::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,37,00,00,\
+::  00
+::"ImageOptionFlags"=dword:00000001
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Gif\DefaultIcon]
+::@="%SystemRoot%\\System32\\imageres.dll,-83"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Gif\shell\open\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Gif\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Png]
+::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
+::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
+::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
+::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
+::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,37,00,00,\
+::  00
+::"ImageOptionFlags"=dword:00000001
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Png\DefaultIcon]
+::@="%SystemRoot%\\System32\\imageres.dll,-71"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Png\shell\open\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Png\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp]
+::"EditFlags"=dword:00010000
+::"ImageOptionFlags"=dword:00000001
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp\DefaultIcon]
+::@="%SystemRoot%\\System32\\wmphoto.dll,-400"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp\shell\open]
+::"MuiVerb"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
+::  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
+::  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
+::  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
+::  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp\shell\open\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\Image Preview\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\Image Preview\DropTarget]
+::"{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"=""
+::
+::[HKEY_CURRENT_USER\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+::"ShowCmd"=dword:00000003
+::"WFlags"=dword:00000002
+::
+::[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+::"ShowCmd"=dword:00000003
+::"WFlags"=dword:00000002
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Edge\SmartScreenPuaEnabled]
+::@=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Feeds]
+::"DefaultInterval"=dword:0000000F
+::"SyncStatus"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
+::"DoNotTrack"=dword:00000001
+::"Use FormSuggest"="yes"
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
+::"CleanDownloadHistory"=dword:00000001
+::"CleanForms"=dword:00000001
+::"CleanPassword"=dword:00000001
+::"ClearBrowsingHistoryOnExit"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
+::"AcceptedPrivacyStatement"=dword:00000001
+::"FirstRun"=dword:00000000
+::"MetadataRetrieval"=dword:00000003
+::"SilentAcquisition"=dword:00000001
+::"UsageTracking"=dword:00000000
+::"Volume"=dword:00000064
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer]
+::"MaximizeApps"=dword:00000001
+::"ShowRecommendations"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+::"NavPaneShowAllCloudStates"=dword:00000001
+::"Start_IrisRecommendations"=dword:00000000
+::"Start_Layout"=dword:00000001
+::"TaskbarGlomLevel"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\CIDSizeMRU]
+::"0"=hex:4E,00,4F,00,54,00,45,00,50,00,41,00,44,00,2E,00,45,00,58,00,45,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,F8,FF,FF, \
+::  FF,F8,FF,FF,FF,88,07,00,00,93,03,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,2B,00,00,00,C0,03,00,00,0B,02,00,00,00,00,00,00,00, \
+::  00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,FF,FF,FF,FF
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
+::"AllItemsIconView"=dword:00000000
+::"StartupPage"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\ShowJumpView]
+::"AllItemsIconView"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+::"MSEdge"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
+::"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
+::"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
+::"ArchivedFiles"=dword:00000001
+::"SystemFolders"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
+::"VisualFXSetting"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
+::"SecureProtocols"=dword:00002820
+::"SyncMode5"=dword:00000003
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
+::"CacheLimit"=dword:00002000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache]
+::"ContentLimit"=dword:00000008
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Cache]
+::"Persistent"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
+::"DaysToKeep"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
+::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
+::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+::"256"=dword:0000003C
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
+::"VideoQualityOnBattery"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
+::"AccountProtection_MicrosoftAccount_Disconnected"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
+::"Hardware_DataEncryption_AddMsa"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
+::"fAllVolumes"=dword:00000001
+::"fDeadlineEnabled"=dword:00000001
+::"fExclude"=dword:00000000
+::"fTaskEnabled"=dword:00000001
+::"TaskFrequency"=dword:00000002
+::"Volumes"=" "
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection]
+::"SummaryNotificationDisabled"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\NoExecuteState]
+::"LastNoExecuteRadioButtonState"=dword:000036BD
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities]
+::"ApplicationDescription"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3069"
+::"ApplicationName"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3009"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities\FileAssociations]
+::".bmp"="PhotoViewer.FileAssoc.Bitmap"
+::".cr2"="PhotoViewer.FileAssoc.Tiff"
+::".dib"="PhotoViewer.FileAssoc.Bitmap"
+::".gif"="PhotoViewer.FileAssoc.Gif"
+::".jfif"="PhotoViewer.FileAssoc.JFIF"
+::".jpe"="PhotoViewer.FileAssoc.Jpeg"
+::".jpeg"="PhotoViewer.FileAssoc.Jpeg"
+::".jpg"="PhotoViewer.FileAssoc.Jpeg"
+::".jxr"="PhotoViewer.FileAssoc.Wdp"
+::".png"="PhotoViewer.FileAssoc.Png"
+::".tif"="PhotoViewer.FileAssoc.Tiff"
+::".tiff"="PhotoViewer.FileAssoc.Tiff"
+::".wdp"="PhotoViewer.FileAssoc.Wdp"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search]
+::"EnableFindMyFiles"=dword:00000001
+::"SystemIndexNormalization"=dword:00000003
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
+::"CostedNetworkPolicy"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
+::"SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+::"PromptOnSecureDesktop"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search\Preferences]
+::"AllowIndexingEncryptedStoresOrItems"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
+::"AllowMUUpdateService"=dword:00000001
+::"IsContinuousInnovationOptedIn"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
+::"AllowUsingDiacritics"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
+::"EnableFindMyFiles"=dword:00000001
+::"SystemIndexNormalization"=dword:00000003
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
+::"PromptOnSecureDesktop"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\Maps]
+::"AutoUpdateEnabled"=dword:00000001
+::"UpdateOnlyOnWifi"=dword:00000000
 ::'
 ::
 ::
@@ -708,6 +1262,43 @@ if "%~1"=="ShowConsole" (
 ::M014	-	# Disable unsolicited network traffic on the offline maps settings page (Category: Miscellaneous)
 ::N001	-	# Disable Network Connectivity Status Indicator (Category: Miscellaneous)
 ::"
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# WinUtil #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant CONFIG_WINUTIL '{
+::    "WPFTweaks":  [
+::                      "WPFTweaksAH",
+::                      "WPFTweaksBraveDebloat",
+::                      "WPFTweaksConsumerFeatures",
+::                      "WPFTweaksDeleteTempFiles",
+::                      "WPFTweaksDisableLMS1",
+::                      "WPFTweaksDiskCleanup",
+::                      "WPFTweaksDVR",
+::                      "WPFTweaksEdgeDebloat",
+::                      "WPFTweaksHome",
+::                      "WPFTweaksLoc",
+::                      "WPFTweaksPowershell7Tele",
+::                      "WPFTweaksRecallOff",
+::                      "WPFTweaksRemoveCopilot",
+::                      "WPFTweaksRemoveGallery",
+::                      "WPFTweaksRestorePoint",
+::                      "WPFTweaksRightClickMenu",
+::                      "WPFTweaksTele",
+::                      "WPFTweaksWifi"
+::                  ],
+::    "Install":  [
+::
+::                ],
+::    "WPFInstall":  [
+::
+::                   ],
+::    "WPFFeature":  [
+::                       "WPFFeatureDisableSearchSuggestions",
+::                       "WPFFeatureRegBackup"
+::                   ]
+::}
+::'
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TabPage #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1056,57 +1647,9 @@ if "%~1"=="ShowConsole" (
 ::} )
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Installs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::New-GroupBox 'Alternative DNS'
-::
-::
-::$BUTTON_FUNCTION = { Set-CloudFlareDNS }
-::New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION | Out-Null
-::
-::$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
-::$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
-::    $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
-::} )
-::
-::$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Hardware Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::New-GroupBox 'Hardware Info'
-::
-::
-::$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCpuZ.Checked 'https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip' }
-::$BUTTON_DownloadCpuZ = New-Button -UAC 'CPU-Z' $BUTTON_FUNCTION
-::
-::$CHECKBOX_DISABLED = $PS_VERSION -le 2
-::$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-::$CHECKBOX_StartCpuZ = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-::$CHECKBOX_StartCpuZ.Add_CheckStateChanged( {
-::    $BUTTON_DownloadCpuZ.Text = "CPU-Z$(if ($CHECKBOX_StartCpuZ.Checked) { $REQUIRES_ELEVATION })"
-::} )
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::New-GroupBox 'HDD Diagnostics'
-::
-::
-::$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked 'https://hdd.by/Victoria/Victoria537.zip' }
-::$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria' $BUTTON_FUNCTION
-::
-::$CHECKBOX_DISABLED = $PS_VERSION -le 2
-::$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-::$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-::$CHECKBOX_StartVictoria.Add_CheckStateChanged( {
-::    $BUTTON_DownloadVictoria.Text = "Victoria$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })"
-::} )
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Downloads #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::Set-Variable -Option Constant TAB_DOWNLOADS (New-TabPage 'Downloads')
+::Set-Variable -Option Constant TAB_INSTALLS (New-TabPage 'Installs')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1227,7 +1770,7 @@ if "%~1"=="ShowConsole" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Config and misc')
+::Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Configuration')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apps Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1237,6 +1780,8 @@ if "%~1"=="ShowConsole" (
 ::$PAD_CHECKBOXES = $False
 ::
 ::
+::$CHECKBOX_Config_Windows = New-CheckBox 'Windows' -Checked
+::
 ::$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
 ::
 ::$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
@@ -1245,11 +1790,29 @@ if "%~1"=="ShowConsole" (
 ::
 ::$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
 ::
+::$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
+::
 ::$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 ::
 ::
 ::$BUTTON_FUNCTION = { Set-AppsConfiguration }
 ::New-Button -UAC 'Apply configuration' $BUTTON_FUNCTION | Out-Null
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::New-GroupBox 'Alternative DNS'
+::
+::
+::$BUTTON_FUNCTION = { Set-CloudFlareDNS }
+::New-Button -UAC 'Setup CloudFlare DNS' $BUTTON_FUNCTION | Out-Null
+::
+::$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
+::$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
+::    $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
+::} )
+::
+::$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Deboat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1278,7 +1841,7 @@ if "%~1"=="ShowConsole" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::New-GroupBox 'Windows Configurator'
+::New-GroupBox 'Windows Configurator' 4
 ::
 ::
 ::$BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }
@@ -1288,9 +1851,46 @@ if "%~1"=="ShowConsole" (
 ::$CHECKBOX_SilentlyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Disabled:$CHECKBOX_DISABLED
 ::
 ::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant TAB_DIAGNOSTICS (New-TabPage 'Diagnostics and Recovery')
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Hardware Info #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::New-GroupBox 'Hardware Info'
+::
+::
+::$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCpuZ.Checked 'https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip' }
+::$BUTTON_DownloadCpuZ = New-Button -UAC 'CPU-Z' $BUTTON_FUNCTION
+::
+::$CHECKBOX_DISABLED = $PS_VERSION -le 2
+::$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+::$CHECKBOX_StartCpuZ = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+::$CHECKBOX_StartCpuZ.Add_CheckStateChanged( {
+::    $BUTTON_DownloadCpuZ.Text = "CPU-Z$(if ($CHECKBOX_StartCpuZ.Checked) { $REQUIRES_ELEVATION })"
+::} )
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# HDD Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::New-GroupBox 'HDD Diagnostics'
+::
+::
+::$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked 'https://hdd.by/Victoria/Victoria537.zip' }
+::$BUTTON_DownloadVictoria = New-Button -UAC 'Victoria' $BUTTON_FUNCTION
+::
+::$CHECKBOX_DISABLED = $PS_VERSION -le 2
+::$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+::$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+::$CHECKBOX_StartVictoria.Add_CheckStateChanged( {
+::    $BUTTON_DownloadVictoria.Text = "Victoria$(if ($CHECKBOX_StartVictoria.Checked) { $REQUIRES_ELEVATION })"
+::} )
+::
+::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TronScript #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::New-GroupBox 'Windows Disinfection' 5
+::New-GroupBox 'Windows Disinfection'
 ::
 ::
 ::$BUTTON_FUNCTION = { Open-InBrowser 'https://github.com/bmrf/tron/blob/master/README.md#use' }
@@ -1798,6 +2398,74 @@ if "%~1"=="ShowConsole" (
 ::}
 ::
 ::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration Helpers #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Function Write-ConfigurationFile {
+::    Param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
+::        [String][Parameter(Position = 1, Mandatory = $True)]$Path,
+::        [String][Parameter(Position = 2, Mandatory = $True)]$Content,
+::        [String][Parameter(Position = 3)]$ProcessName = $AppName
+::    )
+::
+::    Add-Log $INF "Writing $AppName configuration to '$Path'..."
+::
+::    Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
+::
+::    New-Item -ItemType Directory $(Split-Path -Parent $Path)
+::    Set-Content $Path $Content
+::
+::    Out-Success
+::}
+::
+::
+::Function Update-JsonFile {
+::    Param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
+::        [String][Parameter(Position = 1, Mandatory = $True)]$Path,
+::        [String][Parameter(Position = 2, Mandatory = $True)]$Content,
+::        [String][Parameter(Position = 3)]$ProcessName = $AppName
+::    )
+::
+::    Add-Log $INF "Writing $AppName configuration to '$Path'..."
+::
+::    Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
+::
+::    New-Item -ItemType Directory $(Split-Path -Parent $Path)
+::
+::    $CurrentConfig = Get-Content $Path -Raw | ConvertFrom-Json
+::    $PatchConfig = $Content | ConvertFrom-Json
+::
+::    $UpdatedConfig = Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress
+::
+::    Set-Content $Path $UpdatedConfig
+::
+::    Out-Success
+::}
+::
+::
+::Function Import-RegistryConfiguration {
+::    Param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
+::        [String][Parameter(Position = 1, Mandatory = $True)]$Content
+::    )
+::
+::    Add-Log $INF "Importing $AppName configuration into registry..."
+::
+::    Set-Variable -Option Constant RegFilePath "$PATH_TEMP_DIR\$AppName.reg"
+::    Set-Content $RegFilePath $Content
+::
+::    try {
+::        Start-Process -Verb RunAs -Wait 'regedit' "/s $RegFilePath"
+::    } catch [Exception] {
+::        Add-Log $ERR "Failed to import file: $($_.Exception.Message)"
+::        Return
+::    }
+::
+::    Out-Success
+::}
+::
+::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Elevated #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Function Start-Elevated {
@@ -1825,32 +2493,6 @@ if "%~1"=="ShowConsole" (
 ::        Start-Script -HideWindow "iex ((New-Object Net.WebClient).DownloadString('https://get.activated.win'))"
 ::    } else {
 ::        Start-Script -HideWindow "irm https://get.activated.win | iex"
-::    }
-::
-::    Out-Success
-::}
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::Function Set-CloudFlareDNS {
-::    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
-::    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
-::
-::    Add-Log $WRN 'Internet connection may get interrupted briefly'
-::    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
-::
-::    if (!(Get-NetworkAdapter)) {
-::        Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
-::        Add-Log $ERR 'This could mean that computer is not connected'
-::        Return
-::    }
-::
-::    try {
-::        Start-Script -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
-::    } catch [Exception] {
-::        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
-::        Return
 ::    }
 ::
 ::    Out-Success
@@ -1931,67 +2573,6 @@ if "%~1"=="ShowConsole" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apps Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Write-ConfigurationFile {
-::    Param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Path,
-::        [String][Parameter(Position = 2, Mandatory = $True)]$Content
-::    )
-::
-::    Add-Log $INF "Writing $AppName configuration to '$Path'..."
-::
-::    New-Item -ItemType Directory $(Split-Path -Parent $Path)
-::
-::    Set-Content $Path $Content
-::
-::    Out-Success
-::}
-::
-::
-::Function Update-JsonFile {
-::    Param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Path,
-::        [String][Parameter(Position = 2, Mandatory = $True)]$Content
-::    )
-::
-::    Add-Log $INF "Writing $AppName configuration to '$Path'..."
-::
-::    New-Item -ItemType Directory $(Split-Path -Parent $Path)
-::
-::    $CurrentConfig = Get-Content $Path -Raw | ConvertFrom-Json
-::    $PatchConfig = $Content | ConvertFrom-Json
-::
-::    $UpdatedConfig = Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress
-::
-::    Set-Content $Path $UpdatedConfig
-::
-::    Out-Success
-::}
-::
-::
-::Function Import-RegistryConfiguration {
-::    Param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Content
-::    )
-::
-::    Add-Log $INF "Importing $AppName configuration into registry..."
-::
-::    Set-Variable -Option Constant RegFilePath "$PATH_TEMP_DIR\$AppName.reg"
-::    Set-Content $RegFilePath $Content
-::
-::    try {
-::        Start-Process -Verb RunAs -Wait 'regedit' "/s $RegFilePath"
-::    } catch [Exception] {
-::        Add-Log $ERR "Failed to import file: $($_.Exception.Message)"
-::        Return
-::    }
-::
-::    Out-Success
-::}
-::
-::
 ::Function Set-AppsConfiguration {
 ::    if ($CHECKBOX_Config_VLC.Checked) {
 ::        $AppName = $CHECKBOX_Config_VLC.Text
@@ -2015,15 +2596,85 @@ if "%~1"=="ShowConsole" (
 ::        Import-RegistryConfiguration $CHECKBOX_Config_TeamViewer.Text $CONFIG_TEAMVIEWER
 ::    }
 ::
+::    if ($CHECKBOX_Config_Edge.Checked) {
+::        $AppName = $CHECKBOX_Config_Edge.Text
+::
+::        $Path = "$PATH_PROFILE_LOCAL\Microsoft\Edge\User Data\Local State"
+::        Update-JsonFile $AppName $Path $CONFIG_EDGE_LOCAL_STATE "msedge"
+::
+::        $Path = "$PATH_PROFILE_LOCAL\Microsoft\Edge\User Data\Default\Preferences"
+::        Update-JsonFile $AppName $Path $CONFIG_EDGE_PREFERENCES "msedge"
+::    }
+::
 ::    if ($CHECKBOX_Config_Chrome.Checked) {
 ::        $AppName = $CHECKBOX_Config_Chrome.Text
 ::
 ::        $Path = "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Local State"
-::        Update-JsonFile $AppName $Path $CONFIG_CHROME_LOCAL_STATE
+::        Update-JsonFile $AppName $Path $CONFIG_CHROME_LOCAL_STATE "chrome"
 ::
 ::        $Path = "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Default\Preferences"
-::        Update-JsonFile $AppName $Path $CONFIG_CHROME_PREFERENCES
+::        Update-JsonFile $AppName $Path $CONFIG_CHROME_PREFERENCES "chrome"
 ::    }
+::
+::    if ($CHECKBOX_Config_Windows.Checked) {
+::        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate" -Name "Start" -Value 3
+::        Unregister-ScheduledTask -TaskName "CreateExplorerShellUnelevatedTask" -Confirm:$False -ErrorAction SilentlyContinue
+::
+::        Import-RegistryConfiguration $CHECKBOX_Config_Windows.Text $CONFIG_WINDOWS
+::    }
+::}
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Power Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Function Set-PowerConfiguration {
+::    powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
+::    powercfg /SetAcValueIndex SCHEME_BALANCED 0d7dbae2-4294-402a-ba8e-26777e8488cd 309dce9b-bef4-4119-9921-a851fb12f0f4 0
+::    powercfg /SetAcValueIndex SCHEME_BALANCED 02f815b5-a5cf-4c84-bf20-649d1f75d3d8 4c793e7d-a264-42e1-87d3-7a0d2f523ccd 1
+::    powercfg /SetAcValueIndex SCHEME_BALANCED 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 0
+::    powercfg /SetAcValueIndex SCHEME_BALANCED 9596fb26-9850-41fd-ac3e-f7c3c00afd4b 34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4 0
+::    powercfg /SetAcValueIndex SCHEME_BALANCED 9596fb26-9850-41fd-ac3e-f7c3c00afd4b 03680956-93bc-4294-bba6-4e0f09bb717f 1
+::    powercfg /SetAcValueIndex SCHEME_BALANCED 9596fb26-9850-41fd-ac3e-f7c3c00afd4b 10778347-1370-4ee0-8bbd-33bdacaade49 1
+::    powercfg /SetAcValueIndex SCHEME_BALANCED de830923-a562-41af-a086-e3a2c6bad2da e69653ca-cf7f-4f05-aa73-cb833fa90ad4 0
+::    powercfg /SetAcValueIndex SCHEME_BALANCED SUB_PCIEXPRESS ASPM 0
+::    powercfg /SetAcValueIndex SCHEME_BALANCED SUB_SLEEP HYBRIDSLEEP 1
+::    powercfg /SetAcValueIndex SCHEME_BALANCED SUB_SLEEP RTCWAKE 1
+::    powercfg /SetDcValueIndex SCHEME_BALANCED 0d7dbae2-4294-402a-ba8e-26777e8488cd 309dce9b-bef4-4119-9921-a851fb12f0f4 0
+::    powercfg /SetDcValueIndex SCHEME_BALANCED 02f815b5-a5cf-4c84-bf20-649d1f75d3d8 4c793e7d-a264-42e1-87d3-7a0d2f523ccd 1
+::    powercfg /SetDcValueIndex SCHEME_BALANCED 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 0
+::    powercfg /SetDcValueIndex SCHEME_BALANCED 9596fb26-9850-41fd-ac3e-f7c3c00afd4b 34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4 0
+::    powercfg /SetDcValueIndex SCHEME_BALANCED 9596fb26-9850-41fd-ac3e-f7c3c00afd4b 03680956-93bc-4294-bba6-4e0f09bb717f 1
+::    powercfg /SetDcValueIndex SCHEME_BALANCED 9596fb26-9850-41fd-ac3e-f7c3c00afd4b 10778347-1370-4ee0-8bbd-33bdacaade49 1
+::    powercfg /SetDcValueIndex SCHEME_BALANCED de830923-a562-41af-a086-e3a2c6bad2da e69653ca-cf7f-4f05-aa73-cb833fa90ad4 0
+::    powercfg /SetDcValueIndex SCHEME_BALANCED SUB_PCIEXPRESS ASPM 0
+::    powercfg /SetDcValueIndex SCHEME_BALANCED SUB_SLEEP HYBRIDSLEEP 1
+::    powercfg /SetDcValueIndex SCHEME_BALANCED SUB_SLEEP RTCWAKE 1
+::}
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Function Set-CloudFlareDNS {
+::    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
+::    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+::
+::    Add-Log $WRN 'Internet connection may get interrupted briefly'
+::    Add-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+::
+::    if (!(Get-NetworkAdapter)) {
+::        Add-Log $ERR 'Could not determine network adapter used to connect to the Internet'
+::        Add-Log $ERR 'This could mean that computer is not connected'
+::        Return
+::    }
+::
+::    try {
+::        Start-Script -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+::    } catch [Exception] {
+::        Add-Log $ERR "Failed to change DNS server: $($_.Exception.Message)"
+::        Return
+::    }
+::
+::    Out-Success
 ::}
 ::
 ::
@@ -2088,8 +2739,8 @@ if "%~1"=="ShowConsole" (
 ::# SIG # Begin signature block
 ::# MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 ::# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUHxZlkrQo9JnDybHHEJC5soB7
-::# c6GgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUfpQLj25yQLZ1nZTAwPtlDR5a
+::# HEOgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 ::# AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 ::# OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 ::# ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -2210,28 +2861,28 @@ if "%~1"=="ShowConsole" (
 ::# ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 ::# DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 ::# AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSAH2wX
-::# dt5m3frr/QzykFILejGOOzANBgkqhkiG9w0BAQEFAASCAQAo9ehO4BMdSJwqaU+v
-::# MW49pz5XTt/DsHyTkVQIzsPZkH2xxRyzyUNq/kQWk3NDYPg1xh8BldqGjFOscyXG
-::# nufWwr9NlyVDgVrYBIEwScAjdwEK+iqXmG5hT8W31oklw7xBSJgaavvwhMzr0T7L
-::# D2sPHtnaHK4TlhLie+BgecZuITAb6q7OKCnk10jGCqnt0IK6Col/GOxcFIsP3ecu
-::# zRg/IW7pR11QA2QtxaXhk1YuhXqO7pLRX6ZUqCTTTDYMx2SOI3X63Ho63D6RuWCM
-::# g0sFj4hASUNBv8BKQViQsy9XxQZpJp8PDBId0dRU4pdwslb8Hth3eRTN90SA4JNs
-::# uZnDoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBQ0UBgP
+::# f+xiTNuw1W+IUXaW9bvYDzANBgkqhkiG9w0BAQEFAASCAQBhoTwxQGIUSnFRlSTd
+::# 9L6wDpI7mlHpV+qNdaCmTxyzmPCmC8wkVBnbUdIV66cbNAZlyofNOEmQDU39voWi
+::# XxVgkjDfvtrXBccJwnNx2Cp7bgsnIiSzgtdzF6BbOvuRP5882hRuotmYGzg7LRYM
+::# PaTVoftHEIpJZqNf/BgCXMi55OS2jar1l/O7tzLDEkIHPzkY7gbcXhmn6CLa509+
+::# c4r/L/kZom3jhxrxdhW1oo+yL+bXQ6vYs9pCeVaMPQWuppf68k210o+f1HvtsO4B
+::# uyRTdPMzhuDA8Q6ONt3+KeD1wUbWk9iX/hEhaqrbj/CFowkY8QRcFF6e9J1RbRkL
+::# lC5aoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 ::# VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 ::# cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 ::# CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkxODIxMTIyM1owLwYJKoZI
-::# hvcNAQkEMSIEICvOTQmkF16yMmUU3aDmT5A+yi0pRuPd+LCA4s3OvoR1MA0GCSqG
-::# SIb3DQEBAQUABIICAMgoZ90r9ioq+wGSQzR+iTn3X9VUHKEer9xQttmWRSoktgq9
-::# 0RQTrNAOy7ktOpwUwnd2xgRKvCyH+077lflOW7odR4U6+KheTvas2jPeCQWgxLBO
-::# OBIW8CCqZyf7jDK2y4yho1EPpkYgvsZD1SL8rzYLpAf9eTAkaNENieIZzpg171JF
-::# K7ojXDtBCqqY7S12vKZWel8Xn62D9tRoV3abry22A/tkmonarpIvzaR7+1RrlfqY
-::# 4rJGVtuTU83qdya70j3Z4nR+OyNnp1EM339p4HkM1271Ve9Bgtbc0ukgPcd2HU/M
-::# 7mFV6zIlosXZUefRLbMi5ISmFI4jWfAVw1qV3vpBgjjsmHRRFqFtXDYOkvVyn7Jd
-::# 0yI0KJ1SOae/Y4FDqzmTr3hUrC07xY7rsyBI14/ZxwxtbiBhIY590oK9ycUxNQlH
-::# 577Av8oQQ3/we0cILeK6XW1NM7CUNia504HyShYcbtIRXWzmOD9VQ025+5HEju0A
-::# J6KBb0rLs2jfv8gbaR8Ls3bMVfpx+yC36VTDWvMYNX8uscW7iDwR8G0j/KcJwz1G
-::# KfQB7mJKO5lpIXPyBLVPgS5zVx81NXmgErowvI6ytYJkYFAruleCuGPRjjNNQSY3
-::# r3Cgr8zeVzwhW3efyCmgd5Esox9PajYd+RSQUN3ojrBKjZ+loJtcn1/vdwHV
+::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkyMTIwNDEzMFowLwYJKoZI
+::# hvcNAQkEMSIEIKNFKEFOK7TpJAAeW8SV8bzb+NxeAXLE07mdGuKCNY+oMA0GCSqG
+::# SIb3DQEBAQUABIICAGPXKzmn6ueRoIW+lSIw2uGtpyCmEjr6TM7TccBLI2J2yVDI
+::# Fy5082VTDfPaKLC6Sq4FucP3AZxtF2EAlPkBytht7/xjNiETkG7sxgpHhKkep0zQ
+::# hAlo2yh1MOiy8okbUJqqXGoocGJRMZOmKE9yFz7PIYsMU05b289NGZLUGyGsl94W
+::# +/z4Crfxp+wwjZz+PKiu2qYdkZ8c7D+otxm2G5pTx7FzjzbH58kyZjEnSkeTMzZV
+::# 8sQnzsmyO2QVlCYmYQHtV29nfqJZLvhlyIYowznuWLDZxoR6XzP/TFVprOfM8XQ4
+::# 5Ac7Y/XMvLkXnq/sUQFeaTKsOcE5cSTtSxWVAa5BSGoPeBT0eXAov8tvqCXXocP3
+::# CEgbii/EFyi4DVSNeuN+2a97u4NrPYW8DrGA9moWrGCmJvO+5KtlvYxLBRs5lW1m
+::# M5fiitCY50gPKHl2XjYxMAVJMf3vRpGLJDrqalAjB47Shhig0xic/OyMkh64UPuC
+::# WfztYTLD09W1UKI/o0QcYqfoRLXIiDZSbbME5oWTzdS2xyIf/LixNzddK9GG0Cm9
+::# 3P/pWyGuadowSrDZLLrXsP0rikdN8FoYj47H4i/CetWvw2lCRe1HayYwYc32Jh+1
+::# vij7iNiGa8EfokdmcOQdQE6Mxd2QH1zyDOTgfZOX98WGPPfhf8ooAt/t+PSm
 ::# SIG # End signature block

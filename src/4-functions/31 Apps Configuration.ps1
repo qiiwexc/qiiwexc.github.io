@@ -40,4 +40,11 @@ Function Set-AppsConfiguration {
         $Path = "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Default\Preferences"
         Update-JsonFile $AppName $Path $CONFIG_CHROME_PREFERENCES "chrome"
     }
+
+    if ($CHECKBOX_Config_Windows.Checked) {
+        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate" -Name "Start" -Value 3
+        Unregister-ScheduledTask -TaskName "CreateExplorerShellUnelevatedTask" -Confirm:$False -ErrorAction SilentlyContinue
+
+        Import-RegistryConfiguration $CHECKBOX_Config_Windows.Text $CONFIG_WINDOWS
+    }
 }
