@@ -5,6 +5,8 @@ $PAD_CHECKBOXES = $False
 
 $CHECKBOX_Config_Windows = New-CheckBox 'Windows' -Checked
 
+$CHECKBOX_Config_WindowsPersonalization = New-CheckBox 'Windows Personalization'
+
 $CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
 
 $CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
