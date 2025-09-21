@@ -9,12 +9,13 @@ Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
   },
   "default_search_provider_data": {
     "mirrored_template_url_data": {
-      "keyword": "google.lv",
       "preconnect_to_search_url": true,
       "prefetch_likely_navigations": true
     }
   },
   "enable_do_not_track": true,
+  "https_first_balanced_mode_enabled": false,
+  "https_only_mode_auto_enabled": false,
   "https_only_mode_enabled": true,
   "intl": {
     "accept_languages": "lv,ru,en-GB",
@@ -26,13 +27,15 @@ Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
   "privacy_sandbox": {
     "m1": {
       "ad_measurement_enabled": false,
-      "fledge_enabled": false
-    },
+      "consent_decision_made": true,
+      "eea_notice_acknowledged": true,
+      "fledge_enabled": false,
+      "topics_enabled": true
+    }
   },
   "safebrowsing": {
     "enabled": true,
-    "enhanced": true,
-    "esb_enabled_via_tailored_security": true
+    "enhanced": true
   },
   "spellcheck": {
     "dictionaries": ["lv", "ru", "en-GB"],
