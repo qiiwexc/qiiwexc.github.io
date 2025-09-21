@@ -11,6 +11,8 @@ $CHECKBOX_Config_TeamViewer = New-CheckBox 'TeamViewer' -Checked
 
 $CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
 
+$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
+
 $CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 
 

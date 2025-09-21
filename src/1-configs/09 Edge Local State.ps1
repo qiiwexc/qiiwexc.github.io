@@ -1,0 +1,23 @@
+Set-Variable -Option Constant CONFIG_EDGE_LOCAL_STATE '{
+  "background_mode": {
+    "enabled": false
+  },
+  "edge": {
+    "perf_center": {
+      "efficiency_mode_toggle": false,
+      "efficiency_mode_v2_is_active": false,
+      "perf_game_mode": false,
+      "perf_game_mode_default_changed": true,
+      "performance_mode": 3,
+      "performance_mode_is_on": false
+    }
+  },
+  "smartscreen": {
+    "enabled": true,
+    "pua_protection_enabled": true
+  },
+  "startup_boost": {
+    "enabled": false
+  }
+}
+'
