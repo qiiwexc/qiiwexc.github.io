@@ -41,7 +41,7 @@ Function New-CheckBox {
     $CheckBox.Name = $Name
     $CheckBox.Checked = $Checked
     $CheckBox.Enabled = !$Disabled
-    $CheckBox.Size = "145, $CHECKBOX_HEIGHT"
+    $CheckBox.Size = "150, $CHECKBOX_HEIGHT"
     $CheckBox.Location = $Location
 
     $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT

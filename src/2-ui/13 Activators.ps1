@@ -12,5 +12,5 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartActivationProgram.Add_CheckStateChanged( {
-    $BUTTON_DownloadActivationProgram.Text = "Activation Program$(if ($CHECKBOX_StartActivationProgram.Checked) { $REQUIRES_ELEVATION })"
+    $BUTTON_DownloadActivationProgram.Text = Set-ElevationRequired 'Activation Program' $CHECKBOX_StartActivationProgram.Checked
 } )

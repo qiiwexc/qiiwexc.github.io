@@ -38,4 +38,3 @@ Set-Variable -Option Constant PATH_PROFILE_LOCAL "$env:USERPROFILE\AppData\Local
 Set-Variable -Option Constant SYSTEM_LANGUAGE (Get-SystemLanguage)
 
 Set-Variable -Option Constant IS_ELEVATED (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-Set-Variable -Option Constant REQUIRES_ELEVATION $(if (!$IS_ELEVATED) { ' *' } else { '' })

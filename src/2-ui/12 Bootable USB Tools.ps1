@@ -1,4 +1,4 @@
-New-GroupBox 'Bootable USB Tools'
+New-GroupBox 'Bootable USB tools'
 
 
 $BUTTON_DownloadVentoy = New-Button -UAC 'Ventoy'
@@ -11,7 +11,7 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartVentoy.Add_CheckStateChanged( {
-    $BUTTON_DownloadVentoy.Text = "Ventoy$(if ($CHECKBOX_StartVentoy.Checked) { $REQUIRES_ELEVATION })"
+    $BUTTON_DownloadVentoy.Text = Set-ElevationRequired 'Ventoy' $CHECKBOX_StartVentoy.Checked
 } )
 
 
@@ -22,5 +22,5 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartRufus.Add_CheckStateChanged( {
-    $BUTTON_DownloadRufus.Text = "Rufus$(if ($CHECKBOX_StartRufus.Checked) { $REQUIRES_ELEVATION })"
+    $BUTTON_DownloadRufus.Text = Set-ElevationRequired 'Rufus' $CHECKBOX_StartRufus.Checked
 } )

@@ -8,7 +8,7 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartSDI.Add_CheckStateChanged( {
-    $BUTTON_DownloadSDI.Text = "Snappy Driver Installer$(if ($CHECKBOX_StartSDI.Checked) { $REQUIRES_ELEVATION })"
+    $BUTTON_DownloadSDI.Text = Set-ElevationRequired 'Snappy Driver Installer' $CHECKBOX_StartSDI.Checked
 } )
 
 
@@ -19,7 +19,7 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartOfficeInstaller.Add_CheckStateChanged( {
-    $BUTTON_DownloadOfficeInstaller.Text = "Office Installer+$(if ($CHECKBOX_StartOfficeInstaller.Checked) { $REQUIRES_ELEVATION })"
+    $BUTTON_DownloadOfficeInstaller.Text = Set-ElevationRequired 'Office Installer+' $CHECKBOX_StartOfficeInstaller.Checked
 } )
 
 
@@ -34,7 +34,7 @@ $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
-    $BUTTON_DownloadUnchecky.Text = "Unchecky$(if ($CHECKBOX_StartUnchecky.Checked) { $REQUIRES_ELEVATION })"
+    $BUTTON_DownloadUnchecky.Text = Set-ElevationRequired 'Unchecky' $CHECKBOX_StartUnchecky.Checked
     $CHECKBOX_SilentlyInstallUnchecky.Enabled = $CHECKBOX_StartUnchecky.Checked
 } )
 

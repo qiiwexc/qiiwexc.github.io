@@ -1,0 +1,27 @@
+Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION 'Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications]
+"GlobalUserDisabled"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+"ContentDeliveryAllowed"=dword:00000001
+"RotatingLockScreenEnabled"=dword:00000001
+"RotatingLockScreenOverlayEnabled"=dword:00000001
+"RotatingLockScreenOverlayVisible"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"NavPaneExpandToCurrentFolder"=dword:00000001
+"NavPaneShowAllFolders"=dword:00000001
+"TaskbarGlomLevel"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers]
+"BackgroundType"=dword:00000006
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+"CreativeId"=""
+"RotatingLockScreenEnabled"=dword:00000001
+"RotatingLockScreenOverlayEnabled"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\CloudContent]
+"DisableSpotlightCollectionOnDesktop"=dword:00000000
+'

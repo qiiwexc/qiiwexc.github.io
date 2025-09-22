@@ -10,7 +10,7 @@ Function Write-ConfigurationFile {
 
     Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
 
-    New-Item -ItemType Directory $(Split-Path -Parent $Path)
+    New-Item -ItemType Directory (Split-Path -Parent $Path) -ErrorAction SilentlyContinue
     Set-Content $Path $Content
 
     Out-Success
@@ -29,12 +29,12 @@ Function Update-JsonFile {
 
     Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
 
-    New-Item -ItemType Directory $(Split-Path -Parent $Path)
+    New-Item -ItemType Directory (Split-Path -Parent $Path) -ErrorAction SilentlyContinue
 
-    $CurrentConfig = Get-Content $Path -Raw | ConvertFrom-Json
-    $PatchConfig = $Content | ConvertFrom-Json
+    Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
+    Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
 
-    $UpdatedConfig = Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress
+    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
 
     Set-Content $Path $UpdatedConfig
 
