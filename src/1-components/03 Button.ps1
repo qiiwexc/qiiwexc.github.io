@@ -1,16 +1,3 @@
-Function Set-ElevationRequired {
-    Param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$ButtonName,
-        [Boolean][Parameter(Position = 1, Mandatory = $True)]$RequiresElevation
-    )
-
-    if ($RequiresElevation -and !$IS_ELEVATED) {
-        Return "$ButtonName *"
-    } else {
-        Return $ButtonName
-    }
-}
-
 Function New-ButtonBrowser {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
@@ -26,8 +13,7 @@ Function New-Button {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [ScriptBlock][Parameter(Position = 1)]$Function,
-        [Switch]$Disabled,
-        [Switch]$UAC
+        [Switch]$Disabled
     )
 
     Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
@@ -57,7 +43,7 @@ Function New-Button {
     $Button.Enabled = !$Disabled
     $Button.Location = $Location
 
-    $Button.Text = Set-ElevationRequired $Text $UAC
+    $Button.Text = $Text
 
     if ($Function) {
         $Button.Add_Click($Function)

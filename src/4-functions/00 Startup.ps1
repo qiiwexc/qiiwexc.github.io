@@ -2,15 +2,13 @@ Function Initialize-Startup {
     $FORM.Activate()
     Add-LogMessage "[$((Get-Date).ToString())] Initializing..."
 
-    if ($IS_ELEVATED) {
-        Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
+    Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
 
-        if (!(Test-Path $IE_Registry_Key)) {
-            New-Item $IE_Registry_Key -Force | Out-Null
-        }
-
-        Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
+    if (!(Test-Path $IE_Registry_Key)) {
+        New-Item $IE_Registry_Key -Force | Out-Null
     }
+
+    Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1
 
     if ($PS_VERSION -lt 2) {
         Write-Log $WRN "PowerShell $PS_VERSION detected, while PowerShell 2 and newer are supported. Some features might not work correctly."

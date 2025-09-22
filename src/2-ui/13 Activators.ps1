@@ -1,16 +1,13 @@
 New-GroupBox 'Activators (Windows 7+, Office)'
 
 $BUTTON_FUNCTION = { Start-Activator }
-New-Button -UAC 'MAS Activator' $BUTTON_FUNCTION -Disabled:$($OS_VERSION -lt 7)  | Out-Null
+New-Button 'MAS Activator' $BUTTON_FUNCTION -Disabled:$($OS_VERSION -lt 7) | Out-Null
 
 
 
 $BUTTON_FUNCTION = { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked '{URL_ACTIVATION_PROGRAM}' }
-$BUTTON_DownloadActivationProgram = New-Button -UAC 'Activation Program' $BUTTON_FUNCTION
+New-Button 'Activation Program' $BUTTON_FUNCTION | Out-Null
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-$CHECKBOX_StartActivationProgram.Add_CheckStateChanged( {
-    $BUTTON_DownloadActivationProgram.Text = Set-ElevationRequired 'Activation Program' $CHECKBOX_StartActivationProgram.Checked
-} )
