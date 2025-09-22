@@ -27,7 +27,7 @@ Function Start-Extraction {
     Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
     New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 
-    Add-Log $INF "Extracting '$ZipPath'..."
+    Write-Log $INF "Extracting '$ZipPath'..."
 
     try {
         if ($ZIP_SUPPORTED) {
@@ -38,7 +38,7 @@ Function Start-Extraction {
             }
         }
     } catch [Exception] {
-        Add-Log $ERR "Failed to extract '$ZipPath': $($_.Exception.Message)"
+        Write-ExceptionLog $_ "Failed to extract '$ZipPath'"
         Return
     }
 
@@ -55,7 +55,7 @@ Function Start-Extraction {
     }
 
     Out-Success
-    Add-Log $INF "Files extracted to '$TargetPath'"
+    Write-Log $INF "Files extracted to '$TargetPath'"
 
     Return $TargetExe
 }

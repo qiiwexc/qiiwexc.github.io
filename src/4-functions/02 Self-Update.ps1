@@ -1,14 +1,14 @@
 Function Get-CurrentVersion {
     if ($PS_VERSION -le 2) {
-        Add-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"
+        Write-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"
         Return
     }
 
-    Add-Log $INF 'Checking for updates...'
+    Write-Log $INF 'Checking for updates...'
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) {
-        Add-Log $ERR "Failed to check for updates: $IsNotConnected"
+        Write-Log $ERR "Failed to check for updates: $IsNotConnected"
         Return
     }
 
@@ -18,12 +18,12 @@ Function Get-CurrentVersion {
         $ProgressPreference = 'Continue'
     } catch [Exception] {
         $ProgressPreference = 'Continue'
-        Add-Log $ERR "Failed to check for updates: $($_.Exception.Message)"
+        Write-ExceptionLog $_ 'Failed to check for updates'
         Return
     }
 
     if ($LatestVersion -gt $VERSION) {
-        Add-Log $WRN "Newer version available: v$LatestVersion"
+        Write-Log $WRN "Newer version available: v$LatestVersion"
         Get-Update
     } else {
         Out-Status 'No updates available'
@@ -34,29 +34,29 @@ Function Get-CurrentVersion {
 Function Get-Update {
     Set-Variable -Option Constant TargetFileBat "$PATH_CURRENT_DIR\qiiwexc.bat"
 
-    Add-Log $WRN 'Downloading new version...'
+    Write-Log $WRN 'Downloading new version...'
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
 
     if ($IsNotConnected) {
-        Add-Log $ERR "Failed to download update: $IsNotConnected"
+        Write-Log $ERR "Failed to download update: $IsNotConnected"
         Return
     }
 
     try {
         Invoke-WebRequest '{URL_BAT_FILE}' -OutFile $TargetFileBat
     } catch [Exception] {
-        Add-Log $ERR "Failed to download update: $($_.Exception.Message)"
+        Write-ExceptionLog $_ 'Failed to download update'
         Return
     }
 
     Out-Success
-    Add-Log $WRN 'Restarting...'
+    Write-Log $WRN 'Restarting...'
 
     try {
         Start-Script $TargetFileBat
     } catch [Exception] {
-        Add-Log $ERR "Failed to start new version: $($_.Exception.Message)"
+        Write-ExceptionLog $_ 'Failed to start new version'
         Return
     }
 

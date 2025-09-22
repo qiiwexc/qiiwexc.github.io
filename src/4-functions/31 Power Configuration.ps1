@@ -1,5 +1,5 @@
 ﻿Function Set-PowerConfiguration {
-    Add-Log $INF "Applying Windows power scheme settings..."
+    Write-Log $INF "Applying Windows power scheme settings..."
 
     powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 

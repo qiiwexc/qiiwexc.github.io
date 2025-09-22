@@ -23,11 +23,11 @@ Function Exit-Script {
 Function Open-InBrowser {
     Param([String][Parameter(Position = 0, Mandatory = $True)]$URL)
 
-    Add-Log $INF "Opening URL in the default browser: $URL"
+    Write-Log $INF "Opening URL in the default browser: $URL"
 
     try {
         [System.Diagnostics.Process]::Start($URL)
     } catch [Exception] {
-        Add-Log $ERR "Could not open the URL: $($_.Exception.Message)"
+        Write-ExceptionLog $_ 'Could not open the URL'
     }
 }
