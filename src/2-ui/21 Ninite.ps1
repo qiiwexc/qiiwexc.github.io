@@ -40,7 +40,7 @@ $BUTTON_DownloadNinite.Add_Click( {
 
 $CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 $CHECKBOX_StartNinite.Add_CheckStateChanged( {
-    $BUTTON_DownloadNinite.Text = "Download selected$(if ($CHECKBOX_StartNinite.Checked) { $REQUIRES_ELEVATION })"
+    $BUTTON_DownloadNinite.Text = Set-ElevationRequired 'Download selected' $CHECKBOX_StartNinite.Checked
 } )
 
 $BUTTON_FUNCTION = { Open-InBrowser "{URL_NINITE}/?select=$(Set-NiniteQuery)" }

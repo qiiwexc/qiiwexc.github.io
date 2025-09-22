@@ -23,7 +23,7 @@ Function Merge-JsonObjects {
 
         [PSCustomObject] $Merged
     } elseif ($Source -is [Collections.IList] -and $Extend -is [Collections.IList]) {
-        $MaxCount = [Math]::Max($Source.Count, $Extend.Count)
+        Set-Variable -Option Constant MaxCount ([Math]::Max($Source.Count, $Extend.Count))
 
         [Array]$Merged = for ($i = 0; $i -lt $MaxCount; ++$i) {
             if ($i -ge $Source.Count) {

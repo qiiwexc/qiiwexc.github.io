@@ -1,4 +1,4 @@
-New-GroupBox 'Debloat Windows and Privacy'
+New-GroupBox 'Debloat Windows and privacy' 5
 
 
 $BUTTON_FUNCTION = { Start-WindowsDebloat }
@@ -13,7 +13,7 @@ $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 $CHECKBOX_StartShutUp10 = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartShutUp10.Add_CheckStateChanged( {
     $CHECKBOX_SilentlyRunShutUp10.Enabled = $CHECKBOX_StartShutUp10.Checked
-    $BUTTON_StartShutUp10.Text = "ShutUp10++ privacy$(if ($CHECKBOX_StartShutUp10.Checked) { $REQUIRES_ELEVATION })"
+    $BUTTON_StartShutUp10.Text = Set-ElevationRequired 'ShutUp10++ privacy' $CHECKBOX_StartShutUp10.Checked
 } )
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2

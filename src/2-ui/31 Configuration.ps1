@@ -1,11 +1,11 @@
-New-GroupBox 'Apps Configuration'
+New-GroupBox 'Configuration'
 
 $PAD_CHECKBOXES = $False
 
 
 $CHECKBOX_Config_Windows = New-CheckBox 'Windows' -Checked
 
-$CHECKBOX_Config_WindowsPersonalization = New-CheckBox 'Windows Personalization'
+$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Windows Personalisation'
 
 $CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
 
@@ -20,5 +20,5 @@ $CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
 $CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 
 
-$BUTTON_FUNCTION = { Set-AppsConfiguration }
+$BUTTON_FUNCTION = { Set-Configuration }
 New-Button -UAC 'Apply configuration' $BUTTON_FUNCTION | Out-Null

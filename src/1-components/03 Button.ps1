@@ -1,3 +1,16 @@
+Function Set-ElevationRequired {
+    Param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$ButtonName,
+        [Boolean][Parameter(Position = 1, Mandatory = $True)]$RequiresElevation
+    )
+
+    if ($RequiresElevation -and !$IS_ELEVATED) {
+        Return "$ButtonName *"
+    } else {
+        Return $ButtonName
+    }
+}
+
 Function New-ButtonBrowser {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
@@ -44,7 +57,7 @@ Function New-Button {
     $Button.Enabled = !$Disabled
     $Button.Location = $Location
 
-    $Button.Text = if ($UAC) { "$Text$REQUIRES_ELEVATION" } else { $Text }
+    $Button.Text = Set-ElevationRequired $Text $UAC
 
     if ($Function) {
         $Button.Add_Click($Function)

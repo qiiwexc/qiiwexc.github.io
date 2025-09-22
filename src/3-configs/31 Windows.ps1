@@ -278,7 +278,6 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "NavPaneShowAllCloudStates"=dword:00000001
 "Start_IrisRecommendations"=dword:00000000
 "Start_Layout"=dword:00000001
-"TaskbarGlomLevel"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\CIDSizeMRU]
 "0"=hex:4E,00,4F,00,54,00,45,00,50,00,41,00,44,00,2E,00,45,00,58,00,45,00,00, \
@@ -413,9 +412,6 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
 "AllowMUUpdateService"=dword:00000001
 "IsContinuousInnovationOptedIn"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
-"AllowUsingDiacritics"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
 "EnableFindMyFiles"=dword:00000001

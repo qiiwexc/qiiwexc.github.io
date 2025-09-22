@@ -1,4 +1,4 @@
-New-GroupBox 'Windows Disinfection'
+New-GroupBox 'Windows disinfection'
 
 
 $BUTTON_FUNCTION = { Open-InBrowser '{URL_TRONSCRIPT}' }

@@ -1,4 +1,4 @@
-New-GroupBox 'Windows Images'
+New-GroupBox 'Windows images'
 
 
 $BUTTON_FUNCTION = { Open-InBrowser '{URL_WINDOWS_11}' }
