@@ -11,7 +11,7 @@ Set-Variable -Option Constant WRN 'WRN'
 Set-Variable -Option Constant ERR 'ERR'
 
 
-Function Add-Log {
+Function Write-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
@@ -33,14 +33,24 @@ Function Add-Log {
 }
 
 
+Function Write-ExceptionLog {
+    Param(
+        [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+    )
+
+    Write-Log $ERR "$($Message): $($Exception.Exception.Message)"
+}
+
+
 Function Start-Elevated {
     if (!$IsElevated) {
-        Add-Log $INF 'Requesting administrator privileges...'
+        Write-Log $INF 'Requesting administrator privileges...'
 
         try {
             Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`""
         } catch [Exception] {
-            Add-Log $ERR "Failed to gain administrator privileges: $($_.Exception.Message)"
+            Write-ExceptionLog $_ 'Failed to gain administrator privileges'
             Return
         }
 
@@ -55,7 +65,7 @@ Function New-Certificate {
     Remove-Item -Force -ErrorAction SilentlyContinue $CertificatePath
     Remove-Item -Force -ErrorAction SilentlyContinue $ThumbprintPath
 
-    Add-Log $INF "Creating a new certificate $CertificatePath"
+    Write-Log $INF "Creating a new certificate $CertificatePath"
 
     $Certificate = New-SelfSignedCertificate -CertStoreLocation Cert:\CurrentUser\My -Subject "CN=$ProjectName" -KeySpec Signature -Type CodeSigningCert
 
@@ -64,7 +74,7 @@ Function New-Certificate {
     try {
         Get-Item $CertificatePath | Import-Certificate -CertStoreLocation "Cert:\LocalMachine\Root"
     } catch [Exception] {
-        Add-Log $ERR "Failed to import certificates: $($_.Exception.Message)"
+        Write-ExceptionLog $_ 'Failed to import certificates'
         Return
     }
 

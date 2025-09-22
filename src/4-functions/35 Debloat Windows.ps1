@@ -1,5 +1,5 @@
 Function Start-WindowsDebloat {
-    Add-Log $INF "Starting Windows 10/11 debloat utility..."
+    Write-Log $INF "Starting Windows 10/11 debloat utility..."
 
     Start-Script -Elevated -HideWindow "irm https://debloat.raphi.re/ | iex"
 
@@ -13,7 +13,7 @@ Function Start-ShutUp10 {
         [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
     )
 
-    Add-Log $INF "Starting ShutUp10++ utility..."
+    Write-Log $INF "Starting ShutUp10++ utility..."
 
     Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
     Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"

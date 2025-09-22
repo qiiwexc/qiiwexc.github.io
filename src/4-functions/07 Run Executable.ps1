@@ -6,22 +6,22 @@ Function Start-Executable {
     )
 
     if ($Switches -and $Silent) {
-        Add-Log $INF "Running '$Executable' silently..."
+        Write-Log $INF "Running '$Executable' silently..."
 
         try {
             Start-Process -Wait $Executable $Switches
         } catch [Exception] {
-            Add-Log $ERR "Failed to run '$Executable': $($_.Exception.Message)"
+            Write-ExceptionLog $_ "Failed to run '$Executable'"
             Return
         }
 
         Out-Success
 
-        Add-Log $INF "Removing '$Executable'..."
+        Write-Log $INF "Removing '$Executable'..."
         Remove-Item -Force $Executable
         Out-Success
     } else {
-        Add-Log $INF "Running '$Executable'..."
+        Write-Log $INF "Running '$Executable'..."
 
         try {
             if ($Switches) {
@@ -30,7 +30,7 @@ Function Start-Executable {
                 Start-Process $Executable -WorkingDirectory (Split-Path $Executable)
             }
         } catch [Exception] {
-            Add-Log $ERR "Failed to execute '$Executable': $($_.Exception.Message)"
+            Write-ExceptionLog $_ "Failed to execute '$Executable'"
             Return
         }
 

@@ -1,4 +1,4 @@
-Function Add-Log {
+Function Write-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
@@ -18,11 +18,11 @@ Function Add-Log {
         }
     }
 
-    Write-LogMessage "`n[$((Get-Date).ToString())] $Message"
+    Add-LogMessage "`n[$((Get-Date).ToString())] $Message"
 }
 
 
-Function Write-LogMessage {
+Function Add-LogMessage {
     Param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
 
     Write-Host -NoNewline $Text
@@ -35,12 +35,12 @@ Function Write-LogMessage {
 Function Out-Status {
     Param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
 
-    Write-LogMessage ' '
+    Add-LogMessage ' '
 
     Set-Variable -Option Constant LogDefaultFont $LOG.Font
     $LOG.SelectionFont = New-Object Drawing.Font($LogDefaultFont.FontFamily, $LogDefaultFont.Size, [Drawing.FontStyle]::Underline)
 
-    Write-LogMessage $Status
+    Add-LogMessage $Status
 
     $LOG.SelectionFont = $LogDefaultFont
     $LOG.SelectionColor = 'black'
@@ -53,4 +53,14 @@ Function Out-Success {
 
 Function Out-Failure {
     Out-Status 'Failed'
+}
+
+
+Function Write-ExceptionLog {
+    Param(
+        [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+    )
+
+    Write-Log $ERR "$($Message): $($Exception.Exception.Message)"
 }

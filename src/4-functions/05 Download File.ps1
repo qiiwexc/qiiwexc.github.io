@@ -11,14 +11,14 @@ Function Start-Download {
 
     New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null
 
-    Add-Log $INF "Downloading from $URL"
+    Write-Log $INF "Downloading from $URL"
 
     Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
     if ($IsNotConnected) {
-        Add-Log $ERR "Download failed: $IsNotConnected"
+        Write-Log $ERR "Download failed: $IsNotConnected"
 
         if (Test-Path $SavePath) {
-            Add-Log $WRN "Previous download found, returning it"
+            Write-Log $WRN "Previous download found, returning it"
             Return $SavePath
         } else {
             Return
@@ -39,7 +39,7 @@ Function Start-Download {
             Throw 'Possibly computer is offline or disk is full'
         }
     } catch [Exception] {
-        Add-Log $ERR "Download failed: $($_.Exception.Message)"
+        Write-ExceptionLog $_ 'Download failed'
         Return
     }
 

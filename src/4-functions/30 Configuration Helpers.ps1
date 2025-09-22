@@ -6,7 +6,7 @@ Function Write-ConfigurationFile {
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
 
-    Add-Log $INF "Writing $AppName configuration to '$Path'..."
+    Write-Log $INF "Writing $AppName configuration to '$Path'..."
 
     Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
 
@@ -25,7 +25,7 @@ Function Update-JsonFile {
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
 
-    Add-Log $INF "Writing $AppName configuration to '$Path'..."
+    Write-Log $INF "Writing $AppName configuration to '$Path'..."
 
     Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
 
@@ -48,7 +48,7 @@ Function Import-RegistryConfiguration {
         [String][Parameter(Position = 1, Mandatory = $True)]$Content
     )
 
-    Add-Log $INF "Importing $AppName configuration into registry..."
+    Write-Log $INF "Importing $AppName configuration into registry..."
 
     Set-Variable -Option Constant RegFilePath "$PATH_TEMP_DIR\$AppName.reg"
     Set-Content $RegFilePath $Content
@@ -56,7 +56,7 @@ Function Import-RegistryConfiguration {
     try {
         Start-Process -Verb RunAs -Wait 'regedit' "/s $RegFilePath"
     } catch [Exception] {
-        Add-Log $ERR "Failed to import file: $($_.Exception.Message)"
+        Write-ExceptionLog $_ 'Failed to import file into registry'
         Return
     }
 
