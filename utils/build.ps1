@@ -40,7 +40,6 @@ Function Start-Build {
 
     if ($Run) {
         Write-Log $INF "Running $BatchFile"
-        Start-Process 'PowerShell' ".\$BatchFile Debug"
     }
 }
 
@@ -73,7 +72,7 @@ Function Write-VersionFile {
 
     Remove-Item -Force -ErrorAction SilentlyContinue $VersionFile
 
-    Set-Content $VersionFile "$Version`n" -NoNewline
+    $Version | Out-File $VersionFile -Encoding UTF8
 
     Out-Success
 }
@@ -115,7 +114,7 @@ Function New-Html {
 
     $TemplateContent = $TemplateContent -Replace "../d/stylesheet.css", "https://bit.ly/stylesheet_web"
 
-    Set-Content $OutputFile $TemplateContent
+    $TemplateContent | Out-File $OutputFile -Encoding UTF8
 
     Out-Success
 }
@@ -147,7 +146,7 @@ Function New-PowerShell {
     $Config | ForEach-Object { $OutputStrings = $OutputStrings -Replace "{$($_.key)}", $_.value }
 
     Write-Log $INF "Writing output file $Ps1File"
-    $OutputStrings | Out-File $Ps1File -Encoding ASCII
+    $OutputStrings | Out-File $Ps1File -Encoding UTF8
 
     Out-Success
 }
@@ -187,7 +186,7 @@ Function New-Batch {
     }
 
     Write-Log $INF "Writing batch file $BatchFile"
-    $BatchStrings | Out-File $BatchFile -Encoding ASCII
+    $BatchStrings | Out-File $BatchFile -Encoding UTF8
 
     Out-Success
 }

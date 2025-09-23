@@ -78,7 +78,7 @@ Function New-Certificate {
         Return
     }
 
-    $Certificate.Thumbprint | Out-File $ThumbprintPath -Encoding ASCII
+    $Certificate.Thumbprint | Out-File $ThumbprintPath -Encoding UTF8
 }
 
 New-Certificate
