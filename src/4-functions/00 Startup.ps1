@@ -3,7 +3,7 @@ Function Initialize-Startup {
 
     Add-LogMessage "[$((Get-Date).ToString())] Initializing..."
 
-    Set-Variable -Option Constant IE_Registry_Key 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Internet Explorer\Main'
+    Set-Variable -Option Constant IE_Registry_Key 'HKLM:\Software\Policies\Microsoft\Internet Explorer\Main'
 
     New-Item $IE_Registry_Key -ErrorAction SilentlyContinue
     Set-ItemProperty -Path $IE_Registry_Key -Name "DisableFirstRunCustomize" -Value 1 -ErrorAction SilentlyContinue

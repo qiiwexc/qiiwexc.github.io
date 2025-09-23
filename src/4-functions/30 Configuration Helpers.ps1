@@ -11,7 +11,7 @@ Function Write-ConfigurationFile {
     Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
 
     New-Item -ItemType Directory (Split-Path -Parent $Path) -ErrorAction SilentlyContinue
-    Set-Content $Path $Content
+    $Content | Out-File $Path -Encoding UTF8
 
     Out-Success
 }
@@ -37,10 +37,10 @@ Function Update-JsonFile {
 
         Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
 
-        Set-Content $Path $UpdatedConfig
+        $UpdatedConfig | Out-File $Path -Encoding UTF8
     } else {
         Write-Log $INF "'$Path' does not exist. Creating new file..."
-        Set-Content $Path $Content
+        $Content | Out-File $Path -Encoding UTF8
     }
 
     Out-Success
@@ -56,10 +56,10 @@ Function Import-RegistryConfiguration {
     Write-Log $INF "Importing $AppName configuration into registry..."
 
     Set-Variable -Option Constant RegFilePath "$PATH_TEMP_DIR\$AppName.reg"
-    Set-Content $RegFilePath $Content
+    $Content | Out-File $RegFilePath -Encoding UTF8
 
     try {
-        Start-Process -Verb RunAs -Wait 'regedit' "/s $RegFilePath"
+        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to import file into registry'
         Return

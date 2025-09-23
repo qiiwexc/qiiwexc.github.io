@@ -420,6 +420,11 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
 "PromptOnSecureDesktop"=dword:00000000
 
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\CodePage]
+"ACP"="65001"
+"MACCP"="65001"
+"OEMCP"="65001"
+
 [HKEY_LOCAL_MACHINE\SYSTEM\Maps]
 "AutoUpdateEnabled"=dword:00000001
 "UpdateOnlyOnWifi"=dword:00000000

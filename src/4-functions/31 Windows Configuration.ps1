@@ -3,7 +3,7 @@
     Set-MpPreference -MeteredConnectionUpdates $True
 
     Set-ItemProperty -Path "HKCU:\Control Panel\International" -Name "sCurrency" -Value "€"
-    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate" -Name "Start" -Value 3 -ErrorAction SilentlyContinue
+    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate" -Name "Start" -Value 3
 
     Unregister-ScheduledTask -TaskName "CreateExplorerShellUnelevatedTask" -Confirm:$False -ErrorAction SilentlyContinue
 
@@ -51,34 +51,34 @@ Function Get-DynamicWindowsConfiguration {
     # `"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"
         }
 
-        $VolumeRegistries = (Get-Item 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name
+        $VolumeRegistries = (Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name
         ForEach ($Registry In $VolumeRegistries) {
             $ConfigLines += "`n[$Registry]`n"
             $ConfigLines += "`"MaxCapacity`"=dword:000FFFFF`n"
         }
 
-        $NotificationRegistries = (Get-Item 'Registry::HKEY_CURRENT_USER\Control Panel\NotifyIconSettings\*').Name
+        $NotificationRegistries = (Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name
         ForEach ($Registry In $NotificationRegistries) {
             $ConfigLines += "`n[$Registry]`n"
             $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
         }
 
         $FileExtensionRegistries = (Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -Match 'HKEY_CLASSES_ROOT\\\.' }
-        # ForEach ($Registry In $FileExtensionRegistries) {
-        #     $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -Match 'PersistentHandler' }
+        ForEach ($Registry In $FileExtensionRegistries) {
+            $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -Match 'PersistentHandler' }
 
-        #     ForEach ($Reg In $PersistentHandlerRegistries) {
-        #         $PersistentHandler = Get-ItemProperty "Registry::$Reg"
-        #         $DefaultHandler = $PersistentHandler.'(default)'
+            ForEach ($Reg In $PersistentHandlerRegistries) {
+                $PersistentHandler = Get-ItemProperty "Registry::$Reg"
+                $DefaultHandler = $PersistentHandler.'(default)'
 
-        #         if ($DefaultHandler -and !($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
-        #             $ConfigLines += "`n[$Reg]`n"
-        #             $ConfigLines += "@=`"{098F2470-BAE0-11CD-B579-08002B30BFEB}`"`n"
-        #             $ConfigLines += "`"OriginalPersistentHandler`"=`"$DefaultHandler`"`n"
-        #         }
+                if ($DefaultHandler -and !($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
+                    $ConfigLines += "`n[$Reg]`n"
+                    $ConfigLines += "@=`"{098F2470-BAE0-11CD-B579-08002B30BFEB}`"`n"
+                    $ConfigLines += "`"OriginalPersistentHandler`"=`"$DefaultHandler`"`n"
+                }
 
-        #     }
-        # }
+            }
+        }
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to read the registry'
     }
