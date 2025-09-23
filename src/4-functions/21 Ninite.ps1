@@ -1,6 +1,6 @@
 Function Set-NiniteButtonState {
-    $CHECKBOX_StartNinite.Enabled = $BUTTON_DownloadNinite.Enabled = $CHECKBOX_Ninite_7zip.Checked -or $CHECKBOX_Ninite_VLC.Checked -or `
-        $CHECKBOX_Ninite_TeamViewer.Checked -or $CHECKBOX_Ninite_Chrome.Checked -or $CHECKBOX_Ninite_qBittorrent.Checked -or $CHECKBOX_Ninite_Malwarebytes.Checked
+    $CHECKBOX_StartNinite.Enabled = $CHECKBOX_Ninite_7zip.Checked -or $CHECKBOX_Ninite_VLC.Checked -or $CHECKBOX_Ninite_TeamViewer.Checked -or `
+        $CHECKBOX_Ninite_Chrome.Checked -or $CHECKBOX_Ninite_qBittorrent.Checked -or $CHECKBOX_Ninite_Malwarebytes.Checked
 }
 
 
