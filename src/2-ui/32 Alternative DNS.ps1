@@ -1,12 +1,12 @@
 New-GroupBox 'Alternative DNS'
 
 
-$BUTTON_FUNCTION = { Set-CloudFlareDNS }
+[ScriptBlock]$BUTTON_FUNCTION = { Set-CloudFlareDNS }
 New-Button 'Setup CloudFlare DNS' $BUTTON_FUNCTION
 
-$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
+[System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
     $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
 } )
 
-$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
+[System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'

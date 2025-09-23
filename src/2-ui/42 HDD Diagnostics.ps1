@@ -1,9 +1,9 @@
 New-GroupBox 'HDD diagnostics'
 
 
-$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked '{URL_VICTORIA}' }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked '{URL_VICTORIA}' }
 New-Button 'Victoria' $BUTTON_FUNCTION
 
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
+[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+[System.Windows.Forms.CheckBox]$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED

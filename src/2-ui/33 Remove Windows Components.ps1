@@ -1,5 +1,5 @@
 New-GroupBox 'Miscellaneous Windows features'
 
 
-$BUTTON_FUNCTION = { Remove-WindowsFeatures }
+[ScriptBlock]$BUTTON_FUNCTION = { Remove-WindowsFeatures }
 New-Button 'Feature cleanup' $BUTTON_FUNCTION
