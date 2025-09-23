@@ -15,5 +15,5 @@ Function Start-Script {
 
     Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $CallerPath"
 
-    Start-Process 'PowerShell' $FullCommand -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
+    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
 }
