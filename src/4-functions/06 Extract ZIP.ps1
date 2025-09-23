@@ -7,7 +7,7 @@ Function Start-Extraction {
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
     Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
-    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
+    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
 
     [String]$Executable = Switch -Wildcard ($ZipName) {
         'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }

@@ -1,11 +1,11 @@
 Function Remove-WindowsFeatures {
-    Write-Log $INF "Starting miscellaneous Windows features cleanup..."
+    Write-Log $INF 'Starting miscellaneous Windows features cleanup...'
 
-    Set-Variable -Option Constant FeaturesToRemove @("App.StepsRecorder",
-        "MathRecognizer",
-        "Media.WindowsMediaPlayer",
-        "OpenSSH.Client",
-        "VBSCRIPT"
+    Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
+        'MathRecognizer',
+        'Media.WindowsMediaPlayer',
+        'OpenSSH.Client',
+        'VBSCRIPT'
     )
 
     try {

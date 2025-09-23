@@ -6,10 +6,10 @@ Function Start-Download {
     )
 
     Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
-    Set-Variable -Option Constant TempPath "$PATH_TEMP_DIR\$FileName"
+    Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
     Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_CURRENT_DIR\$FileName" })
 
-    New-Item -Force -ItemType Directory $PATH_TEMP_DIR | Out-Null
+    New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
 
     Write-Log $INF "Downloading from $URL"
 
@@ -18,7 +18,7 @@ Function Start-Download {
         Write-Log $ERR "Download failed: $IsNotConnected"
 
         if (Test-Path $SavePath) {
-            Write-Log $WRN "Previous download found, returning it"
+            Write-Log $WRN 'Previous download found, returning it'
             Return $SavePath
         } else {
             Return

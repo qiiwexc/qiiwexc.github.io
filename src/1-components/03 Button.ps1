@@ -19,7 +19,7 @@ Function New-Button {
     Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
 
     [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
-    [System.Drawing.Point]$Shift = "0, 0"
+    [System.Drawing.Point]$Shift = '0, 0'
 
     if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
         [Int]$PreviousLabelOrCheckboxY = if ($PREVIOUS_LABEL_OR_CHECKBOX) { $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y } else { 0 }
@@ -28,7 +28,7 @@ Function New-Button {
         [Int]$PreviousMiscElement = if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) { $PreviousLabelOrCheckboxY } else { $PreviousRadioY }
 
         $InitialLocation.Y = $PreviousMiscElement
-        $Shift = "0, 30"
+        $Shift = '0, 30'
     } elseif ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
         $Shift = "0, $INTERVAL_BUTTON"

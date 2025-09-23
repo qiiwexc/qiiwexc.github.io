@@ -2,10 +2,10 @@
     Set-MpPreference -PUAProtection Enabled
     Set-MpPreference -MeteredConnectionUpdates $True
 
-    Set-ItemProperty -Path "HKCU:\Control Panel\International" -Name "sCurrency" -Value ([Char]0x20AC)
-    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate" -Name "Start" -Value 3
+    Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
+    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
 
-    Unregister-ScheduledTask -TaskName "CreateExplorerShellUnelevatedTask" -Confirm:$False -ErrorAction SilentlyContinue
+    Unregister-ScheduledTask -TaskName 'CreateExplorerShellUnelevatedTask' -Confirm:$False -ErrorAction SilentlyContinue
 
     Set-PowerConfiguration
 

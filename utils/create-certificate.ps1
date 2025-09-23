@@ -72,7 +72,7 @@ Function New-Certificate {
     Export-Certificate -Cert $Certificate -FilePath $CertificatePath
 
     try {
-        Get-Item $CertificatePath | Import-Certificate -CertStoreLocation "Cert:\LocalMachine\Root"
+        Get-Item $CertificatePath | Import-Certificate -CertStoreLocation 'Cert:\LocalMachine\Root'
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to import certificates'
         Return

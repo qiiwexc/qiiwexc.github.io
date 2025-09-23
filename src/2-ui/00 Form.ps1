@@ -25,5 +25,5 @@ $FORM.Controls.Add($LOG)
 
 Set-Variable -Option Constant TAB_CONTROL (New-Object System.Windows.Forms.TabControl)
 $TAB_CONTROL.Size = "$($LOG.Width + 1), $($FORM_HEIGHT - $LOG.Height - 1)"
-$TAB_CONTROL.Location = "5, 5"
+$TAB_CONTROL.Location = '5, 5'
 $FORM.Controls.Add($TAB_CONTROL)
