@@ -2,11 +2,11 @@ New-GroupBox 'Debloat Windows and privacy' 5
 
 
 $BUTTON_FUNCTION = { Start-WindowsDebloat }
-New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION | Out-Null
+New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
 
 
 $BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
-New-Button 'ShutUp10++ privacy' $BUTTON_FUNCTION | Out-Null
+New-Button 'ShutUp10++ privacy' $BUTTON_FUNCTION
 
 $CHECKBOX_DISABLED = $PS_VERSION -le 2
 $CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
