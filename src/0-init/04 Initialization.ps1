@@ -20,12 +20,8 @@ try {
 
 Set-Variable -Option Constant PS_VERSION $PSVersionTable.PSVersion.Major
 
-Set-Variable -Option Constant SHELL (New-Object -com Shell.Application)
-
-Set-Variable -Option Constant OperatingSystem (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
-Set-Variable -Option Constant IsWindows11 ($OperatingSystem.Caption -Match "Windows 11")
-Set-Variable -Option Constant OS_NAME $OperatingSystem.Caption
-Set-Variable -Option Constant OS_BUILD $OperatingSystem.Version
+Set-Variable -Option Constant OPERATING_SYSTEM (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
+Set-Variable -Option Constant IsWindows11 ($OPERATING_SYSTEM.Caption -Match "Windows 11")
 Set-Variable -Option Constant OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -Like '*64') { $True })
 Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
 

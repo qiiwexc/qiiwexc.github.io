@@ -19,10 +19,10 @@ Function Start-Build {
     Set-Variable -Option Constant Ps1File     "$DistPath\$ProjectName.ps1"
     Set-Variable -Option Constant BatchFile   "$DistPath\$ProjectName.bat"
 
-    Add-Log $INF 'Build task started'
-    Add-Log $INF "Version     = $Version"
-    Add-Log $INF "Source path = $SourcePath"
-    Add-Log $INF "Output file = $Ps1File"
+    Write-Log $INF 'Build task started'
+    Write-Log $INF "Version     = $Version"
+    Write-Log $INF "Source path = $SourcePath"
+    Write-Log $INF "Output file = $Ps1File"
 
     Write-VersionFile $Version $VersionFile
 
@@ -36,16 +36,16 @@ Function Start-Build {
 
     New-Batch $Ps1File $BatchFile
 
-    Add-Log $INF 'Build finished'
+    Write-Log $INF 'Build finished'
 
     if ($Run) {
-        Add-Log $INF "Running $BatchFile"
-        Start-Process 'PowerShell' ".\$BatchFile ShowConsole"
+        Write-Log $INF "Running $BatchFile"
+        Start-Process 'PowerShell' ".\$BatchFile Debug"
     }
 }
 
 
-Function Add-Log {
+Function Write-Log {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
@@ -69,7 +69,7 @@ Function Write-VersionFile {
         [String][Parameter(Position = 1, Mandatory = $True)]$VersionFile
     )
 
-    Add-Log $INF 'Writing version file...'
+    Write-Log $INF 'Writing version file...'
 
     Remove-Item -Force -ErrorAction SilentlyContinue $VersionFile
 
@@ -85,7 +85,7 @@ Function Get-Config {
         [String][Parameter(Position = 1, Mandatory = $True)]$Version
     )
 
-    Add-Log $INF 'Loading config...'
+    Write-Log $INF 'Loading config...'
 
     Set-Variable -Option Constant UrlsFile "$AssetsPath\urls.json"
 
@@ -104,7 +104,7 @@ Function New-Html {
         [System.Object[]][Parameter(Position = 1, Mandatory = $True)]$Config
     )
 
-    Add-Log $INF 'Building the web page...'
+    Write-Log $INF 'Building the web page...'
 
     Set-Variable -Option Constant TemplateFile "$AssetsPath\template.html"
     Set-Variable -Option Constant OutputFile   ".\index.html"
@@ -128,7 +128,7 @@ Function New-PowerShell {
         [System.Object[]][Parameter(Position = 2, Mandatory = $True)]$Config
     )
 
-    Add-Log $INF 'Building PowerShell script...'
+    Write-Log $INF 'Building PowerShell script...'
 
     Remove-Item -Force -ErrorAction SilentlyContinue $Ps1File
 
@@ -146,7 +146,7 @@ Function New-PowerShell {
 
     $Config | ForEach-Object { $OutputStrings = $OutputStrings -Replace "{$($_.key)}", $_.value }
 
-    Add-Log $INF "Writing output file $Ps1File"
+    Write-Log $INF "Writing output file $Ps1File"
     $OutputStrings | Out-File $Ps1File -Encoding ASCII
 
     Out-Success
@@ -159,13 +159,14 @@ Function New-Batch {
         [String][Parameter(Position = 1, Mandatory = $True)]$BatchFile
     )
 
-    Add-Log $INF 'Building batch script...'
+    Write-Log $INF 'Building batch script...'
 
     Remove-Item -Force -ErrorAction SilentlyContinue $BatchFile
 
     [String[]]$PowerShellStrings = Get-Content $Ps1File
 
     [String[]]$BatchStrings = "@echo off`n"
+    $BatchStrings += "if `"%~1`"==`"Debug`" set debug=true`n"
     $BatchStrings += "set `"psfile=%temp%\$ProjectName.ps1`"`n"
     $BatchStrings += '> "%psfile%" ('
     $BatchStrings += "  for /f `"delims=`" %%A in ('findstr `"^::`" `"%~f0`"') do ("
@@ -175,17 +176,17 @@ Function New-Batch {
     $BatchStrings += '    endlocal'
     $BatchStrings += '  )'
     $BatchStrings += ")`n"
-    $BatchStrings += 'if "%~1"=="ShowConsole" ('
+    $BatchStrings += 'if "%debug%"=="true" ('
     $BatchStrings += '  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%"'
     $BatchStrings += ') else ('
-    $BatchStrings += '  powershell -ExecutionPolicy Bypass "%psfile%" -HideConsole -CallerPath "%cd%"'
+    $BatchStrings += '  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%" -HideConsole'
     $BatchStrings += ")`n"
 
     ForEach ($String In $PowerShellStrings) {
         $BatchStrings += "::$($String -Replace "`n", "`n::")"
     }
 
-    Add-Log $INF "Writing batch file $BatchFile"
+    Write-Log $INF "Writing batch file $BatchFile"
     $BatchStrings | Out-File $BatchFile -Encoding ASCII
 
     Out-Success
@@ -197,7 +198,7 @@ Function Set-Signature {
         [String][Parameter(Position = 1, Mandatory = $True)]$ProjectName
     )
 
-    Add-Log $INF 'Signing...'
+    Write-Log $INF 'Signing...'
 
     Set-Variable -Option Constant ThumbprintPath ".\certificate\$ProjectName.txt"
     Set-Variable -Option Constant TimestampServer 'http://timestamp.digicert.com'
