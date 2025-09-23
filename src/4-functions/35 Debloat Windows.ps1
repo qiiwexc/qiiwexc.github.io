@@ -18,7 +18,7 @@ Function Start-ShutUp10 {
     Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_TEMP_DIR } else { $PATH_CURRENT_DIR })
     Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
 
-    $CONFIG_SHUTUP10 | Out-File $ConfigFile -Encoding UTF8
+    $CONFIG_SHUTUP10 | Out-File $ConfigFile
 
     if ($Silent) {
         Start-DownloadExtractExecute -Execute:$Execute '{URL_SHUTUP10}' -Params $ConfigFile

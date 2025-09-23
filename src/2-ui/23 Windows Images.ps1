@@ -9,6 +9,3 @@ New-ButtonBrowser 'Windows 10' $BUTTON_FUNCTION
 
 [ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser '{URL_WINDOWS_7}' }
 New-ButtonBrowser 'Windows 7' $BUTTON_FUNCTION
-
-[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser '{URL_LIVE_CD}' }
-New-ButtonBrowser 'Windows PE (Live CD)' $BUTTON_FUNCTION
