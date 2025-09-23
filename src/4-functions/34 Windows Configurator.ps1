@@ -7,7 +7,7 @@ Function Start-WinUtil {
 
     Set-Variable -Option Constant ConfigFile "$PATH_TEMP_DIR\winutil.json"
 
-    $CONFIG_WINUTIL | Out-File $ConfigFile -Encoding UTF8
+    $CONFIG_WINUTIL | Out-File $ConfigFile
 
     Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
     Set-Variable -Option Constant RunParam $(if ($Apply) { '-Run' } else { '' })
