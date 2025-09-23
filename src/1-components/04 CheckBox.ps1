@@ -18,7 +18,7 @@ Function New-CheckBox {
     Set-Variable -Option Constant CheckBox (New-Object System.Windows.Forms.CheckBox)
 
     [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
-    [System.Drawing.Point]$Shift = "0, 0"
+    [System.Drawing.Point]$Shift = '0, 0'
 
     if ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location

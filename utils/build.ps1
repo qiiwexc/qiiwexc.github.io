@@ -55,11 +55,11 @@ Function Write-Log {
 }
 
 Function Out-Success {
-    Write-Host -NoNewline " Done"
+    Write-Host -NoNewline ' Done'
 }
 
 Function Out-Failure {
-    Write-Host -NoNewline " Failed"
+    Write-Host -NoNewline ' Failed'
 }
 
 
@@ -107,13 +107,13 @@ Function New-Html {
     Write-Log $INF 'Building the web page...'
 
     Set-Variable -Option Constant TemplateFile "$AssetsPath\template.html"
-    Set-Variable -Option Constant OutputFile   ".\index.html"
+    Set-Variable -Option Constant OutputFile   '.\index.html'
 
     [String[]]$TemplateContent = Get-Content $TemplateFile
 
     $Config | ForEach-Object { $TemplateContent = $TemplateContent -Replace "{$($_.key)}", $_.value }
 
-    $TemplateContent = $TemplateContent -Replace "../d/stylesheet.css", "https://bit.ly/stylesheet_web"
+    $TemplateContent = $TemplateContent -Replace '../d/stylesheet.css', 'https://bit.ly/stylesheet_web'
 
     $TemplateContent | Out-File $OutputFile
 
