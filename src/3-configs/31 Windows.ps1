@@ -237,6 +237,9 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 [HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\Image Preview\DropTarget]
 "{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"=""
 
+[HKEY_CURRENT_USER\Control Panel\Desktop]
+"JPEGImportQuality"=dword:00000064
+
 [HKEY_CURRENT_USER\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 "ShowCmd"=dword:00000003
 "WFlags"=dword:00000002
@@ -270,12 +273,16 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "UsageTracking"=dword:00000000
 "Volume"=dword:00000064
 
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
+"ShowedToastAtLevel"=dword:00000001
+
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer]
 "MaximizeApps"=dword:00000001
 "ShowRecommendations"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 "NavPaneShowAllCloudStates"=dword:00000001
+"SeparateProcess"=dword:00000001
 "Start_IrisRecommendations"=dword:00000000
 "Start_Layout"=dword:00000001
 
@@ -313,6 +320,7 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "AllItemsIconView"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+"{20D04FE0-3AEA-1069-A2D8-08002B30309D}"=dword:00000000
 "MSEdge"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
@@ -321,12 +329,18 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
 "PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
 
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
+"EnthusiastMode"=dword:00000001
+
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
 "ArchivedFiles"=dword:00000001
 "SystemFolders"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
 "VisualFXSetting"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR]
+"AppCaptureEnabled"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
 "SecureProtocols"=dword:00002820
@@ -360,6 +374,20 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 [HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
 "Hardware_DataEncryption_AddMsa"=dword:00000000
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs\Command]
+@="cmd /c DISM.exe /Online /Add-Package /PackagePath:"%1" /NoRestart & pause""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs]
+"HasLUAShield"=""
+"MUIVerb"="@shell32.dll,-10210"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract\Command]
+@="msiexec.exe /a "%1" /qb TARGETDIR"="%1 extracted""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract]
+"Icon"="shell32.dll,-16817"
+"MUIVerb"="@shell32.dll,-37514"
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
 "fAllVolumes"=dword:00000001
 "fDeadlineEnabled"=dword:00000001
@@ -367,6 +395,69 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "fTaskEnabled"=dword:00000001
 "TaskFrequency"=dword:00000002
 "Volumes"=" "
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
+"CostedNetworkPolicy"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag]
+"ThisPCPolicy"="Hide"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
+"SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\BranchCache]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Delivery Optimization Files]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Device Driver Packages]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Language Pack]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Previous Installations]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Setup Log Files]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error memory dump files]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error minidump files]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Setup Files]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
+"StateFlags1337"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
+"MaxTelemetryAllowed"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+"PromptOnSecureDesktop"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services\7971F918-A847-4430-9279-4A52D1EFE18D]
+"RegisteredWithAU"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services]
+"DefaultService"="7971f918-a847-4430-9279-4a52d1efe18d"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection]
+"EnableNetworkProtection"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection]
 "SummaryNotificationDisabled"=dword:00000001
@@ -397,15 +488,6 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "EnableFindMyFiles"=dword:00000001
 "SystemIndexNormalization"=dword:00000003
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
-"CostedNetworkPolicy"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
-"SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
-"PromptOnSecureDesktop"=dword:00000000
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search\Preferences]
 "AllowIndexingEncryptedStoresOrItems"=dword:00000001
 
@@ -413,12 +495,21 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "AllowMUUpdateService"=dword:00000001
 "IsContinuousInnovationOptedIn"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds]
+"EnableFeeds"=dword:00000000
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
 "EnableFindMyFiles"=dword:00000001
 "SystemIndexNormalization"=dword:00000003
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
 "PromptOnSecureDesktop"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
+"MaxTelemetryAllowed"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Feeds]
+"EnableFeeds"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\CodePage]
 "ACP"="65001"
