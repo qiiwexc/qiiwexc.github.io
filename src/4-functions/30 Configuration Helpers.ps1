@@ -31,12 +31,17 @@ Function Update-JsonFile {
 
     New-Item -ItemType Directory (Split-Path -Parent $Path) -ErrorAction SilentlyContinue
 
-    Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
-    Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
+    if (Test-Path $Path) {
+        Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
+        Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
 
-    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
+        Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
 
-    Set-Content $Path $UpdatedConfig
+        Set-Content $Path $UpdatedConfig
+    } else {
+        Write-Log $INF "'$Path' does not exist. Creating new file..."
+        Set-Content $Path $Content
+    }
 
     Out-Success
 }
