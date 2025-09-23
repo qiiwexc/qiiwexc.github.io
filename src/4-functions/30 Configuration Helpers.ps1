@@ -1,8 +1,8 @@
 Function Write-ConfigurationFile {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Path,
-        [String][Parameter(Position = 2, Mandatory = $True)]$Content,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Content,
+        [String][Parameter(Position = 2, Mandatory = $True)]$Path,
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
 
@@ -20,9 +20,9 @@ Function Write-ConfigurationFile {
 Function Update-JsonFile {
     Param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Path,
+        [String][Parameter(Position = 1, Mandatory = $True)]$ProcessName,
         [String][Parameter(Position = 2, Mandatory = $True)]$Content,
-        [String][Parameter(Position = 3)]$ProcessName = $AppName
+        [String][Parameter(Position = 3, Mandatory = $True)]$Path
     )
 
     Write-Log $INF "Writing $AppName configuration to '$Path'..."

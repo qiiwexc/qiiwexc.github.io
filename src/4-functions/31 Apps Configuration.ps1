@@ -1,50 +1,29 @@
-Function Set-AppsConfiguration {
-    if ($CHECKBOX_Config_VLC.Checked) {
-        $AppName = $CHECKBOX_Config_VLC.Text
-        $Path = "$PATH_PROFILE_ROAMING\vlc\vlcrc"
-        $Content = $CONFIG_VLC
-        Write-ConfigurationFile $AppName $Path $Content
-    }
+﻿Function Set-VlcConfiguration {
+    Set-Variable -Option Constant AppName $CHECKBOX_Config_VLC.Text
+    Write-ConfigurationFile $AppName $CONFIG_VLC "$PATH_PROFILE_ROAMING\vlc\vlcrc"
+}
 
-    if ($CHECKBOX_Config_qBittorrent.Checked) {
-        $AppName = $CHECKBOX_Config_qBittorrent.Text
-        $Path = "$PATH_PROFILE_ROAMING\$AppName\$AppName.ini"
-        $Content = $CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -Match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH })
-        Write-ConfigurationFile $AppName $Path $Content
-    }
 
-    if ($CHECKBOX_Config_7zip.Checked) {
-        Import-RegistryConfiguration $CHECKBOX_Config_7zip.Text $CONFIG_7ZIP
-    }
+Function Set-qBittorrentConfiguration {
+    Set-Variable -Option Constant AppName $CHECKBOX_Config_qBittorrent.Text
+    Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -Match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH }))
+    Write-ConfigurationFile $AppName $Content "$PATH_PROFILE_ROAMING\$AppName\$AppName.ini"
+}
 
-    if ($CHECKBOX_Config_TeamViewer.Checked) {
-        Import-RegistryConfiguration $CHECKBOX_Config_TeamViewer.Text $CONFIG_TEAMVIEWER
-    }
 
-    if ($CHECKBOX_Config_Edge.Checked) {
-        $AppName = $CHECKBOX_Config_Edge.Text
+Function Set-MicrosoftEdgeConfiguration {
+    Set-Variable -Option Constant AppName $CHECKBOX_Config_Edge.Text
+    Set-Variable -Option Constant ProcessName "msedge"
 
-        $Path = "$PATH_PROFILE_LOCAL\Microsoft\Edge\User Data\Local State"
-        Update-JsonFile $AppName $Path $CONFIG_EDGE_LOCAL_STATE "msedge"
+    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$PATH_PROFILE_LOCAL\Microsoft\Edge\User Data\Local State"
+    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$PATH_PROFILE_LOCAL\Microsoft\Edge\User Data\Default\Preferences"
+}
 
-        $Path = "$PATH_PROFILE_LOCAL\Microsoft\Edge\User Data\Default\Preferences"
-        Update-JsonFile $AppName $Path $CONFIG_EDGE_PREFERENCES "msedge"
-    }
 
-    if ($CHECKBOX_Config_Chrome.Checked) {
-        $AppName = $CHECKBOX_Config_Chrome.Text
+Function Set-GoogleChromeConfiguration {
+    Set-Variable -Option Constant AppName $CHECKBOX_Config_Chrome.Text
+    Set-Variable -Option Constant ProcessName "chrome"
 
-        $Path = "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Local State"
-        Update-JsonFile $AppName $Path $CONFIG_CHROME_LOCAL_STATE "chrome"
-
-        $Path = "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Default\Preferences"
-        Update-JsonFile $AppName $Path $CONFIG_CHROME_PREFERENCES "chrome"
-    }
-
-    if ($CHECKBOX_Config_Windows.Checked) {
-        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate" -Name "Start" -Value 3
-        Unregister-ScheduledTask -TaskName "CreateExplorerShellUnelevatedTask" -Confirm:$False -ErrorAction SilentlyContinue
-
-        Import-RegistryConfiguration $CHECKBOX_Config_Windows.Text $CONFIG_WINDOWS
-    }
+    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Local State"
+    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Default\Preferences"
 }
