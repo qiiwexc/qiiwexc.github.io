@@ -4,7 +4,7 @@ Function New-ButtonBrowser {
         [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
     )
 
-    New-Button $Text $Function | Out-Null
+    New-Button $Text $Function
 
     New-Label 'Opens in the browser'
 }
@@ -55,6 +55,4 @@ Function New-Button {
     Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
     Set-Variable -Scope Script PREVIOUS_RADIO $Null
     Set-Variable -Scope Script PREVIOUS_BUTTON $Button
-
-    Return $Button
 }

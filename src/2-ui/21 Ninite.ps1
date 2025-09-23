@@ -33,12 +33,11 @@ $CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( {
     Set-NiniteButtonState
 } )
 
-$BUTTON_DownloadNinite = New-Button 'Download selected'
-$BUTTON_DownloadNinite.Add_Click( {
-    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "{URL_NINITE}/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName)
-} )
+$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "{URL_NINITE}/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName) }
+New-Button 'Download selected' $BUTTON_FUNCTION
+
 
 $CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 
 $BUTTON_FUNCTION = { Open-InBrowser "{URL_NINITE}/?select=$(Set-NiniteQuery)" }
-New-ButtonBrowser 'View other' $BUTTON_FUNCTION | Out-Null
+New-ButtonBrowser 'View other' $BUTTON_FUNCTION

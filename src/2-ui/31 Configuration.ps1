@@ -21,4 +21,4 @@ $CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 
 
 $BUTTON_FUNCTION = { Set-Configuration }
-New-Button 'Apply configuration' $BUTTON_FUNCTION | Out-Null
+New-Button 'Apply configuration' $BUTTON_FUNCTION
