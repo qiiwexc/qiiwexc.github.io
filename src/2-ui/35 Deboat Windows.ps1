@@ -1,19 +1,19 @@
 New-GroupBox 'Debloat Windows and privacy' 5
 
 
-$BUTTON_FUNCTION = { Start-WindowsDebloat }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat }
 New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
 
 
-$BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
 New-Button 'ShutUp10++ privacy' $BUTTON_FUNCTION
 
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-$CHECKBOX_StartShutUp10 = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
+[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+[System.Windows.Forms.CheckBox]$CHECKBOX_StartShutUp10 = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 $CHECKBOX_StartShutUp10.Add_CheckStateChanged( {
     $CHECKBOX_SilentlyRunShutUp10.Enabled = $CHECKBOX_StartShutUp10.Checked
 } )
 
-$CHECKBOX_DISABLED = $PS_VERSION -le 2
-$CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks' -Disabled:$CHECKBOX_DISABLED
+[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
+[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks' -Disabled:$CHECKBOX_DISABLED
