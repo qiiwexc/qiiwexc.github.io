@@ -31,7 +31,7 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Version #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.9.23')
+::Set-Variable -Option Constant VERSION ([Version]'25.9.24')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Elevated #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -457,7 +457,7 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked 'https://github.com/pbatard/rufus/releases/download/v4.9/rufus-4.9p.exe' -Params:'-g' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked 'https://github.com/pbatard/rufus/releases/download/v4.10/rufus-4.10p.exe' -Params:'-g' }
 ::New-Button 'Rufus' $BUTTON_FUNCTION
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -2958,6 +2958,13 @@ if "%debug%"=="true" (
 ::            Set-Variable -Option Constant User ($Registry -Replace 'HKEY_USERS\\', '')
 ::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
 ::            $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
+::
+::    # $ConfigLines += "[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]
+::    # `"EnableAppOffloading`"=dword:00000000
+::
+::    # [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]
+::    # `"RotatingLockScreenEnabled`"=dword:00000001
+::    # `"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"
 ::        }
 ::
 ::        $VolumeRegistries = (Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name
@@ -3140,8 +3147,8 @@ if "%debug%"=="true" (
 ::# SIG # Begin signature block
 ::# MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 ::# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUrzHJ0XSw2D3fEmPFWV7GRbmm
-::# c/OgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUZXzFcJZjCZMllL+cGKaZBvUv
+::# 4K+gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 ::# AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 ::# OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 ::# ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -3262,28 +3269,28 @@ if "%debug%"=="true" (
 ::# ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 ::# DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 ::# AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBTKnim6
-::# 2shloLgKudrbcn8CSQpb4jANBgkqhkiG9w0BAQEFAASCAQCKDwASo89lJXtQJ8Yn
-::# JOPwF1cU1yGutjbU3B6gdf/I50hUeYV8gyqPxmuCvSa/zsMOxrYPjem5X1c1eZIY
-::# DWjwdSH32QlRxxEIrhRTE9OvqyhswTjDpSR8+Qy9jfaNFr0D/OODws8ai5ln2U5H
-::# ro//lJudI7clPzx6HuLKg2ypgqHcSOnNVy4HULLbY3Qiwvu1okFnEMpbThXFnAnn
-::# +NN2m5R1ZuTttcRrxj7gQMSyEBG+O2+upsvx4NyQGVTg/yU/QEBGdU9JYhI1omh+
-::# LjGkpr2Vwkq+BRYuwi0vjsBcS8Wy2XSj1Ow1wkiuhu1jXRtmlMp8tXl5lBmT5igw
-::# bBg0oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSqYTCr
+::# kM5O2UDgj6WP32qJvdQIWDANBgkqhkiG9w0BAQEFAASCAQAB8dy+PWyBYGjtTIYi
+::# MzKDHW8zMaCwxTnr1DEs46fT4sQ3Kdw7Qm9a/hDRlhfvTDR9GoBUrs7m7iwqEuV6
+::# OG8Iz2w9ietILU+B4HPYeYwTs1Wlx3w2ZC4om2rmB4sbvzQqgYO8z6ix8VEf0S4e
+::# J4eWBgqyzzggX1x/vVYZVA3TUw05SG4FJrkaFIyJpbt7Pjz54oTb89eFm4TwhtuW
+::# DEJEMV/RbEciHJRFWe6wJPAR/7Q3zKxuHnUsj1vjirUjjlzZZ+yuBRNW942gpd7i
+::# TTbCO+3/DGbNYCKayBn5SxM02g6/JGYofkFGoY/NFgI0aahGrSEpYhaPkwKPanqr
+::# UeljoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 ::# VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 ::# cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 ::# CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkyMzIwNTkwOVowLwYJKoZI
-::# hvcNAQkEMSIEIFPrc22ZCwBM/6PczfXnXNItIYF+QDFmDVzdLEz2irKWMA0GCSqG
-::# SIb3DQEBAQUABIICALorwRkucLYV8lJ1Crk0r+Da0aG71AoQkpDSGQEqsWSeVsZ/
-::# nbAVL6ICVhwJxY606yVilzF+u8IIQuanShw72d426LOoUFb3Aa3f46Yv42LeikvK
-::# kLbiPHCg6LGn0lwb01EpZeXcxbCCptXIFaF3drAVpEcWsWsVgU6k7CYFUon6UYUU
-::# Zg775oKVT+YStEEZvip5wuP479xrKSmbGGHybDbXV+f6u0pk9sIph1VqxCAIAUaT
-::# NyUwo19iHrVi2DSPJLBdgoE38fQiuqHlTkdsKFQMEzKgpjqcRXu9LvfZBipESlL8
-::# 2AFKQbfcqbeuXatP7K3Fg1PZzfrH+q/xHWuIzeJk2nqO38w2BgmHoXDoykSEd3D+
-::# byuCi9+z+8Lb7Vnq52mLTRdGywdFg/RFDl0fRUAZv7RPyAYmp/5PQfTwQpSfaRmV
-::# zfurvytUJtOI9rUyYsludo98vmf4K3eEIDS5RK6TbVeRbMmJY54gCjSyN3CEqOUZ
-::# Q9vMzYUxacZQn7R+zHZx7TGZrOZ3S+xM/p0GEXPfYuWBmUkmJPJoSBggL7Iaqxxn
-::# eYowJFMZbR4TpY1Hs8lJbYVn5bAoTXG2EEj4uVhe9oRPGjcpbqBd0Wc6/KQwCYuy
-::# mb1Affrr7Pcf7f+HcKdjVHuAdToutMS7MzwLrsY9f1uy2gvlnRPbvQppjw3Q
+::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkyNDE5NDAwOFowLwYJKoZI
+::# hvcNAQkEMSIEINgA3LNkTwidfgOeMfBdx3hjNDirTsEkN0s+FGMuS6paMA0GCSqG
+::# SIb3DQEBAQUABIICAMzsrkvpCiuoYYkKfS6wHpVcrwfKJrFr0zRvvNrWVPX7lyAq
+::# EhIUGH/BqAddPa6dPfpIpRToHh5lz8sgbEUXbQxW1qS8qwpqdDYOWtTN4iQnzQ3f
+::# xwhrwdZuk7sck7CLIruUII4LAgPMLZz6aq6g9yE2+nbYkTb2Ni7myuXEywIfgGBM
+::# NwXkIJ3Zw7pQRyJ1TEe/GKWsuvf4ThqaJn9Rq0ZG3ATSct/RWCOLyZGnZ8ZSUtAo
+::# 9DSQifbyjdRqTGiilQul5p11MALfkqsy6iy5yttEQa1FchLinIXfAXv+f0qrzxxU
+::# kFHrOnkXLzVEyE88uSP+YbTaj4fYp3c44WKEQdxuYnNnedH44oGi84B8Ki7txSBS
+::# bx+uWGBDR8lTDEDa0zQ8455/wtkDVKQfqyZ9ervkPRQ+1lBOrsN9VUT6j8KAAVMd
+::# Cyo9q6jpEgl6MaPc+0gokzWxEw9X7G3dtzviVEoy5/FBBS/0RDi11NZHvIjiguxz
+::# sHs/E2CWwuSIwsNw0K5/NVdrxuqjzEFLWoCDK2mn9UkMswFVF5a510LII/ogbfsM
+::# 1nB8rRuEldd9ldXge6owYuNxvJVow2awQN1s/b/jxgFhZiePx4Btgq2NsrSVDgDK
+::# WJ/Z+inBWFkPjJu3LFhw9so9OD8vbPaPNvYIn/uUZ19sUsV3Bw5tH3iRaoHh
 ::# SIG # End signature block

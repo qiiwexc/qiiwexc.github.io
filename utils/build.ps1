@@ -73,7 +73,7 @@ Function Write-VersionFile {
 
     Remove-Item -Force -ErrorAction SilentlyContinue $VersionFile
 
-    $Version | Out-File $VersionFile
+    $Version | Out-File $VersionFile -Encoding UTF8
 
     Out-Success
 }
