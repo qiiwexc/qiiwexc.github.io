@@ -37,7 +37,6 @@ Microsoft.BingSports
 Microsoft.BingTranslator
 Microsoft.BingTravel
 Microsoft.Copilot
-Microsoft.Copilot
 Microsoft.Getstarted
 Microsoft.Messaging
 Microsoft.Microsoft3DViewer

@@ -31,7 +31,7 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Version #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.9.24')
+::Set-Variable -Option Constant VERSION ([Version]'25.9.26')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Elevated #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -1189,6 +1189,34 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.00
 ::
+::[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing]
+::
+::[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\Directory\shellex\CopyHookHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\Directory\shellex\PropertySheetHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\Drive\shellex\PropertySheetHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
+::
+::[-HKEY_CLASSES_ROOT\LibraryFolder\background\shellex\ContextMenuHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing]
+::
+::[-HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::"System.IsPinnedToNameSpaceTree"=dword:0
+::
+::[-HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::"System.IsPinnedToNameSpaceTree"=dword:0
+::
 ::[HKEY_CLASSES_ROOT\jpegfile\shell\open\DropTarget]
 ::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
 ::
@@ -1212,6 +1240,24 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\open\DropTarget]
 ::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print]
+::"NeverDefault"=""
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print\command]
+::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
+::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
+::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
+::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
+::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
+::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
+::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
+::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
+::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
+::  00,31,00,00,00
+::
+::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print\DropTarget]
+::"Clsid"="{60fd46de-f830-4894-a628-6fa81bc0190d}"
 ::
 ::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap]
 ::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
@@ -1239,24 +1285,6 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\DropTarget]
 ::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print]
-::"NeverDefault"=""
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print\DropTarget]
-::"Clsid"="{60fd46de-f830-4894-a628-6fa81bc0190d}"
 ::
 ::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF]
 ::"EditFlags"=dword:00010000
@@ -1426,12 +1454,22 @@ if "%debug%"=="true" (
 ::[HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\Image Preview\DropTarget]
 ::"{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"=""
 ::
+::[HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys]
+::"Flags"="506"
+::
 ::[HKEY_CURRENT_USER\Control Panel\Desktop]
 ::"JPEGImportQuality"=dword:00000064
 ::
 ::[HKEY_CURRENT_USER\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 ::"ShowCmd"=dword:00000003
 ::"WFlags"=dword:00000002
+::
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}]
+::@="CLSID_MSGraphHomeFolder"
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 ::"ShowCmd"=dword:00000003
@@ -1443,6 +1481,16 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Feeds]
 ::"DefaultInterval"=dword:0000000F
 ::"SyncStatus"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Input\TIPC]
+::"Enabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\InputPersonalization]
+::"RestrictImplicitInkCollection"=dword:00000001
+::"RestrictImplicitTextCollection"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\InputPersonalization\TrainedDataStore]
+::"HarvestContacts"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
 ::"DoNotTrack"=dword:00000001
@@ -1462,6 +1510,19 @@ if "%debug%"=="true" (
 ::"UsageTracking"=dword:00000000
 ::"Volume"=dword:00000064
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Personalization\Settings]
+::"AcceptedPrivacyPolicy"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Siuf\Rules]
+::"NumberOfSIUFInPeriod"=dword:00000000
+::"PeriodInNanoSeconds"=-
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy]
+::"HasAccepted"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
+::"Enabled"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
 ::"ShowedToastAtLevel"=dword:00000001
 ::
@@ -1470,10 +1531,19 @@ if "%debug%"=="true" (
 ::"ShowRecommendations"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+::"Hidden"=dword:00000001
+::"LaunchTo"=dword:00000001
 ::"NavPaneShowAllCloudStates"=dword:00000001
 ::"SeparateProcess"=dword:00000001
+::"ShowCopilotButton"=dword:00000000
+::"ShowTaskViewButton"=dword:00000000
 ::"Start_IrisRecommendations"=dword:00000000
 ::"Start_Layout"=dword:00000001
+::"Start_TrackProgs"=dword:00000000
+::"TaskbarMn"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
+::"TaskbarEndTask"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\CIDSizeMRU]
 ::"0"=hex:4E,00,4F,00,54,00,45,00,50,00,41,00,44,00,2E,00,45,00,58,00,45,00,00, \
@@ -1547,9 +1617,18 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
 ::"DaysToKeep"=dword:00000000
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+::"HideSCAMeetNow"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Privacy]
+::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
 ::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
 ::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
+::"IsEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
 ::"256"=dword:0000003C
@@ -1562,6 +1641,28 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
 ::"Hardware_DataEncryption_AddMsa"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer]
+::"DisableSearchBoxSuggestions"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
+::"DisableAIDataAnalysis"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsCopilot]
+::"TurnOffWindowsCopilot"=dword:00000001
+::
+::[HKEY_CURRENT_USER\System\GameConfigStore]
+::"GameDVR_Enabled"=dword:00000000
+::
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
+::
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
+::
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}]
+::
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
+::
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}]
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs\Command]
 ::@="cmd /c DISM.exe /Online /Add-Package /PackagePath:"%1" /NoRestart & pause""
@@ -1585,8 +1686,33 @@ if "%debug%"=="true" (
 ::"TaskFrequency"=dword:00000002
 ::"Volumes"=" "
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
+::"value"=dword:00000000
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
 ::"CostedNetworkPolicy"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowGallery]
+::"CheckedValue"=dword:00000001
+::"DefaultValue"=dword:00000000
+::"HKeyRoot"=dword:80000001
+::"Id"=dword:0000000d
+::"RegPath"="Software\\Classes\\CLSID\\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}"
+::"Text"="Show Gallery"
+::"Type"="checkbox"
+::"UncheckedValue"=dword:00000000
+::"ValueName"="System.IsPinnedToNameSpaceTree"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
+::"CheckedValue"=dword:00000001
+::"DefaultValue"=dword:00000000
+::"HKeyRoot"=dword:80000001
+::"Id"=dword:0000000d
+::"RegPath"="Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}"
+::"Text"="Show Home"
+::"Type"="checkbox"
+::"UncheckedValue"=dword:00000000
+::"ValueName"="System.IsPinnedToNameSpaceTree"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag]
 ::"ThisPCPolicy"="Hide"
@@ -1634,7 +1760,8 @@ if "%debug%"=="true" (
 ::"StateFlags1337"=dword:00000002
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
-::"MaxTelemetryAllowed"=dword:00000001
+::"AllowTelemetry"=dword:00000000
+::"MaxTelemetryAllowed"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
 ::"PromptOnSecureDesktop"=dword:00000000
@@ -1684,8 +1811,49 @@ if "%debug%"=="true" (
 ::"AllowMUUpdateService"=dword:00000001
 ::"IsContinuousInnovationOptedIn"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
+::"AllowNewsAndInterests"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+::"AlternateErrorPagesEnabled"=dword:00000000
+::"ComposeInlineEnabled"=dword:00000000
+::"CopilotCDPPageContext"=dword:00000000
+::"CopilotPageContext"=dword:00000000
+::"DiagnosticData"=dword:00000000
+::"EdgeEntraCopilotPageContext"=dword:00000000
+::"EdgeHistoryAISearchEnabled"=dword:00000000
+::"EdgeShoppingAssistantEnabled"=dword:00000000
+::"GenAILocalFoundationalModelSettings"=dword:00000001
+::"HubsSidebarEnabled"=dword:00000000
+::"NewTabPageBingChatEnabled"=dword:00000000
+::"NewTabPageContentEnabled"=dword:00000000
+::"NewTabPageHideDefaultTopSites"=dword:00000001
+::"PersonalizationReportingEnabled"=dword:00000000
+::"TabServicesEnabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent]
+::"DisableConsumerAccountStateContent"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
+::"AllowGameDVR"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
+::"PublishUserActivities"=dword:00000000
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds]
 ::"EnableFeeds"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
+::"AllowCortana"=dword:00000000
+::"CortanaConsent"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsAI]
+::"AllowRecallEnablement"=dword:00000000
+::"DisableAIDataAnalysis"=dword:00000001
+::"TurnOffSavingSnapshots"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
+::"TurnOffWindowsCopilot"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
 ::"EnableFindMyFiles"=dword:00000001
@@ -1708,6 +1876,80 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SYSTEM\Maps]
 ::"AutoUpdateEnabled"=dword:00000001
 ::"UpdateOnlyOnWifi"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Control Panel\Accessibility\StickyKeys]
+::"Flags"="506"
+::
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32]
+::@=""
+::
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}]
+::@="CLSID_MSGraphHomeFolder"
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Input\TIPC]
+::"Enabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\InputPersonalization]
+::"RestrictImplicitInkCollection"=dword:00000001
+::"RestrictImplicitTextCollection"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\InputPersonalization\TrainedDataStore]
+::"HarvestContacts"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Personalization\Settings]
+::"AcceptedPrivacyPolicy"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Siuf\Rules]
+::"NumberOfSIUFInPeriod"=dword:00000000
+::"PeriodInNanoSeconds"=-
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy]
+::"HasAccepted"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
+::"Enabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+::"Hidden"=dword:00000001
+::"LaunchTo"=dword:00000001
+::"ShowCopilotButton"=dword:00000000
+::"ShowTaskViewButton"=dword:00000000
+::"Start_TrackProgs"=dword:00000000
+::"TaskbarMn"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
+::"TaskbarEndTask"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+::"HideSCAMeetNow"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Privacy]
+::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
+::"HideGalleryExplorer"="reg add HKCU\\Software\\Classes\\CLSID\\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c} /v System.IsPinnedToNameSpaceTree /t REG_DWORD /d 0 /f"
+::"HideHomeExplorer1"="reg add HKCU\\Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903} /d CLSID_MSGraphHomeFolder /f /ve"
+::"HideHomeExplorer2"="reg add HKCU\\Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903} /v System.IsPinnedToNameSpaceTree /t REG_DWORD /d 0 /f"
+::"RestoreWin10ContextMenu"="reg add HKCU\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32 /f /ve"
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
+::"IsEnabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\Explorer]
+::"DisableSearchBoxSuggestions"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\WindowsAI]
+::"DisableAIDataAnalysis"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\WindowsCopilot]
+::"TurnOffWindowsCopilot"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\System\GameConfigStore]
+::"GameDVR_Enabled"=dword:00000000
 ::'
 ::
 ::
@@ -2070,7 +2312,6 @@ if "%debug%"=="true" (
 ::Microsoft.BingSports
 ::Microsoft.BingTranslator
 ::Microsoft.BingTravel
-::Microsoft.Copilot
 ::Microsoft.Copilot
 ::Microsoft.Getstarted
 ::Microsoft.Messaging
@@ -2958,13 +3199,6 @@ if "%debug%"=="true" (
 ::            Set-Variable -Option Constant User ($Registry -Replace 'HKEY_USERS\\', '')
 ::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
 ::            $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
-::
-::    # $ConfigLines += "[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]
-::    # `"EnableAppOffloading`"=dword:00000000
-::
-::    # [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]
-::    # `"RotatingLockScreenEnabled`"=dword:00000001
-::    # `"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"
 ::        }
 ::
 ::        $VolumeRegistries = (Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name
@@ -3147,8 +3381,8 @@ if "%debug%"=="true" (
 ::# SIG # Begin signature block
 ::# MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 ::# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUZXzFcJZjCZMllL+cGKaZBvUv
-::# 4K+gghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUFkRZ+vtRrVQ8+06NsDr5ZTdE
+::# tLKgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 ::# AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 ::# OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 ::# ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -3269,28 +3503,28 @@ if "%debug%"=="true" (
 ::# ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 ::# DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 ::# AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSqYTCr
-::# kM5O2UDgj6WP32qJvdQIWDANBgkqhkiG9w0BAQEFAASCAQAB8dy+PWyBYGjtTIYi
-::# MzKDHW8zMaCwxTnr1DEs46fT4sQ3Kdw7Qm9a/hDRlhfvTDR9GoBUrs7m7iwqEuV6
-::# OG8Iz2w9ietILU+B4HPYeYwTs1Wlx3w2ZC4om2rmB4sbvzQqgYO8z6ix8VEf0S4e
-::# J4eWBgqyzzggX1x/vVYZVA3TUw05SG4FJrkaFIyJpbt7Pjz54oTb89eFm4TwhtuW
-::# DEJEMV/RbEciHJRFWe6wJPAR/7Q3zKxuHnUsj1vjirUjjlzZZ+yuBRNW942gpd7i
-::# TTbCO+3/DGbNYCKayBn5SxM02g6/JGYofkFGoY/NFgI0aahGrSEpYhaPkwKPanqr
-::# UeljoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBS9CKXw
+::# LMWyg7ONvGGbNKhohLMp5DANBgkqhkiG9w0BAQEFAASCAQBbZPBTvMT4DdL56TG2
+::# 3VZOXhP+Qnepnz2pigvwN0eznzxLruRhsA7bkOJ890mgpQmFu7tBtzkK/VqrhLx1
+::# +lv5hboQJKlSDXz5ahLyGgol2pA5aQjVbdJdx6qlSzRBX45Jblc+c8u9gHf6U26W
+::# oWvozcq33sqPPJzk0KjqJYdmfSgLSiqP4PWTToB0+obKMozewwZy5yfJthqpQ3Do
+::# 4FR5W354jjPxvrd8Kdc5ba+Xhh8lZvx5C34+/oKSXvN+WsRwz0ifhiQPYUnaJTr0
+::# Zl1JfuSiNJUU6LW3Q+jKqR2AFOiaFfMZY5MGTDgsFnHME75Rvp/cldU+gF8ca1j5
+::# M3U2oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 ::# VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 ::# cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 ::# CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkyNDE5NDAwOFowLwYJKoZI
-::# hvcNAQkEMSIEINgA3LNkTwidfgOeMfBdx3hjNDirTsEkN0s+FGMuS6paMA0GCSqG
-::# SIb3DQEBAQUABIICAMzsrkvpCiuoYYkKfS6wHpVcrwfKJrFr0zRvvNrWVPX7lyAq
-::# EhIUGH/BqAddPa6dPfpIpRToHh5lz8sgbEUXbQxW1qS8qwpqdDYOWtTN4iQnzQ3f
-::# xwhrwdZuk7sck7CLIruUII4LAgPMLZz6aq6g9yE2+nbYkTb2Ni7myuXEywIfgGBM
-::# NwXkIJ3Zw7pQRyJ1TEe/GKWsuvf4ThqaJn9Rq0ZG3ATSct/RWCOLyZGnZ8ZSUtAo
-::# 9DSQifbyjdRqTGiilQul5p11MALfkqsy6iy5yttEQa1FchLinIXfAXv+f0qrzxxU
-::# kFHrOnkXLzVEyE88uSP+YbTaj4fYp3c44WKEQdxuYnNnedH44oGi84B8Ki7txSBS
-::# bx+uWGBDR8lTDEDa0zQ8455/wtkDVKQfqyZ9ervkPRQ+1lBOrsN9VUT6j8KAAVMd
-::# Cyo9q6jpEgl6MaPc+0gokzWxEw9X7G3dtzviVEoy5/FBBS/0RDi11NZHvIjiguxz
-::# sHs/E2CWwuSIwsNw0K5/NVdrxuqjzEFLWoCDK2mn9UkMswFVF5a510LII/ogbfsM
-::# 1nB8rRuEldd9ldXge6owYuNxvJVow2awQN1s/b/jxgFhZiePx4Btgq2NsrSVDgDK
-::# WJ/Z+inBWFkPjJu3LFhw9so9OD8vbPaPNvYIn/uUZ19sUsV3Bw5tH3iRaoHh
+::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkyNTIxNDYwMlowLwYJKoZI
+::# hvcNAQkEMSIEIOeqhKRMCW+6i+T1+PLzsKLX+fwHKpIXrzMNAA1tDJVlMA0GCSqG
+::# SIb3DQEBAQUABIICADMsM/D6uJhpG53aCrrFGVScknvU9zf/nTFcvssXxKI8VLCx
+::# 2bpnngw4vj32d68LJsco/8l62p/Mpn074R7op1yp3K4vGhvv6PVWhkKUWtCpiuZS
+::# SSWTkTKHIdaBOZvCC+PYBZxzP8ZTATcG4o0jiJPAf0G1bSPvXqbWSrHqWtQ1JeaL
+::# SOHVPu8uYGsQNlCtYrSQJ5nl1ggElyT4/TPWJi2n63cwyQ7UxknLBKTBGIlV9Kxv
+::# UkaX9zl/WpvHVBtlgcOoa2vINSuSQQQ412S0/5xydciYS/UGAo81edbhgpP3N/5n
+::# JO7xpWtRo9NjKduAdThhxuUnx3toukIcocE25ooLAsRb2pWo/NdGcY//pNXtVvKN
+::# /1DQQTY95zQFKYJ/8wv3lUIMhVLZyKjvyOwW6U/tosPbEUWrZTPkIuPs8Nvj8DVr
+::# G6jWzBHDhNFjym/EaqAMcDo0m7Krr+hM2AnqlhOJUh5lVjHUwZEXtC5RariStBje
+::# mPM2FsBusNAon0cTUZ8Pda53oP16Aqb9e/wOSOSDPvv0cBOGQXzmkWmcVIoLKjIV
+::# D7vjcyqETeeXHrhQUUUBtHKqQ7Ij9tu7UnX3GkVr92KOSIxO70OEvekDdu0TsmTA
+::# rmYLy47yR8VWy4qvIQidr4vyeXLcT74J9uZQKX9LspLQXgWp03oPfHfeyPGX
 ::# SIG # End signature block
