@@ -37,26 +37,26 @@ function Get-DynamicWindowsConfiguration {
     [String]$ConfigLines = ''
 
     try {
-        $UserRegistries = (Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' }
+        Set-Variable -Option Constant UserRegistries ((Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' })
         foreach ($Registry in $UserRegistries) {
             Set-Variable -Option Constant User ($Registry -replace 'HKEY_USERS\\', '')
             $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
             $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
         }
 
-        $VolumeRegistries = (Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name
+        Set-Variable -Option Constant VolumeRegistries ((Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
         foreach ($Registry in $VolumeRegistries) {
             $ConfigLines += "`n[$Registry]`n"
             $ConfigLines += "`"MaxCapacity`"=dword:000FFFFF`n"
         }
 
-        $NotificationRegistries = (Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name
+        Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
         foreach ($Registry in $NotificationRegistries) {
             $ConfigLines += "`n[$Registry]`n"
             $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
         }
 
-        $FileExtensionRegistries = (Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -match 'HKEY_CLASSES_ROOT\\\.' }
+        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -match 'HKEY_CLASSES_ROOT\\\.' })
         foreach ($Registry in $FileExtensionRegistries) {
             $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
 
