@@ -1,4 +1,4 @@
-﻿function Set-WindowsConfiguration {
+﻿function Set-WindowsBaseConfiguration {
     Set-MpPreference -PUAProtection Enabled
     Set-MpPreference -MeteredConnectionUpdates $True
 
@@ -6,10 +6,6 @@
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
 
     Unregister-ScheduledTask -TaskName 'CreateExplorerShellUnelevatedTask' -Confirm:$False -ErrorAction SilentlyContinue
-
-    Set-PowerConfiguration
-
-    Set-FileAssociations
 
     Import-RegistryConfiguration $CHECKBOX_Config_Windows.Text ($CONFIG_WINDOWS + (Get-DynamicWindowsConfiguration))
 }
