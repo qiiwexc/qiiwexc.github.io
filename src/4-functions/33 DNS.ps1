@@ -2,8 +2,8 @@ function Set-CloudFlareDNS {
     [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } }
     [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } }
 
-    Write-Log $WRN 'Internet connection may get interrupted briefly'
     Write-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+    Write-Log $WRN 'Internet connection may get interrupted briefly'
 
     if (!(Get-NetworkAdapter)) {
         Write-Log $ERR 'Could not determine network adapter used to connect to the Internet'
