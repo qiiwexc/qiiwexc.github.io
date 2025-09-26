@@ -1,12 +1,3 @@
-function New-CheckBoxRunAfterDownload {
-    param(
-        [Switch]$Disabled,
-        [Switch]$Checked
-    )
-
-    return New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
-}
-
 function New-CheckBox {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
