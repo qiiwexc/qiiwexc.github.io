@@ -31,7 +31,7 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Version #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.9.26')
+::Set-Variable -Option Constant VERSION ([Version]'25.9.27')
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Elevated #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -39,7 +39,7 @@ if "%debug%"=="true" (
 ::if (!(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) {
 ::    Write-Host 'Restarting elevated...'
 ::    Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"$($MyInvocation.Line)`""
-::    Break
+::    break
 ::}
 ::
 ::
@@ -59,7 +59,7 @@ if "%debug%"=="true" (
 ::try {
 ::    Add-Type -AssemblyName System.Windows.Forms
 ::} catch {
-::    Throw 'System not supported'
+::    throw 'System not supported'
 ::}
 ::
 ::[System.Windows.Forms.Application]::EnableVisualStyles()
@@ -73,21 +73,21 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant PATH_CURRENT_DIR $CallerPath
 ::Set-Variable -Option Constant PATH_TEMP_DIR ([System.IO.Path]::GetTempPath())
 ::Set-Variable -Option Constant PATH_APP_DIR "$PATH_TEMP_DIR\qiiwexc"
-::Set-Variable -Option Constant PATH_PROFILE_ROAMING "$env:USERPROFILE\AppData\Roaming"
-::Set-Variable -Option Constant PATH_PROFILE_LOCAL "$env:USERPROFILE\AppData\Local"
 ::Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 ::
+::
+::Set-Variable -Option Constant IS_LAPTOP ((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2)
 ::
 ::Set-Variable -Option Constant SYSTEM_LANGUAGE (Get-SystemLanguage)
 ::
 ::Set-Variable -Option Constant PS_VERSION $PSVersionTable.PSVersion.Major
 ::
-::Set-Variable -Option Constant OPERATING_SYSTEM (Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version)
-::Set-Variable -Option Constant IsWindows11 ($OPERATING_SYSTEM.Caption -Match 'Windows 11')
-::Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { Switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
+::Set-Variable -Option Constant OPERATING_SYSTEM (Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture)
+::Set-Variable -Option Constant IsWindows11 ($OPERATING_SYSTEM.Caption -match 'Windows 11')
+::Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
 ::
 ::Set-Variable -Option Constant WordRegPath (Get-ItemProperty 'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer' -ErrorAction SilentlyContinue)
-::Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -Replace '\D+', '' })
+::Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -replace '\D+', '' })
 ::Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' } })
 ::
 ::New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
@@ -111,7 +111,7 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant FORM_WIDTH  (($GROUP_WIDTH + 15) * 3 + 30)
 ::Set-Variable -Option Constant FORM_HEIGHT 560
 ::
-::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON "15, 20"
+::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON '15, 20'
 ::
 ::Set-Variable -Option Constant SHIFT_CHECKBOX "0, $INTERVAL_CHECKBOX"
 ::
@@ -122,8 +122,8 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TabPage #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function New-TabPage {
-::    Param(
+::function New-TabPage {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Text
 ::    )
 ::
@@ -141,8 +141,8 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# GroupBox #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function New-GroupBox {
-::    Param(
+::function New-GroupBox {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
 ::        [Int][Parameter(Position = 1)]$IndexOverride
 ::    )
@@ -183,19 +183,8 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Button #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function New-ButtonBrowser {
-::    Param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
-::        [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
-::    )
-::
-::    New-Button $Text $Function
-::
-::    New-Label 'Opens in the browser'
-::}
-::
-::Function New-Button {
-::    Param(
+::function New-Button {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
 ::        [ScriptBlock][Parameter(Position = 1)]$Function,
 ::        [Switch]$Disabled
@@ -243,19 +232,24 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# CheckBox #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# ButtonBrowser #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function New-CheckBoxRunAfterDownload {
-::    Param(
-::        [Switch]$Disabled,
-::        [Switch]$Checked
+::function New-ButtonBrowser {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+::        [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
 ::    )
 ::
-::    Return New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
+::    New-Button $Text $Function
+::
+::    New-Label 'Open in a browser'
 ::}
 ::
-::Function New-CheckBox {
-::    Param(
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# CheckBox #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::function New-CheckBox {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
 ::        [String][Parameter(Position = 1)]$Name,
 ::        [Switch]$Disabled,
@@ -296,14 +290,26 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $CheckBox
 ::
-::    Return $CheckBox
+::    return $CheckBox
+::}
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# CheckBoxRunAfterDownload #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::function New-CheckBoxRunAfterDownload {
+::    param(
+::        [Switch]$Disabled,
+::        [Switch]$Checked
+::    )
+::
+::    return New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
 ::}
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Label #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function New-Label {
-::    Param(
+::function New-Label {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Text
 ::    )
 ::
@@ -324,8 +330,8 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# RadioButton #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function New-RadioButton {
-::    Param(
+::function New-RadioButton {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
 ::        [Switch]$Checked,
 ::        [Switch]$Disabled
@@ -361,7 +367,7 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Scope Script PREVIOUS_RADIO $RadioButton
 ::
-::    Return $RadioButton
+::    return $RadioButton
 ::}
 ::
 ::
@@ -375,12 +381,8 @@ if "%debug%"=="true" (
 ::$FORM.StartPosition = 'CenterScreen'
 ::$FORM.MaximizeBox = $False
 ::$FORM.Top = $True
-::$FORM.Add_Shown( {
-::    Initialize-Startup
-::} )
-::$FORM.Add_FormClosing( {
-::    Reset-State
-::} )
+::$FORM.Add_Shown( { Initialize-Script } )
+::$FORM.Add_FormClosing( { Reset-State } )
 ::
 ::
 ::Set-Variable -Option Constant LOG (New-Object System.Windows.Forms.RichTextBox)
@@ -409,17 +411,17 @@ if "%debug%"=="true" (
 ::
 ::
 ::[Boolean]$BUTTON_DISABLED = $OS_VERSION -lt 7
-::[ScriptBlock]$BUTTON_FUNCTION = { Get-WindowsUpdates }
+::[ScriptBlock]$BUTTON_FUNCTION = { Update-Windows }
 ::New-Button 'Windows update' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 ::
 ::
 ::[Boolean]$BUTTON_DISABLED = $OS_VERSION -lt 8
-::[ScriptBlock]$BUTTON_FUNCTION = { Get-MicrosoftStoreUpdates }
+::[ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftStoreApps }
 ::New-Button 'Microsoft Store updates' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 ::
 ::
 ::[Boolean]$BUTTON_DISABLED = $OFFICE_INSTALL_TYPE -ne 'C2R'
-::[ScriptBlock]$BUTTON_FUNCTION = { Get-OfficeUpdates }
+::[ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftOffice }
 ::New-Button 'Microsoft Office updates' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 ::
 ::
@@ -433,7 +435,7 @@ if "%debug%"=="true" (
 ::New-Button 'MAS Activator' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadExtractExecute -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked 'https://qiiwexc.github.io/d/ActivationProgram.zip' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked 'https://qiiwexc.github.io/d/ActivationProgram.zip' }
 ::New-Button 'Activation Program' $BUTTON_FUNCTION
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -447,8 +449,8 @@ if "%debug%"=="true" (
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = {
-::    Set-Variable -Option Constant FileName $((Split-Path -Leaf 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip') -Replace '-windows', '')
-::    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVentoy.Checked 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip' -FileName:$FileName
+::    Set-Variable -Option Constant FileName $((Split-Path -Leaf 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip') -replace '-windows', '')
+::    Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartVentoy.Checked 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip' -FileName:$FileName
 ::}
 ::New-Button 'Windows Ventoy' $BUTTON_FUNCTION
 ::
@@ -457,12 +459,21 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartRufus.Checked 'https://github.com/pbatard/rufus/releases/download/v4.10/rufus-4.10p.exe' -Params:'-g' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartRufus.Checked 'https://github.com/pbatard/rufus/releases/download/v4.10/rufus-4.10p.exe' -Params:'-g' }
 ::New-Button 'Rufus' $BUTTON_FUNCTION
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
 ::[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::New-GroupBox 'Cleanup'
+::
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-Cleanup }
+::New-Button 'Run cleanup' $BUTTON_FUNCTION
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Installs #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -478,48 +489,31 @@ if "%debug%"=="true" (
 ::
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
-::$CHECKBOX_Ninite_Chrome.Add_CheckStateChanged( {
-::    Set-NiniteButtonState
-::} )
+::$CHECKBOX_Ninite_Chrome.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
-::$CHECKBOX_Ninite_7zip.Add_CheckStateChanged( {
-::    Set-NiniteButtonState
-::} )
+::$CHECKBOX_Ninite_7zip.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
-::$CHECKBOX_Ninite_VLC.Add_CheckStateChanged( {
-::    Set-NiniteButtonState
-::} )
+::$CHECKBOX_Ninite_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
-::$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( {
-::    Set-NiniteButtonState
-::} )
+::$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
-::$CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( {
-::    Set-NiniteButtonState
-::} )
+::$CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
-::$CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( {
-::    Set-NiniteButtonState
-::} )
+::$CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = {
-::    if ($CHECKBOX_StartNinite.Enabled) {
-::        Start-DownloadExtractExecute -Execute:$CHECKBOX_StartNinite.Checked "https://ninite.com/$(Set-NiniteQuery)/ninite.exe" (Set-NiniteFileName)
-::    } else {
-::        Open-InBrowser "https://ninite.com/?select=$(Set-NiniteQuery)"
-::    }
-::}
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser:(!$CHECKBOX_StartNinite.Enabled) -Execute:$CHECKBOX_StartNinite.Checked }
 ::New-Button 'Download selected' $BUTTON_FUNCTION
 ::
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser "https://ninite.com/?select=$(Set-NiniteQuery)" }
+::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser:$True }
 ::New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 ::
 ::
@@ -528,7 +522,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartSDI.Checked 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartSDI.Checked 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip' }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -536,7 +530,7 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-OfficeInstaller -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Install-MicrosoftOffice -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
 ::New-Button 'Office Installer+' $BUTTON_FUNCTION
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -544,20 +538,15 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 ::
 ::
-::
-::[ScriptBlock]$BUTTON_FUNCTION = {
-::    Set-Variable -Option Constant Silent $CHECKBOX_SilentlyInstallUnchecky.Checked
-::    Set-Variable -Option Constant Params $(if ($Silent) { '-install -no_desktop_icon' })
-::    Start-DownloadExtractExecute -Execute:$CHECKBOX_StartUnchecky.Checked 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Params:$Params -Silent:$Silent
-::}
+::[ScriptBlock]$BUTTON_FUNCTION = { Install-Unchecky -Execute:$CHECKBOX_StartOfficeInstaller.Checked -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked }
 ::New-Button 'Unchecky' $BUTTON_FUNCTION
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
 ::[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 ::$CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
-::    $CHECKBOX_SilentlyInstallUnchecky.Enabled = $CHECKBOX_StartUnchecky.Checked
-::} )
+::        $CHECKBOX_SilentlyInstallUnchecky.Enabled = $CHECKBOX_StartUnchecky.Checked
+::    } )
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
 ::[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
@@ -584,16 +573,12 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Configuration')
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apps configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::New-GroupBox 'Configuration'
+::New-GroupBox 'Apps configuration'
 ::
 ::[Boolean]$PAD_CHECKBOXES = $False
 ::
-::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_Windows = New-CheckBox 'Windows' -Checked
-::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Windows Personalisation'
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
 ::
@@ -608,8 +593,73 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Set-Configuration }
+::[ScriptBlock]$BUTTON_FUNCTION = { Set-AppsConfiguration }
 ::New-Button 'Apply configuration' $BUTTON_FUNCTION
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::New-GroupBox 'Windows configuration'
+::
+::[Boolean]$PAD_CHECKBOXES = $False
+::
+::
+::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_Windows = New-CheckBox 'Windows' -Checked
+::
+::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Windows Personalisation'
+::
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration }
+::New-Button 'Apply configuration' $BUTTON_FUNCTION
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configure and debloat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::New-GroupBox 'Configure and debloat Windows'
+::
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat }
+::New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
+::
+::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
+::[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+::[System.Windows.Forms.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+::$CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
+::        $CHECKBOX_SilentlyRunDebloat.Enabled = $CHECKBOX_UseDebloatPreset.Checked
+::    } )
+::
+::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
+::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks' -Disabled:$CHECKBOX_DISABLED
+::
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }
+::New-Button 'WinUtil' $BUTTON_FUNCTION
+::
+::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
+::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Disabled:$CHECKBOX_DISABLED
+::
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
+::New-Button 'ShutUp10++ privacy' $BUTTON_FUNCTION
+::
+::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
+::[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
+::[System.Windows.Forms.CheckBox]$CHECKBOX_StartShutUp10 = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
+::$CHECKBOX_StartShutUp10.Add_CheckStateChanged( {
+::        $CHECKBOX_SilentlyRunShutUp10.Enabled = $CHECKBOX_StartShutUp10.Checked
+::    } )
+::
+::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
+::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks' -Disabled:$CHECKBOX_DISABLED
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Remove Windows components #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::New-GroupBox 'Remove Windows components'
+::
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Remove-WindowsFeatures }
+::New-Button 'Feature cleanup' $BUTTON_FUNCTION
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
@@ -622,67 +672,13 @@ if "%debug%"=="true" (
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 ::$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
-::    $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
-::} )
+::        $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
+::    } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Remove Windows Components #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::New-GroupBox 'Miscellaneous Windows features'
-::
-::
-::[ScriptBlock]$BUTTON_FUNCTION = { Remove-WindowsFeatures }
-::New-Button 'Feature cleanup' $BUTTON_FUNCTION
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::New-GroupBox 'Windows configurator' 4
-::
-::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }
-::New-Button 'WinUtil' $BUTTON_FUNCTION
-::
-::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
-::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Disabled:$CHECKBOX_DISABLED
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Deboat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::New-GroupBox 'Debloat Windows and privacy' 5
-::
-::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat }
-::New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
-::
-::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
-::[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-::[System.Windows.Forms.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-::$CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
-::    $CHECKBOX_SilentlyRunDebloat.Enabled = $CHECKBOX_UseDebloatPreset.Checked
-::} )
-::
-::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
-::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks' -Disabled:$CHECKBOX_DISABLED
-::
-::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
-::New-Button 'ShutUp10++ privacy' $BUTTON_FUNCTION
-::
-::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
-::[Boolean]$CHECKBOX_CHECKED = !$CHECKBOX_DISABLED
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartShutUp10 = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
-::$CHECKBOX_StartShutUp10.Add_CheckStateChanged( {
-::    $CHECKBOX_SilentlyRunShutUp10.Enabled = $CHECKBOX_StartShutUp10.Checked
-::} )
-::
-::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
-::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks' -Disabled:$CHECKBOX_DISABLED
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Diagnostics and recovery #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Set-Variable -Option Constant TAB_DIAGNOSTICS (New-TabPage 'Diagnostics and recovery')
 ::
@@ -692,7 +688,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Hardware info'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartCpuZ.Checked 'https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartCpuZ.Checked 'https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip' }
 ::New-Button 'CPU-Z' $BUTTON_FUNCTION
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -705,7 +701,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'HDD diagnostics'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadExtractExecute -Execute:$CHECKBOX_StartVictoria.Checked 'https://hdd.by/Victoria/Victoria537.zip' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartVictoria.Checked 'https://hdd.by/Victoria/Victoria537.zip' }
 ::New-Button 'Victoria' $BUTTON_FUNCTION
 ::
 ::[Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2
@@ -713,7 +709,16 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Disabled:$CHECKBOX_DISABLED -Checked:$CHECKBOX_CHECKED
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# TronScript #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Battery Report #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::New-GroupBox 'Battery report'
+::
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Get-BatteryReport }
+::New-Button 'Get battery report' $BUTTON_FUNCTION -Disabled:(!$IS_LAPTOP)
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows disinfection #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::New-GroupBox 'Windows disinfection'
 ::
@@ -983,19 +988,68 @@ if "%debug%"=="true" (
 ::'
 ::
 ::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# File Associations #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant CONFIG_FILE_ASSOCIATIONS @(
+::    @{Extension = '.bmp'; Application = 'PhotoViewer.FileAssoc.Bitmap' },
+::    @{Extension = '.cab'; Application = 'CABFolder' },
+::    @{Extension = '.cr2'; Application = 'PhotoViewer.FileAssoc.Tiff' },
+::    @{Extension = '.dib'; Application = 'PhotoViewer.FileAssoc.Bitmap' },
+::    @{Extension = '.gif'; Application = 'Applications\msedge.exe' },
+::    @{Extension = '.htm'; Application = 'ChromeHTML' },
+::    @{Extension = '.html'; Application = 'ChromeHTML' },
+::    @{Extension = '.iso'; Application = 'Windows.IsoFile' },
+::    @{Extension = '.jfif'; Application = 'PhotoViewer.FileAssoc.JFIF' },
+::    @{Extension = '.jpe'; Application = 'PhotoViewer.FileAssoc.Jpeg' },
+::    @{Extension = '.jpeg'; Application = 'PhotoViewer.FileAssoc.Jpeg' },
+::    @{Extension = '.jpg'; Application = 'PhotoViewer.FileAssoc.Jpeg' },
+::    @{Extension = '.jxr'; Application = 'PhotoViewer.FileAssoc.Wdp' },
+::    @{Extension = '.mht'; Application = 'MSEdgeMHT' },
+::    @{Extension = '.mhtml'; Application = 'ChromeHTML' },
+::    @{Extension = '.oqy'; Application = 'Applications\EXCEL.EXE' },
+::    @{Extension = '.pdf'; Application = 'ChromePDF' },
+::    @{Extension = '.png'; Application = 'PhotoViewer.FileAssoc.Png' },
+::    @{Extension = '.rar'; Application = '7-Zip.rar' },
+::    @{Extension = '.rqy'; Application = 'Applications\EXCEL.EXE' },
+::    @{Extension = '.shtml'; Application = 'ChromeHTML' },
+::    @{Extension = '.svg'; Application = 'ChromeHTML' },
+::    @{Extension = '.tif'; Application = 'TIFImage.Document' },
+::    @{Extension = '.tiff'; Application = 'TIFImage.Document' },
+::    @{Extension = '.torrent'; Application = 'qBittorrent.File.Torrent' },
+::    @{Extension = '.url'; Application = 'InternetShortcut' },
+::    @{Extension = '.vlt'; Application = 'VLC.vlt' },
+::    @{Extension = '.webp'; Application = 'ChromeHTML' },
+::    @{Extension = '.wsz'; Application = 'VLC.wsz' },
+::    @{Extension = '.xht'; Application = 'ChromeHTML' },
+::    @{Extension = '.xhtml'; Application = 'ChromeHTML' },
+::    @{Extension = '.xml'; Application = 'MSEdgeHTM' },
+::    @{Extension = '.zip'; Application = 'CompressedFolder' },
+::    @{Extension = 'ftp'; Application = 'MSEdgeHTM' },
+::    @{Extension = 'http'; Application = 'ChromeHTML' },
+::    @{Extension = 'https'; Application = 'ChromeHTML' },
+::    @{Extension = 'mailto'; Application = 'ChromeHTML' },
+::    @{Extension = 'microsoft-edge'; Application = 'MSEdgeHTM' },
+::    @{Extension = 'microsoft-edge-holographic'; Application = 'MSEdgeHTM' },
+::    @{Extension = 'ms-xbl-3d8b930f'; Application = 'MSEdgeHTM' },
+::    @{Extension = 'read'; Application = 'MSEdgeHTM' },
+::    @{Extension = 'tel'; Application = 'ChromeHTML' },
+::    @{Extension = 'webcal'; Application = 'ChromeHTML' }
+::)
+::
+::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Power Settings #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
 ::Set-Variable -Option Constant CONFIG_POWER_SETTINGS @(
-::    @{SubGroup='0d7dbae2-4294-402a-ba8e-26777e8488cd'; Setting='309dce9b-bef4-4119-9921-a851fb12f0f4'; Value=0},
-::    @{SubGroup='02f815b5-a5cf-4c84-bf20-649d1f75d3d8'; Setting='4c793e7d-a264-42e1-87d3-7a0d2f523ccd'; Value=1},
-::    @{SubGroup='19cbb8fa-5279-450e-9fac-8a3d5fedd0c1'; Setting='12bbebe6-58d6-4636-95bb-3217ef867c1a'; Value=0},
-::    @{SubGroup='9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting='34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4'; Value=0},
-::    @{SubGroup='9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting='03680956-93bc-4294-bba6-4e0f09bb717f'; Value=1},
-::    @{SubGroup='9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting='10778347-1370-4ee0-8bbd-33bdacaade49'; Value=1},
-::    @{SubGroup='de830923-a562-41af-a086-e3a2c6bad2da'; Setting='e69653ca-cf7f-4f05-aa73-cb833fa90ad4'; Value=0},
-::    @{SubGroup='SUB_PCIEXPRESS'; Setting='ASPM'; Value=0},
-::    @{SubGroup='SUB_SLEEP'; Setting='HYBRIDSLEEP'; Value=1},
-::    @{SubGroup='SUB_SLEEP'; Setting='RTCWAKE'; Value=1}
+::    @{SubGroup = '0d7dbae2-4294-402a-ba8e-26777e8488cd'; Setting = '309dce9b-bef4-4119-9921-a851fb12f0f4'; Value = 0 },
+::    @{SubGroup = '02f815b5-a5cf-4c84-bf20-649d1f75d3d8'; Setting = '4c793e7d-a264-42e1-87d3-7a0d2f523ccd'; Value = 1 },
+::    @{SubGroup = '19cbb8fa-5279-450e-9fac-8a3d5fedd0c1'; Setting = '12bbebe6-58d6-4636-95bb-3217ef867c1a'; Value = 0 },
+::    @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4'; Value = 0 },
+::    @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '03680956-93bc-4294-bba6-4e0f09bb717f'; Value = 1 },
+::    @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '10778347-1370-4ee0-8bbd-33bdacaade49'; Value = 1 },
+::    @{SubGroup = 'de830923-a562-41af-a086-e3a2c6bad2da'; Setting = 'e69653ca-cf7f-4f05-aa73-cb833fa90ad4'; Value = 0 },
+::    @{SubGroup = 'SUB_PCIEXPRESS'; Setting = 'ASPM'; Value = 0 },
+::    @{SubGroup = 'SUB_SLEEP'; Setting = 'HYBRIDSLEEP'; Value = 1 },
+::    @{SubGroup = 'SUB_SLEEP'; Setting = 'RTCWAKE'; Value = 1 }
 ::)
 ::
 ::
@@ -1464,12 +1518,18 @@ if "%debug%"=="true" (
 ::"ShowCmd"=dword:00000003
 ::"WFlags"=dword:00000002
 ::
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32]
+::@=""
+::
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}]
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}]
 ::@="CLSID_MSGraphHomeFolder"
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
+::@=""
 ::
 ::[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 ::"ShowCmd"=dword:00000003
@@ -1637,9 +1697,7 @@ if "%debug%"=="true" (
 ::"VideoQualityOnBattery"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
-::"AccountProtection_MicrosoftAccount_Disconnected"=dword:00000000
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
+::"AccountProtection_MicrosoftAccount_Disconnected"=dword:00000001
 ::"Hardware_DataEncryption_AddMsa"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer]
@@ -1721,43 +1779,43 @@ if "%debug%"=="true" (
 ::"SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\BranchCache]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Delivery Optimization Files]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Device Driver Packages]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Language Pack]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Previous Installations]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Setup Log Files]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error memory dump files]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error minidump files]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Setup Files]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
-::"StateFlags1337"=dword:00000002
+::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 ::"AllowTelemetry"=dword:00000000
@@ -1950,6 +2008,143 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_USERS\.DEFAULT\System\GameConfigStore]
 ::"GameDVR_Enabled"=dword:00000000
+::'
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat App List Config #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant CONFIG_DEBLOAT "CreateRestorePoint#- Create a system restore point
+::DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads
+::RemoveAppsCustom#- Remove 101 apps:
+::DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads
+::DisableSuggestions#- Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer
+::DisableEdgeAds#- Disable ads, suggestions and the MSN news feed in Microsoft Edge
+::DisableSettings365Ads#- Disable Microsoft 365 ads in Settings Home
+::DisableLockscreenTips#- Disable tips & tricks on the lockscreen
+::DisableBing#- Disable & remove Bing web search, Bing AI and Cortana from Windows search
+::DisableCopilot#- Disable & remove Microsoft Copilot
+::DisableRecall#- Disable Windows Recall snapshots
+::RevertContextMenu#- Restore the old Windows 10 style context menu
+::DisableStickyKeys#- Disable the Sticky Keys keyboard shortcut
+::HideIncludeInLibrary#- Hide the 'Include in library' option in the context menu
+::HideGiveAccessTo#- Hide the 'Give access to' option in the context menu
+::HideShare#- Hide the 'Share' option in the context menu
+::DisableStartPhoneLink#- Disable the Phone Link mobile devices integration in the start menu.
+::TaskbarAlignLeft#- Align taskbar icons to the left
+::HideSearchTb#- Hide search icon from the taskbar
+::HideTaskview#- Hide the taskview button from the taskbar
+::DisableWidgets#- Disable widgets on the taskbar & lockscreen
+::EnableEndTask#- Enable the 'End Task' option in the taskbar right click menu
+::EnableLastActiveClick#- Enable the 'Last Active Click' behavior in the taskbar app area
+::ExplorerToThisPC#- Change the default location that File Explorer opens to 'This PC'
+::ShowHiddenFolders#- Show hidden files, folders and drives
+::HideHome#- Hide the Home section from the File Explorer sidepanel
+::HideGallery#- Hide the Gallery section from the File Explorer sidepanel
+::HideDupliDrive#- Hide duplicate removable drive entries from the File Explorer sidepanel
+::"
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat App List #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST 'ACGMediaPlayer
+::ActiproSoftwareLLC
+::AdobeSystemsIncorporated.AdobePhotoshopExpress
+::Amazon.com.Amazon
+::AmazonVideo.PrimeVideo
+::Asphalt8Airborne
+::AutodeskSketchBook
+::CaesarsSlotsFreeCasino
+::Clipchamp.Clipchamp
+::COOKINGFEVER
+::CyberLinkMediaSuiteEssentials
+::Disney
+::DisneyMagicKingdoms
+::DrawboardPDF
+::Duolingo-LearnLanguagesforFree
+::EclipseManager
+::Facebook
+::FarmVille2CountryEscape
+::fitbit
+::Flipboard
+::HiddenCity
+::HULULLC.HULUPLUS
+::iHeartRadio
+::Instagram
+::king.com.BubbleWitch3Saga
+::king.com.CandyCrushSaga
+::king.com.CandyCrushSodaSaga
+::LinkedInforWindows
+::MarchofEmpires
+::Microsoft.3DBuilder
+::Microsoft.549981C3F5F10
+::Microsoft.BingFinance
+::Microsoft.BingFoodAndDrink
+::Microsoft.BingHealthAndFitness
+::Microsoft.BingNews
+::Microsoft.BingSports
+::Microsoft.BingTranslator
+::Microsoft.BingTravel
+::Microsoft.Copilot
+::Microsoft.Getstarted
+::Microsoft.Messaging
+::Microsoft.Microsoft3DViewer
+::Microsoft.MicrosoftJournal
+::Microsoft.MicrosoftOfficeHub
+::Microsoft.MicrosoftPowerBIForWindows
+::Microsoft.MicrosoftSolitaireCollection
+::Microsoft.MicrosoftStickyNotes
+::Microsoft.MixedReality.Portal
+::Microsoft.NetworkSpeedTest
+::Microsoft.News
+::Microsoft.Office.OneNote
+::Microsoft.Office.Sway
+::Microsoft.OneConnect
+::Microsoft.People
+::Microsoft.PowerAutomateDesktop
+::Microsoft.Print3D
+::Microsoft.RemoteDesktop
+::Microsoft.ScreenSketch
+::Microsoft.SkypeApp
+::Microsoft.StartExperiencesApp
+::Microsoft.Todos
+::Microsoft.Whiteboard
+::Microsoft.Windows.DevHome
+::Microsoft.WindowsAlarms
+::Microsoft.windowscommunicationsapps
+::Microsoft.WindowsFeedbackHub
+::Microsoft.WindowsMaps
+::Microsoft.WindowsSoundRecorder
+::Microsoft.WindowsTerminal
+::Microsoft.Xbox.TCUI
+::Microsoft.XboxApp
+::Microsoft.XboxSpeechToTextOverlay
+::Microsoft.YourPhone
+::Microsoft.ZuneMusic
+::Microsoft.ZuneVideo
+::MicrosoftCorporationII.MicrosoftFamily
+::MicrosoftCorporationII.QuickAssist
+::MicrosoftTeams
+::MicrosoftWindows.CrossDevice
+::Netflix
+::NYTCrossword
+::OneCalendar
+::PandoraMediaInc
+::PhototasticCollage
+::PicsArt-PhotoStudio
+::Plex
+::PolarrPhotoEditorAcademicEdition
+::Royal Revolt
+::Shazam
+::Sidia.LiveWallpaper
+::SlingTV
+::Spotify
+::TikTok
+::TuneInRadio
+::Twitter
+::Viber
+::WinZipUniversal
+::Wunderlist
+::XING
 ::'
 ::
 ::
@@ -2239,146 +2434,9 @@ if "%debug%"=="true" (
 ::'
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat App List Config #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::Set-Variable -Option Constant CONFIG_DEBLOAT "CreateRestorePoint#- Create a system restore point
-::DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads
-::RemoveAppsCustom#- Remove 101 apps:
-::DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads
-::DisableSuggestions#- Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer
-::DisableEdgeAds#- Disable ads, suggestions and the MSN news feed in Microsoft Edge
-::DisableSettings365Ads#- Disable Microsoft 365 ads in Settings Home
-::DisableLockscreenTips#- Disable tips & tricks on the lockscreen
-::DisableBing#- Disable & remove Bing web search, Bing AI and Cortana from Windows search
-::DisableCopilot#- Disable & remove Microsoft Copilot
-::DisableRecall#- Disable Windows Recall snapshots
-::RevertContextMenu#- Restore the old Windows 10 style context menu
-::DisableStickyKeys#- Disable the Sticky Keys keyboard shortcut
-::HideIncludeInLibrary#- Hide the 'Include in library' option in the context menu
-::HideGiveAccessTo#- Hide the 'Give access to' option in the context menu
-::HideShare#- Hide the 'Share' option in the context menu
-::DisableStartPhoneLink#- Disable the Phone Link mobile devices integration in the start menu.
-::TaskbarAlignLeft#- Align taskbar icons to the left
-::HideSearchTb#- Hide search icon from the taskbar
-::HideTaskview#- Hide the taskview button from the taskbar
-::DisableWidgets#- Disable widgets on the taskbar & lockscreen
-::EnableEndTask#- Enable the 'End Task' option in the taskbar right click menu
-::EnableLastActiveClick#- Enable the 'Last Active Click' behavior in the taskbar app area
-::ExplorerToThisPC#- Change the default location that File Explorer opens to 'This PC'
-::ShowHiddenFolders#- Show hidden files, folders and drives
-::HideHome#- Hide the Home section from the File Explorer sidepanel
-::HideGallery#- Hide the Gallery section from the File Explorer sidepanel
-::HideDupliDrive#- Hide duplicate removable drive entries from the File Explorer sidepanel
-::"
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat App List #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST 'ACGMediaPlayer
-::ActiproSoftwareLLC
-::AdobeSystemsIncorporated.AdobePhotoshopExpress
-::Amazon.com.Amazon
-::AmazonVideo.PrimeVideo
-::Asphalt8Airborne
-::AutodeskSketchBook
-::CaesarsSlotsFreeCasino
-::Clipchamp.Clipchamp
-::COOKINGFEVER
-::CyberLinkMediaSuiteEssentials
-::Disney
-::DisneyMagicKingdoms
-::DrawboardPDF
-::Duolingo-LearnLanguagesforFree
-::EclipseManager
-::Facebook
-::FarmVille2CountryEscape
-::fitbit
-::Flipboard
-::HiddenCity
-::HULULLC.HULUPLUS
-::iHeartRadio
-::Instagram
-::king.com.BubbleWitch3Saga
-::king.com.CandyCrushSaga
-::king.com.CandyCrushSodaSaga
-::LinkedInforWindows
-::MarchofEmpires
-::Microsoft.3DBuilder
-::Microsoft.549981C3F5F10
-::Microsoft.BingFinance
-::Microsoft.BingFoodAndDrink
-::Microsoft.BingHealthAndFitness
-::Microsoft.BingNews
-::Microsoft.BingSports
-::Microsoft.BingTranslator
-::Microsoft.BingTravel
-::Microsoft.Copilot
-::Microsoft.Getstarted
-::Microsoft.Messaging
-::Microsoft.Microsoft3DViewer
-::Microsoft.MicrosoftJournal
-::Microsoft.MicrosoftOfficeHub
-::Microsoft.MicrosoftPowerBIForWindows
-::Microsoft.MicrosoftSolitaireCollection
-::Microsoft.MicrosoftStickyNotes
-::Microsoft.MixedReality.Portal
-::Microsoft.NetworkSpeedTest
-::Microsoft.News
-::Microsoft.Office.OneNote
-::Microsoft.Office.Sway
-::Microsoft.OneConnect
-::Microsoft.People
-::Microsoft.PowerAutomateDesktop
-::Microsoft.Print3D
-::Microsoft.RemoteDesktop
-::Microsoft.ScreenSketch
-::Microsoft.SkypeApp
-::Microsoft.StartExperiencesApp
-::Microsoft.Todos
-::Microsoft.Whiteboard
-::Microsoft.Windows.DevHome
-::Microsoft.WindowsAlarms
-::Microsoft.windowscommunicationsapps
-::Microsoft.WindowsFeedbackHub
-::Microsoft.WindowsMaps
-::Microsoft.WindowsSoundRecorder
-::Microsoft.WindowsTerminal
-::Microsoft.Xbox.TCUI
-::Microsoft.XboxApp
-::Microsoft.XboxSpeechToTextOverlay
-::Microsoft.YourPhone
-::Microsoft.ZuneMusic
-::Microsoft.ZuneVideo
-::MicrosoftCorporationII.MicrosoftFamily
-::MicrosoftCorporationII.QuickAssist
-::MicrosoftTeams
-::MicrosoftWindows.CrossDevice
-::Netflix
-::NYTCrossword
-::OneCalendar
-::PandoraMediaInc
-::PhototasticCollage
-::PicsArt-PhotoStudio
-::Plex
-::PolarrPhotoEditorAcademicEdition
-::Royal Revolt
-::Shazam
-::Sidia.LiveWallpaper
-::SlingTV
-::Spotify
-::TikTok
-::TuneInRadio
-::Twitter
-::Viber
-::WinZipUniversal
-::Wunderlist
-::XING
-::'
-::
-::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Startup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Initialize-Startup {
+::function Initialize-Script {
 ::    $FORM.Activate()
 ::
 ::    Add-LogMessage "[$((Get-Date).ToString())] Initializing..."
@@ -2416,18 +2474,23 @@ if "%debug%"=="true" (
 ::
 ::    Write-Log $INF 'Current system information:'
 ::
-::    Set-Variable -Option Constant WindowsRelease ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId)
+::    Set-Variable -Option Constant Motherboard (Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product)
+::    Set-Variable -Option Constant BIOS (Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate)
 ::
-::    Set-Variable -Option Constant -Scope Script OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -Like '*64') { $True })
+::    Set-Variable -Option Constant WindowsRelease ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion)
 ::
-::    Set-Variable -Option Constant OfficeYear $(Switch ($OFFICE_VERSION) { 16 { '2016 / 2019 / 2021 / 2024' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
+::    Set-Variable -Option Constant -Scope Script OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -like '*64') { $True })
+::
+::    Set-Variable -Option Constant OfficeYear $(switch ($OFFICE_VERSION) { 16 { '2016 / 2019 / 2021 / 2024' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
 ::    Set-Variable -Option Constant OfficeName $(if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' })
 ::
-::    Write-Log $INF "    Operation system:  $($OPERATING_SYSTEM.Caption)"
-::    Write-Log $INF "    OS architecture:  $(if ($OS_64_BIT) { '64-bit' } else { '32-bit' })"
-::    Write-Log $INF "    OS language:  $SYSTEM_LANGUAGE"
-::    Write-Log $INF "    $(if ($OS_VERSION -ge 10) {'OS release / '})Build number:  $(if ($OS_VERSION -ge 10) {"v$WindowsRelease / "})$($OPERATING_SYSTEM.Version)"
-::    Write-Log $INF "    Office version:  $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})"
+::    Write-Log $INF "    Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)"
+::    Write-Log $INF "    BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))"
+::    Write-Log $INF "    Operation system: $($OPERATING_SYSTEM.Caption)"
+::    Write-Log $INF "    $(if ($OS_VERSION -ge 10) {'OS release / '})Build number: $(if ($OS_VERSION -ge 10) {"v$WindowsRelease / "})$($OPERATING_SYSTEM.Version)"
+::    Write-Log $INF "    OS architecture: $($OPERATING_SYSTEM.OSArchitecture)"
+::    Write-Log $INF "    OS language: $SYSTEM_LANGUAGE"
+::    Write-Log $INF "    Office version: $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})"
 ::
 ::    Get-CurrentVersion
 ::}
@@ -2435,15 +2498,15 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Logger #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Write-Log {
-::    Param(
+::function Write-Log {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$Message
 ::    )
 ::
 ::    $LOG.SelectionStart = $LOG.TextLength
 ::
-::    Switch ($Level) {
+::    switch ($Level) {
 ::        $WRN {
 ::            $LOG.SelectionColor = 'blue'
 ::        }
@@ -2459,8 +2522,8 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::Function Add-LogMessage {
-::    Param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
+::function Add-LogMessage {
+::    param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
 ::
 ::    Write-Host -NoNewline $Text
 ::    $LOG.AppendText($Text)
@@ -2469,8 +2532,8 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::Function Out-Status {
-::    Param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
+::function Out-Status {
+::    param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
 ::
 ::    Add-LogMessage ' '
 ::
@@ -2484,17 +2547,17 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::Function Out-Success {
+::function Out-Success {
 ::    Out-Status 'Done'
 ::}
 ::
-::Function Out-Failure {
+::function Out-Failure {
 ::    Out-Status 'Failed'
 ::}
 ::
 ::
-::Function Write-ExceptionLog {
-::    Param(
+::function Write-ExceptionLog {
+::    param(
 ::        [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$Message
 ::    )
@@ -2505,18 +2568,18 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Self-Update #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Get-CurrentVersion {
+::function Get-CurrentVersion {
 ::    if ($PS_VERSION -le 2) {
 ::        Write-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"
-::        Return
+::        return
 ::    }
 ::
 ::    Write-Log $INF 'Checking for updates...'
 ::
-::    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
+::    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
 ::    if ($IsNotConnected) {
 ::        Write-Log $ERR "Failed to check for updates: $IsNotConnected"
-::        Return
+::        return
 ::    }
 ::
 ::    $ProgressPreference = 'SilentlyContinue'
@@ -2526,78 +2589,68 @@ if "%debug%"=="true" (
 ::    } catch [Exception] {
 ::        $ProgressPreference = 'Continue'
 ::        Write-ExceptionLog $_ 'Failed to check for updates'
-::        Return
+::        return
 ::    }
 ::
 ::    if ($LatestVersion -gt $VERSION) {
 ::        Write-Log $WRN "Newer version available: v$LatestVersion"
-::        Get-Update
+::        Update-Self
 ::    } else {
 ::        Out-Status 'No updates available'
 ::    }
 ::}
 ::
 ::
-::Function Get-Update {
+::function Update-Self {
 ::    Set-Variable -Option Constant TargetFileBat "$PATH_CURRENT_DIR\qiiwexc.bat"
 ::
 ::    Write-Log $WRN 'Downloading new version...'
 ::
-::    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
+::    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
 ::
 ::    if ($IsNotConnected) {
 ::        Write-Log $ERR "Failed to download update: $IsNotConnected"
-::        Return
+::        return
 ::    }
 ::
 ::    try {
 ::        Invoke-WebRequest 'https://bit.ly/qiiwexc_bat' -OutFile $TargetFileBat
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to download update'
-::        Return
+::        return
 ::    }
 ::
 ::    Out-Success
 ::    Write-Log $WRN 'Restarting...'
 ::
 ::    try {
-::        Start-Script $TargetFileBat
+::        Invoke-Command $TargetFileBat
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to start new version'
-::        Return
+::        return
 ::    }
 ::
 ::    Exit-Script
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Common #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Network #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Get-NetworkAdapter {
-::    Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
+::function Get-NetworkAdapter {
+::    return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
 ::}
 ::
-::Function Get-ConnectionStatus {
+::function Test-NetworkConnection {
 ::    if (!(Get-NetworkAdapter)) {
-::        Return 'Computer is not connected to the Internet'
+::        return 'Computer is not connected to the Internet'
 ::    }
 ::}
 ::
-::Function Reset-State {
-::    Write-Log $INF "Cleaning up '$PATH_APP_DIR'"
-::    Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_APP_DIR
-::    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
-::    Write-Host ''
-::}
 ::
-::Function Exit-Script {
-::    Reset-State
-::    $FORM.Close()
-::}
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Open in a browser #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::
-::Function Open-InBrowser {
-::    Param([String][Parameter(Position = 0, Mandatory = $True)]$URL)
+::function Open-InBrowser {
+::    param([String][Parameter(Position = 0, Mandatory = $True)]$URL)
 ::
 ::    Write-Log $INF "Opening URL in the default browser: $URL"
 ::
@@ -2609,10 +2662,10 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Start Script #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Invoke Command #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Start-Script {
-::    Param(
+::function Invoke-Command {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Command,
 ::        [String]$WorkingDirectory,
 ::        [Switch]$BypassExecutionPolicy,
@@ -2634,8 +2687,8 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download File #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Start-Download {
-::    Param(
+::function Start-Download {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
 ::        [String][Parameter(Position = 1)]$SaveAs,
 ::        [Switch]$Temp
@@ -2649,15 +2702,15 @@ if "%debug%"=="true" (
 ::
 ::    Write-Log $INF "Downloading from $URL"
 ::
-::    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
+::    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
 ::    if ($IsNotConnected) {
 ::        Write-Log $ERR "Download failed: $IsNotConnected"
 ::
 ::        if (Test-Path $SavePath) {
 ::            Write-Log $WRN 'Previous download found, returning it'
-::            Return $SavePath
+::            return $SavePath
 ::        } else {
-::            Return
+::            return
 ::        }
 ::    }
 ::
@@ -2672,21 +2725,21 @@ if "%debug%"=="true" (
 ::        if (Test-Path $SavePath) {
 ::            Out-Success
 ::        } else {
-::            Throw 'Possibly computer is offline or disk is full'
+::            throw 'Possibly computer is offline or disk is full'
 ::        }
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Download failed'
-::        Return
+::        return
 ::    }
 ::
-::    Return $SavePath
+::    return $SavePath
 ::}
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Extract ZIP #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Start-Extraction {
-::    Param(
+::function Expand-Zip {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$ZipPath,
 ::        [Switch]$Execute
 ::    )
@@ -2696,7 +2749,7 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
 ::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
 ::
-::    [String]$Executable = Switch -Wildcard ($ZipName) {
+::    [String]$Executable = switch -Wildcard ($ZipName) {
 ::        'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
 ::        'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
 ::        'cpu-z_*' { "$ExtractionDir\cpuz_x$(if ($OS_64_BIT) {'64'} else {'32'}).exe" }
@@ -2706,7 +2759,7 @@ if "%debug%"=="true" (
 ::        Default { $ZipName.TrimEnd('.zip') + '.exe' }
 ::    }
 ::
-::    Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -Like "$ExtractionDir\*")
+::    Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -like "$ExtractionDir\*")
 ::    Set-Variable -Option Constant TemporaryExe "$ExtractionPath\$Executable"
 ::    Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
 ::
@@ -2720,13 +2773,13 @@ if "%debug%"=="true" (
 ::        if ($ZIP_SUPPORTED) {
 ::            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
 ::        } else {
-::            ForEach ($Item In $SHELL.NameSpace($ZipPath).Items()) {
+::            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
 ::                $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
 ::            }
 ::        }
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ "Failed to extract '$ZipPath'"
-::        Return
+::        return
 ::    }
 ::
 ::    Remove-Item -Force -ErrorAction SilentlyContinue $ZipPath
@@ -2744,14 +2797,14 @@ if "%debug%"=="true" (
 ::    Out-Success
 ::    Write-Log $INF "Files extracted to '$TargetPath'"
 ::
-::    Return $TargetExe
+::    return $TargetExe
 ::}
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Run Executable #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Start-Executable {
-::    Param(
+::function Start-Executable {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Executable,
 ::        [String][Parameter(Position = 1)]$Switches,
 ::        [Switch]$Silent
@@ -2764,7 +2817,7 @@ if "%debug%"=="true" (
 ::            Start-Process -Wait $Executable $Switches
 ::        } catch [Exception] {
 ::            Write-ExceptionLog $_ "Failed to run '$Executable'"
-::            Return
+::            return
 ::        }
 ::
 ::        Out-Success
@@ -2783,7 +2836,7 @@ if "%debug%"=="true" (
 ::            }
 ::        } catch [Exception] {
 ::            Write-ExceptionLog $_ "Failed to execute '$Executable'"
-::            Return
+::            return
 ::        }
 ::
 ::        Out-Success
@@ -2791,10 +2844,10 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download Extract Execute #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Download Unzip and Run #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Start-DownloadExtractExecute {
-::    Param(
+::function Start-DownloadUnzipAndRun {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
 ::        [String][Parameter(Position = 1)]$FileName,
 ::        [String][Parameter(Position = 2)]$Params,
@@ -2808,10 +2861,10 @@ if "%debug%"=="true" (
 ::        Write-Log $WRN 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
 ::        Write-Log $WRN 'Click the button again to continue'
 ::        Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN $True
-::        Return
+::        return
 ::    }
 ::
-::    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) {
+::    if ($PS_VERSION -le 2 -and ($URL -match '*github.com/*' -or $URL -match '*github.io/*')) {
 ::        Open-InBrowser $URL
 ::    } else {
 ::        Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
@@ -2819,7 +2872,7 @@ if "%debug%"=="true" (
 ::        Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 ::
 ::        if ($DownloadedFile) {
-::            Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
+::            Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
 ::
 ::            if ($Execute) {
 ::                Start-Executable $Executable $Params -Silent:$Silent
@@ -2831,8 +2884,8 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Merge JSON #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Merge-JsonObjects {
-::    Param(
+::function Merge-JsonObjects {
+::    param(
 ::        [Parameter(Position = 0, Mandatory = $True)]$Source,
 ::        [Parameter(Position = 1, Mandatory = $True)]$Extend
 ::    )
@@ -2840,7 +2893,7 @@ if "%debug%"=="true" (
 ::    if ($Source -is [PSCustomObject] -and $Extend -is [PSCustomObject]) {
 ::        [PSCustomObject]$Merged = [Ordered] @{}
 ::
-::        ForEach ($Property In $Source.PSObject.Properties) {
+::        foreach ($Property in $Source.PSObject.Properties) {
 ::            if ($Null -eq $Extend.$($Property.Name)) {
 ::                $Merged[$Property.Name] = $Property.Value
 ::            } else {
@@ -2848,7 +2901,7 @@ if "%debug%"=="true" (
 ::            }
 ::        }
 ::
-::        ForEach ($Property In $Extend.PSObject.Properties) {
+::        foreach ($Property in $Extend.PSObject.Properties) {
 ::            if ($Null -eq $Source.$($Property.Name)) {
 ::                $Merged[$Property.Name] = $Property.Value
 ::            }
@@ -2875,9 +2928,24 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Exit #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::function Reset-State {
+::    Write-Log $INF "Cleaning up '$PATH_APP_DIR'"
+::    Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_APP_DIR
+::    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
+::    Write-Host ''
+::}
+::
+::function Exit-Script {
+::    Reset-State
+::    $FORM.Close()
+::}
+::
+::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Check for Updates #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Get-WindowsUpdates {
+::function Update-Windows {
 ::    Write-Log $INF 'Starting Windows Update...'
 ::
 ::    try {
@@ -2888,50 +2956,109 @@ if "%debug%"=="true" (
 ::        }
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to update Windows'
-::        Return
+::        return
 ::    }
 ::
 ::    Out-Success
 ::}
 ::
 ::
-::Function Get-MicrosoftStoreUpdates {
+::function Update-MicrosoftStoreApps {
 ::    Write-Log $INF 'Starting Microsoft Store apps update...'
 ::
 ::    try {
-::        Start-Script -Elevated -HideWindow "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
+::        Invoke-Command -Elevated -HideWindow "(Get-WmiObject MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap').UpdateScanMethod()"
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to update Microsoft Store apps'
-::        Return
+::        return
 ::    }
 ::
 ::    Out-Success
 ::}
 ::
 ::
-::Function Get-OfficeUpdates {
+::function Update-MicrosoftOffice {
 ::    Write-Log $INF 'Starting Microsoft Office update...'
 ::
 ::    try {
 ::        Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user'
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to update Microsoft Office'
-::        Return
+::        return
 ::    }
 ::
 ::    Out-Success
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Activator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Activators #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Start-Activator {
+::function Start-Activator {
 ::    Write-Log $INF 'Starting MAS activator...'
 ::
 ::    if ($OS_VERSION -eq 7) {
-::        Start-Script -HideWindow "iex ((New-Object Net.WebClient).DownloadString('https://get.activated.win'))"
+::        Invoke-Command -HideWindow "iex ((New-Object Net.WebClient).DownloadString('https://get.activated.win'))"
 ::    } else {
-::        Start-Script -HideWindow "irm 'https://get.activated.win' | iex"
+::        Invoke-Command -HideWindow "irm 'https://get.activated.win' | iex"
+::    }
+::
+::    Out-Success
+::}
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Cleanup #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::function Start-Cleanup {
+::    Write-Log $INF 'Cleaning up the system...'
+::
+::    Write-Log $INF 'Clearing delivery optimization cache...'
+::    Delete-DeliveryOptimizationCache -Force
+::    Out-Success
+::
+::    Write-Log $INF 'Clearing software distribution folder...'
+::    Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
+::    Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
+::    Out-Success
+::
+::    Write-Log $INF 'Clearing Windows temp folder...'
+::    Set-Variable -Option Constant WindowsTemp "$env:SystemRoot\Temp"
+::    Get-ChildItem -Path $WindowsTemp -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
+::    Out-Success
+::
+::    Write-Log $INF 'Clearing user temp folder...'
+::    Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
+::    New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
+::    Out-Success
+::
+::    Write-Log $INF 'Running system cleanup...'
+::
+::    Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
+::        Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
+::    }
+::
+::    Set-Variable -Option Constant VolumeCaches @(
+::        'Delivery Optimization Files',
+::        'Device Driver Packages',
+::        'Language Pack',
+::        'Previous Installations',
+::        'Setup Log Files',
+::        'System error memory dump files',
+::        'System error minidump files',
+::        'Temporary Setup Files',
+::        'Update Cleanup',
+::        'Windows Defender',
+::        'Windows ESD installation files',
+::        'Windows Upgrade Log Files'
+::    )
+::
+::    foreach ($VolumeCache in $VolumeCaches) {
+::        New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\$VolumeCache" -Name StateFlags3224 -PropertyType DWord -Value 2 -Force
+::    }
+::
+::    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224' -Wait
+::
+::    Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
+::        Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
 ::    }
 ::
 ::    Out-Success
@@ -2940,80 +3067,91 @@ if "%debug%"=="true" (
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Ninite #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Set-NiniteButtonState {
-::    $CHECKBOX_StartNinite.Enabled = $CHECKBOX_Ninite_7zip.Checked -or $CHECKBOX_Ninite_VLC.Checked -or $CHECKBOX_Ninite_TeamViewer.Checked -or `
-::        $CHECKBOX_Ninite_Chrome.Checked -or $CHECKBOX_Ninite_qBittorrent.Checked -or $CHECKBOX_Ninite_Malwarebytes.Checked
+::Set-Variable -Option Constant NiniteCheckboxes @(
+::    $CHECKBOX_Ninite_7zip,
+::    $CHECKBOX_Ninite_VLC,
+::    $CHECKBOX_Ninite_TeamViewer,
+::    $CHECKBOX_Ninite_Chrome,
+::    $CHECKBOX_Ninite_qBittorrent,
+::    $CHECKBOX_Ninite_Malwarebytes
+::)
+::
+::
+::function Set-NiniteButtonState {
+::    $CHECKBOX_StartNinite.Enabled = $NiniteCheckboxes.Where({ $_.Checked })
 ::}
 ::
 ::
-::Function Set-NiniteQuery {
-::    [String[]]$Array = @()
-::    if ($CHECKBOX_Ninite_7zip.Checked) {
-::        $Array += $CHECKBOX_Ninite_7zip.Name
+::function Get-NiniteInstaller {
+::    param(
+::        [Boolean][Parameter(Position = 0, Mandatory = $True)]$OpenInBrowser,
+::        [Boolean][Parameter(Position = 1)]$Execute
+::    )
+::
+::    [String[]]$AppIds = @()
+::
+::    foreach ($Checkbox in $NiniteCheckboxes) {
+::        if ($Checkbox.Checked) {
+::            $AppIds += $Checkbox.Name
+::        }
 ::    }
-::    if ($CHECKBOX_Ninite_VLC.Checked) {
-::        $Array += $CHECKBOX_Ninite_VLC.Name
+::
+::    Set-Variable -Option Constant Query ($AppIds -join '-')
+::
+::    if ($OpenInBrowser) {
+::        Open-InBrowser "https://ninite.com/?select=$Query"
+::    } else {
+::        [String[]]$AppNames = @()
+::
+::        foreach ($Checkbox in $NiniteCheckboxes) {
+::            if ($Checkbox.Checked) {
+::                $AppNames += $Checkbox.Text
+::            }
+::        }
+::
+::        Set-Variable -Option Constant FileName "Ninite $($AppNames -Join ' ') Installer.exe"
+::        Set-Variable -Option Constant DownloadUrl "https://ninite.com/$Query/ninite.exe"
+::
+::        Start-DownloadUnzipAndRun -Execute:$Execute $DownloadUrl $FileName
 ::    }
-::    if ($CHECKBOX_Ninite_TeamViewer.Checked) {
-::        $Array += $CHECKBOX_Ninite_TeamViewer.Name
-::    }
-::    if ($CHECKBOX_Ninite_Chrome.Checked) {
-::        $Array += $CHECKBOX_Ninite_Chrome.Name
-::    }
-::    if ($CHECKBOX_Ninite_qBittorrent.Checked) {
-::        $Array += $CHECKBOX_Ninite_qBittorrent.Name
-::    }
-::    if ($CHECKBOX_Ninite_Malwarebytes.Checked) {
-::        $Array += $CHECKBOX_Ninite_Malwarebytes.Name
-::    }
-::    Return $Array -Join '-'
 ::}
 ::
 ::
-::Function Set-NiniteFileName {
-::    [String[]]$Array = @()
-::    if ($CHECKBOX_Ninite_7zip.Checked) {
-::        $Array += $CHECKBOX_Ninite_7zip.Text
-::    }
-::    if ($CHECKBOX_Ninite_VLC.Checked) {
-::        $Array += $CHECKBOX_Ninite_VLC.Text
-::    }
-::    if ($CHECKBOX_Ninite_TeamViewer.Checked) {
-::        $Array += $CHECKBOX_Ninite_TeamViewer.Text
-::    }
-::    if ($CHECKBOX_Ninite_Chrome.Checked) {
-::        $Array += $CHECKBOX_Ninite_Chrome.Text
-::    }
-::    if ($CHECKBOX_Ninite_qBittorrent.Checked) {
-::        $Array += $CHECKBOX_Ninite_qBittorrent.Text
-::    }
-::    if ($CHECKBOX_Ninite_Malwarebytes.Checked) {
-::        $Array += $CHECKBOX_Ninite_Malwarebytes.Text
-::    }
-::    Return "Ninite $($Array -Join ' ') Installer.exe"
-::}
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Essentials #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Install Office #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::Function Start-OfficeInstaller {
-::    Param(
+::function Install-MicrosoftOffice {
+::    param(
 ::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute
 ::    )
 ::
 ::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
-::    Set-Variable -Option Constant Config $(if ($SYSTEM_LANGUAGE -Match 'ru') { $CONFIG_OFFICE_INSTALLER -Replace 'en-GB', 'ru-RU' } else { $CONFIG_OFFICE_INSTALLER })
+::    Set-Variable -Option Constant Config $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_OFFICE_INSTALLER -replace 'en-GB', 'ru-RU' } else { $CONFIG_OFFICE_INSTALLER })
 ::
 ::    $Config | Out-File "$TargetPath\Office Installer+.ini" -Encoding UTF8
 ::
-::    Start-DownloadExtractExecute -AVWarning -Execute:$Execute 'https://qiiwexc.github.io/d/Office_Installer+.zip'
+::    Start-DownloadUnzipAndRun -AVWarning -Execute:$Execute 'https://qiiwexc.github.io/d/Office_Installer+.zip'
+::}
+::
+::
+::function Install-Unchecky {
+::    param(
+::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
+::        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+::    )
+::
+::    Set-Variable -Option Constant Registry_Key 'HKCU:\Software\Unchecky'
+::    New-Item $Registry_Key -ErrorAction SilentlyContinue
+::    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1 -ErrorAction SilentlyContinue
+::
+::    Set-Variable -Option Constant Params $(if ($Silent) { '-install -no_desktop_icon' })
+::    Start-DownloadUnzipAndRun -Execute:$Execute 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Params:$Params -Silent:$Silent
 ::}
 ::
 ::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration Helpers #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Write-ConfigurationFile {
-::    Param(
+::function Write-ConfigurationFile {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$Content,
 ::        [String][Parameter(Position = 2, Mandatory = $True)]$Path,
@@ -3031,8 +3169,8 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::Function Update-JsonFile {
-::    Param(
+::function Update-JsonFile {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$ProcessName,
 ::        [String][Parameter(Position = 2, Mandatory = $True)]$Content,
@@ -3061,8 +3199,8 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::Function Import-RegistryConfiguration {
-::    Param(
+::function Import-RegistryConfiguration {
+::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$Content
 ::    )
@@ -3076,49 +3214,16 @@ if "%debug%"=="true" (
 ::        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to import file into registry'
-::        Return
+::        return
 ::    }
 ::
 ::    Out-Success
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apps Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apply apps configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Set-VlcConfiguration {
-::    Set-Variable -Option Constant AppName $CHECKBOX_Config_VLC.Text
-::    Write-ConfigurationFile $AppName $CONFIG_VLC "$PATH_PROFILE_ROAMING\vlc\vlcrc"
-::}
-::
-::
-::Function Set-qBittorrentConfiguration {
-::    Set-Variable -Option Constant AppName $CHECKBOX_Config_qBittorrent.Text
-::    Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -Match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH }))
-::    Write-ConfigurationFile $AppName $Content "$PATH_PROFILE_ROAMING\$AppName\$AppName.ini"
-::}
-::
-::
-::Function Set-MicrosoftEdgeConfiguration {
-::    Set-Variable -Option Constant AppName $CHECKBOX_Config_Edge.Text
-::    Set-Variable -Option Constant ProcessName 'msedge'
-::
-::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$PATH_PROFILE_LOCAL\Microsoft\Edge\User Data\Local State"
-::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$PATH_PROFILE_LOCAL\Microsoft\Edge\User Data\Default\Preferences"
-::}
-::
-::
-::Function Set-GoogleChromeConfiguration {
-::    Set-Variable -Option Constant AppName $CHECKBOX_Config_Chrome.Text
-::    Set-Variable -Option Constant ProcessName 'chrome'
-::
-::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Local State"
-::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$PATH_PROFILE_LOCAL\Google\Chrome\User Data\Default\Preferences"
-::}
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::Function Set-Configuration {
+::function Set-AppsConfiguration {
 ::    if ($CHECKBOX_Config_VLC.Checked) {
 ::        Set-VlcConfiguration
 ::    }
@@ -3142,7 +3247,45 @@ if "%debug%"=="true" (
 ::    if ($CHECKBOX_Config_Chrome.Checked) {
 ::        Set-GoogleChromeConfiguration
 ::    }
+::}
 ::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apps Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::function Set-VlcConfiguration {
+::    Set-Variable -Option Constant AppName $CHECKBOX_Config_VLC.Text
+::    Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
+::}
+::
+::
+::function Set-qBittorrentConfiguration {
+::    Set-Variable -Option Constant AppName $CHECKBOX_Config_qBittorrent.Text
+::    Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH }))
+::    Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
+::}
+::
+::
+::function Set-MicrosoftEdgeConfiguration {
+::    Set-Variable -Option Constant AppName $CHECKBOX_Config_Edge.Text
+::    Set-Variable -Option Constant ProcessName 'msedge'
+::
+::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
+::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
+::}
+::
+::
+::function Set-GoogleChromeConfiguration {
+::    Set-Variable -Option Constant AppName $CHECKBOX_Config_Chrome.Text
+::    Set-Variable -Option Constant ProcessName 'chrome'
+::
+::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"
+::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Google\Chrome\User Data\Default\Preferences"
+::}
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Apply Windows configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::function Set-WindowsConfiguration {
 ::    if ($CHECKBOX_Config_Windows.Checked) {
 ::        Set-WindowsConfiguration
 ::    }
@@ -3153,9 +3296,37 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# File Associations #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::function Set-FileAssociations {
+::    Write-Log $INF 'Setting file associations...'
+::
+::    Set-Variable -Option Constant ScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
+::
+::    $Parameters = @{
+::        Uri             = "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
+::        Outfile         = $ScriptPath
+::        UseBasicParsing = $true
+::    }
+::    Invoke-WebRequest @Parameters
+::
+::    (Get-Content -Path $ScriptPath -Force) | Set-Content -Path $ScriptPath -Encoding UTF8 -Force
+::
+::    . $ScriptPath
+::
+::    foreach ($FileAssociation in $CONFIG_FILE_ASSOCIATIONS) {
+::        Set-Association -ProgramPath $FileAssociation.Application -Extension $FileAssociation.Extension
+::    }
+::
+::    Remove-Item -Path $ScriptPath -Force
+::
+::    Out-Success
+::}
+::
+::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Configuration #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Set-WindowsConfiguration {
+::function Set-WindowsConfiguration {
 ::    Set-MpPreference -PUAProtection Enabled
 ::    Set-MpPreference -MeteredConnectionUpdates $True
 ::
@@ -3166,11 +3337,13 @@ if "%debug%"=="true" (
 ::
 ::    Set-PowerConfiguration
 ::
+::    Set-FileAssociations
+::
 ::    Import-RegistryConfiguration $CHECKBOX_Config_Windows.Text ($CONFIG_WINDOWS + (Get-DynamicWindowsConfiguration))
 ::}
 ::
 ::
-::Function Set-PowerConfiguration {
+::function Set-PowerConfiguration {
 ::    Write-Log $INF 'Setting power scheme overlay...'
 ::
 ::    powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
@@ -3179,7 +3352,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-Log $INF 'Applying Windows power scheme settings...'
 ::
-::    ForEach ($PowerSetting In $CONFIG_POWER_SETTINGS) {
+::    foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
 ::        powercfg /SetAcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
 ::        powercfg /SetDcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
 ::    }
@@ -3188,36 +3361,36 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::Function Get-DynamicWindowsConfiguration {
+::function Get-DynamicWindowsConfiguration {
 ::    Write-Log $INF 'Creating Windows configuration file...'
 ::
 ::    [String]$ConfigLines = ''
 ::
 ::    try {
-::        $UserRegistries = (Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -Match 'S-1-5-21' -and $_ -NotMatch '_Classes$' }
-::        ForEach ($Registry In $UserRegistries) {
-::            Set-Variable -Option Constant User ($Registry -Replace 'HKEY_USERS\\', '')
+::        Set-Variable -Option Constant UserRegistries ((Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' })
+::        foreach ($Registry in $UserRegistries) {
+::            Set-Variable -Option Constant User ($Registry -replace 'HKEY_USERS\\', '')
 ::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
 ::            $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
 ::        }
 ::
-::        $VolumeRegistries = (Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name
-::        ForEach ($Registry In $VolumeRegistries) {
+::        Set-Variable -Option Constant VolumeRegistries ((Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
+::        foreach ($Registry in $VolumeRegistries) {
 ::            $ConfigLines += "`n[$Registry]`n"
 ::            $ConfigLines += "`"MaxCapacity`"=dword:000FFFFF`n"
 ::        }
 ::
-::        $NotificationRegistries = (Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name
-::        ForEach ($Registry In $NotificationRegistries) {
+::        Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
+::        foreach ($Registry in $NotificationRegistries) {
 ::            $ConfigLines += "`n[$Registry]`n"
 ::            $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
 ::        }
 ::
-::        $FileExtensionRegistries = (Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -Match 'HKEY_CLASSES_ROOT\\\.' }
-::        ForEach ($Registry In $FileExtensionRegistries) {
-::            $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -Match 'PersistentHandler' }
+::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -match 'HKEY_CLASSES_ROOT\\\.' })
+::        foreach ($Registry in $FileExtensionRegistries) {
+::            $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
 ::
-::            ForEach ($Reg In $PersistentHandlerRegistries) {
+::            foreach ($Reg in $PersistentHandlerRegistries) {
 ::                $PersistentHandler = Get-ItemProperty "Registry::$Reg"
 ::                $DefaultHandler = $PersistentHandler.'(default)'
 ::
@@ -3235,39 +3408,78 @@ if "%debug%"=="true" (
 ::
 ::    Out-Success
 ::
-::    Return $ConfigLines
+::    return $ConfigLines
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Configure and debloat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Set-CloudFlareDNS {
-::    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } };
-::    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } };
+::function Start-WindowsDebloat {
+::    Write-Log $INF 'Starting Windows 10/11 debloat utility...'
 ::
-::    Write-Log $WRN 'Internet connection may get interrupted briefly'
-::    Write-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+::    Set-Variable -Option Constant TargetPath "$PATH_TEMP_DIR\Win11Debloat"
+::    New-Item -ItemType Directory $TargetPath -ErrorAction SilentlyContinue
 ::
-::    if (!(Get-NetworkAdapter)) {
-::        Write-Log $ERR 'Could not determine network adapter used to connect to the Internet'
-::        Write-Log $ERR 'This could mean that computer is not connected'
-::        Return
-::    }
+::    Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
+::    $CONFIG_DEBLOAT_APP_LIST | Out-File $CustomAppsListFile
 ::
-::    try {
-::        Start-Script -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
-::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to change DNS server'
-::        Return
-::    }
+::    Set-Variable -Option Constant SavedSettingsFile "$TargetPath\SavedSettings"
+::    $CONFIG_DEBLOAT | Out-File $SavedSettingsFile
+::
+::    Set-Variable -Option Constant UsePresetParam $(if ($CHECKBOX_UseDebloatPreset.Checked) { '-RunSavedSettings' } else { '' })
+::    Set-Variable -Option Constant SilentParam $(if ($CHECKBOX_SilentlyRunDebloat.Checked) { '-Silent' } else { '' })
+::    Set-Variable -Option Constant Params "-Sysprep $UsePresetParam $SilentParam"
+::
+::    Invoke-Command -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 ::
 ::    Out-Success
 ::}
 ::
 ::
+::function Start-WinUtil {
+::    param(
+::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Apply
+::    )
+::
+::    Write-Log $INF 'Starting WinUtil utility...'
+::
+::    Set-Variable -Option Constant ConfigFile "$PATH_APP_DIR\winutil.json"
+::
+::    $CONFIG_WINUTIL | Out-File $ConfigFile
+::
+::    Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
+::    Set-Variable -Option Constant RunParam $(if ($Apply) { '-Run' } else { '' })
+::
+::    Invoke-Command "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
+::
+::    Out-Success
+::}
+::
+::
+::function Start-ShutUp10 {
+::    param(
+::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
+::        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+::    )
+::
+::    Write-Log $INF 'Starting ShutUp10++ utility...'
+::
+::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+::    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
+::
+::    $CONFIG_SHUTUP10 | Out-File $ConfigFile
+::
+::    if ($Silent) {
+::        Start-DownloadUnzipAndRun -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Params $ConfigFile
+::    } else {
+::        Start-DownloadUnzipAndRun -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe'
+::    }
+::}
+::
+::
 ::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Remove Windows Components #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Remove-WindowsFeatures {
+::function Remove-WindowsFeatures {
 ::    Write-Log $INF 'Starting miscellaneous Windows features cleanup...'
 ::
 ::    Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
@@ -3284,7 +3496,7 @@ if "%debug%"=="true" (
 ::        Write-ExceptionLog $_ 'Failed to collect the features to remove'
 ::    }
 ::
-::    ForEach ($Capability in $CapabilitiesToRemove) {
+::    foreach ($Capability in $CapabilitiesToRemove) {
 ::        [String]$Name = $Capability.Name
 ::        try {
 ::            Write-Log $INF "Removing '$Name'..."
@@ -3307,70 +3519,44 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Windows Configurator #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Alternative DNS #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 ::
-::Function Start-WinUtil {
-::    Param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Apply
-::    )
+::function Set-CloudFlareDNS {
+::    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } }
+::    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } }
 ::
-::    Write-Log $INF 'Starting WinUtil utility...'
+::    Write-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+::    Write-Log $WRN 'Internet connection may get interrupted briefly'
 ::
-::    Set-Variable -Option Constant ConfigFile "$PATH_APP_DIR\winutil.json"
-::
-::    $CONFIG_WINUTIL | Out-File $ConfigFile
-::
-::    Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
-::    Set-Variable -Option Constant RunParam $(if ($Apply) { '-Run' } else { '' })
-::
-::    Start-Script "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
-::
-::    Out-Success
-::}
-::
-::
-::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Debloat Windows #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
-::
-::Function Start-WindowsDebloat {
-::    Write-Log $INF 'Starting Windows 10/11 debloat utility...'
-::
-::    Set-Variable -Option Constant TargetPath "$PATH_TEMP_DIR\Win11Debloat"
-::    New-Item -ItemType Directory $TargetPath -ErrorAction SilentlyContinue
-::
-::    Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
-::    $CONFIG_DEBLOAT_APP_LIST | Out-File $CustomAppsListFile
-::
-::    Set-Variable -Option Constant SavedSettingsFile "$TargetPath\SavedSettings"
-::    $CONFIG_DEBLOAT | Out-File $SavedSettingsFile
-::
-::    Set-Variable -Option Constant UsePresetParam $(if ($CHECKBOX_UseDebloatPreset.Checked) { '-RunSavedSettings' } else { '' })
-::    Set-Variable -Option Constant SilentParam $(if ($CHECKBOX_SilentlyRunDebloat.Checked) { '-Silent' } else { '' })
-::    Set-Variable -Option Constant Params "-Sysprep $UsePresetParam $SilentParam"
-::
-::    Start-Script -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
-::
-::    Out-Success
-::}
-::
-::
-::Function Start-ShutUp10 {
-::    Param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
-::        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
-::    )
-::
-::    Write-Log $INF 'Starting ShutUp10++ utility...'
-::
-::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
-::    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
-::
-::    $CONFIG_SHUTUP10 | Out-File $ConfigFile
-::
-::    if ($Silent) {
-::        Start-DownloadExtractExecute -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Params $ConfigFile
-::    } else {
-::        Start-DownloadExtractExecute -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe'
+::    if (!(Get-NetworkAdapter)) {
+::        Write-Log $ERR 'Could not determine network adapter used to connect to the Internet'
+::        Write-Log $ERR 'This could mean that computer is not connected'
+::        return
 ::    }
+::
+::    try {
+::        Invoke-Command -Elevated -HideWindow "(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True').SetDNSServerSearchOrder(`$('$PreferredDnsServer', '$AlternateDnsServer'))"
+::    } catch [Exception] {
+::        Write-ExceptionLog $_ 'Failed to change DNS server'
+::        return
+::    }
+::
+::    Out-Success
+::}
+::
+::
+::#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-# Battery Report #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
+::
+::function Get-BatteryReport {
+::    Write-Log $INF 'Exporting battery report...'
+::
+::    Set-Variable -Option Constant ReportPath "$PATH_APP_DIR\battery_report.html"
+::
+::    powercfg /BatteryReport /Output $ReportPath
+::
+::    Open-InBrowser $ReportPath
+::
+::    Out-Success
 ::}
 ::
 ::
@@ -3381,8 +3567,8 @@ if "%debug%"=="true" (
 ::# SIG # Begin signature block
 ::# MIIbuQYJKoZIhvcNAQcCoIIbqjCCG6YCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 ::# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUFkRZ+vtRrVQ8+06NsDr5ZTdE
-::# tLKgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
+::# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUrtGiQRd4GpNqPMhGczzIBxbn
+::# sMCgghYyMIIC9DCCAdygAwIBAgIQXsI0IvjnYrROmtXpEM8jXjANBgkqhkiG9w0B
 ::# AQUFADASMRAwDgYDVQQDDAdxaWl3ZXhjMB4XDTI1MDgwOTIyNDMxOVoXDTI2MDgw
 ::# OTIzMDMxOVowEjEQMA4GA1UEAwwHcWlpd2V4YzCCASIwDQYJKoZIhvcNAQEBBQAD
 ::# ggEPADCCAQoCggEBAMhnu8NP9C+9WtGc5kHCOjJo3ZMzdw/qQIMhafhu736EWnJ5
@@ -3503,28 +3689,28 @@ if "%debug%"=="true" (
 ::# ZPvmpovq90K8eWyG2N01c4IhSOxqt81nMYIE8TCCBO0CAQEwJjASMRAwDgYDVQQD
 ::# DAdxaWl3ZXhjAhBewjQi+OditE6a1ekQzyNeMAkGBSsOAwIaBQCgeDAYBgorBgEE
 ::# AYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwG
-::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBS9CKXw
-::# LMWyg7ONvGGbNKhohLMp5DANBgkqhkiG9w0BAQEFAASCAQBbZPBTvMT4DdL56TG2
-::# 3VZOXhP+Qnepnz2pigvwN0eznzxLruRhsA7bkOJ890mgpQmFu7tBtzkK/VqrhLx1
-::# +lv5hboQJKlSDXz5ahLyGgol2pA5aQjVbdJdx6qlSzRBX45Jblc+c8u9gHf6U26W
-::# oWvozcq33sqPPJzk0KjqJYdmfSgLSiqP4PWTToB0+obKMozewwZy5yfJthqpQ3Do
-::# 4FR5W354jjPxvrd8Kdc5ba+Xhh8lZvx5C34+/oKSXvN+WsRwz0ifhiQPYUnaJTr0
-::# Zl1JfuSiNJUU6LW3Q+jKqR2AFOiaFfMZY5MGTDgsFnHME75Rvp/cldU+gF8ca1j5
-::# M3U2oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
+::# CisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBR7W500
+::# NOiy3xJqvLuevcToxYCpVTANBgkqhkiG9w0BAQEFAASCAQCe1Zi9O2LXWETx8ve0
+::# ZJNQ/CDmxYDRQ5sHhCRtdSQIK5wQGNTJHevF94MEu1R++2EEJcNkmNnNFDgOfGW4
+::# IY0zR0JwyVhHH2vM2+3NjMj0DyLSICnhnW6Ggd0eXdbOiKpwI3dqlK3vPxf8ViMr
+::# GqsPg6odPXze6BdOwCH/jopqxX4DOh4RwDIP+hwbHef58nCxdNR1hRU3ByX5vqAK
+::# 6s8Yyis1jXZuBgG9LAn643mtsiNtuhpENvAOTAHA1C4HfUcQts0KU564EeI5EJlL
+::# EBLu2Td0YM+jWwZbBToCpKZPn/DIIrCpCQvq6TRWD/zDxU+Tdi9mhVISbsQyEsYJ
+::# oG9xoYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMC
 ::# VVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBU
 ::# cnVzdGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQ
 ::# CoDvGEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzEL
-::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkyNTIxNDYwMlowLwYJKoZI
-::# hvcNAQkEMSIEIOeqhKRMCW+6i+T1+PLzsKLX+fwHKpIXrzMNAA1tDJVlMA0GCSqG
-::# SIb3DQEBAQUABIICADMsM/D6uJhpG53aCrrFGVScknvU9zf/nTFcvssXxKI8VLCx
-::# 2bpnngw4vj32d68LJsco/8l62p/Mpn074R7op1yp3K4vGhvv6PVWhkKUWtCpiuZS
-::# SSWTkTKHIdaBOZvCC+PYBZxzP8ZTATcG4o0jiJPAf0G1bSPvXqbWSrHqWtQ1JeaL
-::# SOHVPu8uYGsQNlCtYrSQJ5nl1ggElyT4/TPWJi2n63cwyQ7UxknLBKTBGIlV9Kxv
-::# UkaX9zl/WpvHVBtlgcOoa2vINSuSQQQ412S0/5xydciYS/UGAo81edbhgpP3N/5n
-::# JO7xpWtRo9NjKduAdThhxuUnx3toukIcocE25ooLAsRb2pWo/NdGcY//pNXtVvKN
-::# /1DQQTY95zQFKYJ/8wv3lUIMhVLZyKjvyOwW6U/tosPbEUWrZTPkIuPs8Nvj8DVr
-::# G6jWzBHDhNFjym/EaqAMcDo0m7Krr+hM2AnqlhOJUh5lVjHUwZEXtC5RariStBje
-::# mPM2FsBusNAon0cTUZ8Pda53oP16Aqb9e/wOSOSDPvv0cBOGQXzmkWmcVIoLKjIV
-::# D7vjcyqETeeXHrhQUUUBtHKqQ7Ij9tu7UnX3GkVr92KOSIxO70OEvekDdu0TsmTA
-::# rmYLy47yR8VWy4qvIQidr4vyeXLcT74J9uZQKX9LspLQXgWp03oPfHfeyPGX
+::# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDkyNjIxMDEwMFowLwYJKoZI
+::# hvcNAQkEMSIEIGBFm3Xm4xZJXawtcgech4apZo05gRGFjk5y0FQl3QTmMA0GCSqG
+::# SIb3DQEBAQUABIICAMRnLbfyUNlSUHPBEJaiyQz708KFaxAuZRVhyXIcNSyKj4an
+::# qr3jtKfNCkUVbo/Qv+fjBnXnWfpg4EIXyBOHsw8oN8PBNK0f/qFl8NaQOHE84rrL
+::# CeP+E5QKJsi8bZNHecTK3Rkg0Pc2goxtVjcP1t5ajkfMWtWnTpa+H5qBXO31CKlL
+::# MJY6YDukrT00clMKRHLkMvMOAI4D1mm3c0YxIsMxikUyMs6sY9sXJtjC9GS0r2GS
+::# JyouhfK96991YtXd6A8oLDoZMDB+FA+2BzTLbIlpAOPX3z39XmrmrqO5UKAQhUZt
+::# Oq5HebWRNTUOc2cYxqPrpO8yCr77zsx2ZI9GqeOXKMDccqpRVc/YKZyidzbA456s
+::# D4wGrfaoOd1xphPewk1Raj/2NJuu6amqb4UpTB568t0PBGv6PwTnlkteMG+ozwYU
+::# iPWYQL1/PYOX+ee4Ydl6S2WzgqBP0Pq7yG+UxllTjGqqTxD0Vv5kXyRkrYzNhC/r
+::# fqCJkXaBwQ20/9pQBVVg0vMYhSW19YVWm5GEh1/oId/ADRqhUGGZ8tGBC/+b/9/n
+::# xSs9cI0GbZzHoLip9zDupRzgd8aFx9MzJ0aPQav+FJRhG4LdtgQtYgobFiX2fZFP
+::# tq2pXEj01a95Mghb6IXdfGJQ86nh0B+DjmnQQo0UVCUio4gh1APgQlvSQxHc
 ::# SIG # End signature block
