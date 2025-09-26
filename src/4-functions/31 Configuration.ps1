@@ -1,4 +1,4 @@
-Function Set-Configuration {
+function Set-Configuration {
     if ($CHECKBOX_Config_VLC.Checked) {
         Set-VlcConfiguration
     }

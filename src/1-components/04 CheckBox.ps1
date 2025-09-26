@@ -1,14 +1,14 @@
-Function New-CheckBoxRunAfterDownload {
-    Param(
+function New-CheckBoxRunAfterDownload {
+    param(
         [Switch]$Disabled,
         [Switch]$Checked
     )
 
-    Return New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
+    return New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
 }
 
-Function New-CheckBox {
-    Param(
+function New-CheckBox {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [String][Parameter(Position = 1)]$Name,
         [Switch]$Disabled,
@@ -49,5 +49,5 @@ Function New-CheckBox {
 
     Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $CheckBox
 
-    Return $CheckBox
+    return $CheckBox
 }

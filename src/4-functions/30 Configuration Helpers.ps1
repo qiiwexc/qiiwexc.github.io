@@ -1,5 +1,5 @@
-Function Write-ConfigurationFile {
-    Param(
+function Write-ConfigurationFile {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
         [String][Parameter(Position = 1, Mandatory = $True)]$Content,
         [String][Parameter(Position = 2, Mandatory = $True)]$Path,
@@ -17,8 +17,8 @@ Function Write-ConfigurationFile {
 }
 
 
-Function Update-JsonFile {
-    Param(
+function Update-JsonFile {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
         [String][Parameter(Position = 1, Mandatory = $True)]$ProcessName,
         [String][Parameter(Position = 2, Mandatory = $True)]$Content,
@@ -47,8 +47,8 @@ Function Update-JsonFile {
 }
 
 
-Function Import-RegistryConfiguration {
-    Param(
+function Import-RegistryConfiguration {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
         [String][Parameter(Position = 1, Mandatory = $True)]$Content
     )
@@ -62,7 +62,7 @@ Function Import-RegistryConfiguration {
         Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to import file into registry'
-        Return
+        return
     }
 
     Out-Success

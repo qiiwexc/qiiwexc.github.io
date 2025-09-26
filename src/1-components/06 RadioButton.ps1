@@ -1,5 +1,5 @@
-Function New-RadioButton {
-    Param(
+function New-RadioButton {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [Switch]$Checked,
         [Switch]$Disabled
@@ -35,5 +35,5 @@ Function New-RadioButton {
 
     Set-Variable -Scope Script PREVIOUS_RADIO $RadioButton
 
-    Return $RadioButton
+    return $RadioButton
 }

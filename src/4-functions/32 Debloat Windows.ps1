@@ -1,4 +1,4 @@
-Function Start-WindowsDebloat {
+function Start-WindowsDebloat {
     Write-Log $INF 'Starting Windows 10/11 debloat utility...'
 
     Set-Variable -Option Constant TargetPath "$PATH_TEMP_DIR\Win11Debloat"
@@ -14,14 +14,14 @@ Function Start-WindowsDebloat {
     Set-Variable -Option Constant SilentParam $(if ($CHECKBOX_SilentlyRunDebloat.Checked) { '-Silent' } else { '' })
     Set-Variable -Option Constant Params "-Sysprep $UsePresetParam $SilentParam"
 
-    Start-Script -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
+    Invoke-Command -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 
     Out-Success
 }
 
 
-Function Start-ShutUp10 {
-    Param(
+function Start-ShutUp10 {
+    param(
         [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
         [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
     )
@@ -34,8 +34,8 @@ Function Start-ShutUp10 {
     $CONFIG_SHUTUP10 | Out-File $ConfigFile
 
     if ($Silent) {
-        Start-DownloadExtractExecute -Execute:$Execute '{URL_SHUTUP10}' -Params $ConfigFile
+        Start-DownloadUnzipAndRun -Execute:$Execute '{URL_SHUTUP10}' -Params $ConfigFile
     } else {
-        Start-DownloadExtractExecute -Execute:$Execute '{URL_SHUTUP10}'
+        Start-DownloadUnzipAndRun -Execute:$Execute '{URL_SHUTUP10}'
     }
 }

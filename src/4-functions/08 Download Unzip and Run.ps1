@@ -1,5 +1,5 @@
-Function Start-DownloadExtractExecute {
-    Param(
+function Start-DownloadUnzipAndRun {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$URL,
         [String][Parameter(Position = 1)]$FileName,
         [String][Parameter(Position = 2)]$Params,
@@ -13,10 +13,10 @@ Function Start-DownloadExtractExecute {
         Write-Log $WRN 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
         Write-Log $WRN 'Click the button again to continue'
         Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN $True
-        Return
+        return
     }
 
-    if ($PS_VERSION -le 2 -and ($URL -Match '*github.com/*' -or $URL -Match '*github.io/*')) {
+    if ($PS_VERSION -le 2 -and ($URL -match '*github.com/*' -or $URL -match '*github.io/*')) {
         Open-InBrowser $URL
     } else {
         Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
@@ -24,7 +24,7 @@ Function Start-DownloadExtractExecute {
         Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 
         if ($DownloadedFile) {
-            Set-Variable -Option Constant Executable $(if ($IsZip) { Start-Extraction $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
+            Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
 
             if ($Execute) {
                 Start-Executable $Executable $Params -Silent:$Silent

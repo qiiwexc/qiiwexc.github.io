@@ -1,52 +1,48 @@
-Function Set-NiniteButtonState {
-    $CHECKBOX_StartNinite.Enabled = $CHECKBOX_Ninite_7zip.Checked -or $CHECKBOX_Ninite_VLC.Checked -or $CHECKBOX_Ninite_TeamViewer.Checked -or `
-        $CHECKBOX_Ninite_Chrome.Checked -or $CHECKBOX_Ninite_qBittorrent.Checked -or $CHECKBOX_Ninite_Malwarebytes.Checked
+Set-Variable -Option Constant NiniteCheckboxes @(
+    $CHECKBOX_Ninite_7zip,
+    $CHECKBOX_Ninite_VLC,
+    $CHECKBOX_Ninite_TeamViewer,
+    $CHECKBOX_Ninite_Chrome,
+    $CHECKBOX_Ninite_qBittorrent,
+    $CHECKBOX_Ninite_Malwarebytes
+)
+
+
+function Set-NiniteButtonState {
+    $CHECKBOX_StartNinite.Enabled = $NiniteCheckboxes.Where({ $_.Checked })
 }
 
 
-Function Set-NiniteQuery {
-    [String[]]$Array = @()
-    if ($CHECKBOX_Ninite_7zip.Checked) {
-        $Array += $CHECKBOX_Ninite_7zip.Name
-    }
-    if ($CHECKBOX_Ninite_VLC.Checked) {
-        $Array += $CHECKBOX_Ninite_VLC.Name
-    }
-    if ($CHECKBOX_Ninite_TeamViewer.Checked) {
-        $Array += $CHECKBOX_Ninite_TeamViewer.Name
-    }
-    if ($CHECKBOX_Ninite_Chrome.Checked) {
-        $Array += $CHECKBOX_Ninite_Chrome.Name
-    }
-    if ($CHECKBOX_Ninite_qBittorrent.Checked) {
-        $Array += $CHECKBOX_Ninite_qBittorrent.Name
-    }
-    if ($CHECKBOX_Ninite_Malwarebytes.Checked) {
-        $Array += $CHECKBOX_Ninite_Malwarebytes.Name
-    }
-    Return $Array -Join '-'
-}
+function Get-NiniteInstaller {
+    param(
+        [Boolean][Parameter(Position = 0, Mandatory = $True)]$OpenInBrowser,
+        [Boolean][Parameter(Position = 1)]$Execute
+    )
 
+    [String[]]$AppIds = @()
 
-Function Set-NiniteFileName {
-    [String[]]$Array = @()
-    if ($CHECKBOX_Ninite_7zip.Checked) {
-        $Array += $CHECKBOX_Ninite_7zip.Text
+    foreach ($Checkbox in $NiniteCheckboxes) {
+        if ($Checkbox.Checked) {
+            $AppIds += $Checkbox.Name
+        }
     }
-    if ($CHECKBOX_Ninite_VLC.Checked) {
-        $Array += $CHECKBOX_Ninite_VLC.Text
+
+    Set-Variable -Option Constant Query ($AppIds -join '-')
+
+    if ($OpenInBrowser) {
+        Open-InBrowser "{URL_NINITE}/?select=$Query"
+    } else {
+        [String[]]$AppNames = @()
+
+        foreach ($Checkbox in $NiniteCheckboxes) {
+            if ($Checkbox.Checked) {
+                $AppNames += $Checkbox.Text
+            }
+        }
+
+        Set-Variable -Option Constant FileName "Ninite $($AppNames -Join ' ') Installer.exe"
+        Set-Variable -Option Constant DownloadUrl "{URL_NINITE}/$Query/ninite.exe"
+
+        Start-DownloadUnzipAndRun -Execute:$Execute $DownloadUrl $FileName
     }
-    if ($CHECKBOX_Ninite_TeamViewer.Checked) {
-        $Array += $CHECKBOX_Ninite_TeamViewer.Text
-    }
-    if ($CHECKBOX_Ninite_Chrome.Checked) {
-        $Array += $CHECKBOX_Ninite_Chrome.Text
-    }
-    if ($CHECKBOX_Ninite_qBittorrent.Checked) {
-        $Array += $CHECKBOX_Ninite_qBittorrent.Text
-    }
-    if ($CHECKBOX_Ninite_Malwarebytes.Checked) {
-        $Array += $CHECKBOX_Ninite_Malwarebytes.Text
-    }
-    Return "Ninite $($Array -Join ' ') Installer.exe"
 }

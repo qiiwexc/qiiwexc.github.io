@@ -1,5 +1,5 @@
-Function New-TabPage {
-    Param(
+function New-TabPage {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text
     )
 
