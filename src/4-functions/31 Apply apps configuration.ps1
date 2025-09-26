@@ -1,4 +1,4 @@
-function Set-Configuration {
+function Set-AppsConfiguration {
     if ($CHECKBOX_Config_VLC.Checked) {
         Set-VlcConfiguration
     }
@@ -21,13 +21,5 @@ function Set-Configuration {
 
     if ($CHECKBOX_Config_Chrome.Checked) {
         Set-GoogleChromeConfiguration
-    }
-
-    if ($CHECKBOX_Config_Windows.Checked) {
-        Set-WindowsConfiguration
-    }
-
-    if ($CHECKBOX_Config_WindowsPersonalisation.Checked) {
-        Import-RegistryConfiguration $CHECKBOX_Config_WindowsPersonalisation.Text $CONFIG_WINDOWS_PERSONALISATION
     }
 }

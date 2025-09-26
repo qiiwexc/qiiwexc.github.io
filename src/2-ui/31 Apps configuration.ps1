@@ -1,11 +1,7 @@
-New-GroupBox 'Configuration'
+New-GroupBox 'Apps configuration'
 
 [Boolean]$PAD_CHECKBOXES = $False
 
-
-[System.Windows.Forms.CheckBox]$CHECKBOX_Config_Windows = New-CheckBox 'Windows' -Checked
-
-[System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Windows Personalisation'
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
 
@@ -20,5 +16,5 @@ New-GroupBox 'Configuration'
 [System.Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Set-Configuration }
+[ScriptBlock]$BUTTON_FUNCTION = { Set-AppsConfiguration }
 New-Button 'Apply configuration' $BUTTON_FUNCTION
