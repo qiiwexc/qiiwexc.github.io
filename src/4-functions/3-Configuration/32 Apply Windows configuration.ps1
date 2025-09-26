@@ -1,14 +1,14 @@
 function Set-WindowsConfiguration {
     if ($CHECKBOX_Config_WindowsBase.Checked) {
-        Set-WindowsBaseConfiguration
+        Set-WindowsBaseConfiguration $CHECKBOX_Config_WindowsBase.Text
     }
 
     if ($CHECKBOX_Config_PowerScheme.Checked) {
-        Set-PowerConfiguration
+        Set-PowerSchemeConfiguration
     }
 
     if ($CHECKBOX_Config_WindowsSearch.Checked) {
-        Set-FileAssociations
+        Set-SearchConfiguration $CHECKBOX_Config_WindowsSearch.Text
     }
 
     if ($CHECKBOX_Config_FileAssociations.Checked) {
@@ -16,6 +16,6 @@ function Set-WindowsConfiguration {
     }
 
     if ($CHECKBOX_Config_WindowsPersonalisation.Checked) {
-        Import-RegistryConfiguration $CHECKBOX_Config_WindowsPersonalisation.Text $CONFIG_WINDOWS_PERSONALISATION
+        Set-WindowsPersonalisationConfig $CHECKBOX_Config_WindowsPersonalisation.Text
     }
 }

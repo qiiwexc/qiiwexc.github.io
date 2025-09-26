@@ -1,7 +1,7 @@
 New-GroupBox 'Configure and debloat Windows'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat -UsePreset:$CHECKBOX_UseDebloatPreset.Checked -Silent:$CHECKBOX_SilentlyRunDebloat.Checked }
 New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
 
 [Boolean]$CHECKBOX_DISABLED = $PS_VERSION -le 2

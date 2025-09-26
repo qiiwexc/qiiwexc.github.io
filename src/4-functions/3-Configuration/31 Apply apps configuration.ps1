@@ -1,10 +1,10 @@
 function Set-AppsConfiguration {
     if ($CHECKBOX_Config_VLC.Checked) {
-        Set-VlcConfiguration
+        Set-VlcConfiguration $CHECKBOX_Config_VLC.Text
     }
 
     if ($CHECKBOX_Config_qBittorrent.Checked) {
-        Set-qBittorrentConfiguration
+        Set-qBittorrentConfiguration $CHECKBOX_Config_qBittorrent.Text
     }
 
     if ($CHECKBOX_Config_7zip.Checked) {
@@ -16,10 +16,10 @@ function Set-AppsConfiguration {
     }
 
     if ($CHECKBOX_Config_Edge.Checked) {
-        Set-MicrosoftEdgeConfiguration
+        Set-MicrosoftEdgeConfiguration $CHECKBOX_Config_Edge.Text
     }
 
     if ($CHECKBOX_Config_Chrome.Checked) {
-        Set-GoogleChromeConfiguration
+        Set-GoogleChromeConfiguration $CHECKBOX_Config_Chrome.Text
     }
 }

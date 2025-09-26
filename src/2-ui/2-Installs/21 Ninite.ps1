@@ -30,3 +30,13 @@ New-Button 'Download selected' $BUTTON_FUNCTION
 
 [ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser:$True }
 New-ButtonBrowser 'View other' $BUTTON_FUNCTION
+
+
+Set-Variable -Option Constant NINITE_CHECKBOXES @(
+    $CHECKBOX_Ninite_7zip,
+    $CHECKBOX_Ninite_VLC,
+    $CHECKBOX_Ninite_TeamViewer,
+    $CHECKBOX_Ninite_Chrome,
+    $CHECKBOX_Ninite_qBittorrent,
+    $CHECKBOX_Ninite_Malwarebytes
+)
