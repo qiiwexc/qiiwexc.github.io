@@ -1,12 +1,12 @@
-Function Write-Log {
-    Param(
+function Write-Log {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
     $LOG.SelectionStart = $LOG.TextLength
 
-    Switch ($Level) {
+    switch ($Level) {
         $WRN {
             $LOG.SelectionColor = 'blue'
         }
@@ -22,8 +22,8 @@ Function Write-Log {
 }
 
 
-Function Add-LogMessage {
-    Param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
+function Add-LogMessage {
+    param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
 
     Write-Host -NoNewline $Text
     $LOG.AppendText($Text)
@@ -32,8 +32,8 @@ Function Add-LogMessage {
 }
 
 
-Function Out-Status {
-    Param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
+function Out-Status {
+    param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
 
     Add-LogMessage ' '
 
@@ -47,17 +47,17 @@ Function Out-Status {
 }
 
 
-Function Out-Success {
+function Out-Success {
     Out-Status 'Done'
 }
 
-Function Out-Failure {
+function Out-Failure {
     Out-Status 'Failed'
 }
 
 
-Function Write-ExceptionLog {
-    Param(
+function Write-ExceptionLog {
+    param(
         [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )

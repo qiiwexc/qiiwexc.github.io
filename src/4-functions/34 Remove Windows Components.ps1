@@ -1,4 +1,4 @@
-Function Remove-WindowsFeatures {
+function Remove-WindowsFeatures {
     Write-Log $INF 'Starting miscellaneous Windows features cleanup...'
 
     Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
@@ -15,7 +15,7 @@ Function Remove-WindowsFeatures {
         Write-ExceptionLog $_ 'Failed to collect the features to remove'
     }
 
-    ForEach ($Capability in $CapabilitiesToRemove) {
+    foreach ($Capability in $CapabilitiesToRemove) {
         [String]$Name = $Capability.Name
         try {
             Write-Log $INF "Removing '$Name'..."

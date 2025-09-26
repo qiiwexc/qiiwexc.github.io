@@ -1,5 +1,5 @@
-Function Start-Download {
-    Param(
+function Start-Download {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$URL,
         [String][Parameter(Position = 1)]$SaveAs,
         [Switch]$Temp
@@ -13,15 +13,15 @@ Function Start-Download {
 
     Write-Log $INF "Downloading from $URL"
 
-    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
+    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
     if ($IsNotConnected) {
         Write-Log $ERR "Download failed: $IsNotConnected"
 
         if (Test-Path $SavePath) {
             Write-Log $WRN 'Previous download found, returning it'
-            Return $SavePath
+            return $SavePath
         } else {
-            Return
+            return
         }
     }
 
@@ -36,12 +36,12 @@ Function Start-Download {
         if (Test-Path $SavePath) {
             Out-Success
         } else {
-            Throw 'Possibly computer is offline or disk is full'
+            throw 'Possibly computer is offline or disk is full'
         }
     } catch [Exception] {
         Write-ExceptionLog $_ 'Download failed'
-        Return
+        return
     }
 
-    Return $SavePath
+    return $SavePath
 }

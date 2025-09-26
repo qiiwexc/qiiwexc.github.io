@@ -1,28 +1,28 @@
-Function Get-NetworkAdapter {
-    Return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
+function Get-NetworkAdapter {
+    return $(Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
 }
 
-Function Get-ConnectionStatus {
+function Test-NetworkConnection {
     if (!(Get-NetworkAdapter)) {
-        Return 'Computer is not connected to the Internet'
+        return 'Computer is not connected to the Internet'
     }
 }
 
-Function Reset-State {
+function Reset-State {
     Write-Log $INF "Cleaning up '$PATH_APP_DIR'"
     Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_APP_DIR
     $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
     Write-Host ''
 }
 
-Function Exit-Script {
+function Exit-Script {
     Reset-State
     $FORM.Close()
 }
 
 
-Function Open-InBrowser {
-    Param([String][Parameter(Position = 0, Mandatory = $True)]$URL)
+function Open-InBrowser {
+    param([String][Parameter(Position = 0, Mandatory = $True)]$URL)
 
     Write-Log $INF "Opening URL in the default browser: $URL"
 

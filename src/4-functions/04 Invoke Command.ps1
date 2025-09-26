@@ -1,5 +1,5 @@
-Function Start-Script {
-    Param(
+function Invoke-Command {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Command,
         [String]$WorkingDirectory,
         [Switch]$BypassExecutionPolicy,

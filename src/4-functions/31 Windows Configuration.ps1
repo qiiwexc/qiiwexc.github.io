@@ -1,4 +1,4 @@
-﻿Function Set-WindowsConfiguration {
+﻿function Set-WindowsConfiguration {
     Set-MpPreference -PUAProtection Enabled
     Set-MpPreference -MeteredConnectionUpdates $True
 
@@ -13,7 +13,7 @@
 }
 
 
-Function Set-PowerConfiguration {
+function Set-PowerConfiguration {
     Write-Log $INF 'Setting power scheme overlay...'
 
     powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
@@ -22,7 +22,7 @@ Function Set-PowerConfiguration {
 
     Write-Log $INF 'Applying Windows power scheme settings...'
 
-    ForEach ($PowerSetting In $CONFIG_POWER_SETTINGS) {
+    foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
         powercfg /SetAcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
         powercfg /SetDcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
     }
@@ -31,43 +31,36 @@ Function Set-PowerConfiguration {
 }
 
 
-Function Get-DynamicWindowsConfiguration {
+function Get-DynamicWindowsConfiguration {
     Write-Log $INF 'Creating Windows configuration file...'
 
     [String]$ConfigLines = ''
 
     try {
-        $UserRegistries = (Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -Match 'S-1-5-21' -and $_ -NotMatch '_Classes$' }
-        ForEach ($Registry In $UserRegistries) {
-            Set-Variable -Option Constant User ($Registry -Replace 'HKEY_USERS\\', '')
+        $UserRegistries = (Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' }
+        foreach ($Registry in $UserRegistries) {
+            Set-Variable -Option Constant User ($Registry -replace 'HKEY_USERS\\', '')
             $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
             $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
-
-    # $ConfigLines += "[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]
-    # `"EnableAppOffloading`"=dword:00000000
-
-    # [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]
-    # `"RotatingLockScreenEnabled`"=dword:00000001
-    # `"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"
         }
 
         $VolumeRegistries = (Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name
-        ForEach ($Registry In $VolumeRegistries) {
+        foreach ($Registry in $VolumeRegistries) {
             $ConfigLines += "`n[$Registry]`n"
             $ConfigLines += "`"MaxCapacity`"=dword:000FFFFF`n"
         }
 
         $NotificationRegistries = (Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name
-        ForEach ($Registry In $NotificationRegistries) {
+        foreach ($Registry in $NotificationRegistries) {
             $ConfigLines += "`n[$Registry]`n"
             $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
         }
 
-        $FileExtensionRegistries = (Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -Match 'HKEY_CLASSES_ROOT\\\.' }
-        ForEach ($Registry In $FileExtensionRegistries) {
-            $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -Match 'PersistentHandler' }
+        $FileExtensionRegistries = (Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -match 'HKEY_CLASSES_ROOT\\\.' }
+        foreach ($Registry in $FileExtensionRegistries) {
+            $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
 
-            ForEach ($Reg In $PersistentHandlerRegistries) {
+            foreach ($Reg in $PersistentHandlerRegistries) {
                 $PersistentHandler = Get-ItemProperty "Registry::$Reg"
                 $DefaultHandler = $PersistentHandler.'(default)'
 
@@ -85,5 +78,5 @@ Function Get-DynamicWindowsConfiguration {
 
     Out-Success
 
-    Return $ConfigLines
+    return $ConfigLines
 }

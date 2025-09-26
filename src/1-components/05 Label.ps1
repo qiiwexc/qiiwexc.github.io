@@ -1,5 +1,5 @@
-Function New-Label {
-    Param(
+function New-Label {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text
     )
 

@@ -1,15 +1,15 @@
-Function Get-CurrentVersion {
+function Get-CurrentVersion {
     if ($PS_VERSION -le 2) {
         Write-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"
-        Return
+        return
     }
 
     Write-Log $INF 'Checking for updates...'
 
-    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
+    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
     if ($IsNotConnected) {
         Write-Log $ERR "Failed to check for updates: $IsNotConnected"
-        Return
+        return
     }
 
     $ProgressPreference = 'SilentlyContinue'
@@ -19,45 +19,45 @@ Function Get-CurrentVersion {
     } catch [Exception] {
         $ProgressPreference = 'Continue'
         Write-ExceptionLog $_ 'Failed to check for updates'
-        Return
+        return
     }
 
     if ($LatestVersion -gt $VERSION) {
         Write-Log $WRN "Newer version available: v$LatestVersion"
-        Get-Update
+        Update-Self
     } else {
         Out-Status 'No updates available'
     }
 }
 
 
-Function Get-Update {
+function Update-Self {
     Set-Variable -Option Constant TargetFileBat "$PATH_CURRENT_DIR\qiiwexc.bat"
 
     Write-Log $WRN 'Downloading new version...'
 
-    Set-Variable -Option Constant IsNotConnected (Get-ConnectionStatus)
+    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
 
     if ($IsNotConnected) {
         Write-Log $ERR "Failed to download update: $IsNotConnected"
-        Return
+        return
     }
 
     try {
         Invoke-WebRequest '{URL_BAT_FILE}' -OutFile $TargetFileBat
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to download update'
-        Return
+        return
     }
 
     Out-Success
     Write-Log $WRN 'Restarting...'
 
     try {
-        Start-Script $TargetFileBat
+        Invoke-Command $TargetFileBat
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to start new version'
-        Return
+        return
     }
 
     Exit-Script

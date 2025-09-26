@@ -275,12 +275,18 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "ShowCmd"=dword:00000003
 "WFlags"=dword:00000002
 
+[HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32]
+@=""
+
 [HKEY_CURRENT_USER\Software\Classes\CLSID\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}]
 "System.IsPinnedToNameSpaceTree"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Classes\CLSID\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}]
 @="CLSID_MSGraphHomeFolder"
 "System.IsPinnedToNameSpaceTree"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
+@=""
 
 [HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 "ShowCmd"=dword:00000003
@@ -448,9 +454,7 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "VideoQualityOnBattery"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
-"AccountProtection_MicrosoftAccount_Disconnected"=dword:00000000
-
-[HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
+"AccountProtection_MicrosoftAccount_Disconnected"=dword:00000001
 "Hardware_DataEncryption_AddMsa"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer]
@@ -532,43 +536,43 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\BranchCache]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Delivery Optimization Files]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Device Driver Packages]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Language Pack]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Previous Installations]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Setup Log Files]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error memory dump files]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error minidump files]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Setup Files]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
-"StateFlags1337"=dword:00000002
+"StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 "AllowTelemetry"=dword:00000000

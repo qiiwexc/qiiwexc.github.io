@@ -1,5 +1,5 @@
-Function Merge-JsonObjects {
-    Param(
+function Merge-JsonObjects {
+    param(
         [Parameter(Position = 0, Mandatory = $True)]$Source,
         [Parameter(Position = 1, Mandatory = $True)]$Extend
     )
@@ -7,7 +7,7 @@ Function Merge-JsonObjects {
     if ($Source -is [PSCustomObject] -and $Extend -is [PSCustomObject]) {
         [PSCustomObject]$Merged = [Ordered] @{}
 
-        ForEach ($Property In $Source.PSObject.Properties) {
+        foreach ($Property in $Source.PSObject.Properties) {
             if ($Null -eq $Extend.$($Property.Name)) {
                 $Merged[$Property.Name] = $Property.Value
             } else {
@@ -15,7 +15,7 @@ Function Merge-JsonObjects {
             }
         }
 
-        ForEach ($Property In $Extend.PSObject.Properties) {
+        foreach ($Property in $Extend.PSObject.Properties) {
             if ($Null -eq $Source.$($Property.Name)) {
                 $Merged[$Property.Name] = $Property.Value
             }

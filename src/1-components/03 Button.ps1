@@ -1,16 +1,16 @@
-Function New-ButtonBrowser {
-    Param(
+function New-ButtonBrowser {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
     )
 
     New-Button $Text $Function
 
-    New-Label 'Opens in the browser'
+    New-Label 'Open in a browser'
 }
 
-Function New-Button {
-    Param(
+function New-Button {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Text,
         [ScriptBlock][Parameter(Position = 1)]$Function,
         [Switch]$Disabled

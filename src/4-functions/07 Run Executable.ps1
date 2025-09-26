@@ -1,5 +1,5 @@
-Function Start-Executable {
-    Param(
+function Start-Executable {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Executable,
         [String][Parameter(Position = 1)]$Switches,
         [Switch]$Silent
@@ -12,7 +12,7 @@ Function Start-Executable {
             Start-Process -Wait $Executable $Switches
         } catch [Exception] {
             Write-ExceptionLog $_ "Failed to run '$Executable'"
-            Return
+            return
         }
 
         Out-Success
@@ -31,7 +31,7 @@ Function Start-Executable {
             }
         } catch [Exception] {
             Write-ExceptionLog $_ "Failed to execute '$Executable'"
-            Return
+            return
         }
 
         Out-Success

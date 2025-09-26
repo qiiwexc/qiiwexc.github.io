@@ -1,5 +1,5 @@
-Function Start-WinUtil {
-    Param(
+function Start-WinUtil {
+    param(
         [Switch][Parameter(Position = 0, Mandatory = $True)]$Apply
     )
 
@@ -12,7 +12,7 @@ Function Start-WinUtil {
     Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
     Set-Variable -Option Constant RunParam $(if ($Apply) { '-Run' } else { '' })
 
-    Start-Script "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
+    Invoke-Command "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
 
     Out-Success
 }
