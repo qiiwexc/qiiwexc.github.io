@@ -1,4 +1,4 @@
-New-GroupBox 'Miscellaneous Windows features' 5
+New-GroupBox 'Remove Windows components' 5
 
 
 [ScriptBlock]$BUTTON_FUNCTION = { Remove-WindowsFeatures }
