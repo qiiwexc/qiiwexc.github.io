@@ -23,7 +23,9 @@ function Write-Log {
 
 
 function Add-LogMessage {
-    param([String][Parameter(Position = 0, Mandatory = $True)]$Text)
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Text
+    )
 
     Write-Host -NoNewline $Text
     $LOG.AppendText($Text)
@@ -33,7 +35,9 @@ function Add-LogMessage {
 
 
 function Out-Status {
-    param([String][Parameter(Position = 0, Mandatory = $True)]$Status)
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Status
+    )
 
     Add-LogMessage ' '
 

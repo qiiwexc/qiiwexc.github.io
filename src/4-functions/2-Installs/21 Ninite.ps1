@@ -1,15 +1,5 @@
-Set-Variable -Option Constant NiniteCheckboxes @(
-    $CHECKBOX_Ninite_7zip,
-    $CHECKBOX_Ninite_VLC,
-    $CHECKBOX_Ninite_TeamViewer,
-    $CHECKBOX_Ninite_Chrome,
-    $CHECKBOX_Ninite_qBittorrent,
-    $CHECKBOX_Ninite_Malwarebytes
-)
-
-
 function Set-NiniteButtonState {
-    $CHECKBOX_StartNinite.Enabled = $NiniteCheckboxes.Where({ $_.Checked })
+    $CHECKBOX_StartNinite.Enabled = $NINITE_CHECKBOXES.Where({ $_.Checked })
 }
 
 
@@ -21,7 +11,7 @@ function Get-NiniteInstaller {
 
     [String[]]$AppIds = @()
 
-    foreach ($Checkbox in $NiniteCheckboxes) {
+    foreach ($Checkbox in $NINITE_CHECKBOXES) {
         if ($Checkbox.Checked) {
             $AppIds += $Checkbox.Name
         }
@@ -34,7 +24,7 @@ function Get-NiniteInstaller {
     } else {
         [String[]]$AppNames = @()
 
-        foreach ($Checkbox in $NiniteCheckboxes) {
+        foreach ($Checkbox in $NINITE_CHECKBOXES) {
             if ($Checkbox.Checked) {
                 $AppNames += $Checkbox.Text
             }

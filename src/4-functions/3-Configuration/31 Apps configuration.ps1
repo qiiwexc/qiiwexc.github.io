@@ -1,18 +1,27 @@
 ﻿function Set-VlcConfiguration {
-    Set-Variable -Option Constant AppName $CHECKBOX_Config_VLC.Text
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+    )
+
     Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
 }
 
 
 function Set-qBittorrentConfiguration {
-    Set-Variable -Option Constant AppName $CHECKBOX_Config_qBittorrent.Text
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+    )
+
     Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH }))
     Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
 }
 
 
 function Set-MicrosoftEdgeConfiguration {
-    Set-Variable -Option Constant AppName $CHECKBOX_Config_Edge.Text
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+    )
+
     Set-Variable -Option Constant ProcessName 'msedge'
 
     Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
@@ -21,7 +30,10 @@ function Set-MicrosoftEdgeConfiguration {
 
 
 function Set-GoogleChromeConfiguration {
-    Set-Variable -Option Constant AppName $CHECKBOX_Config_Chrome.Text
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+    )
+
     Set-Variable -Option Constant ProcessName 'chrome'
 
     Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"
