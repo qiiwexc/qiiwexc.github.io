@@ -11,15 +11,15 @@ Set-Variable -Option Constant WRN 'WRN'
 Set-Variable -Option Constant ERR 'ERR'
 
 
-Function Write-Log {
-    Param(
+function Write-Log {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
 
-    Switch ($Level) {
+    switch ($Level) {
         $WRN {
             Write-Warning $Text
         }
@@ -33,8 +33,8 @@ Function Write-Log {
 }
 
 
-Function Write-ExceptionLog {
-    Param(
+function Write-ExceptionLog {
+    param(
         [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
@@ -43,7 +43,7 @@ Function Write-ExceptionLog {
 }
 
 
-Function Start-Elevated {
+function Start-Elevated {
     if (!$IsElevated) {
         Write-Log $INF 'Requesting administrator privileges...'
 
@@ -51,15 +51,15 @@ Function Start-Elevated {
             Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`""
         } catch [Exception] {
             Write-ExceptionLog $_ 'Failed to gain administrator privileges'
-            Return
+            return
         }
 
-        Exit
+        exit
     }
 }
 
 
-Function New-Certificate {
+function New-Certificate {
     Start-Elevated
 
     Remove-Item -Force -ErrorAction SilentlyContinue $CertificatePath
@@ -75,7 +75,7 @@ Function New-Certificate {
         Get-Item $CertificatePath | Import-Certificate -CertStoreLocation 'Cert:\LocalMachine\Root'
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to import certificates'
-        Return
+        return
     }
 
     $Certificate.Thumbprint | Out-File $ThumbprintPath
