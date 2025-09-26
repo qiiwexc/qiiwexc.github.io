@@ -5,8 +5,8 @@ Set-Variable -Option Constant WRN 'WRN'
 Set-Variable -Option Constant ERR 'ERR'
 
 
-Function Start-Build {
-    Param([Switch]$Run)
+function Start-Build {
+    param([Switch]$Run)
 
     Set-Variable -Option Constant Version     (Get-Date -Format 'y.M.d')
     Set-Variable -Option Constant ProjectName 'qiiwexc'
@@ -45,8 +45,8 @@ Function Start-Build {
 }
 
 
-Function Write-Log {
-    Param(
+function Write-Log {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
@@ -54,17 +54,17 @@ Function Write-Log {
     Write-Host -NoNewline "`n[$((Get-Date).ToString())] $Message"
 }
 
-Function Out-Success {
+function Out-Success {
     Write-Host -NoNewline ' Done'
 }
 
-Function Out-Failure {
+function Out-Failure {
     Write-Host -NoNewline ' Failed'
 }
 
 
-Function Write-VersionFile {
-    Param(
+function Write-VersionFile {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Version,
         [String][Parameter(Position = 1, Mandatory = $True)]$VersionFile
     )
@@ -79,8 +79,8 @@ Function Write-VersionFile {
 }
 
 
-Function Get-Config {
-    Param(
+function Get-Config {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AssetsPath,
         [String][Parameter(Position = 1, Mandatory = $True)]$Version
     )
@@ -90,7 +90,7 @@ Function Get-Config {
     Set-Variable -Option Constant UrlsFile "$AssetsPath\urls.json"
 
     [System.Object[]]$Config = Get-Content $UrlsFile | ConvertFrom-Json
-    $Config += @{key='PROJECT_VERSION'; value=$Version}
+    $Config += @{key = 'PROJECT_VERSION'; value = $Version }
 
     Out-Success
 
@@ -98,8 +98,8 @@ Function Get-Config {
 }
 
 
-Function New-Html {
-    Param(
+function New-Html {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AssetsPath,
         [System.Object[]][Parameter(Position = 1, Mandatory = $True)]$Config
     )
@@ -111,9 +111,9 @@ Function New-Html {
 
     [String[]]$TemplateContent = Get-Content $TemplateFile
 
-    $Config | ForEach-Object { $TemplateContent = $TemplateContent -Replace "{$($_.key)}", $_.value }
+    $Config | ForEach-Object { $TemplateContent = $TemplateContent -replace "{$($_.key)}", $_.value }
 
-    $TemplateContent = $TemplateContent -Replace '../d/stylesheet.css', 'https://bit.ly/stylesheet_web'
+    $TemplateContent = $TemplateContent -replace '../d/stylesheet.css', 'https://bit.ly/stylesheet_web'
 
     $TemplateContent | Out-File $OutputFile
 
@@ -121,8 +121,8 @@ Function New-Html {
 }
 
 
-Function New-PowerShell {
-    Param(
+function New-PowerShell {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$SourcePath,
         [String][Parameter(Position = 1, Mandatory = $True)]$Ps1File,
         [System.Object[]][Parameter(Position = 2, Mandatory = $True)]$Config
@@ -136,7 +136,7 @@ Function New-PowerShell {
 
     [String[]]$OutputStrings = @()
 
-    ForEach ($File In Get-ChildItem -Recurse -File $SourcePath) {
+    foreach ($File in Get-ChildItem -Recurse -File $SourcePath) {
         [String]$SectionName = $File.ToString().Replace('.ps1', '').Remove(0, 3)
         [String]$Spacer = '=-' * (30 - [Math]::Round(($SectionName.length + 1) / 4))
 
@@ -144,7 +144,7 @@ Function New-PowerShell {
         $OutputStrings += Get-Content $File.FullName
     }
 
-    $Config | ForEach-Object { $OutputStrings = $OutputStrings -Replace "{$($_.key)}", $_.value }
+    $Config | ForEach-Object { $OutputStrings = $OutputStrings -replace "{$($_.key)}", $_.value }
 
     Write-Log $INF "Writing output file $Ps1File"
     $OutputStrings | Out-File $Ps1File
@@ -153,8 +153,8 @@ Function New-PowerShell {
 }
 
 
-Function New-Batch {
-    Param(
+function New-Batch {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Ps1File,
         [String][Parameter(Position = 1, Mandatory = $True)]$BatchFile
     )
@@ -182,7 +182,7 @@ Function New-Batch {
     $BatchStrings += '  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%" -HideConsole'
     $BatchStrings += ")`n"
 
-    ForEach ($String In $PowerShellStrings) {
+    foreach ($String in $PowerShellStrings) {
         $BatchStrings += "::$($String -Replace "`n", "`n::")"
     }
 
@@ -192,8 +192,8 @@ Function New-Batch {
     Out-Success
 }
 
-Function Set-Signature {
-    Param(
+function Set-Signature {
+    param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Ps1File,
         [String][Parameter(Position = 1, Mandatory = $True)]$ProjectName
     )
@@ -205,7 +205,7 @@ Function Set-Signature {
 
     [String]$Thumbprint = Get-Content $ThumbprintPath
 
-    $CodeSignCert = Get-ChildItem -Path Cert:\CurrentUser\My | Where-Object {$_.Thumbprint -eq $Thumbprint}
+    $CodeSignCert = Get-ChildItem -Path Cert:\CurrentUser\My | Where-Object { $_.Thumbprint -eq $Thumbprint }
 
     Set-AuthenticodeSignature -FilePath $Ps1File -Certificate $CodeSignCert -TimestampServer $TimestampServer | Out-Null
 

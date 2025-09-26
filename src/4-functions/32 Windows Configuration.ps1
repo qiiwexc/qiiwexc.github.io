@@ -9,6 +9,8 @@
 
     Set-PowerConfiguration
 
+    Set-FileAssociations
+
     Import-RegistryConfiguration $CHECKBOX_Config_Windows.Text ($CONFIG_WINDOWS + (Get-DynamicWindowsConfiguration))
 }
 
