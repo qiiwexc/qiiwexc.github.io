@@ -18,17 +18,32 @@ function Write-Log {
         }
     }
 
-    Add-LogMessage "`n[$((Get-Date).ToString())] $Message"
+    Add-LogMessage $Level "[$((Get-Date).ToString())] $Message"
 }
 
 
 function Add-LogMessage {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Text
+        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Text
     )
 
-    Write-Host -NoNewline $Text
-    $LOG.AppendText($Text)
+    switch ($Level) {
+        $INF {
+            Write-Host $Text
+        }
+        $WRN {
+            Write-Warning $Text
+        }
+        $ERR {
+            Write-Error $Text
+        }
+        Default {
+            Write-Host $Text
+        }
+    }
+
+    $LOG.AppendText("$Text`n")
     $LOG.SelectionColor = 'black'
     $LOG.ScrollToCaret()
 }
@@ -39,15 +54,7 @@ function Out-Status {
         [String][Parameter(Position = 0, Mandatory = $True)]$Status
     )
 
-    Add-LogMessage ' '
-
-    Set-Variable -Option Constant LogDefaultFont $LOG.Font
-    $LOG.SelectionFont = New-Object Drawing.Font($LogDefaultFont.FontFamily, $LogDefaultFont.Size, [Drawing.FontStyle]::Underline)
-
-    Add-LogMessage $Status
-
-    $LOG.SelectionFont = $LogDefaultFont
-    $LOG.SelectionColor = 'black'
+    Write-Log $INF "   > $Status"
 }
 
 

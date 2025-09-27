@@ -22,16 +22,28 @@ function Write-Log {
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
 
     switch ($Level) {
+        $INF {
+            Write-Host $Text
+        }
         $WRN {
             Write-Warning $Text
         }
-        $INF {
-            Write-Output $Text
+        $ERR {
+            Write-Error $Text
         }
         Default {
-            Write-Output $Message
+            Write-Host $Text
         }
     }
+}
+
+
+function Out-Success {
+    Write-Log $INF '   > Done'
+}
+
+function Out-Failure {
+    Write-Log $INF '   > Failed'
 }
 
 
@@ -66,11 +78,13 @@ function New-Certificate {
     Remove-Item -Force -ErrorAction SilentlyContinue $CertificatePath
     Remove-Item -Force -ErrorAction SilentlyContinue $ThumbprintPath
 
-    Write-Log $INF "Creating a new certificate $CertificatePath"
-
+    Write-Log $INF 'Creating a new certificate...'
     $Certificate = New-SelfSignedCertificate -CertStoreLocation Cert:\CurrentUser\My -Subject "CN=$ProjectName" -KeySpec Signature -Type CodeSigningCert
+    Out-Success
 
+    Write-Log $INF "Creating the certificate to  '$CertificatePath'..."
     Export-Certificate -Cert $Certificate -FilePath $CertificatePath
+    Out-Success
 
     try {
         Get-Item $CertificatePath | Import-Certificate -CertStoreLocation 'Cert:\LocalMachine\Root'
