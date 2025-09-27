@@ -1,4 +1,5 @@
 #Requires -PSEdition Desktop
+#Requires -Version 3
 
 Set-Variable -Option Constant IsElevated $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 

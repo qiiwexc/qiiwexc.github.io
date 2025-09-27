@@ -29,6 +29,23 @@
             NewLineAfter       = $true
             IgnoreOneLineBlock = $true
         }
+        PSUseCompatibleCmdlets                     = @{
+            compatibility = @('desktop-3.0-windows')
+        }
+        PSUseCompatibleSyntax                      = @{
+            Enable         = $true
+            TargetVersions = @(
+                '7.1',
+                '7.0',
+                '6.2',
+                '6.1',
+                '6.0',
+                '5.1',
+                '4.0',
+                '3.0',
+                '2.0'
+            )
+        }
         PSUseConsistentIndentation                 = @{
             Enable              = $true
             IndentationSize     = 4
@@ -40,9 +57,6 @@
             CheckCommands = $true
             CheckKeyword  = $true
             CheckOperator = $true
-        }
-        PSUseCompatibleCmdlets                     = @{
-            compatibility = @('desktop-3.0-windows')
         }
     }
 }
