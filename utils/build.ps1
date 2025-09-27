@@ -35,8 +35,6 @@ function Start-Build {
 
     New-PowerShellScript $SourcePath $Ps1File -Config:$Config
 
-    Add-Signature $Ps1File $ProjectName
-
     New-BatchScript $Ps1File $BatchFile
 
     Write-LogInfo 'Build finished'
@@ -69,6 +67,23 @@ function Write-LogError {
     Write-Log 'ERROR' $Message
 }
 
+function Out-Success {
+    Write-LogInfo '   > Done'
+}
+
+function Out-Failure {
+    Write-LogInfo '   > Failed'
+}
+
+function Write-ExceptionLog {
+    param(
+        [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+    )
+
+    Write-LogError "$($Message): $($Exception.Exception.Message)"
+}
+
 function Write-Log {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INFO', 'WARN', 'ERROR')]$Level,
@@ -91,25 +106,6 @@ function Write-Log {
             Write-Host $Text
         }
     }
-}
-
-
-function Out-Success {
-    Write-LogInfo '   > Done'
-}
-
-function Out-Failure {
-    Write-LogInfo '   > Failed'
-}
-
-
-function Write-ExceptionLog {
-    param(
-        [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Message
-    )
-
-    Write-LogError "$($Message): $($Exception.Exception.Message)"
 }
 
 
@@ -238,26 +234,6 @@ function New-BatchScript {
 
     Write-LogInfo "Writing batch file $BatchFile"
     $BatchStrings | Out-File $BatchFile -Encoding ASCII
-
-    Out-Success
-}
-
-function Add-Signature {
-    param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Ps1File,
-        [String][Parameter(Position = 1, Mandatory = $True)]$ProjectName
-    )
-
-    Write-LogInfo 'Signing...'
-
-    Set-Variable -Option Constant ThumbprintPath ".\certificate\$ProjectName.txt"
-    Set-Variable -Option Constant TimestampServer 'http://timestamp.digicert.com'
-
-    [String]$Thumbprint = Get-Content $ThumbprintPath
-
-    $CodeSignCert = Get-ChildItem -Path Cert:\CurrentUser\My | Where-Object { $_.Thumbprint -eq $Thumbprint }
-
-    Set-AuthenticodeSignature -FilePath $Ps1File -Certificate $CodeSignCert -TimestampServer $TimestampServer | Out-Null
 
     Out-Success
 }
