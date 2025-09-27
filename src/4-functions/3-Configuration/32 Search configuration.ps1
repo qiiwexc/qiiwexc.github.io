@@ -16,7 +16,7 @@
                 $PersistentHandler = Get-ItemProperty "Registry::$Reg"
                 $DefaultHandler = $PersistentHandler.'(default)'
 
-                if ($DefaultHandler -and !($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
+                if ($DefaultHandler -and -not ($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
                     $ConfigLines += "`n[$Reg]`n"
                     $ConfigLines += "@=`"{098F2470-BAE0-11CD-B579-08002B30BFEB}`"`n"
                     $ConfigLines += "`"OriginalPersistentHandler`"=`"$DefaultHandler`"`n"

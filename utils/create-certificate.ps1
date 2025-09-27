@@ -1,3 +1,5 @@
+#Requires -PSEdition Desktop
+
 Set-Variable -Option Constant IsElevated $(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 
 Set-Variable -Option Constant ProjectName 'qiiwexc'
@@ -44,7 +46,7 @@ function Write-ExceptionLog {
 
 
 function Start-Elevated {
-    if (!$IsElevated) {
+    if (-not $IsElevated) {
         Write-Log $INF 'Requesting administrator privileges...'
 
         try {
