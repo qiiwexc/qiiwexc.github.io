@@ -18,7 +18,7 @@ function Update-JsonFile {
 
         Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
 
-        $UpdatedConfig | Out-File $Path
+        $UpdatedConfig | Out-File $Path -Encoding UTF8
     } else {
         Write-LogInfo "'$Path' does not exist. Creating new file..."
         $Content | Out-File $Path
