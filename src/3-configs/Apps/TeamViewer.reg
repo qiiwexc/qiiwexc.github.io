@@ -1,4 +1,4 @@
-Set-Variable -Option Constant CONFIG_TEAMVIEWER 'Windows Registry Editor Version 5.00
+Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\TeamViewer]
 "AutoHideServerControl"=dword:00000001
@@ -15,4 +15,3 @@ Set-Variable -Option Constant CONFIG_TEAMVIEWER 'Windows Registry Editor Version
 "Remote_RemoveWallpaper"=dword:00000000
 "RemotePrintingPreferPDFFormat"=dword:00000001
 "SsoKmsEnabled"=dword:00000002
-'

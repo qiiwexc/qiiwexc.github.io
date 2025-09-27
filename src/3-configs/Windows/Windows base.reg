@@ -1,4 +1,4 @@
-Set-Variable -Option Constant CONFIG_WINDOWS_BASE 'Windows Registry Editor Version 5.00
+Windows Registry Editor Version 5.00
 
 [-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing]
 
@@ -768,4 +768,3 @@ Set-Variable -Option Constant CONFIG_WINDOWS_BASE 'Windows Registry Editor Versi
 
 [HKEY_USERS\.DEFAULT\System\GameConfigStore]
 "GameDVR_Enabled"=dword:00000000
-'

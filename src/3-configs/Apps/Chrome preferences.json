@@ -1,4 +1,4 @@
-Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
+{
   "browser": {
     "enable_spellchecking": true,
     "window_placement": {
@@ -42,4 +42,3 @@ Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
     "use_spelling_service": true
   }
 }
-'

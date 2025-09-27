@@ -1,4 +1,4 @@
-Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST 'ACGMediaPlayer
+ACGMediaPlayer
 ActiproSoftwareLLC
 AdobeSystemsIncorporated.AdobePhotoshopExpress
 Amazon.com.Amazon
@@ -97,4 +97,3 @@ Viber
 WinZipUniversal
 Wunderlist
 XING
-'

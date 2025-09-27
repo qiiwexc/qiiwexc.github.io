@@ -1,4 +1,4 @@
-Set-Variable -Option Constant CONFIG_WINUTIL '{
+{
     "WPFTweaks":  [
                       "WPFTweaksAH",
                       "WPFTweaksBraveDebloat",
@@ -30,4 +30,3 @@ Set-Variable -Option Constant CONFIG_WINUTIL '{
                        "WPFFeatureRegBackup"
                    ]
 }
-'

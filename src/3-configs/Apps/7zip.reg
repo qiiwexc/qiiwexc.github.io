@@ -1,4 +1,4 @@
-Set-Variable -Option Constant CONFIG_7ZIP 'Windows Registry Editor Version 5.00
+Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\7-Zip]
 "LargePages"=dword:00000001
@@ -26,4 +26,3 @@ Set-Variable -Option Constant CONFIG_7ZIP 'Windows Registry Editor Version 5.00
 "ContextMenu"=dword:00001367
 "MenuIcons"=dword:00000001
 "WriteZoneIdExtract"=dword:00000001
-'

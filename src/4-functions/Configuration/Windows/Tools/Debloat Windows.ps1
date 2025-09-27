@@ -13,7 +13,7 @@ function Start-WindowsDebloat {
     $CONFIG_DEBLOAT_APP_LIST | Out-File $CustomAppsListFile
 
     Set-Variable -Option Constant SavedSettingsFile "$TargetPath\SavedSettings"
-    $CONFIG_DEBLOAT | Out-File $SavedSettingsFile
+    $CONFIG_DEBLOAT_PRESET | Out-File $SavedSettingsFile
 
     Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
     Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
