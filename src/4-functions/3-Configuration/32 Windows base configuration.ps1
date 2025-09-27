@@ -32,5 +32,5 @@
         Write-ExceptionLog $_ 'Failed to read the registry'
     }
 
-    Import-RegistryConfiguration $FileName ($CONFIG_WINDOWS + $ConfigLines)
+    Import-RegistryConfiguration $FileName ($CONFIG_WINDOWS_BASE + $ConfigLines)
 }

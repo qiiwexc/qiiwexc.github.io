@@ -19,7 +19,7 @@ function Start-WindowsDebloat {
     Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
     Set-Variable -Option Constant Params "-Sysprep $UsePresetParam $SilentParam"
 
-    Invoke-Command -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
+    Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 
     Out-Success
 }

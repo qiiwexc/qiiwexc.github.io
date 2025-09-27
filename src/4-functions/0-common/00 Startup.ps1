@@ -1,7 +1,7 @@
 function Initialize-Script {
     $FORM.Activate()
 
-    Add-LogMessage "[$((Get-Date).ToString())] Initializing..."
+    Add-LogMessage $INF "[$((Get-Date).ToString())] Initializing..."
 
     Set-Variable -Option Constant IE_Registry_Key 'HKLM:\Software\Policies\Microsoft\Internet Explorer\Main'
 

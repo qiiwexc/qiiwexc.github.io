@@ -1,4 +1,6 @@
-param([Switch]$Run)
+param(
+    [Switch]$Run
+)
 
 Set-Variable -Option Constant INF 'INF'
 Set-Variable -Option Constant WRN 'WRN'
@@ -6,18 +8,20 @@ Set-Variable -Option Constant ERR 'ERR'
 
 
 function Start-Build {
-    param([Switch]$Run)
+    param(
+        [Switch]$Run
+    )
 
-    Set-Variable -Option Constant Version     (Get-Date -Format 'y.M.d')
+    Set-Variable -Option Constant Version (Get-Date -Format 'y.M.d')
     Set-Variable -Option Constant ProjectName 'qiiwexc'
 
     Set-Variable -Option Constant AssetsPath '.\assets'
     Set-Variable -Option Constant SourcePath '.\src'
-    Set-Variable -Option Constant DistPath   '.\d'
+    Set-Variable -Option Constant DistPath '.\d'
 
     Set-Variable -Option Constant VersionFile "$DistPath\version"
-    Set-Variable -Option Constant Ps1File     "$DistPath\$ProjectName.ps1"
-    Set-Variable -Option Constant BatchFile   "$DistPath\$ProjectName.bat"
+    Set-Variable -Option Constant Ps1File "$DistPath\$ProjectName.ps1"
+    Set-Variable -Option Constant BatchFile "$DistPath\$ProjectName.bat"
 
     Write-Log $INF 'Build task started'
     Write-Log $INF "Version     = $Version"
@@ -28,13 +32,13 @@ function Start-Build {
 
     Set-Variable -Option Constant Config (Get-Config $AssetsPath $Version)
 
-    New-Html $AssetsPath $Config
+    New-HtmlFile $AssetsPath $Config
 
-    New-PowerShell $SourcePath $Ps1File $Config
+    New-PowerShellScript $SourcePath $Ps1File -Config:$Config
 
-    Set-Signature $Ps1File $ProjectName
+    Add-Signature $Ps1File $ProjectName
 
-    New-Batch $Ps1File $BatchFile
+    New-BatchScript $Ps1File $BatchFile
 
     Write-Log $INF 'Build finished'
 
@@ -98,7 +102,7 @@ function Get-Config {
 }
 
 
-function New-Html {
+function New-HtmlFile {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AssetsPath,
         [System.Object[]][Parameter(Position = 1, Mandatory = $True)]$Config
@@ -107,7 +111,7 @@ function New-Html {
     Write-Log $INF 'Building the web page...'
 
     Set-Variable -Option Constant TemplateFile "$AssetsPath\template.html"
-    Set-Variable -Option Constant OutputFile   '.\index.html'
+    Set-Variable -Option Constant OutputFile '.\index.html'
 
     [String[]]$TemplateContent = Get-Content $TemplateFile
 
@@ -121,7 +125,7 @@ function New-Html {
 }
 
 
-function New-PowerShell {
+function New-PowerShellScript {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$SourcePath,
         [String][Parameter(Position = 1, Mandatory = $True)]$Ps1File,
@@ -153,7 +157,7 @@ function New-PowerShell {
 }
 
 
-function New-Batch {
+function New-BatchScript {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Ps1File,
         [String][Parameter(Position = 1, Mandatory = $True)]$BatchFile
@@ -192,7 +196,7 @@ function New-Batch {
     Out-Success
 }
 
-function Set-Signature {
+function Add-Signature {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Ps1File,
         [String][Parameter(Position = 1, Mandatory = $True)]$ProjectName

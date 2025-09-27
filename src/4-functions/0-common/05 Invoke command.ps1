@@ -1,4 +1,4 @@
-function Invoke-Command {
+function Invoke-CustomCommand {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Command,
         [String]$WorkingDirectory,

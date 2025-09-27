@@ -25,6 +25,4 @@
     }
 
     Import-RegistryConfiguration $FileName ($CONFIG_WINDOWS_PERSONALISATION + $ConfigLines)
-
-    Out-Success
 }
