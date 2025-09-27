@@ -1,6 +1,3 @@
-#Requires -PSEdition Desktop
-#Requires -Version 3
-
 function Write-VersionFile {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Version,
