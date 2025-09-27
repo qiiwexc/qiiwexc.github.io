@@ -77,7 +77,7 @@ function Out-Failure {
 
 function Write-ExceptionLog {
     param(
-        [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
+        [System.Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
@@ -157,9 +157,9 @@ function New-HtmlFile {
 
     [String[]]$TemplateContent = Get-Content $TemplateFile
 
-    $Config | ForEach-Object { $TemplateContent = $TemplateContent -replace "{$($_.key)}", $_.value }
+    $Config | ForEach-Object { $TemplateContent = $TemplateContent.Replace("{$($_.key)}", $_.value) }
 
-    $TemplateContent = $TemplateContent -replace '../d/stylesheet.css', 'https://bit.ly/stylesheet_web'
+    $TemplateContent = $TemplateContent.Replace('../d/stylesheet.css', 'https://bit.ly/stylesheet_web')
 
     $TemplateContent | Out-File $OutputFile
 
@@ -180,17 +180,34 @@ function New-PowerShellScript {
 
     New-Item -Force -ItemType Directory $DistPath | Out-Null
 
+    Set-Variable -Option Constant ProjectFiles (Get-ChildItem -Recurse -File $SourcePath)
+    Set-Variable -Option Constant FileCount $ProjectFiles.Length
+
     [String[]]$OutputStrings = @()
 
-    foreach ($File in Get-ChildItem -Recurse -File $SourcePath) {
-        [String]$SectionName = $File.ToString().Replace('.ps1', '').Remove(0, 3)
-        [String]$Spacer = '=-' * (30 - [Math]::Round(($SectionName.length + 1) / 4))
+    [Int]$CurrentFileNum = 1
+    [String]$PreviousRegion = ''
+    foreach ($File in $ProjectFiles) {
+        [String]$CurrentRegion = $File.FullName.Replace('\src\', '|').Split('|')[1].Replace('.ps1', '').Replace('\', ' > ') -replace '\d{1,2}(-|\s)', ''
 
-        $OutputStrings += "`n`n#$Spacer# $SectionName #$Spacer#`n"
+        if ($CurrentFileNum -eq 1) {
+            $OutputStrings += "#region $CurrentRegion`n"
+        } else {
+            $OutputStrings += "`n#endregion $PreviousRegion`n"
+            $OutputStrings += "`n#region $CurrentRegion`n"
+        }
+
+        $PreviousRegion = $CurrentRegion
         $OutputStrings += Get-Content $File.FullName
+
+        if ($CurrentFileNum -eq $FileCount) {
+            $OutputStrings += "`n#endregion $CurrentRegion"
+        }
+
+        $CurrentFileNum++
     }
 
-    $Config | ForEach-Object { $OutputStrings = $OutputStrings -replace "{$($_.key)}", $_.value }
+    $Config | ForEach-Object { $OutputStrings = $OutputStrings.Replace("{$($_.key)}", $_.value) }
 
     Write-LogInfo "Writing output file $Ps1File"
     $OutputStrings | Out-File $Ps1File
@@ -229,7 +246,7 @@ function New-BatchScript {
     $BatchStrings += ")`n"
 
     foreach ($String in $PowerShellStrings) {
-        $BatchStrings += "::$($String -Replace "`n", "`n::")"
+        $BatchStrings += "::$($String.Replace("`n", "`n::"))"
     }
 
     Write-LogInfo "Writing batch file $BatchFile"

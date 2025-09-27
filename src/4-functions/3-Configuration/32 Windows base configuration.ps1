@@ -20,7 +20,7 @@
     try {
         Set-Variable -Option Constant UserRegistries ((Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' })
         foreach ($Registry in $UserRegistries) {
-            Set-Variable -Option Constant User ($Registry -replace 'HKEY_USERS\\', '')
+            Set-Variable -Option Constant User ($Registry.Replace('HKEY_USERS\', ''))
             $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
             $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
         }
