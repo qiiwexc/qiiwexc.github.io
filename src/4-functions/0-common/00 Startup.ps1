@@ -18,14 +18,6 @@ function Initialize-Script {
         Write-Log $WRN "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)"
     }
 
-    try {
-        Add-Type -AssemblyName System.IO.Compression.FileSystem
-        Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED $True
-    } catch [Exception] {
-        Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
-        Write-Log $WRN "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
-    }
-
     Write-Log $INF 'Current system information:'
 
     Set-Variable -Option Constant Motherboard (Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product)
