@@ -4,8 +4,8 @@ function Merge-JsonObjects {
         [Parameter(Position = 1, Mandatory = $True)]$Extend
     )
 
-    if ($Source -is [System.Object] -and $Extend -is [System.Object]) {
-        [System.Object]$Merged = [Ordered] @{}
+    if ($Source -is [PSCustomObject] -and $Extend -is [PSCustomObject]) {
+        [PSCustomObject]$Merged = [Ordered] @{}
 
         foreach ($Property in $Source.PSObject.Properties) {
             if ($Null -eq $Extend.$($Property.Name)) {
