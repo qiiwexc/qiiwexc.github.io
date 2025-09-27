@@ -3,7 +3,7 @@
         [String][Parameter(Position = 0, Mandatory = $True)]$FileName
     )
 
-    Write-Log $INF 'Applying Windows search index configuration...'
+    Write-LogInfo 'Applying Windows search index configuration...'
 
     [String]$ConfigLines = ''
 

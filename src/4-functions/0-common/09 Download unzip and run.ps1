@@ -9,9 +9,9 @@ function Start-DownloadUnzipAndRun {
     )
 
     if ($AVWarning -and -not $AV_WARNING_SHOWN) {
-        Write-Log $WRN 'This file may trigger anti-virus false positive!'
-        Write-Log $WRN 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
-        Write-Log $WRN 'Click the button again to continue'
+        Write-LogWarning 'This file may trigger anti-virus false positive!'
+        Write-LogWarning 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
+        Write-LogWarning 'Click the button again to continue'
         Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN $True
         return
     }

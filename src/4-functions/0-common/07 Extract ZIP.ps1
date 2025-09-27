@@ -27,7 +27,7 @@ function Expand-Zip {
     Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
     New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 
-    Write-Log $INF "Extracting '$ZipPath'..."
+    Write-LogInfo "Extracting '$ZipPath'..."
 
     try {
         if ($ZIP_SUPPORTED) {
@@ -55,7 +55,7 @@ function Expand-Zip {
     }
 
     Out-Success
-    Write-Log $INF "Files extracted to '$TargetPath'"
+    Write-LogInfo "Files extracted to '$TargetPath'"
 
     return $TargetExe
 }

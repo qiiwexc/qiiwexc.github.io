@@ -3,7 +3,7 @@
         [String][Parameter(Position = 0, Mandatory = $True)]$FileName
     )
 
-    Write-Log $INF 'Applying Windows configuration...'
+    Write-LogInfo 'Applying Windows configuration...'
 
     if ($PS_VERSION -ge 5) {
         Set-MpPreference -PUAProtection Enabled

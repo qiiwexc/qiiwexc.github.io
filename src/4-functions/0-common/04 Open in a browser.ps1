@@ -3,7 +3,7 @@ function Open-InBrowser {
         [String][Parameter(Position = 0, Mandatory = $True)]$URL
     )
 
-    Write-Log $INF "Opening URL in the default browser: $URL"
+    Write-LogInfo "Opening URL in the default browser: $URL"
 
     try {
         [System.Diagnostics.Process]::Start($URL)

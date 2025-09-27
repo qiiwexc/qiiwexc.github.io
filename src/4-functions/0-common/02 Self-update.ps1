@@ -1,9 +1,9 @@
 function Get-CurrentVersion {
-    Write-Log $INF 'Checking for updates...'
+    Write-LogInfo 'Checking for updates...'
 
     Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
     if ($IsNotConnected) {
-        Write-Log $ERR "Failed to check for updates: $IsNotConnected"
+        Write-LogError "Failed to check for updates: $IsNotConnected"
         return
     }
 
@@ -18,7 +18,7 @@ function Get-CurrentVersion {
     }
 
     if ($LatestVersion -gt $VERSION) {
-        Write-Log $WRN "Newer version available: v$LatestVersion"
+        Write-LogWarning "Newer version available: v$LatestVersion"
         Update-Self
     } else {
         Out-Status 'No updates available'
@@ -29,12 +29,12 @@ function Get-CurrentVersion {
 function Update-Self {
     Set-Variable -Option Constant TargetFileBat "$PATH_CURRENT_DIR\qiiwexc.bat"
 
-    Write-Log $WRN 'Downloading new version...'
+    Write-LogWarning 'Downloading new version...'
 
     Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
 
     if ($IsNotConnected) {
-        Write-Log $ERR "Failed to download update: $IsNotConnected"
+        Write-LogError "Failed to download update: $IsNotConnected"
         return
     }
 
@@ -46,7 +46,7 @@ function Update-Self {
     }
 
     Out-Success
-    Write-Log $WRN 'Restarting...'
+    Write-LogWarning 'Restarting...'
 
     try {
         Invoke-CustomCommand $TargetFileBat

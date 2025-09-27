@@ -1,5 +1,5 @@
 function Get-BatteryReport {
-    Write-Log $INF 'Exporting battery report...'
+    Write-LogInfo 'Exporting battery report...'
 
     Set-Variable -Option Constant ReportPath "$PATH_APP_DIR\battery_report.html"
 
