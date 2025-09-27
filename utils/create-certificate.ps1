@@ -2,9 +2,9 @@ Set-Variable -Option Constant IsElevated $(([Security.Principal.WindowsPrincipal
 
 Set-Variable -Option Constant ProjectName 'qiiwexc'
 
-Set-Variable -Option Constant TargetFile      "..\d\$ProjectName.ps1"
+Set-Variable -Option Constant TargetFile "..\d\$ProjectName.ps1"
 Set-Variable -Option Constant CertificatePath "..\certificate\$ProjectName.cer"
-Set-Variable -Option Constant ThumbprintPath  "..\certificate\$ProjectName.txt"
+Set-Variable -Option Constant ThumbprintPath "..\certificate\$ProjectName.txt"
 
 Set-Variable -Option Constant INF 'INF'
 Set-Variable -Option Constant WRN 'WRN'
@@ -24,10 +24,10 @@ function Write-Log {
             Write-Warning $Text
         }
         $INF {
-            Write-Host $Text
+            Write-Output $Text
         }
         Default {
-            Write-Host $Message
+            Write-Output $Message
         }
     }
 }
@@ -51,7 +51,6 @@ function Start-Elevated {
             Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`""
         } catch [Exception] {
             Write-ExceptionLog $_ 'Failed to gain administrator privileges'
-            return
         }
 
         exit

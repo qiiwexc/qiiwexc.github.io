@@ -12,7 +12,7 @@ function Start-WinUtil {
     Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
     Set-Variable -Option Constant RunParam $(if ($Apply) { '-Run' } else { '' })
 
-    Invoke-Command "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
+    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
 
     Out-Success
 }

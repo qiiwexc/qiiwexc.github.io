@@ -1,4 +1,4 @@
-Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.00
+Set-Variable -Option Constant CONFIG_WINDOWS_BASE 'Windows Registry Editor Version 5.00
 
 [-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing]
 
@@ -326,6 +326,9 @@ Set-Variable -Option Constant CONFIG_WINDOWS 'Windows Registry Editor Version 5.
 "SilentAcquisition"=dword:00000001
 "UsageTracking"=dword:00000000
 "Volume"=dword:00000064
+
+[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\LinkedIn]
+"OfficeLinkedIn"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Personalization\Settings]
 "AcceptedPrivacyPolicy"=dword:00000000

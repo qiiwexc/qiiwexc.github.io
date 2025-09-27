@@ -54,7 +54,7 @@ function Update-Self {
     Write-Log $WRN 'Restarting...'
 
     try {
-        Invoke-Command $TargetFileBat
+        Invoke-CustomCommand $TargetFileBat
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to start new version'
         return
