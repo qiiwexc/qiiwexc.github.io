@@ -1,9 +1,4 @@
 function Get-CurrentVersion {
-    if ($PS_VERSION -le 2) {
-        Write-Log $WRN "Automatic self-update requires PowerShell 3 or higher (currently running on PowerShell $PS_VERSION)"
-        return
-    }
-
     Write-Log $INF 'Checking for updates...'
 
     Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
