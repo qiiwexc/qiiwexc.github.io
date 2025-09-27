@@ -2,7 +2,7 @@ New-GroupBox 'Bootable USB tools'
 
 
 [ScriptBlock]$BUTTON_FUNCTION = {
-    Set-Variable -Option Constant FileName $((Split-Path -Leaf '{URL_VENTOY}') -replace '-windows', '')
+    Set-Variable -Option Constant FileName $((Split-Path -Leaf '{URL_VENTOY}').Replace('-windows', ''))
     Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartVentoy.Checked '{URL_VENTOY}' -FileName:$FileName
 }
 New-Button 'Windows Ventoy' $BUTTON_FUNCTION
