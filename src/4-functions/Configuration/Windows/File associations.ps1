@@ -6,7 +6,7 @@ function Set-FileAssociations {
     $Parameters = @{
         Uri             = "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
         Outfile         = $ScriptPath
-        UseBasicParsing = $true
+        UseBasicParsing = $True
     }
     Invoke-WebRequest @Parameters
 

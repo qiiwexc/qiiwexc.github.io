@@ -6,34 +6,34 @@
     )
     Rules        = @{
         PSAlignAssignmentStatement                 = @{
-            Enable         = $true
-            CheckHashtable = $true
+            Enable         = $True
+            CheckHashtable = $True
         }
         PSAvoidExclaimOperator                     = @{
-            Enable = $true
+            Enable = $True
         }
         PSAvoidSemicolonsAsLineTerminators         = @{
-            Enable = $true
+            Enable = $True
         }
         PSAvoidUsingDoubleQuotesForConstantStrings = @{
-            Enable = $true
+            Enable = $True
         }
         PSPlaceCloseBrace                          = @{
-            Enable             = $true
-            IgnoreOneLineBlock = $true
-            NewLineAfter       = $false
+            Enable             = $True
+            IgnoreOneLineBlock = $True
+            NewLineAfter       = $False
         }
         PSPlaceOpenBrace                           = @{
-            Enable             = $true
-            OnSameLine         = $true
-            NewLineAfter       = $true
-            IgnoreOneLineBlock = $true
+            Enable             = $True
+            OnSameLine         = $True
+            NewLineAfter       = $True
+            IgnoreOneLineBlock = $True
         }
         PSUseCompatibleCmdlets                     = @{
             compatibility = @('desktop-3.0-windows')
         }
         PSUseCompatibleSyntax                      = @{
-            Enable         = $true
+            Enable         = $True
             TargetVersions = @(
                 '7.1',
                 '7.0',
@@ -47,16 +47,16 @@
             )
         }
         PSUseConsistentIndentation                 = @{
-            Enable              = $true
+            Enable              = $True
             IndentationSize     = 4
             PipelineIndentation = 'IncreaseIndentationForFirstPipeline'
             Kind                = 'space'
         }
         PSUseCorrectCasing                         = @{
-            Enable        = $true
-            CheckCommands = $true
-            CheckKeyword  = $true
-            CheckOperator = $true
+            Enable        = $True
+            CheckCommands = $True
+            CheckKeyword  = $True
+            CheckOperator = $True
         }
     }
 }

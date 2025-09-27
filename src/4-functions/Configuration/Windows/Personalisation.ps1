@@ -5,6 +5,12 @@
 
     Write-LogInfo 'Applying Windows personalisation configuration...'
 
+    Set-Variable -Option Constant LanguageList (Get-WinUserLanguageList)
+    if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
+        $LanguageList.Add('lv-LV')
+        Set-WinUserLanguageList $LanguageList -Force
+    }
+
     [String]$ConfigLines = ''
 
     try {
