@@ -19,7 +19,12 @@ function New-PowerShellScript {
     [Int]$CurrentFileNum = 1
     [String]$PreviousRegion = ''
     foreach ($File in $ProjectFiles) {
-        [String]$CurrentRegion = $File.FullName.Replace('\src\', '|').Split('|')[1].Replace('.ps1', '').Replace('\', ' > ') -replace '\d{1,2}(-|\s)', ''
+        [String]$FilePath = $File.FullName
+        [String]$FileName = $File.Name
+
+        [Boolean]$IsConfigFile = -not ($FileName -match '\.ps1$')
+
+        [String]$CurrentRegion = $FilePath.Replace('\src\', '|').Split('|')[1].Replace('\', ' > ') -replace '\..{1,}$', '' -replace '\d{1,2}(-|\s)', ''
 
         if ($CurrentFileNum -eq 1) {
             $OutputStrings += "#region $CurrentRegion`n"
@@ -29,7 +34,17 @@ function New-PowerShellScript {
         }
 
         $PreviousRegion = $CurrentRegion
-        $OutputStrings += Get-Content $File.FullName
+
+        [String[]]$Content = Get-Content $FilePath
+
+        if ($IsConfigFile) {
+            [String]$VariableName = "CONFIG_$(($FileName.Replace(' ', '_') -replace '\..{1,}$', '').ToUpper())"
+            $Content[0] = "Set-Variable -Option Constant $VariableName '$($Content[0])"
+            $OutputStrings += $Content
+            $OutputStrings += "'"
+        } else {
+            $OutputStrings += $Content
+        }
 
         if ($CurrentFileNum -eq $FileCount) {
             $OutputStrings += "`n#endregion $CurrentRegion"
