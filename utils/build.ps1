@@ -1,3 +1,5 @@
+#Requires -PSEdition Desktop
+
 param(
     [Switch]$Run
 )
@@ -55,15 +57,41 @@ function Write-Log {
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
-    Write-Host -NoNewline "`n[$((Get-Date).ToString())] $Message"
+    Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
+
+    switch ($Level) {
+        $INF {
+            Write-Host $Text
+        }
+        $WRN {
+            Write-Warning $Text
+        }
+        $ERR {
+            Write-Error $Text
+        }
+        Default {
+            Write-Host $Text
+        }
+    }
 }
 
+
 function Out-Success {
-    Write-Host -NoNewline ' Done'
+    Write-Log $INF '   > Done'
 }
 
 function Out-Failure {
-    Write-Host -NoNewline ' Failed'
+    Write-Log $INF '   > Failed'
+}
+
+
+function Write-ExceptionLog {
+    param(
+        [PSCustomObject][Parameter(Position = 0, Mandatory = $True)]$Exception,
+        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+    )
+
+    Write-Log $ERR "$($Message): $($Exception.Exception.Message)"
 }
 
 
