@@ -9,27 +9,44 @@ Set-Variable -Option Constant TargetFile "..\d\$ProjectName.ps1"
 Set-Variable -Option Constant CertificatePath "..\certificate\$ProjectName.cer"
 Set-Variable -Option Constant ThumbprintPath "..\certificate\$ProjectName.txt"
 
-Set-Variable -Option Constant INF 'INF'
-Set-Variable -Option Constant WRN 'WRN'
-Set-Variable -Option Constant ERR 'ERR'
 
+function Write-LogInfo {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'INFO' $Message
+}
+
+function Write-LogWarning {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'WARN' $Message
+}
+
+function Write-LogError {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'ERROR' $Message
+}
 
 function Write-Log {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
+        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INFO', 'WARN', 'ERROR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
 
     switch ($Level) {
-        $INF {
+        'INFO' {
             Write-Host $Text
         }
-        $WRN {
+        'WARN' {
             Write-Warning $Text
         }
-        $ERR {
+        'ERROR' {
             Write-Error $Text
         }
         Default {
@@ -40,11 +57,11 @@ function Write-Log {
 
 
 function Out-Success {
-    Write-Log $INF '   > Done'
+    Write-LogInfo '   > Done'
 }
 
 function Out-Failure {
-    Write-Log $INF '   > Failed'
+    Write-LogInfo '   > Failed'
 }
 
 
@@ -54,13 +71,13 @@ function Write-ExceptionLog {
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
-    Write-Log $ERR "$($Message): $($Exception.Exception.Message)"
+    Write-LogError "$($Message): $($Exception.Exception.Message)"
 }
 
 
 function Start-Elevated {
     if (-not $IsElevated) {
-        Write-Log $INF 'Requesting administrator privileges...'
+        Write-LogInfo 'Requesting administrator privileges...'
 
         try {
             Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`""
@@ -79,11 +96,11 @@ function New-Certificate {
     Remove-Item -Force -ErrorAction SilentlyContinue $CertificatePath
     Remove-Item -Force -ErrorAction SilentlyContinue $ThumbprintPath
 
-    Write-Log $INF 'Creating a new certificate...'
+    Write-LogInfo 'Creating a new certificate...'
     $Certificate = New-SelfSignedCertificate -CertStoreLocation Cert:\CurrentUser\My -Subject "CN=$ProjectName" -KeySpec Signature -Type CodeSigningCert
     Out-Success
 
-    Write-Log $INF "Creating the certificate to  '$CertificatePath'..."
+    Write-LogInfo "Creating the certificate to  '$CertificatePath'..."
     Export-Certificate -Cert $Certificate -FilePath $CertificatePath
     Out-Success
 

@@ -1,5 +1,5 @@
 function Update-Windows {
-    Write-Log $INF 'Starting Windows Update...'
+    Write-LogInfo 'Starting Windows Update...'
 
     try {
         if ($OS_VERSION -gt 7) {

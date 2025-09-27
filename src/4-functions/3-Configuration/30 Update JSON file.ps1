@@ -6,7 +6,7 @@ function Update-JsonFile {
         [String][Parameter(Position = 3, Mandatory = $True)]$Path
     )
 
-    Write-Log $INF "Writing $AppName configuration to '$Path'..."
+    Write-LogInfo "Writing $AppName configuration to '$Path'..."
 
     Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
 
@@ -20,7 +20,7 @@ function Update-JsonFile {
 
         $UpdatedConfig | Out-File $Path
     } else {
-        Write-Log $INF "'$Path' does not exist. Creating new file..."
+        Write-LogInfo "'$Path' does not exist. Creating new file..."
         $Content | Out-File $Path
     }
 

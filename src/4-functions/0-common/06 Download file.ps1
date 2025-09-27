@@ -11,14 +11,14 @@ function Start-Download {
 
     New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
 
-    Write-Log $INF "Downloading from $URL"
+    Write-LogInfo "Downloading from $URL"
 
     Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
     if ($IsNotConnected) {
-        Write-Log $ERR "Download failed: $IsNotConnected"
+        Write-LogError "Download failed: $IsNotConnected"
 
         if (Test-Path $SavePath) {
-            Write-Log $WRN 'Previous download found, returning it'
+            Write-LogWarning 'Previous download found, returning it'
             return $SavePath
         } else {
             return

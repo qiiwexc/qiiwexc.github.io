@@ -1,5 +1,5 @@
 function Start-Activator {
-    Write-Log $INF 'Starting MAS activator...'
+    Write-LogInfo 'Starting MAS activator...'
 
     if ($OS_VERSION -eq 7) {
         Invoke-CustomCommand -HideWindow "iex ((New-Object Net.WebClient).DownloadString('https://get.activated.win'))"

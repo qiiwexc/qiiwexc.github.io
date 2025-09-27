@@ -6,7 +6,7 @@ function Write-ConfigurationFile {
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
 
-    Write-Log $INF "Writing $AppName configuration to '$Path'..."
+    Write-LogInfo "Writing $AppName configuration to '$Path'..."
 
     Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
 

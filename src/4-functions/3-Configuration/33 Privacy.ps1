@@ -4,7 +4,7 @@ function Start-ShutUp10 {
         [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
     )
 
-    Write-Log $INF 'Starting ShutUp10++ utility...'
+    Write-LogInfo 'Starting ShutUp10++ utility...'
 
     Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
     Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"

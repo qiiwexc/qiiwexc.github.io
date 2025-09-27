@@ -1,44 +1,49 @@
+function Write-LogInfo {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'INFO' $Message
+}
+
+function Write-LogWarning {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'WARN' $Message
+}
+
+function Write-LogError {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'ERROR' $Message
+}
+
 function Write-Log {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
+        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INFO', 'WARN', 'ERROR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
+
+    Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
 
     $LOG.SelectionStart = $LOG.TextLength
 
     switch ($Level) {
-        $WRN {
-            $LOG.SelectionColor = 'blue'
-        }
-        $ERR {
-            $LOG.SelectionColor = 'red'
-        }
-        Default {
+        'INFO' {
             $LOG.SelectionColor = 'black'
-        }
-    }
-
-    Add-LogMessage $Level "[$((Get-Date).ToString())] $Message"
-}
-
-
-function Add-LogMessage {
-    param(
-        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Text
-    )
-
-    switch ($Level) {
-        $INF {
             Write-Host $Text
         }
-        $WRN {
+        'WARN' {
+            $LOG.SelectionColor = 'blue'
             Write-Warning $Text
         }
-        $ERR {
+        'ERROR' {
+            $LOG.SelectionColor = 'red'
             Write-Error $Text
         }
         Default {
+            $LOG.SelectionColor = 'black'
             Write-Host $Text
         }
     }
@@ -54,7 +59,7 @@ function Out-Status {
         [String][Parameter(Position = 0, Mandatory = $True)]$Status
     )
 
-    Write-Log $INF "   > $Status"
+    Write-LogInfo "   > $Status"
 }
 
 
@@ -73,5 +78,5 @@ function Write-ExceptionLog {
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
-    Write-Log $ERR "$($Message): $($Exception.Exception.Message)"
+    Write-LogError "$($Message): $($Exception.Exception.Message)"
 }

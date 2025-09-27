@@ -1,5 +1,5 @@
 function Update-MicrosoftOffice {
-    Write-Log $INF 'Starting Microsoft Office update...'
+    Write-LogInfo 'Starting Microsoft Office update...'
 
     try {
         Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user'

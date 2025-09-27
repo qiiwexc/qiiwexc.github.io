@@ -5,10 +5,6 @@ param(
     [Switch]$Run
 )
 
-Set-Variable -Option Constant INF 'INF'
-Set-Variable -Option Constant WRN 'WRN'
-Set-Variable -Option Constant ERR 'ERR'
-
 
 function Start-Build {
     param(
@@ -26,10 +22,10 @@ function Start-Build {
     Set-Variable -Option Constant Ps1File "$DistPath\$ProjectName.ps1"
     Set-Variable -Option Constant BatchFile "$DistPath\$ProjectName.bat"
 
-    Write-Log $INF 'Build task started'
-    Write-Log $INF "Version     = $Version"
-    Write-Log $INF "Source path = $SourcePath"
-    Write-Log $INF "Output file = $Ps1File"
+    Write-LogInfo 'Build task started'
+    Write-LogInfo "Version     = $Version"
+    Write-LogInfo "Source path = $SourcePath"
+    Write-LogInfo "Output file = $Ps1File"
 
     Write-VersionFile $Version $VersionFile
 
@@ -43,31 +39,52 @@ function Start-Build {
 
     New-BatchScript $Ps1File $BatchFile
 
-    Write-Log $INF 'Build finished'
+    Write-LogInfo 'Build finished'
 
     if ($Run) {
-        Write-Log $INF "Running $BatchFile"
+        Write-LogInfo "Running $BatchFile"
         Start-Process 'PowerShell' ".\$BatchFile Debug"
     }
 }
 
 
+function Write-LogInfo {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'INFO' $Message
+}
+
+function Write-LogWarning {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'WARN' $Message
+}
+
+function Write-LogError {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+    )
+    Write-Log 'ERROR' $Message
+}
+
 function Write-Log {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INF', 'WRN', 'ERR')]$Level,
+        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INFO', 'WARN', 'ERROR')]$Level,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
 
     switch ($Level) {
-        $INF {
+        'INFO' {
             Write-Host $Text
         }
-        $WRN {
+        'WARN' {
             Write-Warning $Text
         }
-        $ERR {
+        'ERROR' {
             Write-Error $Text
         }
         Default {
@@ -78,11 +95,11 @@ function Write-Log {
 
 
 function Out-Success {
-    Write-Log $INF '   > Done'
+    Write-LogInfo '   > Done'
 }
 
 function Out-Failure {
-    Write-Log $INF '   > Failed'
+    Write-LogInfo '   > Failed'
 }
 
 
@@ -92,7 +109,7 @@ function Write-ExceptionLog {
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
-    Write-Log $ERR "$($Message): $($Exception.Exception.Message)"
+    Write-LogError "$($Message): $($Exception.Exception.Message)"
 }
 
 
@@ -102,7 +119,7 @@ function Write-VersionFile {
         [String][Parameter(Position = 1, Mandatory = $True)]$VersionFile
     )
 
-    Write-Log $INF 'Writing version file...'
+    Write-LogInfo 'Writing version file...'
 
     Remove-Item -Force -ErrorAction SilentlyContinue $VersionFile
 
@@ -118,7 +135,7 @@ function Get-Config {
         [String][Parameter(Position = 1, Mandatory = $True)]$Version
     )
 
-    Write-Log $INF 'Loading config...'
+    Write-LogInfo 'Loading config...'
 
     Set-Variable -Option Constant UrlsFile "$AssetsPath\urls.json"
 
@@ -137,7 +154,7 @@ function New-HtmlFile {
         [System.Object[]][Parameter(Position = 1, Mandatory = $True)]$Config
     )
 
-    Write-Log $INF 'Building the web page...'
+    Write-LogInfo 'Building the web page...'
 
     Set-Variable -Option Constant TemplateFile "$AssetsPath\template.html"
     Set-Variable -Option Constant OutputFile '.\index.html'
@@ -161,7 +178,7 @@ function New-PowerShellScript {
         [System.Object[]][Parameter(Position = 2, Mandatory = $True)]$Config
     )
 
-    Write-Log $INF 'Building PowerShell script...'
+    Write-LogInfo 'Building PowerShell script...'
 
     Remove-Item -Force -ErrorAction SilentlyContinue $Ps1File
 
@@ -179,7 +196,7 @@ function New-PowerShellScript {
 
     $Config | ForEach-Object { $OutputStrings = $OutputStrings -replace "{$($_.key)}", $_.value }
 
-    Write-Log $INF "Writing output file $Ps1File"
+    Write-LogInfo "Writing output file $Ps1File"
     $OutputStrings | Out-File $Ps1File
 
     Out-Success
@@ -192,7 +209,7 @@ function New-BatchScript {
         [String][Parameter(Position = 1, Mandatory = $True)]$BatchFile
     )
 
-    Write-Log $INF 'Building batch script...'
+    Write-LogInfo 'Building batch script...'
 
     Remove-Item -Force -ErrorAction SilentlyContinue $BatchFile
 
@@ -219,7 +236,7 @@ function New-BatchScript {
         $BatchStrings += "::$($String -Replace "`n", "`n::")"
     }
 
-    Write-Log $INF "Writing batch file $BatchFile"
+    Write-LogInfo "Writing batch file $BatchFile"
     $BatchStrings | Out-File $BatchFile -Encoding ASCII
 
     Out-Success
@@ -231,7 +248,7 @@ function Add-Signature {
         [String][Parameter(Position = 1, Mandatory = $True)]$ProjectName
     )
 
-    Write-Log $INF 'Signing...'
+    Write-LogInfo 'Signing...'
 
     Set-Variable -Option Constant ThumbprintPath ".\certificate\$ProjectName.txt"
     Set-Variable -Option Constant TimestampServer 'http://timestamp.digicert.com'

@@ -1,5 +1,5 @@
 function Set-FileAssociations {
-    Write-Log $INF 'Setting file associations...'
+    Write-LogInfo 'Setting file associations...'
 
     Set-Variable -Option Constant ScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
 

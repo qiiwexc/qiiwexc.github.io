@@ -1,5 +1,5 @@
 function Remove-WindowsFeatures {
-    Write-Log $INF 'Starting miscellaneous Windows features cleanup...'
+    Write-LogInfo 'Starting miscellaneous Windows features cleanup...'
 
     Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
         'MathRecognizer',
@@ -18,7 +18,7 @@ function Remove-WindowsFeatures {
     foreach ($Capability in $CapabilitiesToRemove) {
         [String]$Name = $Capability.Name
         try {
-            Write-Log $INF "Removing '$Name'..."
+            Write-LogInfo "Removing '$Name'..."
             Remove-WindowsCapability -Online -Name "$Name"
             Out-Success
         } catch [Exception] {
@@ -31,7 +31,7 @@ function Remove-WindowsFeatures {
     }
 
     if (Test-Path 'mstsc.exe') {
-        Write-Log $INF "Removing 'mstsc'..."
+        Write-LogInfo "Removing 'mstsc'..."
         Start-Process 'mstsc' '/uninstall'
         Out-Success
     }

@@ -1,26 +1,26 @@
 function Start-Cleanup {
-    Write-Log $INF 'Cleaning up the system...'
+    Write-LogInfo 'Cleaning up the system...'
 
-    Write-Log $INF 'Clearing delivery optimization cache...'
+    Write-LogInfo 'Clearing delivery optimization cache...'
     Delete-DeliveryOptimizationCache -Force
     Out-Success
 
-    Write-Log $INF 'Clearing software distribution folder...'
+    Write-LogInfo 'Clearing software distribution folder...'
     Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
     Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
     Out-Success
 
-    Write-Log $INF 'Clearing Windows temp folder...'
+    Write-LogInfo 'Clearing Windows temp folder...'
     Set-Variable -Option Constant WindowsTemp "$env:SystemRoot\Temp"
     Get-ChildItem -Path $WindowsTemp -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
     Out-Success
 
-    Write-Log $INF 'Clearing user temp folder...'
+    Write-LogInfo 'Clearing user temp folder...'
     Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
     New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
     Out-Success
 
-    Write-Log $INF 'Running system cleanup...'
+    Write-LogInfo 'Running system cleanup...'
 
     Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore

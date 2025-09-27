@@ -6,7 +6,7 @@ function Start-Executable {
     )
 
     if ($Switches -and $Silent) {
-        Write-Log $INF "Running '$Executable' silently..."
+        Write-LogInfo "Running '$Executable' silently..."
 
         try {
             Start-Process -Wait $Executable $Switches
@@ -17,11 +17,11 @@ function Start-Executable {
 
         Out-Success
 
-        Write-Log $INF "Removing '$Executable'..."
+        Write-LogInfo "Removing '$Executable'..."
         Remove-Item -Force $Executable
         Out-Success
     } else {
-        Write-Log $INF "Running '$Executable'..."
+        Write-LogInfo "Running '$Executable'..."
 
         try {
             if ($Switches) {

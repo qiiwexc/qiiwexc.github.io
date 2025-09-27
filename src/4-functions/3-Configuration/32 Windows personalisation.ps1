@@ -3,7 +3,7 @@
         [String][Parameter(Position = 0, Mandatory = $True)]$FileName
     )
 
-    Write-Log $INF 'Applying Windows personalisation configuration...'
+    Write-LogInfo 'Applying Windows personalisation configuration...'
 
     [String]$ConfigLines = ''
 

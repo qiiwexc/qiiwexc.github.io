@@ -1,5 +1,5 @@
 function Update-MicrosoftStoreApps {
-    Write-Log $INF 'Starting Microsoft Store apps update...'
+    Write-LogInfo 'Starting Microsoft Store apps update...'
 
     try {
         Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'"

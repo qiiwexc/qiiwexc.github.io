@@ -21,11 +21,6 @@ if ($HideConsole) {
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 
-Set-Variable -Option Constant INF 'INF'
-Set-Variable -Option Constant WRN 'WRN'
-Set-Variable -Option Constant ERR 'ERR'
-
-
 Set-Variable -Option Constant PATH_CURRENT_DIR $CallerPath
 Set-Variable -Option Constant PATH_TEMP_DIR ([System.IO.Path]::GetTempPath())
 Set-Variable -Option Constant PATH_APP_DIR "$($PATH_TEMP_DIR)qiiwexc"
