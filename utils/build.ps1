@@ -1,4 +1,5 @@
 #Requires -PSEdition Desktop
+#Requires -Version 3
 
 param(
     [Switch]$Run

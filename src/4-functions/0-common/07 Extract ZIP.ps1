@@ -30,7 +30,13 @@ function Expand-Zip {
     Write-Log $INF "Extracting '$ZipPath'..."
 
     try {
-        [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
+        if ($ZIP_SUPPORTED) {
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
+        } else {
+            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
+                $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
+            }
+        }
     } catch [Exception] {
         Write-ExceptionLog $_ "Failed to extract '$ZipPath'"
         return
