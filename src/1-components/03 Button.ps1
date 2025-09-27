@@ -29,7 +29,7 @@ function New-Button {
     $Button.Font = $BUTTON_FONT
     $Button.Height = $BUTTON_HEIGHT
     $Button.Width = $BUTTON_WIDTH
-    $Button.Enabled = !$Disabled
+    $Button.Enabled = -not $Disabled
     $Button.Location = $Location
 
     $Button.Text = $Text

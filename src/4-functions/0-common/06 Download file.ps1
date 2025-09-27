@@ -29,7 +29,7 @@ function Start-Download {
         Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
         (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
 
-        if (!$Temp) {
+        if (-not $Temp) {
             Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath
         }
 

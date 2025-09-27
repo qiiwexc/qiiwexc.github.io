@@ -5,7 +5,7 @@ function Set-CloudFlareDNS {
     Write-Log $INF "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
     Write-Log $WRN 'Internet connection may get interrupted briefly'
 
-    if (!(Get-NetworkAdapter)) {
+    if (-not (Get-NetworkAdapter)) {
         Write-Log $ERR 'Could not determine network adapter used to connect to the Internet'
         Write-Log $ERR 'This could mean that computer is not connected'
         return

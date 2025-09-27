@@ -44,12 +44,12 @@ function Expand-Zip {
 
     Remove-Item -Force -ErrorAction SilentlyContinue $ZipPath
 
-    if (!$IsDirectory) {
+    if (-not $IsDirectory) {
         Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
         Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
     }
 
-    if (!$Execute -and $IsDirectory) {
+    if (-not $Execute -and $IsDirectory) {
         Remove-Item -Force -ErrorAction SilentlyContinue -Recurse "$TargetPath\$ExtractionDir"
         Move-Item -Force -ErrorAction SilentlyContinue $ExtractionPath $TargetPath
     }

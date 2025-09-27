@@ -31,7 +31,7 @@ function New-CheckBox {
     $CheckBox.Text = $Text
     $CheckBox.Name = $Name
     $CheckBox.Checked = $Checked
-    $CheckBox.Enabled = !$Disabled
+    $CheckBox.Enabled = -not $Disabled
     $CheckBox.Size = "150, $CHECKBOX_HEIGHT"
     $CheckBox.Location = $Location
 

@@ -26,7 +26,7 @@ function New-RadioButton {
 
     $RadioButton.Text = $Text
     $RadioButton.Checked = $Checked
-    $RadioButton.Enabled = !$Disabled
+    $RadioButton.Enabled = -not $Disabled
     $RadioButton.Size = "80, $CHECKBOX_HEIGHT"
     $RadioButton.Location = $Location
 
