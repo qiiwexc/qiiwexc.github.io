@@ -8,7 +8,7 @@ function Start-DownloadUnzipAndRun {
         [Switch]$Silent
     )
 
-    if ($AVWarning -and !$AV_WARNING_SHOWN) {
+    if ($AVWarning -and -not $AV_WARNING_SHOWN) {
         Write-Log $WRN 'This file may trigger anti-virus false positive!'
         Write-Log $WRN 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
         Write-Log $WRN 'Click the button again to continue'
@@ -16,19 +16,15 @@ function Start-DownloadUnzipAndRun {
         return
     }
 
-    if ($PS_VERSION -le 2 -and ($URL -match '*github.com/*' -or $URL -match '*github.io/*')) {
-        Open-InBrowser $URL
-    } else {
-        Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
-        Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
-        Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
+    Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
+    Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
+    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 
-        if ($DownloadedFile) {
-            Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
+    if ($DownloadedFile) {
+        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
 
-            if ($Execute) {
-                Start-Executable $Executable $Params -Silent:$Silent
-            }
+        if ($Execute) {
+            Start-Executable $Executable $Params -Silent:$Silent
         }
     }
 }

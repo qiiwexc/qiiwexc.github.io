@@ -5,8 +5,10 @@
 
     Write-Log $INF 'Applying Windows configuration...'
 
-    Set-MpPreference -PUAProtection Enabled
-    Set-MpPreference -MeteredConnectionUpdates $True
+    if ($PS_VERSION -ge 5) {
+        Set-MpPreference -PUAProtection Enabled
+        Set-MpPreference -MeteredConnectionUpdates $True
+    }
 
     Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3

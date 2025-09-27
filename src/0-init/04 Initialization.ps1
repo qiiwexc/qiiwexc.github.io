@@ -1,3 +1,6 @@
+#Requires -PSEdition Desktop
+#Requires -Version 3
+
 Write-Output 'Initializing...'
 
 Set-Variable -Option Constant OLD_WINDOW_TITLE ($HOST.UI.RawUI.WindowTitle)
