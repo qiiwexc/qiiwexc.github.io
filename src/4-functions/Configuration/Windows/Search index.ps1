@@ -10,11 +10,11 @@
     try {
         Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -match 'HKEY_CLASSES_ROOT\\\.' })
         foreach ($Registry in $FileExtensionRegistries) {
-            $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
+            [System.Object]$PersistentHandlers = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
 
-            foreach ($Reg in $PersistentHandlerRegistries) {
-                $PersistentHandler = Get-ItemProperty "Registry::$Reg"
-                $DefaultHandler = $PersistentHandler.'(default)'
+            foreach ($PersistentHandler in $PersistentHandlers) {
+                [System.Object]$Handler = Get-ItemProperty "Registry::$PersistentHandler"
+                [String]$DefaultHandler = $Handler.'(default)'
 
                 if ($DefaultHandler -and -not ($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
                     $ConfigLines += "`n[$Reg]`n"

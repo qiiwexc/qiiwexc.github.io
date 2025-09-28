@@ -6,8 +6,6 @@ function Write-VersionFile {
 
     Write-LogInfo 'Writing version file...'
 
-    Remove-Item -Force -ErrorAction SilentlyContinue $VersionFile
-
     $Version | Out-File $VersionFile -Encoding ASCII
 
     Out-Success

@@ -6,7 +6,7 @@ $FORM.FormBorderStyle = 'Fixed3D'
 $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
 $FORM.Top = $True
-$FORM.Add_Shown( { Initialize-Script } )
+$FORM.Add_Shown( { Initialize-App } )
 $FORM.Add_FormClosing( { Reset-State } )
 
 

@@ -17,7 +17,6 @@ function Start-Cleanup {
 
     Write-LogInfo 'Clearing user temp folder...'
     Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
-    New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
     Out-Success
 
     Write-LogInfo 'Running system cleanup...'

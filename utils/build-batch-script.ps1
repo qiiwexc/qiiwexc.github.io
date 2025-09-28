@@ -6,8 +6,6 @@ function New-BatchScript {
 
     Write-LogInfo 'Building batch script...'
 
-    Remove-Item -Force -ErrorAction SilentlyContinue $BatchFile
-
     [String[]]$PowerShellStrings = Get-Content $Ps1File
 
     [String[]]$BatchStrings = "@echo off`n"

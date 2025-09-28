@@ -7,6 +7,8 @@ function Start-WinUtil {
 
     Set-Variable -Option Constant ConfigFile "$PATH_APP_DIR\winutil.json"
 
+    Initialize-AppDirectory
+
     $CONFIG_WINUTIL | Out-File $ConfigFile
 
     Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"

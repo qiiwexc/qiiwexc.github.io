@@ -7,7 +7,8 @@ function Start-WindowsDebloat {
     Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 
     Set-Variable -Option Constant TargetPath "$PATH_TEMP_DIR\Win11Debloat"
-    New-Item -ItemType Directory $TargetPath -ErrorAction SilentlyContinue
+
+    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
     Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
     $CONFIG_DEBLOAT_APP_LIST | Out-File $CustomAppsListFile

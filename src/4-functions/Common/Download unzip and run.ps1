@@ -21,7 +21,7 @@ function Start-DownloadUnzipAndRun {
     Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 
     if ($DownloadedFile) {
-        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
+        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Temp:$Execute } else { $DownloadedFile })
 
         if ($Execute) {
             Start-Executable $Executable $Params -Silent:$Silent

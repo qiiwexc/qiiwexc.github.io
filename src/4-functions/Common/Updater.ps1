@@ -1,59 +1,72 @@
-function Get-CurrentVersion {
+function Update-App {
+    Set-Variable -Option Constant AppBatFile "$PATH_CURRENT_DIR\qiiwexc.bat"
+
+    Set-Variable -Option Constant IsUpdateAvailable (Get-UpdateAvailability)
+
+    if ($IsUpdateAvailable) {
+        Get-NewVersion $AppBatFile
+
+        Write-LogWarning 'Restarting...'
+
+        try {
+            Invoke-CustomCommand $AppBatFile
+        } catch [Exception] {
+            Write-ExceptionLog $_ 'Failed to start new version'
+            return
+        }
+
+        Exit-App
+    }
+}
+
+
+function Get-UpdateAvailability {
     Write-LogInfo 'Checking for updates...'
 
-    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
-    if ($IsNotConnected) {
-        Write-LogError "Failed to check for updates: $IsNotConnected"
+    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    if ($NoConnection) {
+        Write-LogError "Failed to check for updates: $NoConnection"
         return
     }
 
-    $ProgressPreference = 'SilentlyContinue'
     try {
-        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest '{URL_VERSION_FILE}').ToString())
-        $ProgressPreference = 'Continue'
+        Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
+        Start-BitsTransfer -Source '{URL_VERSION_FILE}' -Destination $VersionFile -Dynamic
+        Set-Variable -Option Constant LatestVersion ([Version](Get-Content $VersionFile -Raw))
     } catch [Exception] {
-        $ProgressPreference = 'Continue'
         Write-ExceptionLog $_ 'Failed to check for updates'
         return
     }
 
     if ($LatestVersion -gt $VERSION) {
         Write-LogWarning "Newer version available: v$LatestVersion"
-        Update-Self
+        return $True
     } else {
         Out-Status 'No updates available'
     }
 }
 
 
-function Update-Self {
-    Set-Variable -Option Constant TargetFileBat "$PATH_CURRENT_DIR\qiiwexc.bat"
+function Get-NewVersion {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$AppBatFile
+    )
 
     Write-LogWarning 'Downloading new version...'
 
-    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
+    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
 
-    if ($IsNotConnected) {
-        Write-LogError "Failed to download update: $IsNotConnected"
+    if ($NoConnection) {
+        Write-LogError "Failed to download update: $NoConnection"
         return
     }
 
     try {
-        Invoke-WebRequest '{URL_BAT_FILE}' -OutFile $TargetFileBat
+        Start-BitsTransfer -Source '{URL_BAT_FILE}' -Destination $AppBatFile -Dynamic
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to download update'
         return
     }
 
     Out-Success
-    Write-LogWarning 'Restarting...'
-
-    try {
-        Invoke-CustomCommand $TargetFileBat
-    } catch [Exception] {
-        Write-ExceptionLog $_ 'Failed to start new version'
-        return
-    }
-
-    Exit-Script
 }
