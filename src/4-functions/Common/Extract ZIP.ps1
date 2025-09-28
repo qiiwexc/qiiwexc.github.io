@@ -1,13 +1,15 @@
 function Expand-Zip {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$ZipPath,
-        [Switch]$Execute
+        [Switch]$Temp
     )
 
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
     Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
-    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+    Set-Variable -Option Constant TargetPath $(if ($Temp) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+
+    Initialize-AppDirectory
 
     [String]$Executable = switch -Wildcard ($ZipName) {
         'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
@@ -23,8 +25,14 @@ function Expand-Zip {
     Set-Variable -Option Constant TemporaryExe "$ExtractionPath\$Executable"
     Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
 
-    Remove-Item -Force -ErrorAction SilentlyContinue $TemporaryExe
-    Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
+    if (Test-Path $TemporaryExe) {
+        Remove-Item -Force $TemporaryExe
+    }
+
+    if (Test-Path $ExtractionPath) {
+        Remove-Item -Force -Recurse $ExtractionPath
+    }
+
     New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 
     Write-LogInfo "Extracting '$ZipPath'..."
@@ -42,16 +50,24 @@ function Expand-Zip {
         return
     }
 
-    Remove-Item -Force -ErrorAction SilentlyContinue $ZipPath
-
-    if (-not $IsDirectory) {
-        Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
-        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
+    if (Test-Path $ZipPath) {
+        Remove-Item -Force $ZipPath
     }
 
-    if (-not $Execute -and $IsDirectory) {
-        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse "$TargetPath\$ExtractionDir"
-        Move-Item -Force -ErrorAction SilentlyContinue $ExtractionPath $TargetPath
+    if (-not $IsDirectory) {
+        Move-Item -Force $TemporaryExe $TargetExe
+
+        if (Test-Path $ExtractionPath) {
+            Remove-Item -Force -Recurse $ExtractionPath
+        }
+    }
+
+    if (-not $Temp -and $IsDirectory) {
+        if (Test-Path "$TargetPath\$ExtractionDir") {
+            Remove-Item -Force -Recurse "$TargetPath\$ExtractionDir"
+        }
+
+        Move-Item -Force $ExtractionPath $TargetPath
     }
 
     Out-Success

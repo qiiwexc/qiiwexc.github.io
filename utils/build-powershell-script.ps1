@@ -7,8 +7,6 @@ function New-PowerShellScript {
 
     Write-LogInfo 'Building PowerShell script...'
 
-    Remove-Item -Force -ErrorAction SilentlyContinue $Ps1File
-
     New-Item -Force -ItemType Directory $DistPath | Out-Null
 
     Set-Variable -Option Constant ProjectFiles (Get-ChildItem -Recurse -File $SourcePath)

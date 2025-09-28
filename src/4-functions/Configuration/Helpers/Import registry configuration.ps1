@@ -7,6 +7,9 @@ function Import-RegistryConfiguration {
     Write-LogInfo "Importing $AppName configuration into registry..."
 
     Set-Variable -Option Constant RegFilePath "$PATH_APP_DIR\$AppName.reg"
+
+    Initialize-AppDirectory
+
     $Content | Out-File $RegFilePath
 
     try {

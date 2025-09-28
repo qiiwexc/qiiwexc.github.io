@@ -3,6 +3,8 @@ function Get-BatteryReport {
 
     Set-Variable -Option Constant ReportPath "$PATH_APP_DIR\battery_report.html"
 
+    Initialize-AppDirectory
+
     powercfg /BatteryReport /Output $ReportPath
 
     Open-InBrowser $ReportPath

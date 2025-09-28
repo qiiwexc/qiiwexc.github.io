@@ -6,11 +6,12 @@ function Write-ConfigurationFile {
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
 
+    Stop-ProcessIfRunning $ProcessName
+
     Write-LogInfo "Writing $AppName configuration to '$Path'..."
 
-    Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
+    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 
-    New-Item -ItemType Directory (Split-Path -Parent $Path) -ErrorAction SilentlyContinue
     $Content | Out-File $Path
 
     Out-Success

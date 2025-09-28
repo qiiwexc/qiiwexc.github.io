@@ -9,13 +9,13 @@ function Start-Download {
     Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
     Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_CURRENT_DIR\$FileName" })
 
-    New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
+    Initialize-AppDirectory
 
     Write-LogInfo "Downloading from $URL"
 
-    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
-    if ($IsNotConnected) {
-        Write-LogError "Download failed: $IsNotConnected"
+    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    if ($NoConnection) {
+        Write-LogError "Download failed: $NoConnection"
 
         if (Test-Path $SavePath) {
             Write-LogWarning 'Previous download found, returning it'
@@ -26,11 +26,10 @@ function Start-Download {
     }
 
     try {
-        Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
-        (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
+        Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic
 
         if (-not $Temp) {
-            Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath
+            Move-Item -Force $TempPath $SavePath
         }
 
         if (Test-Path $SavePath) {

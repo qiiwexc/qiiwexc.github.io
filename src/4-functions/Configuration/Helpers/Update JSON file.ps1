@@ -6,11 +6,11 @@ function Update-JsonFile {
         [String][Parameter(Position = 3, Mandatory = $True)]$Path
     )
 
+    Stop-ProcessIfRunning $ProcessName
+
     Write-LogInfo "Writing $AppName configuration to '$Path'..."
 
-    Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
-
-    New-Item -ItemType Directory (Split-Path -Parent $Path) -ErrorAction SilentlyContinue
+    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 
     if (Test-Path $Path) {
         Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
