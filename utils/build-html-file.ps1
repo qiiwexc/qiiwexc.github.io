@@ -15,7 +15,7 @@ function New-HtmlFile {
 
     $TemplateContent = $TemplateContent.Replace('../d/stylesheet.css', 'https://bit.ly/stylesheet_web')
 
-    $TemplateContent | Out-File $OutputFile
+    $TemplateContent | Out-File $OutputFile -Encoding UTF8
 
     Out-Success
 }
