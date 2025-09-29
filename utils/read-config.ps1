@@ -8,7 +8,7 @@ function Get-Config {
 
     Set-Variable -Option Constant UrlsFile "$AssetsPath\urls.json"
 
-    [System.Object[]]$Config = Get-Content $UrlsFile | ConvertFrom-Json
+    [Object[]]$Config = Get-Content $UrlsFile | ConvertFrom-Json
     $Config += @{key = 'PROJECT_VERSION'; value = $Version }
 
     Out-Success

@@ -74,7 +74,7 @@ function Out-Failure {
 
 function Write-ExceptionLog {
     param(
-        [System.Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
+        [Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message
     )
 
