@@ -14,8 +14,7 @@
     [String]$ConfigLines = ''
 
     try {
-        Set-Variable -Option Constant UserRegistries ((Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' })
-        foreach ($Registry in $UserRegistries) {
+        foreach ($Registry in (Get-UsersRegistryKeys)) {
             # [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]
             # `"RotatingLockScreenEnabled`"=dword:00000001
             # `"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"

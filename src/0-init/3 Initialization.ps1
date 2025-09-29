@@ -9,7 +9,7 @@ try {
     throw 'System not supported'
 }
 
-if ($HideConsole) {
+if (-not $DevMode) {
     Add-Type -Namespace Console -Name Window -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
                                                                 [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
     [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)

@@ -2,7 +2,7 @@ function New-PowerShellScript {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$SourcePath,
         [String][Parameter(Position = 1, Mandatory = $True)]$Ps1File,
-        [System.Object[]][Parameter(Position = 2, Mandatory = $True)]$Config
+        [Object[]][Parameter(Position = 2, Mandatory = $True)]$Config
     )
 
     Write-LogInfo 'Building PowerShell script...'

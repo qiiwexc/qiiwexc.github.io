@@ -23,6 +23,11 @@ function Update-App {
 function Get-UpdateAvailability {
     Write-LogInfo 'Checking for updates...'
 
+    if ($DevMode) {
+        Out-Status 'Skipping in dev mode'
+        return
+    }
+
     Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
     if ($NoConnection) {
         Write-LogError "Failed to check for updates: $NoConnection"
