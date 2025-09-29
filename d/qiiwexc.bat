@@ -14,16 +14,18 @@ set "psfile=%temp%\qiiwexc.ps1"
 )
 
 if "%debug%"=="true" (
-  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%"
+  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%" -DevMode
 ) else (
-  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%" -HideConsole
+  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%"
 )
 
 ::#region init > Parameters
 ::
+::#Requires -Version 3
+::
 ::param(
 ::    [String][Parameter(Position = 0)]$CallerPath,
-::    [Switch]$HideConsole
+::    [Switch]$DevMode
 ::)
 ::
 ::#endregion init > Parameters
@@ -31,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.9.28')
+::Set-Variable -Option Constant VERSION ([Version]'25.9.30')
 ::
 ::#endregion init > Version
 ::
@@ -56,9 +58,6 @@ if "%debug%"=="true" (
 ::
 ::#region init > Initialization
 ::
-::#Requires -PSEdition Desktop
-::#Requires -Version 3
-::
 ::Write-Host 'Initializing...'
 ::
 ::Set-Variable -Option Constant OLD_WINDOW_TITLE ($HOST.UI.RawUI.WindowTitle)
@@ -70,8 +69,8 @@ if "%debug%"=="true" (
 ::    throw 'System not supported'
 ::}
 ::
-::if ($HideConsole) {
-::    Add-Type -Name Window -Namespace Console -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
+::if (-not $DevMode) {
+::    Add-Type -Namespace Console -Name Window -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
 ::                                                                [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
 ::    [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
 ::}
@@ -95,11 +94,12 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant IsWindows11 ($OPERATING_SYSTEM.Caption -match 'Windows 11')
 ::Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
 ::
-::Set-Variable -Option Constant WordRegPath (Get-ItemProperty 'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer' -ErrorAction SilentlyContinue)
-::Set-Variable -Option Constant OFFICE_VERSION $(if ($WordRegPath) { ($WordRegPath.'(default)') -replace '\D+', '' })
-::Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if ($OFFICE_VERSION) { if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' } })
-::
-::New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
+::Set-Variable -Option Constant WordRegPath 'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer'
+::if (Test-Path $WordRegPath) {
+::    Set-Variable -Option Constant WordPath (Get-ItemProperty $WordRegPath)
+::    Set-Variable -Option Constant OFFICE_VERSION ($WordPath.'(default)' -replace '\D+', '')
+::    Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' })
+::}
 ::
 ::#endregion init > Initialization
 ::
@@ -410,7 +410,7 @@ if "%debug%"=="true" (
 ::$FORM.StartPosition = 'CenterScreen'
 ::$FORM.MaximizeBox = $False
 ::$FORM.Top = $True
-::$FORM.Add_Shown( { Initialize-Script } )
+::$FORM.Add_Shown( { Initialize-App } )
 ::$FORM.Add_FormClosing( { Reset-State } )
 ::
 ::
@@ -583,7 +583,7 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Checked
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Install-Unchecky -Execute:$CHECKBOX_StartOfficeInstaller.Checked -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Install-Unchecky -Execute:$CHECKBOX_StartUnchecky.Checked -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked }
 ::New-Button 'Unchecky' $BUTTON_FUNCTION
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Checked
@@ -659,7 +659,7 @@ if "%debug%"=="true" (
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsSearch = New-CheckBox 'Configure search index' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_FileAssociations = New-CheckBox 'Set file associations' -Checked
+::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_FileAssociations = New-CheckBox 'Set file associations'
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 ::
@@ -1231,49 +1231,102 @@ if "%debug%"=="true" (
 ::#region configs > Windows > File associations
 ::
 ::Set-Variable -Option Constant CONFIG_FILE_ASSOCIATIONS @(
-::    @{Extension = '.bmp'; Application = 'PhotoViewer.FileAssoc.Bitmap' },
-::    @{Extension = '.cab'; Application = 'CABFolder' },
-::    @{Extension = '.cr2'; Application = 'PhotoViewer.FileAssoc.Tiff' },
-::    @{Extension = '.dib'; Application = 'PhotoViewer.FileAssoc.Bitmap' },
-::    @{Extension = '.gif'; Application = 'Applications\msedge.exe' },
-::    @{Extension = '.htm'; Application = 'ChromeHTML' },
-::    @{Extension = '.html'; Application = 'ChromeHTML' },
-::    @{Extension = '.iso'; Application = 'Windows.IsoFile' },
-::    @{Extension = '.jfif'; Application = 'PhotoViewer.FileAssoc.JFIF' },
-::    @{Extension = '.jpe'; Application = 'PhotoViewer.FileAssoc.Jpeg' },
-::    @{Extension = '.jpeg'; Application = 'PhotoViewer.FileAssoc.Jpeg' },
-::    @{Extension = '.jpg'; Application = 'PhotoViewer.FileAssoc.Jpeg' },
-::    @{Extension = '.jxr'; Application = 'PhotoViewer.FileAssoc.Wdp' },
-::    @{Extension = '.mht'; Application = 'MSEdgeMHT' },
-::    @{Extension = '.mhtml'; Application = 'ChromeHTML' },
-::    @{Extension = '.oqy'; Application = 'Applications\EXCEL.EXE' },
-::    @{Extension = '.pdf'; Application = 'ChromePDF' },
-::    @{Extension = '.png'; Application = 'PhotoViewer.FileAssoc.Png' },
-::    @{Extension = '.rar'; Application = '7-Zip.rar' },
-::    @{Extension = '.rqy'; Application = 'Applications\EXCEL.EXE' },
-::    @{Extension = '.shtml'; Application = 'ChromeHTML' },
-::    @{Extension = '.svg'; Application = 'ChromeHTML' },
-::    @{Extension = '.tif'; Application = 'TIFImage.Document' },
-::    @{Extension = '.tiff'; Application = 'TIFImage.Document' },
-::    @{Extension = '.torrent'; Application = 'qBittorrent.File.Torrent' },
-::    @{Extension = '.url'; Application = 'InternetShortcut' },
-::    @{Extension = '.vlt'; Application = 'VLC.vlt' },
-::    @{Extension = '.webp'; Application = 'ChromeHTML' },
-::    @{Extension = '.wsz'; Application = 'VLC.wsz' },
-::    @{Extension = '.xht'; Application = 'ChromeHTML' },
-::    @{Extension = '.xhtml'; Application = 'ChromeHTML' },
-::    @{Extension = '.xml'; Application = 'MSEdgeHTM' },
-::    @{Extension = '.zip'; Application = 'CompressedFolder' },
-::    @{Extension = 'ftp'; Application = 'MSEdgeHTM' },
-::    @{Extension = 'http'; Application = 'ChromeHTML' },
-::    @{Extension = 'https'; Application = 'ChromeHTML' },
-::    @{Extension = 'mailto'; Application = 'ChromeHTML' },
-::    @{Extension = 'microsoft-edge'; Application = 'MSEdgeHTM' },
-::    @{Extension = 'microsoft-edge-holographic'; Application = 'MSEdgeHTM' },
-::    @{Extension = 'ms-xbl-3d8b930f'; Application = 'MSEdgeHTM' },
-::    @{Extension = 'read'; Application = 'MSEdgeHTM' },
-::    @{Extension = 'tel'; Application = 'ChromeHTML' },
-::    @{Extension = 'webcal'; Application = 'ChromeHTML' }
+::    @{Method = 'Registry'; Application = '7-Zip.rar'; Extension = '.rar' },
+::    @{Method = 'Registry'; Application = '7-Zip.tbz2'; Extension = '.tbz2' },
+::    @{Method = 'Registry'; Application = '7-Zip.tgz'; Extension = '.tgz' },
+::    @{Method = 'Registry'; Application = '7-Zip.txz'; Extension = '.txz' },
+::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.7z' },
+::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.bz2' },
+::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.gz' },
+::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.tar' },
+::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.xz' },
+::    @{Method = 'Registry'; Application = 'CABFolder'; Extension = '.cab' },
+::    @{Method = 'Registry'; Application = 'contact_wab_auto_file'; Extension = '.contact' },
+::    @{Method = 'Registry'; Application = 'group_wab_auto_file'; Extension = '.group' },
+::    @{Method = 'Registry'; Application = 'icofile'; Extension = '.ico' },
+::    @{Method = 'Registry'; Application = 'jpegfile'; Extension = '.jpe' },
+::    @{Method = 'Registry'; Application = 'jpegfile'; Extension = '.jpeg' },
+::    @{Method = 'Registry'; Application = 'jpegfile'; Extension = '.jpg' },
+::    @{Method = 'Registry'; Application = 'PhotoViewer.FileAssoc.Bitmap'; Extension = '.bmp' },
+::    @{Method = 'Registry'; Application = 'PhotoViewer.FileAssoc.Bitmap'; Extension = '.dib' },
+::    @{Method = 'Registry'; Application = 'pjpegfile'; Extension = '.jfif' },
+::    @{Method = 'Registry'; Application = 'pngfile'; Extension = '.png' },
+::    @{Method = 'Registry'; Application = 'qBittorrent.File.Torrent'; Extension = '.torrent' },
+::    @{Method = 'Registry'; Application = 'TIFImage.Document'; Extension = '.cr2' },
+::    @{Method = 'Registry'; Application = 'vcard_wab_auto_file'; Extension = '.vcf' },
+::    @{Method = 'Registry'; Application = 'VLC.3g2'; Extension = '.3g2' },
+::    @{Method = 'Registry'; Application = 'VLC.3gp'; Extension = '.3gp' },
+::    @{Method = 'Registry'; Application = 'VLC.3gp2'; Extension = '.3gp2' },
+::    @{Method = 'Registry'; Application = 'VLC.3gpp'; Extension = '.3gpp' },
+::    @{Method = 'Registry'; Application = 'VLC.aac'; Extension = '.aac' },
+::    @{Method = 'Registry'; Application = 'VLC.adt'; Extension = '.adt' },
+::    @{Method = 'Registry'; Application = 'VLC.adts'; Extension = '.adts' },
+::    @{Method = 'Registry'; Application = 'VLC.aif'; Extension = '.aif' },
+::    @{Method = 'Registry'; Application = 'VLC.aifc'; Extension = '.aifc' },
+::    @{Method = 'Registry'; Application = 'VLC.aiff'; Extension = '.aiff' },
+::    @{Method = 'Registry'; Application = 'VLC.asf'; Extension = '.asf' },
+::    @{Method = 'Registry'; Application = 'VLC.asx'; Extension = '.asx' },
+::    @{Method = 'Registry'; Application = 'VLC.au'; Extension = '.au' },
+::    @{Method = 'Registry'; Application = 'VLC.avi'; Extension = '.avi' },
+::    @{Method = 'Registry'; Application = 'VLC.cda'; Extension = '.cda' },
+::    @{Method = 'Registry'; Application = 'VLC.dvr-ms'; Extension = '.dvr-ms' },
+::    @{Method = 'Registry'; Application = 'VLC.flac'; Extension = '.flac' },
+::    @{Method = 'Registry'; Application = 'VLC.m1v'; Extension = '.m1v' },
+::    @{Method = 'Registry'; Application = 'VLC.m2t'; Extension = '.m2t' },
+::    @{Method = 'Registry'; Application = 'VLC.m2ts'; Extension = '.m2ts' },
+::    @{Method = 'Registry'; Application = 'VLC.m2v'; Extension = '.m2v' },
+::    @{Method = 'Registry'; Application = 'VLC.m3u'; Extension = '.m3u' },
+::    @{Method = 'Registry'; Application = 'VLC.m4a'; Extension = '.m4a' },
+::    @{Method = 'Registry'; Application = 'VLC.m4v'; Extension = '.m4v' },
+::    @{Method = 'Registry'; Application = 'VLC.mid'; Extension = '.mid' },
+::    @{Method = 'Registry'; Application = 'VLC.mka'; Extension = '.mka' },
+::    @{Method = 'Registry'; Application = 'VLC.mkv'; Extension = '.mkv' },
+::    @{Method = 'Registry'; Application = 'VLC.mod'; Extension = '.mod' },
+::    @{Method = 'Registry'; Application = 'VLC.mov'; Extension = '.mov' },
+::    @{Method = 'Registry'; Application = 'VLC.mp2'; Extension = '.mp2' },
+::    @{Method = 'Registry'; Application = 'VLC.mp2v'; Extension = '.mp2v' },
+::    @{Method = 'Registry'; Application = 'VLC.mp3'; Extension = '.mp3' },
+::    @{Method = 'Registry'; Application = 'VLC.mp4'; Extension = '.mp4' },
+::    @{Method = 'Registry'; Application = 'VLC.mp4v'; Extension = '.mp4v' },
+::    @{Method = 'Registry'; Application = 'VLC.mpa'; Extension = '.mpa' },
+::    @{Method = 'Registry'; Application = 'VLC.mpe'; Extension = '.mpe' },
+::    @{Method = 'Registry'; Application = 'VLC.mpeg'; Extension = '.mpeg' },
+::    @{Method = 'Registry'; Application = 'VLC.mpg'; Extension = '.mpg' },
+::    @{Method = 'Registry'; Application = 'VLC.mpv2'; Extension = '.mpv2' },
+::    @{Method = 'Registry'; Application = 'VLC.mts'; Extension = '.mts' },
+::    @{Method = 'Registry'; Application = 'VLC.rmi'; Extension = '.rmi' },
+::    @{Method = 'Registry'; Application = 'VLC.snd'; Extension = '.snd' },
+::    @{Method = 'Registry'; Application = 'VLC.ts'; Extension = '.ts' },
+::    @{Method = 'Registry'; Application = 'VLC.tts'; Extension = '.tts' },
+::    @{Method = 'Registry'; Application = 'VLC.vlt'; Extension = '.vlt' },
+::    @{Method = 'Registry'; Application = 'VLC.wav'; Extension = '.wav' },
+::    @{Method = 'Registry'; Application = 'VLC.wma'; Extension = '.wma' },
+::    @{Method = 'Registry'; Application = 'VLC.wmv'; Extension = '.wmv' },
+::    @{Method = 'Registry'; Application = 'VLC.wpl'; Extension = '.wpl' },
+::    @{Method = 'Registry'; Application = 'VLC.wsz'; Extension = '.wsz' },
+::    @{Method = 'Registry'; Application = 'VLC.wtv'; Extension = '.wtv' },
+::    @{Method = 'Registry'; Application = 'VLC.wvx'; Extension = '.wvx' },
+::    @{Method = 'Registry'; Application = 'wdpfile'; Extension = '.jxr' },
+::    @{Method = 'Registry'; Application = 'wdpfile'; Extension = '.wdp' },
+::    @{Method = 'Registry'; Application = 'Windows.IsoFile'; Extension = '.iso' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.gif' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.htm' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.html' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.mhtml' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.shtml' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.svg' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.webp' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.xht' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.xhtml' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'http' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'https' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'mailto' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'mms' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'tel' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'webcal' },
+::    @{Method = 'Sophia'; Application = 'ChromePDF'; Extension = '.pdf' },
+::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.url' },
+::    @{Method = 'Sophia'; Application = 'VLC.mp2'; Extension = '.mp2' }
 ::)
 ::
 ::#endregion configs > Windows > File associations
@@ -2154,7 +2207,6 @@ if "%debug%"=="true" (
 ::Microsoft.MicrosoftJournal
 ::Microsoft.MicrosoftOfficeHub
 ::Microsoft.MicrosoftPowerBIForWindows
-::Microsoft.MicrosoftSolitaireCollection
 ::Microsoft.MicrosoftStickyNotes
 ::Microsoft.MixedReality.Portal
 ::Microsoft.NetworkSpeedTest
@@ -2537,6 +2589,15 @@ if "%debug%"=="true" (
 ::#endregion configs > Windows > Tools > WinUtil
 ::
 ::
+::#region functions > Common > App directory
+::
+::function Initialize-AppDirectory {
+::    New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
+::}
+::
+::#endregion functions > Common > App directory
+::
+::
 ::#region functions > Common > Download file
 ::
 ::function Start-Download {
@@ -2550,13 +2611,13 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
 ::    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_CURRENT_DIR\$FileName" })
 ::
-::    New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
+::    Initialize-AppDirectory
 ::
 ::    Write-LogInfo "Downloading from $URL"
 ::
-::    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
-::    if ($IsNotConnected) {
-::        Write-LogError "Download failed: $IsNotConnected"
+::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    if ($NoConnection) {
+::        Write-LogError "Download failed: $NoConnection"
 ::
 ::        if (Test-Path $SavePath) {
 ::            Write-LogWarning 'Previous download found, returning it'
@@ -2567,11 +2628,10 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        Remove-Item -Force -ErrorAction SilentlyContinue $SavePath
-::        (New-Object System.Net.WebClient).DownloadFile($URL, $TempPath)
+::        Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic
 ::
 ::        if (-not $Temp) {
-::            Move-Item -Force -ErrorAction SilentlyContinue $TempPath $SavePath
+::            Move-Item -Force $TempPath $SavePath
 ::        }
 ::
 ::        if (Test-Path $SavePath) {
@@ -2615,7 +2675,7 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
 ::
 ::    if ($DownloadedFile) {
-::        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Execute:$Execute } else { $DownloadedFile })
+::        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Temp:$Execute } else { $DownloadedFile })
 ::
 ::        if ($Execute) {
 ::            Start-Executable $Executable $Params -Silent:$Silent
@@ -2629,13 +2689,24 @@ if "%debug%"=="true" (
 ::#region functions > Common > Exit
 ::
 ::function Reset-State {
-::    Write-LogInfo "Cleaning up '$PATH_APP_DIR'"
-::    Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $PATH_APP_DIR
+::    Write-LogInfo 'Cleaning up files on exit...'
+::
+::    Set-Variable -Option Constant PowerShellScript "$PATH_TEMP_DIR\qiiwexc.ps1"
+::
+::    if (Test-Path $PATH_APP_DIR) {
+::        Remove-Item -Force -Recurse $PATH_APP_DIR -ErrorAction Stop
+::    }
+::
+::    if (Test-Path $PowerShellScript) {
+::        Remove-Item -Force -Recurse $PowerShellScript -ErrorAction Stop
+::    }
+::
 ::    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
 ::    Write-Host ''
 ::}
 ::
-::function Exit-Script {
+::function Exit-App {
+::    Write-LogInfo 'Exiting the app...'
 ::    Reset-State
 ::    $FORM.Close()
 ::}
@@ -2648,13 +2719,15 @@ if "%debug%"=="true" (
 ::function Expand-Zip {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$ZipPath,
-::        [Switch]$Execute
+::        [Switch]$Temp
 ::    )
 ::
 ::    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
 ::    Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
 ::    Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
-::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+::    Set-Variable -Option Constant TargetPath $(if ($Temp) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+::
+::    Initialize-AppDirectory
 ::
 ::    [String]$Executable = switch -Wildcard ($ZipName) {
 ::        'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
@@ -2670,8 +2743,14 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant TemporaryExe "$ExtractionPath\$Executable"
 ::    Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
 ::
-::    Remove-Item -Force -ErrorAction SilentlyContinue $TemporaryExe
-::    Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
+::    if (Test-Path $TemporaryExe) {
+::        Remove-Item -Force $TemporaryExe
+::    }
+::
+::    if (Test-Path $ExtractionPath) {
+::        Remove-Item -Force -Recurse $ExtractionPath
+::    }
+::
 ::    New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 ::
 ::    Write-LogInfo "Extracting '$ZipPath'..."
@@ -2689,16 +2768,24 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
-::    Remove-Item -Force -ErrorAction SilentlyContinue $ZipPath
-::
-::    if (-not $IsDirectory) {
-::        Move-Item -Force -ErrorAction SilentlyContinue $TemporaryExe $TargetExe
-::        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse $ExtractionPath
+::    if (Test-Path $ZipPath) {
+::        Remove-Item -Force $ZipPath
 ::    }
 ::
-::    if (-not $Execute -and $IsDirectory) {
-::        Remove-Item -Force -ErrorAction SilentlyContinue -Recurse "$TargetPath\$ExtractionDir"
-::        Move-Item -Force -ErrorAction SilentlyContinue $ExtractionPath $TargetPath
+::    if (-not $IsDirectory) {
+::        Move-Item -Force $TemporaryExe $TargetExe
+::
+::        if (Test-Path $ExtractionPath) {
+::            Remove-Item -Force -Recurse $ExtractionPath
+::        }
+::    }
+::
+::    if (-not $Temp -and $IsDirectory) {
+::        if (Test-Path "$TargetPath\$ExtractionDir") {
+::            Remove-Item -Force -Recurse "$TargetPath\$ExtractionDir"
+::        }
+::
+::        Move-Item -Force $ExtractionPath $TargetPath
 ::    }
 ::
 ::    Out-Success
@@ -2813,7 +2900,7 @@ if "%debug%"=="true" (
 ::
 ::function Write-ExceptionLog {
 ::    param(
-::        [System.Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
+::        [Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$Message
 ::    )
 ::
@@ -2904,24 +2991,13 @@ if "%debug%"=="true" (
 ::
 ::#region functions > Common > Startup
 ::
-::function Initialize-Script {
+::function Initialize-App {
 ::    $FORM.Activate()
 ::
 ::    Write-LogInfo 'Initializing...'
 ::
-::    Set-Variable -Option Constant IE_Registry_Key 'HKLM:\Software\Policies\Microsoft\Internet Explorer\Main'
-::
-::    New-Item $IE_Registry_Key -ErrorAction SilentlyContinue
-::    Set-ItemProperty -Path $IE_Registry_Key -Name 'DisableFirstRunCustomize' -Value 1 -ErrorAction SilentlyContinue
-::
 ::    if ($OS_VERSION -lt 8) {
 ::        Write-LogWarning "Windows $OS_VERSION detected, some features are not supported."
-::    }
-::
-::    try {
-::        [Net.ServicePointManager]::SecurityProtocol = 'Tls12'
-::    } catch [Exception] {
-::        Write-LogWarning "Failed to configure security protocol, downloading from GitHub might not work: $($_.Exception.Message)"
 ::    }
 ::
 ::    try {
@@ -2932,6 +3008,36 @@ if "%debug%"=="true" (
 ::        Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
 ::    }
 ::
+::    Get-SystemInformation
+::
+::    Initialize-AppDirectory
+::
+::    Update-App
+::}
+::
+::#endregion functions > Common > Startup
+::
+::
+::#region functions > Common > Stop process
+::
+::function Stop-ProcessIfRunning {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$ProcessName
+::    )
+::
+::    if (Get-Process | Where-Object { $_.ProcessName -eq $ProcessName } ) {
+::        Write-LogInfo "Stopping process '$AppName'..."
+::        Stop-Process -Name $ProcessName
+::        Out-Success
+::    }
+::}
+::
+::#endregion functions > Common > Stop process
+::
+::
+::#region functions > Common > System information
+::
+::function Get-SystemInformation {
 ::    Write-LogInfo 'Current system information:'
 ::
 ::    Set-Variable -Option Constant Motherboard (Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product)
@@ -2951,73 +3057,89 @@ if "%debug%"=="true" (
 ::    Write-LogInfo "    OS architecture: $($OPERATING_SYSTEM.OSArchitecture)"
 ::    Write-LogInfo "    OS language: $SYSTEM_LANGUAGE"
 ::    Write-LogInfo "    Office version: $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})"
-::
-::    Get-CurrentVersion
 ::}
 ::
-::#endregion functions > Common > Startup
+::#endregion functions > Common > System information
 ::
 ::
 ::#region functions > Common > Updater
 ::
-::function Get-CurrentVersion {
+::function Update-App {
+::    Set-Variable -Option Constant AppBatFile "$PATH_CURRENT_DIR\qiiwexc.bat"
+::
+::    Set-Variable -Option Constant IsUpdateAvailable (Get-UpdateAvailability)
+::
+::    if ($IsUpdateAvailable) {
+::        Get-NewVersion $AppBatFile
+::
+::        Write-LogWarning 'Restarting...'
+::
+::        try {
+::            Invoke-CustomCommand $AppBatFile
+::        } catch [Exception] {
+::            Write-ExceptionLog $_ 'Failed to start new version'
+::            return
+::        }
+::
+::        Exit-App
+::    }
+::}
+::
+::
+::function Get-UpdateAvailability {
 ::    Write-LogInfo 'Checking for updates...'
 ::
-::    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
-::    if ($IsNotConnected) {
-::        Write-LogError "Failed to check for updates: $IsNotConnected"
+::    if ($DevMode) {
+::        Out-Status 'Skipping in dev mode'
 ::        return
 ::    }
 ::
-::    $ProgressPreference = 'SilentlyContinue'
+::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    if ($NoConnection) {
+::        Write-LogError "Failed to check for updates: $NoConnection"
+::        return
+::    }
+::
 ::    try {
-::        Set-Variable -Option Constant LatestVersion ([Version](Invoke-WebRequest 'https://bit.ly/qiiwexc_version').ToString())
-::        $ProgressPreference = 'Continue'
+::        Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
+::        Start-BitsTransfer -Source 'https://bit.ly/qiiwexc_version' -Destination $VersionFile -Dynamic
+::        Set-Variable -Option Constant LatestVersion ([Version](Get-Content $VersionFile -Raw))
 ::    } catch [Exception] {
-::        $ProgressPreference = 'Continue'
 ::        Write-ExceptionLog $_ 'Failed to check for updates'
 ::        return
 ::    }
 ::
 ::    if ($LatestVersion -gt $VERSION) {
 ::        Write-LogWarning "Newer version available: v$LatestVersion"
-::        Update-Self
+::        return $True
 ::    } else {
 ::        Out-Status 'No updates available'
 ::    }
 ::}
 ::
 ::
-::function Update-Self {
-::    Set-Variable -Option Constant TargetFileBat "$PATH_CURRENT_DIR\qiiwexc.bat"
+::function Get-NewVersion {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$AppBatFile
+::    )
 ::
 ::    Write-LogWarning 'Downloading new version...'
 ::
-::    Set-Variable -Option Constant IsNotConnected (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
 ::
-::    if ($IsNotConnected) {
-::        Write-LogError "Failed to download update: $IsNotConnected"
+::    if ($NoConnection) {
+::        Write-LogError "Failed to download update: $NoConnection"
 ::        return
 ::    }
 ::
 ::    try {
-::        Invoke-WebRequest 'https://bit.ly/qiiwexc_bat' -OutFile $TargetFileBat
+::        Start-BitsTransfer -Source 'https://bit.ly/qiiwexc_bat' -Destination $AppBatFile -Dynamic
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to download update'
 ::        return
 ::    }
 ::
 ::    Out-Success
-::    Write-LogWarning 'Restarting...'
-::
-::    try {
-::        Invoke-CustomCommand $TargetFileBat
-::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to start new version'
-::        return
-::    }
-::
-::    Exit-Script
 ::}
 ::
 ::#endregion functions > Common > Updater
@@ -3113,6 +3235,15 @@ if "%debug%"=="true" (
 ::#endregion functions > Configuration > Apps > VLC
 ::
 ::
+::#region functions > Configuration > Helpers > Get users registry keys
+::
+::function Get-UsersRegistryKeys {
+::    return ((Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match '^S-1-5-21' -and $_ -notmatch '_Classes$' })
+::}
+::
+::#endregion functions > Configuration > Helpers > Get users registry keys
+::
+::
 ::#region functions > Configuration > Helpers > Import registry configuration
 ::
 ::function Import-RegistryConfiguration {
@@ -3124,6 +3255,9 @@ if "%debug%"=="true" (
 ::    Write-LogInfo "Importing $AppName configuration into registry..."
 ::
 ::    Set-Variable -Option Constant RegFilePath "$PATH_APP_DIR\$AppName.reg"
+::
+::    Initialize-AppDirectory
+::
 ::    $Content | Out-File $RegFilePath
 ::
 ::    try {
@@ -3187,6 +3321,53 @@ if "%debug%"=="true" (
 ::#endregion functions > Configuration > Helpers > Merge JSON
 ::
 ::
+::#region functions > Configuration > Helpers > Set file association
+::
+::function Set-FileAssociation {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Application,
+::        [String][Parameter(Position = 1, Mandatory = $True)]$RegistryPath,
+::        [Switch][Parameter(Position = 2)]$SetDefault
+::    )
+::
+::    if (-not (Test-Path $RegistryPath)) {
+::        New-Item $RegistryPath
+::    }
+::
+::    if ($SetDefault) {
+::        Set-Variable -Option Constant DefaultAssociation (Get-ItemProperty -Path $RegistryPath).'(Default)'
+::        if ($DefaultAssociation -ne $Application) {
+::            Set-ItemProperty -Path $RegistryPath -Name '(Default)' -Value $Application
+::        }
+::    }
+::
+::    Set-Variable -Option Constant OpenWithProgidsPath "$RegistryPath\OpenWithProgids"
+::    if (-not (Test-Path $OpenWithProgidsPath)) {
+::        New-Item $OpenWithProgidsPath
+::    }
+::
+::    Set-Variable -Option Constant OpenWithProgids (Get-ItemProperty -Path $OpenWithProgidsPath)
+::    if ($OpenWithProgids) {
+::        Set-Variable -Option Constant OpenWithProgidsNames ($OpenWithProgids | Get-Member -MemberType NoteProperty).Name
+::        Set-Variable -Option Constant Progids ($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' })
+::
+::        foreach ($Progid in $Progids) {
+::            if ($Progid -ne $Application) {
+::                Remove-ItemProperty -Path $OpenWithProgidsPath -Name $Progid
+::            }
+::        }
+::
+::        if (-not ($Progids -contains $Application)) {
+::            New-ItemProperty -Path $OpenWithProgidsPath -Name $Application -Value ''
+::        }
+::    } else {
+::        New-ItemProperty -Path $OpenWithProgidsPath -Name $Application -Value ''
+::    }
+::}
+::
+::#endregion functions > Configuration > Helpers > Set file association
+::
+::
 ::#region functions > Configuration > Helpers > Update JSON file
 ::
 ::function Update-JsonFile {
@@ -3197,11 +3378,11 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 3, Mandatory = $True)]$Path
 ::    )
 ::
+::    Stop-ProcessIfRunning $ProcessName
+::
 ::    Write-LogInfo "Writing $AppName configuration to '$Path'..."
 ::
-::    Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
-::
-::    New-Item -ItemType Directory (Split-Path -Parent $Path) -ErrorAction SilentlyContinue
+::    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 ::
 ::    if (Test-Path $Path) {
 ::        Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
@@ -3231,11 +3412,12 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 3)]$ProcessName = $AppName
 ::    )
 ::
+::    Stop-ProcessIfRunning $ProcessName
+::
 ::    Write-LogInfo "Writing $AppName configuration to '$Path'..."
 ::
-::    Stop-Process -Name $ProcessName -ErrorAction SilentlyContinue
+::    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 ::
-::    New-Item -ItemType Directory (Split-Path -Parent $Path) -ErrorAction SilentlyContinue
 ::    $Content | Out-File $Path
 ::
 ::    Out-Success
@@ -3316,14 +3498,16 @@ if "%debug%"=="true" (
 ::    Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
 ::    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
 ::
-::    Unregister-ScheduledTask -TaskName 'CreateExplorerShellUnelevatedTask' -Confirm:$False -ErrorAction SilentlyContinue
+::    Set-Variable -Option Constant UnelevatedExplorerTaskName 'CreateExplorerShellUnelevatedTask'
+::    if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
+::        Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
+::    }
 ::
 ::    [String]$ConfigLines = ''
 ::
 ::    try {
-::        Set-Variable -Option Constant UserRegistries ((Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' })
-::        foreach ($Registry in $UserRegistries) {
-::            Set-Variable -Option Constant User ($Registry.Replace('HKEY_USERS\', ''))
+::        foreach ($Registry in (Get-UsersRegistryKeys)) {
+::            [String]$User = $Registry.Replace('HKEY_USERS\', '')
 ::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
 ::            $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
 ::        }
@@ -3348,24 +3532,34 @@ if "%debug%"=="true" (
 ::function Set-FileAssociations {
 ::    Write-LogInfo 'Setting file associations...'
 ::
-::    Set-Variable -Option Constant ScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
+::    Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
+::    Set-Variable -Option Constant SophiaScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
 ::
-::    $Parameters = @{
-::        Uri             = "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
-::        Outfile         = $ScriptPath
-::        UseBasicParsing = $true
-::    }
-::    Invoke-WebRequest @Parameters
+::    Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
 ::
-::    (Get-Content -Path $ScriptPath -Force) | Set-Content -Path $ScriptPath -Encoding UTF8 -Force
+::    (Get-Content -Path $SophiaScriptPath -Force) | Set-Content -Path $SophiaScriptPath -Encoding UTF8 -Force
 ::
-::    . $ScriptPath
+::    . $SophiaScriptPath
 ::
 ::    foreach ($FileAssociation in $CONFIG_FILE_ASSOCIATIONS) {
-::        Set-Association -ProgramPath $FileAssociation.Application -Extension $FileAssociation.Extension
+::        [String]$Extension = $FileAssociation.Extension
+::        [String]$Application = $FileAssociation.Application
+::
+::        Set-FileAssociation $Application "Registry::HKEY_CLASSES_ROOT\$Extension"
+::        Set-FileAssociation $Application "HKCU:\Software\Classes\$Extension" -SetDefault
+::        Set-FileAssociation $Application "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\$Extension"
+::
+::        [String]$OriginalAssociation = $(& cmd.exe /c assoc $Extension 2`>`&1).Replace("$Extension=", '')
+::        if ($OriginalAssociation -ne $Application) {
+::            & cmd.exe /c assoc $Extension=$Application
+::        }
+::
+::        if ($FileAssociation.Method -eq 'Sophia') {
+::            Set-Association -ProgramPath $Application -Extension $Extension
+::        }
 ::    }
 ::
-::    Remove-Item -Path $ScriptPath -Force
+::    Remove-Item -Path $SophiaScriptPath -Force
 ::
 ::    Out-Success
 ::}
@@ -3382,11 +3576,16 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Applying Windows personalisation configuration...'
 ::
+::    Set-Variable -Option Constant LanguageList (Get-WinUserLanguageList)
+::    if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
+::        $LanguageList.Add('lv-LV')
+::        Set-WinUserLanguageList $LanguageList -Force
+::    }
+::
 ::    [String]$ConfigLines = ''
 ::
 ::    try {
-::        Set-Variable -Option Constant UserRegistries ((Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' })
-::        foreach ($Registry in $UserRegistries) {
+::        foreach ($Registry in (Get-UsersRegistryKeys)) {
 ::            # [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]
 ::            # `"RotatingLockScreenEnabled`"=dword:00000001
 ::            # `"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"
@@ -3485,13 +3684,12 @@ if "%debug%"=="true" (
 ::    [String]$ConfigLines = ''
 ::
 ::    try {
-::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -match 'HKEY_CLASSES_ROOT\\\.' })
+::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
 ::        foreach ($Registry in $FileExtensionRegistries) {
-::            $PersistentHandlerRegistries = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
+::            [Object]$PersistentHandlers = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
 ::
-::            foreach ($Reg in $PersistentHandlerRegistries) {
-::                $PersistentHandler = Get-ItemProperty "Registry::$Reg"
-::                $DefaultHandler = $PersistentHandler.'(default)'
+::            foreach ($PersistentHandler in $PersistentHandlers) {
+::                [String]$DefaultHandler = (Get-ItemProperty "Registry::$PersistentHandler").'(default)'
 ::
 ::                if ($DefaultHandler -and -not ($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
 ::                    $ConfigLines += "`n[$Reg]`n"
@@ -3526,7 +3724,8 @@ if "%debug%"=="true" (
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 ::
 ::    Set-Variable -Option Constant TargetPath "$PATH_TEMP_DIR\Win11Debloat"
-::    New-Item -ItemType Directory $TargetPath -ErrorAction SilentlyContinue
+::
+::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 ::
 ::    Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
 ::    $CONFIG_DEBLOAT_APP_LIST | Out-File $CustomAppsListFile
@@ -3559,6 +3758,8 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
 ::    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
 ::
+::    Initialize-AppDirectory
+::
 ::    $CONFIG_SHUTUP10 | Out-File $ConfigFile
 ::
 ::    if ($Silent) {
@@ -3582,6 +3783,8 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant ConfigFile "$PATH_APP_DIR\winutil.json"
 ::
+::    Initialize-AppDirectory
+::
 ::    $CONFIG_WINUTIL | Out-File $ConfigFile
 ::
 ::    Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
@@ -3601,6 +3804,8 @@ if "%debug%"=="true" (
 ::    Write-LogInfo 'Exporting battery report...'
 ::
 ::    Set-Variable -Option Constant ReportPath "$PATH_APP_DIR\battery_report.html"
+::
+::    Initialize-AppDirectory
 ::
 ::    powercfg /BatteryReport /Output $ReportPath
 ::
@@ -3650,7 +3855,6 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Clearing user temp folder...'
 ::    Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
-::    New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
 ::    Out-Success
 ::
 ::    Write-LogInfo 'Running system cleanup...'
@@ -3758,6 +3962,8 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
 ::    Set-Variable -Option Constant Config $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU') } else { $CONFIG_OFFICE_INSTALLER })
 ::
+::    Initialize-AppDirectory
+::
 ::    $Config | Out-File "$TargetPath\Office Installer+.ini" -Encoding UTF8
 ::
 ::    Start-DownloadUnzipAndRun -AVWarning -Execute:$Execute 'https://qiiwexc.github.io/d/Office_Installer+.zip'
@@ -3819,8 +4025,10 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    Set-Variable -Option Constant Registry_Key 'HKCU:\Software\Unchecky'
-::    New-Item $Registry_Key -ErrorAction SilentlyContinue
-::    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1 -ErrorAction SilentlyContinue
+::    if (-not (Test-Path $Registry_Key)) {
+::        New-Item $Registry_Key
+::    }
+::    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1
 ::
 ::    Set-Variable -Option Constant Params $(if ($Silent) { '-install -no_desktop_icon' })
 ::    Start-DownloadUnzipAndRun -Execute:$Execute 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Params:$Params -Silent:$Silent
