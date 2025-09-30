@@ -13,7 +13,7 @@ function Start-WinUtil {
 
     New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
 
-    Set-Variable -Option Constant ConfigFile "$PATH_WINUTIL\winutil.json"
+    Set-Variable -Option Constant ConfigFile "$PATH_WINUTIL\WinUtil.json"
 
     $CONFIG_WINUTIL | Out-File $ConfigFile
 

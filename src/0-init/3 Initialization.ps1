@@ -22,7 +22,7 @@ Set-Variable -Option Constant PATH_WORKING_DIR $WorkingDirectory
 Set-Variable -Option Constant PATH_TEMP_DIR ([System.IO.Path]::GetTempPath())
 Set-Variable -Option Constant PATH_APP_DIR "$($PATH_TEMP_DIR)qiiwexc"
 Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
-Set-Variable -Option Constant PATH_WINUTIL "$env:ProgramData\winutil"
+Set-Variable -Option Constant PATH_WINUTIL "$env:ProgramData\WinUtil"
 
 
 Set-Variable -Option Constant IS_LAPTOP ((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2)

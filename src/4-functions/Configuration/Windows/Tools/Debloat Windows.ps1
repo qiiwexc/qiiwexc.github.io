@@ -1,7 +1,7 @@
 function Start-WindowsDebloat {
     param(
         [Switch][Parameter(Position = 0, Mandatory = $True)]$UsePreset,
-        [Switch][Parameter(Position = 1, Mandatory = $True)]$Personalize,
+        [Switch][Parameter(Position = 1, Mandatory = $True)]$Personalisation,
         [Switch][Parameter(Position = 2, Mandatory = $True)]$Silent
     )
 
@@ -18,11 +18,11 @@ function Start-WindowsDebloat {
     New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
     Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
-    Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + $(if ($Personalize) { 'Microsoft.OneDrive' } else { '' }))
+    Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + $(if ($Personalisation) { 'Microsoft.OneDrive' } else { '' }))
     $AppsList | Out-File $CustomAppsListFile
 
     Set-Variable -Option Constant SavedSettingsFile "$TargetPath\SavedSettings"
-    Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $(if ($Personalize) { $CONFIG_DEBLOAT_PRESET_PERSONALIZATION } else { '' }))
+    Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $(if ($Personalisation) { $CONFIG_DEBLOAT_PRESET_PERSONALISATION } else { '' }))
     $Configuration | Out-File $SavedSettingsFile
 
     Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
