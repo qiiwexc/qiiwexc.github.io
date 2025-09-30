@@ -10,5 +10,9 @@ function Install-MicrosoftOffice {
 
     $Config | Out-File "$TargetPath\Office Installer+.ini" -Encoding UTF8
 
+    if ($Execute -and $AV_WARNING_SHOWN) {
+        Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
+    }
+
     Start-DownloadUnzipAndRun -AVWarning -Execute:$Execute '{URL_OFFICE_INSTALLER}'
 }
