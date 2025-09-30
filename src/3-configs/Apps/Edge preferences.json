@@ -16,8 +16,10 @@
     },
     "enable_editor_proofing": true,
     "enable_text_prediction_v2": true,
+    "show_hub_apps_tower_pinned": false,
     "show_hubapps_personalization": false,
     "show_prompt_before_closing_tabs": true,
+    "show_sidebar_notification": false,
     "window_placement": {
       "maximized": true,
       "work_area_left": 0,
@@ -59,6 +61,7 @@
     "layout_mode": 3,
     "news_feed_display": "off",
     "next_site_suggestions_available": false,
+    "num_personal_suggestions": 0,
     "quick_links_options": 0,
     "record_user_choices": [
       {
@@ -83,8 +86,21 @@
       }
     ]
   },
+  "personalization_data_consent": {
+    "personalization_in_context_consent_can_prompt": false
+  },
+  "profile": {
+    "has_seen_signin_fre": true
+  },
+  "shopping": {
+    "contextual_features_enabled": false
+  },
   "spellcheck": {
     "dictionaries": ["lv", "ru", "en-GB"]
+  },
+  "user_experience_metrics": {
+    "personalization_data_consent_enabled": false,
+    "personalization_data_consent_enabled_last_known_value": false
   },
   "video_enhancement": {
     "enabled": true
