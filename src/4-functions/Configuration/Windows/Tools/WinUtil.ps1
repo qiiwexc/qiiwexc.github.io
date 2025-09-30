@@ -11,9 +11,9 @@ function Start-WinUtil {
         return
     }
 
-    Set-Variable -Option Constant ConfigFile "$PATH_APP_DIR\winutil.json"
+    New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
 
-    Initialize-AppDirectory
+    Set-Variable -Option Constant ConfigFile "$PATH_WINUTIL\winutil.json"
 
     $CONFIG_WINUTIL | Out-File $ConfigFile
 
