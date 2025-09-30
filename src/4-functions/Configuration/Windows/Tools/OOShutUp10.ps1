@@ -12,10 +12,10 @@ function Start-ShutUp10 {
         return
     }
 
-    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
-    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
+    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_OOSHUTUP10 } else { $PATH_WORKING_DIR })
+    Set-Variable -Option Constant ConfigFile "$TargetPath\OOShutUp10.cfg"
 
-    Initialize-AppDirectory
+    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
     $CONFIG_SHUTUP10 | Out-File $ConfigFile -Encoding UTF8
 
