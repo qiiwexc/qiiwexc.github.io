@@ -4,8 +4,7 @@ function Remove-WindowsFeatures {
     Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
         'MathRecognizer',
         'Media.WindowsMediaPlayer',
-        'OpenSSH.Client',
-        'VBSCRIPT'
+        'OpenSSH.Client'
     )
 
     try {
