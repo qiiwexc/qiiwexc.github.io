@@ -32,7 +32,7 @@ function Write-Log {
     switch ($Level) {
         'INFO' {
             $LOG.SelectionColor = 'black'
-            Write-Host $Text
+            Write-Host -NoNewline "$Text`n"
         }
         'WARN' {
             $LOG.SelectionColor = 'blue'
@@ -44,7 +44,7 @@ function Write-Log {
         }
         Default {
             $LOG.SelectionColor = 'black'
-            Write-Host $Text
+            Write-Host -NoNewline "$Text`n"
         }
     }
 
