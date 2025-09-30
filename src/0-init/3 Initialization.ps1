@@ -18,7 +18,7 @@ if (-not $DevMode) {
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 
-Set-Variable -Option Constant PATH_CURRENT_DIR $CallerPath
+Set-Variable -Option Constant PATH_WORKING_DIR $WorkingDirectory
 Set-Variable -Option Constant PATH_TEMP_DIR ([System.IO.Path]::GetTempPath())
 Set-Variable -Option Constant PATH_APP_DIR "$($PATH_TEMP_DIR)qiiwexc"
 Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"

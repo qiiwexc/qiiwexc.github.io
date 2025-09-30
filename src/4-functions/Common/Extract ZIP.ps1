@@ -7,7 +7,7 @@ function Expand-Zip {
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
     Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
-    Set-Variable -Option Constant TargetPath $(if ($Temp) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+    Set-Variable -Option Constant TargetPath $(if ($Temp) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
 
     Initialize-AppDirectory
 
