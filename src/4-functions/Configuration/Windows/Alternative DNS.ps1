@@ -12,7 +12,11 @@ function Set-CloudFlareDNS {
     }
 
     try {
-        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True' | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @('$PreferredDnsServer', '$AlternateDnsServer') }"
+        Set-Variable -Option Constant Status (Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue
+
+        if ($Status -ne 0) {
+            Write-LogError 'Failed to change DNS server'
+        }
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to change DNS server'
         return
