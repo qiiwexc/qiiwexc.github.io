@@ -10,19 +10,24 @@ function Update-JsonFile {
 
     Write-LogInfo "Writing $AppName configuration to '$Path'..."
 
-    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
+    if (-not (Test-Path $Path)) {
+        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it"
 
-    if (Test-Path $Path) {
-        Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
-        Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
-
-        Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
-
-        $UpdatedConfig | Out-File $Path -Encoding UTF8
-    } else {
-        Write-LogInfo "'$Path' does not exist. Creating new file..."
-        $Content | Out-File $Path
+        Start-Process $ProcessName
+        for ([Int]$i = 0; $i -lt 5; $i++) {
+            Start-Sleep -Seconds 10
+            if (Test-Path $Path) {
+                break
+            }
+        }
     }
+
+    Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
+    Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
+
+    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
+
+    $UpdatedConfig | Out-File $Path -Encoding UTF8
 
     Out-Success
 }
