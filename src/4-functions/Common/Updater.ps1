@@ -1,5 +1,5 @@
 function Update-App {
-    Set-Variable -Option Constant AppBatFile "$PATH_CURRENT_DIR\qiiwexc.bat"
+    Set-Variable -Option Constant AppBatFile "$PATH_WORKING_DIR\qiiwexc.bat"
 
     Set-Variable -Option Constant IsUpdateAvailable (Get-UpdateAvailability)
 

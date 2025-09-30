@@ -20,9 +20,9 @@ function New-BatchScript {
     $BatchStrings += '  )'
     $BatchStrings += ")`n"
     $BatchStrings += 'if "%debug%"=="true" ('
-    $BatchStrings += '  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%" -DevMode'
+    $BatchStrings += "  powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%' -DevMode`""
     $BatchStrings += ') else ('
-    $BatchStrings += '  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%"'
+    $BatchStrings += "  powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%'`""
     $BatchStrings += ")`n"
 
     foreach ($String in $PowerShellStrings) {
