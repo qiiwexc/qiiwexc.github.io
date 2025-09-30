@@ -6,7 +6,13 @@ function Start-ShutUp10 {
 
     Write-LogInfo 'Starting ShutUp10++ utility...'
 
-    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    if ($NoConnection) {
+        Write-LogError "Failed to start: $NoConnection"
+        return
+    }
+
+    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
     Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
 
     Initialize-AppDirectory

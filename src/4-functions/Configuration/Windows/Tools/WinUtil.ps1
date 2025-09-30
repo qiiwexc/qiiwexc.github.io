@@ -5,6 +5,12 @@ function Start-WinUtil {
 
     Write-LogInfo 'Starting WinUtil utility...'
 
+    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    if ($NoConnection) {
+        Write-LogError "Failed to start: $NoConnection"
+        return
+    }
+
     Set-Variable -Option Constant ConfigFile "$PATH_APP_DIR\winutil.json"
 
     Initialize-AppDirectory
