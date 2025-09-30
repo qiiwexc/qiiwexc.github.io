@@ -1,13 +1,16 @@
 New-GroupBox 'Configure and debloat Windows'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat -UsePreset:$CHECKBOX_UseDebloatPreset.Checked -Silent:$CHECKBOX_SilentlyRunDebloat.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat -UsePreset:$CHECKBOX_UseDebloatPreset.Checked -Personalize:$CHECKBOX_DebloatAndPersonalize.Checked -Silent:$CHECKBOX_SilentlyRunDebloat.Checked }
 New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Checked
 $CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
         $CHECKBOX_SilentlyRunDebloat.Enabled = $CHECKBOX_UseDebloatPreset.Checked
+        $CHECKBOX_DebloatAndPersonalize.Enabled = $CHECKBOX_UseDebloatPreset.Checked
     } )
+
+[System.Windows.Forms.CheckBox]$CHECKBOX_DebloatAndPersonalize = New-CheckBox '+ Personalization settings'
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks'
 

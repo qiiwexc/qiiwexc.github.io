@@ -1,7 +1,8 @@
 function Start-WindowsDebloat {
     param(
         [Switch][Parameter(Position = 0, Mandatory = $True)]$UsePreset,
-        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+        [Switch][Parameter(Position = 1, Mandatory = $True)]$Personalize,
+        [Switch][Parameter(Position = 2, Mandatory = $True)]$Silent
     )
 
     Write-LogInfo 'Starting Windows 10/11 debloat utility...'
@@ -17,10 +18,12 @@ function Start-WindowsDebloat {
     New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
     Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
-    $CONFIG_DEBLOAT_APP_LIST | Out-File $CustomAppsListFile
+    Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + $(if ($Personalize) { 'Microsoft.OneDrive' } else { '' }))
+    $AppsList | Out-File $CustomAppsListFile
 
     Set-Variable -Option Constant SavedSettingsFile "$TargetPath\SavedSettings"
-    $CONFIG_DEBLOAT_PRESET | Out-File $SavedSettingsFile
+    Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $(if ($Personalize) { $CONFIG_DEBLOAT_PRESET_PERSONALIZATION } else { '' }))
+    $Configuration | Out-File $SavedSettingsFile
 
     Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
     Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
