@@ -2,7 +2,7 @@ function Update-MicrosoftStoreApps {
     Write-LogInfo 'Starting Microsoft Store apps update...'
 
     try {
-        $Status = (Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod').ReturnStatus
+        $Status = (Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod').ReturnValue
 
         if ($Status -ne 0) {
             Write-LogError 'Failed to update Microsoft Store apps'
