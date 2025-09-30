@@ -1,98 +1,101 @@
-ACGMediaPlayer
-ActiproSoftwareLLC
-AdobeSystemsIncorporated.AdobePhotoshopExpress
-Amazon.com.Amazon
-AmazonVideo.PrimeVideo
-Asphalt8Airborne
-AutodeskSketchBook
-CaesarsSlotsFreeCasino
-Clipchamp.Clipchamp
-COOKINGFEVER
-CyberLinkMediaSuiteEssentials
-Disney
-DisneyMagicKingdoms
-DrawboardPDF
-Duolingo-LearnLanguagesforFree
-EclipseManager
-Facebook
-FarmVille2CountryEscape
-fitbit
-Flipboard
-HiddenCity
-HULULLC.HULUPLUS
-iHeartRadio
-Instagram
-king.com.BubbleWitch3Saga
-king.com.CandyCrushSaga
-king.com.CandyCrushSodaSaga
-LinkedInforWindows
-MarchofEmpires
-Microsoft.3DBuilder
-Microsoft.549981C3F5F10
-Microsoft.BingFinance
-Microsoft.BingFoodAndDrink
-Microsoft.BingHealthAndFitness
-Microsoft.BingNews
-Microsoft.BingSports
-Microsoft.BingTranslator
-Microsoft.BingTravel
-Microsoft.Copilot
-Microsoft.Getstarted
-Microsoft.Messaging
-Microsoft.Microsoft3DViewer
-Microsoft.MicrosoftJournal
-Microsoft.MicrosoftOfficeHub
-Microsoft.MicrosoftPowerBIForWindows
-Microsoft.MicrosoftStickyNotes
-Microsoft.MixedReality.Portal
-Microsoft.NetworkSpeedTest
-Microsoft.News
-Microsoft.Office.OneNote
-Microsoft.Office.Sway
-Microsoft.OneConnect
-Microsoft.People
-Microsoft.PowerAutomateDesktop
-Microsoft.Print3D
-Microsoft.RemoteDesktop
-Microsoft.ScreenSketch
-Microsoft.SkypeApp
-Microsoft.StartExperiencesApp
-Microsoft.Todos
-Microsoft.Whiteboard
-Microsoft.Windows.DevHome
-Microsoft.WindowsAlarms
-Microsoft.windowscommunicationsapps
-Microsoft.WindowsFeedbackHub
-Microsoft.WindowsMaps
-Microsoft.WindowsSoundRecorder
-Microsoft.WindowsTerminal
-Microsoft.Xbox.TCUI
-Microsoft.XboxApp
-Microsoft.XboxSpeechToTextOverlay
-Microsoft.YourPhone
-Microsoft.ZuneMusic
-Microsoft.ZuneVideo
-MicrosoftCorporationII.MicrosoftFamily
-MicrosoftCorporationII.QuickAssist
-MicrosoftTeams
-MicrosoftWindows.CrossDevice
-Netflix
-NYTCrossword
-OneCalendar
-PandoraMediaInc
-PhototasticCollage
-PicsArt-PhotoStudio
-Plex
-PolarrPhotoEditorAcademicEdition
-Royal Revolt
-Shazam
-Sidia.LiveWallpaper
-SlingTV
-Spotify
-TikTok
-TuneInRadio
-Twitter
-Viber
-WinZipUniversal
-Wunderlist
-XING
+ACGMediaPlayer                                 # Media player app
+ActiproSoftwareLLC                             # Potentially UI controls or software components, often bundled by OEMs
+AdobeSystemsIncorporated.AdobePhotoshopExpress # Basic photo editing app from Adobe
+Amazon.com.Amazon                              # Amazon shopping app
+AmazonVideo.PrimeVideo                         # Amazon Prime Video streaming service app
+Asphalt8Airborne                               # Racing game
+AutodeskSketchBook                             # Digital drawing and sketching app
+CaesarsSlotsFreeCasino                         # Casino slot machine game
+Clipchamp.Clipchamp                            # Video editor from Microsoft
+COOKINGFEVER                                   # Restaurant simulation game
+CyberLinkMediaSuiteEssentials                  # Multimedia software suite (often preinstalled by OEMs)
+Disney                                         # General Disney content app (may vary by region/OEM, often Disney+)
+DisneyMagicKingdoms                            # Disney theme park building game
+DrawboardPDF                                   # PDF viewing and annotation app, often focused on pen input
+Duolingo-LearnLanguagesforFree                 # Language learning app
+EclipseManager                                 # Often related to specific OEM software or utilities (e.g., for managing screen settings)
+Facebook                                       # Facebook social media app
+FarmVille2CountryEscape                        # Farming simulation game
+fitbit                                         # Fitbit activity tracker companion app
+Flipboard                                      # News and social network aggregator styled as a magazine
+HiddenCity                                     # Hidden object puzzle adventure game
+HULULLC.HULUPLUS                               # Hulu streaming service app
+iHeartRadio                                    # Internet radio streaming app
+Instagram                                      # Instagram social media app
+king.com.BubbleWitch3Saga                      # Puzzle game from King
+king.com.CandyCrushSaga                        # Puzzle game from King
+king.com.CandyCrushSodaSaga                    # Puzzle game from King
+LinkedInforWindows                             # LinkedIn professional networking app
+MarchofEmpires                                 # Strategy game
+Microsoft.3DBuilder                            # Basic 3D modeling software
+Microsoft.549981C3F5F10                        # Cortana app (Voice assistant)
+Microsoft.BingFinance                          # Finance news and tracking via Bing (Discontinued)
+Microsoft.BingFoodAndDrink                     # Recipes and food news via Bing (Discontinued)
+Microsoft.BingHealthAndFitness                 # Health and fitness tracking/news via Bing (Discontinued)
+Microsoft.BingNews                             # News aggregator via Bing (Replaced by Microsoft News/Start)
+Microsoft.BingSearch                           # Web Search from Microsoft Bing (Integrates into Windows Search)
+Microsoft.BingSports                           # Sports news and scores via Bing (Discontinued)
+Microsoft.BingTranslator                       # Translation service via Bing
+Microsoft.BingTravel                           # Travel planning and news via Bing (Discontinued)
+Microsoft.Copilot                              # AI assistant integrated into Windows
+Microsoft.Getstarted                           # Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)
+Microsoft.Messaging                            # Messaging app, often integrates with Skype (Largely deprecated)
+Microsoft.Microsoft3DViewer                    # Viewer for 3D models
+Microsoft.MicrosoftJournal                     # Digital note-taking app optimized for pen input
+Microsoft.MicrosoftOfficeHub                   # Hub to access Microsoft Office apps and documents (Precursor to Microsoft 365 app)
+Microsoft.MicrosoftPowerBIForWindows           # Business analytics service client
+Microsoft.MicrosoftStickyNotes                 # Digital sticky notes app (Deprecated & replaced by OneNote)
+Microsoft.MixedReality.Portal                  # Portal for Windows Mixed Reality headsets
+Microsoft.NetworkSpeedTest                     # Internet connection speed test utility
+Microsoft.News                                 # News aggregator (Replaced Bing News, now part of Microsoft Start)
+Microsoft.Office.OneNote                       # Digital note-taking app (Universal Windows Platform version)
+Microsoft.Office.Sway                          # Presentation and storytelling app
+Microsoft.OneConnect                           # Mobile Operator management app (Replaced by Mobile Plans)
+Microsoft.OutlookForWindows                    # New mail app: Outlook for Windows
+Microsoft.People                               # Required for & included with Mail & Calendar (Contacts management)
+Microsoft.PowerAutomateDesktop                 # Desktop automation tool (RPA)
+Microsoft.Print3D                              # 3D printing preparation software
+Microsoft.RemoteDesktop                        # Remote Desktop client app
+Microsoft.ScreenSketch                         # Snipping Tool (Screenshot and annotation tool)
+Microsoft.SkypeApp                             # Skype communication app (Universal Windows Platform version)
+Microsoft.StartExperiencesApp                  # This app powers Windows Widgets My Feed
+Microsoft.Todos                                # To-do list and task management app
+Microsoft.Whiteboard                           # Digital collaborative whiteboard app
+Microsoft.Windows.DevHome                      # Developer dashboard and tool configuration utility
+Microsoft.WindowsAlarms                        # Alarms & Clock app
+Microsoft.windowscommunicationsapps            # Mail & Calendar app suite
+Microsoft.WindowsFeedbackHub                   # App for providing feedback to Microsoft on Windows
+Microsoft.WindowsMaps                          # Mapping and navigation app
+Microsoft.WindowsSoundRecorder                 # Basic audio recording app
+Microsoft.WindowsTerminal                      # New default terminal app in windows 11 (Command Prompt, PowerShell, WSL)
+Microsoft.Xbox.TCUI                            # UI framework, seems to be required for MS store, photos and certain games
+Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
+Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
+Microsoft.XboxSpeechToTextOverlay              # Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)
+Microsoft.YourPhone                            # Phone link (Connects Android/iOS phone to PC)
+Microsoft.ZuneMusic                            # Modern Media Player (Replaced Groove Music, plays local audio/video)
+Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
+MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings
+MicrosoftCorporationII.QuickAssist             # Remote assistance tool
+MicrosoftTeams                                 # Old MS Teams personal (MS Store version)
+MicrosoftWindows.CrossDevice                   # Phone integration within File Explorer, Camera and more (Part of Phone Link features)
+Netflix                                        # Netflix streaming service app
+NYTCrossword                                   # New York Times crossword puzzle app
+OneCalendar                                    # Calendar aggregation app
+PandoraMediaInc                                # Pandora music streaming app
+PhototasticCollage                             # Photo collage creation app
+PicsArt-PhotoStudio                            # Photo editing and creative app
+Plex                                           # Media server and player app
+PolarrPhotoEditorAcademicEdition               # Photo editing app (Academic Edition)
+Royal Revolt                                   # Tower defense / strategy game
+Shazam                                         # Music identification app
+Sidia.LiveWallpaper                            # Live wallpaper app
+SlingTV                                        # Live TV streaming service app
+Spotify                                        # Spotify music streaming app
+TikTok                                         # TikTok short-form video app
+TuneInRadio                                    # Internet radio streaming app
+Twitter                                        # Twitter (now X) social media app
+Viber                                          # Messaging and calling app
+WinZipUniversal                                # File compression and extraction utility (Universal Windows Platform version)
+Wunderlist                                     # To-do list app (Acquired by Microsoft, functionality moved to Microsoft To Do)
+XING                                           # Professional networking platform popular in German-speaking countries
