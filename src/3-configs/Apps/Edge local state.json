@@ -12,11 +12,24 @@
       "performance_mode_is_on": false
     }
   },
+  "fre": {
+    "has_first_visible_browser_session_completed": true,
+    "has_user_committed_selection_to_import_during_fre": false,
+    "has_user_completed_fre": false,
+    "has_user_seen_fre": true,
+    "oem_bookmarks_set": true
+  },
+  "new_device_fre": {
+    "has_user_seen_new_fre": true
+  },
   "smartscreen": {
     "enabled": true,
     "pua_protection_enabled": true
   },
   "startup_boost": {
     "enabled": false
+  },
+  "user_experience_metrics": {
+    "reporting_enabled": false
   }
 }
