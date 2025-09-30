@@ -7,6 +7,10 @@ function Reset-State {
         Remove-Item -Force -Recurse $PATH_WINUTIL -ErrorAction Ignore
     }
 
+    if (Test-Path $PATH_OOSHUTUP10) {
+        Remove-Item -Force -Recurse $PATH_OOSHUTUP10 -ErrorAction Ignore
+    }
+
     if (Test-Path $PATH_APP_DIR) {
         Remove-Item -Force -Recurse $PATH_APP_DIR -ErrorAction Ignore
     }
