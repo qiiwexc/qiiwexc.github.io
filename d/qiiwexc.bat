@@ -14,9 +14,9 @@ set "psfile=%temp%\qiiwexc.ps1"
 )
 
 if "%debug%"=="true" (
-  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%" -DevMode
+  powershell -ExecutionPolicy Bypass -Command "& '%psfile%' -WorkingDirectory '%cd%' -DevMode"
 ) else (
-  powershell -ExecutionPolicy Bypass "%psfile%" -CallerPath "%cd%"
+  powershell -ExecutionPolicy Bypass -Command "& '%psfile%' -WorkingDirectory '%cd%'"
 )
 
 ::#region init > Parameters
@@ -24,7 +24,7 @@ if "%debug%"=="true" (
 ::#Requires -Version 3
 ::
 ::param(
-::    [String][Parameter(Position = 0)]$CallerPath,
+::    [String][Parameter(Position = 0)]$WorkingDirectory,
 ::    [Switch]$DevMode
 ::)
 ::
@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.9.30')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.1')
 ::
 ::#endregion init > Version
 ::
@@ -78,10 +78,12 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.Application]::EnableVisualStyles()
 ::
 ::
-::Set-Variable -Option Constant PATH_CURRENT_DIR $CallerPath
+::Set-Variable -Option Constant PATH_WORKING_DIR $WorkingDirectory
 ::Set-Variable -Option Constant PATH_TEMP_DIR ([System.IO.Path]::GetTempPath())
 ::Set-Variable -Option Constant PATH_APP_DIR "$($PATH_TEMP_DIR)qiiwexc"
 ::Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
+::Set-Variable -Option Constant PATH_WINUTIL "$env:ProgramData\WinUtil"
+::Set-Variable -Option Constant PATH_OOSHUTUP10 "$env:ProgramData\OOShutUp10"
 ::
 ::
 ::Set-Variable -Option Constant IS_LAPTOP ((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2)
@@ -238,7 +240,7 @@ if "%debug%"=="true" (
 ::    $CheckBox.Name = $Name
 ::    $CheckBox.Checked = $Checked
 ::    $CheckBox.Enabled = -not $Disabled
-::    $CheckBox.Size = "150, $CHECKBOX_HEIGHT"
+::    $CheckBox.Size = "160, $CHECKBOX_HEIGHT"
 ::    $CheckBox.Location = $Location
 ::
 ::    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
@@ -589,6 +591,9 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Checked
 ::$CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
 ::        $CHECKBOX_SilentlyInstallUnchecky.Enabled = $CHECKBOX_StartUnchecky.Checked
+::        if (-not $CHECKBOX_SilentlyInstallUnchecky.Enabled) {
+::            $CHECKBOX_SilentlyInstallUnchecky.Checked = $CHECKBOX_SilentlyInstallUnchecky.Enabled
+::        }
 ::    } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Checked
@@ -675,21 +680,32 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Configure and debloat Windows'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat -UsePreset:$CHECKBOX_UseDebloatPreset.Checked -Silent:$CHECKBOX_SilentlyRunDebloat.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat -UsePreset:$CHECKBOX_UseDebloatPreset.Checked -Personalisation:$CHECKBOX_DebloatAndPersonalise.Checked -Silent:$CHECKBOX_SilentlyRunDebloat.Checked }
 ::New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Checked
 ::$CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
 ::        $CHECKBOX_SilentlyRunDebloat.Enabled = $CHECKBOX_UseDebloatPreset.Checked
+::        if (-not $CHECKBOX_SilentlyRunDebloat.Enabled) {
+::            $CHECKBOX_SilentlyRunDebloat.Checked = $CHECKBOX_SilentlyRunDebloat.Enabled
+::        }
+::        $CHECKBOX_DebloatAndPersonalise.Enabled = $CHECKBOX_UseDebloatPreset.Checked
+::        if (-not $CHECKBOX_DebloatAndPersonalise.Enabled) {
+::            $CHECKBOX_DebloatAndPersonalise.Checked = $CHECKBOX_DebloatAndPersonalise.Enabled
+::        }
 ::    } )
+::
+::[System.Windows.Forms.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings'
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -Apply:$CHECKBOX_SilentlyRunWinUtil.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -Personalisation:$CHECKBOX_WinUtilPersonalisation.Checked -AutomaticallyApply:$CHECKBOX_AutomaticallyRunWinUtil.Checked }
 ::New-Button 'WinUtil' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunWinUtil = New-CheckBox 'Auto apply tweaks'
+::[System.Windows.Forms.CheckBox]$CHECKBOX_WinUtilPersonalisation = New-CheckBox '+ Personalisation settings'
+::
+::[System.Windows.Forms.CheckBox]$CHECKBOX_AutomaticallyRunWinUtil = New-CheckBox 'Auto apply tweaks'
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
@@ -698,6 +714,9 @@ if "%debug%"=="true" (
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_StartShutUp10 = New-CheckBoxRunAfterDownload -Checked
 ::$CHECKBOX_StartShutUp10.Add_CheckStateChanged( {
 ::        $CHECKBOX_SilentlyRunShutUp10.Enabled = $CHECKBOX_StartShutUp10.Checked
+::        if (-not $CHECKBOX_SilentlyRunShutUp10.Enabled) {
+::            $CHECKBOX_SilentlyRunShutUp10.Checked = $CHECKBOX_SilentlyRunShutUp10.Enabled
+::        }
 ::    } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks'
@@ -722,12 +741,15 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Alternative DNS'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Set-CloudFlareDNS }
+::[ScriptBlock]$BUTTON_FUNCTION = { Set-CloudFlareDNS -MalwareProtection:$CHECKBOX_CloudFlareAntiMalware.Checked -FamilyFriendly:$CHECKBOX_CloudFlareFamilyFriendly.Checked }
 ::New-Button 'Setup CloudFlare DNS' $BUTTON_FUNCTION
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 ::$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
 ::        $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
+::        if (-not $CHECKBOX_CloudFlareFamilyFriendly.Enabled) {
+::            $CHECKBOX_CloudFlareFamilyFriendly.Checked = $CHECKBOX_CloudFlareFamilyFriendly.Enabled
+::        }
 ::    } )
 ::
 ::[System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
@@ -918,12 +940,25 @@ if "%debug%"=="true" (
 ::      "performance_mode_is_on": false
 ::    }
 ::  },
+::  "fre": {
+::    "has_first_visible_browser_session_completed": true,
+::    "has_user_committed_selection_to_import_during_fre": false,
+::    "has_user_completed_fre": false,
+::    "has_user_seen_fre": true,
+::    "oem_bookmarks_set": true
+::  },
+::  "new_device_fre": {
+::    "has_user_seen_new_fre": true
+::  },
 ::  "smartscreen": {
 ::    "enabled": true,
 ::    "pua_protection_enabled": true
 ::  },
 ::  "startup_boost": {
 ::    "enabled": false
+::  },
+::  "user_experience_metrics": {
+::    "reporting_enabled": false
 ::  }
 ::}
 ::'
@@ -951,8 +986,10 @@ if "%debug%"=="true" (
 ::    },
 ::    "enable_editor_proofing": true,
 ::    "enable_text_prediction_v2": true,
+::    "show_hub_apps_tower_pinned": false,
 ::    "show_hubapps_personalization": false,
 ::    "show_prompt_before_closing_tabs": true,
+::    "show_sidebar_notification": false,
 ::    "window_placement": {
 ::      "maximized": true,
 ::      "work_area_left": 0,
@@ -994,6 +1031,7 @@ if "%debug%"=="true" (
 ::    "layout_mode": 3,
 ::    "news_feed_display": "off",
 ::    "next_site_suggestions_available": false,
+::    "num_personal_suggestions": 0,
 ::    "quick_links_options": 0,
 ::    "record_user_choices": [
 ::      {
@@ -1018,8 +1056,21 @@ if "%debug%"=="true" (
 ::      }
 ::    ]
 ::  },
+::  "personalization_data_consent": {
+::    "personalization_in_context_consent_can_prompt": false
+::  },
+::  "profile": {
+::    "has_seen_signin_fre": true
+::  },
+::  "shopping": {
+::    "contextual_features_enabled": false
+::  },
 ::  "spellcheck": {
 ::    "dictionaries": ["lv", "ru", "en-GB"]
+::  },
+::  "user_experience_metrics": {
+::    "personalization_data_consent_enabled": false,
+::    "personalization_data_consent_enabled_last_known_value": false
 ::  },
 ::  "video_enhancement": {
 ::    "enabled": true
@@ -1028,6 +1079,26 @@ if "%debug%"=="true" (
 ::'
 ::
 ::#endregion configs > Apps > Edge preferences
+::
+::
+::#region configs > Apps > Microsoft Office
+::
+::Set-Variable -Option Constant CONFIG_MICROSOFT_OFFICE 'Windows Registry Editor Version 5.00
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\General]
+::"ShownFirstRunOptin"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Licensing]
+::"EulasSetAccepted"="0,49,"
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\LinkedIn]
+::"OfficeLinkedIn"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
+::"OptionalConnectedExperiencesNoticeVersion"=dword:00000002
+::'
+::
+::#endregion configs > Apps > Microsoft Office
 ::
 ::
 ::#region configs > Apps > qBittorrent base
@@ -2162,142 +2233,153 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Tools > Debloat app list
 ::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST 'ACGMediaPlayer
-::ActiproSoftwareLLC
-::AdobeSystemsIncorporated.AdobePhotoshopExpress
-::Amazon.com.Amazon
-::AmazonVideo.PrimeVideo
-::Asphalt8Airborne
-::AutodeskSketchBook
-::CaesarsSlotsFreeCasino
-::Clipchamp.Clipchamp
-::COOKINGFEVER
-::CyberLinkMediaSuiteEssentials
-::Disney
-::DisneyMagicKingdoms
-::DrawboardPDF
-::Duolingo-LearnLanguagesforFree
-::EclipseManager
-::Facebook
-::FarmVille2CountryEscape
-::fitbit
-::Flipboard
-::HiddenCity
-::HULULLC.HULUPLUS
-::iHeartRadio
-::Instagram
-::king.com.BubbleWitch3Saga
-::king.com.CandyCrushSaga
-::king.com.CandyCrushSodaSaga
-::LinkedInforWindows
-::MarchofEmpires
-::Microsoft.3DBuilder
-::Microsoft.549981C3F5F10
-::Microsoft.BingFinance
-::Microsoft.BingFoodAndDrink
-::Microsoft.BingHealthAndFitness
-::Microsoft.BingNews
-::Microsoft.BingSports
-::Microsoft.BingTranslator
-::Microsoft.BingTravel
-::Microsoft.Copilot
-::Microsoft.Getstarted
-::Microsoft.Messaging
-::Microsoft.Microsoft3DViewer
-::Microsoft.MicrosoftJournal
-::Microsoft.MicrosoftOfficeHub
-::Microsoft.MicrosoftPowerBIForWindows
-::Microsoft.MicrosoftStickyNotes
-::Microsoft.MixedReality.Portal
-::Microsoft.NetworkSpeedTest
-::Microsoft.News
-::Microsoft.Office.OneNote
-::Microsoft.Office.Sway
-::Microsoft.OneConnect
-::Microsoft.People
-::Microsoft.PowerAutomateDesktop
-::Microsoft.Print3D
-::Microsoft.RemoteDesktop
-::Microsoft.ScreenSketch
-::Microsoft.SkypeApp
-::Microsoft.StartExperiencesApp
-::Microsoft.Todos
-::Microsoft.Whiteboard
-::Microsoft.Windows.DevHome
-::Microsoft.WindowsAlarms
-::Microsoft.windowscommunicationsapps
-::Microsoft.WindowsFeedbackHub
-::Microsoft.WindowsMaps
-::Microsoft.WindowsSoundRecorder
-::Microsoft.WindowsTerminal
-::Microsoft.Xbox.TCUI
-::Microsoft.XboxApp
-::Microsoft.XboxSpeechToTextOverlay
-::Microsoft.YourPhone
-::Microsoft.ZuneMusic
-::Microsoft.ZuneVideo
-::MicrosoftCorporationII.MicrosoftFamily
-::MicrosoftCorporationII.QuickAssist
-::MicrosoftTeams
-::MicrosoftWindows.CrossDevice
-::Netflix
-::NYTCrossword
-::OneCalendar
-::PandoraMediaInc
-::PhototasticCollage
-::PicsArt-PhotoStudio
-::Plex
-::PolarrPhotoEditorAcademicEdition
-::Royal Revolt
-::Shazam
-::Sidia.LiveWallpaper
-::SlingTV
-::Spotify
-::TikTok
-::TuneInRadio
-::Twitter
-::Viber
-::WinZipUniversal
-::Wunderlist
-::XING
+::Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST 'ACGMediaPlayer                                 # Media player app
+::ActiproSoftwareLLC                             # Potentially UI controls or software components, often bundled by OEMs
+::AdobeSystemsIncorporated.AdobePhotoshopExpress # Basic photo editing app from Adobe
+::Amazon.com.Amazon                              # Amazon shopping app
+::AmazonVideo.PrimeVideo                         # Amazon Prime Video streaming service app
+::Asphalt8Airborne                               # Racing game
+::AutodeskSketchBook                             # Digital drawing and sketching app
+::CaesarsSlotsFreeCasino                         # Casino slot machine game
+::Clipchamp.Clipchamp                            # Video editor from Microsoft
+::COOKINGFEVER                                   # Restaurant simulation game
+::CyberLinkMediaSuiteEssentials                  # Multimedia software suite (often preinstalled by OEMs)
+::Disney                                         # General Disney content app (may vary by region/OEM, often Disney+)
+::DisneyMagicKingdoms                            # Disney theme park building game
+::DrawboardPDF                                   # PDF viewing and annotation app, often focused on pen input
+::Duolingo-LearnLanguagesforFree                 # Language learning app
+::EclipseManager                                 # Often related to specific OEM software or utilities (e.g., for managing screen settings)
+::Facebook                                       # Facebook social media app
+::FarmVille2CountryEscape                        # Farming simulation game
+::fitbit                                         # Fitbit activity tracker companion app
+::Flipboard                                      # News and social network aggregator styled as a magazine
+::HiddenCity                                     # Hidden object puzzle adventure game
+::HULULLC.HULUPLUS                               # Hulu streaming service app
+::iHeartRadio                                    # Internet radio streaming app
+::Instagram                                      # Instagram social media app
+::king.com.BubbleWitch3Saga                      # Puzzle game from King
+::king.com.CandyCrushSaga                        # Puzzle game from King
+::king.com.CandyCrushSodaSaga                    # Puzzle game from King
+::LinkedInforWindows                             # LinkedIn professional networking app
+::MarchofEmpires                                 # Strategy game
+::Microsoft.3DBuilder                            # Basic 3D modeling software
+::Microsoft.549981C3F5F10                        # Cortana app (Voice assistant)
+::Microsoft.BingFinance                          # Finance news and tracking via Bing (Discontinued)
+::Microsoft.BingFoodAndDrink                     # Recipes and food news via Bing (Discontinued)
+::Microsoft.BingHealthAndFitness                 # Health and fitness tracking/news via Bing (Discontinued)
+::Microsoft.BingNews                             # News aggregator via Bing (Replaced by Microsoft News/Start)
+::Microsoft.BingSearch                           # Web Search from Microsoft Bing (Integrates into Windows Search)
+::Microsoft.BingSports                           # Sports news and scores via Bing (Discontinued)
+::Microsoft.BingTranslator                       # Translation service via Bing
+::Microsoft.BingTravel                           # Travel planning and news via Bing (Discontinued)
+::Microsoft.Copilot                              # AI assistant integrated into Windows
+::Microsoft.Getstarted                           # Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)
+::Microsoft.Messaging                            # Messaging app, often integrates with Skype (Largely deprecated)
+::Microsoft.Microsoft3DViewer                    # Viewer for 3D models
+::Microsoft.MicrosoftJournal                     # Digital note-taking app optimized for pen input
+::Microsoft.MicrosoftOfficeHub                   # Hub to access Microsoft Office apps and documents (Precursor to Microsoft 365 app)
+::Microsoft.MicrosoftPowerBIForWindows           # Business analytics service client
+::Microsoft.MicrosoftStickyNotes                 # Digital sticky notes app (Deprecated & replaced by OneNote)
+::Microsoft.MixedReality.Portal                  # Portal for Windows Mixed Reality headsets
+::Microsoft.NetworkSpeedTest                     # Internet connection speed test utility
+::Microsoft.News                                 # News aggregator (Replaced Bing News, now part of Microsoft Start)
+::Microsoft.Office.OneNote                       # Digital note-taking app (Universal Windows Platform version)
+::Microsoft.Office.Sway                          # Presentation and storytelling app
+::Microsoft.OneConnect                           # Mobile Operator management app (Replaced by Mobile Plans)
+::Microsoft.OutlookForWindows                    # New mail app: Outlook for Windows
+::Microsoft.People                               # Required for & included with Mail & Calendar (Contacts management)
+::Microsoft.PowerAutomateDesktop                 # Desktop automation tool (RPA)
+::Microsoft.Print3D                              # 3D printing preparation software
+::Microsoft.RemoteDesktop                        # Remote Desktop client app
+::Microsoft.ScreenSketch                         # Snipping Tool (Screenshot and annotation tool)
+::Microsoft.SkypeApp                             # Skype communication app (Universal Windows Platform version)
+::Microsoft.StartExperiencesApp                  # This app powers Windows Widgets My Feed
+::Microsoft.Todos                                # To-do list and task management app
+::Microsoft.Whiteboard                           # Digital collaborative whiteboard app
+::Microsoft.Windows.DevHome                      # Developer dashboard and tool configuration utility
+::Microsoft.WindowsAlarms                        # Alarms & Clock app
+::Microsoft.windowscommunicationsapps            # Mail & Calendar app suite
+::Microsoft.WindowsFeedbackHub                   # App for providing feedback to Microsoft on Windows
+::Microsoft.WindowsMaps                          # Mapping and navigation app
+::Microsoft.WindowsSoundRecorder                 # Basic audio recording app
+::Microsoft.WindowsTerminal                      # New default terminal app in windows 11 (Command Prompt, PowerShell, WSL)
+::Microsoft.Xbox.TCUI                            # UI framework, seems to be required for MS store, photos and certain games
+::Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
+::Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
+::Microsoft.XboxSpeechToTextOverlay              # Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)
+::Microsoft.YourPhone                            # Phone link (Connects Android/iOS phone to PC)
+::Microsoft.ZuneMusic                            # Modern Media Player (Replaced Groove Music, plays local audio/video)
+::Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
+::MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings
+::MicrosoftCorporationII.QuickAssist             # Remote assistance tool
+::MicrosoftTeams                                 # Old MS Teams personal (MS Store version)
+::MicrosoftWindows.CrossDevice                   # Phone integration within File Explorer, Camera and more (Part of Phone Link features)
+::Netflix                                        # Netflix streaming service app
+::NYTCrossword                                   # New York Times crossword puzzle app
+::OneCalendar                                    # Calendar aggregation app
+::PandoraMediaInc                                # Pandora music streaming app
+::PhototasticCollage                             # Photo collage creation app
+::PicsArt-PhotoStudio                            # Photo editing and creative app
+::Plex                                           # Media server and player app
+::PolarrPhotoEditorAcademicEdition               # Photo editing app (Academic Edition)
+::Royal Revolt                                   # Tower defense / strategy game
+::Shazam                                         # Music identification app
+::Sidia.LiveWallpaper                            # Live wallpaper app
+::SlingTV                                        # Live TV streaming service app
+::Spotify                                        # Spotify music streaming app
+::TikTok                                         # TikTok short-form video app
+::TuneInRadio                                    # Internet radio streaming app
+::Twitter                                        # Twitter (now X) social media app
+::Viber                                          # Messaging and calling app
+::WinZipUniversal                                # File compression and extraction utility (Universal Windows Platform version)
+::Wunderlist                                     # To-do list app (Acquired by Microsoft, functionality moved to Microsoft To Do)
+::XING                                           # Professional networking platform popular in German-speaking countries
 ::'
 ::
 ::#endregion configs > Windows > Tools > Debloat app list
 ::
 ::
-::#region configs > Windows > Tools > Debloat preset
+::#region configs > Windows > Tools > Debloat preset base
 ::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET 'CreateRestorePoint#- Create a system restore point
-::DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads
-::RemoveAppsCustom#- Remove 101 apps:
-::DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads
-::DisableSuggestions#- Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer
-::DisableEdgeAds#- Disable ads, suggestions and the MSN news feed in Microsoft Edge
-::DisableSettings365Ads#- Disable Microsoft 365 ads in Settings Home
-::DisableLockscreenTips#- Disable tips & tricks on the lockscreen
+::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE 'CreateRestorePoint#- Create a system restore point
 ::DisableBing#- Disable & remove Bing web search, Bing AI and Cortana from Windows search
+::DisableClickToDo#- Disable Click to Do (AI text & image analysis)
 ::DisableCopilot#- Disable & remove Microsoft Copilot
-::DisableRecall#- Disable Windows Recall snapshots
-::RevertContextMenu#- Restore the old Windows 10 style context menu
-::DisableStickyKeys#- Disable the Sticky Keys keyboard shortcut
-::HideIncludeInLibrary#- Hide the "Include in library" option in the context menu
-::HideGiveAccessTo#- Hide the "Give access to" option in the context menu
-::HideShare#- Hide the "Share" option in the context menu
+::DisableEdgeAds#- Disable ads, suggestions and the MSN news feed in Microsoft Edge
+::DisableRecall#- Disable Windows Recall
+::DisableSettings365Ads#- Disable Microsoft 365 ads in Settings Home
 ::DisableStartPhoneLink#- Disable the Phone Link mobile devices integration in the start menu.
-::TaskbarAlignLeft#- Align taskbar icons to the left
-::HideSearchTb#- Hide search icon from the taskbar
-::HideTaskview#- Hide the taskview button from the taskbar
-::DisableWidgets#- Disable widgets on the taskbar & lockscreen
+::DisableStickyKeys#- Disable the Sticky Keys keyboard shortcut
+::DisableSuggestions#- Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer
+::DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads
 ::EnableEndTask#- Enable the "End Task" option in the taskbar right click menu
-::EnableLastActiveClick#- Enable the "Last Active Click" behavior in the taskbar app area
-::ExplorerToThisPC#- Change the default location that File Explorer opens to "This PC"
-::ShowHiddenFolders#- Show hidden files, folders and drives
-::HideHome#- Hide the Home section from the File Explorer sidepanel
-::HideGallery#- Hide the Gallery section from the File Explorer sidepanel
 ::HideDupliDrive#- Hide duplicate removable drive entries from the File Explorer sidepanel
+::HideGallery#- Hide the Gallery section from the File Explorer sidepanel
+::HideGiveAccessTo#- Hide the "Give access to" option in the context menu
+::HideHome#- Hide the Home section from the File Explorer sidepanel
+::HideIncludeInLibrary#- Hide the "Include in library" option in the context menu
+::HideShare#- Hide the "Share" option in the context menu
+::ShowHiddenFolders#- Show hidden files, folders and drives
+::ShowSearchLabelTb#- Show search icon with label on the taskbar
+::RemoveAppsCustom#- Remove 101 apps:
 ::'
 ::
-::#endregion configs > Windows > Tools > Debloat preset
+::#endregion configs > Windows > Tools > Debloat preset base
+::
+::
+::#region configs > Windows > Tools > Debloat preset personalisation
+::
+::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALISATION 'CombineTaskbarWhenFull#- Combine taskbar buttons and hide labels when taskbar is full
+::DisableLockscreenTips#- Disable tips & tricks on the lockscreen
+::DisableStartRecommended#- Disable the recommended section in the start menu.
+::DisableWidgets#- Disable widgets on the taskbar & lockscreen
+::ExplorerToThisPC#- Change the default location that File Explorer opens to "This PC"
+::HideTaskview#- Hide the taskview button from the taskbar
+::RevertContextMenu#- Restore the old Windows 10 style context menu
+::TaskbarAlignLeft#- Align taskbar icons to the left
+::'
+::
+::#endregion configs > Windows > Tools > Debloat preset personalisation
 ::
 ::
 ::#region configs > Windows > Tools > ShutUp10
@@ -2550,6 +2632,15 @@ if "%debug%"=="true" (
 ::#endregion configs > Windows > Tools > ShutUp10
 ::
 ::
+::#region configs > Windows > Tools > WinUtil Personalisation
+::
+::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION '                      "WPFTweaksRightClickMenu",
+::                      "WPFTweaksRemoveOnedrive",
+::'
+::
+::#endregion configs > Windows > Tools > WinUtil Personalisation
+::
+::
 ::#region configs > Windows > Tools > WinUtil
 ::
 ::Set-Variable -Option Constant CONFIG_WINUTIL '{
@@ -2562,14 +2653,15 @@ if "%debug%"=="true" (
 ::                      "WPFTweaksDiskCleanup",
 ::                      "WPFTweaksDVR",
 ::                      "WPFTweaksEdgeDebloat",
+::                      "WPFTweaksEndTaskOnTaskbar",
 ::                      "WPFTweaksHome",
 ::                      "WPFTweaksLoc",
 ::                      "WPFTweaksPowershell7Tele",
 ::                      "WPFTweaksRecallOff",
 ::                      "WPFTweaksRemoveCopilot",
 ::                      "WPFTweaksRemoveGallery",
+::                      "WPFTweaksRemoveHome",
 ::                      "WPFTweaksRestorePoint",
-::                      "WPFTweaksRightClickMenu",
 ::                      "WPFTweaksTele",
 ::                      "WPFTweaksWifi"
 ::                  ],
@@ -2609,7 +2701,7 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
 ::    Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
-::    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_CURRENT_DIR\$FileName" })
+::    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_WORKING_DIR\$FileName" })
 ::
 ::    Initialize-AppDirectory
 ::
@@ -2693,12 +2785,20 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant PowerShellScript "$PATH_TEMP_DIR\qiiwexc.ps1"
 ::
+::    if (Test-Path $PATH_WINUTIL) {
+::        Remove-Item -Force -Recurse $PATH_WINUTIL -ErrorAction Ignore
+::    }
+::
+::    if (Test-Path $PATH_OOSHUTUP10) {
+::        Remove-Item -Force -Recurse $PATH_OOSHUTUP10 -ErrorAction Ignore
+::    }
+::
 ::    if (Test-Path $PATH_APP_DIR) {
-::        Remove-Item -Force -Recurse $PATH_APP_DIR -ErrorAction Stop
+::        Remove-Item -Force -Recurse $PATH_APP_DIR -ErrorAction Ignore
 ::    }
 ::
 ::    if (Test-Path $PowerShellScript) {
-::        Remove-Item -Force -Recurse $PowerShellScript -ErrorAction Stop
+::        Remove-Item -Force -Recurse $PowerShellScript -ErrorAction Ignore
 ::    }
 ::
 ::    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
@@ -2725,7 +2825,7 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
 ::    Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
 ::    Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
-::    Set-Variable -Option Constant TargetPath $(if ($Temp) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+::    Set-Variable -Option Constant TargetPath $(if ($Temp) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
 ::
 ::    Initialize-AppDirectory
 ::
@@ -2810,11 +2910,11 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    Set-Variable -Option Constant ExecutionPolicy $(if ($BypassExecutionPolicy) { '-ExecutionPolicy Bypass' } else { '' })
-::    Set-Variable -Option Constant CallerPath $(if ($WorkingDirectory) { "-CallerPath:$WorkingDirectory" } else { '' })
+::    Set-Variable -Option Constant WorkingDir $(if ($WorkingDirectory) { "-WorkingDirectory:$WorkingDirectory" } else { '' })
 ::    Set-Variable -Option Constant Verb $(if ($Elevated) { 'RunAs' } else { 'Open' })
 ::    Set-Variable -Option Constant WindowStyle $(if ($HideWindow) { 'Hidden' } else { 'Normal' })
 ::
-::    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $CallerPath"
+::    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $WorkingDir"
 ::
 ::    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
 ::}
@@ -2858,7 +2958,7 @@ if "%debug%"=="true" (
 ::    switch ($Level) {
 ::        'INFO' {
 ::            $LOG.SelectionColor = 'black'
-::            Write-Host $Text
+::            Write-Host -NoNewline "$Text`n"
 ::        }
 ::        'WARN' {
 ::            $LOG.SelectionColor = 'blue'
@@ -2870,7 +2970,7 @@ if "%debug%"=="true" (
 ::        }
 ::        Default {
 ::            $LOG.SelectionColor = 'black'
-::            Write-Host $Text
+::            Write-Host -NoNewline "$Text`n"
 ::        }
 ::    }
 ::
@@ -3065,7 +3165,7 @@ if "%debug%"=="true" (
 ::#region functions > Common > Updater
 ::
 ::function Update-App {
-::    Set-Variable -Option Constant AppBatFile "$PATH_CURRENT_DIR\qiiwexc.bat"
+::    Set-Variable -Option Constant AppBatFile "$PATH_WORKING_DIR\qiiwexc.bat"
 ::
 ::    Set-Variable -Option Constant IsUpdateAvailable (Get-UpdateAvailability)
 ::
@@ -3382,19 +3482,24 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo "Writing $AppName configuration to '$Path'..."
 ::
-::    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
+::    if (-not (Test-Path $Path)) {
+::        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it"
 ::
-::    if (Test-Path $Path) {
-::        Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
-::        Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
-::
-::        Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
-::
-::        $UpdatedConfig | Out-File $Path -Encoding UTF8
-::    } else {
-::        Write-LogInfo "'$Path' does not exist. Creating new file..."
-::        $Content | Out-File $Path
+::        Start-Process $ProcessName
+::        for ([Int]$i = 0; $i -lt 5; $i++) {
+::            Start-Sleep -Seconds 10
+::            if (Test-Path $Path) {
+::                break
+::            }
+::        }
 ::    }
+::
+::    Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
+::    Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
+::
+::    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
+::
+::    $UpdatedConfig | Out-File $Path -Encoding UTF8
 ::
 ::    Out-Success
 ::}
@@ -3418,7 +3523,7 @@ if "%debug%"=="true" (
 ::
 ::    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 ::
-::    $Content | Out-File $Path
+::    $Content | Out-File $Path -Encoding UTF8
 ::
 ::    Out-Success
 ::}
@@ -3429,8 +3534,13 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Windows > Alternative DNS
 ::
 ::function Set-CloudFlareDNS {
-::    [String]$PreferredDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.1.1.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.1.1.2' } else { '1.1.1.1' } }
-::    [String]$AlternateDnsServer = if ($CHECKBOX_CloudFlareFamilyFriendly.Checked) { '1.0.0.3' } else { if ($CHECKBOX_CloudFlareAntiMalware.Checked) { '1.0.0.2' } else { '1.0.0.1' } }
+::    param(
+::        [Switch][Parameter(Position = 0, Mandatory = $True)]$MalwareProtection,
+::        [Switch][Parameter(Position = 1, Mandatory = $True)]$FamilyFriendly
+::    )
+::
+::    Set-Variable -Option Constant PreferredDnsServer $(if ($FamilyFriendly) { '1.1.1.3' } else { if ($MalwareProtection) { '1.1.1.2' } else { '1.1.1.1' } })
+::    Set-Variable -Option Constant AlternateDnsServer $(if ($FamilyFriendly) { '1.0.0.3' } else { if ($MalwareProtection) { '1.0.0.2' } else { '1.0.0.1' } })
 ::
 ::    Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
 ::    Write-LogWarning 'Internet connection may get interrupted briefly'
@@ -3442,7 +3552,11 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True' | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @('$PreferredDnsServer', '$AlternateDnsServer') }"
+::        Set-Variable -Option Constant Status (Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue
+::
+::        if ($Status -ne 0) {
+::            Write-LogError 'Failed to change DNS server'
+::        }
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to change DNS server'
 ::        return
@@ -3636,8 +3750,7 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
 ::        'MathRecognizer',
 ::        'Media.WindowsMediaPlayer',
-::        'OpenSSH.Client',
-::        'VBSCRIPT'
+::        'OpenSSH.Client'
 ::    )
 ::
 ::    try {
@@ -3684,7 +3797,7 @@ if "%debug%"=="true" (
 ::    [String]$ConfigLines = ''
 ::
 ::    try {
-::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction SilentlyContinue).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
+::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
 ::        foreach ($Registry in $FileExtensionRegistries) {
 ::            [Object]$PersistentHandlers = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
 ::
@@ -3718,20 +3831,29 @@ if "%debug%"=="true" (
 ::function Start-WindowsDebloat {
 ::    param(
 ::        [Switch][Parameter(Position = 0, Mandatory = $True)]$UsePreset,
-::        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+::        [Switch][Parameter(Position = 1, Mandatory = $True)]$Personalisation,
+::        [Switch][Parameter(Position = 2, Mandatory = $True)]$Silent
 ::    )
 ::
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
+::
+::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    if ($NoConnection) {
+::        Write-LogError "Failed to start: $NoConnection"
+::        return
+::    }
 ::
 ::    Set-Variable -Option Constant TargetPath "$PATH_TEMP_DIR\Win11Debloat"
 ::
 ::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 ::
 ::    Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
-::    $CONFIG_DEBLOAT_APP_LIST | Out-File $CustomAppsListFile
+::    Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + $(if ($Personalisation) { 'Microsoft.OneDrive' } else { '' }))
+::    $AppsList | Out-File $CustomAppsListFile -Encoding UTF8
 ::
 ::    Set-Variable -Option Constant SavedSettingsFile "$TargetPath\SavedSettings"
-::    $CONFIG_DEBLOAT_PRESET | Out-File $SavedSettingsFile
+::    Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $(if ($Personalisation) { $CONFIG_DEBLOAT_PRESET_PERSONALISATION } else { '' }))
+::    $Configuration | Out-File $SavedSettingsFile -Encoding UTF8
 ::
 ::    Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
 ::    Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
@@ -3745,7 +3867,7 @@ if "%debug%"=="true" (
 ::#endregion functions > Configuration > Windows > Tools > Debloat Windows
 ::
 ::
-::#region functions > Configuration > Windows > Tools > ShutUp10
+::#region functions > Configuration > Windows > Tools > OOShutUp10
 ::
 ::function Start-ShutUp10 {
 ::    param(
@@ -3755,12 +3877,18 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting ShutUp10++ utility...'
 ::
-::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
-::    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
+::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    if ($NoConnection) {
+::        Write-LogError "Failed to start: $NoConnection"
+::        return
+::    }
 ::
-::    Initialize-AppDirectory
+::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_OOSHUTUP10 } else { $PATH_WORKING_DIR })
+::    Set-Variable -Option Constant ConfigFile "$TargetPath\OOShutUp10.cfg"
 ::
-::    $CONFIG_SHUTUP10 | Out-File $ConfigFile
+::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
+::
+::    $CONFIG_SHUTUP10 | Out-File $ConfigFile -Encoding UTF8
 ::
 ::    if ($Silent) {
 ::        Start-DownloadUnzipAndRun -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Params $ConfigFile
@@ -3769,26 +3897,40 @@ if "%debug%"=="true" (
 ::    }
 ::}
 ::
-::#endregion functions > Configuration > Windows > Tools > ShutUp10
+::#endregion functions > Configuration > Windows > Tools > OOShutUp10
 ::
 ::
 ::#region functions > Configuration > Windows > Tools > WinUtil
 ::
 ::function Start-WinUtil {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Apply
+::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Personalisation,
+::        [Switch][Parameter(Position = 1, Mandatory = $True)]$AutomaticallyApply
 ::    )
 ::
 ::    Write-LogInfo 'Starting WinUtil utility...'
 ::
-::    Set-Variable -Option Constant ConfigFile "$PATH_APP_DIR\winutil.json"
+::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    if ($NoConnection) {
+::        Write-LogError "Failed to start: $NoConnection"
+::        return
+::    }
 ::
-::    Initialize-AppDirectory
+::    New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
 ::
-::    $CONFIG_WINUTIL | Out-File $ConfigFile
+::    Set-Variable -Option Constant ConfigFile "$PATH_WINUTIL\WinUtil.json"
+::
+::    [String]$Configuration = $CONFIG_WINUTIL
+::    if ($Personalisation) {
+::        $Configuration = $CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
+::', '    "WPFTweaks":  [
+::' + $CONFIG_WINUTIL_PERSONALISATION)
+::    }
+::
+::    $Configuration | Out-File $ConfigFile -Encoding UTF8
 ::
 ::    Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
-::    Set-Variable -Option Constant RunParam $(if ($Apply) { '-Run' } else { '' })
+::    Set-Variable -Option Constant RunParam $(if ($AutomaticallyApply) { '-Run' } else { '' })
 ::
 ::    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
 ::
@@ -3821,6 +3963,12 @@ if "%debug%"=="true" (
 ::
 ::function Start-Activator {
 ::    Write-LogInfo 'Starting MAS activator...'
+::
+::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    if ($NoConnection) {
+::        Write-LogError "Failed to start: $NoConnection"
+::        return
+::    }
 ::
 ::    if ($OS_VERSION -eq 7) {
 ::        Invoke-CustomCommand -HideWindow "iex ((New-Object Net.WebClient).DownloadString('https://get.activated.win'))"
@@ -3918,7 +4066,11 @@ if "%debug%"=="true" (
 ::    Write-LogInfo 'Starting Microsoft Store apps update...'
 ::
 ::    try {
-::        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'"
+::        Set-Variable -Option Constant Status (Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod').ReturnValue
+::
+::        if ($Status -ne 0) {
+::            Write-LogError 'Failed to update Microsoft Store apps'
+::        }
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to update Microsoft Store apps'
 ::        return
@@ -3959,12 +4111,16 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute
 ::    )
 ::
-::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_CURRENT_DIR })
+::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
 ::    Set-Variable -Option Constant Config $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU') } else { $CONFIG_OFFICE_INSTALLER })
 ::
 ::    Initialize-AppDirectory
 ::
 ::    $Config | Out-File "$TargetPath\Office Installer+.ini" -Encoding UTF8
+::
+::    if ($Execute -and $AV_WARNING_SHOWN) {
+::        Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
+::    }
 ::
 ::    Start-DownloadUnzipAndRun -AVWarning -Execute:$Execute 'https://qiiwexc.github.io/d/Office_Installer+.zip'
 ::}
