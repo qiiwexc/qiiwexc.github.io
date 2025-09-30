@@ -17,7 +17,7 @@ function Start-ShutUp10 {
 
     Initialize-AppDirectory
 
-    $CONFIG_SHUTUP10 | Out-File $ConfigFile
+    $CONFIG_SHUTUP10 | Out-File $ConfigFile -Encoding UTF8
 
     if ($Silent) {
         Start-DownloadUnzipAndRun -Execute:$Execute '{URL_SHUTUP10}' -Params $ConfigFile
