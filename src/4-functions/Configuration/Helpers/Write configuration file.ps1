@@ -12,7 +12,7 @@ function Write-ConfigurationFile {
 
     New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 
-    $Content | Out-File $Path
+    $Content | Out-File $Path -Encoding UTF8
 
     Out-Success
 }
