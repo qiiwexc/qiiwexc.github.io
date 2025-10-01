@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.1')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.2')
 ::
 ::#endregion init > Version
 ::
@@ -1314,14 +1314,8 @@ if "%debug%"=="true" (
 ::    @{Method = 'Registry'; Application = 'CABFolder'; Extension = '.cab' },
 ::    @{Method = 'Registry'; Application = 'contact_wab_auto_file'; Extension = '.contact' },
 ::    @{Method = 'Registry'; Application = 'group_wab_auto_file'; Extension = '.group' },
-::    @{Method = 'Registry'; Application = 'icofile'; Extension = '.ico' },
-::    @{Method = 'Registry'; Application = 'jpegfile'; Extension = '.jpe' },
-::    @{Method = 'Registry'; Application = 'jpegfile'; Extension = '.jpeg' },
-::    @{Method = 'Registry'; Application = 'jpegfile'; Extension = '.jpg' },
 ::    @{Method = 'Registry'; Application = 'PhotoViewer.FileAssoc.Bitmap'; Extension = '.bmp' },
 ::    @{Method = 'Registry'; Application = 'PhotoViewer.FileAssoc.Bitmap'; Extension = '.dib' },
-::    @{Method = 'Registry'; Application = 'pjpegfile'; Extension = '.jfif' },
-::    @{Method = 'Registry'; Application = 'pngfile'; Extension = '.png' },
 ::    @{Method = 'Registry'; Application = 'qBittorrent.File.Torrent'; Extension = '.torrent' },
 ::    @{Method = 'Registry'; Application = 'TIFImage.Document'; Extension = '.cr2' },
 ::    @{Method = 'Registry'; Application = 'vcard_wab_auto_file'; Extension = '.vcf' },
@@ -1425,75 +1419,40 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant CONFIG_WINDOWS_BASE 'Windows Registry Editor Version 5.00
 ::
+::; Disable "Share" context menu
 ::[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing]
 ::
+::; Disable "Give access to" context menu
 ::[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Sharing]
-::
 ::[-HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Sharing]
-::
 ::[-HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Sharing]
-::
 ::[-HKEY_CLASSES_ROOT\Directory\shellex\CopyHookHandlers\Sharing]
-::
 ::[-HKEY_CLASSES_ROOT\Directory\shellex\PropertySheetHandlers\Sharing]
-::
 ::[-HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\Sharing]
-::
 ::[-HKEY_CLASSES_ROOT\Drive\shellex\PropertySheetHandlers\Sharing]
-::
-::[-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
-::
 ::[-HKEY_CLASSES_ROOT\LibraryFolder\background\shellex\ContextMenuHandlers\Sharing]
-::
 ::[-HKEY_CLASSES_ROOT\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing]
 ::
-::[-HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
-::"System.IsPinnedToNameSpaceTree"=dword:0
+::; Disable "Include in library" context menu
+::[-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::
-::[-HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
-::"System.IsPinnedToNameSpaceTree"=dword:0
+::; Hide Gallery on Navigation Pane
+::[HKEY_CLASSES_ROOT\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Hide Home on Navigation Pane
+::[HKEY_CLASSES_ROOT\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
+::@="CLSID_MSGraphHomeFolder"
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::[HKEY_CLASSES_ROOT\icofile\shell\open\DropTarget]
+::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
 ::
 ::[HKEY_CLASSES_ROOT\jpegfile\shell\open\DropTarget]
 ::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
 ::
 ::[HKEY_CLASSES_ROOT\pngfile\shell\open\DropTarget]
 ::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\open]
-::"MuiVerb"="@photoviewer.dll,-3043"
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\open\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print]
-::"NeverDefault"=""
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\Applications\photoviewer.dll\shell\print\DropTarget]
-::"Clsid"="{60fd46de-f830-4894-a628-6fa81bc0190d}"
 ::
 ::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap]
 ::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
@@ -1506,6 +1465,13 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\DefaultIcon]
 ::@="%SystemRoot%\\System32\\imageres.dll,-70"
+::
+::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open]
+::"MuiVerb"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
+::  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
+::  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
+::  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
+::  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
 ::
 ::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\command]
 ::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
@@ -1522,159 +1488,6 @@ if "%debug%"=="true" (
 ::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\DropTarget]
 ::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
 ::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF]
-::"EditFlags"=dword:00010000
-::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
-::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
-::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
-::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
-::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,35,00,00,\
-::  00
-::"ImageOptionFlags"=dword:00000001
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF\DefaultIcon]
-::@="%SystemRoot%\\System32\\imageres.dll,-72"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF\shell\open]
-::"MuiVerb"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
-::  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
-::  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
-::  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
-::  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF\shell\open\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.JFIF\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg]
-::"EditFlags"=dword:00010000
-::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
-::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
-::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
-::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
-::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,35,00,00,\
-::  00
-::"ImageOptionFlags"=dword:00000001
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg\DefaultIcon]
-::@="%SystemRoot%\\System32\\imageres.dll,-72"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg\shell\open]
-::"MuiVerb"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
-::  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
-::  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
-::  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
-::  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg\shell\open\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Jpeg\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Gif]
-::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
-::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
-::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
-::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
-::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,37,00,00,\
-::  00
-::"ImageOptionFlags"=dword:00000001
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Gif\DefaultIcon]
-::@="%SystemRoot%\\System32\\imageres.dll,-83"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Gif\shell\open\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Gif\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Png]
-::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
-::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
-::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
-::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
-::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,37,00,00,\
-::  00
-::"ImageOptionFlags"=dword:00000001
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Png\DefaultIcon]
-::@="%SystemRoot%\\System32\\imageres.dll,-71"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Png\shell\open\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Png\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp]
-::"EditFlags"=dword:00010000
-::"ImageOptionFlags"=dword:00000001
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp\DefaultIcon]
-::@="%SystemRoot%\\System32\\wmphoto.dll,-400"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp\shell\open]
-::"MuiVerb"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
-::  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
-::  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
-::  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
-::  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp\shell\open\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Wdp\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
 ::[HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\Image Preview\command]
 ::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
 ::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
@@ -1687,9 +1500,7 @@ if "%debug%"=="true" (
 ::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
 ::  00,31,00,00,00
 ::
-::[HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\Image Preview\DropTarget]
-::"{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"=""
-::
+::; Disable sticky keys shortcut
 ::[HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys]
 ::"Flags"="506"
 ::
@@ -1700,13 +1511,12 @@ if "%debug%"=="true" (
 ::"ShowCmd"=dword:00000003
 ::"WFlags"=dword:00000002
 ::
-::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32]
-::@=""
-::
-::[HKEY_CURRENT_USER\Software\Classes\CLSID\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}]
+::; Hide Gallery on Navigation Pane
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Classes\CLSID\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}]
+::; Hide Home on Navigation Pane
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
 ::@="CLSID_MSGraphHomeFolder"
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
@@ -1717,6 +1527,9 @@ if "%debug%"=="true" (
 ::"ShowCmd"=dword:00000003
 ::"WFlags"=dword:00000002
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Clipboard]
+::"EnableClipboardHistory"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Edge\SmartScreenPuaEnabled]
 ::@=dword:00000001
 ::
@@ -1724,9 +1537,11 @@ if "%debug%"=="true" (
 ::"DefaultInterval"=dword:0000000F
 ::"SyncStatus"=dword:00000001
 ::
+::; Disable "Improve Inking & Typing Recognition"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Input\TIPC]
 ::"Enabled"=dword:00000000
 ::
+::; Disable "Inking & Typing Personalization"
 ::[HKEY_CURRENT_USER\Software\Microsoft\InputPersonalization]
 ::"RestrictImplicitInkCollection"=dword:00000001
 ::"RestrictImplicitTextCollection"=dword:00000001
@@ -1758,15 +1573,40 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Personalization\Settings]
 ::"AcceptedPrivacyPolicy"=dword:00000000
 ::
+::; Set Feedback Frequency to Never
 ::[HKEY_CURRENT_USER\Software\Microsoft\Siuf\Rules]
 ::"NumberOfSIUFInPeriod"=dword:00000000
 ::"PeriodInNanoSeconds"=-
 ::
+::; Disable "Online Speech Recognition"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy]
 ::"HasAccepted"=dword:00000000
 ::
+::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 ::"Enabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore]
+::"appDiagnostics"="Deny"
+::"userAccountInformation"="Deny"
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+::"OemPreInstalledAppsEnabled"=dword:00000000
+::"PreInstalledAppsEnabled"=dword:00000000
+::"PreInstalledAppsEverEnabled"=dword:00000000
+::"SilentInstalledAppsEnabled"=dword:00000000
+::"SoftLandingEnabled"=dword:00000000
+::"SystemPaneSuggestionsEnabled"=dword:00000000
+::
+::; Disable "Tailored experiences with diagnostic data"
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
+::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration]
+::"IsResumeAllowed"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization]
+::"SystemSettingsDownloadMode"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
 ::"ShowedToastAtLevel"=dword:00000001
@@ -1776,45 +1616,17 @@ if "%debug%"=="true" (
 ::"ShowRecommendations"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-::"Hidden"=dword:00000001
-::"LaunchTo"=dword:00000001
 ::"NavPaneShowAllCloudStates"=dword:00000001
 ::"SeparateProcess"=dword:00000001
-::"ShowCopilotButton"=dword:00000000
-::"ShowTaskViewButton"=dword:00000000
+::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
+::"ShowSyncProviderNotifications"=dword:00000000
 ::"Start_IrisRecommendations"=dword:00000000
 ::"Start_Layout"=dword:00000001
-::"Start_TrackProgs"=dword:00000000
-::"TaskbarMn"=dword:00000000
+::"Start_TrackProgs"=dword:00000000 ; Disable "Let Windows improve Start and search results by tracking app launches"
 ::
+::; Enable "End task" in the taskbar
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
 ::"TaskbarEndTask"=dword:00000001
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\CIDSizeMRU]
-::"0"=hex:4E,00,4F,00,54,00,45,00,50,00,41,00,44,00,2E,00,45,00,58,00,45,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,F8,FF,FF, \
-::  FF,F8,FF,FF,FF,88,07,00,00,93,03,00,00,00,00,00,00,00,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,2B,00,00,00,C0,03,00,00,0B,02,00,00,00,00,00,00,00, \
-::  00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,FF,FF,FF,FF
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
 ::"AllItemsIconView"=dword:00000000
@@ -1862,18 +1674,31 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
 ::"DaysToKeep"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-::"HideSCAMeetNow"=dword:00000001
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Mobility]
+::"CrossDeviceEnabled"=dword:00000000
+::"OptedIn"=dword:00000000
+::"PhoneLinkEnabled"=dword:00000000
 ::
+::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Privacy]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
-::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
-::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search]
+::"BingSearchEnabled"=dword:00000000 ; Disable Bing search
+::"SearchboxTaskbarMode"=dword:00000003 ; Show search icon and label
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
+::"IsDynamicSearchBoxEnabled"=dword:00000000
+::
+::; Disable Show mobile device in Start
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 ::"IsEnabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+::"2048"=dword:0000001E
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
+::"ScoobeSystemSettingEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
 ::"256"=dword:0000003C
@@ -1881,31 +1706,80 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
 ::"VideoQualityOnBattery"=dword:00000001
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\WindowsCopilot]
+::"AllowCopilotRuntime"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Windows Search]
+::"CortanaConsent"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows Security Health\State]
 ::"AccountProtection_MicrosoftAccount_Disconnected"=dword:00000001
 ::"Hardware_DataEncryption_AddMsa"=dword:00000000
 ::
+::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
+::; Disable required and optional diagnostic data about browser usage
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Edge]
+::"AutofillCreditCardEnabled"=dword:00000000
+::"ConfigureDoNotTrack"=dword:00000001
+::"EdgeShoppingAssistantEnabled"=dword:00000000
+::"PaymentMethodQueryEnabled"=dword:00000000
+::"PersonalizationReportingEnabled"=dword:00000000
+::"UserFeedbackAllowed"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common]
+::"LinkedIn"=dword:00000000
+::"QMEnable"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
+::"Enabled"=dword:00000000
+::"IncludeEmail"=dword:00000000
+::"SurveyEnabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\osm]
+::"EnableFileObfuscation"=dword:00000001
+::"Enablelogging"=dword:00000000
+::"EnableUpload"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
+::"DisableTelemetry"=dword:00000001
+::"SendTelemetry"=dword:00000003
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\CloudContent]
+::"DisableTailoredExperiencesWithDiagnosticData"=dword:00000001
+::
+::; Disable Bing in search
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer]
 ::"DisableSearchBoxSuggestions"=dword:00000001
 ::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Windows Feeds]
+::"EnableFeeds"=dword:00000000
+::
+::; Disable AI recall
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
 ::"DisableAIDataAnalysis"=dword:00000001
 ::
+::; Disable Copilot service
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsCopilot]
 ::"TurnOffWindowsCopilot"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\System\GameConfigStore]
-::"GameDVR_Enabled"=dword:00000000
+::"GameDVR_EFSEFeatureFlags"=dword:00000000
+::"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
+::"GameDVR_FSEBehavior"=dword:00000002
+::"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
 ::
+::; Disable "Include in library" context menu
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::
+::; Hide "3D objects" folder
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
-::
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}]
-::
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
 ::
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}]
+::; Hide "Music" folder
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
+::
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs\Command]
 ::@="cmd /c DISM.exe /Online /Add-Package /PackagePath:"%1" /NoRestart & pause""
@@ -1929,29 +1803,74 @@ if "%debug%"=="true" (
 ::"TaskFrequency"=dword:00000002
 ::"Volumes"=" "
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
-::"value"=dword:00000000
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
+::"PreventNetworkTrafficPreUserSignIn"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Bluetooth]
+::"AllowAdvertising"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Browser]
+::"AllowAddressBarDropdown"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
+::"AllowAutoConnectToWiFiSenseHotspots"=dword:00000000
+::"AllowWiFiHotSpotReporting"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Preferences]
+::"ModelDownloadAllowed"=dword:00000000
+::
+::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore]
+::"appDiagnostics"="Deny"
+::"location"="Deny"
+::"userAccountInformation"="Deny"
+::
+::; Disable "Tailored experiences with diagnostic data"
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CPSS\Store]
+::"AllowTelemetry"=dword:00000000
+::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config]
+::"DODownloadMode"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
 ::"CostedNetworkPolicy"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
+::"DiagTrackStatus"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack\TraceManager]
+::"miniTraceHasStopTime"=dword:00000000
+::"miniTraceIsAutoLogger"=dword:00000000
+::"miniTraceProfileHash"=hex:00,00,00,00,00,00,00,00
+::"miniTraceRequiredBufferSpace"=dword:00000000
+::"miniTraceScenarioId"=-
+::"miniTraceSessionStartTime"=hex:00,00,00,00,00,00,00,00
+::"miniTraceSlotEnabled"=dword:00000000
+::"miniTraceStopTime"=hex:00,00,00,00,00,00,00,00
+::
+::; Add `Show Gallery` option to File Explorer folder options, with default set to disabled
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowGallery]
 ::"CheckedValue"=dword:00000001
 ::"DefaultValue"=dword:00000000
 ::"HKeyRoot"=dword:80000001
 ::"Id"=dword:0000000d
-::"RegPath"="Software\\Classes\\CLSID\\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}"
+::"RegPath"="Software\\Classes\\CLSID\\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}"
 ::"Text"="Show Gallery"
 ::"Type"="checkbox"
 ::"UncheckedValue"=dword:00000000
 ::"ValueName"="System.IsPinnedToNameSpaceTree"
 ::
+::; Add `Show Home` option to File Explorer folder options, with default set to disabled
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
 ::"CheckedValue"=dword:00000001
 ::"DefaultValue"=dword:00000000
 ::"HKeyRoot"=dword:80000001
 ::"Id"=dword:0000000d
-::"RegPath"="Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}"
+::"RegPath"="Software\\Classes\\CLSID\\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}"
 ::"Text"="Show Home"
 ::"Type"="checkbox"
 ::"UncheckedValue"=dword:00000000
@@ -2002,6 +1921,7 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
 ::"StateFlags"=dword:00000001
 ::
+::; Send only Required Diagnostic and Usage Data
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 ::"AllowTelemetry"=dword:00000000
 ::"MaxTelemetryAllowed"=dword:00000000
@@ -2009,14 +1929,31 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
 ::"PromptOnSecureDesktop"=dword:00000000
 ::
+::; Disable "Tailored experiences with diagnostic data"
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
+::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
+::"DisableMonitoring"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update]
+::"AUOptions"=dword:00000004
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services\7971F918-A847-4430-9279-4A52D1EFE18D]
 ::"RegisteredWithAU"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services]
 ::"DefaultService"="7971f918-a847-4430-9279-4a52d1efe18d"
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection]
-::"EnableNetworkProtection"=dword:00000001
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
+::"CopilotDisabledReason"="IsEnabledForGeographicRegionFailed"
+::"IsCopilotAvailable"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat]
+::"IsUserEligible"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
+::"Disabled"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection]
 ::"SummaryNotificationDisabled"=dword:00000001
@@ -2024,24 +1961,28 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\NoExecuteState]
 ::"LastNoExecuteRadioButtonState"=dword:000036BD
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+::"SystemResponsiveness"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
+::"SensorPermissionState"=dword:00000000
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities]
 ::"ApplicationDescription"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3069"
 ::"ApplicationName"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3009"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities\FileAssociations]
 ::".bmp"="PhotoViewer.FileAssoc.Bitmap"
-::".cr2"="PhotoViewer.FileAssoc.Tiff"
+::".cr2"="TIFImage.Document"
 ::".dib"="PhotoViewer.FileAssoc.Bitmap"
-::".gif"="PhotoViewer.FileAssoc.Gif"
-::".jfif"="PhotoViewer.FileAssoc.JFIF"
-::".jpe"="PhotoViewer.FileAssoc.Jpeg"
-::".jpeg"="PhotoViewer.FileAssoc.Jpeg"
-::".jpg"="PhotoViewer.FileAssoc.Jpeg"
-::".jxr"="PhotoViewer.FileAssoc.Wdp"
-::".png"="PhotoViewer.FileAssoc.Png"
-::".tif"="PhotoViewer.FileAssoc.Tiff"
-::".tiff"="PhotoViewer.FileAssoc.Tiff"
-::".wdp"="PhotoViewer.FileAssoc.Wdp"
+::".ico"="icofile"
+::".jfif"="pjpegfile"
+::".jpe"="jpegfile"
+::".jpeg"="jpegfile"
+::".jpg"="jpegfile"
+::".jxr"="wdpfile"
+::".png"="pngfile"
+::".wdp"="wdpfile"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search]
 ::"EnableFindMyFiles"=dword:00000001
@@ -2054,12 +1995,162 @@ if "%debug%"=="true" (
 ::"AllowMUUpdateService"=dword:00000001
 ::"IsContinuousInnovationOptedIn"=dword:00000001
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
-::"AllowNewsAndInterests"=dword:00000000
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
+::"BraveAIChatEnabled"=dword:00000000
+::"BraveRewardsDisabled"=dword:00000001
+::"BraveVPNDisabled"=dword:00000001
+::"BraveWalletDisabled"=dword:00000001
 ::
+::; Disable Microsoft Edge MSN news feed, sponsored links, shopping assistant and more.
+::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
+::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
 ::"AlternateErrorPagesEnabled"=dword:00000000
 ::"ComposeInlineEnabled"=dword:00000000
+::"ConfigureDoNotTrack"=dword:00000001
+::"CopilotCDPPageContext"=dword:00000000
+::"CopilotPageContext"=dword:00000000
+::"CryptoWalletEnabled"=dword:00000000
+::"DiagnosticData"=dword:00000000
+::"EdgeAssetDeliveryServiceEnabled"=dword:00000000
+::"EdgeCollectionsEnabled"=dword:00000000
+::"EdgeEntraCopilotPageContext"=dword:00000000
+::"EdgeHistoryAISearchEnabled"=dword:00000000
+::"EdgeShoppingAssistantEnabled"=dword:00000000
+::"GenAILocalFoundationalModelSettings"=dword:00000001
+::"HideFirstRunExperience"=dword:00000001
+::"HubsSidebarEnabled"=dword:00000000
+::"MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
+::"NewTabPageBingChatEnabled"=dword:00000000
+::"NewTabPageContentEnabled"=dword:00000000
+::"NewTabPageHideDefaultTopSites"=dword:00000001
+::"PersonalizationReportingEnabled"=dword:00000000
+::"ShowMicrosoftRewards"=dword:00000000
+::"ShowRecommendationsEnabled"=dword:00000000
+::"TabServicesEnabled"=dword:00000000
+::"UserFeedbackAllowed"=dword:00000000
+::"WalletDonationEnabled"=dword:00000000
+::"WebWidgetAllowed"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EdgeUpdate]
+::"CreateDesktopShortcutDefault"=dword:00000000
+::
+::; Disable "Inking & Typing Personalization"
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization]
+::"AllowInputPersonalization"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main]
+::"AllowPrelaunch"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT]
+::"DontReportInfectionInformation"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Speech]
+::"AllowSpeechModelUpdate"=dword:00000000
+::
+::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
+::"DisabledByGroupPolicy"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat]
+::"AITEnable"=dword:00000000
+::"DisableInventory"=dword:00000001
+::"DisableUAR"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent]
+::"DisableConsumerAccountStateContent"=dword:00000001 ; Disable MS 365 Ads in Settings Home
+::"DisableWindowsConsumerFeatures"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection]
+::"AllowTelemetry"=dword:00000000 ; Send only Required Diagnostic and Usage Data
+::"DisableOneSettingsDownloads"=dword:00000001
+::"DoNotShowFeedbackNotifications"=dword:00000001
+::"LimitDiagnosticLogCollection"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization]
+::"DODownloadMode"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
+::"HideRecommendedSection"=dword:00000001
+::
+::; Disable game DVR
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
+::"AllowGameDVR"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports]
+::"PreventHandwritingErrorReports"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors]
+::"DisableLocationScripting"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Messaging]
+::"AllowMessageSync"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive]
+::"DisableFileSyncNGSC"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization]
+::"NoLockScreenCamera"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
+::"AllowClipboardHistory"=dword:00000000
+::"AllowCrossDeviceClipboard"=dword:00000000
+::"EnableActivityFeed"=dword:00000000
+::"EnableMmx"=dword:00000000
+::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
+::"UploadUserActivities"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TabletPC]
+::"PreventHandwritingDataSharing"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds]
+::"EnableFeeds"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
+::"AllowCloudSearch"=dword:00000000
+::"AllowCortana"=dword:00000000 ; Disable Cortana in search
+::"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
+::"AllowSearchToUseLocation"=dword:00000000
+::"ConnectedSearchUseWeb"=dword:00000000
+::"CortanaConsent"=dword:00000000
+::"DisableWebSearch"=dword:00000001
+::"EnableDynamicContentInWSB"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsAI]
+::"AllowRecallEnablement"=dword:00000000 ; Disable AI recall
+::"DisableAIDataAnalysis"=dword:00000001 ; Disable AI recall
+::"DisableClickToDo"=dword:00000001 ; Disable click to do
+::"TurnOffSavingSnapshots"=dword:00000001 ; Disable AI recall
+::
+::; Disable Copilot service
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
+::"TurnOffWindowsCopilot"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet]
+::"SpyNetReporting"=dword:00000000
+::"SubmitSamplesConsent"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
+::"fAllowToGetHelp"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
+::"EnableFindMyFiles"=dword:00000001
+::"SystemIndexNormalization"=dword:00000003
+::
+:: ; Send only Required Diagnostic and Usage Data
+:: [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
+::"AllowTelemetry"=dword:00000000
+::"MaxTelemetryAllowed"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
+::"PromptOnSecureDesktop"=dword:00000000
+::
+::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
+::; Disable required and optional diagnostic data about browser usage
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
+::"AlternateErrorPagesEnabled"=dword:00000000
+::"ComposeInlineEnabled"=dword:00000000
+::"ConfigureDoNotTrack"=dword:00000001
 ::"CopilotCDPPageContext"=dword:00000000
 ::"CopilotPageContext"=dword:00000000
 ::"DiagnosticData"=dword:00000000
@@ -2073,69 +2164,167 @@ if "%debug%"=="true" (
 ::"NewTabPageHideDefaultTopSites"=dword:00000001
 ::"PersonalizationReportingEnabled"=dword:00000000
 ::"TabServicesEnabled"=dword:00000000
+::"UserFeedbackAllowed"=dword:00000000
+::"WebWidgetAllowed"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent]
+::; Disable "Inking & Typing Personalization"
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\InputPersonalization]
+::"AllowInputPersonalization"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MicrosoftEdge\Main]
+::"AllowPrelaunch"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MRT]
+::"DontReportInfectionInformation"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Speech]
+::"AllowSpeechModelUpdate"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
+::"AITEnable"=dword:00000000
+::"DisableInventory"=dword:00000001
+::"DisableUAR"=dword:00000001
+::
+::; Disable MS 365 Ads in Settings Home
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\CloudContent]
 ::"DisableConsumerAccountStateContent"=dword:00000001
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
-::"AllowGameDVR"=dword:00000000
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DataCollection]
+::"AllowTelemetry"=dword:00000000 ; Send only Required Diagnostic and Usage Data
+::"DisableOneSettingsDownloads"=dword:00000001
+::"DoNotShowFeedbackNotifications"=dword:00000001
+::"LimitDiagnosticLogCollection"=dword:00000001
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
-::"PublishUserActivities"=dword:00000000
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DeliveryOptimization]
+::"DODownloadMode"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds]
-::"EnableFeeds"=dword:00000000
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\HandwritingErrorReports]
+::"PreventHandwritingErrorReports"=dword:00000001
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
-::"AllowCortana"=dword:00000000
-::"CortanaConsent"=dword:00000000
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\LocationAndSensors]
+::"DisableLocationScripting"=dword:00000001
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsAI]
-::"AllowRecallEnablement"=dword:00000000
-::"DisableAIDataAnalysis"=dword:00000001
-::"TurnOffSavingSnapshots"=dword:00000001
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Messaging]
+::"AllowMessageSync"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
-::"TurnOffWindowsCopilot"=dword:00000001
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Personalization]
+::"NoLockScreenCamera"=dword:00000001
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
-::"EnableFindMyFiles"=dword:00000001
-::"SystemIndexNormalization"=dword:00000003
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
+::"AllowClipboardHistory"=dword:00000000
+::"AllowCrossDeviceClipboard"=dword:00000000
+::"EnableActivityFeed"=dword:00000000
+::"EnableMmx"=dword:00000000
+::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
+::"UploadUserActivities"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
-::"PromptOnSecureDesktop"=dword:00000000
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
-::"MaxTelemetryAllowed"=dword:00000001
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\TabletPC]
+::"PreventHandwritingDataSharing"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Feeds]
 ::"EnableFeeds"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\CodePage]
-::"ACP"="65001"
-::"MACCP"="65001"
-::"OEMCP"="65001"
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
+::"AllowCloudSearch"=dword:00000000
+::"AllowCortana"=dword:00000000 ; Disable Cortana in search
+::"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
+::"AllowSearchToUseLocation"=dword:00000000
+::"ConnectedSearchUseWeb"=dword:00000000
+::"CortanaConsent"=dword:00000000
+::"DisableWebSearch"=dword:00000001
+::"EnableDynamicContentInWSB"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsAI]
+::"AllowRecallEnablement"=dword:00000000
+::"DisableAIDataAnalysis"=dword:00000001
+::"DisableClickToDo"=dword:00000001 ; Disable click to do
+::"TurnOffSavingSnapshots"=dword:00000001
+::
+::; Disable Copilot service
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
+::"TurnOffWindowsCopilot"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender\Spynet]
+::"SpyNetReporting"=dword:00000000
+::"SubmitSamplesConsent"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows NT\Terminal Services]
+::"fAllowToGetHelp"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control]
+::"SvcHostSplitThresholdInKB"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy]
+::"VerifiedAndReputablePolicyState"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
+::"DisableEmoticon"=dword:00000001
+::"DisplayParameters"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
+::"LongPathsEnabled"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance]
+::"fAllowToGetHelp"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager]
+::"EnablePeriodicBackup"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\AutoLogger-Diagtrack-Listener]
+::"Start"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
+::"IRPStackSize"=dword:00000030
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration]
+::"Status"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\Maps]
-::"AutoUpdateEnabled"=dword:00000001
+::"AutoUpdateEnabled"=dword:00000000
 ::"UpdateOnlyOnWifi"=dword:00000000
 ::
+::; Disable sticky keys shortcut
 ::[HKEY_USERS\.DEFAULT\Control Panel\Accessibility\StickyKeys]
 ::"Flags"="506"
 ::
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32]
-::@=""
+::[HKEY_USERS\.DEFAULT\Control Panel\Desktop]
+::"JPEGImportQuality"=dword:00000064
 ::
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}]
+::[HKEY_USERS\.DEFAULT\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+::"ShowCmd"=dword:00000003
+::"WFlags"=dword:00000002
+::
+::; Hide Gallery on Navigation Pane
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}]
+::; Hide Home on Navigation Pane
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
 ::@="CLSID_MSGraphHomeFolder"
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
+::[HKEY_USERS\.DEFAULT\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
+::@=""
+::
+::[HKEY_USERS\.DEFAULT\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+::"ShowCmd"=dword:00000003
+::"WFlags"=dword:00000002
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Clipboard]
+::"EnableClipboardHistory"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Edge\SmartScreenPuaEnabled]
+::@=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Feeds]
+::"DefaultInterval"=dword:0000000F
+::"SyncStatus"=dword:00000001
+::
+::; Disable "Improve Inking & Typing Recognition"
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Input\TIPC]
 ::"Enabled"=dword:00000000
 ::
+::; Disable "Inking & Typing Personalization"
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\InputPersonalization]
 ::"RestrictImplicitInkCollection"=dword:00000001
 ::"RestrictImplicitTextCollection"=dword:00000001
@@ -2143,56 +2332,231 @@ if "%debug%"=="true" (
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\InputPersonalization\TrainedDataStore]
 ::"HarvestContacts"=dword:00000000
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Internet Explorer\Main]
+::"DoNotTrack"=dword:00000001
+::"Use FormSuggest"="yes"
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Internet Explorer\Privacy]
+::"CleanDownloadHistory"=dword:00000001
+::"CleanForms"=dword:00000001
+::"CleanPassword"=dword:00000001
+::"ClearBrowsingHistoryOnExit"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\MediaPlayer\Preferences]
+::"AcceptedPrivacyStatement"=dword:00000001
+::"FirstRun"=dword:00000000
+::"MetadataRetrieval"=dword:00000003
+::"SilentAcquisition"=dword:00000001
+::"UsageTracking"=dword:00000000
+::"Volume"=dword:00000064
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Office\16.0\Common\LinkedIn]
+::"OfficeLinkedIn"=dword:00000000
+::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Personalization\Settings]
 ::"AcceptedPrivacyPolicy"=dword:00000000
 ::
-::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Siuf\Rules]
+::; Set Feedback Frequency to Never
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Siuf\Rules]
 ::"NumberOfSIUFInPeriod"=dword:00000000
 ::"PeriodInNanoSeconds"=-
 ::
+::; Disable "Online Speech Recognition"
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy]
 ::"HasAccepted"=dword:00000000
 ::
+::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 ::"Enabled"=dword:00000000
 ::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-::"Hidden"=dword:00000001
-::"LaunchTo"=dword:00000001
-::"ShowCopilotButton"=dword:00000000
-::"ShowTaskViewButton"=dword:00000000
-::"Start_TrackProgs"=dword:00000000
-::"TaskbarMn"=dword:00000000
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore]
+::"appDiagnostics"="Deny"
+::"userAccountInformation"="Deny"
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+::"OemPreInstalledAppsEnabled"=dword:00000000
+::"PreInstalledAppsEnabled"=dword:00000000
+::"PreInstalledAppsEverEnabled"=dword:00000000
+::"SilentInstalledAppsEnabled"=dword:00000000
+::"SoftLandingEnabled"=dword:00000000
+::"SystemPaneSuggestionsEnabled"=dword:00000000
+::
+::; Disable "Tailored experiences with diagnostic data"
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
+::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration]
+::"IsResumeAllowed"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization]
+::"SystemSettingsDownloadMode"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
+::"ShowedToastAtLevel"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer]
+::"MaximizeApps"=dword:00000001
+::"ShowRecommendations"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+::"NavPaneShowAllCloudStates"=dword:00000001
+::"SeparateProcess"=dword:00000001
+::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
+::"ShowSyncProviderNotifications"=dword:00000000
+::"Start_IrisRecommendations"=dword:00000000
+::"Start_Layout"=dword:00000001
+::"Start_TrackProgs"=dword:00000000 ; Disable "Let Windows improve Start and search results by tracking app launches"
+::
+::; Enable "End task" in the taskbar
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
 ::"TaskbarEndTask"=dword:00000001
 ::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-::"HideSCAMeetNow"=dword:00000001
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
+::"AllItemsIconView"=dword:00000000
+::"StartupPage"=dword:00000001
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\ShowJumpView]
+::"AllItemsIconView"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+::"{20D04FE0-3AEA-1069-A2D8-08002B30309D}"=dword:00000000
+::"MSEdge"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
+::"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
+::"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
+::"EnthusiastMode"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
+::"ArchivedFiles"=dword:00000001
+::"SystemFolders"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
+::"VisualFXSetting"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\GameDVR]
+::"AppCaptureEnabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
+::"SecureProtocols"=dword:00002820
+::"SyncMode5"=dword:00000003
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
+::"CacheLimit"=dword:00002000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache]
+::"ContentLimit"=dword:00000008
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Cache]
+::"Persistent"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
+::"DaysToKeep"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Mobility]
+::"CrossDeviceEnabled"=dword:00000000
+::"OptedIn"=dword:00000000
+::"PhoneLinkEnabled"=dword:00000000
+::
+::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Privacy]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
-::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
-::"HideGalleryExplorer"="reg add HKCU\\Software\\Classes\\CLSID\\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c} /v System.IsPinnedToNameSpaceTree /t REG_DWORD /d 0 /f"
-::"HideHomeExplorer1"="reg add HKCU\\Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903} /d CLSID_MSGraphHomeFolder /f /ve"
-::"HideHomeExplorer2"="reg add HKCU\\Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903} /v System.IsPinnedToNameSpaceTree /t REG_DWORD /d 0 /f"
-::"RestoreWin10ContextMenu"="reg add HKCU\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32 /f /ve"
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Search]
+::"BingSearchEnabled"=dword:00000000 ; Disable Bing search
+::"SearchboxTaskbarMode"=dword:00000003 ; Show search icon and label
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
+::"IsDynamicSearchBoxEnabled"=dword:00000000
+::
+::; Disable Show mobile device in Start
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 ::"IsEnabled"=dword:00000000
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+::"2048"=dword:0000001E
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
+::"ScoobeSystemSettingEnabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+::"256"=dword:0000003C
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
+::"VideoQualityOnBattery"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\WindowsCopilot]
+::"AllowCopilotRuntime"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Windows Search]
+::"CortanaConsent"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows Security Health\State]
+::"AccountProtection_MicrosoftAccount_Disconnected"=dword:00000001
+::"Hardware_DataEncryption_AddMsa"=dword:00000000
+::
+::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
+::; Disable required and optional diagnostic data about browser usage
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Edge]
+::"AutofillCreditCardEnabled"=dword:00000000
+::"ConfigureDoNotTrack"=dword:00000001
+::"EdgeShoppingAssistantEnabled"=dword:00000000
+::"PaymentMethodQueryEnabled"=dword:00000000
+::"PersonalizationReportingEnabled"=dword:00000000
+::"UserFeedbackAllowed"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Office\16.0\Common]
+::"LinkedIn"=dword:00000000
+::"QMEnable"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
+::"Enabled"=dword:00000000
+::"IncludeEmail"=dword:00000000
+::"SurveyEnabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Office\16.0\osm]
+::"EnableFileObfuscation"=dword:00000001
+::"Enablelogging"=dword:00000000
+::"EnableUpload"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
+::"DisableTelemetry"=dword:00000001
+::"SendTelemetry"=dword:00000003
+::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\CloudContent]
+::"DisableTailoredExperiencesWithDiagnosticData"=dword:00000001
+::
+::; Disable Bing in search
 ::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\Explorer]
 ::"DisableSearchBoxSuggestions"=dword:00000001
 ::
+::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\Windows Feeds]
+::"EnableFeeds"=dword:00000000
+::
+::; Disable AI recall
 ::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\WindowsAI]
 ::"DisableAIDataAnalysis"=dword:00000001
 ::
+::; Disable Copilot service
 ::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\WindowsCopilot]
 ::"TurnOffWindowsCopilot"=dword:00000001
 ::
 ::[HKEY_USERS\.DEFAULT\System\GameConfigStore]
-::"GameDVR_Enabled"=dword:00000000
+::"GameDVR_EFSEFeatureFlags"=dword:00000000
+::"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
+::"GameDVR_FSEBehavior"=dword:00000002
+::"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
+::
+::[HKEY_USERS\S-1-5-20\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Usage]
+::"CacheServerConnectionCount"=dword:00000000
+::"DownlinkUsageBps"=dword:00000000
+::"SwarmCount"=dword:00000000
+::"UploadCount"=dword:00000000
+::"CacheSizeBytes"=hex:00,00,00,00,00,00,00,00
 ::'
 ::
 ::#endregion configs > Windows > Windows base
@@ -2202,30 +2566,135 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION 'Windows Registry Editor Version 5.00
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications]
-::"GlobalUserDisabled"=dword:00000000
+::; Hide "OneDrive" folder
+::[HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Hide "OneDrive" folder
+::[HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Hide "OneDrive" folder
+::[-HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::
+::; Hide "OneDrive" folder
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Enable classic context menu
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
+::@=""
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
-::"ContentDeliveryAllowed"=dword:00000001
 ::"RotatingLockScreenEnabled"=dword:00000001
-::"RotatingLockScreenOverlayEnabled"=dword:00000001
-::"RotatingLockScreenOverlayVisible"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+::"Hidden"=dword:00000001 ; Show hidden files
+::"LaunchTo"=dword:00000001 ; Launch File Explorer to "This PC"
 ::"NavPaneExpandToCurrentFolder"=dword:00000001
 ::"NavPaneShowAllFolders"=dword:00000001
-::"TaskbarGlomLevel"=dword:00000001
+::"ShowTaskViewButton"=dword:00000000 ; Hide Task View in the taskbar
+::"Start_Layout"=dword:00000001
+::"TaskbarAl"=dword:00000000 ; Align taskbar left
+::"TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
+::"TaskbarMn"=dword:00000000 ; Disable chat taskbar (Windows 11)
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers]
-::"BackgroundType"=dword:00000006
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People]
+::"PeopleBand"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
-::"CreativeId"=""
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+::"{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"=dword:00000001
+::
+::; Disable chat taskbar (Windows 10)
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+::"HideSCAMeetNow"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search]
+::"BingSearchEnabled"=dword:00000000 ; Disable Bing search
+::"SearchboxTaskbarMode"=dword:00000001 ; Show search icon
+::"WebViewBundleType"=dword:00000002
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings\Appearance\Current]
+::"baseline"="{00000000-0000-0000-0000-000000000000}"
+::"current"="{00000000-0000-0000-0000-000000000000}"
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
+::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
+::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
+::
+::; Disable widgets service
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
+::"value"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+::"HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
+::"SettingsPageVisibility"="hide:home" ; Disable Home page in settings
+::
+::; Disable widgets service
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
+::"AllowNewsAndInterests"=dword:00000000
+::
+::; Disable chat taskbar (Windows 10)
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+::"HideSCAMeetNow"=dword:00000001
+::
+::; Disable widgets service
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
+::"AllowNewsAndInterests"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\OneDrive]
+::"DisableFileSyncNGSC"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
+::"DisplayParameters"=dword:00000001
+::
+::; Hide "OneDrive" folder
+::[-HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::
+::; Hide "OneDrive" folder
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Enable classic context menu
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
+::@=""
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
 ::"RotatingLockScreenEnabled"=dword:00000001
-::"RotatingLockScreenOverlayEnabled"=dword:00000001
 ::
-::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\CloudContent]
-::"DisableSpotlightCollectionOnDesktop"=dword:00000000
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+::"Hidden"=dword:00000001 ; Show hidden files
+::"LaunchTo"=dword:00000001 ; Launch File Explorer to "This PC"
+::"NavPaneExpandToCurrentFolder"=dword:00000001
+::"NavPaneShowAllFolders"=dword:00000001
+::"ShowTaskViewButton"=dword:00000000 ; Hide Task View in the taskbar
+::"Start_Layout"=dword:00000001
+::"TaskbarAl"=dword:00000000 ; Align taskbar left
+::"TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
+::"TaskbarMn"=dword:00000000 ; Disable chat taskbar (Windows 11)
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People]
+::"PeopleBand"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+::"{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"=dword:00000001
+::
+::; Disable chat taskbar (Windows 10)
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+::"HideSCAMeetNow"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Search]
+::"BingSearchEnabled"=dword:00000000 ; Disable Bing search
+::"SearchboxTaskbarMode"=dword:00000001 ; Show search icon
+::"WebViewBundleType"=dword:00000002
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SearchSettings\Appearance\Current]
+::"baseline"="{00000000-0000-0000-0000-000000000000}"
+::"current"="{00000000-0000-0000-0000-000000000000}"
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Start]
+::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
+::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
 ::'
 ::
 ::#endregion configs > Windows > Windows personalisation
@@ -2610,7 +3079,7 @@ if "%debug%"=="true" (
 ::M025	+	# Disable search with AI in search box (Category: Search)
 ::M003	+	# Disable extension of Windows search with Bing (Category: Search)
 ::M015	+	# Disable People icon in the taskbar (Category: Taskbar)
-::M016	+	# Disable search box in task bar (Category: Taskbar)
+::M016	-	# Disable search box in task bar (Category: Taskbar)
 ::M017	+	# Disable `Meet now` in the task bar (Category: Taskbar)
 ::M018	+	# Disable `Meet now` in the task bar (Category: Taskbar)
 ::M019	+	# Disable news and interests in the task bar (Category: Taskbar)
@@ -2688,6 +3157,21 @@ if "%debug%"=="true" (
 ::}
 ::
 ::#endregion functions > Common > App directory
+::
+::
+::#region functions > Common > Create registry key
+::
+::function New-RegistryKeyIfMissing {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$RegistryPath
+::    )
+::
+::    if (-not (Test-Path $RegistryPath)) {
+::        New-Item $RegistryPath
+::    }
+::}
+::
+::#endregion functions > Common > Create registry key
 ::
 ::
 ::#region functions > Common > Download file
@@ -2785,21 +3269,11 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant PowerShellScript "$PATH_TEMP_DIR\qiiwexc.ps1"
 ::
-::    if (Test-Path $PATH_WINUTIL) {
-::        Remove-Item -Force -Recurse $PATH_WINUTIL -ErrorAction Ignore
-::    }
+::    Remove-Directory $PATH_WINUTIL -Silent
+::    Remove-Directory $PATH_OOSHUTUP10 -Silent
+::    Remove-Directory $PATH_APP_DIR -Silent
 ::
-::    if (Test-Path $PATH_OOSHUTUP10) {
-::        Remove-Item -Force -Recurse $PATH_OOSHUTUP10 -ErrorAction Ignore
-::    }
-::
-::    if (Test-Path $PATH_APP_DIR) {
-::        Remove-Item -Force -Recurse $PATH_APP_DIR -ErrorAction Ignore
-::    }
-::
-::    if (Test-Path $PowerShellScript) {
-::        Remove-Item -Force -Recurse $PowerShellScript -ErrorAction Ignore
-::    }
+::    Remove-File $PowerShellScript -Silent
 ::
 ::    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
 ::    Write-Host ''
@@ -2843,13 +3317,9 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant TemporaryExe "$ExtractionPath\$Executable"
 ::    Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
 ::
-::    if (Test-Path $TemporaryExe) {
-::        Remove-Item -Force $TemporaryExe
-::    }
+::    Remove-File $TemporaryExe
 ::
-::    if (Test-Path $ExtractionPath) {
-::        Remove-Item -Force -Recurse $ExtractionPath
-::    }
+::    Remove-Directory $ExtractionPath
 ::
 ::    New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 ::
@@ -2868,23 +3338,15 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
-::    if (Test-Path $ZipPath) {
-::        Remove-Item -Force $ZipPath
-::    }
+::    Remove-File $ZipPath
 ::
 ::    if (-not $IsDirectory) {
 ::        Move-Item -Force $TemporaryExe $TargetExe
-::
-::        if (Test-Path $ExtractionPath) {
-::            Remove-Item -Force -Recurse $ExtractionPath
-::        }
+::        Remove-Directory $ExtractionPath
 ::    }
 ::
 ::    if (-not $Temp -and $IsDirectory) {
-::        if (Test-Path "$TargetPath\$ExtractionDir") {
-::            Remove-Item -Force -Recurse "$TargetPath\$ExtractionDir"
-::        }
-::
+::        Remove-Directory "$TargetPath\$ExtractionDir"
 ::        Move-Item -Force $ExtractionPath $TargetPath
 ::    }
 ::
@@ -3044,6 +3506,46 @@ if "%debug%"=="true" (
 ::#endregion functions > Common > Open in a browser
 ::
 ::
+::#region functions > Common > Remove directory
+::
+::function Remove-Directory {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$DirectoryPath,
+::        [Switch]$Silent
+::    )
+::
+::    if (Test-Path $DirectoryPath) {
+::        if ($Silent) {
+::            Remove-Item -Force -Recurse $DirectoryPath -ErrorAction Ignore
+::        } else {
+::            Remove-Item -Force -Recurse $DirectoryPath
+::        }
+::    }
+::}
+::
+::#endregion functions > Common > Remove directory
+::
+::
+::#region functions > Common > Remove file
+::
+::function Remove-File {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$FilePath,
+::        [Switch]$Silent
+::    )
+::
+::    if (Test-Path $FilePath) {
+::        if ($Silent) {
+::            Remove-Item -Force $FilePath -ErrorAction Ignore
+::        } else {
+::            Remove-Item -Force $FilePath
+::        }
+::    }
+::}
+::
+::#endregion functions > Common > Remove file
+::
+::
 ::#region functions > Common > Run executable
 ::
 ::function Start-Executable {
@@ -3066,7 +3568,7 @@ if "%debug%"=="true" (
 ::        Out-Success
 ::
 ::        Write-LogInfo "Removing '$Executable'..."
-::        Remove-Item -Force $Executable
+::        Remove-File $Executable
 ::        Out-Success
 ::    } else {
 ::        Write-LogInfo "Running '$Executable'..."
@@ -3430,9 +3932,7 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 2)]$SetDefault
 ::    )
 ::
-::    if (-not (Test-Path $RegistryPath)) {
-::        New-Item $RegistryPath
-::    }
+::    New-RegistryKeyIfMissing $RegistryPath
 ::
 ::    if ($SetDefault) {
 ::        Set-Variable -Option Constant DefaultAssociation (Get-ItemProperty -Path $RegistryPath).'(Default)'
@@ -3442,9 +3942,7 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    Set-Variable -Option Constant OpenWithProgidsPath "$RegistryPath\OpenWithProgids"
-::    if (-not (Test-Path $OpenWithProgidsPath)) {
-::        New-Item $OpenWithProgidsPath
-::    }
+::    New-RegistryKeyIfMissing $OpenWithProgidsPath
 ::
 ::    Set-Variable -Option Constant OpenWithProgids (Get-ItemProperty -Path $OpenWithProgidsPath)
 ::    if ($OpenWithProgids) {
@@ -3485,7 +3983,13 @@ if "%debug%"=="true" (
 ::    if (-not (Test-Path $Path)) {
 ::        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it"
 ::
-::        Start-Process $ProcessName
+::        try {
+::            Start-Process $ProcessName -ErrorAction Stop
+::        } catch [Exception] {
+::            Write-ExceptionLog $_ "Couldn't start '$AppName'"
+::            return
+::        }
+::
 ::        for ([Int]$i = 0; $i -lt 5; $i++) {
 ::            Start-Sleep -Seconds 10
 ::            if (Test-Path $Path) {
@@ -3673,7 +4177,7 @@ if "%debug%"=="true" (
 ::        }
 ::    }
 ::
-::    Remove-Item -Path $SophiaScriptPath -Force
+::    Remove-File $SophiaScriptPath
 ::
 ::    Out-Success
 ::}
@@ -3690,6 +4194,8 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Applying Windows personalisation configuration...'
 ::
+::    Set-WinHomeLocation -GeoId 140
+::
 ::    Set-Variable -Option Constant LanguageList (Get-WinUserLanguageList)
 ::    if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
 ::        $LanguageList.Add('lv-LV')
@@ -3699,12 +4205,6 @@ if "%debug%"=="true" (
 ::    [String]$ConfigLines = ''
 ::
 ::    try {
-::        foreach ($Registry in (Get-UsersRegistryKeys)) {
-::            # [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]
-::            # `"RotatingLockScreenEnabled`"=dword:00000001
-::            # `"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"
-::        }
-::
 ::        Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
 ::        foreach ($Registry in $NotificationRegistries) {
 ::            $ConfigLines += "`n[$Registry]`n"
@@ -3794,7 +4294,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Applying Windows search index configuration...'
 ::
-::    [String]$ConfigLines = ''
+::    [String]$ConfigLines = "Windows Registry Editor Version 5.00`n"
 ::
 ::    try {
 ::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
@@ -3805,7 +4305,7 @@ if "%debug%"=="true" (
 ::                [String]$DefaultHandler = (Get-ItemProperty "Registry::$PersistentHandler").'(default)'
 ::
 ::                if ($DefaultHandler -and -not ($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
-::                    $ConfigLines += "`n[$Reg]`n"
+::                    $ConfigLines += "`n[$Registry\PersistentHandler]`n"
 ::                    $ConfigLines += "@=`"{098F2470-BAE0-11CD-B579-08002B30BFEB}`"`n"
 ::                    $ConfigLines += "`"OriginalPersistentHandler`"=`"$DefaultHandler`"`n"
 ::                }
@@ -4181,9 +4681,8 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    Set-Variable -Option Constant Registry_Key 'HKCU:\Software\Unchecky'
-::    if (-not (Test-Path $Registry_Key)) {
-::        New-Item $Registry_Key
-::    }
+::    New-RegistryKeyIfMissing $Registry_Key
+::
 ::    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1
 ::
 ::    Set-Variable -Option Constant Params $(if ($Silent) { '-install -no_desktop_icon' })
