@@ -25,13 +25,9 @@ function Expand-Zip {
     Set-Variable -Option Constant TemporaryExe "$ExtractionPath\$Executable"
     Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
 
-    if (Test-Path $TemporaryExe) {
-        Remove-Item -Force $TemporaryExe
-    }
+    Remove-File $TemporaryExe
 
-    if (Test-Path $ExtractionPath) {
-        Remove-Item -Force -Recurse $ExtractionPath
-    }
+    Remove-Directory $ExtractionPath
 
     New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 
@@ -50,23 +46,15 @@ function Expand-Zip {
         return
     }
 
-    if (Test-Path $ZipPath) {
-        Remove-Item -Force $ZipPath
-    }
+    Remove-File $ZipPath
 
     if (-not $IsDirectory) {
         Move-Item -Force $TemporaryExe $TargetExe
-
-        if (Test-Path $ExtractionPath) {
-            Remove-Item -Force -Recurse $ExtractionPath
-        }
+        Remove-Directory $ExtractionPath
     }
 
     if (-not $Temp -and $IsDirectory) {
-        if (Test-Path "$TargetPath\$ExtractionDir") {
-            Remove-Item -Force -Recurse "$TargetPath\$ExtractionDir"
-        }
-
+        Remove-Directory "$TargetPath\$ExtractionDir"
         Move-Item -Force $ExtractionPath $TargetPath
     }
 

@@ -18,7 +18,7 @@ function Start-Executable {
         Out-Success
 
         Write-LogInfo "Removing '$Executable'..."
-        Remove-Item -Force $Executable
+        Remove-File $Executable
         Out-Success
     } else {
         Write-LogInfo "Running '$Executable'..."
