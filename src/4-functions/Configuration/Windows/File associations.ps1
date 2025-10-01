@@ -28,7 +28,7 @@ function Set-FileAssociations {
         }
     }
 
-    Remove-Item -Path $SophiaScriptPath -Force
+    Remove-File $SophiaScriptPath
 
     Out-Success
 }
