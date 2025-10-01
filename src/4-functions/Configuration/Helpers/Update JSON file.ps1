@@ -13,7 +13,13 @@ function Update-JsonFile {
     if (-not (Test-Path $Path)) {
         Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it"
 
-        Start-Process $ProcessName
+        try {
+            Start-Process $ProcessName -ErrorAction Stop
+        } catch [Exception] {
+            Write-ExceptionLog $_ "Couldn't start '$AppName'"
+            return
+        }
+
         for ([Int]$i = 0; $i -lt 5; $i++) {
             Start-Sleep -Seconds 10
             if (Test-Path $Path) {
