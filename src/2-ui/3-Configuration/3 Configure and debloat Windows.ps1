@@ -29,15 +29,15 @@ New-Button 'WinUtil' $BUTTON_FUNCTION
 [System.Windows.Forms.CheckBox]$CHECKBOX_AutomaticallyRunWinUtil = New-CheckBox 'Auto apply tweaks'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-ShutUp10 -Execute:$CHECKBOX_StartShutUp10.Checked -Silent:($CHECKBOX_StartShutUp10.Checked -and $CHECKBOX_SilentlyRunShutUp10.Checked) }
-New-Button 'ShutUp10++ privacy' $BUTTON_FUNCTION
+[ScriptBlock]$BUTTON_FUNCTION = { Start-OoShutUp10 -Execute:$CHECKBOX_StartOoShutUp10.Checked -Silent:($CHECKBOX_StartOoShutUp10.Checked -and $CHECKBOX_SilentlyRunOoShutUp10.Checked) }
+New-Button 'OOShutUp10++ privacy' $BUTTON_FUNCTION
 
-[System.Windows.Forms.CheckBox]$CHECKBOX_StartShutUp10 = New-CheckBoxRunAfterDownload -Checked
-$CHECKBOX_StartShutUp10.Add_CheckStateChanged( {
-        $CHECKBOX_SilentlyRunShutUp10.Enabled = $CHECKBOX_StartShutUp10.Checked
-        if (-not $CHECKBOX_SilentlyRunShutUp10.Enabled) {
-            $CHECKBOX_SilentlyRunShutUp10.Checked = $CHECKBOX_SilentlyRunShutUp10.Enabled
+[System.Windows.Forms.CheckBox]$CHECKBOX_StartOoShutUp10 = New-CheckBoxRunAfterDownload -Checked
+$CHECKBOX_StartOoShutUp10.Add_CheckStateChanged( {
+        $CHECKBOX_SilentlyRunOoShutUp10.Enabled = $CHECKBOX_StartOoShutUp10.Checked
+        if (-not $CHECKBOX_SilentlyRunOoShutUp10.Enabled) {
+            $CHECKBOX_SilentlyRunOoShutUp10.Checked = $CHECKBOX_SilentlyRunOoShutUp10.Enabled
         }
     } )
 
-[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunShutUp10 = New-CheckBox 'Silently apply tweaks'
+[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks'

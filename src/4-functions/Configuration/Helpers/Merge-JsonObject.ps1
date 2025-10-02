@@ -1,4 +1,4 @@
-function Merge-JsonObjects {
+function Merge-JsonObject {
     param(
         [Parameter(Position = 0, Mandatory = $True)]$Source,
         [Parameter(Position = 1, Mandatory = $True)]$Extend
@@ -11,7 +11,7 @@ function Merge-JsonObjects {
             if ($Null -eq $Extend.$($Property.Name)) {
                 $Merged[$Property.Name] = $Property.Value
             } else {
-                $Merged[$Property.Name] = Merge-JsonObjects $Property.Value $Extend.$($Property.Name)
+                $Merged[$Property.Name] = Merge-JsonObject $Property.Value $Extend.$($Property.Name)
             }
         }
 
@@ -31,7 +31,7 @@ function Merge-JsonObjects {
             } elseif ($i -ge $Extend.Count) {
                 $Source[$i]
             } else {
-                Merge-JsonObjects $Source[$i] $Extend[$i]
+                Merge-JsonObject $Source[$i] $Extend[$i]
             }
         }
 

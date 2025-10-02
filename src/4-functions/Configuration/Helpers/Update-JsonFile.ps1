@@ -31,7 +31,7 @@ function Update-JsonFile {
     Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
     Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
 
-    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObjects $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
+    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
 
     $UpdatedConfig | Out-File $Path -Encoding UTF8
 

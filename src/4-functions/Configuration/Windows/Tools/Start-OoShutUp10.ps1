@@ -1,10 +1,10 @@
-function Start-ShutUp10 {
+function Start-OoShutUp10 {
     param(
         [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
         [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
     )
 
-    Write-LogInfo 'Starting ShutUp10++ utility...'
+    Write-LogInfo 'Starting OOShutUp10++ utility...'
 
     Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
     if ($NoConnection) {
@@ -20,8 +20,8 @@ function Start-ShutUp10 {
     $CONFIG_SHUTUP10 | Out-File $ConfigFile -Encoding UTF8
 
     if ($Silent) {
-        Start-DownloadUnzipAndRun -Execute:$Execute '{URL_SHUTUP10}' -Params $ConfigFile
+        Start-DownloadUnzipAndRun -Execute:$Execute '{URL_OOSHUTUP10}' -Params $ConfigFile
     } else {
-        Start-DownloadUnzipAndRun -Execute:$Execute '{URL_SHUTUP10}'
+        Start-DownloadUnzipAndRun -Execute:$Execute '{URL_OOSHUTUP10}'
     }
 }
