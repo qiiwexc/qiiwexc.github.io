@@ -18,10 +18,7 @@ New-Button 'Unchecky' $BUTTON_FUNCTION
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Checked
 $CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
-        $CHECKBOX_SilentlyInstallUnchecky.Enabled = $CHECKBOX_StartUnchecky.Checked
-        if (-not $CHECKBOX_SilentlyInstallUnchecky.Enabled) {
-            $CHECKBOX_SilentlyInstallUnchecky.Checked = $CHECKBOX_SilentlyInstallUnchecky.Enabled
-        }
+        Set-CheckboxState -Control:$CHECKBOX_StartUnchecky -Dependant:$CHECKBOX_SilentlyInstallUnchecky
     } )
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Checked

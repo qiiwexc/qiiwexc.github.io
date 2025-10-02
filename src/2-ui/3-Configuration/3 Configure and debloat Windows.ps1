@@ -6,14 +6,8 @@ New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Checked
 $CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
-        $CHECKBOX_SilentlyRunDebloat.Enabled = $CHECKBOX_UseDebloatPreset.Checked
-        if (-not $CHECKBOX_SilentlyRunDebloat.Enabled) {
-            $CHECKBOX_SilentlyRunDebloat.Checked = $CHECKBOX_SilentlyRunDebloat.Enabled
-        }
-        $CHECKBOX_DebloatAndPersonalise.Enabled = $CHECKBOX_UseDebloatPreset.Checked
-        if (-not $CHECKBOX_DebloatAndPersonalise.Enabled) {
-            $CHECKBOX_DebloatAndPersonalise.Checked = $CHECKBOX_DebloatAndPersonalise.Enabled
-        }
+        Set-CheckboxState -Control:$CHECKBOX_UseDebloatPreset -Dependant:$CHECKBOX_SilentlyRunDebloat
+        Set-CheckboxState -Control:$CHECKBOX_UseDebloatPreset -Dependant:$CHECKBOX_DebloatAndPersonalise
     } )
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings'
