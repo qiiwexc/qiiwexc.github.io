@@ -24,5 +24,5 @@ Set-Variable -Option Constant AppsConfigurationParameters @{
     Edge        = $CHECKBOX_Config_Edge
     Chrome      = $CHECKBOX_Config_Chrome
 }
-[ScriptBlock]$BUTTON_FUNCTION = { Set-AppsConfiguration }
+[ScriptBlock]$BUTTON_FUNCTION = { Set-AppsConfiguration @AppsConfigurationParameters }
 New-Button 'Apply configuration' $BUTTON_FUNCTION

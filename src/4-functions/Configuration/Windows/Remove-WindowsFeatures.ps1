@@ -26,7 +26,7 @@ function Remove-WindowsFeatures {
     }
 
     if ($CapabilitiesToRemove.Count -eq 0) {
-        Out-Success
+        Write-LogInfo 'Nothing to remove'
     }
 
     if (Test-Path 'mstsc.exe') {
