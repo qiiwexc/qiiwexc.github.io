@@ -6,10 +6,7 @@ New-Button 'Setup CloudFlare DNS' $BUTTON_FUNCTION
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 $CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
-        $CHECKBOX_CloudFlareFamilyFriendly.Enabled = $CHECKBOX_CloudFlareAntiMalware.Checked
-        if (-not $CHECKBOX_CloudFlareFamilyFriendly.Enabled) {
-            $CHECKBOX_CloudFlareFamilyFriendly.Checked = $CHECKBOX_CloudFlareFamilyFriendly.Enabled
-        }
+        Set-CheckboxState -Control:$CHECKBOX_CloudFlareAntiMalware -Dependant:$CHECKBOX_CloudFlareFamilyFriendly
     } )
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
