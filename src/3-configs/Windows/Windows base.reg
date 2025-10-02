@@ -104,6 +104,12 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
 @=""
 
+[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]
+"DoNotTrack"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
+"EnableCortana"=dword:00000000
+
 [HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 "ShowCmd"=dword:00000003
 "WFlags"=dword:00000002
@@ -167,9 +173,11 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 "Enabled"=dword:00000000
 
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore]
-"appDiagnostics"="Deny"
-"userAccountInformation"="Deny"
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
+"value"="Deny"
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
+"value"="Deny"
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
 "OemPreInstalledAppsEnabled"=dword:00000000
@@ -404,10 +412,11 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 "Enabled"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore]
-"appDiagnostics"="Deny"
-"location"="Deny"
-"userAccountInformation"="Deny"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
+"value"="Deny"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
+"value"="Deny"
 
 ; Disable "Tailored experiences with diagnostic data"
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CPSS\Store]
@@ -543,7 +552,8 @@ Windows Registry Editor Version 5.00
 "LastNoExecuteRadioButtonState"=dword:000036BD
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
-"SystemResponsiveness"=dword:00000000
+"NetworkThrottlingIndex"=dword:FFFFFFFF
+"SystemResponsiveness"=dword:00000010
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
 "SensorPermissionState"=dword:00000000
@@ -845,6 +855,9 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
 "LongPathsEnabled"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
+"PowerThrottlingOff"=dword:00000001
+
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance]
 "fAllowToGetHelp"=dword:00000000
 
@@ -855,10 +868,18 @@ Windows Registry Editor Version 5.00
 "Start"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
-"IRPStackSize"=dword:00000030
+"IRPStackSize"=dword:0000001E
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration]
 "Status"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"DefaultTTL"=dword:00000064
+"GlobalMaxTcpWindowSize"=dword:00065535
+"MaxUserPort"=dword:00065534
+"Tcp1323Opts"=dword:00000001
+"TcpMaxDupAcks"=dword:00000002
+"TCPTimedWaitDelay"=dword:00000030
 
 [HKEY_LOCAL_MACHINE\SYSTEM\Maps]
 "AutoUpdateEnabled"=dword:00000000
@@ -886,6 +907,12 @@ Windows Registry Editor Version 5.00
 
 [HKEY_USERS\.DEFAULT\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
 @=""
+
+[HKEY_USERS\.DEFAULT\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]
+"DoNotTrack"=dword:00000001
+
+[HKEY_USERS\.DEFAULT\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
+"EnableCortana"=dword:00000000
 
 [HKEY_USERS\.DEFAULT\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 "ShowCmd"=dword:00000003
@@ -950,9 +977,11 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 "Enabled"=dword:00000000
 
-[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore]
-"appDiagnostics"="Deny"
-"userAccountInformation"="Deny"
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
+"value"="Deny"
+
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
+"value"="Deny"
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
 "OemPreInstalledAppsEnabled"=dword:00000000
