@@ -1,25 +1,34 @@
 function Set-AppsConfiguration {
-    if ($CHECKBOX_Config_VLC.Checked) {
-        Set-VlcConfiguration $CHECKBOX_Config_VLC.Text
+    param(
+        [System.Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$7zip,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$VLC,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$TeamViewer,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$qBittorrent,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Edge,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory = $True)]$Chrome
+    )
+
+    if ($VLC.Checked) {
+        Set-VlcConfiguration $VLC.Text
     }
 
-    if ($CHECKBOX_Config_qBittorrent.Checked) {
-        Set-qBittorrentConfiguration $CHECKBOX_Config_qBittorrent.Text
+    if ($qBittorrent.Checked) {
+        Set-qBittorrentConfiguration $qBittorrent.Text
     }
 
-    if ($CHECKBOX_Config_7zip.Checked) {
-        Import-RegistryConfiguration $CHECKBOX_Config_7zip.Text $CONFIG_7ZIP
+    if ($7zip.Checked) {
+        Import-RegistryConfiguration $7zip.Text $CONFIG_7ZIP
     }
 
-    if ($CHECKBOX_Config_TeamViewer.Checked) {
-        Import-RegistryConfiguration $CHECKBOX_Config_TeamViewer.Text $CONFIG_TEAMVIEWER
+    if ($TeamViewer.Checked) {
+        Import-RegistryConfiguration $TeamViewer.Text $CONFIG_TEAMVIEWER
     }
 
-    if ($CHECKBOX_Config_Edge.Checked) {
-        Set-MicrosoftEdgeConfiguration $CHECKBOX_Config_Edge.Text
+    if ($Edge.Checked) {
+        Set-MicrosoftEdgeConfiguration $Edge.Text
     }
 
-    if ($CHECKBOX_Config_Chrome.Checked) {
-        Set-GoogleChromeConfiguration $CHECKBOX_Config_Chrome.Text
+    if ($Chrome.Checked) {
+        Set-GoogleChromeConfiguration $Chrome.Text
     }
 }

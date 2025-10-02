@@ -1,6 +1,6 @@
 New-GroupBox 'Windows configuration'
 
-[Boolean]$PAD_CHECKBOXES = $False
+[Switch]$PAD_CHECKBOXES = $False
 
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBase = New-CheckBox 'Base config and privacy' -Checked
@@ -14,5 +14,12 @@ New-GroupBox 'Windows configuration'
 [System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration }
+Set-Variable -Option Constant WindowsConfigurationParameters @{
+    Base             = $CHECKBOX_Config_WindowsBase
+    PowerScheme      = $CHECKBOX_Config_PowerScheme
+    Search           = $CHECKBOX_Config_WindowsSearch
+    FileAssociations = $CHECKBOX_Config_FileAssociations
+    Personalisation  = $CHECKBOX_Config_WindowsPersonalisation
+}
+[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration @WindowsConfigurationParameters }
 New-Button 'Apply configuration' $BUTTON_FUNCTION
