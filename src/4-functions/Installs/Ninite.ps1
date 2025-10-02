@@ -5,8 +5,8 @@ function Set-NiniteButtonState {
 
 function Get-NiniteInstaller {
     param(
-        [Boolean][Parameter(Position = 0, Mandatory = $True)]$OpenInBrowser,
-        [Boolean][Parameter(Position = 1)]$Execute
+        [Switch][Parameter(Position = 0, Mandatory = $True)]$OpenInBrowser,
+        [Switch][Parameter(Position = 1)]$Execute
     )
 
     [String[]]$AppIds = @()

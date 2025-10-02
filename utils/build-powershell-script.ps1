@@ -20,7 +20,7 @@ function New-PowerShellScript {
         [String]$FilePath = $File.FullName
         [String]$FileName = $File.Name
 
-        [Boolean]$IsConfigFile = -not ($FileName -match '\.ps1$')
+        [Switch]$IsConfigFile = -not ($FileName -match '\.ps1$')
 
         [String]$CurrentRegion = $FilePath.Replace('\src\', '|').Split('|')[1].Replace('\', ' > ') -replace '\..{1,}$', '' -replace '\d{1,2}(-|\s)', ''
 

@@ -1,7 +1,7 @@
 New-GroupBox 'Activators (Windows 7+, Office)'
 
 
-[Boolean]$BUTTON_DISABLED = $OS_VERSION -lt 7
+[Switch]$BUTTON_DISABLED = $OS_VERSION -lt 7
 [ScriptBlock]$BUTTON_FUNCTION = { Start-Activator }
 New-Button 'MAS Activator' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 

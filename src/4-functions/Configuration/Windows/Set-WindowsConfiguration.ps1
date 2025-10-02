@@ -1,21 +1,29 @@
 function Set-WindowsConfiguration {
-    if ($CHECKBOX_Config_WindowsBase.Checked) {
-        Set-WindowsBaseConfiguration $CHECKBOX_Config_WindowsBase.Text
+    param(
+        [System.Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Base,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$PowerScheme,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$Search,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$FileAssociations,
+        [System.Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Personalisation
+    )
+
+    if ($Base.Checked) {
+        Set-WindowsBaseConfiguration $Base.Text
     }
 
-    if ($CHECKBOX_Config_PowerScheme.Checked) {
+    if ($PowerScheme.Checked) {
         Set-PowerSchemeConfiguration
     }
 
-    if ($CHECKBOX_Config_WindowsSearch.Checked) {
-        Set-SearchConfiguration $CHECKBOX_Config_WindowsSearch.Text
+    if ($Search.Checked) {
+        Set-SearchConfiguration $Search.Text
     }
 
-    if ($CHECKBOX_Config_FileAssociations.Checked) {
+    if ($FileAssociations.Checked) {
         Set-FileAssociations
     }
 
-    if ($CHECKBOX_Config_WindowsPersonalisation.Checked) {
-        Set-WindowsPersonalisationConfig $CHECKBOX_Config_WindowsPersonalisation.Text
+    if ($Personalisation.Checked) {
+        Set-WindowsPersonalisationConfig $Personalisation.Text
     }
 }
