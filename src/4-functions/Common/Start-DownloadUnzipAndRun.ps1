@@ -8,6 +8,10 @@ function Start-DownloadUnzipAndRun {
         [Switch]$Silent
     )
 
+    if ($AVWarning -and (Get-MicrosoftSecurityStatus)) {
+        Write-LogWarning 'Microsoft Security is enabled'
+    }
+
     if ($AVWarning -and -not $AV_WARNING_SHOWN) {
         Write-LogWarning 'This file may trigger anti-virus false positive!'
         Write-LogWarning 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
