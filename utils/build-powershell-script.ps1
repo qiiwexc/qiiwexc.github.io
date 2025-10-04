@@ -37,8 +37,9 @@ function New-PowerShellScript {
 
         if ($IsConfigFile) {
             [String]$VariableName = "CONFIG_$(($FileName.Replace(' ', '_') -replace '\..{1,}$', '').ToUpper())"
-            $Content[0] = "Set-Variable -Option Constant $VariableName '$($Content[0])"
-            $OutputStrings += $Content
+            [String[]]$EscapedContent = $Content.Replace("'", '"')
+            $EscapedContent[0] = "Set-Variable -Option Constant $VariableName '$($EscapedContent[0])"
+            $OutputStrings += $EscapedContent
             $OutputStrings += "'"
         } else {
             $OutputStrings += $Content

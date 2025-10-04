@@ -13,11 +13,11 @@ function Start-OoShutUp10 {
     }
 
     Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_OOSHUTUP10 } else { $PATH_WORKING_DIR })
-    Set-Variable -Option Constant ConfigFile "$TargetPath\OOShutUp10.cfg"
+    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
 
     New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
-    $CONFIG_SHUTUP10 | Out-File $ConfigFile -Encoding UTF8
+    $CONFIG_OOSHUTUP10 | Out-File $ConfigFile -Encoding UTF8
 
     if ($Silent) {
         Start-DownloadUnzipAndRun -Execute:$Execute '{URL_OOSHUTUP10}' -Params $ConfigFile
