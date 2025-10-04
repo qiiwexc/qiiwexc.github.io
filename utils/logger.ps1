@@ -9,22 +9,22 @@ function Write-LogWarning {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Message
     )
-    Write-Log 'WARN' $Message
+    Write-Log 'WARN' "$(Get-Emoji '26A0') $Message"
 }
 
 function Write-LogError {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$Message
     )
-    Write-Log 'ERROR' $Message
+    Write-Log 'ERROR' "$(Get-Emoji '274C') $Message"
 }
 
 function Out-Success {
-    Write-LogInfo '   > Done'
+    Write-LogInfo "   > Done $(Get-Emoji '2705')"
 }
 
 function Out-Failure {
-    Write-LogInfo '   > Failed'
+    Write-LogInfo "   > Failed $(Get-Emoji '274C')"
 }
 
 function Write-ExceptionLog {
@@ -58,4 +58,14 @@ function Write-Log {
             Write-Host -NoNewline "$Text`n"
         }
     }
+}
+
+function Get-Emoji {
+    param(
+        [String][Parameter(Position = 0, Mandatory = $True)]$Code
+    )
+
+    Set-Variable -Option Constant Emoji ([System.Convert]::toInt32($Code, 16))
+
+    return [System.Char]::ConvertFromUtf32($Emoji)
 }
