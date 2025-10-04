@@ -44,7 +44,6 @@ Windows Registry Editor Version 5.00
 "HideSCAMeetNow"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search]
-"BingSearchEnabled"=dword:00000000 ; Disable Bing search
 "SearchboxTaskbarMode"=dword:00000001 ; Show search icon
 "WebViewBundleType"=dword:00000002
 
@@ -75,12 +74,6 @@ Windows Registry Editor Version 5.00
 ; Disable widgets service
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 "AllowNewsAndInterests"=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\OneDrive]
-"DisableFileSyncNGSC"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
-"DisplayParameters"=dword:00000001
 
 ; Hide "OneDrive" folder
 [-HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
@@ -118,7 +111,6 @@ Windows Registry Editor Version 5.00
 "HideSCAMeetNow"=dword:00000001
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Search]
-"BingSearchEnabled"=dword:00000000 ; Disable Bing search
 "SearchboxTaskbarMode"=dword:00000001 ; Show search icon
 "WebViewBundleType"=dword:00000002
 
