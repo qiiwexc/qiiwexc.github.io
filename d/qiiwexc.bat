@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.3')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.4')
 ::
 ::#endregion init > Version
 ::
@@ -83,7 +83,7 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant PATH_APP_DIR "$($PATH_TEMP_DIR)qiiwexc"
 ::Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 ::Set-Variable -Option Constant PATH_WINUTIL "$env:ProgramData\WinUtil"
-::Set-Variable -Option Constant PATH_OOSHUTUP10 "$env:ProgramData\OOShutUp10"
+::Set-Variable -Option Constant PATH_OOSHUTUP10 "$env:ProgramData\OOShutUp10++"
 ::
 ::
 ::Set-Variable -Option Constant IS_LAPTOP ((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2)
@@ -1602,9 +1602,15 @@ if "%debug%"=="true" (
 ::"OemPreInstalledAppsEnabled"=dword:00000000
 ::"PreInstalledAppsEnabled"=dword:00000000
 ::"PreInstalledAppsEverEnabled"=dword:00000000
-::"SilentInstalledAppsEnabled"=dword:00000000
-::"SoftLandingEnabled"=dword:00000000
-::"SystemPaneSuggestionsEnabled"=dword:00000000
+::"SilentInstalledAppsEnabled"=dword:00000000 ; Automatic Installation of Suggested Apps
+::"SoftLandingEnabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+::"SubscribedContent-310093Enabled"=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what"s new and suggested
+::"SubscribedContent-338388Enabled"=dword:00000000 ; Occasionally show suggestions in Start
+::"SubscribedContent-338389Enabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+::"SubscribedContent-353694Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+::"SubscribedContent-353696Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+::"SubscribedContent-353698Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+::"SystemPaneSuggestionsEnabled"=dword:00000000 ; Occasionally show suggestions in Start
 ::
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
@@ -1627,9 +1633,9 @@ if "%debug%"=="true" (
 ::"NavPaneShowAllCloudStates"=dword:00000001
 ::"SeparateProcess"=dword:00000001
 ::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
-::"ShowSyncProviderNotifications"=dword:00000000
-::"Start_IrisRecommendations"=dword:00000000
-::"Start_Layout"=dword:00000001
+::"ShowSyncProviderNotifications"=dword:00000000 ; Sync provider ads
+::"Start_AccountNotifications"=dword:00000000 ; Disable Show account-related notifications
+::"Start_IrisRecommendations"=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
 ::"Start_TrackProgs"=dword:00000000 ; Disable "Let Windows improve Start and search results by tracking app launches"
 ::
 ::; Enable "End task" in the taskbar
@@ -1684,7 +1690,7 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Mobility]
 ::"CrossDeviceEnabled"=dword:00000000
-::"OptedIn"=dword:00000000
+::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 ::"PhoneLinkEnabled"=dword:00000000
 ::
 ::; Disable "Tailored experiences with diagnostic data"
@@ -1698,13 +1704,25 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
 ::"IsDynamicSearchBoxEnabled"=dword:00000000
 ::
+::; Disable Windows Backup reminder notifications
+::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
+::"Enabled"=dword:00000000
+::
+::; Disable "Suggested" app notifications (Ads for MS services)
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+::"Enabled"=dword:00000000
+::
 ::; Disable Show mobile device in Start
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 ::"IsEnabled"=dword:00000000
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications]
+::"EnableAccountNotifications"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
 ::"2048"=dword:0000001E
 ::
+::; Suggest ways I can finish setting up my device to get the most out of Windows
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
 ::"ScoobeSystemSettingEnabled"=dword:00000000
 ::
@@ -1942,6 +1960,7 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
+::; Disable Windows Backup reminder notifications
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
 ::"DisableMonitoring"=dword:00000001
 ::
@@ -2406,9 +2425,15 @@ if "%debug%"=="true" (
 ::"OemPreInstalledAppsEnabled"=dword:00000000
 ::"PreInstalledAppsEnabled"=dword:00000000
 ::"PreInstalledAppsEverEnabled"=dword:00000000
-::"SilentInstalledAppsEnabled"=dword:00000000
-::"SoftLandingEnabled"=dword:00000000
-::"SystemPaneSuggestionsEnabled"=dword:00000000
+::"SilentInstalledAppsEnabled"=dword:00000000 ; Automatic Installation of Suggested Apps
+::"SoftLandingEnabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+::"SubscribedContent-310093Enabled"=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what"s new and suggested
+::"SubscribedContent-338388Enabled"=dword:00000000 ; Occasionally show suggestions in Start
+::"SubscribedContent-338389Enabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+::"SubscribedContent-353694Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+::"SubscribedContent-353696Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+::"SubscribedContent-353698Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+::"SystemPaneSuggestionsEnabled"=dword:00000000 ; Occasionally show suggestions in Start
 ::
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
@@ -2431,9 +2456,9 @@ if "%debug%"=="true" (
 ::"NavPaneShowAllCloudStates"=dword:00000001
 ::"SeparateProcess"=dword:00000001
 ::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
-::"ShowSyncProviderNotifications"=dword:00000000
-::"Start_IrisRecommendations"=dword:00000000
-::"Start_Layout"=dword:00000001
+::"ShowSyncProviderNotifications"=dword:00000000 ; Sync provider ads
+::"Start_AccountNotifications"=dword:00000000 ; Disable Show account-related notifications
+::"Start_IrisRecommendations"=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
 ::"Start_TrackProgs"=dword:00000000 ; Disable "Let Windows improve Start and search results by tracking app launches"
 ::
 ::; Enable "End task" in the taskbar
@@ -2488,7 +2513,7 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Mobility]
 ::"CrossDeviceEnabled"=dword:00000000
-::"OptedIn"=dword:00000000
+::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 ::"PhoneLinkEnabled"=dword:00000000
 ::
 ::; Disable "Tailored experiences with diagnostic data"
@@ -2502,13 +2527,25 @@ if "%debug%"=="true" (
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
 ::"IsDynamicSearchBoxEnabled"=dword:00000000
 ::
+::; Disable Windows Backup reminder notifications
+::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
+::"Enabled"=dword:00000000
+::
+::; Disable "Suggested" app notifications (Ads for MS services)
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+::"Enabled"=dword:00000000
+::
 ::; Disable Show mobile device in Start
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 ::"IsEnabled"=dword:00000000
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications]
+::"EnableAccountNotifications"=dword:00000000
+::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
 ::"2048"=dword:0000001E
 ::
+::; Suggest ways I can finish setting up my device to get the most out of Windows
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
 ::"ScoobeSystemSettingEnabled"=dword:00000000
 ::
@@ -2639,7 +2676,6 @@ if "%debug%"=="true" (
 ::"HideSCAMeetNow"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search]
-::"BingSearchEnabled"=dword:00000000 ; Disable Bing search
 ::"SearchboxTaskbarMode"=dword:00000001 ; Show search icon
 ::"WebViewBundleType"=dword:00000002
 ::
@@ -2670,12 +2706,6 @@ if "%debug%"=="true" (
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\OneDrive]
-::"DisableFileSyncNGSC"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
-::"DisplayParameters"=dword:00000001
 ::
 ::; Hide "OneDrive" folder
 ::[-HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
@@ -2713,7 +2743,6 @@ if "%debug%"=="true" (
 ::"HideSCAMeetNow"=dword:00000001
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Search]
-::"BingSearchEnabled"=dword:00000000 ; Disable Bing search
 ::"SearchboxTaskbarMode"=dword:00000001 ; Show search icon
 ::"WebViewBundleType"=dword:00000002
 ::
@@ -2880,9 +2909,9 @@ if "%debug%"=="true" (
 ::#endregion configs > Windows > Tools > Debloat preset personalisation
 ::
 ::
-::#region configs > Windows > Tools > ShutUp10
+::#region configs > Windows > Tools > OOShutUp10
 ::
-::Set-Variable -Option Constant CONFIG_SHUTUP10 'P001	+	# Disable sharing of handwriting data (Category: Privacy)
+::Set-Variable -Option Constant CONFIG_OOSHUTUP10 'P001	+	# Disable sharing of handwriting data (Category: Privacy)
 ::P002	+	# Disable sharing of handwriting error reports (Category: Privacy)
 ::P003	+	# Disable Inventory Collector (Category: Privacy)
 ::P004	+	# Disable camera in logon screen (Category: Privacy)
@@ -2904,7 +2933,7 @@ if "%debug%"=="true" (
 ::P068	-	# Disable text suggestions when typing on the software keyboard (Category: Privacy)
 ::P016	-	# Disable sending URLs from apps to Windows Store (Category: Privacy)
 ::A001	+	# Disable recordings of user activity (Category: Activity History and Clipboard)
-::A002	+	# Disable storing users` activity history (Category: Activity History and Clipboard)
+::A002	+	# Disable storing users" activity history (Category: Activity History and Clipboard)
 ::A003	+	# Disable the submission of user activities to Microsoft (Category: Activity History and Clipboard)
 ::A004	+	# Disable storage of clipboard history for whole machine (Category: Activity History and Clipboard)
 ::A006	+	# Disable storage of clipboard history (Category: Activity History and Clipboard)
@@ -3039,8 +3068,8 @@ if "%debug%"=="true" (
 ::F005	+	# Obfuscate file names when uploading telemetry data (Category: Microsoft Office)
 ::F007	+	# Disable Microsoft Office surveys (Category: Microsoft Office)
 ::F008	+	# Disable feedback to Microsoft (Category: Microsoft Office)
-::F009	+	# Disable Microsoft`s feedback tracking (Category: Microsoft Office)
-::F017	+	# Disable Microsoft`s feedback tracking (Category: Microsoft Office)
+::F009	+	# Disable Microsoft"s feedback tracking (Category: Microsoft Office)
+::F017	+	# Disable Microsoft"s feedback tracking (Category: Microsoft Office)
 ::F006	-	# Disable automatic receipt of updates (Category: Microsoft Office)
 ::F010	-	# Disable connected experiences in Office (Category: Microsoft Office)
 ::F011	-	# Disable connected experiences with content analytics (Category: Microsoft Office)
@@ -3084,14 +3113,14 @@ if "%debug%"=="true" (
 ::W001	+	# Disable Windows Update via peer-to-peer (Category: Windows Update)
 ::W011	+	# Disable updates to the speech recognition and speech synthesis modules. (Category: Windows Update)
 ::W004	-	# Activate deferring of upgrades (Category: Windows Update)
-::W005	-	# Disable automatic downloading manufacturers` apps and icons for devices (Category: Windows Update)
+::W005	-	# Disable automatic downloading manufacturers" apps and icons for devices (Category: Windows Update)
 ::W010	-	# Disable automatic driver updates through Windows Update (Category: Windows Update)
 ::W009	-	# Disable automatic app updates through Windows Update (Category: Windows Update)
 ::P017	-	# Disable Windows dynamic configuration and update rollouts (Category: Windows Update)
 ::W006	-	# Disable automatic Windows Updates (Category: Windows Update)
 ::W008	-	# Disable Windows Updates for other products (e.g. Microsoft Office) (Category: Windows Update)
 ::M006	+	# Disable occasionally showing app suggestions in Start menu (Category: Windows Explorer)
-::M011	-	# Do not show recently opened items in Jump Lists on `Start` or the taskbar (Category: Windows Explorer)
+::M011	-	# Do not show recently opened items in Jump Lists on "Start" or the taskbar (Category: Windows Explorer)
 ::M010	+	# Disable ads in Windows Explorer/OneDrive (Category: Windows Explorer)
 ::O003	+	# Disable OneDrive access to network before login (Category: Windows Explorer)
 ::O001	+	# Disable Microsoft OneDrive (Category: Windows Explorer)
@@ -3109,8 +3138,8 @@ if "%debug%"=="true" (
 ::M003	+	# Disable extension of Windows search with Bing (Category: Search)
 ::M015	+	# Disable People icon in the taskbar (Category: Taskbar)
 ::M016	-	# Disable search box in task bar (Category: Taskbar)
-::M017	+	# Disable `Meet now` in the task bar (Category: Taskbar)
-::M018	+	# Disable `Meet now` in the task bar (Category: Taskbar)
+::M017	+	# Disable "Meet now" in the task bar (Category: Taskbar)
+::M018	+	# Disable "Meet now" in the task bar (Category: Taskbar)
 ::M019	+	# Disable news and interests in the task bar (Category: Taskbar)
 ::M021	+	# Disable widgets in Windows Explorer (Category: Taskbar)
 ::M022	+	# Disable feedback reminders (Category: Miscellaneous)
@@ -3120,14 +3149,14 @@ if "%debug%"=="true" (
 ::M024	+	# Disable Windows Media Player Diagnostics (Category: Miscellaneous)
 ::M026	+	# Disable remote assistance connections to this computer (Category: Miscellaneous)
 ::M027	+	# Disable remote connections to this computer (Category: Miscellaneous)
-::M028	+	# Disable the desktop icon for information on `Windows Spotlight` (Category: Miscellaneous)
+::M028	+	# Disable the desktop icon for information on "Windows Spotlight" (Category: Miscellaneous)
 ::M012	-	# Disable Key Management Service Online Activation (Category: Miscellaneous)
 ::M013	-	# Disable automatic download and update of map data (Category: Miscellaneous)
 ::M014	-	# Disable unsolicited network traffic on the offline maps settings page (Category: Miscellaneous)
 ::N001	-	# Disable Network Connectivity Status Indicator (Category: Miscellaneous)
 ::'
 ::
-::#endregion configs > Windows > Tools > ShutUp10
+::#endregion configs > Windows > Tools > OOShutUp10
 ::
 ::
 ::#region configs > Windows > Tools > WinUtil Personalisation
@@ -3276,6 +3305,31 @@ if "%debug%"=="true" (
 ::#endregion functions > Common > Expand-Zip
 ::
 ::
+::#region functions > Common > Get-MicrosoftSecurityStatus
+::
+::function Get-MicrosoftSecurityStatus {
+::    if ($PS_VERSION -ge 5) {
+::        Set-Variable -Option Constant Status (Get-MpComputerStatus)
+::
+::        Set-Variable -Option Constant Properties (($Status | Get-Member -MemberType Property).Name)
+::
+::        Set-Variable -Option Constant Filtered ($Properties | Where-Object { $_ -eq 'BehaviorMonitorEnabled' -or $_ -eq 'IoavProtectionEnabled' -or $_ -eq 'NISEnabled' -or $_ -eq 'OnAccessProtectionEnabled' -or $_ -eq 'RealTimeProtectionEnabled' })
+::
+::        [Boolean]$IsEnabled = $False
+::        foreach ($Property in $Filtered) {
+::            if ($Status.$Property) {
+::                $IsEnabled = $True
+::            }
+::            break
+::        }
+::
+::        return $IsEnabled
+::    }
+::}
+::
+::#endregion functions > Common > Get-MicrosoftSecurityStatus
+::
+::
 ::#region functions > Common > Get-SystemInformation
 ::
 ::function Get-SystemInformation {
@@ -3368,6 +3422,13 @@ if "%debug%"=="true" (
 ::
 ::#region functions > Common > Logger
 ::
+::function Write-LogDebug {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+::    )
+::    Write-Log 'DEBUG' $Message
+::}
+::
 ::function Write-LogInfo {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Message
@@ -3379,19 +3440,19 @@ if "%debug%"=="true" (
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Message
 ::    )
-::    Write-Log 'WARN' $Message
+::    Write-Log 'WARN' "$(Get-Emoji '26A0') $Message"
 ::}
 ::
 ::function Write-LogError {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Message
 ::    )
-::    Write-Log 'ERROR' $Message
+::    Write-Log 'ERROR' "$(Get-Emoji '274C') $Message"
 ::}
 ::
 ::function Write-Log {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INFO', 'WARN', 'ERROR')]$Level,
+::        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$Message
 ::    )
 ::
@@ -3400,6 +3461,10 @@ if "%debug%"=="true" (
 ::    $LOG.SelectionStart = $LOG.TextLength
 ::
 ::    switch ($Level) {
+::        'DEBUG' {
+::            $LOG.SelectionColor = 'black'
+::            Write-Host -NoNewline "$Text`n"
+::        }
 ::        'INFO' {
 ::            $LOG.SelectionColor = 'black'
 ::            Write-Host -NoNewline "$Text`n"
@@ -3418,9 +3483,11 @@ if "%debug%"=="true" (
 ::        }
 ::    }
 ::
-::    $LOG.AppendText("$Text`n")
-::    $LOG.SelectionColor = 'black'
-::    $LOG.ScrollToCaret()
+::    if ($Level -ne 'DEBUG') {
+::        $LOG.AppendText("$Text`n")
+::        $LOG.SelectionColor = 'black'
+::        $LOG.ScrollToCaret()
+::    }
 ::}
 ::
 ::
@@ -3434,11 +3501,11 @@ if "%debug%"=="true" (
 ::
 ::
 ::function Out-Success {
-::    Out-Status 'Done'
+::    Out-Status "Done $(Get-Emoji '2705')"
 ::}
 ::
 ::function Out-Failure {
-::    Out-Status 'Failed'
+::    Out-Status "Failed $(Get-Emoji '274C')"
 ::}
 ::
 ::
@@ -3448,7 +3515,17 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$Message
 ::    )
 ::
-::    Write-LogError "$($Message): $($Exception.Exception.Message)"
+::    Write-Log 'ERROR' "$($Message): $($Exception.Exception.Message)"
+::}
+::
+::function Get-Emoji {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Code
+::    )
+::
+::    Set-Variable -Option Constant Emoji ([System.Convert]::toInt32($Code, 16))
+::
+::    return [System.Char]::ConvertFromUtf32($Emoji)
 ::}
 ::
 ::#endregion functions > Common > Logger
@@ -3625,6 +3702,10 @@ if "%debug%"=="true" (
 ::        [Switch]$Execute,
 ::        [Switch]$Silent
 ::    )
+::
+::    if ($AVWarning -and (Get-MicrosoftSecurityStatus)) {
+::        Write-LogWarning 'Microsoft Security is enabled'
+::    }
 ::
 ::    if ($AVWarning -and -not $AV_WARNING_SHOWN) {
 ::        Write-LogWarning 'This file may trigger anti-virus false positive!'
@@ -4420,11 +4501,11 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_OOSHUTUP10 } else { $PATH_WORKING_DIR })
-::    Set-Variable -Option Constant ConfigFile "$TargetPath\OOShutUp10.cfg"
+::    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
 ::
 ::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 ::
-::    $CONFIG_SHUTUP10 | Out-File $ConfigFile -Encoding UTF8
+::    $CONFIG_OOSHUTUP10 | Out-File $ConfigFile -Encoding UTF8
 ::
 ::    if ($Silent) {
 ::        Start-DownloadUnzipAndRun -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Params $ConfigFile
