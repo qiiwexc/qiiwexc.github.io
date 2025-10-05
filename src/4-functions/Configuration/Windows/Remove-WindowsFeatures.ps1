@@ -31,7 +31,7 @@ function Remove-WindowsFeatures {
         Write-LogInfo 'Nothing to remove'
     }
 
-    if ($OS_VERSION -gt 10 -and (Test-Path 'mstsc.exe')) {
+    if (Test-Path 'mstsc.exe') {
         Write-LogInfo "Removing 'mstsc'..."
         Start-Process 'mstsc' '/uninstall'
         Out-Success

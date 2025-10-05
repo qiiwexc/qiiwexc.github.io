@@ -26,17 +26,30 @@ function Start-Cleanup {
     }
 
     Set-Variable -Option Constant VolumeCaches @(
+        'Active Setup Temp Folders',
+        'BranchCache',
+        'D3D Shader Cache',
         'Delivery Optimization Files',
         'Device Driver Packages',
+        'Diagnostic Data Viewer database files',
+        'Downloaded Program Files',
+        'Internet Cache Files',
         'Language Pack',
+        'Old ChkDsk Files',
         'Previous Installations',
+        'Recycle Bin',
+        'RetailDemo Offline Content',
         'Setup Log Files',
         'System error memory dump files',
         'System error minidump files',
+        'Temporary Files',
         'Temporary Setup Files',
+        'Thumbnail Cache',
         'Update Cleanup',
-        'Windows Defender',
+        'User file versions',
+        'Windows Error Reporting Files',
         'Windows ESD installation files',
+        'Windows Defender',
         'Windows Upgrade Log Files'
     )
 

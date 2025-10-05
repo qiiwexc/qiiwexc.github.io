@@ -17,15 +17,6 @@ Windows Registry Editor Version 5.00
 ; Disable "Include in library" context menu
 [-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
 
-; Hide Gallery on Navigation Pane
-[HKEY_CLASSES_ROOT\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-"System.IsPinnedToNameSpaceTree"=dword:00000000
-
-; Hide Home on Navigation Pane
-[HKEY_CLASSES_ROOT\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-@="CLSID_MSGraphHomeFolder"
-"System.IsPinnedToNameSpaceTree"=dword:00000000
-
 [HKEY_CLASSES_ROOT\icofile\shell\open\DropTarget]
 "Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
 
@@ -88,18 +79,12 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\Control Panel\Desktop]
 "JPEGImportQuality"=dword:00000064
 
+[HKEY_CURRENT_USER\Control Panel\International\User Profile]
+"HttpAcceptLanguageOptOut"=dword:00000001
+
 [HKEY_CURRENT_USER\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 "ShowCmd"=dword:00000003
 "WFlags"=dword:00000002
-
-; Hide Gallery on Navigation Pane
-[HKEY_CURRENT_USER\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-"System.IsPinnedToNameSpaceTree"=dword:00000000
-
-; Hide Home on Navigation Pane
-[HKEY_CURRENT_USER\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-@="CLSID_MSGraphHomeFolder"
-"System.IsPinnedToNameSpaceTree"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
 @=""
@@ -124,6 +109,10 @@ Windows Registry Editor Version 5.00
 "DefaultInterval"=dword:0000000F
 "SyncStatus"=dword:00000001
 
+[HKEY_CURRENT_USER\Software\Microsoft\input\Settings]
+"EnableHwkbTextPrediction"=dword:00000001
+"MultilingualEnabled"=dword:00000001
+
 ; Disable "Improve Inking & Typing Recognition"
 [HKEY_CURRENT_USER\Software\Microsoft\Input\TIPC]
 "Enabled"=dword:00000000
@@ -138,13 +127,17 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
 "DoNotTrack"=dword:00000001
+"Isolation64Bit"=dword:00000001
 "Use FormSuggest"="yes"
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main\Start]
+"Page"="about:blank"
 
 [HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
 "CleanDownloadHistory"=dword:00000001
 "CleanForms"=dword:00000001
 "CleanPassword"=dword:00000001
-"ClearBrowsingHistoryOnExit"=dword:00000000
+"ClearBrowsingHistoryOnExit"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 "AcceptedPrivacyStatement"=dword:00000001
@@ -153,6 +146,10 @@ Windows Registry Editor Version 5.00
 "SilentAcquisition"=dword:00000001
 "UsageTracking"=dword:00000000
 "Volume"=dword:00000064
+
+[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
+"iWindowPosX"=dword:FFFFFFF8
+"iWindowPosY"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\LinkedIn]
 "OfficeLinkedIn"=dword:00000000
@@ -173,6 +170,10 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 "Enabled"=dword:00000000
 
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
+"WindowPlacement"=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
+  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
+
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
 "value"="Deny"
 
@@ -180,17 +181,28 @@ Windows Registry Editor Version 5.00
 "value"="Deny"
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+"ContentDeliveryAllowed"=dword:00000000
 "OemPreInstalledAppsEnabled"=dword:00000000
 "PreInstalledAppsEnabled"=dword:00000000
 "PreInstalledAppsEverEnabled"=dword:00000000
+"RotatingLockScreenEnabled"=dword:00000000
+"RotatingLockScreenOverlayEnabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
+"RotatingLockScreenOverlayVisible"=dword:00000000
 "SilentInstalledAppsEnabled"=dword:00000000 ; Automatic Installation of Suggested Apps
 "SoftLandingEnabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+"SubscribedContent-202914Enabled"=dword:00000000
+"SubscribedContent-280815Enabled"=dword:00000000
 "SubscribedContent-310093Enabled"=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what's new and suggested
+"SubscribedContent-338387Enabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
 "SubscribedContent-338388Enabled"=dword:00000000 ; Occasionally show suggestions in Start
 "SubscribedContent-338389Enabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
 "SubscribedContent-353694Enabled"=dword:00000000 ; Show me suggested content in the Settings app
 "SubscribedContent-353696Enabled"=dword:00000000 ; Show me suggested content in the Settings app
 "SubscribedContent-353698Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+"SubscribedContent-88000045Enabled"=dword:00000000
+"SubscribedContent-88000161Enabled"=dword:00000000
+"SubscribedContent-88000163Enabled"=dword:00000000
+"SubscribedContent-88000165Enabled"=dword:00000000
 "SystemPaneSuggestionsEnabled"=dword:00000000 ; Occasionally show suggestions in Start
 
 ; Disable "Tailored experiences with diagnostic data"
@@ -235,10 +247,10 @@ Windows Registry Editor Version 5.00
 "MSEdge"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
-"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
-"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
 "EnthusiastMode"=dword:00000001
@@ -269,10 +281,27 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
 "DaysToKeep"=dword:00000000
 
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+"RotatingLockScreenOverlayEnabled"=dword:00000000
+
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Mobility]
 "CrossDeviceEnabled"=dword:00000000
 "OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 "PhoneLinkEnabled"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
+"NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK"=dword:00000000
+
+; Disable Windows Backup reminder notifications
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
+"Enabled"=dword:00000000
+
+; Disable "Suggested" app notifications (Ads for MS services)
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+"Enabled"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+"NoDriveTypeAutoRun"=dword:00000091
 
 ; Disable "Tailored experiences with diagnostic data"
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Privacy]
@@ -285,14 +314,6 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
 "IsDynamicSearchBoxEnabled"=dword:00000000
 
-; Disable Windows Backup reminder notifications
-[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
-"Enabled"=dword:00000000
-
-; Disable "Suggested" app notifications (Ads for MS services)
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
-"Enabled"=dword:00000000
-
 ; Disable Show mobile device in Start
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 "IsEnabled"=dword:00000000
@@ -301,6 +322,7 @@ Windows Registry Editor Version 5.00
 "EnableAccountNotifications"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+"01"=dword:00000001
 "2048"=dword:0000001E
 
 ; Suggest ways I can finish setting up my device to get the most out of Windows
@@ -353,6 +375,7 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\CloudContent]
 "DisableTailoredExperiencesWithDiagnosticData"=dword:00000001
+"DisableWindowsSpotlightOnLockScreen"=dword:00000001
 
 ; Disable Bing in search
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer]
@@ -378,14 +401,6 @@ Windows Registry Editor Version 5.00
 ; Disable "Include in library" context menu
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
 
-; Hide "3D objects" folder
-[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
-[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
-
-; Hide "Music" folder
-[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
-[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
-
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs\Command]
@@ -401,6 +416,9 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract]
 "Icon"="shell32.dll,-16817"
 "MUIVerb"="@shell32.dll,-37514"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\Wintrust\Config]
+"EnableCertPaddingCheck"="1"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
 "fAllVolumes"=dword:00000001
@@ -418,6 +436,12 @@ Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Browser]
 "AllowAddressBarDropdown"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Education]
+"IsEducationEnvironment"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Start]
+"HideRecommendedSection"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
 "AllowAutoConnectToWiFiSenseHotspots"=dword:00000000
@@ -460,37 +484,19 @@ Windows Registry Editor Version 5.00
 "miniTraceSlotEnabled"=dword:00000000
 "miniTraceStopTime"=hex:00,00,00,00,00,00,00,00
 
-; Add `Show Gallery` option to File Explorer folder options, with default set to disabled
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowGallery]
-"CheckedValue"=dword:00000001
-"DefaultValue"=dword:00000000
-"HKeyRoot"=dword:80000001
-"Id"=dword:0000000d
-"RegPath"="Software\\Classes\\CLSID\\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}"
-"Text"="Show Gallery"
-"Type"="checkbox"
-"UncheckedValue"=dword:00000000
-"ValueName"="System.IsPinnedToNameSpaceTree"
-
-; Add `Show Home` option to File Explorer folder options, with default set to disabled
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
-"CheckedValue"=dword:00000001
-"DefaultValue"=dword:00000000
-"HKeyRoot"=dword:80000001
-"Id"=dword:0000000d
-"RegPath"="Software\\Classes\\CLSID\\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}"
-"Text"="Show Home"
-"Type"="checkbox"
-"UncheckedValue"=dword:00000000
-"ValueName"="System.IsPinnedToNameSpaceTree"
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag]
 "ThisPCPolicy"="Hide"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
 "SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders]
+"StateFlags"=dword:00000001
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\BranchCache]
+"StateFlags"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\D3D Shader Cache]
 "StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Delivery Optimization Files]
@@ -499,10 +505,28 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Device Driver Packages]
 "StateFlags"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Diagnostic Data Viewer database files]
+"StateFlags"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Downloaded Program Files]
+"StateFlags"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Internet Cache Files]
+"StateFlags"=dword:00000001
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Language Pack]
 "StateFlags"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Old ChkDsk Files]
+"StateFlags"=dword:00000001
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Previous Installations]
+"StateFlags"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Recycle Bin]
+"StateFlags"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\RetailDemo Offline Content]
 "StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Setup Log Files]
@@ -514,16 +538,28 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error minidump files]
 "StateFlags"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Files]
+"StateFlags"=dword:00000001
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Setup Files]
+"StateFlags"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Thumbnail Cache]
 "StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup]
 "StateFlags"=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\User file versions]
+"StateFlags"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting Files]
 "StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files]
+"StateFlags"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
 "StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
@@ -535,7 +571,10 @@ Windows Registry Editor Version 5.00
 "MaxTelemetryAllowed"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+"ConsentPromptBehaviorUser"=dword:00000000
+"FilterAdministratorToken"=dword:00000001
 "PromptOnSecureDesktop"=dword:00000000
+"TypeOfAdminApprovalMode"=dword:00000002
 
 ; Disable "Tailored experiences with diagnostic data"
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
@@ -564,11 +603,356 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
 "Disabled"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search\Preferences]
+"AllowIndexingEncryptedStoresOrItems"=dword:00000001
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection]
 "SummaryNotificationDisabled"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\NoExecuteState]
 "LastNoExecuteRadioButtonState"=dword:000036BD
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Acrobat.exe]
+"MitigationOptions"=hex:00,03,00,01,00,00,11,01,10,00,11,00,00,10,00,10,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\AppControlManager.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,11,01,00,00,11,10,01,01,00,30,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\clview.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\excel.exe]
+"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\excelcnv.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\explorer.exe]
+"MitigationOptions"=hex:00,00,00,01,01,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ExtExport.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\graph.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ie4uinit.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ieinstal.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ielowutil.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ieUnatt.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\iexplore.exe]
+"DisableExceptionChainValidation"=dword:00000000
+"DisableUserModeCallbackFilter"=dword:00000001
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\LSASS.exe]
+"AuditLevel"=dword:00000008
+"MitigationOptions"=hex:00,00,00,00,11,10,10,00,00,00,00,00,10,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdgeUpdate.exe]
+"DisableExceptionChainValidation"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MRT.exe]
+"CFGOptions"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MSACCESS.EXE]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mscorsvw.exe]
+"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedge.exe]
+"MitigationOptions"=hex:00,00,00,00,01,31,10,01,10,00,00,00,00,10,00,30,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedgewebview2.exe]
+"MitigationOptions"=hex:00,00,00,00,01,01,00,00,10,01,00,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msfeedssync.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mshta.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MsMpEng.exe]
+"CFGOptions"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoadfsb.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoasb.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msohtmed.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msosrec.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoxmled.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MSPUB.EXE]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msqry32.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ngen.exe]
+"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ngentask.exe]
+"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\NisSrv.exe]
+"MitigationOptions"=hex:00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe]
+"UseFilter"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\0]
+"AppExecutionAliasRedirect"=dword:00000001
+"AppExecutionAliasRedirectPackages"="*"
+"FilterFullPath"="C:\\Windows\\System32\\notepad.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\1]
+"AppExecutionAliasRedirect"=dword:00000001
+"AppExecutionAliasRedirectPackages"="*"
+"FilterFullPath"="C:\\Windows\\SysWOW64\\notepad.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\2]
+"AppExecutionAliasRedirect"=dword:00000001
+"AppExecutionAliasRedirectPackages"="*"
+"FilterFullPath"="C:\\Windows\\notepad.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\OneDrive.exe]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ONENOTE.EXE]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\orgchart.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\OUTLOOK.EXE]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\powerpnt.exe]
+"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PresentationHost.exe]
+"MitigationOptions"=hex(b):11,11,11,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PrintIsolationHost.exe]
+"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\QuickAssist.exe]
+"MitigationOptions"=hex:00,00,00,01,11,30,11,01,10,00,11,10,01,11,00,30,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Regsvr32.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\rundll32.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,01,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\runtimebroker.exe]
+"MitigationOptions"=hex:00,00,00,00,01,01,00,00,10,01,00,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sdxhelper.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\selfcert.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\services.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\setlang.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SmartScreen.exe]
+"MitigationOptions"=hex:00,00,00,00,01,11,00,00,00,01,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SMSS.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\splwow64.exe]
+"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\spoolsv.exe]
+"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\svchost.exe]
+"MinimumStackCommitInBytes"=dword:00008000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SystemSettings.exe]
+"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VBoxHeadless.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VBoxNetDHCP.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VirtualBox.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VirtualBoxVM.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\vmcompute.exe]
+"MitigationOptions"=hex:00,00,00,00,00,01,00,00,00,01,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\vmwp.exe]
+"MitigationOptions"=hex:00,00,00,00,00,01,00,00,00,01,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\windows10universal.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WindowsSandbox.exe]
+"MitigationOptions"=hex:00,00,00,01,01,11,10,01,10,01,00,10,01,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WindowsSandboxClient.exe]
+"MitigationOptions"=hex:00,00,00,01,01,11,10,01,10,01,00,10,01,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Wininit.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winword.exe]
+"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wordconv.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wpr.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  10
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wprui.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  10
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
 "NetworkThrottlingIndex"=dword:FFFFFFFF
@@ -576,6 +960,9 @@ Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
 "SensorPermissionState"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
+"scremoveoption"="1"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities]
 "ApplicationDescription"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3069"
@@ -598,12 +985,16 @@ Windows Registry Editor Version 5.00
 "EnableFindMyFiles"=dword:00000001
 "SystemIndexNormalization"=dword:00000003
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search\Preferences]
-"AllowIndexingEncryptedStoresOrItems"=dword:00000001
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex]
+"EnableFindMyFiles"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
+"AllowAutoWindowsUpdateDownloadOverMeteredNetwork"=dword:00000001
 "AllowMUUpdateService"=dword:00000001
 "IsContinuousInnovationOptedIn"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\StateVariables]
+"AlwaysAllowMeteredNetwork"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
 "BraveAIChatEnabled"=dword:00000000
@@ -611,22 +1002,33 @@ Windows Registry Editor Version 5.00
 "BraveVPNDisabled"=dword:00000001
 "BraveWalletDisabled"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography]
+"ForceKeyProtection"=dword:00000001
+
 ; Disable Microsoft Edge MSN news feed, sponsored links, shopping assistant and more.
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
 "AlternateErrorPagesEnabled"=dword:00000000
+"AudioSandboxEnabled"=dword:00000001
+"BasicAuthOverHttpEnabled"=dword:00000000
 "ComposeInlineEnabled"=dword:00000000
 "ConfigureDoNotTrack"=dword:00000001
 "CopilotCDPPageContext"=dword:00000000
 "CopilotPageContext"=dword:00000000
 "CryptoWalletEnabled"=dword:00000000
+"DefaultWebUsbGuardSetting"=dword:00000002
+"DefaultWindowManagementSetting"=dword:00000002
 "DiagnosticData"=dword:00000000
+"DnsOverHttpsMode"="automatic"
+"DynamicCodeSettings"=dword:00000001
 "EdgeAssetDeliveryServiceEnabled"=dword:00000000
 "EdgeCollectionsEnabled"=dword:00000000
 "EdgeEntraCopilotPageContext"=dword:00000000
 "EdgeHistoryAISearchEnabled"=dword:00000000
 "EdgeShoppingAssistantEnabled"=dword:00000000
+"EncryptedClientHelloEnabled"=dword:00000001
+"ExperimentationAndConfigurationServiceControl"=dword:00000002
 "GenAILocalFoundationalModelSettings"=dword:00000001
 "HideFirstRunExperience"=dword:00000001
 "HubsSidebarEnabled"=dword:00000000
@@ -641,6 +1043,18 @@ Windows Registry Editor Version 5.00
 "UserFeedbackAllowed"=dword:00000000
 "WalletDonationEnabled"=dword:00000000
 "WebWidgetAllowed"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
+"BlockThirdPartyCookies"=dword:00000001
+"DefaultShareAdditionalOSRegionSetting"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
+"1"="0xc013"
+"2"="0xc014"
+"3"="0x0035"
+"4"="0x002f"
+"5"="0x009c"
+"6"="0x009d"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EdgeUpdate]
 "CreateDesktopShortcutDefault"=dword:00000000
@@ -743,30 +1157,401 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
 "fAllowToGetHelp"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
-"EnableFindMyFiles"=dword:00000001
-"SystemIndexNormalization"=dword:00000003
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
+"EnableCertPaddingCheck"="1"
 
- ; Send only Required Diagnostic and Usage Data
- [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10}]
+"allowautoupdatesmetered"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}]
+"allowautoupdatesmetered"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}]
+"allowautoupdatesmetered"=dword:00000001
+
+; Send only Required Diagnostic and Usage Data
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 "AllowTelemetry"=dword:00000000
 "MaxTelemetryAllowed"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
+"ConsentPromptBehaviorUser"=dword:00000000
+"FilterAdministratorToken"=dword:00000001
 "PromptOnSecureDesktop"=dword:00000000
+"TypeOfAdminApprovalMode"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Acrobat.exe]
+"MitigationOptions"=hex:00,03,00,01,00,00,11,01,10,00,11,00,00,10,00,10,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\AppControlManager.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,11,01,00,00,11,10,01,01,00,30,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\clview.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\excel.exe]
+"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\excelcnv.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\explorer.exe]
+"MitigationOptions"=hex:00,00,00,01,01,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ExtExport.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\graph.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ie4uinit.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ieinstal.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ielowutil.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ieUnatt.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\iexplore.exe]
+"DisableExceptionChainValidation"=dword:00000000
+"DisableUserModeCallbackFilter"=dword:00000001
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\LSASS.exe]
+"AuditLevel"=dword:00000008
+"MitigationOptions"=hex:00,00,00,00,11,10,10,00,00,00,00,00,10,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdgeUpdate.exe]
+"DisableExceptionChainValidation"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MRT.exe]
+"CFGOptions"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MSACCESS.EXE]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mscorsvw.exe]
+"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedge.exe]
+"MitigationOptions"=hex:00,00,00,00,01,31,10,01,10,00,00,00,00,10,00,30,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedgewebview2.exe]
+"MitigationOptions"=hex:00,00,00,00,01,01,00,00,10,01,00,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msfeedssync.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mshta.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MsMpEng.exe]
+"CFGOptions"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoadfsb.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoasb.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msohtmed.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msosrec.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoxmled.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MSPUB.EXE]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msqry32.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ngen.exe]
+"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ngentask.exe]
+"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\NisSrv.exe]
+"MitigationOptions"=hex:00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe]
+"UseFilter"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\0]
+"AppExecutionAliasRedirect"=dword:00000001
+"AppExecutionAliasRedirectPackages"="*"
+"FilterFullPath"="C:\\Windows\\System32\\notepad.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\1]
+"AppExecutionAliasRedirect"=dword:00000001
+"AppExecutionAliasRedirectPackages"="*"
+"FilterFullPath"="C:\\Windows\\SysWOW64\\notepad.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\2]
+"AppExecutionAliasRedirect"=dword:00000001
+"AppExecutionAliasRedirectPackages"="*"
+"FilterFullPath"="C:\\Windows\\notepad.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\OneDrive.exe]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ONENOTE.EXE]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\orgchart.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\OUTLOOK.EXE]
+"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\powerpnt.exe]
+"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PresentationHost.exe]
+"MitigationOptions"=hex(b):11,11,11,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PrintIsolationHost.exe]
+"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\QuickAssist.exe]
+"MitigationOptions"=hex:00,00,00,01,11,30,11,01,10,00,11,10,01,11,00,30,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Regsvr32.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\rundll32.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,01,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\runtimebroker.exe]
+"MitigationOptions"=hex:00,00,00,00,01,01,00,00,10,01,00,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sdxhelper.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\selfcert.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\services.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\setlang.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SmartScreen.exe]
+"MitigationOptions"=hex:00,00,00,00,01,11,00,00,00,01,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SMSS.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\splwow64.exe]
+"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\spoolsv.exe]
+"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\svchost.exe]
+"MinimumStackCommitInBytes"=dword:00008000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SystemSettings.exe]
+"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VBoxHeadless.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VBoxNetDHCP.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VirtualBox.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VirtualBoxVM.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\vmcompute.exe]
+"MitigationOptions"=hex:00,00,00,00,00,01,00,00,00,01,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\vmwp.exe]
+"MitigationOptions"=hex:00,00,00,00,00,01,00,00,00,01,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\windows10universal.exe]
+"ImageExpansionMitigation"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WindowsSandbox.exe]
+"MitigationOptions"=hex:00,00,00,01,01,11,10,01,10,01,00,10,01,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WindowsSandboxClient.exe]
+"MitigationOptions"=hex:00,00,00,01,01,11,10,01,10,01,00,10,01,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Wininit.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winword.exe]
+"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+  00,00,00,00,00,00
+"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00
+"EAFModules"=""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wordconv.exe]
+"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wpr.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  10
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wprui.exe]
+"MitigationOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  10
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
+"EnableFindMyFiles"=dword:00000001
+"SystemIndexNormalization"=dword:00000003
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search\Gather\Windows\SystemIndex]
+"EnableFindMyFiles"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Cryptography]
+"ForceKeyProtection"=dword:00000001
 
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
 "AlternateErrorPagesEnabled"=dword:00000000
+"AudioSandboxEnabled"=dword:00000001
+"BasicAuthOverHttpEnabled"=dword:00000000
 "ComposeInlineEnabled"=dword:00000000
 "ConfigureDoNotTrack"=dword:00000001
 "CopilotCDPPageContext"=dword:00000000
 "CopilotPageContext"=dword:00000000
+"DefaultWebUsbGuardSetting"=dword:00000002
+"DefaultWindowManagementSetting"=dword:00000002
 "DiagnosticData"=dword:00000000
+"DnsOverHttpsMode"="automatic"
+"DynamicCodeSettings"=dword:00000001
 "EdgeEntraCopilotPageContext"=dword:00000000
 "EdgeHistoryAISearchEnabled"=dword:00000000
 "EdgeShoppingAssistantEnabled"=dword:00000000
+"EncryptedClientHelloEnabled"=dword:00000001
+"ExperimentationAndConfigurationServiceControl"=dword:00000002
 "GenAILocalFoundationalModelSettings"=dword:00000001
 "HubsSidebarEnabled"=dword:00000000
 "NewTabPageBingChatEnabled"=dword:00000000
@@ -776,6 +1561,18 @@ Windows Registry Editor Version 5.00
 "TabServicesEnabled"=dword:00000000
 "UserFeedbackAllowed"=dword:00000000
 "WebWidgetAllowed"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
+"BlockThirdPartyCookies"=dword:00000001
+"DefaultShareAdditionalOSRegionSetting"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
+"1"="0xc013"
+"2"="0xc014"
+"3"="0x0035"
+"4"="0x002f"
+"5"="0x009c"
+"6"="0x009d"
 
 ; Disable "Inking & Typing Personalization"
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\InputPersonalization]
@@ -807,6 +1604,9 @@ Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DeliveryOptimization]
 "DODownloadMode"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Explorer]
+"HideRecommendedSection"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\HandwritingErrorReports]
 "PreventHandwritingErrorReports"=dword:00000001
@@ -874,20 +1674,87 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
 "LongPathsEnabled"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa]
+"LmCompatibilityLevel"=dword:00000005
+"restrictanonymous"=dword:00000001
+"RestrictRemoteSAM"="O:BAG:BAD:(A;;RC;;;BA)"
+"SCENoApplyLegacyAuditPolicy"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0]
+"allownullsessionfallback"=dword:00000000
+"NtlmMinClientSec"=dword:20080000
+"NtlmMinServerSec"=dword:20080000
+
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
 "PowerThrottlingOff"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance]
 "fAllowToGetHelp"=dword:00000000
 
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5]
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client]
+"DisabledByDefault"=dword:00000001
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server]
+"DisabledByDefault"=dword:00000001
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client]
+"DisabledByDefault"=dword:00000001
+"Enabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server]
+"DisabledByDefault"=dword:00000001
+"Enabled"=dword:00000000
+
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager]
 "EnablePeriodicBackup"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+"MP_FORCE_USE_SANDBOX"="1"
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\AutoLogger-Diagtrack-Listener]
 "Start"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
 "IRPStackSize"=dword:0000001E
+"requiresecuritysignature"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters]
+"RequireSecuritySignature"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration]
 "Status"=dword:00000000
@@ -911,18 +1778,12 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\.DEFAULT\Control Panel\Desktop]
 "JPEGImportQuality"=dword:00000064
 
+[HKEY_USERS\.DEFAULT\Control Panel\International\User Profile]
+"HttpAcceptLanguageOptOut"=dword:00000001
+
 [HKEY_USERS\.DEFAULT\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 "ShowCmd"=dword:00000003
 "WFlags"=dword:00000002
-
-; Hide Gallery on Navigation Pane
-[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-"System.IsPinnedToNameSpaceTree"=dword:00000000
-
-; Hide Home on Navigation Pane
-[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-@="CLSID_MSGraphHomeFolder"
-"System.IsPinnedToNameSpaceTree"=dword:00000000
 
 [HKEY_USERS\.DEFAULT\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
 @=""
@@ -947,6 +1808,10 @@ Windows Registry Editor Version 5.00
 "DefaultInterval"=dword:0000000F
 "SyncStatus"=dword:00000001
 
+[HKEY_USERS\.DEFAULT\Software\Microsoft\input\Settings]
+"EnableHwkbTextPrediction"=dword:00000001
+"MultilingualEnabled"=dword:00000001
+
 ; Disable "Improve Inking & Typing Recognition"
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Input\TIPC]
 "Enabled"=dword:00000000
@@ -961,13 +1826,17 @@ Windows Registry Editor Version 5.00
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Internet Explorer\Main]
 "DoNotTrack"=dword:00000001
+"Isolation64Bit"=dword:00000001
 "Use FormSuggest"="yes"
+
+[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Internet Explorer\Main\Start]
+"Page"="about:blank"
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Internet Explorer\Privacy]
 "CleanDownloadHistory"=dword:00000001
 "CleanForms"=dword:00000001
 "CleanPassword"=dword:00000001
-"ClearBrowsingHistoryOnExit"=dword:00000000
+"ClearBrowsingHistoryOnExit"=dword:00000001
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\MediaPlayer\Preferences]
 "AcceptedPrivacyStatement"=dword:00000001
@@ -976,6 +1845,10 @@ Windows Registry Editor Version 5.00
 "SilentAcquisition"=dword:00000001
 "UsageTracking"=dword:00000000
 "Volume"=dword:00000064
+
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Notepad]
+"iWindowPosX"=dword:FFFFFFF8
+"iWindowPosY"=dword:00000000
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Office\16.0\Common\LinkedIn]
 "OfficeLinkedIn"=dword:00000000
@@ -996,6 +1869,10 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 "Enabled"=dword:00000000
 
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
+"WindowPlacement"=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
+  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
+
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
 "value"="Deny"
 
@@ -1003,17 +1880,28 @@ Windows Registry Editor Version 5.00
 "value"="Deny"
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+"ContentDeliveryAllowed"=dword:00000000
 "OemPreInstalledAppsEnabled"=dword:00000000
 "PreInstalledAppsEnabled"=dword:00000000
 "PreInstalledAppsEverEnabled"=dword:00000000
+"RotatingLockScreenEnabled"=dword:00000000
+"RotatingLockScreenOverlayEnabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
+"RotatingLockScreenOverlayVisible"=dword:00000000
 "SilentInstalledAppsEnabled"=dword:00000000 ; Automatic Installation of Suggested Apps
 "SoftLandingEnabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+"SubscribedContent-202914Enabled"=dword:00000000
+"SubscribedContent-280815Enabled"=dword:00000000
 "SubscribedContent-310093Enabled"=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what's new and suggested
+"SubscribedContent-338387Enabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
 "SubscribedContent-338388Enabled"=dword:00000000 ; Occasionally show suggestions in Start
 "SubscribedContent-338389Enabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
 "SubscribedContent-353694Enabled"=dword:00000000 ; Show me suggested content in the Settings app
 "SubscribedContent-353696Enabled"=dword:00000000 ; Show me suggested content in the Settings app
 "SubscribedContent-353698Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+"SubscribedContent-88000045Enabled"=dword:00000000
+"SubscribedContent-88000161Enabled"=dword:00000000
+"SubscribedContent-88000163Enabled"=dword:00000000
+"SubscribedContent-88000165Enabled"=dword:00000000
 "SystemPaneSuggestionsEnabled"=dword:00000000 ; Occasionally show suggestions in Start
 
 ; Disable "Tailored experiences with diagnostic data"
@@ -1058,10 +1946,10 @@ Windows Registry Editor Version 5.00
 "MSEdge"=dword:00000001
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
-"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
-"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
 "EnthusiastMode"=dword:00000001
@@ -1092,10 +1980,27 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
 "DaysToKeep"=dword:00000000
 
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+"RotatingLockScreenOverlayEnabled"=dword:00000000
+
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Mobility]
 "CrossDeviceEnabled"=dword:00000000
 "OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 "PhoneLinkEnabled"=dword:00000000
+
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
+"NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK"=dword:00000000
+
+; Disable Windows Backup reminder notifications
+[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
+"Enabled"=dword:00000000
+
+; Disable "Suggested" app notifications (Ads for MS services)
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+"Enabled"=dword:00000000
+
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+"NoDriveTypeAutoRun"=dword:00000091
 
 ; Disable "Tailored experiences with diagnostic data"
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Privacy]
@@ -1108,14 +2013,6 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
 "IsDynamicSearchBoxEnabled"=dword:00000000
 
-; Disable Windows Backup reminder notifications
-[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
-"Enabled"=dword:00000000
-
-; Disable "Suggested" app notifications (Ads for MS services)
-[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
-"Enabled"=dword:00000000
-
 ; Disable Show mobile device in Start
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 "IsEnabled"=dword:00000000
@@ -1124,6 +2021,7 @@ Windows Registry Editor Version 5.00
 "EnableAccountNotifications"=dword:00000000
 
 [HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+"01"=dword:00000001
 "2048"=dword:0000001E
 
 ; Suggest ways I can finish setting up my device to get the most out of Windows
@@ -1176,6 +2074,7 @@ Windows Registry Editor Version 5.00
 
 [HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\CloudContent]
 "DisableTailoredExperiencesWithDiagnosticData"=dword:00000001
+"DisableWindowsSpotlightOnLockScreen"=dword:00000001
 
 ; Disable Bing in search
 [HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\Explorer]
