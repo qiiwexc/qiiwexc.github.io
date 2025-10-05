@@ -25,13 +25,6 @@
         foreach ($User in (Get-UsersRegistryKeys)) {
             $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n"
             $ConfigLines += "`"RotatingLockScreenEnabled`"=dword:00000001`n"
-            $ConfigLines += "`"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"
-
-            $ConfigLines += "`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]`n"
-            $ConfigLines += "`"DoNotTrack`"=dword:00000001`n"
-
-            $ConfigLines += "`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]`n"
-            $ConfigLines += "`"EnableCortana`"=dword:00000000`n"
         }
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to read the registry'
