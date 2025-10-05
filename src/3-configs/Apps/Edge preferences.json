@@ -57,6 +57,11 @@
     "pin_recommendations_eligible": false
   },
   "ntp": {
+    "background_image": {
+      "provider": "NoBackground",
+      "userSelected": true
+    },
+    "background_image_type": "off",
     "hide_default_top_sites": true,
     "layout_mode": 3,
     "news_feed_display": "off",
@@ -84,7 +89,8 @@
         "source": "ntp",
         "value": "off"
       }
-    ]
+    ],
+    "show_image_of_day": false
   },
   "personalization_data_consent": {
     "personalization_in_context_consent_can_prompt": false
