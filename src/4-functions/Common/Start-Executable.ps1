@@ -17,7 +17,7 @@ function Start-Executable {
 
         Out-Success
 
-        Write-LogInfo "Removing '$Executable'..."
+        Write-LogDebug "Removing '$Executable'..."
         Remove-File $Executable
         Out-Success
     } else {
