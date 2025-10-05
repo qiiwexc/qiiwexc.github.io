@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.4')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.6')
 ::
 ::#endregion init > Version
 ::
@@ -94,7 +94,8 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant OPERATING_SYSTEM (Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture)
 ::Set-Variable -Option Constant IsWindows11 ($OPERATING_SYSTEM.Caption -match 'Windows 11')
-::Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { switch -Wildcard ($OS_BUILD) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
+::Set-Variable -Option Constant WindowsBuild $OPERATING_SYSTEM.Version
+::Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { switch -Wildcard ($WindowsBuild) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
 ::
 ::Set-Variable -Option Constant WordRegPath 'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer'
 ::if (Test-Path $WordRegPath) {
@@ -1027,6 +1028,11 @@ if "%debug%"=="true" (
 ::    "pin_recommendations_eligible": false
 ::  },
 ::  "ntp": {
+::    "background_image": {
+::      "provider": "NoBackground",
+::      "userSelected": true
+::    },
+::    "background_image_type": "off",
 ::    "hide_default_top_sites": true,
 ::    "layout_mode": 3,
 ::    "news_feed_display": "off",
@@ -1054,7 +1060,8 @@ if "%debug%"=="true" (
 ::        "source": "ntp",
 ::        "value": "off"
 ::      }
-::    ]
+::    ],
+::    "show_image_of_day": false
 ::  },
 ::  "personalization_data_consent": {
 ::    "personalization_in_context_consent_can_prompt": false
@@ -1408,6 +1415,7 @@ if "%debug%"=="true" (
 ::    @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '10778347-1370-4ee0-8bbd-33bdacaade49'; Value = 1 },
 ::    @{SubGroup = 'de830923-a562-41af-a086-e3a2c6bad2da'; Setting = 'e69653ca-cf7f-4f05-aa73-cb833fa90ad4'; Value = 0 },
 ::    @{SubGroup = 'SUB_PCIEXPRESS'; Setting = 'ASPM'; Value = 0 },
+::    @{SubGroup = 'SUB_PROCESSOR'; Setting = 'SYSCOOLPOL'; Value = 1 },
 ::    @{SubGroup = 'SUB_SLEEP'; Setting = 'HYBRIDSLEEP'; Value = 1 },
 ::    @{SubGroup = 'SUB_SLEEP'; Setting = 'RTCWAKE'; Value = 1 }
 ::)
@@ -1435,15 +1443,6 @@ if "%debug%"=="true" (
 ::
 ::; Disable "Include in library" context menu
 ::[-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
-::
-::; Hide Gallery on Navigation Pane
-::[HKEY_CLASSES_ROOT\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
-::; Hide Home on Navigation Pane
-::[HKEY_CLASSES_ROOT\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-::@="CLSID_MSGraphHomeFolder"
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
 ::[HKEY_CLASSES_ROOT\icofile\shell\open\DropTarget]
 ::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
@@ -1507,18 +1506,12 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Control Panel\Desktop]
 ::"JPEGImportQuality"=dword:00000064
 ::
+::[HKEY_CURRENT_USER\Control Panel\International\User Profile]
+::"HttpAcceptLanguageOptOut"=dword:00000001
+::
 ::[HKEY_CURRENT_USER\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 ::"ShowCmd"=dword:00000003
 ::"WFlags"=dword:00000002
-::
-::; Hide Gallery on Navigation Pane
-::[HKEY_CURRENT_USER\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
-::; Hide Home on Navigation Pane
-::[HKEY_CURRENT_USER\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-::@="CLSID_MSGraphHomeFolder"
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
 ::@=""
@@ -1543,6 +1536,10 @@ if "%debug%"=="true" (
 ::"DefaultInterval"=dword:0000000F
 ::"SyncStatus"=dword:00000001
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\input\Settings]
+::"EnableHwkbTextPrediction"=dword:00000001
+::"MultilingualEnabled"=dword:00000001
+::
 ::; Disable "Improve Inking & Typing Recognition"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Input\TIPC]
 ::"Enabled"=dword:00000000
@@ -1557,13 +1554,17 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
 ::"DoNotTrack"=dword:00000001
+::"Isolation64Bit"=dword:00000001
 ::"Use FormSuggest"="yes"
+::
+::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main\Start]
+::"Page"="about:blank"
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
 ::"CleanDownloadHistory"=dword:00000001
 ::"CleanForms"=dword:00000001
 ::"CleanPassword"=dword:00000001
-::"ClearBrowsingHistoryOnExit"=dword:00000000
+::"ClearBrowsingHistoryOnExit"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 ::"AcceptedPrivacyStatement"=dword:00000001
@@ -1572,6 +1573,10 @@ if "%debug%"=="true" (
 ::"SilentAcquisition"=dword:00000001
 ::"UsageTracking"=dword:00000000
 ::"Volume"=dword:00000064
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
+::"iWindowPosX"=dword:FFFFFFF8
+::"iWindowPosY"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\LinkedIn]
 ::"OfficeLinkedIn"=dword:00000000
@@ -1592,6 +1597,10 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 ::"Enabled"=dword:00000000
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
+::"WindowPlacement"=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
+::  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
 ::"value"="Deny"
 ::
@@ -1599,17 +1608,28 @@ if "%debug%"=="true" (
 ::"value"="Deny"
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+::"ContentDeliveryAllowed"=dword:00000000
 ::"OemPreInstalledAppsEnabled"=dword:00000000
 ::"PreInstalledAppsEnabled"=dword:00000000
 ::"PreInstalledAppsEverEnabled"=dword:00000000
+::"RotatingLockScreenEnabled"=dword:00000000
+::"RotatingLockScreenOverlayEnabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
+::"RotatingLockScreenOverlayVisible"=dword:00000000
 ::"SilentInstalledAppsEnabled"=dword:00000000 ; Automatic Installation of Suggested Apps
 ::"SoftLandingEnabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+::"SubscribedContent-202914Enabled"=dword:00000000
+::"SubscribedContent-280815Enabled"=dword:00000000
 ::"SubscribedContent-310093Enabled"=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what"s new and suggested
+::"SubscribedContent-338387Enabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
 ::"SubscribedContent-338388Enabled"=dword:00000000 ; Occasionally show suggestions in Start
 ::"SubscribedContent-338389Enabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
 ::"SubscribedContent-353694Enabled"=dword:00000000 ; Show me suggested content in the Settings app
 ::"SubscribedContent-353696Enabled"=dword:00000000 ; Show me suggested content in the Settings app
 ::"SubscribedContent-353698Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+::"SubscribedContent-88000045Enabled"=dword:00000000
+::"SubscribedContent-88000161Enabled"=dword:00000000
+::"SubscribedContent-88000163Enabled"=dword:00000000
+::"SubscribedContent-88000165Enabled"=dword:00000000
 ::"SystemPaneSuggestionsEnabled"=dword:00000000 ; Occasionally show suggestions in Start
 ::
 ::; Disable "Tailored experiences with diagnostic data"
@@ -1654,10 +1674,10 @@ if "%debug%"=="true" (
 ::"MSEdge"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
-::"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
-::"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
 ::"EnthusiastMode"=dword:00000001
@@ -1688,10 +1708,27 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
 ::"DaysToKeep"=dword:00000000
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+::"RotatingLockScreenOverlayEnabled"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Mobility]
 ::"CrossDeviceEnabled"=dword:00000000
 ::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 ::"PhoneLinkEnabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
+::"NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK"=dword:00000000
+::
+::; Disable Windows Backup reminder notifications
+::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
+::"Enabled"=dword:00000000
+::
+::; Disable "Suggested" app notifications (Ads for MS services)
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+::"Enabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+::"NoDriveTypeAutoRun"=dword:00000091
 ::
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Privacy]
@@ -1704,14 +1741,6 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
 ::"IsDynamicSearchBoxEnabled"=dword:00000000
 ::
-::; Disable Windows Backup reminder notifications
-::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
-::"Enabled"=dword:00000000
-::
-::; Disable "Suggested" app notifications (Ads for MS services)
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
-::"Enabled"=dword:00000000
-::
 ::; Disable Show mobile device in Start
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 ::"IsEnabled"=dword:00000000
@@ -1720,6 +1749,7 @@ if "%debug%"=="true" (
 ::"EnableAccountNotifications"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+::"01"=dword:00000001
 ::"2048"=dword:0000001E
 ::
 ::; Suggest ways I can finish setting up my device to get the most out of Windows
@@ -1772,6 +1802,7 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\CloudContent]
 ::"DisableTailoredExperiencesWithDiagnosticData"=dword:00000001
+::"DisableWindowsSpotlightOnLockScreen"=dword:00000001
 ::
 ::; Disable Bing in search
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer]
@@ -1797,14 +1828,6 @@ if "%debug%"=="true" (
 ::; Disable "Include in library" context menu
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::
-::; Hide "3D objects" folder
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
-::
-::; Hide "Music" folder
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
-::
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs\Command]
@@ -1820,6 +1843,9 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract]
 ::"Icon"="shell32.dll,-16817"
 ::"MUIVerb"="@shell32.dll,-37514"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\Wintrust\Config]
+::"EnableCertPaddingCheck"="1"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
 ::"fAllVolumes"=dword:00000001
@@ -1837,6 +1863,12 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Browser]
 ::"AllowAddressBarDropdown"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Education]
+::"IsEducationEnvironment"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Start]
+::"HideRecommendedSection"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
 ::"AllowAutoConnectToWiFiSenseHotspots"=dword:00000000
@@ -1879,37 +1911,19 @@ if "%debug%"=="true" (
 ::"miniTraceSlotEnabled"=dword:00000000
 ::"miniTraceStopTime"=hex:00,00,00,00,00,00,00,00
 ::
-::; Add `Show Gallery` option to File Explorer folder options, with default set to disabled
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowGallery]
-::"CheckedValue"=dword:00000001
-::"DefaultValue"=dword:00000000
-::"HKeyRoot"=dword:80000001
-::"Id"=dword:0000000d
-::"RegPath"="Software\\Classes\\CLSID\\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}"
-::"Text"="Show Gallery"
-::"Type"="checkbox"
-::"UncheckedValue"=dword:00000000
-::"ValueName"="System.IsPinnedToNameSpaceTree"
-::
-::; Add `Show Home` option to File Explorer folder options, with default set to disabled
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
-::"CheckedValue"=dword:00000001
-::"DefaultValue"=dword:00000000
-::"HKeyRoot"=dword:80000001
-::"Id"=dword:0000000d
-::"RegPath"="Software\\Classes\\CLSID\\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}"
-::"Text"="Show Home"
-::"Type"="checkbox"
-::"UncheckedValue"=dword:00000000
-::"ValueName"="System.IsPinnedToNameSpaceTree"
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag]
 ::"ThisPCPolicy"="Hide"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
 ::"SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders]
+::"StateFlags"=dword:00000001
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\BranchCache]
+::"StateFlags"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\D3D Shader Cache]
 ::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Delivery Optimization Files]
@@ -1918,10 +1932,28 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Device Driver Packages]
 ::"StateFlags"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Diagnostic Data Viewer database files]
+::"StateFlags"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Downloaded Program Files]
+::"StateFlags"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Internet Cache Files]
+::"StateFlags"=dword:00000001
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Language Pack]
 ::"StateFlags"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Old ChkDsk Files]
+::"StateFlags"=dword:00000001
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Previous Installations]
+::"StateFlags"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Recycle Bin]
+::"StateFlags"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\RetailDemo Offline Content]
 ::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Setup Log Files]
@@ -1933,16 +1965,28 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error minidump files]
 ::"StateFlags"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Files]
+::"StateFlags"=dword:00000001
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Setup Files]
+::"StateFlags"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Thumbnail Cache]
 ::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup]
 ::"StateFlags"=dword:00000001
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\User file versions]
+::"StateFlags"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting Files]
 ::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files]
+::"StateFlags"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
 ::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
@@ -1954,7 +1998,10 @@ if "%debug%"=="true" (
 ::"MaxTelemetryAllowed"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+::"ConsentPromptBehaviorUser"=dword:00000000
+::"FilterAdministratorToken"=dword:00000001
 ::"PromptOnSecureDesktop"=dword:00000000
+::"TypeOfAdminApprovalMode"=dword:00000002
 ::
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
@@ -1983,11 +2030,356 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
 ::"Disabled"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search\Preferences]
+::"AllowIndexingEncryptedStoresOrItems"=dword:00000001
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection]
 ::"SummaryNotificationDisabled"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\NoExecuteState]
 ::"LastNoExecuteRadioButtonState"=dword:000036BD
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Acrobat.exe]
+::"MitigationOptions"=hex:00,03,00,01,00,00,11,01,10,00,11,00,00,10,00,10,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\AppControlManager.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,11,01,00,00,11,10,01,01,00,30,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\clview.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\excel.exe]
+::"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\excelcnv.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\explorer.exe]
+::"MitigationOptions"=hex:00,00,00,01,01,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ExtExport.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\graph.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ie4uinit.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ieinstal.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ielowutil.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ieUnatt.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\iexplore.exe]
+::"DisableExceptionChainValidation"=dword:00000000
+::"DisableUserModeCallbackFilter"=dword:00000001
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\LSASS.exe]
+::"AuditLevel"=dword:00000008
+::"MitigationOptions"=hex:00,00,00,00,11,10,10,00,00,00,00,00,10,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdgeUpdate.exe]
+::"DisableExceptionChainValidation"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MRT.exe]
+::"CFGOptions"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MSACCESS.EXE]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mscorsvw.exe]
+::"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedge.exe]
+::"MitigationOptions"=hex:00,00,00,00,01,31,10,01,10,00,00,00,00,10,00,30,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedgewebview2.exe]
+::"MitigationOptions"=hex:00,00,00,00,01,01,00,00,10,01,00,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msfeedssync.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mshta.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MsMpEng.exe]
+::"CFGOptions"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoadfsb.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoasb.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msohtmed.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msosrec.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoxmled.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MSPUB.EXE]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msqry32.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ngen.exe]
+::"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ngentask.exe]
+::"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\NisSrv.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe]
+::"UseFilter"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\0]
+::"AppExecutionAliasRedirect"=dword:00000001
+::"AppExecutionAliasRedirectPackages"="*"
+::"FilterFullPath"="C:\\Windows\\System32\\notepad.exe"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\1]
+::"AppExecutionAliasRedirect"=dword:00000001
+::"AppExecutionAliasRedirectPackages"="*"
+::"FilterFullPath"="C:\\Windows\\SysWOW64\\notepad.exe"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\2]
+::"AppExecutionAliasRedirect"=dword:00000001
+::"AppExecutionAliasRedirectPackages"="*"
+::"FilterFullPath"="C:\\Windows\\notepad.exe"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\OneDrive.exe]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ONENOTE.EXE]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\orgchart.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\OUTLOOK.EXE]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\powerpnt.exe]
+::"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PresentationHost.exe]
+::"MitigationOptions"=hex(b):11,11,11,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PrintIsolationHost.exe]
+::"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\QuickAssist.exe]
+::"MitigationOptions"=hex:00,00,00,01,11,30,11,01,10,00,11,10,01,11,00,30,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Regsvr32.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\rundll32.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,01,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\runtimebroker.exe]
+::"MitigationOptions"=hex:00,00,00,00,01,01,00,00,10,01,00,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sdxhelper.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\selfcert.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\services.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\setlang.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SmartScreen.exe]
+::"MitigationOptions"=hex:00,00,00,00,01,11,00,00,00,01,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SMSS.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\splwow64.exe]
+::"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\spoolsv.exe]
+::"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\svchost.exe]
+::"MinimumStackCommitInBytes"=dword:00008000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SystemSettings.exe]
+::"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VBoxHeadless.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VBoxNetDHCP.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VirtualBox.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VirtualBoxVM.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\vmcompute.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,01,00,00,00,01,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\vmwp.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,01,00,00,00,01,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\windows10universal.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WindowsSandbox.exe]
+::"MitigationOptions"=hex:00,00,00,01,01,11,10,01,10,01,00,10,01,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WindowsSandboxClient.exe]
+::"MitigationOptions"=hex:00,00,00,01,01,11,10,01,10,01,00,10,01,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Wininit.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winword.exe]
+::"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wordconv.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wpr.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  10
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wprui.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  10
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
 ::"NetworkThrottlingIndex"=dword:FFFFFFFF
@@ -1995,6 +2387,9 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
 ::"SensorPermissionState"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
+::"scremoveoption"="1"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities]
 ::"ApplicationDescription"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3069"
@@ -2017,12 +2412,16 @@ if "%debug%"=="true" (
 ::"EnableFindMyFiles"=dword:00000001
 ::"SystemIndexNormalization"=dword:00000003
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search\Preferences]
-::"AllowIndexingEncryptedStoresOrItems"=dword:00000001
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex]
+::"EnableFindMyFiles"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
+::"AllowAutoWindowsUpdateDownloadOverMeteredNetwork"=dword:00000001
 ::"AllowMUUpdateService"=dword:00000001
 ::"IsContinuousInnovationOptedIn"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\StateVariables]
+::"AlwaysAllowMeteredNetwork"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
 ::"BraveAIChatEnabled"=dword:00000000
@@ -2030,22 +2429,33 @@ if "%debug%"=="true" (
 ::"BraveVPNDisabled"=dword:00000001
 ::"BraveWalletDisabled"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography]
+::"ForceKeyProtection"=dword:00000001
+::
 ::; Disable Microsoft Edge MSN news feed, sponsored links, shopping assistant and more.
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
 ::"AlternateErrorPagesEnabled"=dword:00000000
+::"AudioSandboxEnabled"=dword:00000001
+::"BasicAuthOverHttpEnabled"=dword:00000000
 ::"ComposeInlineEnabled"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
 ::"CopilotCDPPageContext"=dword:00000000
 ::"CopilotPageContext"=dword:00000000
 ::"CryptoWalletEnabled"=dword:00000000
+::"DefaultWebUsbGuardSetting"=dword:00000002
+::"DefaultWindowManagementSetting"=dword:00000002
 ::"DiagnosticData"=dword:00000000
+::"DnsOverHttpsMode"="automatic"
+::"DynamicCodeSettings"=dword:00000001
 ::"EdgeAssetDeliveryServiceEnabled"=dword:00000000
 ::"EdgeCollectionsEnabled"=dword:00000000
 ::"EdgeEntraCopilotPageContext"=dword:00000000
 ::"EdgeHistoryAISearchEnabled"=dword:00000000
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
+::"EncryptedClientHelloEnabled"=dword:00000001
+::"ExperimentationAndConfigurationServiceControl"=dword:00000002
 ::"GenAILocalFoundationalModelSettings"=dword:00000001
 ::"HideFirstRunExperience"=dword:00000001
 ::"HubsSidebarEnabled"=dword:00000000
@@ -2060,6 +2470,18 @@ if "%debug%"=="true" (
 ::"UserFeedbackAllowed"=dword:00000000
 ::"WalletDonationEnabled"=dword:00000000
 ::"WebWidgetAllowed"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
+::"BlockThirdPartyCookies"=dword:00000001
+::"DefaultShareAdditionalOSRegionSetting"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
+::"1"="0xc013"
+::"2"="0xc014"
+::"3"="0x0035"
+::"4"="0x002f"
+::"5"="0x009c"
+::"6"="0x009d"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EdgeUpdate]
 ::"CreateDesktopShortcutDefault"=dword:00000000
@@ -2162,30 +2584,401 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
 ::"fAllowToGetHelp"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
-::"EnableFindMyFiles"=dword:00000001
-::"SystemIndexNormalization"=dword:00000003
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
+::"EnableCertPaddingCheck"="1"
 ::
-:: ; Send only Required Diagnostic and Usage Data
-:: [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10}]
+::"allowautoupdatesmetered"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}]
+::"allowautoupdatesmetered"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}]
+::"allowautoupdatesmetered"=dword:00000001
+::
+::; Send only Required Diagnostic and Usage Data
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 ::"AllowTelemetry"=dword:00000000
 ::"MaxTelemetryAllowed"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
+::"ConsentPromptBehaviorUser"=dword:00000000
+::"FilterAdministratorToken"=dword:00000001
 ::"PromptOnSecureDesktop"=dword:00000000
+::"TypeOfAdminApprovalMode"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Acrobat.exe]
+::"MitigationOptions"=hex:00,03,00,01,00,00,11,01,10,00,11,00,00,10,00,10,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\AppControlManager.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,11,01,00,00,11,10,01,01,00,30,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\clview.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\excel.exe]
+::"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\excelcnv.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\explorer.exe]
+::"MitigationOptions"=hex:00,00,00,01,01,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ExtExport.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\graph.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ie4uinit.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ieinstal.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ielowutil.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ieUnatt.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\iexplore.exe]
+::"DisableExceptionChainValidation"=dword:00000000
+::"DisableUserModeCallbackFilter"=dword:00000001
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\LSASS.exe]
+::"AuditLevel"=dword:00000008
+::"MitigationOptions"=hex:00,00,00,00,11,10,10,00,00,00,00,00,10,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdgeUpdate.exe]
+::"DisableExceptionChainValidation"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MRT.exe]
+::"CFGOptions"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MSACCESS.EXE]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mscorsvw.exe]
+::"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedge.exe]
+::"MitigationOptions"=hex:00,00,00,00,01,31,10,01,10,00,00,00,00,10,00,30,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedgewebview2.exe]
+::"MitigationOptions"=hex:00,00,00,00,01,01,00,00,10,01,00,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msfeedssync.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mshta.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MsMpEng.exe]
+::"CFGOptions"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoadfsb.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoasb.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msohtmed.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msosrec.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msoxmled.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MSPUB.EXE]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msqry32.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ngen.exe]
+::"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ngentask.exe]
+::"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\NisSrv.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe]
+::"UseFilter"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\0]
+::"AppExecutionAliasRedirect"=dword:00000001
+::"AppExecutionAliasRedirectPackages"="*"
+::"FilterFullPath"="C:\\Windows\\System32\\notepad.exe"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\1]
+::"AppExecutionAliasRedirect"=dword:00000001
+::"AppExecutionAliasRedirectPackages"="*"
+::"FilterFullPath"="C:\\Windows\\SysWOW64\\notepad.exe"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe\2]
+::"AppExecutionAliasRedirect"=dword:00000001
+::"AppExecutionAliasRedirectPackages"="*"
+::"FilterFullPath"="C:\\Windows\\notepad.exe"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\OneDrive.exe]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ONENOTE.EXE]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\orgchart.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\OUTLOOK.EXE]
+::"MitigationOptions"=hex:00,00,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\powerpnt.exe]
+::"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PresentationHost.exe]
+::"MitigationOptions"=hex(b):11,11,11,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PrintIsolationHost.exe]
+::"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\QuickAssist.exe]
+::"MitigationOptions"=hex:00,00,00,01,11,30,11,01,10,00,11,10,01,11,00,30,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Regsvr32.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\rundll32.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,01,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\runtimebroker.exe]
+::"MitigationOptions"=hex:00,00,00,00,01,01,00,00,10,01,00,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sdxhelper.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\selfcert.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\services.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\setlang.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SmartScreen.exe]
+::"MitigationOptions"=hex:00,00,00,00,01,11,00,00,00,01,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SMSS.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\splwow64.exe]
+::"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\spoolsv.exe]
+::"MitigationOptions"=hex(b):00,00,20,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\svchost.exe]
+::"MinimumStackCommitInBytes"=dword:00008000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SystemSettings.exe]
+::"MitigationOptions"=hex(b):00,00,00,00,01,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VBoxHeadless.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VBoxNetDHCP.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VirtualBox.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VirtualBoxVM.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\vmcompute.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,01,00,00,00,01,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\vmwp.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,01,00,00,00,01,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\windows10universal.exe]
+::"ImageExpansionMitigation"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WindowsSandbox.exe]
+::"MitigationOptions"=hex:00,00,00,01,01,11,10,01,10,01,00,10,01,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WindowsSandboxClient.exe]
+::"MitigationOptions"=hex:00,00,00,01,01,11,10,01,10,01,00,10,01,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Wininit.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,10,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winword.exe]
+::"MitigationOptions"=hex:00,01,00,01,01,30,00,00,10,00,11,00,00,10,00,00,00,00,\
+::  00,00,00,00,00,00
+::"MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00
+::"EAFModules"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wordconv.exe]
+::"MitigationOptions"=hex(b):00,01,00,00,00,00,00,00
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wpr.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  10
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\wprui.exe]
+::"MitigationOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  10
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
+::"EnableFindMyFiles"=dword:00000001
+::"SystemIndexNormalization"=dword:00000003
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search\Gather\Windows\SystemIndex]
+::"EnableFindMyFiles"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Cryptography]
+::"ForceKeyProtection"=dword:00000001
 ::
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
 ::"AlternateErrorPagesEnabled"=dword:00000000
+::"AudioSandboxEnabled"=dword:00000001
+::"BasicAuthOverHttpEnabled"=dword:00000000
 ::"ComposeInlineEnabled"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
 ::"CopilotCDPPageContext"=dword:00000000
 ::"CopilotPageContext"=dword:00000000
+::"DefaultWebUsbGuardSetting"=dword:00000002
+::"DefaultWindowManagementSetting"=dword:00000002
 ::"DiagnosticData"=dword:00000000
+::"DnsOverHttpsMode"="automatic"
+::"DynamicCodeSettings"=dword:00000001
 ::"EdgeEntraCopilotPageContext"=dword:00000000
 ::"EdgeHistoryAISearchEnabled"=dword:00000000
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
+::"EncryptedClientHelloEnabled"=dword:00000001
+::"ExperimentationAndConfigurationServiceControl"=dword:00000002
 ::"GenAILocalFoundationalModelSettings"=dword:00000001
 ::"HubsSidebarEnabled"=dword:00000000
 ::"NewTabPageBingChatEnabled"=dword:00000000
@@ -2195,6 +2988,18 @@ if "%debug%"=="true" (
 ::"TabServicesEnabled"=dword:00000000
 ::"UserFeedbackAllowed"=dword:00000000
 ::"WebWidgetAllowed"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
+::"BlockThirdPartyCookies"=dword:00000001
+::"DefaultShareAdditionalOSRegionSetting"=dword:00000002
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
+::"1"="0xc013"
+::"2"="0xc014"
+::"3"="0x0035"
+::"4"="0x002f"
+::"5"="0x009c"
+::"6"="0x009d"
 ::
 ::; Disable "Inking & Typing Personalization"
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\InputPersonalization]
@@ -2226,6 +3031,9 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DeliveryOptimization]
 ::"DODownloadMode"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Explorer]
+::"HideRecommendedSection"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\HandwritingErrorReports]
 ::"PreventHandwritingErrorReports"=dword:00000001
@@ -2293,20 +3101,87 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
 ::"LongPathsEnabled"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa]
+::"LmCompatibilityLevel"=dword:00000005
+::"restrictanonymous"=dword:00000001
+::"RestrictRemoteSAM"="O:BAG:BAD:(A;;RC;;;BA)"
+::"SCENoApplyLegacyAuditPolicy"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0]
+::"allownullsessionfallback"=dword:00000000
+::"NtlmMinClientSec"=dword:20080000
+::"NtlmMinServerSec"=dword:20080000
+::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
 ::"PowerThrottlingOff"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance]
 ::"fAllowToGetHelp"=dword:00000000
 ::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5]
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client]
+::"DisabledByDefault"=dword:00000001
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server]
+::"DisabledByDefault"=dword:00000001
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client]
+::"DisabledByDefault"=dword:00000001
+::"Enabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server]
+::"DisabledByDefault"=dword:00000001
+::"Enabled"=dword:00000000
+::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager]
 ::"EnablePeriodicBackup"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+::"MP_FORCE_USE_SANDBOX"="1"
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\AutoLogger-Diagtrack-Listener]
 ::"Start"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
 ::"IRPStackSize"=dword:0000001E
+::"requiresecuritysignature"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters]
+::"RequireSecuritySignature"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration]
 ::"Status"=dword:00000000
@@ -2330,18 +3205,12 @@ if "%debug%"=="true" (
 ::[HKEY_USERS\.DEFAULT\Control Panel\Desktop]
 ::"JPEGImportQuality"=dword:00000064
 ::
+::[HKEY_USERS\.DEFAULT\Control Panel\International\User Profile]
+::"HttpAcceptLanguageOptOut"=dword:00000001
+::
 ::[HKEY_USERS\.DEFAULT\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 ::"ShowCmd"=dword:00000003
 ::"WFlags"=dword:00000002
-::
-::; Hide Gallery on Navigation Pane
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
-::; Hide Home on Navigation Pane
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-::@="CLSID_MSGraphHomeFolder"
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
 ::@=""
@@ -2366,6 +3235,10 @@ if "%debug%"=="true" (
 ::"DefaultInterval"=dword:0000000F
 ::"SyncStatus"=dword:00000001
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\input\Settings]
+::"EnableHwkbTextPrediction"=dword:00000001
+::"MultilingualEnabled"=dword:00000001
+::
 ::; Disable "Improve Inking & Typing Recognition"
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Input\TIPC]
 ::"Enabled"=dword:00000000
@@ -2380,13 +3253,17 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Internet Explorer\Main]
 ::"DoNotTrack"=dword:00000001
+::"Isolation64Bit"=dword:00000001
 ::"Use FormSuggest"="yes"
+::
+::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Internet Explorer\Main\Start]
+::"Page"="about:blank"
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Internet Explorer\Privacy]
 ::"CleanDownloadHistory"=dword:00000001
 ::"CleanForms"=dword:00000001
 ::"CleanPassword"=dword:00000001
-::"ClearBrowsingHistoryOnExit"=dword:00000000
+::"ClearBrowsingHistoryOnExit"=dword:00000001
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\MediaPlayer\Preferences]
 ::"AcceptedPrivacyStatement"=dword:00000001
@@ -2395,6 +3272,10 @@ if "%debug%"=="true" (
 ::"SilentAcquisition"=dword:00000001
 ::"UsageTracking"=dword:00000000
 ::"Volume"=dword:00000064
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Notepad]
+::"iWindowPosX"=dword:FFFFFFF8
+::"iWindowPosY"=dword:00000000
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Office\16.0\Common\LinkedIn]
 ::"OfficeLinkedIn"=dword:00000000
@@ -2415,6 +3296,10 @@ if "%debug%"=="true" (
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 ::"Enabled"=dword:00000000
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
+::"WindowPlacement"=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
+::  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
+::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
 ::"value"="Deny"
 ::
@@ -2422,17 +3307,28 @@ if "%debug%"=="true" (
 ::"value"="Deny"
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+::"ContentDeliveryAllowed"=dword:00000000
 ::"OemPreInstalledAppsEnabled"=dword:00000000
 ::"PreInstalledAppsEnabled"=dword:00000000
 ::"PreInstalledAppsEverEnabled"=dword:00000000
+::"RotatingLockScreenEnabled"=dword:00000000
+::"RotatingLockScreenOverlayEnabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
+::"RotatingLockScreenOverlayVisible"=dword:00000000
 ::"SilentInstalledAppsEnabled"=dword:00000000 ; Automatic Installation of Suggested Apps
 ::"SoftLandingEnabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+::"SubscribedContent-202914Enabled"=dword:00000000
+::"SubscribedContent-280815Enabled"=dword:00000000
 ::"SubscribedContent-310093Enabled"=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what"s new and suggested
+::"SubscribedContent-338387Enabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
 ::"SubscribedContent-338388Enabled"=dword:00000000 ; Occasionally show suggestions in Start
 ::"SubscribedContent-338389Enabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
 ::"SubscribedContent-353694Enabled"=dword:00000000 ; Show me suggested content in the Settings app
 ::"SubscribedContent-353696Enabled"=dword:00000000 ; Show me suggested content in the Settings app
 ::"SubscribedContent-353698Enabled"=dword:00000000 ; Show me suggested content in the Settings app
+::"SubscribedContent-88000045Enabled"=dword:00000000
+::"SubscribedContent-88000161Enabled"=dword:00000000
+::"SubscribedContent-88000163Enabled"=dword:00000000
+::"SubscribedContent-88000165Enabled"=dword:00000000
 ::"SystemPaneSuggestionsEnabled"=dword:00000000 ; Occasionally show suggestions in Start
 ::
 ::; Disable "Tailored experiences with diagnostic data"
@@ -2477,10 +3373,10 @@ if "%debug%"=="true" (
 ::"MSEdge"=dword:00000001
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
-::"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
-::"PreviewPaneSizer"=hex:8D,00,00,00,01,00,00,00,00,00,00,00,3D,03,00,00
+::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
 ::"EnthusiastMode"=dword:00000001
@@ -2511,10 +3407,27 @@ if "%debug%"=="true" (
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
 ::"DaysToKeep"=dword:00000000
 ::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+::"RotatingLockScreenOverlayEnabled"=dword:00000000
+::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Mobility]
 ::"CrossDeviceEnabled"=dword:00000000
 ::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 ::"PhoneLinkEnabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
+::"NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK"=dword:00000000
+::
+::; Disable Windows Backup reminder notifications
+::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
+::"Enabled"=dword:00000000
+::
+::; Disable "Suggested" app notifications (Ads for MS services)
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+::"Enabled"=dword:00000000
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+::"NoDriveTypeAutoRun"=dword:00000091
 ::
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Privacy]
@@ -2527,14 +3440,6 @@ if "%debug%"=="true" (
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
 ::"IsDynamicSearchBoxEnabled"=dword:00000000
 ::
-::; Disable Windows Backup reminder notifications
-::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
-::"Enabled"=dword:00000000
-::
-::; Disable "Suggested" app notifications (Ads for MS services)
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
-::"Enabled"=dword:00000000
-::
 ::; Disable Show mobile device in Start
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 ::"IsEnabled"=dword:00000000
@@ -2543,6 +3448,7 @@ if "%debug%"=="true" (
 ::"EnableAccountNotifications"=dword:00000000
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+::"01"=dword:00000001
 ::"2048"=dword:0000001E
 ::
 ::; Suggest ways I can finish setting up my device to get the most out of Windows
@@ -2595,6 +3501,7 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\CloudContent]
 ::"DisableTailoredExperiencesWithDiagnosticData"=dword:00000001
+::"DisableWindowsSpotlightOnLockScreen"=dword:00000001
 ::
 ::; Disable Bing in search
 ::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\Explorer]
@@ -2628,12 +3535,421 @@ if "%debug%"=="true" (
 ::#endregion configs > Windows > Windows base
 ::
 ::
+::#region configs > Windows > Windows English
+::
+::Set-Variable -Option Constant CONFIG_WINDOWS_ENGLISH 'Windows Registry Editor Version 5.00
+::
+::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
+::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
+::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
+::  00,20,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,f0,01,00,00,\
+::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
+::  00,00,00,00,00,00,00,60,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,77,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
+::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,5b,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
+::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,bf,43,f6,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a4,00,00,00,1e,00,00,00,8d,90,00,\
+::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
+::  b0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,24,00,00,00,1e,\
+::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
+::  00,00,00,00,00,00,c8,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,ab,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
+::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,ba,00,00,00,1e,00,00,00,8f,90,00,00,0e,00,00,00,00,00,\
+::  00,00,00,01,10,00,00,00,00,00,07,00,00,00,00,00,00,00,18,35,bf,43,f6,7f,00,\
+::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
+::  06,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
+::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
+::  00,00,91,90,00,00,07,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
+::  00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
+::  49,00,00,00,49,00,00,00,92,90,00,00,08,00,00,00,00,00,00,00,00,04,25,08,00,\
+::  00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,09,00,00,00,00,00,00,\
+::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,bf,43,f6,7f,00,00,\
+::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0a,\
+::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
+::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
+::  00,3a,a0,00,00,0b,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
+::  00,00,00,00,b8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,53,\
+::  00,00,00,49,00,00,00,4c,a0,00,00,0c,00,00,00,00,00,00,00,00,02,15,08,00,00,\
+::  00,00,1e,00,00,00,00,00,00,00,d8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
+::  00,ff,ff,ff,ff,73,00,00,00,49,00,00,00,4d,a0,00,00,0d,00,00,00,00,00,00,00,\
+::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
+::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
+::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
+::  00,00,00,00,00,90,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
+::  00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
+::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,bf,43,f6,7f,00,00,\
+::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
+::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
+::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
+::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
+::  00,00,00,00,58,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
+::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
+::  00,00,0f,00,00,00,00,00,00,00,80,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
+::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
+::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,bf,43,f6,7f,00,00,00,\
+::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
+::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,bf,\
+::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
+::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
+::  00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
+::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,\
+::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
+::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
+::  00,00,00,e8,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
+::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
+::  00,14,00,00,00,00,00,00,00,08,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,\
+::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
+::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,bf,43,f6,7f,00,00,00,00,\
+::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
+::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,\
+::  f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
+::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
+::  00,00,18,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
+::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
+::  08,00,00,00,00,00,00,00,48,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,06,\
+::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
+::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,\
+::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
+::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,\
+::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
+::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
+::  00,70,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
+::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
+::  00,00,00,00,00,00,00,90,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
+::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
+::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,43,f6,\
+::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,71,01,00,00,1e,00,00,00,b0,90,\
+::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
+::  00,50,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
+::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
+::  00,00,00,00,00,00,00,80,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
+::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,bf,43,f6,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
+::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,bf,43,f6,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
+::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
+::  08,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
+::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
+::  00,00,00,00,00,00,38,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
+::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,bf,43,f6,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
+::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,01,01,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,5c,00,3f,00,5c,\
+::  00,53,00,43,00,53,00,49,00,23,00,44,00,69,00,73,00,6b,00,26,00,56,00,65,00,\
+::  6e,00,5f,00,56,00,42,00,4f,00,58,00,26,00,50,00,72,00,6f,00,64,00,5f,00,48,\
+::  00,41,00,52,00,44,00,44,00,49,00,53,00,4b,00,23,00,34,00,26,00,32,00,36,00,\
+::  31,00,37,00,61,00,65,00,61,00,65,00,26,00,30,00,26,00,30,00,30,00,30,00,30,\
+::  00,30,00,30,00,23,00,7b,00,35,00,33,00,66,00,35,00,36,00,33,00,30,00,37,00,\
+::  2d,00,62,00,36,00,62,00,66,00,2d,00,31,00,31,00,64,00,30,00,2d,00,39,00,34,\
+::  00,66,00,32,00,2d,00,30,00,30,00,61,00,30,00,63,00,39,00,31,00,65,00,66,00,\
+::  62,00,38,00,62,00,7d,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  00,00,00,00,95,0d,21,fc,78,08,00,00,b8,00,00,00,31,02,00,00,26,00,00,00,48,\
+::  00,00,00,73,00,00,00,41,00,00,00,50,00,00,00,24,00,00,00,3f,00,00,00,2a,00,\
+::  00,00,83,00,00,00,9d,00,00,00,a0,00,00,00,cb,00,00,00,a9,00,00,00,a7,00,00,\
+::  00,4e,00,00,00,48,00,00,00,37,00,00,00,46,00,00,00,37,00,00,00,57,00,00,00,\
+::  37,00,00,00,36,00,00,00,4d,00,00,00,48,00,00,00,3c,00,00,00,3f,00,00,00,3e,\
+::  00,00,00,57,00,00,00,59,00,00,00,5b,00,00,00,ea,02,00,00,c4,05,00,00,94,00,\
+::  00,00,3b,00,00,00,38,00,00,00,6b,00,00,00,30,01,00,00,97,00,00,00,6b,00,00,\
+::  00,66,00,00,00,63,00,00,00,23,00,00,00,4a,00,00,00,8b,00,00,00,7a,00,00,00,\
+::  cf,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
+::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
+::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
+::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
+::  18,00,00,00,19,00,00,00,1a,00,00,00,1b,00,00,00,1c,00,00,00,1d,00,00,00,1e,\
+::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
+::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
+::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
+::  01,00,00,00,1f,00,00,00,00,00,00,00,08,01,00,00,2c,00,00,00,e1,01,00,00,3b,\
+::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+::
+::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
+::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
+::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
+::  00,20,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,f0,01,00,00,\
+::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
+::  00,00,00,00,00,00,00,60,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,77,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
+::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,5b,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
+::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,bf,43,f6,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a4,00,00,00,1e,00,00,00,8d,90,00,\
+::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
+::  b0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,24,00,00,00,1e,\
+::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
+::  00,00,00,00,00,00,c8,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,ab,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
+::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,ba,00,00,00,1e,00,00,00,8f,90,00,00,0e,00,00,00,00,00,\
+::  00,00,00,01,10,00,00,00,00,00,07,00,00,00,00,00,00,00,18,35,bf,43,f6,7f,00,\
+::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
+::  06,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
+::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
+::  00,00,91,90,00,00,07,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
+::  00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
+::  49,00,00,00,49,00,00,00,92,90,00,00,08,00,00,00,00,00,00,00,00,04,25,08,00,\
+::  00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,09,00,00,00,00,00,00,\
+::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,bf,43,f6,7f,00,00,\
+::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0a,\
+::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
+::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
+::  00,3a,a0,00,00,0b,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
+::  00,00,00,00,b8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,53,\
+::  00,00,00,49,00,00,00,4c,a0,00,00,0c,00,00,00,00,00,00,00,00,02,15,08,00,00,\
+::  00,00,1e,00,00,00,00,00,00,00,d8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
+::  00,ff,ff,ff,ff,73,00,00,00,49,00,00,00,4d,a0,00,00,0d,00,00,00,00,00,00,00,\
+::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
+::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
+::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
+::  00,00,00,00,00,90,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
+::  00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
+::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,bf,43,f6,7f,00,00,\
+::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
+::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
+::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
+::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
+::  00,00,00,00,58,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
+::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
+::  00,00,0f,00,00,00,00,00,00,00,80,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
+::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
+::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,bf,43,f6,7f,00,00,00,\
+::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
+::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,bf,\
+::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
+::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
+::  00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
+::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,\
+::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
+::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
+::  00,00,00,e8,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
+::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
+::  00,14,00,00,00,00,00,00,00,08,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,\
+::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
+::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,bf,43,f6,7f,00,00,00,00,\
+::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
+::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,\
+::  f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
+::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
+::  00,00,18,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
+::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
+::  08,00,00,00,00,00,00,00,48,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,06,\
+::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
+::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,\
+::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
+::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,\
+::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
+::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
+::  00,70,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
+::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
+::  00,00,00,00,00,00,00,90,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
+::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
+::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,43,f6,\
+::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,71,01,00,00,1e,00,00,00,b0,90,\
+::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
+::  00,50,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
+::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
+::  00,00,00,00,00,00,00,80,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
+::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,bf,43,f6,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
+::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,bf,43,f6,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
+::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
+::  08,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
+::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
+::  00,00,00,00,00,00,38,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
+::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,bf,43,f6,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
+::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,01,01,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,5c,00,3f,00,5c,\
+::  00,53,00,43,00,53,00,49,00,23,00,44,00,69,00,73,00,6b,00,26,00,56,00,65,00,\
+::  6e,00,5f,00,56,00,42,00,4f,00,58,00,26,00,50,00,72,00,6f,00,64,00,5f,00,48,\
+::  00,41,00,52,00,44,00,44,00,49,00,53,00,4b,00,23,00,34,00,26,00,32,00,36,00,\
+::  31,00,37,00,61,00,65,00,61,00,65,00,26,00,30,00,26,00,30,00,30,00,30,00,30,\
+::  00,30,00,30,00,23,00,7b,00,35,00,33,00,66,00,35,00,36,00,33,00,30,00,37,00,\
+::  2d,00,62,00,36,00,62,00,66,00,2d,00,31,00,31,00,64,00,30,00,2d,00,39,00,34,\
+::  00,66,00,32,00,2d,00,30,00,30,00,61,00,30,00,63,00,39,00,31,00,65,00,66,00,\
+::  62,00,38,00,62,00,7d,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  00,00,00,00,95,0d,21,fc,78,08,00,00,b8,00,00,00,31,02,00,00,26,00,00,00,48,\
+::  00,00,00,73,00,00,00,41,00,00,00,50,00,00,00,24,00,00,00,3f,00,00,00,2a,00,\
+::  00,00,83,00,00,00,9d,00,00,00,a0,00,00,00,cb,00,00,00,a9,00,00,00,a7,00,00,\
+::  00,4e,00,00,00,48,00,00,00,37,00,00,00,46,00,00,00,37,00,00,00,57,00,00,00,\
+::  37,00,00,00,36,00,00,00,4d,00,00,00,48,00,00,00,3c,00,00,00,3f,00,00,00,3e,\
+::  00,00,00,57,00,00,00,59,00,00,00,5b,00,00,00,ea,02,00,00,c4,05,00,00,94,00,\
+::  00,00,3b,00,00,00,38,00,00,00,6b,00,00,00,30,01,00,00,97,00,00,00,6b,00,00,\
+::  00,66,00,00,00,63,00,00,00,23,00,00,00,4a,00,00,00,8b,00,00,00,7a,00,00,00,\
+::  cf,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
+::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
+::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
+::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
+::  18,00,00,00,19,00,00,00,1a,00,00,00,1b,00,00,00,1c,00,00,00,1d,00,00,00,1e,\
+::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
+::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
+::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
+::  01,00,00,00,1f,00,00,00,00,00,00,00,08,01,00,00,2c,00,00,00,e1,01,00,00,3b,\
+::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+::'
+::
+::#endregion configs > Windows > Windows English
+::
+::
 ::#region configs > Windows > Windows personalisation
 ::
 ::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION 'Windows Registry Editor Version 5.00
 ::
 ::; Hide "OneDrive" folder
 ::[HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Hide Gallery on Navigation Pane
+::[HKEY_CLASSES_ROOT\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Hide Home on Navigation Pane
+::[HKEY_CLASSES_ROOT\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
+::@="CLSID_MSGraphHomeFolder"
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
 ::; Hide "OneDrive" folder
@@ -2651,8 +3967,22 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 ::@=""
 ::
+::; Hide Gallery on Navigation Pane
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Hide Home on Navigation Pane
+::[HKEY_CURRENT_USER\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
+::@="CLSID_MSGraphHomeFolder"
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+::"ContentDeliveryAllowed"=dword:00000001
 ::"RotatingLockScreenEnabled"=dword:00000001
+::"SubscribedContent-338387Enabled"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\DesktopSpotlight\Settings]
+::"EnabledState"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 ::"Hidden"=dword:00000001 ; Show hidden files
@@ -2687,9 +4017,41 @@ if "%debug%"=="true" (
 ::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
 ::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
 ::
+::; Hide "3D objects" folder
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
+::
+::; Hide "Music" folder
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
+::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
+::
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
+::
+::; Add `Show Gallery` option to File Explorer folder options, with default set to disabled
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowGallery]
+::"CheckedValue"=dword:00000001
+::"DefaultValue"=dword:00000000
+::"HKeyRoot"=dword:80000001
+::"Id"=dword:0000000d
+::"RegPath"="Software\\Classes\\CLSID\\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}"
+::"Text"="Show Gallery"
+::"Type"="checkbox"
+::"UncheckedValue"=dword:00000000
+::"ValueName"="System.IsPinnedToNameSpaceTree"
+::
+::; Add `Show Home` option to File Explorer folder options, with default set to disabled
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
+::"CheckedValue"=dword:00000001
+::"DefaultValue"=dword:00000000
+::"HKeyRoot"=dword:80000001
+::"Id"=dword:0000000d
+::"RegPath"="Software\\Classes\\CLSID\\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}"
+::"Text"="Show Home"
+::"Type"="checkbox"
+::"UncheckedValue"=dword:00000000
+::"ValueName"="System.IsPinnedToNameSpaceTree"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
@@ -2718,8 +4080,22 @@ if "%debug%"=="true" (
 ::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 ::@=""
 ::
+::; Hide Gallery on Navigation Pane
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
+::; Hide Home on Navigation Pane
+::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
+::@="CLSID_MSGraphHomeFolder"
+::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+::"ContentDeliveryAllowed"=dword:00000001
 ::"RotatingLockScreenEnabled"=dword:00000001
+::"SubscribedContent-338387Enabled"=dword:00000001
+::
+::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\DesktopSpotlight\Settings]
+::"EnabledState"=dword:00000001
 ::
 ::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 ::"Hidden"=dword:00000001 ; Show hidden files
@@ -2756,6 +4132,406 @@ if "%debug%"=="true" (
 ::'
 ::
 ::#endregion configs > Windows > Windows personalisation
+::
+::
+::#region configs > Windows > Windows Russian
+::
+::Set-Variable -Option Constant CONFIG_WINDOWS_RUSSIAN 'Windows Registry Editor Version 5.00
+::
+::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
+::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
+::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
+::  00,20,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,bd,01,00,00,\
+::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
+::  00,00,00,00,00,00,00,60,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,71,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
+::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,82,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
+::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,f4,5c,f7,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,b0,00,00,00,1e,00,00,00,8d,90,00,\
+::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
+::  b0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,56,00,00,00,1e,\
+::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
+::  00,00,00,00,00,00,c8,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,c1,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
+::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,04,01,00,00,1e,00,00,00,8f,90,00,00,06,00,00,00,00,00,\
+::  00,00,00,01,10,01,00,00,00,00,07,00,00,00,00,00,00,00,18,35,f4,5c,f7,7f,00,\
+::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
+::  07,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
+::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
+::  00,00,91,90,00,00,08,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
+::  00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
+::  49,00,00,00,49,00,00,00,92,90,00,00,09,00,00,00,00,00,00,00,00,04,25,08,00,\
+::  00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,0a,00,00,00,00,00,00,\
+::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,f4,5c,f7,7f,00,00,\
+::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0b,\
+::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
+::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
+::  00,3a,a0,00,00,0c,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
+::  00,00,00,00,b8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,80,\
+::  00,00,00,49,00,00,00,4c,a0,00,00,0d,00,00,00,00,00,00,00,00,02,15,08,00,00,\
+::  00,00,1e,00,00,00,00,00,00,00,d8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
+::  00,ff,ff,ff,ff,bb,00,00,00,49,00,00,00,4d,a0,00,00,0e,00,00,00,00,00,00,00,\
+::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
+::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
+::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
+::  00,00,00,00,00,90,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
+::  00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
+::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,f4,5c,f7,7f,00,00,\
+::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
+::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
+::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
+::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
+::  00,00,00,00,58,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
+::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
+::  00,00,0f,00,00,00,00,00,00,00,80,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
+::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
+::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,f4,5c,f7,7f,00,00,00,\
+::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
+::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,f4,\
+::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
+::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
+::  00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
+::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,\
+::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
+::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
+::  00,00,00,e8,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
+::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
+::  00,14,00,00,00,00,00,00,00,08,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,\
+::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
+::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,f4,5c,f7,7f,00,00,00,00,\
+::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
+::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,\
+::  f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
+::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
+::  00,00,18,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
+::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
+::  08,00,00,00,00,00,00,00,48,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,06,\
+::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
+::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,\
+::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
+::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,\
+::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
+::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
+::  00,70,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
+::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
+::  00,00,00,00,00,00,00,90,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
+::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
+::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,5c,f7,\
+::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c2,01,00,00,1e,00,00,00,b0,90,\
+::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
+::  00,50,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
+::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
+::  00,00,00,00,00,00,00,80,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
+::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,f4,5c,f7,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
+::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,f4,5c,f7,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
+::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
+::  08,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
+::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
+::  00,00,00,00,00,00,38,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
+::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,f4,5c,f7,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
+::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,01,01,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,5c,00,3f,00,5c,\
+::  00,53,00,43,00,53,00,49,00,23,00,44,00,69,00,73,00,6b,00,26,00,56,00,65,00,\
+::  6e,00,5f,00,56,00,42,00,4f,00,58,00,26,00,50,00,72,00,6f,00,64,00,5f,00,48,\
+::  00,41,00,52,00,44,00,44,00,49,00,53,00,4b,00,23,00,34,00,26,00,32,00,36,00,\
+::  31,00,37,00,61,00,65,00,61,00,65,00,26,00,30,00,26,00,30,00,30,00,30,00,30,\
+::  00,30,00,30,00,23,00,7b,00,35,00,33,00,66,00,35,00,36,00,33,00,30,00,37,00,\
+::  2d,00,62,00,36,00,62,00,66,00,2d,00,31,00,31,00,64,00,30,00,2d,00,39,00,34,\
+::  00,66,00,32,00,2d,00,30,00,30,00,61,00,30,00,63,00,39,00,31,00,65,00,66,00,\
+::  62,00,38,00,62,00,7d,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  00,00,00,00,85,0d,20,e0,40,08,00,00,ce,00,00,00,31,02,00,00,58,00,00,00,6c,\
+::  00,00,00,73,00,00,00,4e,00,00,00,7a,00,00,00,28,00,00,00,50,00,00,00,3c,00,\
+::  00,00,95,00,00,00,ca,00,00,00,7e,00,00,00,a5,00,00,00,87,00,00,00,c2,00,00,\
+::  00,9a,00,00,00,a4,00,00,00,99,00,00,00,9a,00,00,00,84,00,00,00,7b,00,00,00,\
+::  58,00,00,00,37,00,00,00,67,00,00,00,59,00,00,00,d4,00,00,00,d2,00,00,00,bf,\
+::  00,00,00,b9,00,00,00,af,00,00,00,a1,00,00,00,ea,02,00,00,d9,05,00,00,c7,00,\
+::  00,00,4e,00,00,00,a0,00,00,00,7a,00,00,00,8c,01,00,00,e0,00,00,00,78,00,00,\
+::  00,a9,00,00,00,d1,00,00,00,2d,00,00,00,41,00,00,00,0f,01,00,00,f3,00,00,00,\
+::  da,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
+::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
+::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
+::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
+::  18,00,00,00,19,00,00,00,1a,00,00,00,1b,00,00,00,1c,00,00,00,1d,00,00,00,1e,\
+::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
+::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
+::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
+::  01,00,00,00,1f,00,00,00,00,00,00,00,09,01,00,00,54,00,00,00,de,02,00,00,57,\
+::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+::
+::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
+::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
+::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
+::  00,20,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,bd,01,00,00,\
+::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
+::  00,00,00,00,00,00,00,60,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,71,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
+::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,82,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
+::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,f4,5c,f7,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,b0,00,00,00,1e,00,00,00,8d,90,00,\
+::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
+::  b0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,56,00,00,00,1e,\
+::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
+::  00,00,00,00,00,00,c8,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,c1,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
+::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,04,01,00,00,1e,00,00,00,8f,90,00,00,06,00,00,00,00,00,\
+::  00,00,00,01,10,01,00,00,00,00,07,00,00,00,00,00,00,00,18,35,f4,5c,f7,7f,00,\
+::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
+::  07,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
+::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
+::  00,00,91,90,00,00,08,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
+::  00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
+::  49,00,00,00,49,00,00,00,92,90,00,00,09,00,00,00,00,00,00,00,00,04,25,08,00,\
+::  00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,0a,00,00,00,00,00,00,\
+::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,f4,5c,f7,7f,00,00,\
+::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0b,\
+::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
+::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
+::  00,3a,a0,00,00,0c,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
+::  00,00,00,00,b8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,80,\
+::  00,00,00,49,00,00,00,4c,a0,00,00,0d,00,00,00,00,00,00,00,00,02,15,08,00,00,\
+::  00,00,1e,00,00,00,00,00,00,00,d8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
+::  00,ff,ff,ff,ff,bb,00,00,00,49,00,00,00,4d,a0,00,00,0e,00,00,00,00,00,00,00,\
+::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
+::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
+::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
+::  00,00,00,00,00,90,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
+::  00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
+::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,f4,5c,f7,7f,00,00,\
+::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
+::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
+::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
+::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
+::  00,00,00,00,58,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
+::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
+::  00,00,0f,00,00,00,00,00,00,00,80,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
+::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
+::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,f4,5c,f7,7f,00,00,00,\
+::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
+::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,f4,\
+::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
+::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
+::  00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
+::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,\
+::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
+::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
+::  00,00,00,e8,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
+::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
+::  00,14,00,00,00,00,00,00,00,08,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,\
+::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
+::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,f4,5c,f7,7f,00,00,00,00,\
+::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
+::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,\
+::  f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
+::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
+::  00,00,18,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
+::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
+::  08,00,00,00,00,00,00,00,48,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,06,\
+::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
+::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,\
+::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
+::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,\
+::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
+::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
+::  00,70,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
+::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
+::  00,00,00,00,00,00,00,90,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
+::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
+::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,5c,f7,\
+::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c2,01,00,00,1e,00,00,00,b0,90,\
+::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
+::  00,50,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
+::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
+::  00,00,00,00,00,00,00,80,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
+::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,f4,5c,f7,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
+::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,f4,5c,f7,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
+::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
+::  08,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
+::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
+::  00,00,00,00,00,00,38,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
+::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,f4,5c,f7,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
+::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,01,01,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,5c,00,3f,00,5c,\
+::  00,53,00,43,00,53,00,49,00,23,00,44,00,69,00,73,00,6b,00,26,00,56,00,65,00,\
+::  6e,00,5f,00,56,00,42,00,4f,00,58,00,26,00,50,00,72,00,6f,00,64,00,5f,00,48,\
+::  00,41,00,52,00,44,00,44,00,49,00,53,00,4b,00,23,00,34,00,26,00,32,00,36,00,\
+::  31,00,37,00,61,00,65,00,61,00,65,00,26,00,30,00,26,00,30,00,30,00,30,00,30,\
+::  00,30,00,30,00,23,00,7b,00,35,00,33,00,66,00,35,00,36,00,33,00,30,00,37,00,\
+::  2d,00,62,00,36,00,62,00,66,00,2d,00,31,00,31,00,64,00,30,00,2d,00,39,00,34,\
+::  00,66,00,32,00,2d,00,30,00,30,00,61,00,30,00,63,00,39,00,31,00,65,00,66,00,\
+::  62,00,38,00,62,00,7d,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  00,00,00,00,85,0d,20,e0,40,08,00,00,ce,00,00,00,31,02,00,00,58,00,00,00,6c,\
+::  00,00,00,73,00,00,00,4e,00,00,00,7a,00,00,00,28,00,00,00,50,00,00,00,3c,00,\
+::  00,00,95,00,00,00,ca,00,00,00,7e,00,00,00,a5,00,00,00,87,00,00,00,c2,00,00,\
+::  00,9a,00,00,00,a4,00,00,00,99,00,00,00,9a,00,00,00,84,00,00,00,7b,00,00,00,\
+::  58,00,00,00,37,00,00,00,67,00,00,00,59,00,00,00,d4,00,00,00,d2,00,00,00,bf,\
+::  00,00,00,b9,00,00,00,af,00,00,00,a1,00,00,00,ea,02,00,00,d9,05,00,00,c7,00,\
+::  00,00,4e,00,00,00,a0,00,00,00,7a,00,00,00,8c,01,00,00,e0,00,00,00,78,00,00,\
+::  00,a9,00,00,00,d1,00,00,00,2d,00,00,00,41,00,00,00,0f,01,00,00,f3,00,00,00,\
+::  da,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
+::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
+::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
+::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
+::  18,00,00,00,19,00,00,00,1a,00,00,00,1b,00,00,00,1c,00,00,00,1d,00,00,00,1e,\
+::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
+::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
+::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
+::  01,00,00,00,1f,00,00,00,00,00,00,00,09,01,00,00,54,00,00,00,de,02,00,00,57,\
+::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+::'
+::
+::#endregion configs > Windows > Windows Russian
 ::
 ::
 ::#region configs > Windows > Tools > Debloat app list
@@ -3161,7 +4937,9 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Tools > WinUtil Personalisation
 ::
-::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION '                      "WPFTweaksRightClickMenu",
+::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION '                      "WPFTweaksRemoveGallery",
+::                      "WPFTweaksRemoveHome",
+::                      "WPFTweaksRightClickMenu",
 ::                      "WPFTweaksRemoveOnedrive",
 ::'
 ::
@@ -3186,8 +4964,6 @@ if "%debug%"=="true" (
 ::                      "WPFTweaksPowershell7Tele",
 ::                      "WPFTweaksRecallOff",
 ::                      "WPFTweaksRemoveCopilot",
-::                      "WPFTweaksRemoveGallery",
-::                      "WPFTweaksRemoveHome",
 ::                      "WPFTweaksRestorePoint",
 ::                      "WPFTweaksTele",
 ::                      "WPFTweaksWifi"
@@ -3554,7 +5330,7 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    if (-not (Test-Path $RegistryPath)) {
-::        Write-LogInfo "Creating registry key '$RegistryPath'"
+::        Write-LogDebug "Creating registry key '$RegistryPath'"
 ::        New-Item $RegistryPath
 ::    }
 ::}
@@ -3752,7 +5528,7 @@ if "%debug%"=="true" (
 ::
 ::        Out-Success
 ::
-::        Write-LogInfo "Removing '$Executable'..."
+::        Write-LogDebug "Removing '$Executable'..."
 ::        Remove-File $Executable
 ::        Out-Success
 ::    } else {
@@ -4179,8 +5955,10 @@ if "%debug%"=="true" (
 ::    Write-LogInfo 'Starting miscellaneous Windows features cleanup...'
 ::
 ::    Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
+::        'App.Support.QuickAssist',
 ::        'MathRecognizer',
 ::        'Media.WindowsMediaPlayer',
+::        'Microsoft.Windows.WordPad',
 ::        'OpenSSH.Client'
 ::    )
 ::
@@ -4261,11 +6039,14 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
 ::    Set-Variable -Option Constant SophiaScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
 ::
-::    Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
+::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    if (-not $NoConnection) {
+::        Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
 ::
-::    (Get-Content -Path $SophiaScriptPath -Force) | Set-Content -Path $SophiaScriptPath -Encoding UTF8 -Force
+::        (Get-Content -Path $SophiaScriptPath -Force) | Set-Content -Path $SophiaScriptPath -Encoding UTF8 -Force
 ::
-::    . $SophiaScriptPath
+::        . $SophiaScriptPath
+::    }
 ::
 ::    foreach ($FileAssociation in $CONFIG_FILE_ASSOCIATIONS) {
 ::        [String]$Extension = $FileAssociation.Extension
@@ -4280,7 +6061,7 @@ if "%debug%"=="true" (
 ::            & cmd.exe /c assoc $Extension=$Application
 ::        }
 ::
-::        if ($FileAssociation.Method -eq 'Sophia') {
+::        if (-not $NoConnection -and $FileAssociation.Method -eq 'Sophia') {
 ::            Set-Association -ProgramPath $Application -Extension $Extension
 ::        }
 ::    }
@@ -4366,8 +6147,21 @@ if "%debug%"=="true" (
 ::    Write-LogInfo 'Applying Windows configuration...'
 ::
 ::    if ($PS_VERSION -ge 5) {
+::        Set-MpPreference -CheckForSignaturesBefore $True
+::        Set-MpPreference -DisableBlockAtFirstSeen $False
+::        Set-MpPreference -DisableCatchupQuickScan $False
+::        Set-MpPreference -DisableEmailScanning $False
+::        Set-MpPreference -DisableRemovableDriveScanning $False
+::        Set-MpPreference -DisableRestorePoint $False
+::        Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan $False
+::        Set-MpPreference -DisableScanningNetworkFiles $False
+::        Set-MpPreference -EnableFileHashComputation $True
+::        Set-MpPreference -EnableNetworkProtection Enabled
 ::        Set-MpPreference -PUAProtection Enabled
+::        Set-MpPreference -AllowSwitchToAsyncInspection $True
 ::        Set-MpPreference -MeteredConnectionUpdates $True
+::        Set-MpPreference -IntelTDTEnabled $True
+::        Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
 ::    }
 ::
 ::    Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
@@ -4383,8 +6177,17 @@ if "%debug%"=="true" (
 ::    try {
 ::        foreach ($Registry in (Get-UsersRegistryKeys)) {
 ::            [String]$User = $Registry.Replace('HKEY_USERS\', '')
+::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n"
+::            $ConfigLines += "`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n"
+::
 ::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
 ::            $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
+::
+::            $ConfigLines += "`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]`n"
+::            $ConfigLines += "`"DoNotTrack`"=dword:00000001`n"
+::
+::            $ConfigLines += "`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]`n"
+::            $ConfigLines += "`"EnableCortana`"=dword:00000000`n"
 ::        }
 ::
 ::        Set-Variable -Option Constant VolumeRegistries ((Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
@@ -4396,7 +6199,9 @@ if "%debug%"=="true" (
 ::        Write-ExceptionLog $_ 'Failed to read the registry'
 ::    }
 ::
-::    Import-RegistryConfiguration $FileName ($CONFIG_WINDOWS_BASE + $ConfigLines)
+::    Set-Variable -Option Constant BaseConfig ($CONFIG_WINDOWS_BASE + $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH }))
+::
+::    Import-RegistryConfiguration $FileName ($BaseConfig + $ConfigLines)
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-WindowsBaseConfiguration
@@ -4457,22 +6262,17 @@ if "%debug%"=="true" (
 ::    [String]$ConfigLines = ''
 ::
 ::    try {
-::        Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
-::        foreach ($Registry in $NotificationRegistries) {
-::            $ConfigLines += "`n[$Registry]`n"
-::            $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
+::        if ($OS_VERSION -gt 10) {
+::            Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
+::            foreach ($Registry in $NotificationRegistries) {
+::                $ConfigLines += "`n[$Registry]`n"
+::                $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
+::            }
 ::        }
 ::
 ::        foreach ($User in (Get-UsersRegistryKeys)) {
 ::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n"
 ::            $ConfigLines += "`"RotatingLockScreenEnabled`"=dword:00000001`n"
-::            $ConfigLines += "`"RotatingLockScreenOverlayEnabled`"=dword:00000001`n"
-::
-::            $ConfigLines += "`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]`n"
-::            $ConfigLines += "`"DoNotTrack`"=dword:00000001`n"
-::
-::            $ConfigLines += "`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]`n"
-::            $ConfigLines += "`"EnableCortana`"=dword:00000000`n"
 ::        }
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to read the registry'
@@ -4548,7 +6348,8 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
 ::    Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
-::    Set-Variable -Option Constant Params "-Sysprep $UsePresetParam $SilentParam"
+::    Set-Variable -Option Constant SysprepParam $(if ($OS_VERSION -gt 10) { '-Sysprep' } else { '' })
+::    Set-Variable -Option Constant Params "$SysprepParam $UsePresetParam $SilentParam"
 ::
 ::    Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 ::
@@ -4670,17 +6471,30 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    Set-Variable -Option Constant VolumeCaches @(
+::        'Active Setup Temp Folders',
+::        'BranchCache',
+::        'D3D Shader Cache',
 ::        'Delivery Optimization Files',
 ::        'Device Driver Packages',
+::        'Diagnostic Data Viewer database files',
+::        'Downloaded Program Files',
+::        'Internet Cache Files',
 ::        'Language Pack',
+::        'Old ChkDsk Files',
 ::        'Previous Installations',
+::        'Recycle Bin',
+::        'RetailDemo Offline Content',
 ::        'Setup Log Files',
 ::        'System error memory dump files',
 ::        'System error minidump files',
+::        'Temporary Files',
 ::        'Temporary Setup Files',
+::        'Thumbnail Cache',
 ::        'Update Cleanup',
-::        'Windows Defender',
+::        'User file versions',
+::        'Windows Error Reporting Files',
 ::        'Windows ESD installation files',
+::        'Windows Defender',
 ::        'Windows Upgrade Log Files'
 ::    )
 ::
@@ -4724,7 +6538,7 @@ if "%debug%"=="true" (
 ::    Write-LogInfo 'Starting Microsoft Store apps update...'
 ::
 ::    try {
-::        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'"    
+::        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'"
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to update Microsoft Store apps'
 ::        return
