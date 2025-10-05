@@ -2,8 +2,10 @@ function Remove-WindowsFeatures {
     Write-LogInfo 'Starting miscellaneous Windows features cleanup...'
 
     Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
+        'App.Support.QuickAssist',
         'MathRecognizer',
         'Media.WindowsMediaPlayer',
+        'Microsoft.Windows.WordPad',
         'OpenSSH.Client'
     )
 
