@@ -16,10 +16,12 @@
     [String]$ConfigLines = ''
 
     try {
-        Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
-        foreach ($Registry in $NotificationRegistries) {
-            $ConfigLines += "`n[$Registry]`n"
-            $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
+        if ($OS_VERSION -gt 10) {
+            Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
+            foreach ($Registry in $NotificationRegistries) {
+                $ConfigLines += "`n[$Registry]`n"
+                $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
+            }
         }
 
         foreach ($User in (Get-UsersRegistryKeys)) {
