@@ -20,6 +20,10 @@
     "value": "https://w16.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html"
   },
   {
+    "key": "URL_UNATTENDED_GENERATOR",
+    "value": "https://schneegans.de/windows/unattend-generator/"
+  },
+  {
     "key": "URL_RUFUS",
     "value": "https://github.com/pbatard/rufus/releases/download/v4.11/rufus-4.11p.exe"
   },
