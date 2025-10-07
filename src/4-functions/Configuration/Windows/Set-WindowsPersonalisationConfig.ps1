@@ -13,7 +13,11 @@
         Set-WinUserLanguageList $LanguageList -Force
     }
 
-    [String]$ConfigLines = ''
+    [String]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+
+    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT
+    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER
+    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE
 
     try {
         if ($OS_VERSION -gt 10) {
@@ -32,5 +36,5 @@
         Write-ExceptionLog $_ 'Failed to read the registry'
     }
 
-    Import-RegistryConfiguration $FileName ($CONFIG_WINDOWS_PERSONALISATION + $ConfigLines)
+    Import-RegistryConfiguration $FileName $ConfigLines
 }
