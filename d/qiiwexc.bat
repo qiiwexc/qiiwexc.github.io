@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.6')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.8')
 ::
 ::#endregion init > Version
 ::
@@ -815,9 +815,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Apps > 7zip
 ::
-::Set-Variable -Option Constant CONFIG_7ZIP 'Windows Registry Editor Version 5.00
-::
-::[HKEY_CURRENT_USER\Software\7-Zip]
+::Set-Variable -Option Constant CONFIG_7ZIP '[HKEY_CURRENT_USER\Software\7-Zip]
 ::"LargePages"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\7-Zip\FM]
@@ -1090,9 +1088,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Apps > Microsoft Office
 ::
-::Set-Variable -Option Constant CONFIG_MICROSOFT_OFFICE 'Windows Registry Editor Version 5.00
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\General]
+::Set-Variable -Option Constant CONFIG_MICROSOFT_OFFICE '[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\General]
 ::"ShownFirstRunOptin"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Licensing]
@@ -1236,9 +1232,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Apps > TeamViewer
 ::
-::Set-Variable -Option Constant CONFIG_TEAMVIEWER 'Windows Registry Editor Version 5.00
-::
-::[HKEY_CURRENT_USER\Software\TeamViewer]
+::Set-Variable -Option Constant CONFIG_TEAMVIEWER '[HKEY_CURRENT_USER\Software\TeamViewer]
 ::"AutoHideServerControl"=dword:00000001
 ::"ColorScheme"=dword:00000001
 ::"CustomInvitationSubject"=" "
@@ -1423,11 +1417,211 @@ if "%debug%"=="true" (
 ::#endregion configs > Windows > Power settings
 ::
 ::
-::#region configs > Windows > Windows base
+::#region configs > Windows > Base > Windows English
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_BASE 'Windows Registry Editor Version 5.00
+::Set-Variable -Option Constant CONFIG_WINDOWS_ENGLISH '[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
+::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
+::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
+::  00,20,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,f0,01,00,00,\
+::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
+::  00,00,00,00,00,00,00,60,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,77,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
+::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,5b,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
+::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,bf,43,f6,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a4,00,00,00,1e,00,00,00,8d,90,00,\
+::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
+::  b0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,24,00,00,00,1e,\
+::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
+::  00,00,00,00,00,00,c8,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,ab,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
+::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,ba,00,00,00,1e,00,00,00,8f,90,00,00,0e,00,00,00,00,00,\
+::  00,00,00,01,10,00,00,00,00,00,07,00,00,00,00,00,00,00,18,35,bf,43,f6,7f,00,\
+::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
+::  06,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
+::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
+::  00,00,91,90,00,00,07,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
+::  00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
+::  49,00,00,00,49,00,00,00,92,90,00,00,08,00,00,00,00,00,00,00,00,04,25,08,00,\
+::  00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,09,00,00,00,00,00,00,\
+::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,bf,43,f6,7f,00,00,\
+::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0a,\
+::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
+::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
+::  00,3a,a0,00,00,0b,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
+::  00,00,00,00,b8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,53,\
+::  00,00,00,49,00,00,00,4c,a0,00,00,0c,00,00,00,00,00,00,00,00,02,15,08,00,00,\
+::  00,00,1e,00,00,00,00,00,00,00,d8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
+::  00,ff,ff,ff,ff,73,00,00,00,49,00,00,00,4d,a0,00,00,0d,00,00,00,00,00,00,00,\
+::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
+::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
+::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
+::  00,00,00,00,00,90,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
+::  00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
+::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,bf,43,f6,7f,00,00,\
+::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
+::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
+::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
+::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
+::  00,00,00,00,58,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
+::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
+::  00,00,0f,00,00,00,00,00,00,00,80,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
+::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
+::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,bf,43,f6,7f,00,00,00,\
+::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
+::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,bf,\
+::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
+::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
+::  00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
+::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,\
+::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
+::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
+::  00,00,00,e8,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
+::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
+::  00,14,00,00,00,00,00,00,00,08,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,\
+::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
+::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,bf,43,f6,7f,00,00,00,00,\
+::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
+::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,\
+::  f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
+::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
+::  00,00,18,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
+::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
+::  08,00,00,00,00,00,00,00,48,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,06,\
+::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
+::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,\
+::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
+::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,\
+::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
+::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
+::  00,70,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
+::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
+::  00,00,00,00,00,00,00,90,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
+::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
+::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,43,f6,\
+::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,71,01,00,00,1e,00,00,00,b0,90,\
+::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
+::  00,50,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
+::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
+::  00,00,00,00,00,00,00,80,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
+::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,bf,43,f6,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
+::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,bf,43,f6,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
+::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
+::  08,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
+::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
+::  00,00,00,00,00,00,38,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
+::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,bf,43,f6,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
+::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,01,01,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,5c,00,3f,00,5c,\
+::  00,53,00,43,00,53,00,49,00,23,00,44,00,69,00,73,00,6b,00,26,00,56,00,65,00,\
+::  6e,00,5f,00,56,00,42,00,4f,00,58,00,26,00,50,00,72,00,6f,00,64,00,5f,00,48,\
+::  00,41,00,52,00,44,00,44,00,49,00,53,00,4b,00,23,00,34,00,26,00,32,00,36,00,\
+::  31,00,37,00,61,00,65,00,61,00,65,00,26,00,30,00,26,00,30,00,30,00,30,00,30,\
+::  00,30,00,30,00,23,00,7b,00,35,00,33,00,66,00,35,00,36,00,33,00,30,00,37,00,\
+::  2d,00,62,00,36,00,62,00,66,00,2d,00,31,00,31,00,64,00,30,00,2d,00,39,00,34,\
+::  00,66,00,32,00,2d,00,30,00,30,00,61,00,30,00,63,00,39,00,31,00,65,00,66,00,\
+::  62,00,38,00,62,00,7d,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  00,00,00,00,95,0d,21,fc,78,08,00,00,b8,00,00,00,31,02,00,00,26,00,00,00,48,\
+::  00,00,00,73,00,00,00,41,00,00,00,50,00,00,00,24,00,00,00,3f,00,00,00,2a,00,\
+::  00,00,83,00,00,00,9d,00,00,00,a0,00,00,00,cb,00,00,00,a9,00,00,00,a7,00,00,\
+::  00,4e,00,00,00,48,00,00,00,37,00,00,00,46,00,00,00,37,00,00,00,57,00,00,00,\
+::  37,00,00,00,36,00,00,00,4d,00,00,00,48,00,00,00,3c,00,00,00,3f,00,00,00,3e,\
+::  00,00,00,57,00,00,00,59,00,00,00,5b,00,00,00,ea,02,00,00,c4,05,00,00,94,00,\
+::  00,00,3b,00,00,00,38,00,00,00,6b,00,00,00,30,01,00,00,97,00,00,00,6b,00,00,\
+::  00,66,00,00,00,63,00,00,00,23,00,00,00,4a,00,00,00,8b,00,00,00,7a,00,00,00,\
+::  cf,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
+::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
+::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
+::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
+::  18,00,00,00,19,00,00,00,1a,00,00,00,1b,00,00,00,1c,00,00,00,1d,00,00,00,1e,\
+::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
+::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
+::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
+::  01,00,00,00,1f,00,00,00,00,00,00,00,08,01,00,00,2c,00,00,00,e1,01,00,00,3b,\
+::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+::'
 ::
-::; Disable "Share" context menu
+::#endregion configs > Windows > Base > Windows English
+::
+::
+::#region configs > Windows > Base > Windows HKEY_CLASSES_ROOT
+::
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CLASSES_ROOT '; Disable "Share" context menu
 ::[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing]
 ::
 ::; Disable "Give access to" context menu
@@ -1498,8 +1692,14 @@ if "%debug%"=="true" (
 ::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
 ::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
 ::  00,31,00,00,00
+::'
 ::
-::; Disable sticky keys shortcut
+::#endregion configs > Windows > Base > Windows HKEY_CLASSES_ROOT
+::
+::
+::#region configs > Windows > Base > Windows HKEY_CURRENT_USER
+::
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CURRENT_USER '; Disable sticky keys shortcut
 ::[HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys]
 ::"Flags"="506"
 ::
@@ -1540,11 +1740,11 @@ if "%debug%"=="true" (
 ::"EnableHwkbTextPrediction"=dword:00000001
 ::"MultilingualEnabled"=dword:00000001
 ::
-::; Disable "Improve Inking & Typing Recognition"
+::; Disable "Improve Inking and Typing Recognition"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Input\TIPC]
 ::"Enabled"=dword:00000000
 ::
-::; Disable "Inking & Typing Personalization"
+::; Disable "Inking and Typing Personalization"
 ::[HKEY_CURRENT_USER\Software\Microsoft\InputPersonalization]
 ::"RestrictImplicitInkCollection"=dword:00000001
 ::"RestrictImplicitTextCollection"=dword:00000001
@@ -1552,13 +1752,18 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\InputPersonalization\TrainedDataStore]
 ::"HarvestContacts"=dword:00000000
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\ContinuousBrowsing]
+::"Enabled"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
 ::"DoNotTrack"=dword:00000001
+::"Isolation"="PMEM"
 ::"Isolation64Bit"=dword:00000001
+::"Start Page"="about:blank"
 ::"Use FormSuggest"="yes"
 ::
-::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main\Start]
-::"Page"="about:blank"
+::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\PhishingFilter]
+::"EnabledV9"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
 ::"CleanDownloadHistory"=dword:00000001
@@ -1603,6 +1808,9 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
 ::"value"="Deny"
+::
+::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
+::"Value"="Allow"
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
 ::"value"="Deny"
@@ -1696,11 +1904,11 @@ if "%debug%"=="true" (
 ::"SecureProtocols"=dword:00002820
 ::"SyncMode5"=dword:00000003
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
-::"CacheLimit"=dword:00002000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache]
 ::"ContentLimit"=dword:00000008
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
+::"CacheLimit"=dword:00002000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Cache]
 ::"Persistent"=dword:00000000
@@ -1824,8 +2032,14 @@ if "%debug%"=="true" (
 ::"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
 ::"GameDVR_FSEBehavior"=dword:00000002
 ::"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
+::'
 ::
-::; Disable "Include in library" context menu
+::#endregion configs > Windows > Base > Windows HKEY_CURRENT_USER
+::
+::
+::#region configs > Windows > Base > Windows HKEY_LOCAL_MACHINE
+::
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_LOCAL_MACHINE '; Disable "Include in library" context menu
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
@@ -1865,7 +2079,7 @@ if "%debug%"=="true" (
 ::"AllowAddressBarDropdown"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Education]
-::"IsEducationEnvironment"=dword:00000000
+::"IsEducationEnvironment"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Start]
 ::"HideRecommendedSection"=dword:00000001
@@ -1883,6 +2097,9 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
 ::"value"="Deny"
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
+::"Value"="Allow"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
 ::"value"="Deny"
@@ -2486,7 +2703,7 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EdgeUpdate]
 ::"CreateDesktopShortcutDefault"=dword:00000000
 ::
-::; Disable "Inking & Typing Personalization"
+::; Disable "Inking and Typing Personalization"
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization]
 ::"AllowInputPersonalization"=dword:00000000
 ::
@@ -3001,7 +3218,7 @@ if "%debug%"=="true" (
 ::"5"="0x009c"
 ::"6"="0x009d"
 ::
-::; Disable "Inking & Typing Personalization"
+::; Disable "Inking and Typing Personalization"
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\InputPersonalization]
 ::"AllowInputPersonalization"=dword:00000000
 ::
@@ -3197,334 +3414,14 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SYSTEM\Maps]
 ::"AutoUpdateEnabled"=dword:00000000
 ::"UpdateOnlyOnWifi"=dword:00000000
+::'
 ::
-::; Disable sticky keys shortcut
-::[HKEY_USERS\.DEFAULT\Control Panel\Accessibility\StickyKeys]
-::"Flags"="506"
+::#endregion configs > Windows > Base > Windows HKEY_LOCAL_MACHINE
 ::
-::[HKEY_USERS\.DEFAULT\Control Panel\Desktop]
-::"JPEGImportQuality"=dword:00000064
 ::
-::[HKEY_USERS\.DEFAULT\Control Panel\International\User Profile]
-::"HttpAcceptLanguageOptOut"=dword:00000001
+::#region configs > Windows > Base > Windows HKEY_USERS
 ::
-::[HKEY_USERS\.DEFAULT\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
-::"ShowCmd"=dword:00000003
-::"WFlags"=dword:00000002
-::
-::[HKEY_USERS\.DEFAULT\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
-::@=""
-::
-::[HKEY_USERS\.DEFAULT\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]
-::"DoNotTrack"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
-::"EnableCortana"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
-::"ShowCmd"=dword:00000003
-::"WFlags"=dword:00000002
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Clipboard]
-::"EnableClipboardHistory"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Edge\SmartScreenPuaEnabled]
-::@=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Feeds]
-::"DefaultInterval"=dword:0000000F
-::"SyncStatus"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\input\Settings]
-::"EnableHwkbTextPrediction"=dword:00000001
-::"MultilingualEnabled"=dword:00000001
-::
-::; Disable "Improve Inking & Typing Recognition"
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Input\TIPC]
-::"Enabled"=dword:00000000
-::
-::; Disable "Inking & Typing Personalization"
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\InputPersonalization]
-::"RestrictImplicitInkCollection"=dword:00000001
-::"RestrictImplicitTextCollection"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\InputPersonalization\TrainedDataStore]
-::"HarvestContacts"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Internet Explorer\Main]
-::"DoNotTrack"=dword:00000001
-::"Isolation64Bit"=dword:00000001
-::"Use FormSuggest"="yes"
-::
-::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Internet Explorer\Main\Start]
-::"Page"="about:blank"
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Internet Explorer\Privacy]
-::"CleanDownloadHistory"=dword:00000001
-::"CleanForms"=dword:00000001
-::"CleanPassword"=dword:00000001
-::"ClearBrowsingHistoryOnExit"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\MediaPlayer\Preferences]
-::"AcceptedPrivacyStatement"=dword:00000001
-::"FirstRun"=dword:00000000
-::"MetadataRetrieval"=dword:00000003
-::"SilentAcquisition"=dword:00000001
-::"UsageTracking"=dword:00000000
-::"Volume"=dword:00000064
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Notepad]
-::"iWindowPosX"=dword:FFFFFFF8
-::"iWindowPosY"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Office\16.0\Common\LinkedIn]
-::"OfficeLinkedIn"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Personalization\Settings]
-::"AcceptedPrivacyPolicy"=dword:00000000
-::
-::; Set Feedback Frequency to Never
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Siuf\Rules]
-::"NumberOfSIUFInPeriod"=dword:00000000
-::"PeriodInNanoSeconds"=-
-::
-::; Disable "Online Speech Recognition"
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy]
-::"HasAccepted"=dword:00000000
-::
-::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
-::"Enabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
-::"WindowPlacement"=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
-::  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
-::"value"="Deny"
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
-::"value"="Deny"
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
-::"ContentDeliveryAllowed"=dword:00000000
-::"OemPreInstalledAppsEnabled"=dword:00000000
-::"PreInstalledAppsEnabled"=dword:00000000
-::"PreInstalledAppsEverEnabled"=dword:00000000
-::"RotatingLockScreenEnabled"=dword:00000000
-::"RotatingLockScreenOverlayEnabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
-::"RotatingLockScreenOverlayVisible"=dword:00000000
-::"SilentInstalledAppsEnabled"=dword:00000000 ; Automatic Installation of Suggested Apps
-::"SoftLandingEnabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
-::"SubscribedContent-202914Enabled"=dword:00000000
-::"SubscribedContent-280815Enabled"=dword:00000000
-::"SubscribedContent-310093Enabled"=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what"s new and suggested
-::"SubscribedContent-338387Enabled"=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
-::"SubscribedContent-338388Enabled"=dword:00000000 ; Occasionally show suggestions in Start
-::"SubscribedContent-338389Enabled"=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
-::"SubscribedContent-353694Enabled"=dword:00000000 ; Show me suggested content in the Settings app
-::"SubscribedContent-353696Enabled"=dword:00000000 ; Show me suggested content in the Settings app
-::"SubscribedContent-353698Enabled"=dword:00000000 ; Show me suggested content in the Settings app
-::"SubscribedContent-88000045Enabled"=dword:00000000
-::"SubscribedContent-88000161Enabled"=dword:00000000
-::"SubscribedContent-88000163Enabled"=dword:00000000
-::"SubscribedContent-88000165Enabled"=dword:00000000
-::"SystemPaneSuggestionsEnabled"=dword:00000000 ; Occasionally show suggestions in Start
-::
-::; Disable "Tailored experiences with diagnostic data"
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
-::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration]
-::"IsResumeAllowed"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization]
-::"SystemSettingsDownloadMode"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
-::"ShowedToastAtLevel"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer]
-::"MaximizeApps"=dword:00000001
-::"ShowRecommendations"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-::"NavPaneShowAllCloudStates"=dword:00000001
-::"SeparateProcess"=dword:00000001
-::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
-::"ShowSyncProviderNotifications"=dword:00000000 ; Sync provider ads
-::"Start_AccountNotifications"=dword:00000000 ; Disable Show account-related notifications
-::"Start_IrisRecommendations"=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
-::"Start_TrackProgs"=dword:00000000 ; Disable "Let Windows improve Start and search results by tracking app launches"
-::
-::; Enable "End task" in the taskbar
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
-::"TaskbarEndTask"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
-::"AllItemsIconView"=dword:00000000
-::"StartupPage"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\ShowJumpView]
-::"AllItemsIconView"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
-::"{20D04FE0-3AEA-1069-A2D8-08002B30309D}"=dword:00000000
-::"MSEdge"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
-::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
-::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
-::"EnthusiastMode"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
-::"ArchivedFiles"=dword:00000001
-::"SystemFolders"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
-::"VisualFXSetting"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\GameDVR]
-::"AppCaptureEnabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
-::"SecureProtocols"=dword:00002820
-::"SyncMode5"=dword:00000003
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
-::"CacheLimit"=dword:00002000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache]
-::"ContentLimit"=dword:00000008
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Cache]
-::"Persistent"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
-::"DaysToKeep"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
-::"RotatingLockScreenOverlayEnabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Mobility]
-::"CrossDeviceEnabled"=dword:00000000
-::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
-::"PhoneLinkEnabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
-::"NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK"=dword:00000000
-::
-::; Disable Windows Backup reminder notifications
-::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
-::"Enabled"=dword:00000000
-::
-::; Disable "Suggested" app notifications (Ads for MS services)
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
-::"Enabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-::"NoDriveTypeAutoRun"=dword:00000091
-::
-::; Disable "Tailored experiences with diagnostic data"
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Privacy]
-::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Search]
-::"BingSearchEnabled"=dword:00000000 ; Disable Bing search
-::"SearchboxTaskbarMode"=dword:00000003 ; Show search icon and label
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
-::"IsDynamicSearchBoxEnabled"=dword:00000000
-::
-::; Disable Show mobile device in Start
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
-::"IsEnabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications]
-::"EnableAccountNotifications"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
-::"01"=dword:00000001
-::"2048"=dword:0000001E
-::
-::; Suggest ways I can finish setting up my device to get the most out of Windows
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
-::"ScoobeSystemSettingEnabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
-::"256"=dword:0000003C
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
-::"VideoQualityOnBattery"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\WindowsCopilot]
-::"AllowCopilotRuntime"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Windows Search]
-::"CortanaConsent"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows Security Health\State]
-::"AccountProtection_MicrosoftAccount_Disconnected"=dword:00000001
-::"Hardware_DataEncryption_AddMsa"=dword:00000000
-::
-::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
-::; Disable required and optional diagnostic data about browser usage
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Edge]
-::"AutofillCreditCardEnabled"=dword:00000000
-::"ConfigureDoNotTrack"=dword:00000001
-::"EdgeShoppingAssistantEnabled"=dword:00000000
-::"PaymentMethodQueryEnabled"=dword:00000000
-::"PersonalizationReportingEnabled"=dword:00000000
-::"UserFeedbackAllowed"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Office\16.0\Common]
-::"LinkedIn"=dword:00000000
-::"QMEnable"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
-::"Enabled"=dword:00000000
-::"IncludeEmail"=dword:00000000
-::"SurveyEnabled"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Office\16.0\osm]
-::"EnableFileObfuscation"=dword:00000001
-::"Enablelogging"=dword:00000000
-::"EnableUpload"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
-::"DisableTelemetry"=dword:00000001
-::"SendTelemetry"=dword:00000003
-::
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\CloudContent]
-::"DisableTailoredExperiencesWithDiagnosticData"=dword:00000001
-::"DisableWindowsSpotlightOnLockScreen"=dword:00000001
-::
-::; Disable Bing in search
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\Explorer]
-::"DisableSearchBoxSuggestions"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\Windows Feeds]
-::"EnableFeeds"=dword:00000000
-::
-::; Disable AI recall
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\WindowsAI]
-::"DisableAIDataAnalysis"=dword:00000001
-::
-::; Disable Copilot service
-::[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\WindowsCopilot]
-::"TurnOffWindowsCopilot"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\System\GameConfigStore]
-::"GameDVR_EFSEFeatureFlags"=dword:00000000
-::"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
-::"GameDVR_FSEBehavior"=dword:00000002
-::"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
-::
-::[HKEY_USERS\S-1-5-20\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Usage]
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_USERS '[HKEY_USERS\S-1-5-20\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Usage]
 ::"CacheServerConnectionCount"=dword:00000000
 ::"DownlinkUsageBps"=dword:00000000
 ::"SwarmCount"=dword:00000000
@@ -3532,73 +3429,71 @@ if "%debug%"=="true" (
 ::"CacheSizeBytes"=hex:00,00,00,00,00,00,00,00
 ::'
 ::
-::#endregion configs > Windows > Windows base
+::#endregion configs > Windows > Base > Windows HKEY_USERS
 ::
 ::
-::#region configs > Windows > Windows English
+::#region configs > Windows > Base > Windows Russian
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_ENGLISH 'Windows Registry Editor Version 5.00
-::
-::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+::Set-Variable -Option Constant CONFIG_WINDOWS_RUSSIAN '[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
 ::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
 ::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
 ::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
-::  00,20,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,f0,01,00,00,\
+::  00,20,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,bd,01,00,00,\
 ::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
-::  00,00,00,00,00,00,00,60,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
-::  ff,ff,77,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
-::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,\
-::  00,00,00,00,ff,ff,ff,ff,5b,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
-::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,bf,43,f6,7f,\
-::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a4,00,00,00,1e,00,00,00,8d,90,00,\
+::  00,00,00,00,00,00,00,60,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  ff,ff,71,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
+::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,\
+::  00,00,00,00,ff,ff,ff,ff,82,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
+::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,f4,5c,f7,7f,\
+::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,b0,00,00,00,1e,00,00,00,8d,90,00,\
 ::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
-::  b0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,24,00,00,00,1e,\
+::  b0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,56,00,00,00,1e,\
 ::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
-::  00,00,00,00,00,00,c8,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
-::  ff,ab,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
-::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,\
-::  00,00,00,ff,ff,ff,ff,ba,00,00,00,1e,00,00,00,8f,90,00,00,0e,00,00,00,00,00,\
-::  00,00,00,01,10,00,00,00,00,00,07,00,00,00,00,00,00,00,18,35,bf,43,f6,7f,00,\
+::  00,00,00,00,00,00,c8,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  ff,c1,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
+::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,\
+::  00,00,00,ff,ff,ff,ff,04,01,00,00,1e,00,00,00,8f,90,00,00,06,00,00,00,00,00,\
+::  00,00,00,01,10,01,00,00,00,00,07,00,00,00,00,00,00,00,18,35,f4,5c,f7,7f,00,\
 ::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
-::  06,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
-::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
-::  00,00,91,90,00,00,07,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
-::  00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
-::  49,00,00,00,49,00,00,00,92,90,00,00,08,00,00,00,00,00,00,00,00,04,25,08,00,\
-::  00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
-::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,09,00,00,00,00,00,00,\
-::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,bf,43,f6,7f,00,00,\
-::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0a,\
+::  07,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
+::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
+::  00,00,91,90,00,00,08,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
+::  00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
+::  49,00,00,00,49,00,00,00,92,90,00,00,09,00,00,00,00,00,00,00,00,04,25,08,00,\
+::  00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
+::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,0a,00,00,00,00,00,00,\
+::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,f4,5c,f7,7f,00,00,\
+::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0b,\
 ::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
-::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
-::  00,3a,a0,00,00,0b,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
-::  00,00,00,00,b8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,53,\
-::  00,00,00,49,00,00,00,4c,a0,00,00,0c,00,00,00,00,00,00,00,00,02,15,08,00,00,\
-::  00,00,1e,00,00,00,00,00,00,00,d8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
-::  00,ff,ff,ff,ff,73,00,00,00,49,00,00,00,4d,a0,00,00,0d,00,00,00,00,00,00,00,\
+::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
+::  00,3a,a0,00,00,0c,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
+::  00,00,00,00,b8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,80,\
+::  00,00,00,49,00,00,00,4c,a0,00,00,0d,00,00,00,00,00,00,00,00,02,15,08,00,00,\
+::  00,00,1e,00,00,00,00,00,00,00,d8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
+::  00,ff,ff,ff,ff,bb,00,00,00,49,00,00,00,4d,a0,00,00,0e,00,00,00,00,00,00,00,\
 ::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
-::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
+::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
 ::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
-::  00,00,00,00,00,90,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
+::  00,00,00,00,00,90,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
 ::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
-::  00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
+::  00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
 ::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
-::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,bf,43,f6,7f,00,00,\
+::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,f4,5c,f7,7f,00,00,\
 ::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
 ::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
-::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
+::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
 ::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
-::  00,00,00,00,58,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
+::  00,00,00,00,58,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
 ::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
-::  00,00,0f,00,00,00,00,00,00,00,80,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
+::  00,00,0f,00,00,00,00,00,00,00,80,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
 ::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
-::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,bf,43,f6,7f,00,00,00,\
+::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,f4,5c,f7,7f,00,00,00,\
 ::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
-::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,bf,\
-::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
+::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,f4,\
+::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
 ::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
-::  00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
+::  00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
 ::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
@@ -3611,30 +3506,30 @@ if "%debug%"=="true" (
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,\
-::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
+::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,\
+::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
 ::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
-::  00,00,00,e8,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
+::  00,00,00,e8,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
 ::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
-::  00,14,00,00,00,00,00,00,00,08,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,\
+::  00,14,00,00,00,00,00,00,00,08,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,\
 ::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
-::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,bf,43,f6,7f,00,00,00,00,\
+::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,f4,5c,f7,7f,00,00,00,00,\
 ::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
-::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,\
-::  f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
+::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,\
+::  f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
 ::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
-::  00,00,18,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
+::  00,00,18,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
 ::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
-::  08,00,00,00,00,00,00,00,48,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,06,\
+::  08,00,00,00,00,00,00,00,48,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,06,\
 ::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
-::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,\
+::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,\
 ::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
-::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,\
+::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,\
 ::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
 ::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
-::  00,70,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
+::  00,70,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
 ::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
-::  00,00,00,00,00,00,00,90,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
+::  00,00,00,00,00,00,00,90,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
 ::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
 ::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
@@ -3645,23 +3540,23 @@ if "%debug%"=="true" (
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,43,f6,\
-::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,71,01,00,00,1e,00,00,00,b0,90,\
+::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,5c,f7,\
+::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c2,01,00,00,1e,00,00,00,b0,90,\
 ::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
-::  00,50,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
+::  00,50,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
 ::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
-::  00,00,00,00,00,00,00,80,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
+::  00,00,00,00,00,00,00,80,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
 ::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
-::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,bf,43,f6,7f,00,00,00,00,00,00,\
+::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,f4,5c,f7,7f,00,00,00,00,00,00,\
 ::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
-::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,bf,43,f6,7f,\
+::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,f4,5c,f7,7f,\
 ::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
 ::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
-::  08,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
+::  08,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
 ::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
-::  00,00,00,00,00,00,38,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
+::  00,00,00,00,00,00,38,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
 ::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
-::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,bf,43,f6,7f,00,00,00,00,00,00,00,\
+::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,f4,5c,f7,7f,00,00,00,00,00,00,00,\
 ::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
 ::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
@@ -3701,15 +3596,15 @@ if "%debug%"=="true" (
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
-::  00,00,00,00,95,0d,21,fc,78,08,00,00,b8,00,00,00,31,02,00,00,26,00,00,00,48,\
-::  00,00,00,73,00,00,00,41,00,00,00,50,00,00,00,24,00,00,00,3f,00,00,00,2a,00,\
-::  00,00,83,00,00,00,9d,00,00,00,a0,00,00,00,cb,00,00,00,a9,00,00,00,a7,00,00,\
-::  00,4e,00,00,00,48,00,00,00,37,00,00,00,46,00,00,00,37,00,00,00,57,00,00,00,\
-::  37,00,00,00,36,00,00,00,4d,00,00,00,48,00,00,00,3c,00,00,00,3f,00,00,00,3e,\
-::  00,00,00,57,00,00,00,59,00,00,00,5b,00,00,00,ea,02,00,00,c4,05,00,00,94,00,\
-::  00,00,3b,00,00,00,38,00,00,00,6b,00,00,00,30,01,00,00,97,00,00,00,6b,00,00,\
-::  00,66,00,00,00,63,00,00,00,23,00,00,00,4a,00,00,00,8b,00,00,00,7a,00,00,00,\
-::  cf,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
+::  00,00,00,00,85,0d,20,e0,40,08,00,00,ce,00,00,00,31,02,00,00,58,00,00,00,6c,\
+::  00,00,00,73,00,00,00,4e,00,00,00,7a,00,00,00,28,00,00,00,50,00,00,00,3c,00,\
+::  00,00,95,00,00,00,ca,00,00,00,7e,00,00,00,a5,00,00,00,87,00,00,00,c2,00,00,\
+::  00,9a,00,00,00,a4,00,00,00,99,00,00,00,9a,00,00,00,84,00,00,00,7b,00,00,00,\
+::  58,00,00,00,37,00,00,00,67,00,00,00,59,00,00,00,d4,00,00,00,d2,00,00,00,bf,\
+::  00,00,00,b9,00,00,00,af,00,00,00,a1,00,00,00,ea,02,00,00,d9,05,00,00,c7,00,\
+::  00,00,4e,00,00,00,a0,00,00,00,7a,00,00,00,8c,01,00,00,e0,00,00,00,78,00,00,\
+::  00,a9,00,00,00,d1,00,00,00,2d,00,00,00,41,00,00,00,0f,01,00,00,f3,00,00,00,\
+::  da,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
 ::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
 ::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
 ::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
@@ -3717,203 +3612,7 @@ if "%debug%"=="true" (
 ::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
 ::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
 ::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
-::  01,00,00,00,1f,00,00,00,00,00,00,00,08,01,00,00,2c,00,00,00,e1,01,00,00,3b,\
-::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
-::
-::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
-::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
-::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
-::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
-::  00,20,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,f0,01,00,00,\
-::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
-::  00,00,00,00,00,00,00,60,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
-::  ff,ff,77,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
-::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,\
-::  00,00,00,00,ff,ff,ff,ff,5b,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
-::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,bf,43,f6,7f,\
-::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a4,00,00,00,1e,00,00,00,8d,90,00,\
-::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
-::  b0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,24,00,00,00,1e,\
-::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
-::  00,00,00,00,00,00,c8,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
-::  ff,ab,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
-::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,\
-::  00,00,00,ff,ff,ff,ff,ba,00,00,00,1e,00,00,00,8f,90,00,00,0e,00,00,00,00,00,\
-::  00,00,00,01,10,00,00,00,00,00,07,00,00,00,00,00,00,00,18,35,bf,43,f6,7f,00,\
-::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
-::  06,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
-::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
-::  00,00,91,90,00,00,07,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
-::  00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
-::  49,00,00,00,49,00,00,00,92,90,00,00,08,00,00,00,00,00,00,00,00,04,25,08,00,\
-::  00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
-::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,09,00,00,00,00,00,00,\
-::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,bf,43,f6,7f,00,00,\
-::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0a,\
-::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
-::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
-::  00,3a,a0,00,00,0b,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
-::  00,00,00,00,b8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,53,\
-::  00,00,00,49,00,00,00,4c,a0,00,00,0c,00,00,00,00,00,00,00,00,02,15,08,00,00,\
-::  00,00,1e,00,00,00,00,00,00,00,d8,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
-::  00,ff,ff,ff,ff,73,00,00,00,49,00,00,00,4d,a0,00,00,0d,00,00,00,00,00,00,00,\
-::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
-::  34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
-::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
-::  00,00,00,00,00,90,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
-::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
-::  00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,\
-::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
-::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,bf,43,f6,7f,00,00,\
-::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
-::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
-::  bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
-::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
-::  00,00,00,00,58,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
-::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
-::  00,00,0f,00,00,00,00,00,00,00,80,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,\
-::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
-::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,bf,43,f6,7f,00,00,00,\
-::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
-::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,bf,\
-::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
-::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
-::  00,00,00,f0,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
-::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,\
-::  43,f6,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
-::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
-::  00,00,00,e8,36,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
-::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
-::  00,14,00,00,00,00,00,00,00,08,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,\
-::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
-::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,bf,43,f6,7f,00,00,00,00,\
-::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
-::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,bf,43,\
-::  f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
-::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
-::  00,00,18,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
-::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
-::  08,00,00,00,00,00,00,00,48,34,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,06,\
-::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
-::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,bf,43,f6,7f,00,00,00,00,00,\
-::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
-::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,bf,43,f6,\
-::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
-::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
-::  00,70,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
-::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
-::  00,00,00,00,00,00,00,90,35,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
-::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
-::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,bf,43,f6,\
-::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,71,01,00,00,1e,00,00,00,b0,90,\
-::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
-::  00,50,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
-::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
-::  00,00,00,00,00,00,00,80,37,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
-::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
-::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,bf,43,f6,7f,00,00,00,00,00,00,\
-::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
-::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,bf,43,f6,7f,\
-::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
-::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
-::  08,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
-::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
-::  00,00,00,00,00,00,38,38,bf,43,f6,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
-::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
-::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,bf,43,f6,7f,00,00,00,00,00,00,00,\
-::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
-::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,01,01,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,5c,00,3f,00,5c,\
-::  00,53,00,43,00,53,00,49,00,23,00,44,00,69,00,73,00,6b,00,26,00,56,00,65,00,\
-::  6e,00,5f,00,56,00,42,00,4f,00,58,00,26,00,50,00,72,00,6f,00,64,00,5f,00,48,\
-::  00,41,00,52,00,44,00,44,00,49,00,53,00,4b,00,23,00,34,00,26,00,32,00,36,00,\
-::  31,00,37,00,61,00,65,00,61,00,65,00,26,00,30,00,26,00,30,00,30,00,30,00,30,\
-::  00,30,00,30,00,23,00,7b,00,35,00,33,00,66,00,35,00,36,00,33,00,30,00,37,00,\
-::  2d,00,62,00,36,00,62,00,66,00,2d,00,31,00,31,00,64,00,30,00,2d,00,39,00,34,\
-::  00,66,00,32,00,2d,00,30,00,30,00,61,00,30,00,63,00,39,00,31,00,65,00,66,00,\
-::  62,00,38,00,62,00,7d,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
-::  00,00,00,00,95,0d,21,fc,78,08,00,00,b8,00,00,00,31,02,00,00,26,00,00,00,48,\
-::  00,00,00,73,00,00,00,41,00,00,00,50,00,00,00,24,00,00,00,3f,00,00,00,2a,00,\
-::  00,00,83,00,00,00,9d,00,00,00,a0,00,00,00,cb,00,00,00,a9,00,00,00,a7,00,00,\
-::  00,4e,00,00,00,48,00,00,00,37,00,00,00,46,00,00,00,37,00,00,00,57,00,00,00,\
-::  37,00,00,00,36,00,00,00,4d,00,00,00,48,00,00,00,3c,00,00,00,3f,00,00,00,3e,\
-::  00,00,00,57,00,00,00,59,00,00,00,5b,00,00,00,ea,02,00,00,c4,05,00,00,94,00,\
-::  00,00,3b,00,00,00,38,00,00,00,6b,00,00,00,30,01,00,00,97,00,00,00,6b,00,00,\
-::  00,66,00,00,00,63,00,00,00,23,00,00,00,4a,00,00,00,8b,00,00,00,7a,00,00,00,\
-::  cf,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
-::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
-::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
-::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
-::  18,00,00,00,19,00,00,00,1a,00,00,00,1b,00,00,00,1c,00,00,00,1d,00,00,00,1e,\
-::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
-::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
-::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
-::  01,00,00,00,1f,00,00,00,00,00,00,00,08,01,00,00,2c,00,00,00,e1,01,00,00,3b,\
+::  01,00,00,00,1f,00,00,00,00,00,00,00,09,01,00,00,54,00,00,00,de,02,00,00,57,\
 ::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
@@ -3932,14 +3631,12 @@ if "%debug%"=="true" (
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
 ::'
 ::
-::#endregion configs > Windows > Windows English
+::#endregion configs > Windows > Base > Windows Russian
 ::
 ::
-::#region configs > Windows > Windows personalisation
+::#region configs > Windows > Personalisation > Windows personalisation HKEY_CLASSES_ROOT
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION 'Windows Registry Editor Version 5.00
-::
-::; Hide "OneDrive" folder
+::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT '; Hide "OneDrive" folder
 ::[HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
@@ -3955,8 +3652,14 @@ if "%debug%"=="true" (
 ::; Hide "OneDrive" folder
 ::[HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
+::'
 ::
-::; Hide "OneDrive" folder
+::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_CLASSES_ROOT
+::
+::
+::#region configs > Windows > Personalisation > Windows personalisation HKEY_CURRENT_USER
+::
+::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER '; Hide "OneDrive" folder
 ::[-HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
 ::
 ::; Hide "OneDrive" folder
@@ -3983,6 +3686,9 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\DesktopSpotlight\Settings]
 ::"EnabledState"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer]
+::"EnableAutoTray"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 ::"Hidden"=dword:00000001 ; Show hidden files
@@ -4016,8 +3722,14 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
 ::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
 ::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
+::'
 ::
-::; Hide "3D objects" folder
+::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_CURRENT_USER
+::
+::
+::#region configs > Windows > Personalisation > Windows personalisation HKEY_LOCAL_MACHINE
+::
+::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE '; Hide "3D objects" folder
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
 ::
@@ -4068,470 +3780,9 @@ if "%debug%"=="true" (
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
-::
-::; Hide "OneDrive" folder
-::[-HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
-::
-::; Hide "OneDrive" folder
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
-::; Enable classic context menu
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
-::@=""
-::
-::; Hide Gallery on Navigation Pane
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
-::; Hide Home on Navigation Pane
-::[HKEY_USERS\.DEFAULT\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-::@="CLSID_MSGraphHomeFolder"
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
-::"ContentDeliveryAllowed"=dword:00000001
-::"RotatingLockScreenEnabled"=dword:00000001
-::"SubscribedContent-338387Enabled"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\DesktopSpotlight\Settings]
-::"EnabledState"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-::"Hidden"=dword:00000001 ; Show hidden files
-::"LaunchTo"=dword:00000001 ; Launch File Explorer to "This PC"
-::"NavPaneExpandToCurrentFolder"=dword:00000001
-::"NavPaneShowAllFolders"=dword:00000001
-::"ShowTaskViewButton"=dword:00000000 ; Hide Task View in the taskbar
-::"Start_Layout"=dword:00000001
-::"TaskbarAl"=dword:00000000 ; Align taskbar left
-::"TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
-::"TaskbarMn"=dword:00000000 ; Disable chat taskbar (Windows 11)
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People]
-::"PeopleBand"=dword:00000000
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
-::"{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"=dword:00000001
-::
-::; Disable chat taskbar (Windows 10)
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-::"HideSCAMeetNow"=dword:00000001
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Search]
-::"SearchboxTaskbarMode"=dword:00000001 ; Show search icon
-::"WebViewBundleType"=dword:00000002
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\SearchSettings\Appearance\Current]
-::"baseline"="{00000000-0000-0000-0000-000000000000}"
-::"current"="{00000000-0000-0000-0000-000000000000}"
-::
-::[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Start]
-::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
-::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
 ::'
 ::
-::#endregion configs > Windows > Windows personalisation
-::
-::
-::#region configs > Windows > Windows Russian
-::
-::Set-Variable -Option Constant CONFIG_WINDOWS_RUSSIAN 'Windows Registry Editor Version 5.00
-::
-::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
-::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
-::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
-::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
-::  00,20,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,bd,01,00,00,\
-::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
-::  00,00,00,00,00,00,00,60,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
-::  ff,ff,71,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
-::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,\
-::  00,00,00,00,ff,ff,ff,ff,82,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
-::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,f4,5c,f7,7f,\
-::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,b0,00,00,00,1e,00,00,00,8d,90,00,\
-::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
-::  b0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,56,00,00,00,1e,\
-::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
-::  00,00,00,00,00,00,c8,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
-::  ff,c1,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
-::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,\
-::  00,00,00,ff,ff,ff,ff,04,01,00,00,1e,00,00,00,8f,90,00,00,06,00,00,00,00,00,\
-::  00,00,00,01,10,01,00,00,00,00,07,00,00,00,00,00,00,00,18,35,f4,5c,f7,7f,00,\
-::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
-::  07,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
-::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
-::  00,00,91,90,00,00,08,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
-::  00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
-::  49,00,00,00,49,00,00,00,92,90,00,00,09,00,00,00,00,00,00,00,00,04,25,08,00,\
-::  00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
-::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,0a,00,00,00,00,00,00,\
-::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,f4,5c,f7,7f,00,00,\
-::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0b,\
-::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
-::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
-::  00,3a,a0,00,00,0c,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
-::  00,00,00,00,b8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,80,\
-::  00,00,00,49,00,00,00,4c,a0,00,00,0d,00,00,00,00,00,00,00,00,02,15,08,00,00,\
-::  00,00,1e,00,00,00,00,00,00,00,d8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
-::  00,ff,ff,ff,ff,bb,00,00,00,49,00,00,00,4d,a0,00,00,0e,00,00,00,00,00,00,00,\
-::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
-::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
-::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
-::  00,00,00,00,00,90,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
-::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
-::  00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
-::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
-::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,f4,5c,f7,7f,00,00,\
-::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
-::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
-::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
-::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
-::  00,00,00,00,58,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
-::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
-::  00,00,0f,00,00,00,00,00,00,00,80,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
-::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
-::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,f4,5c,f7,7f,00,00,00,\
-::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
-::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,f4,\
-::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
-::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
-::  00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
-::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,\
-::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
-::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
-::  00,00,00,e8,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
-::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
-::  00,14,00,00,00,00,00,00,00,08,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,\
-::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
-::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,f4,5c,f7,7f,00,00,00,00,\
-::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
-::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,\
-::  f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
-::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
-::  00,00,18,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
-::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
-::  08,00,00,00,00,00,00,00,48,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,06,\
-::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
-::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,\
-::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
-::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,\
-::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
-::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
-::  00,70,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
-::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
-::  00,00,00,00,00,00,00,90,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
-::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
-::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,5c,f7,\
-::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c2,01,00,00,1e,00,00,00,b0,90,\
-::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
-::  00,50,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
-::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
-::  00,00,00,00,00,00,00,80,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
-::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
-::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,f4,5c,f7,7f,00,00,00,00,00,00,\
-::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
-::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,f4,5c,f7,7f,\
-::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
-::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
-::  08,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
-::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
-::  00,00,00,00,00,00,38,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
-::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
-::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,f4,5c,f7,7f,00,00,00,00,00,00,00,\
-::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
-::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,01,01,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,5c,00,3f,00,5c,\
-::  00,53,00,43,00,53,00,49,00,23,00,44,00,69,00,73,00,6b,00,26,00,56,00,65,00,\
-::  6e,00,5f,00,56,00,42,00,4f,00,58,00,26,00,50,00,72,00,6f,00,64,00,5f,00,48,\
-::  00,41,00,52,00,44,00,44,00,49,00,53,00,4b,00,23,00,34,00,26,00,32,00,36,00,\
-::  31,00,37,00,61,00,65,00,61,00,65,00,26,00,30,00,26,00,30,00,30,00,30,00,30,\
-::  00,30,00,30,00,23,00,7b,00,35,00,33,00,66,00,35,00,36,00,33,00,30,00,37,00,\
-::  2d,00,62,00,36,00,62,00,66,00,2d,00,31,00,31,00,64,00,30,00,2d,00,39,00,34,\
-::  00,66,00,32,00,2d,00,30,00,30,00,61,00,30,00,63,00,39,00,31,00,65,00,66,00,\
-::  62,00,38,00,62,00,7d,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
-::  00,00,00,00,85,0d,20,e0,40,08,00,00,ce,00,00,00,31,02,00,00,58,00,00,00,6c,\
-::  00,00,00,73,00,00,00,4e,00,00,00,7a,00,00,00,28,00,00,00,50,00,00,00,3c,00,\
-::  00,00,95,00,00,00,ca,00,00,00,7e,00,00,00,a5,00,00,00,87,00,00,00,c2,00,00,\
-::  00,9a,00,00,00,a4,00,00,00,99,00,00,00,9a,00,00,00,84,00,00,00,7b,00,00,00,\
-::  58,00,00,00,37,00,00,00,67,00,00,00,59,00,00,00,d4,00,00,00,d2,00,00,00,bf,\
-::  00,00,00,b9,00,00,00,af,00,00,00,a1,00,00,00,ea,02,00,00,d9,05,00,00,c7,00,\
-::  00,00,4e,00,00,00,a0,00,00,00,7a,00,00,00,8c,01,00,00,e0,00,00,00,78,00,00,\
-::  00,a9,00,00,00,d1,00,00,00,2d,00,00,00,41,00,00,00,0f,01,00,00,f3,00,00,00,\
-::  da,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
-::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
-::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
-::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
-::  18,00,00,00,19,00,00,00,1a,00,00,00,1b,00,00,00,1c,00,00,00,1d,00,00,00,1e,\
-::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
-::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
-::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
-::  01,00,00,00,1f,00,00,00,00,00,00,00,09,01,00,00,54,00,00,00,de,02,00,00,57,\
-::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
-::
-::[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
-::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
-::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
-::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,00,00,01,00,00,00,00,00,00,\
-::  00,20,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,bd,01,00,00,\
-::  1e,00,00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,0d,\
-::  00,00,00,00,00,00,00,60,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
-::  ff,ff,71,00,00,00,1e,00,00,00,8b,90,00,00,01,00,00,00,00,00,00,00,00,10,10,\
-::  00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,\
-::  00,00,00,00,ff,ff,ff,ff,82,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,\
-::  00,00,00,01,02,12,00,00,00,00,00,04,00,00,00,00,00,00,00,90,34,f4,5c,f7,7f,\
-::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,b0,00,00,00,1e,00,00,00,8d,90,00,\
-::  00,03,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,02,00,00,00,00,00,00,00,\
-::  b0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,56,00,00,00,1e,\
-::  00,00,00,8a,90,00,00,04,00,00,00,00,00,00,00,00,08,20,00,00,00,00,00,05,00,\
-::  00,00,00,00,00,00,c8,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
-::  ff,c1,00,00,00,1e,00,00,00,8e,90,00,00,05,00,00,00,00,00,00,00,00,01,10,00,\
-::  00,00,00,00,06,00,00,00,00,00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,\
-::  00,00,00,ff,ff,ff,ff,04,01,00,00,1e,00,00,00,8f,90,00,00,06,00,00,00,00,00,\
-::  00,00,00,01,10,01,00,00,00,00,07,00,00,00,00,00,00,00,18,35,f4,5c,f7,7f,00,\
-::  00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,90,90,00,00,\
-::  07,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,08,00,00,00,00,00,00,00,48,\
-::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,\
-::  00,00,91,90,00,00,08,00,00,00,01,00,00,00,00,04,25,02,00,00,00,00,09,00,00,\
-::  00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,\
-::  49,00,00,00,49,00,00,00,92,90,00,00,09,00,00,00,00,00,00,00,00,04,25,08,00,\
-::  00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
-::  00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,93,90,00,00,0a,00,00,00,00,00,00,\
-::  00,00,04,25,08,00,00,00,00,0b,00,00,00,00,00,00,00,70,35,f4,5c,f7,7f,00,00,\
-::  00,00,00,00,00,00,00,00,ff,ff,ff,ff,49,00,00,00,49,00,00,00,39,a0,00,00,0b,\
-::  00,00,00,00,00,00,00,00,04,25,08,00,00,00,00,1c,00,00,00,00,00,00,00,90,35,\
-::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4c,00,00,00,49,00,00,\
-::  00,3a,a0,00,00,0c,00,00,00,00,00,00,00,00,01,10,08,00,00,00,00,1d,00,00,00,\
-::  00,00,00,00,b8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,80,\
-::  00,00,00,49,00,00,00,4c,a0,00,00,0d,00,00,00,00,00,00,00,00,02,15,08,00,00,\
-::  00,00,1e,00,00,00,00,00,00,00,d8,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
-::  00,ff,ff,ff,ff,bb,00,00,00,49,00,00,00,4d,a0,00,00,0e,00,00,00,00,00,00,00,\
-::  00,02,15,08,00,00,00,00,03,00,00,00,0a,00,00,00,01,00,00,00,00,00,00,00,20,\
-::  34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,1d,01,00,00,1e,00,\
-::  00,00,89,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,04,00,00,\
-::  00,00,00,00,00,90,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
-::  93,00,00,00,1e,00,00,00,8d,90,00,00,01,00,00,00,00,00,00,00,01,01,10,00,00,\
-::  00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,\
-::  00,00,ff,ff,ff,ff,4c,00,00,00,1e,00,00,00,8c,90,00,00,02,00,00,00,00,00,00,\
-::  00,00,02,10,00,00,00,00,00,0c,00,00,00,00,00,00,00,08,36,f4,5c,f7,7f,00,00,\
-::  00,00,00,00,00,00,00,00,03,00,00,00,76,00,00,00,1e,00,00,00,94,90,00,00,03,\
-::  00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,0d,00,00,00,00,00,00,00,30,36,\
-::  f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,4e,00,00,00,1e,00,00,\
-::  00,95,90,00,00,04,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,0e,00,00,00,\
-::  00,00,00,00,58,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,cf,\
-::  00,00,00,1e,00,00,00,96,90,00,00,05,00,00,00,01,00,00,00,01,04,20,00,00,00,\
-::  00,00,0f,00,00,00,00,00,00,00,80,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,\
-::  00,06,00,00,00,64,00,00,00,1e,00,00,00,97,90,00,00,06,00,00,00,01,00,00,00,\
-::  01,04,20,02,00,00,00,00,10,00,00,00,00,00,00,00,a0,36,f4,5c,f7,7f,00,00,00,\
-::  00,00,00,00,00,00,00,07,00,00,00,7f,00,00,00,1e,00,00,00,98,90,00,00,07,00,\
-::  00,00,00,00,00,00,01,01,10,00,00,00,00,00,11,00,00,00,00,00,00,00,c0,36,f4,\
-::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,91,00,00,00,1e,00,00,00,\
-::  99,90,00,00,08,00,00,00,00,00,00,00,00,01,10,00,00,00,00,00,06,00,00,00,00,\
-::  00,00,00,f0,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,19,01,\
-::  00,00,1e,00,00,00,8f,90,00,00,09,00,00,00,00,00,00,00,01,01,10,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,04,00,00,00,0b,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,\
-::  5c,f7,7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,25,01,00,00,1e,00,00,00,\
-::  9e,90,00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,12,00,00,00,00,\
-::  00,00,00,e8,36,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,2d,00,\
-::  00,00,1e,00,00,00,9b,90,00,00,01,00,00,00,00,00,00,00,00,04,20,00,00,00,00,\
-::  00,14,00,00,00,00,00,00,00,08,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,\
-::  ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9d,90,00,00,02,00,00,00,00,00,00,00,00,\
-::  01,10,00,00,00,00,00,13,00,00,00,00,00,00,00,30,37,f4,5c,f7,7f,00,00,00,00,\
-::  00,00,00,00,00,00,ff,ff,ff,ff,64,00,00,00,1e,00,00,00,9c,90,00,00,03,00,00,\
-::  00,00,00,00,00,00,01,10,00,00,00,00,00,03,00,00,00,00,00,00,00,78,34,f4,5c,\
-::  f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6f,00,00,00,1e,00,00,00,8c,\
-::  90,00,00,04,00,00,00,00,00,00,00,01,02,10,00,00,00,00,00,07,00,00,00,00,00,\
-::  00,00,18,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,05,00,00,00,49,00,00,\
-::  00,49,00,00,00,90,90,00,00,05,00,00,00,00,00,00,00,01,04,21,00,00,00,00,00,\
-::  08,00,00,00,00,00,00,00,48,34,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,06,\
-::  00,00,00,49,00,00,00,49,00,00,00,91,90,00,00,06,00,00,00,01,00,00,00,01,04,\
-::  21,02,00,00,00,00,09,00,00,00,00,00,00,00,38,35,f4,5c,f7,7f,00,00,00,00,00,\
-::  00,00,00,00,00,07,00,00,00,49,00,00,00,49,00,00,00,92,90,00,00,07,00,00,00,\
-::  00,00,00,00,01,04,21,08,00,00,00,00,0a,00,00,00,00,00,00,00,50,35,f4,5c,f7,\
-::  7f,00,00,00,00,00,00,00,00,00,00,08,00,00,00,49,00,00,00,49,00,00,00,93,90,\
-::  00,00,08,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,0b,00,00,00,00,00,00,\
-::  00,70,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,09,00,00,00,49,00,00,00,\
-::  49,00,00,00,39,a0,00,00,09,00,00,00,00,00,00,00,01,04,21,08,00,00,00,00,1c,\
-::  00,00,00,00,00,00,00,90,35,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,0a,00,\
-::  00,00,64,00,00,00,49,00,00,00,3a,a0,00,00,0a,00,00,00,00,00,00,00,00,01,10,\
-::  08,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,02,00,00,00,08,00,00,00,01,00,00,00,00,00,00,00,20,34,f4,5c,f7,\
-::  7f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c2,01,00,00,1e,00,00,00,b0,90,\
-::  00,00,00,00,00,00,ff,00,00,00,01,01,50,00,00,00,00,00,15,00,00,00,00,00,00,\
-::  00,50,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,6b,00,00,00,\
-::  1e,00,00,00,b1,90,00,00,01,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,16,\
-::  00,00,00,00,00,00,00,80,37,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,\
-::  ff,ff,6b,00,00,00,1e,00,00,00,b2,90,00,00,02,00,00,00,01,00,00,00,00,04,25,\
-::  02,00,00,00,00,18,00,00,00,00,00,00,00,a8,37,f4,5c,f7,7f,00,00,00,00,00,00,\
-::  00,00,00,00,ff,ff,ff,ff,8e,00,00,00,1e,00,00,00,b4,90,00,00,03,00,00,00,00,\
-::  00,00,00,00,04,25,00,00,00,00,00,17,00,00,00,00,00,00,00,d0,37,f4,5c,f7,7f,\
-::  00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,7c,00,00,00,1e,00,00,00,b3,90,00,\
-::  00,04,00,00,00,00,00,00,00,00,04,25,00,00,00,00,00,19,00,00,00,00,00,00,00,\
-::  08,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,a0,00,00,00,1e,\
-::  00,00,00,b5,90,00,00,05,00,00,00,00,00,00,00,00,04,20,00,00,00,00,00,1a,00,\
-::  00,00,00,00,00,00,38,38,f4,5c,f7,7f,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,\
-::  ff,7d,00,00,00,1e,00,00,00,b6,90,00,00,06,00,00,00,00,00,00,00,00,04,20,00,\
-::  00,00,00,00,1b,00,00,00,00,00,00,00,68,38,f4,5c,f7,7f,00,00,00,00,00,00,00,\
-::  00,00,00,ff,ff,ff,ff,7d,00,00,00,1e,00,00,00,b7,90,00,00,07,00,00,00,00,00,\
-::  00,00,00,04,20,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,01,01,00,00,00,00,00,00,01,00,00,00,00,00,00,00,00,00,5c,00,3f,00,5c,\
-::  00,53,00,43,00,53,00,49,00,23,00,44,00,69,00,73,00,6b,00,26,00,56,00,65,00,\
-::  6e,00,5f,00,56,00,42,00,4f,00,58,00,26,00,50,00,72,00,6f,00,64,00,5f,00,48,\
-::  00,41,00,52,00,44,00,44,00,49,00,53,00,4b,00,23,00,34,00,26,00,32,00,36,00,\
-::  31,00,37,00,61,00,65,00,61,00,65,00,26,00,30,00,26,00,30,00,30,00,30,00,30,\
-::  00,30,00,30,00,23,00,7b,00,35,00,33,00,66,00,35,00,36,00,33,00,30,00,37,00,\
-::  2d,00,62,00,36,00,62,00,66,00,2d,00,31,00,31,00,64,00,30,00,2d,00,39,00,34,\
-::  00,66,00,32,00,2d,00,30,00,30,00,61,00,30,00,63,00,39,00,31,00,65,00,66,00,\
-::  62,00,38,00,62,00,7d,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,01,00,da,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,\
-::  00,00,00,00,85,0d,20,e0,40,08,00,00,ce,00,00,00,31,02,00,00,58,00,00,00,6c,\
-::  00,00,00,73,00,00,00,4e,00,00,00,7a,00,00,00,28,00,00,00,50,00,00,00,3c,00,\
-::  00,00,95,00,00,00,ca,00,00,00,7e,00,00,00,a5,00,00,00,87,00,00,00,c2,00,00,\
-::  00,9a,00,00,00,a4,00,00,00,99,00,00,00,9a,00,00,00,84,00,00,00,7b,00,00,00,\
-::  58,00,00,00,37,00,00,00,67,00,00,00,59,00,00,00,d4,00,00,00,d2,00,00,00,bf,\
-::  00,00,00,b9,00,00,00,af,00,00,00,a1,00,00,00,ea,02,00,00,d9,05,00,00,c7,00,\
-::  00,00,4e,00,00,00,a0,00,00,00,7a,00,00,00,8c,01,00,00,e0,00,00,00,78,00,00,\
-::  00,a9,00,00,00,d1,00,00,00,2d,00,00,00,41,00,00,00,0f,01,00,00,f3,00,00,00,\
-::  da,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,05,\
-::  00,00,00,06,00,00,00,07,00,00,00,08,00,00,00,09,00,00,00,0a,00,00,00,0b,00,\
-::  00,00,0c,00,00,00,0d,00,00,00,0e,00,00,00,0f,00,00,00,10,00,00,00,11,00,00,\
-::  00,12,00,00,00,13,00,00,00,14,00,00,00,15,00,00,00,16,00,00,00,17,00,00,00,\
-::  18,00,00,00,19,00,00,00,1a,00,00,00,1b,00,00,00,1c,00,00,00,1d,00,00,00,1e,\
-::  00,00,00,1f,00,00,00,20,00,00,00,21,00,00,00,22,00,00,00,23,00,00,00,24,00,\
-::  00,00,25,00,00,00,26,00,00,00,27,00,00,00,28,00,00,00,29,00,00,00,2a,00,00,\
-::  00,2b,00,00,00,2c,00,00,00,2d,00,00,00,2e,00,00,00,2f,00,00,00,0a,00,00,00,\
-::  01,00,00,00,1f,00,00,00,00,00,00,00,09,01,00,00,54,00,00,00,de,02,00,00,57,\
-::  00,00,00,d3,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,01,00,00,00,02,00,00,00,03,00,00,00,04,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
-::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
-::'
-::
-::#endregion configs > Windows > Windows Russian
+::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_LOCAL_MACHINE
 ::
 ::
 ::#region configs > Windows > Tools > Debloat app list
@@ -5652,6 +4903,23 @@ if "%debug%"=="true" (
 ::#endregion functions > Common > Updater
 ::
 ::
+::#region functions > Configuration > Apps > Set-7zipConfiguration
+::
+::function Set-7zipConfiguration {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+::    )
+::
+::    [String]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines += "`n"
+::    $ConfigLines += $CONFIG_7ZIP
+::
+::    Import-RegistryConfiguration $AppName $ConfigLines
+::}
+::
+::#endregion functions > Configuration > Apps > Set-7zipConfiguration
+::
+::
 ::#region functions > Configuration > Apps > Set-AppsConfiguration
 ::
 ::function Set-AppsConfiguration {
@@ -5673,11 +4941,11 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    if ($7zip.Checked) {
-::        Import-RegistryConfiguration $7zip.Text $CONFIG_7ZIP
+::        Set-7zipConfiguration $7zip.Text
 ::    }
 ::
 ::    if ($TeamViewer.Checked) {
-::        Import-RegistryConfiguration $TeamViewer.Text $CONFIG_TEAMVIEWER
+::        Set-TeamViewerConfiguration $TeamViewer.Text
 ::    }
 ::
 ::    if ($Edge.Checked) {
@@ -5738,6 +5006,23 @@ if "%debug%"=="true" (
 ::#endregion functions > Configuration > Apps > Set-qBittorrentConfiguration
 ::
 ::
+::#region functions > Configuration > Apps > Set-TeamViewerConfiguration
+::
+::function Set-TeamViewerConfiguration {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+::    )
+::
+::    [String]$ConfigLines = $CONFIG_TEAMVIEWER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines += "`n"
+::    $ConfigLines += $CONFIG_TEAMVIEWER
+::
+::    Import-RegistryConfiguration $AppName $ConfigLines
+::}
+::
+::#endregion functions > Configuration > Apps > Set-TeamViewerConfiguration
+::
+::
 ::#region functions > Configuration > Apps > Set-VlcConfiguration
 ::
 ::function Set-VlcConfiguration {
@@ -5774,7 +5059,7 @@ if "%debug%"=="true" (
 ::
 ::    Initialize-AppDirectory
 ::
-::    $Content | Out-File $RegFilePath
+::    "Windows Registry Editor Version 5.00`n`n" + $Content | Out-File $RegFilePath
 ::
 ::    try {
 ::        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
@@ -5912,7 +5197,7 @@ if "%debug%"=="true" (
 ::        }
 ::    }
 ::
-::    Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw | ConvertFrom-Json)
+::    Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw -Encoding UTF8 | ConvertFrom-Json)
 ::    Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
 ::
 ::    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
@@ -6172,7 +5457,19 @@ if "%debug%"=="true" (
 ::        Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
 ::    }
 ::
-::    [String]$ConfigLines = ''
+::    Set-Variable -Option Constant LocalisedConfig $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH })
+::
+::    [String]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines += "`n"
+::    $ConfigLines += $CONFIG_WINDOWS_HKEY_CLASSES_ROOT
+::    $ConfigLines += "`n"
+::    $ConfigLines += $CONFIG_WINDOWS_HKEY_CURRENT_USER
+::    $ConfigLines += "`n"
+::    $ConfigLines += $CONFIG_WINDOWS_HKEY_LOCAL_MACHINE
+::    $ConfigLines += "`n"
+::    $ConfigLines += $LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines += "`n"
+::    $ConfigLines += $LocalisedConfig
 ::
 ::    try {
 ::        foreach ($Registry in (Get-UsersRegistryKeys)) {
@@ -6199,9 +5496,7 @@ if "%debug%"=="true" (
 ::        Write-ExceptionLog $_ 'Failed to read the registry'
 ::    }
 ::
-::    Set-Variable -Option Constant BaseConfig ($CONFIG_WINDOWS_BASE + $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH }))
-::
-::    Import-RegistryConfiguration $FileName ($BaseConfig + $ConfigLines)
+::    Import-RegistryConfiguration $FileName $ConfigLines
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-WindowsBaseConfiguration
@@ -6259,7 +5554,13 @@ if "%debug%"=="true" (
 ::        Set-WinUserLanguageList $LanguageList -Force
 ::    }
 ::
-::    [String]$ConfigLines = ''
+::    [String]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines += "`n"
+::    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT
+::    $ConfigLines += "`n"
+::    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER
+::    $ConfigLines += "`n"
+::    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE
 ::
 ::    try {
 ::        if ($OS_VERSION -gt 10) {
@@ -6278,7 +5579,7 @@ if "%debug%"=="true" (
 ::        Write-ExceptionLog $_ 'Failed to read the registry'
 ::    }
 ::
-::    Import-RegistryConfiguration $FileName ($CONFIG_WINDOWS_PERSONALISATION + $ConfigLines)
+::    Import-RegistryConfiguration $FileName $ConfigLines
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-WindowsPersonalisationConfig
