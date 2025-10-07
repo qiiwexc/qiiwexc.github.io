@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\S-1-5-20\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Usage]
+"CacheServerConnectionCount"=dword:00000000
+"DownlinkUsageBps"=dword:00000000
+"SwarmCount"=dword:00000000
+"UploadCount"=dword:00000000
+"CacheSizeBytes"=hex:00,00,00,00,00,00,00,00
