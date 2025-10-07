@@ -31,7 +31,16 @@
         Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
     }
 
-    [String]$ConfigLines = ''
+    Set-Variable -Option Constant LocalisedConfig $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH })
+
+    [String]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+
+    $ConfigLines += $CONFIG_WINDOWS_HKEY_CLASSES_ROOT
+    $ConfigLines += $CONFIG_WINDOWS_HKEY_CURRENT_USER
+    $ConfigLines += $CONFIG_WINDOWS_HKEY_LOCAL_MACHINE
+
+    $ConfigLines += $LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+    $ConfigLines += $LocalisedConfig
 
     try {
         foreach ($Registry in (Get-UsersRegistryKeys)) {
@@ -58,7 +67,5 @@
         Write-ExceptionLog $_ 'Failed to read the registry'
     }
 
-    Set-Variable -Option Constant BaseConfig ($CONFIG_WINDOWS_BASE + $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH }))
-
-    Import-RegistryConfiguration $FileName ($BaseConfig + $ConfigLines)
+    Import-RegistryConfiguration $FileName $ConfigLines
 }
