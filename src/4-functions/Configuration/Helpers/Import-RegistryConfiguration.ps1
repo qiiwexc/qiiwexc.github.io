@@ -10,7 +10,7 @@ function Import-RegistryConfiguration {
 
     Initialize-AppDirectory
 
-    $Content | Out-File $RegFilePath
+    "Windows Registry Editor Version 5.00`n`n" + $Content | Out-File $RegFilePath
 
     try {
         Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
