@@ -17,11 +17,11 @@ function Set-AppsConfiguration {
     }
 
     if ($7zip.Checked) {
-        Import-RegistryConfiguration $7zip.Text $CONFIG_7ZIP
+        Set-7zipConfiguration $7zip.Text
     }
 
     if ($TeamViewer.Checked) {
-        Import-RegistryConfiguration $TeamViewer.Text $CONFIG_TEAMVIEWER
+        Set-TeamViewerConfiguration $TeamViewer.Text
     }
 
     if ($Edge.Checked) {

@@ -1,5 +1,3 @@
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\S-1-5-20\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Usage]
 "CacheServerConnectionCount"=dword:00000000
 "DownlinkUsageBps"=dword:00000000
