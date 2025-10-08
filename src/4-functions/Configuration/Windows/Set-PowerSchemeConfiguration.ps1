@@ -1,11 +1,11 @@
 ﻿function Set-PowerSchemeConfiguration {
-    Write-LogInfo 'Setting power scheme overlay...'
+    Write-ActivityProgress -PercentComplete 15 -Task 'Setting power scheme overlay...'
 
     powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 
     Out-Success
 
-    Write-LogInfo 'Applying Windows power scheme settings...'
+    Write-ActivityProgress -PercentComplete 20 -Task 'Applying Windows power scheme settings...'
 
     foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
         powercfg /SetAcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value

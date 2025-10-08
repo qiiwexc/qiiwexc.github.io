@@ -3,7 +3,7 @@
         [String][Parameter(Position = 0, Mandatory = $True)]$FileName
     )
 
-    Write-LogInfo 'Applying Windows configuration...'
+    Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
 
     if ($PS_VERSION -ge 5) {
         Set-MpPreference -CheckForSignaturesBefore $True
@@ -44,6 +44,8 @@
     $ConfigLines += $LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
     $ConfigLines += "`n"
     $ConfigLines += $LocalisedConfig
+
+    Write-ActivityProgress -PercentComplete 10
 
     try {
         foreach ($Registry in (Get-UsersRegistryKeys)) {

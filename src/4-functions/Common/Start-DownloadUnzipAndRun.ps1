@@ -20,6 +20,8 @@ function Start-DownloadUnzipAndRun {
         return
     }
 
+    New-Activity 'Download and run'
+
     Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
     Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
     Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
@@ -31,4 +33,6 @@ function Start-DownloadUnzipAndRun {
             Start-Executable $Executable $Params -Silent:$Silent
         }
     }
+
+    Write-ActivityCompleted
 }

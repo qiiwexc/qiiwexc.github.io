@@ -8,6 +8,8 @@ function Set-AppsConfiguration {
         [System.Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory = $True)]$Chrome
     )
 
+    New-Activity 'Configuring apps...'
+
     if ($VLC.Checked) {
         Set-VlcConfiguration $VLC.Text
     }
@@ -31,4 +33,6 @@ function Set-AppsConfiguration {
     if ($Chrome.Checked) {
         Set-GoogleChromeConfiguration $Chrome.Text
     }
+
+    Write-ActivityCompleted
 }

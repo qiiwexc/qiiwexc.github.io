@@ -28,15 +28,22 @@ Write-LogInfo "Version     = $Version"
 Write-LogInfo "Source path = $SourcePath"
 Write-LogInfo "Output file = $Ps1File"
 
+Write-Progress -Activity 'Build' -PercentComplete 1
+
 Set-Variable -Option Constant Config (Get-Config $AssetsPath $Version)
+Write-Progress -Activity 'Build' -PercentComplete 10
 
 Write-VersionFile $Version $VersionFile
+Write-Progress -Activity 'Build' -PercentComplete 30
 
 New-HtmlFile $AssetsPath $Config
+Write-Progress -Activity 'Build' -PercentComplete 60
 
 New-PowerShellScript $SourcePath $Ps1File -Config:$Config
+Write-Progress -Activity 'Build' -PercentComplete 80
 
 New-BatchScript $Ps1File $BatchFile
+Write-Progress -Activity 'Build' -Complete
 
 Write-LogInfo 'Build finished'
 

@@ -4,6 +4,8 @@ function Expand-Zip {
         [Switch]$Temp
     )
 
+    Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
+
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
     Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
@@ -30,8 +32,6 @@ function Expand-Zip {
     Remove-Directory $ExtractionPath
 
     New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
-
-    Write-LogInfo "Extracting '$ZipPath'..."
 
     try {
         if ($ZIP_SUPPORTED) {
