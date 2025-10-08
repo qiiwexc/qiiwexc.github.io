@@ -1,29 +1,30 @@
 function Start-Cleanup {
-    Write-LogInfo 'Cleaning up the system...'
+    New-Activity 'Cleaning up the system...'
 
-    Write-LogInfo 'Clearing delivery optimization cache...'
+    Write-ActivityProgress -PercentComplete 10 -Task 'Clearing delivery optimization cache...'
     Delete-DeliveryOptimizationCache -Force
     Out-Success
 
-    Write-LogInfo 'Clearing software distribution folder...'
-    Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
-    Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
-    Out-Success
-
-    Write-LogInfo 'Clearing Windows temp folder...'
+    Write-ActivityProgress -PercentComplete 20 -Task 'Clearing Windows temp folder...'
     Set-Variable -Option Constant WindowsTemp "$env:SystemRoot\Temp"
     Get-ChildItem -Path $WindowsTemp -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
     Out-Success
 
-    Write-LogInfo 'Clearing user temp folder...'
+    Write-ActivityProgress -PercentComplete 30 -Task 'Clearing user temp folder...'
     Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
     Out-Success
 
-    Write-LogInfo 'Running system cleanup...'
+    Write-ActivityProgress -PercentComplete 40 -Task 'Clearing software distribution folder...'
+    Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
+    Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
+    Out-Success
+
+    Write-ActivityProgress -PercentComplete 60 -Task 'Running system cleanup...'
 
     Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
     }
+    Write-ActivityProgress -PercentComplete 70
 
     Set-Variable -Option Constant VolumeCaches @(
         'Active Setup Temp Folders',
@@ -56,12 +57,16 @@ function Start-Cleanup {
     foreach ($VolumeCache in $VolumeCaches) {
         New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\$VolumeCache" -Name StateFlags3224 -PropertyType DWord -Value 2 -Force
     }
+    Write-ActivityProgress -PercentComplete 80
 
-    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224' -Wait
+    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224'
 
+    Start-Sleep -Seconds 3
+
+    Write-ActivityProgress -PercentComplete 90
     Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
     }
 
-    Out-Success
+    Write-ActivityCompleted
 }

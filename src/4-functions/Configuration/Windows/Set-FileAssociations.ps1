@@ -1,5 +1,5 @@
 function Set-FileAssociations {
-    Write-LogInfo 'Setting file associations...'
+    Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
 
     Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
     Set-Variable -Option Constant SophiaScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
@@ -13,7 +13,15 @@ function Set-FileAssociations {
         . $SophiaScriptPath
     }
 
+    Set-Variable -Option Constant FileTypeCount ($CONFIG_FILE_ASSOCIATIONS.Count)
+    Set-Variable -Option Constant Step ([Math]::Floor(20 / $FileTypeCount))
+
+    [Int]$Iteration = 1
     foreach ($FileAssociation in $CONFIG_FILE_ASSOCIATIONS) {
+        [Int]$Percentage = 70 + $Iteration * $Step
+        Write-ActivityProgress -PercentComplete $Percentage
+        $Iteration++
+
         [String]$Extension = $FileAssociation.Extension
         [String]$Application = $FileAssociation.Application
 

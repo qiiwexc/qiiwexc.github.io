@@ -6,7 +6,7 @@ function Start-Executable {
     )
 
     if ($Switches -and $Silent) {
-        Write-LogInfo "Running '$Executable' silently..."
+        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
 
         try {
             Start-Process -Wait $Executable $Switches
@@ -21,7 +21,7 @@ function Start-Executable {
         Remove-File $Executable
         Out-Success
     } else {
-        Write-LogInfo "Running '$Executable'..."
+        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable'..."
 
         try {
             if ($Switches) {

@@ -7,6 +7,8 @@ function Set-WindowsConfiguration {
         [System.Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Personalisation
     )
 
+    New-Activity 'Configuring Windows...'
+
     if ($Base.Checked) {
         Set-WindowsBaseConfiguration $Base.Text
     }
@@ -26,4 +28,6 @@ function Set-WindowsConfiguration {
     if ($Personalisation.Checked) {
         Set-WindowsPersonalisationConfig $Personalisation.Text
     }
+
+    Write-ActivityCompleted
 }

@@ -5,13 +5,13 @@ function Start-Download {
         [Switch]$Temp
     )
 
+    Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
+
     Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
     Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
     Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_WORKING_DIR\$FileName" })
 
     Initialize-AppDirectory
-
-    Write-LogInfo "Downloading from $URL"
 
     Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
     if ($NoConnection) {

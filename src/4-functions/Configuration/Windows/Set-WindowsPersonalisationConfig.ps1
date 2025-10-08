@@ -3,13 +3,13 @@
         [String][Parameter(Position = 0, Mandatory = $True)]$FileName
     )
 
-    Write-LogInfo 'Applying Windows personalisation configuration...'
+    Write-ActivityProgress -PercentComplete 90 -Task 'Applying Windows personalisation configuration...'
 
     Set-WinHomeLocation -GeoId 140
 
     Set-Variable -Option Constant LanguageList (Get-WinUserLanguageList)
     if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
-        $LanguageList.Add('lv-LV')
+        $LanguageList.Add('lv')
         Set-WinUserLanguageList $LanguageList -Force
     }
 
@@ -20,6 +20,8 @@
     $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER
     $ConfigLines += "`n"
     $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE
+
+    Write-ActivityProgress -PercentComplete 95
 
     try {
         if ($OS_VERSION -gt 10) {

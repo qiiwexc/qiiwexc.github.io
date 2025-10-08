@@ -3,13 +3,23 @@
         [String][Parameter(Position = 0, Mandatory = $True)]$FileName
     )
 
-    Write-LogInfo 'Applying Windows search index configuration...'
+    Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
 
     [String]$ConfigLines = "Windows Registry Editor Version 5.00`n"
 
     try {
         Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
+        Write-ActivityProgress -PercentComplete 50
+
+        Set-Variable -Option Constant RegistriesCount ($FileExtensionRegistries.Count)
+        Set-Variable -Option Constant Step ([Math]::Floor(20 / $RegistriesCount))
+
+        [Int]$Iteration = 1
         foreach ($Registry in $FileExtensionRegistries) {
+            [Int]$Percentage = 50 + $Iteration * $Step
+            Write-ActivityProgress -PercentComplete $Percentage
+            $Iteration++
+
             [Object]$PersistentHandlers = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
 
             foreach ($PersistentHandler in $PersistentHandlers) {
