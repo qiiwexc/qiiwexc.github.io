@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.8')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.9')
 ::
 ::#endregion init > Version
 ::
@@ -4269,6 +4269,8 @@ if "%debug%"=="true" (
 ::        [Switch]$Temp
 ::    )
 ::
+::    Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
+::
 ::    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
 ::    Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
 ::    Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
@@ -4295,8 +4297,6 @@ if "%debug%"=="true" (
 ::    Remove-Directory $ExtractionPath
 ::
 ::    New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
-::
-::    Write-LogInfo "Extracting '$ZipPath'..."
 ::
 ::    try {
 ::        if ($ZIP_SUPPORTED) {
@@ -4402,6 +4402,10 @@ if "%debug%"=="true" (
 ::        Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
 ::        Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
 ::    }
+::
+::    Set-Variable -Option Constant IeRegistryPath 'HKLM:\Software\Policies\Microsoft\Internet Explorer\Main'
+::    New-RegistryKeyIfMissing $IeRegistryPath
+::    Set-ItemProperty -Path $IeRegistryPath -Name 'DisableFirstRunCustomize' -Value 1
 ::
 ::    Get-SystemInformation
 ::
@@ -4608,6 +4612,44 @@ if "%debug%"=="true" (
 ::#endregion functions > Common > Open-InBrowser
 ::
 ::
+::#region functions > Common > Progressbar
+::
+::function New-Activity {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Activity
+::    )
+::
+::    Write-LogInfo $Activity
+::    Set-Variable -Scope Script CURRENT_ACTIVITY $Activity
+::    Write-Progress -Activity $CURRENT_ACTIVITY -PercentComplete 1
+::}
+::
+::function Write-ActivityProgress {
+::    param(
+::        [Int][Parameter(Position = 0, Mandatory = $True)]$PercentComplete,
+::        [String][Parameter(Position = 1)]$Task
+::    )
+::
+::    if ($Task) {
+::        Set-Variable -Scope Script CURRENT_TASK $Task
+::        Write-LogInfo $CURRENT_TASK
+::    }
+::
+::    if ($CURRENT_ACTIVITY) {
+::        Write-Progress -Activity $CURRENT_ACTIVITY -Status $CURRENT_TASK -PercentComplete $PercentComplete
+::    }
+::}
+::
+::function Write-ActivityCompleted {
+::    Out-Success
+::    Write-Progress -Activity $CURRENT_ACTIVITY -Completed
+::    Set-Variable -Scope Script CURRENT_ACTIVITY $Null
+::    Set-Variable -Scope Script CURRENT_TASK $Null
+::}
+::
+::#endregion functions > Common > Progressbar
+::
+::
 ::#region functions > Common > Remove-Directory
 ::
 ::function Remove-Directory {
@@ -4675,13 +4717,13 @@ if "%debug%"=="true" (
 ::        [Switch]$Temp
 ::    )
 ::
+::    Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
+::
 ::    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
 ::    Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
 ::    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_WORKING_DIR\$FileName" })
 ::
 ::    Initialize-AppDirectory
-::
-::    Write-LogInfo "Downloading from $URL"
 ::
 ::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
 ::    if ($NoConnection) {
@@ -4742,6 +4784,8 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
+::    New-Activity 'Download and run'
+::
 ::    Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
 ::    Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
 ::    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
@@ -4753,6 +4797,8 @@ if "%debug%"=="true" (
 ::            Start-Executable $Executable $Params -Silent:$Silent
 ::        }
 ::    }
+::
+::    Write-ActivityCompleted
 ::}
 ::
 ::#endregion functions > Common > Start-DownloadUnzipAndRun
@@ -4768,7 +4814,7 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    if ($Switches -and $Silent) {
-::        Write-LogInfo "Running '$Executable' silently..."
+::        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
 ::
 ::        try {
 ::            Start-Process -Wait $Executable $Switches
@@ -4783,7 +4829,7 @@ if "%debug%"=="true" (
 ::        Remove-File $Executable
 ::        Out-Success
 ::    } else {
-::        Write-LogInfo "Running '$Executable'..."
+::        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable'..."
 ::
 ::        try {
 ::            if ($Switches) {
@@ -4860,8 +4906,7 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
-::        Start-BitsTransfer -Source 'https://bit.ly/qiiwexc_version' -Destination $VersionFile -Dynamic
-::        Set-Variable -Option Constant LatestVersion ([Version](Get-Content $VersionFile -Raw))
+::        Set-Variable -Option Constant LatestVersion ([Version](([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version' -UseBasicParsing)).Trim()))
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to check for updates'
 ::        return
@@ -4910,6 +4955,8 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
 ::    )
 ::
+::    Write-ActivityProgress -PercentComplete 25 -Task "Configuring $AppName..."
+::
 ::    [String]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
 ::    $ConfigLines += "`n"
 ::    $ConfigLines += $CONFIG_7ZIP
@@ -4931,6 +4978,8 @@ if "%debug%"=="true" (
 ::        [System.Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Edge,
 ::        [System.Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory = $True)]$Chrome
 ::    )
+::
+::    New-Activity 'Configuring apps...'
 ::
 ::    if ($VLC.Checked) {
 ::        Set-VlcConfiguration $VLC.Text
@@ -4955,6 +5004,8 @@ if "%debug%"=="true" (
 ::    if ($Chrome.Checked) {
 ::        Set-GoogleChromeConfiguration $Chrome.Text
 ::    }
+::
+::    Write-ActivityCompleted
 ::}
 ::
 ::#endregion functions > Configuration > Apps > Set-AppsConfiguration
@@ -4966,6 +5017,8 @@ if "%debug%"=="true" (
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
 ::    )
+::
+::    Write-ActivityProgress -PercentComplete 75 -Task "Configuring $AppName..."
 ::
 ::    Set-Variable -Option Constant ProcessName 'chrome'
 ::
@@ -4983,6 +5036,8 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
 ::    )
 ::
+::    Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
+::
 ::    Set-Variable -Option Constant ProcessName 'msedge'
 ::
 ::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
@@ -4999,7 +5054,10 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
 ::    )
 ::
+::    Write-ActivityProgress -PercentComplete 15 -Task "Configuring $AppName..."
+::
 ::    Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH }))
+::
 ::    Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
 ::}
 ::
@@ -5012,6 +5070,8 @@ if "%debug%"=="true" (
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
 ::    )
+::
+::    Write-ActivityProgress -PercentComplete 40 -Task "Configuring $AppName..."
 ::
 ::    [String]$ConfigLines = $CONFIG_TEAMVIEWER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
 ::    $ConfigLines += "`n"
@@ -5029,6 +5089,8 @@ if "%debug%"=="true" (
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
 ::    )
+::
+::    Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
 ::
 ::    Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
 ::}
@@ -5237,7 +5299,7 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Windows > Remove-WindowsFeatures
 ::
 ::function Remove-WindowsFeatures {
-::    Write-LogInfo 'Starting miscellaneous Windows features cleanup...'
+::    New-Activity 'Removing miscellaneous Windows features...'
 ::
 ::    Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
 ::        'App.Support.QuickAssist',
@@ -5248,32 +5310,42 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    try {
+::        Write-ActivityProgress -PercentComplete 5 -Task 'Collecting the features to remove...'
 ::        Set-Variable -Option Constant InstalledCapabilities (Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' })
 ::        Set-Variable -Option Constant CapabilitiesToRemove ($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $FeaturesToRemove })
 ::    } catch [Exception] {
 ::        Write-ExceptionLog $_ 'Failed to collect the features to remove'
 ::    }
 ::
-::    foreach ($Capability in $CapabilitiesToRemove) {
-::        [String]$Name = $Capability.Name
-::        try {
-::            Write-LogInfo "Removing '$Name'..."
-::            Remove-WindowsCapability -Online -Name "$Name"
-::            Out-Success
-::        } catch [Exception] {
-::            Write-ExceptionLog $_ "Failed to remove '$Name'"
+::    Set-Variable -Option Constant CapabilityCount ($CapabilitiesToRemove.Count)
+::
+::    if ($CapabilityCount -eq 0) {
+::        Write-LogInfo 'Nothing to remove'
+::    } else {
+::        Set-Variable -Option Constant Step ([Math]::Floor(80 / $CapabilityCount))
+::
+::        [Int]$Iteration = 1
+::        foreach ($Capability in $CapabilitiesToRemove) {
+::            [String]$Name = $Capability.Name
+::            try {
+::                [Int]$Percentage = 10 + $Iteration * $Step
+::                Write-ActivityProgress -PercentComplete $Percentage -Task "Removing '$Name'..."
+::                $Iteration++
+::                Remove-WindowsCapability -Online -Name "$Name"
+::                Out-Success
+::            } catch [Exception] {
+::                Write-ExceptionLog $_ "Failed to remove '$Name'"
+::            }
 ::        }
 ::    }
 ::
-::    if ($CapabilitiesToRemove.Count -eq 0) {
-::        Write-LogInfo 'Nothing to remove'
-::    }
-::
 ::    if (Test-Path 'mstsc.exe') {
-::        Write-LogInfo "Removing 'mstsc'..."
+::        Write-ActivityProgress -PercentComplete 90 -Task "Removing 'mstsc'..."
 ::        Start-Process 'mstsc' '/uninstall'
 ::        Out-Success
 ::    }
+::
+::    Write-ActivityCompleted
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Remove-WindowsFeatures
@@ -5319,7 +5391,7 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Windows > Set-FileAssociations
 ::
 ::function Set-FileAssociations {
-::    Write-LogInfo 'Setting file associations...'
+::    Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
 ::
 ::    Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
 ::    Set-Variable -Option Constant SophiaScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
@@ -5333,7 +5405,15 @@ if "%debug%"=="true" (
 ::        . $SophiaScriptPath
 ::    }
 ::
+::    Set-Variable -Option Constant FileTypeCount ($CONFIG_FILE_ASSOCIATIONS.Count)
+::    Set-Variable -Option Constant Step ([Math]::Floor(20 / $FileTypeCount))
+::
+::    [Int]$Iteration = 1
 ::    foreach ($FileAssociation in $CONFIG_FILE_ASSOCIATIONS) {
+::        [Int]$Percentage = 70 + $Iteration * $Step
+::        Write-ActivityProgress -PercentComplete $Percentage
+::        $Iteration++
+::
 ::        [String]$Extension = $FileAssociation.Extension
 ::        [String]$Application = $FileAssociation.Application
 ::
@@ -5362,13 +5442,13 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Windows > Set-PowerSchemeConfiguration
 ::
 ::function Set-PowerSchemeConfiguration {
-::    Write-LogInfo 'Setting power scheme overlay...'
+::    Write-ActivityProgress -PercentComplete 15 -Task 'Setting power scheme overlay...'
 ::
 ::    powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 ::
 ::    Out-Success
 ::
-::    Write-LogInfo 'Applying Windows power scheme settings...'
+::    Write-ActivityProgress -PercentComplete 20 -Task 'Applying Windows power scheme settings...'
 ::
 ::    foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
 ::        powercfg /SetAcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
@@ -5388,13 +5468,23 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
 ::    )
 ::
-::    Write-LogInfo 'Applying Windows search index configuration...'
+::    Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
 ::
 ::    [String]$ConfigLines = "Windows Registry Editor Version 5.00`n"
 ::
 ::    try {
 ::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
+::        Write-ActivityProgress -PercentComplete 50
+::
+::        Set-Variable -Option Constant RegistriesCount ($FileExtensionRegistries.Count)
+::        Set-Variable -Option Constant Step ([Math]::Floor(20 / $RegistriesCount))
+::
+::        [Int]$Iteration = 1
 ::        foreach ($Registry in $FileExtensionRegistries) {
+::            [Int]$Percentage = 50 + $Iteration * $Step
+::            Write-ActivityProgress -PercentComplete $Percentage
+::            $Iteration++
+::
 ::            [Object]$PersistentHandlers = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
 ::
 ::            foreach ($PersistentHandler in $PersistentHandlers) {
@@ -5429,7 +5519,7 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
 ::    )
 ::
-::    Write-LogInfo 'Applying Windows configuration...'
+::    Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
 ::
 ::    if ($PS_VERSION -ge 5) {
 ::        Set-MpPreference -CheckForSignaturesBefore $True
@@ -5470,6 +5560,8 @@ if "%debug%"=="true" (
 ::    $ConfigLines += $LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
 ::    $ConfigLines += "`n"
 ::    $ConfigLines += $LocalisedConfig
+::
+::    Write-ActivityProgress -PercentComplete 10
 ::
 ::    try {
 ::        foreach ($Registry in (Get-UsersRegistryKeys)) {
@@ -5513,6 +5605,8 @@ if "%debug%"=="true" (
 ::        [System.Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Personalisation
 ::    )
 ::
+::    New-Activity 'Configuring Windows...'
+::
 ::    if ($Base.Checked) {
 ::        Set-WindowsBaseConfiguration $Base.Text
 ::    }
@@ -5532,6 +5626,8 @@ if "%debug%"=="true" (
 ::    if ($Personalisation.Checked) {
 ::        Set-WindowsPersonalisationConfig $Personalisation.Text
 ::    }
+::
+::    Write-ActivityCompleted
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-WindowsConfiguration
@@ -5544,13 +5640,13 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
 ::    )
 ::
-::    Write-LogInfo 'Applying Windows personalisation configuration...'
+::    Write-ActivityProgress -PercentComplete 90 -Task 'Applying Windows personalisation configuration...'
 ::
 ::    Set-WinHomeLocation -GeoId 140
 ::
 ::    Set-Variable -Option Constant LanguageList (Get-WinUserLanguageList)
 ::    if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
-::        $LanguageList.Add('lv-LV')
+::        $LanguageList.Add('lv')
 ::        Set-WinUserLanguageList $LanguageList -Force
 ::    }
 ::
@@ -5561,6 +5657,8 @@ if "%debug%"=="true" (
 ::    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER
 ::    $ConfigLines += "`n"
 ::    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE
+::
+::    Write-ActivityProgress -PercentComplete 95
 ::
 ::    try {
 ::        if ($OS_VERSION -gt 10) {
@@ -5745,31 +5843,32 @@ if "%debug%"=="true" (
 ::#region functions > Home > Start-Cleanup
 ::
 ::function Start-Cleanup {
-::    Write-LogInfo 'Cleaning up the system...'
+::    New-Activity 'Cleaning up the system...'
 ::
-::    Write-LogInfo 'Clearing delivery optimization cache...'
+::    Write-ActivityProgress -PercentComplete 10 -Task 'Clearing delivery optimization cache...'
 ::    Delete-DeliveryOptimizationCache -Force
 ::    Out-Success
 ::
-::    Write-LogInfo 'Clearing software distribution folder...'
-::    Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
-::    Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
-::    Out-Success
-::
-::    Write-LogInfo 'Clearing Windows temp folder...'
+::    Write-ActivityProgress -PercentComplete 20 -Task 'Clearing Windows temp folder...'
 ::    Set-Variable -Option Constant WindowsTemp "$env:SystemRoot\Temp"
 ::    Get-ChildItem -Path $WindowsTemp -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
 ::    Out-Success
 ::
-::    Write-LogInfo 'Clearing user temp folder...'
+::    Write-ActivityProgress -PercentComplete 30 -Task 'Clearing user temp folder...'
 ::    Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
 ::    Out-Success
 ::
-::    Write-LogInfo 'Running system cleanup...'
+::    Write-ActivityProgress -PercentComplete 40 -Task 'Clearing software distribution folder...'
+::    Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
+::    Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
+::    Out-Success
+::
+::    Write-ActivityProgress -PercentComplete 60 -Task 'Running system cleanup...'
 ::
 ::    Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
 ::        Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
 ::    }
+::    Write-ActivityProgress -PercentComplete 70
 ::
 ::    Set-Variable -Option Constant VolumeCaches @(
 ::        'Active Setup Temp Folders',
@@ -5802,14 +5901,18 @@ if "%debug%"=="true" (
 ::    foreach ($VolumeCache in $VolumeCaches) {
 ::        New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\$VolumeCache" -Name StateFlags3224 -PropertyType DWord -Value 2 -Force
 ::    }
+::    Write-ActivityProgress -PercentComplete 80
 ::
-::    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224' -Wait
+::    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224'
 ::
+::    Start-Sleep -Seconds 3
+::
+::    Write-ActivityProgress -PercentComplete 90
 ::    Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
 ::        Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
 ::    }
 ::
-::    Out-Success
+::    Write-ActivityCompleted
 ::}
 ::
 ::#endregion functions > Home > Start-Cleanup

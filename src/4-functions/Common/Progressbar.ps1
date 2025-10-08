@@ -6,8 +6,6 @@ function New-Activity {
     Write-LogInfo $Activity
     Set-Variable -Scope Script CURRENT_ACTIVITY $Activity
     Write-Progress -Activity $CURRENT_ACTIVITY -PercentComplete 1
-
-    Start-Sleep -Seconds 2
 }
 
 function Write-ActivityProgress {
@@ -24,8 +22,6 @@ function Write-ActivityProgress {
     if ($CURRENT_ACTIVITY) {
         Write-Progress -Activity $CURRENT_ACTIVITY -Status $CURRENT_TASK -PercentComplete $PercentComplete
     }
-
-    Start-Sleep -Seconds 2
 }
 
 function Write-ActivityCompleted {
@@ -33,6 +29,4 @@ function Write-ActivityCompleted {
     Write-Progress -Activity $CURRENT_ACTIVITY -Completed
     Set-Variable -Scope Script CURRENT_ACTIVITY $Null
     Set-Variable -Scope Script CURRENT_TASK $Null
-
-    Start-Sleep -Seconds 2
 }
