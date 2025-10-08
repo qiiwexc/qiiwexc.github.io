@@ -36,8 +36,7 @@ function Get-UpdateAvailability {
 
     try {
         Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
-        Start-BitsTransfer -Source '{URL_VERSION_FILE}' -Destination $VersionFile -Dynamic
-        Set-Variable -Option Constant LatestVersion ([Version](Get-Content $VersionFile -Raw))
+        Set-Variable -Option Constant LatestVersion ([Version](([String](Invoke-WebRequest -Uri '{URL_VERSION_FILE}' -UseBasicParsing)).Trim()))
     } catch [Exception] {
         Write-ExceptionLog $_ 'Failed to check for updates'
         return
