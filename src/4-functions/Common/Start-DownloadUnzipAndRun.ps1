@@ -24,13 +24,13 @@ function Start-DownloadUnzipAndRun {
 
     Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
     Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
-    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp $($Execute -or $IsZip))
+    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:($Execute -or $IsZip))
 
     if ($DownloadedFile) {
-        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Temp $Execute } else { $DownloadedFile })
+        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Temp:$Execute } else { $DownloadedFile })
 
         if ($Execute) {
-            Start-Executable $Executable $Params -Silent $Silent
+            Start-Executable $Executable $Params -Silent:$Silent
         }
     }
 
