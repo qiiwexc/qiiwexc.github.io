@@ -65,7 +65,7 @@ function Get-Emoji {
         [String][Parameter(Position = 0, Mandatory = $True)]$Code
     )
 
-    Set-Variable -Option Constant Emoji ([System.Convert]::toInt32($Code, 16))
+    Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))
 
-    return [System.Char]::ConvertFromUtf32($Emoji)
+    return [Char]::ConvertFromUtf32($Emoji)
 }
