@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.9')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.10')
 ::
 ::#endregion init > Version
 ::
@@ -733,9 +733,8 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Remove Windows components'
 ::
 ::
-::[Switch]$BUTTON_DISABLED = $PS_VERSION -lt 5
 ::[ScriptBlock]$BUTTON_FUNCTION = { Remove-WindowsFeatures }
-::New-Button 'Feature cleanup' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+::New-Button 'Feature cleanup' $BUTTON_FUNCTION
 ::
 ::#endregion ui > Configuration > Remove Windows components
 ::
@@ -1298,6 +1297,36 @@ if "%debug%"=="true" (
 ::'
 ::
 ::#endregion configs > Installs > Office Installer
+::
+::
+::#region configs > Windows > Capabilities to remove
+::
+::Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE @(
+::    'App.StepsRecorder'
+::    'App.Support.QuickAssist'
+::    'Language.Handwriting'
+::    'Language.Speech'
+::    'Language.TextToSpeech'
+::    'MathRecognizer'
+::    'Media.WindowsMediaPlayer'
+::    'Microsoft.Windows.WordPad'
+::    'OneCoreUAP.OneSync'
+::    'OpenSSH.Client'
+::)
+::
+::#endregion configs > Windows > Capabilities to remove
+::
+::
+::#region configs > Windows > Features to remove
+::
+::Set-Variable -Option Constant CONFIG_FEATURES_TO_REMOVE @(
+::    'MediaPlayback'
+::    'Microsoft-RemoteDesktopConnection'
+::    'MicrosoftWindowsPowerShellV2Root'
+::    'Recall'
+::)
+::
+::#endregion configs > Windows > Features to remove
 ::
 ::
 ::#region configs > Windows > File associations
@@ -4269,6 +4298,8 @@ if "%debug%"=="true" (
 ::        [Switch]$Temp
 ::    )
 ::
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
 ::
 ::    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
@@ -4307,7 +4338,7 @@ if "%debug%"=="true" (
 ::            }
 ::        }
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ "Failed to extract '$ZipPath'"
+::        Write-LogException $_ "Failed to extract '$ZipPath'" $LogIndentLevel
 ::        return
 ::    }
 ::
@@ -4323,8 +4354,8 @@ if "%debug%"=="true" (
 ::        Move-Item -Force $ExtractionPath $TargetPath
 ::    }
 ::
-::    Out-Success
-::    Write-LogInfo "Files extracted to '$TargetPath'"
+::    Out-Success $LogIndentLevel
+::    Write-LogInfo "Files extracted to '$TargetPath'" $LogIndentLevel
 ::
 ::    return $TargetExe
 ::}
@@ -4362,6 +4393,8 @@ if "%debug%"=="true" (
 ::function Get-SystemInformation {
 ::    Write-LogInfo 'Current system information:'
 ::
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    Set-Variable -Option Constant Motherboard (Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product)
 ::    Set-Variable -Option Constant BIOS (Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate)
 ::
@@ -4372,13 +4405,13 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant OfficeYear $(switch ($OFFICE_VERSION) { 16 { '2016 / 2019 / 2021 / 2024' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
 ::    Set-Variable -Option Constant OfficeName $(if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' })
 ::
-::    Write-LogInfo "    Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)"
-::    Write-LogInfo "    BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))"
-::    Write-LogInfo "    Operation system: $($OPERATING_SYSTEM.Caption)"
-::    Write-LogInfo "    $(if ($OS_VERSION -ge 10) {'OS release / '})Build number: $(if ($OS_VERSION -ge 10) {"v$WindowsRelease / "})$($OPERATING_SYSTEM.Version)"
-::    Write-LogInfo "    OS architecture: $($OPERATING_SYSTEM.OSArchitecture)"
-::    Write-LogInfo "    OS language: $SYSTEM_LANGUAGE"
-::    Write-LogInfo "    Office version: $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})"
+::    Write-LogInfo "Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)" $LogIndentLevel
+::    Write-LogInfo "BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))" $LogIndentLevel
+::    Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
+::    Write-LogInfo "$(if ($OS_VERSION -ge 10) {'OS release / '})Build number: $(if ($OS_VERSION -ge 10) {"v$WindowsRelease / "})$($OPERATING_SYSTEM.Version)" $LogIndentLevel
+::    Write-LogInfo "OS architecture: $($OPERATING_SYSTEM.OSArchitecture)" $LogIndentLevel
+::    Write-LogInfo "OS language: $SYSTEM_LANGUAGE" $LogIndentLevel
+::    Write-LogInfo "Office version: $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})" $LogIndentLevel
 ::}
 ::
 ::#endregion functions > Common > Get-SystemInformation
@@ -4389,7 +4422,7 @@ if "%debug%"=="true" (
 ::function Initialize-App {
 ::    $FORM.Activate()
 ::
-::    Write-LogInfo 'Initializing...'
+::    Write-Log -NoNewLine 'INFO' 'Initializing...'
 ::
 ::    if ($OS_VERSION -lt 8) {
 ::        Write-LogWarning "Windows $OS_VERSION detected, some features are not supported."
@@ -4455,50 +4488,57 @@ if "%debug%"=="true" (
 ::
 ::function Write-LogDebug {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
-::    Write-Log 'DEBUG' $Message
+::    Write-Log 'DEBUG' $Message -IndentLevel $Level
 ::}
 ::
 ::function Write-LogInfo {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
-::    Write-Log 'INFO' $Message
+::    Write-Log 'INFO' $Message -IndentLevel $Level
 ::}
 ::
 ::function Write-LogWarning {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
-::    Write-Log 'WARN' "$(Get-Emoji '26A0') $Message"
+::    Write-Log 'WARN' "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
 ::}
 ::
 ::function Write-LogError {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
-::    Write-Log 'ERROR' "$(Get-Emoji '274C') $Message"
+::    Write-Log 'ERROR' "$(Get-Emoji '274C') $Message" -IndentLevel $Level
 ::}
 ::
 ::function Write-Log {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+::        [String][Parameter(Position = 1, Mandatory = $True)]$Message,
+::        [Int][Parameter(Position = 2)]$IndentLevel = 0,
+::        [Switch][Parameter(Position = 3)]$NoNewLine
 ::    )
 ::
-::    Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
+::    Set-Variable -Option Constant Indent $('   ' * $IndentLevel)
+::    Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Indent $Message"
 ::
 ::    $LOG.SelectionStart = $LOG.TextLength
 ::
 ::    switch ($Level) {
 ::        'DEBUG' {
 ::            $LOG.SelectionColor = 'black'
-::            Write-Host -NoNewline "$Text`n"
+::            Write-Host $Text
 ::        }
 ::        'INFO' {
 ::            $LOG.SelectionColor = 'black'
-::            Write-Host -NoNewline "$Text`n"
+::            Write-Host $Text
 ::        }
 ::        'WARN' {
 ::            $LOG.SelectionColor = 'blue'
@@ -4510,12 +4550,12 @@ if "%debug%"=="true" (
 ::        }
 ::        Default {
 ::            $LOG.SelectionColor = 'black'
-::            Write-Host -NoNewline "$Text`n"
+::            Write-Host $Text
 ::        }
 ::    }
 ::
 ::    if ($Level -ne 'DEBUG') {
-::        $LOG.AppendText("$Text`n")
+::        $LOG.AppendText($(if ($NoNewLine) { $Text } else { "`n$Text" }))
 ::        $LOG.SelectionColor = 'black'
 ::        $LOG.ScrollToCaret()
 ::    }
@@ -4524,29 +4564,39 @@ if "%debug%"=="true" (
 ::
 ::function Out-Status {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Status
+::        [String][Parameter(Position = 0, Mandatory = $True)]$Status,
+::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::
-::    Write-LogInfo "   > $Status"
+::    Write-LogInfo "   > $Status" $Level
 ::}
 ::
 ::
 ::function Out-Success {
-::    Out-Status "Done $(Get-Emoji '2705')"
+::    param(
+::        [Int][Parameter(Position = 0)]$Level = 0
+::    )
+::
+::    Out-Status "Done $(Get-Emoji '2705')" $Level
 ::}
 ::
 ::function Out-Failure {
-::    Out-Status "Failed $(Get-Emoji '274C')"
+::    param(
+::        [Int][Parameter(Position = 0)]$Level = 0
+::    )
+::
+::    Out-Status "Failed $(Get-Emoji '274C')" $Level
 ::}
 ::
 ::
-::function Write-ExceptionLog {
+::function Write-LogException {
 ::    param(
 ::        [Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+::        [String][Parameter(Position = 1, Mandatory = $True)]$Message,
+::        [Int][Parameter(Position = 2)]$Level = 0
 ::    )
 ::
-::    Write-Log 'ERROR' "$($Message): $($Exception.Exception.Message)"
+::    Write-Log 'ERROR' "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
 ::}
 ::
 ::function Get-Emoji {
@@ -4605,7 +4655,7 @@ if "%debug%"=="true" (
 ::    try {
 ::        [System.Diagnostics.Process]::Start($URL)
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Could not open the URL'
+::        Write-LogException $_ 'Could not open the URL'
 ::    }
 ::}
 ::
@@ -4631,7 +4681,7 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    if ($Task) {
-::        Set-Variable -Scope Script CURRENT_TASK $Task
+::        Set-Variable -Scope Script CURRENT_TASK "  $Task"
 ::        Write-LogInfo $CURRENT_TASK
 ::    }
 ::
@@ -4717,6 +4767,8 @@ if "%debug%"=="true" (
 ::        [Switch]$Temp
 ::    )
 ::
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
 ::
 ::    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
@@ -4727,10 +4779,10 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
 ::    if ($NoConnection) {
-::        Write-LogError "Download failed: $NoConnection"
+::        Write-LogError "Download failed: $NoConnection" $LogIndentLevel
 ::
 ::        if (Test-Path $SavePath) {
-::            Write-LogWarning 'Previous download found, returning it'
+::            Write-LogWarning 'Previous download found, returning it' $LogIndentLevel
 ::            return $SavePath
 ::        } else {
 ::            return
@@ -4745,12 +4797,12 @@ if "%debug%"=="true" (
 ::        }
 ::
 ::        if (Test-Path $SavePath) {
-::            Out-Success
+::            Out-Success $LogIndentLevel
 ::        } else {
 ::            throw 'Possibly computer is offline or disk is full'
 ::        }
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Download failed'
+::        Write-LogException $_ 'Download failed' $LogIndentLevel
 ::        return
 ::    }
 ::
@@ -4813,21 +4865,23 @@ if "%debug%"=="true" (
 ::        [Switch]$Silent
 ::    )
 ::
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    if ($Switches -and $Silent) {
 ::        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
 ::
 ::        try {
 ::            Start-Process -Wait $Executable $Switches
 ::        } catch [Exception] {
-::            Write-ExceptionLog $_ "Failed to run '$Executable'"
+::            Write-LogException $_ "Failed to run '$Executable'" $LogIndentLevel
 ::            return
 ::        }
 ::
-::        Out-Success
+::        Out-Success $LogIndentLevel
 ::
-::        Write-LogDebug "Removing '$Executable'..."
+::        Write-LogDebug "Removing '$Executable'..." $LogIndentLevel
 ::        Remove-File $Executable
-::        Out-Success
+::        Out-Success $LogIndentLevel
 ::    } else {
 ::        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable'..."
 ::
@@ -4838,11 +4892,11 @@ if "%debug%"=="true" (
 ::                Start-Process $Executable -WorkingDirectory (Split-Path $Executable)
 ::            }
 ::        } catch [Exception] {
-::            Write-ExceptionLog $_ "Failed to execute '$Executable'"
+::            Write-LogException $_ "Failed to execute '$Executable'" $LogIndentLevel
 ::            return
 ::        }
 ::
-::        Out-Success
+::        Out-Success $LogIndentLevel
 ::    }
 ::}
 ::
@@ -4856,10 +4910,12 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$ProcessName
 ::    )
 ::
+::    Set-Variable -Option Constant LogIndentLevel 3
+::
 ::    if (Get-Process | Where-Object { $_.ProcessName -eq $ProcessName } ) {
-::        Write-LogInfo "Stopping process '$AppName'..."
+::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
 ::        Stop-Process -Name $ProcessName
-::        Out-Success
+::        Out-Success $LogIndentLevel
 ::    }
 ::}
 ::
@@ -4881,7 +4937,7 @@ if "%debug%"=="true" (
 ::        try {
 ::            Invoke-CustomCommand $AppBatFile
 ::        } catch [Exception] {
-::            Write-ExceptionLog $_ 'Failed to start new version'
+::            Write-LogException $_ 'Failed to start new version'
 ::            return
 ::        }
 ::
@@ -4908,7 +4964,7 @@ if "%debug%"=="true" (
 ::        Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
 ::        Set-Variable -Option Constant LatestVersion ([Version](([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version' -UseBasicParsing)).Trim()))
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to check for updates'
+::        Write-LogException $_ 'Failed to check for updates'
 ::        return
 ::    }
 ::
@@ -4938,7 +4994,7 @@ if "%debug%"=="true" (
 ::    try {
 ::        Start-BitsTransfer -Source 'https://bit.ly/qiiwexc_bat' -Destination $AppBatFile -Dynamic
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to download update'
+::        Write-LogException $_ 'Failed to download update'
 ::        return
 ::    }
 ::
@@ -5115,7 +5171,9 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 1, Mandatory = $True)]$Content
 ::    )
 ::
-::    Write-LogInfo "Importing $AppName configuration into registry..."
+::    Set-Variable -Option Constant LogIndentLevel 2
+::
+::    Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
 ::
 ::    Set-Variable -Option Constant RegFilePath "$PATH_APP_DIR\$AppName.reg"
 ::
@@ -5126,11 +5184,11 @@ if "%debug%"=="true" (
 ::    try {
 ::        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to import file into registry'
+::        Write-LogException $_ 'Failed to import file into registry' $LogIndentLevel
 ::        return
 ::    }
 ::
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::}
 ::
 ::#endregion functions > Configuration > Helpers > Import-RegistryConfiguration
@@ -5237,17 +5295,19 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 3, Mandatory = $True)]$Path
 ::    )
 ::
+::    Set-Variable -Option Constant LogIndentLevel 2
+::
 ::    Stop-ProcessIfRunning $ProcessName
 ::
-::    Write-LogInfo "Writing $AppName configuration to '$Path'..."
+::    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 ::
 ::    if (-not (Test-Path $Path)) {
-::        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it"
+::        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it" $LogIndentLevel
 ::
 ::        try {
 ::            Start-Process $ProcessName -ErrorAction Stop
 ::        } catch [Exception] {
-::            Write-ExceptionLog $_ "Couldn't start '$AppName'"
+::            Write-LogException $_ "Couldn't start '$AppName'" $LogIndentLevel
 ::            return
 ::        }
 ::
@@ -5266,7 +5326,7 @@ if "%debug%"=="true" (
 ::
 ::    $UpdatedConfig | Out-File $Path -Encoding UTF8
 ::
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::}
 ::
 ::#endregion functions > Configuration > Helpers > Update-JsonFile
@@ -5281,16 +5341,17 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 2, Mandatory = $True)]$Path,
 ::        [String][Parameter(Position = 3)]$ProcessName = $AppName
 ::    )
+::    Set-Variable -Option Constant LogIndentLevel 2
 ::
 ::    Stop-ProcessIfRunning $ProcessName
 ::
-::    Write-LogInfo "Writing $AppName configuration to '$Path'..."
+::    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 ::
 ::    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 ::
 ::    $Content | Out-File $Path -Encoding UTF8
 ::
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::}
 ::
 ::#endregion functions > Configuration > Helpers > Write-ConfigurationFile
@@ -5299,42 +5360,64 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Windows > Remove-WindowsFeatures
 ::
 ::function Remove-WindowsFeatures {
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    New-Activity 'Removing miscellaneous Windows features...'
 ::
-::    Set-Variable -Option Constant FeaturesToRemove @('App.StepsRecorder',
-::        'App.Support.QuickAssist',
-::        'MathRecognizer',
-::        'Media.WindowsMediaPlayer',
-::        'Microsoft.Windows.WordPad',
-::        'OpenSSH.Client'
-::    )
-::
-::    try {
-::        Write-ActivityProgress -PercentComplete 5 -Task 'Collecting the features to remove...'
-::        Set-Variable -Option Constant InstalledCapabilities (Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' })
-::        Set-Variable -Option Constant CapabilitiesToRemove ($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $FeaturesToRemove })
-::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to collect the features to remove'
+::    if ($PS_VERSION -ge 5) {
+::        try {
+::            Write-ActivityProgress -PercentComplete 5 -Task 'Collecting capabilities to remove...'
+::            Set-Variable -Option Constant InstalledCapabilities (Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' })
+::            Set-Variable -Option Constant CapabilitiesToRemove ($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE })
+::            Set-Variable -Option Constant CapabilityCount ($CapabilitiesToRemove.Count)
+::            Out-Success $LogIndentLevel
+::        } catch [Exception] {
+::            Write-LogException $_ 'Failed to collect capabilities to remove' $LogIndentLevel
+::        }
 ::    }
 ::
-::    Set-Variable -Option Constant CapabilityCount ($CapabilitiesToRemove.Count)
+::    try {
+::        Write-ActivityProgress -PercentComplete 10 -Task 'Collecting features to remove...'
+::        Set-Variable -Option Constant InstalledFeatures (Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' })
+::        Set-Variable -Option Constant FeaturesToRemove ($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE })
+::        Set-Variable -Option Constant FeatureCount ($FeaturesToRemove.Count)
+::        Out-Success $LogIndentLevel
+::    } catch [Exception] {
+::        Write-LogException $_ 'Failed to collect features to remove' $LogIndentLevel
+::    }
 ::
-::    if ($CapabilityCount -eq 0) {
-::        Write-LogInfo 'Nothing to remove'
-::    } else {
-::        Set-Variable -Option Constant Step ([Math]::Floor(80 / $CapabilityCount))
+::    if ($CapabilityCount) {
+::        Set-Variable -Option Constant CapabilityStep ([Math]::Floor(50 / $CapabilityCount))
 ::
 ::        [Int]$Iteration = 1
 ::        foreach ($Capability in $CapabilitiesToRemove) {
 ::            [String]$Name = $Capability.Name
 ::            try {
-::                [Int]$Percentage = 10 + $Iteration * $Step
+::                [Int]$Percentage = 15 + $Iteration * $CapabilityStep
 ::                Write-ActivityProgress -PercentComplete $Percentage -Task "Removing '$Name'..."
 ::                $Iteration++
 ::                Remove-WindowsCapability -Online -Name "$Name"
-::                Out-Success
+::                Out-Success $LogIndentLevel
 ::            } catch [Exception] {
-::                Write-ExceptionLog $_ "Failed to remove '$Name'"
+::                Write-LogException $_ "Failed to remove '$Name'" $LogIndentLevel
+::            }
+::        }
+::    }
+::
+::    if ($FeatureCount) {
+::        Set-Variable -Option Constant FeatureStep ([Math]::Floor(20 / $FeatureCount))
+::
+::        [Int]$Iteration = 1
+::        foreach ($Feature in $FeaturesToRemove) {
+::            [String]$Name = $Feature.FeatureName
+::            try {
+::                [Int]$Percentage = 70 + $Iteration * $FeatureStep
+::                Write-ActivityProgress -PercentComplete $Percentage -Task "Removing '$Name'..."
+::                $Iteration++
+::                Disable-WindowsOptionalFeature -Online -Remove -NoRestart -FeatureName "$Name"
+::                Out-Success $LogIndentLevel
+::            } catch [Exception] {
+::                Write-LogException $_ "Failed to remove '$Name'" $LogIndentLevel
 ::            }
 ::        }
 ::    }
@@ -5342,7 +5425,7 @@ if "%debug%"=="true" (
 ::    if (Test-Path 'mstsc.exe') {
 ::        Write-ActivityProgress -PercentComplete 90 -Task "Removing 'mstsc'..."
 ::        Start-Process 'mstsc' '/uninstall'
-::        Out-Success
+::        Out-Success $LogIndentLevel
 ::    }
 ::
 ::    Write-ActivityCompleted
@@ -5378,7 +5461,7 @@ if "%debug%"=="true" (
 ::            Write-LogError 'Failed to change DNS server'
 ::        }
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to change DNS server'
+::        Write-LogException $_ 'Failed to change DNS server'
 ::        return
 ::    }
 ::
@@ -5391,6 +5474,8 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Windows > Set-FileAssociations
 ::
 ::function Set-FileAssociations {
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
 ::
 ::    Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
@@ -5433,7 +5518,7 @@ if "%debug%"=="true" (
 ::
 ::    Remove-File $SophiaScriptPath
 ::
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-FileAssociations
@@ -5442,11 +5527,13 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Windows > Set-PowerSchemeConfiguration
 ::
 ::function Set-PowerSchemeConfiguration {
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    Write-ActivityProgress -PercentComplete 15 -Task 'Setting power scheme overlay...'
 ::
 ::    powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 ::
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 20 -Task 'Applying Windows power scheme settings...'
 ::
@@ -5455,7 +5542,7 @@ if "%debug%"=="true" (
 ::        powercfg /SetDcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
 ::    }
 ::
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-PowerSchemeConfiguration
@@ -5467,6 +5554,8 @@ if "%debug%"=="true" (
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
 ::    )
+::
+::    Set-Variable -Option Constant LogIndentLevel 1
 ::
 ::    Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
 ::
@@ -5499,13 +5588,13 @@ if "%debug%"=="true" (
 ::            }
 ::        }
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to read the registry'
+::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
 ::    }
 ::
 ::    if ($ConfigLines) {
 ::        Import-RegistryConfiguration $FileName $ConfigLines
 ::    } else {
-::        Out-Success
+::        Out-Success $LogIndentLevel
 ::    }
 ::}
 ::
@@ -5518,6 +5607,8 @@ if "%debug%"=="true" (
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
 ::    )
+::
+::    Set-Variable -Option Constant LogIndentLevel 1
 ::
 ::    Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
 ::
@@ -5585,7 +5676,7 @@ if "%debug%"=="true" (
 ::            $ConfigLines += "`"MaxCapacity`"=dword:000FFFFF`n"
 ::        }
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to read the registry'
+::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
 ::    }
 ::
 ::    Import-RegistryConfiguration $FileName $ConfigLines
@@ -5640,6 +5731,8 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
 ::    )
 ::
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    Write-ActivityProgress -PercentComplete 90 -Task 'Applying Windows personalisation configuration...'
 ::
 ::    Set-WinHomeLocation -GeoId 140
@@ -5674,7 +5767,7 @@ if "%debug%"=="true" (
 ::            $ConfigLines += "`"RotatingLockScreenEnabled`"=dword:00000001`n"
 ::        }
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to read the registry'
+::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
 ::    }
 ::
 ::    Import-RegistryConfiguration $FileName $ConfigLines
@@ -5845,23 +5938,25 @@ if "%debug%"=="true" (
 ::function Start-Cleanup {
 ::    New-Activity 'Cleaning up the system...'
 ::
+::    Set-Variable -Option Constant LogIndentLevel 1
+::
 ::    Write-ActivityProgress -PercentComplete 10 -Task 'Clearing delivery optimization cache...'
 ::    Delete-DeliveryOptimizationCache -Force
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 20 -Task 'Clearing Windows temp folder...'
 ::    Set-Variable -Option Constant WindowsTemp "$env:SystemRoot\Temp"
 ::    Get-ChildItem -Path $WindowsTemp -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 30 -Task 'Clearing user temp folder...'
 ::    Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 40 -Task 'Clearing software distribution folder...'
 ::    Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
 ::    Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
-::    Out-Success
+::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 60 -Task 'Running system cleanup...'
 ::
@@ -5926,7 +6021,7 @@ if "%debug%"=="true" (
 ::    try {
 ::        Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user'
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to update Microsoft Office'
+::        Write-LogException $_ 'Failed to update Microsoft Office'
 ::        return
 ::    }
 ::
@@ -5944,7 +6039,7 @@ if "%debug%"=="true" (
 ::    try {
 ::        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'"
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to update Microsoft Store apps'
+::        Write-LogException $_ 'Failed to update Microsoft Store apps'
 ::        return
 ::    }
 ::
@@ -5966,7 +6061,7 @@ if "%debug%"=="true" (
 ::            Start-Process 'wuauclt' '/detectnow /updatenow'
 ::        }
 ::    } catch [Exception] {
-::        Write-ExceptionLog $_ 'Failed to update Windows'
+::        Write-LogException $_ 'Failed to update Windows'
 ::        return
 ::    }
 ::
