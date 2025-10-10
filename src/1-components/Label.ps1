@@ -3,9 +3,9 @@ function New-Label {
         [String][Parameter(Position = 0, Mandatory = $True)]$Text
     )
 
-    Set-Variable -Option Constant Label (New-Object System.Windows.Forms.Label)
+    Set-Variable -Option Constant Label (New-Object Windows.Forms.Label)
 
-    [System.Drawing.Point]$Location = ($PREVIOUS_BUTTON.Location + "30, $BUTTON_HEIGHT")
+    [Drawing.Point]$Location = $PREVIOUS_BUTTON.Location + "30, $BUTTON_HEIGHT"
 
     $Label.Size = "145, $CHECKBOX_HEIGHT"
     $Label.Text = $Text
