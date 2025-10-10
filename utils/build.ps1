@@ -5,19 +5,20 @@ param(
     [Switch]$Run
 )
 
-. '.\utils\logger.ps1'
-. '.\utils\read-config.ps1'
-. '.\utils\write-version-file.ps1'
-. '.\utils\build-html-file.ps1'
-. '.\utils\build-powershell-script.ps1'
-. '.\utils\build-batch-script.ps1'
-
 Set-Variable -Option Constant Version (Get-Date -Format 'y.M.d')
 Set-Variable -Option Constant ProjectName 'qiiwexc'
 
 Set-Variable -Option Constant AssetsPath '.\assets'
+Set-Variable -Option Constant UtilsPath '.\utils'
 Set-Variable -Option Constant SourcePath '.\src'
 Set-Variable -Option Constant DistPath '.\d'
+
+. "$UtilsPath\logger.ps1"
+. "$UtilsPath\Get-Config.ps1"
+. "$UtilsPath\New-BatchScript.ps1"
+. "$UtilsPath\New-HtmlFile.ps1"
+. "$UtilsPath\New-PowerShellScript.ps1"
+. "$UtilsPath\Write-VersionFile.ps1"
 
 Set-Variable -Option Constant VersionFile "$DistPath\version"
 Set-Variable -Option Constant Ps1File "$DistPath\$ProjectName.ps1"
@@ -34,12 +35,12 @@ Set-Variable -Option Constant Config (Get-Config $AssetsPath $Version)
 Write-Progress -Activity 'Build' -PercentComplete 10
 
 Write-VersionFile $Version $VersionFile
-Write-Progress -Activity 'Build' -PercentComplete 30
+Write-Progress -Activity 'Build' -PercentComplete 20
 
 New-HtmlFile $AssetsPath $Config
 Write-Progress -Activity 'Build' -PercentComplete 60
 
-New-PowerShellScript $SourcePath $Ps1File -Config:$Config
+New-PowerShellScript $SourcePath $Ps1File -Config $Config
 Write-Progress -Activity 'Build' -PercentComplete 80
 
 New-BatchScript $Ps1File $BatchFile
