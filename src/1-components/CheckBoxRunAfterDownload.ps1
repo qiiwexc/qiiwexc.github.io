@@ -4,5 +4,5 @@ function New-CheckBoxRunAfterDownload {
         [Switch]$Checked
     )
 
-    return New-CheckBox 'Start after download' -Disabled $Disabled -Checked $Checked
+    return New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
 }
