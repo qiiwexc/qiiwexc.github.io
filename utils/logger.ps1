@@ -46,7 +46,7 @@ function Write-Log {
 
     switch ($Level) {
         'INFO' {
-            Write-Host -NoNewline "$Text`n"
+            Write-Host $Text
         }
         'WARN' {
             Write-Warning $Text
@@ -55,7 +55,7 @@ function Write-Log {
             Write-Error $Text
         }
         Default {
-            Write-Host -NoNewline "$Text`n"
+            Write-Host $Text
         }
     }
 }
