@@ -29,7 +29,8 @@ function Write-LogError {
 function Write-Log {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+        [String][Parameter(Position = 1, Mandatory = $True)]$Message,
+        [Switch][Parameter(Position = 2)]$NoNewLine
     )
 
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
@@ -39,11 +40,11 @@ function Write-Log {
     switch ($Level) {
         'DEBUG' {
             $LOG.SelectionColor = 'black'
-            Write-Host -NoNewline "$Text`n"
+            Write-Host $Text
         }
         'INFO' {
             $LOG.SelectionColor = 'black'
-            Write-Host -NoNewline "$Text`n"
+            Write-Host $Text
         }
         'WARN' {
             $LOG.SelectionColor = 'blue'
@@ -55,12 +56,12 @@ function Write-Log {
         }
         Default {
             $LOG.SelectionColor = 'black'
-            Write-Host -NoNewline "$Text`n"
+            Write-Host $Text
         }
     }
 
     if ($Level -ne 'DEBUG') {
-        $LOG.AppendText("$Text`n")
+        $LOG.AppendText($(if ($NoNewLine) { $Text } else { "`n$Text" }))
         $LOG.SelectionColor = 'black'
         $LOG.ScrollToCaret()
     }
