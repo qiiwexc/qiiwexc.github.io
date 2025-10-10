@@ -3,6 +3,8 @@
         [String][Parameter(Position = 0, Mandatory = $True)]$FileName
     )
 
+    Set-Variable -Option Constant LogIndentLevel 1
+
     Write-ActivityProgress -PercentComplete 90 -Task 'Applying Windows personalisation configuration...'
 
     Set-WinHomeLocation -GeoId 140
@@ -37,7 +39,7 @@
             $ConfigLines += "`"RotatingLockScreenEnabled`"=dword:00000001`n"
         }
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Failed to read the registry'
+        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
     }
 
     Import-RegistryConfiguration $FileName $ConfigLines

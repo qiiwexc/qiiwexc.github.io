@@ -5,6 +5,8 @@ function Start-Download {
         [Switch]$Temp
     )
 
+    Set-Variable -Option Constant LogIndentLevel 1
+
     Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
 
     Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
@@ -15,10 +17,10 @@ function Start-Download {
 
     Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
     if ($NoConnection) {
-        Write-LogError "Download failed: $NoConnection"
+        Write-LogError "Download failed: $NoConnection" $LogIndentLevel
 
         if (Test-Path $SavePath) {
-            Write-LogWarning 'Previous download found, returning it'
+            Write-LogWarning 'Previous download found, returning it' $LogIndentLevel
             return $SavePath
         } else {
             return
@@ -33,12 +35,12 @@ function Start-Download {
         }
 
         if (Test-Path $SavePath) {
-            Out-Success
+            Out-Success $LogIndentLevel
         } else {
             throw 'Possibly computer is offline or disk is full'
         }
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Download failed'
+        Write-LogException $_ 'Download failed' $LogIndentLevel
         return
     }
 

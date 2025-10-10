@@ -8,7 +8,7 @@ function Update-Windows {
             Start-Process 'wuauclt' '/detectnow /updatenow'
         }
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Failed to update Windows'
+        Write-LogException $_ 'Failed to update Windows'
         return
     }
 

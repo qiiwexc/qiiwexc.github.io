@@ -6,17 +6,19 @@ function Update-JsonFile {
         [String][Parameter(Position = 3, Mandatory = $True)]$Path
     )
 
+    Set-Variable -Option Constant LogIndentLevel 2
+
     Stop-ProcessIfRunning $ProcessName
 
-    Write-LogInfo "Writing $AppName configuration to '$Path'..."
+    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 
     if (-not (Test-Path $Path)) {
-        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it"
+        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it" $LogIndentLevel
 
         try {
             Start-Process $ProcessName -ErrorAction Stop
         } catch [Exception] {
-            Write-ExceptionLog $_ "Couldn't start '$AppName'"
+            Write-LogException $_ "Couldn't start '$AppName'" $LogIndentLevel
             return
         }
 
@@ -35,5 +37,5 @@ function Update-JsonFile {
 
     $UpdatedConfig | Out-File $Path -Encoding UTF8
 
-    Out-Success
+    Out-Success $LogIndentLevel
 }

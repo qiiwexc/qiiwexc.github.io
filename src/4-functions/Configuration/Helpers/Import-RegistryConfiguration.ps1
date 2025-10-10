@@ -4,7 +4,9 @@ function Import-RegistryConfiguration {
         [String][Parameter(Position = 1, Mandatory = $True)]$Content
     )
 
-    Write-LogInfo "Importing $AppName configuration into registry..."
+    Set-Variable -Option Constant LogIndentLevel 2
+
+    Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
 
     Set-Variable -Option Constant RegFilePath "$PATH_APP_DIR\$AppName.reg"
 
@@ -15,9 +17,9 @@ function Import-RegistryConfiguration {
     try {
         Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Failed to import file into registry'
+        Write-LogException $_ 'Failed to import file into registry' $LogIndentLevel
         return
     }
 
-    Out-Success
+    Out-Success $LogIndentLevel
 }

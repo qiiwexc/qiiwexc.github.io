@@ -11,7 +11,7 @@ function Update-App {
         try {
             Invoke-CustomCommand $AppBatFile
         } catch [Exception] {
-            Write-ExceptionLog $_ 'Failed to start new version'
+            Write-LogException $_ 'Failed to start new version'
             return
         }
 
@@ -38,7 +38,7 @@ function Get-UpdateAvailability {
         Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
         Set-Variable -Option Constant LatestVersion ([Version](([String](Invoke-WebRequest -Uri '{URL_VERSION_FILE}' -UseBasicParsing)).Trim()))
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Failed to check for updates'
+        Write-LogException $_ 'Failed to check for updates'
         return
     }
 
@@ -68,7 +68,7 @@ function Get-NewVersion {
     try {
         Start-BitsTransfer -Source '{URL_BAT_FILE}' -Destination $AppBatFile -Dynamic
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Failed to download update'
+        Write-LogException $_ 'Failed to download update'
         return
     }
 

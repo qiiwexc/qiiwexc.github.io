@@ -5,21 +5,23 @@ function Start-Executable {
         [Switch]$Silent
     )
 
+    Set-Variable -Option Constant LogIndentLevel 1
+
     if ($Switches -and $Silent) {
         Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
 
         try {
             Start-Process -Wait $Executable $Switches
         } catch [Exception] {
-            Write-ExceptionLog $_ "Failed to run '$Executable'"
+            Write-LogException $_ "Failed to run '$Executable'" $LogIndentLevel
             return
         }
 
-        Out-Success
+        Out-Success $LogIndentLevel
 
-        Write-LogDebug "Removing '$Executable'..."
+        Write-LogDebug "Removing '$Executable'..." $LogIndentLevel
         Remove-File $Executable
-        Out-Success
+        Out-Success $LogIndentLevel
     } else {
         Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable'..."
 
@@ -30,10 +32,10 @@ function Start-Executable {
                 Start-Process $Executable -WorkingDirectory (Split-Path $Executable)
             }
         } catch [Exception] {
-            Write-ExceptionLog $_ "Failed to execute '$Executable'"
+            Write-LogException $_ "Failed to execute '$Executable'" $LogIndentLevel
             return
         }
 
-        Out-Success
+        Out-Success $LogIndentLevel
     }
 }

@@ -3,6 +3,8 @@
         [String][Parameter(Position = 0, Mandatory = $True)]$FileName
     )
 
+    Set-Variable -Option Constant LogIndentLevel 1
+
     Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
 
     [String]$ConfigLines = "Windows Registry Editor Version 5.00`n"
@@ -34,12 +36,12 @@
             }
         }
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Failed to read the registry'
+        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
     }
 
     if ($ConfigLines) {
         Import-RegistryConfiguration $FileName $ConfigLines
     } else {
-        Out-Success
+        Out-Success $LogIndentLevel
     }
 }
