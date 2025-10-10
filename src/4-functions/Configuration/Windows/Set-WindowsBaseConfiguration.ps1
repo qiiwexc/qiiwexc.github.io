@@ -30,7 +30,7 @@
 
     Set-Variable -Option Constant UnelevatedExplorerTaskName 'CreateExplorerShellUnelevatedTask'
     if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
-        Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
+        Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm $False
     }
 
     Set-Variable -Option Constant LocalisedConfig $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH })

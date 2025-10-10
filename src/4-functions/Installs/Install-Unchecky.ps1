@@ -10,5 +10,5 @@ function Install-Unchecky {
     Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1
 
     Set-Variable -Option Constant Params $(if ($Silent) { '-install -no_desktop_icon' })
-    Start-DownloadUnzipAndRun -Execute:$Execute '{URL_UNCHECKY}' -Params:$Params -Silent:$Silent
+    Start-DownloadUnzipAndRun '{URL_UNCHECKY}' -Execute $Execute -Params $Params -Silent $Silent
 }
