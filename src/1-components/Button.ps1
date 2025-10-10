@@ -5,10 +5,10 @@ function New-Button {
         [Switch]$Disabled
     )
 
-    Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
+    Set-Variable -Option Constant Button (New-Object Windows.Forms.Button)
 
-    [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
-    [System.Drawing.Point]$Shift = '0, 0'
+    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
+    [Drawing.Point]$Shift = '0, 0'
 
     if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
         [Int]$PreviousLabelOrCheckboxY = if ($PREVIOUS_LABEL_OR_CHECKBOX) { $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y } else { 0 }
@@ -24,7 +24,7 @@ function New-Button {
     }
 
 
-    [System.Drawing.Point]$Location = $InitialLocation + $Shift
+    [Drawing.Point]$Location = $InitialLocation + $Shift
 
     $Button.Font = $BUTTON_FONT
     $Button.Height = $BUTTON_HEIGHT

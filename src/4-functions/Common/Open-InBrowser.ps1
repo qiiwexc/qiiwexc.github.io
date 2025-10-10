@@ -6,7 +6,7 @@ function Open-InBrowser {
     Write-LogInfo "Opening URL in the default browser: $URL"
 
     try {
-        [System.Diagnostics.Process]::Start($URL)
+        [Diagnostics.Process]::Start($URL)
     } catch [Exception] {
         Write-LogException $_ 'Could not open the URL'
     }

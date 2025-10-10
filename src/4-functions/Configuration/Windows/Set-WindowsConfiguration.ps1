@@ -1,10 +1,10 @@
 function Set-WindowsConfiguration {
     param(
-        [System.Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Base,
-        [System.Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$PowerScheme,
-        [System.Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$Search,
-        [System.Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$FileAssociations,
-        [System.Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Personalisation
+        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Base,
+        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$PowerScheme,
+        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$Search,
+        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$FileAssociations,
+        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Personalisation
     )
 
     New-Activity 'Configuring Windows...'
