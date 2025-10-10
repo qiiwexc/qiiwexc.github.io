@@ -15,11 +15,11 @@ if (-not $DevMode) {
     [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
 }
 
-[System.Windows.Forms.Application]::EnableVisualStyles()
+[Windows.Forms.Application]::EnableVisualStyles()
 
 
 Set-Variable -Option Constant PATH_WORKING_DIR $WorkingDirectory
-Set-Variable -Option Constant PATH_TEMP_DIR ([System.IO.Path]::GetTempPath())
+Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
 Set-Variable -Option Constant PATH_APP_DIR "$($PATH_TEMP_DIR)qiiwexc"
 Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 Set-Variable -Option Constant PATH_WINUTIL "$env:ProgramData\WinUtil"

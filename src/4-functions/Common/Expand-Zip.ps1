@@ -37,7 +37,7 @@ function Expand-Zip {
 
     try {
         if ($ZIP_SUPPORTED) {
-            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
+            [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
         } else {
             foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
                 $SHELL.NameSpace($ExtractionPath).CopyHere($Item)

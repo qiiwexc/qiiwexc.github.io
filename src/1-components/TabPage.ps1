@@ -3,7 +3,7 @@ function New-TabPage {
         [String][Parameter(Position = 0, Mandatory = $True)]$Text
     )
 
-    Set-Variable -Option Constant TabPage (New-Object System.Windows.Forms.TabPage)
+    Set-Variable -Option Constant TabPage (New-Object Windows.Forms.TabPage)
 
     $TabPage.UseVisualStyleBackColor = $True
     $TabPage.Text = $Text
