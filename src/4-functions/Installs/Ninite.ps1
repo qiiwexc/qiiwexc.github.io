@@ -33,6 +33,6 @@ function Get-NiniteInstaller {
         Set-Variable -Option Constant FileName "Ninite $($AppNames -Join ' ') Installer.exe"
         Set-Variable -Option Constant DownloadUrl "{URL_NINITE}/$Query/ninite.exe"
 
-        Start-DownloadUnzipAndRun $DownloadUrl $FileName -Execute $Execute
+        Start-DownloadUnzipAndRun $DownloadUrl $FileName -Execute:$Execute
     }
 }

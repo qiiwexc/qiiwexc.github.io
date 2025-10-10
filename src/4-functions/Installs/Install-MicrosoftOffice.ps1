@@ -14,5 +14,5 @@ function Install-MicrosoftOffice {
         Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
     }
 
-    Start-DownloadUnzipAndRun '{URL_OFFICE_INSTALLER}' -AVWarning -Execute $Execute
+    Start-DownloadUnzipAndRun '{URL_OFFICE_INSTALLER}' -AVWarning -Execute:$Execute
 }

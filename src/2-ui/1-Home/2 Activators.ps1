@@ -6,7 +6,7 @@ New-GroupBox 'Activators (Windows 7+, Office)'
 New-Button 'MAS Activator' $BUTTON_FUNCTION -Disabled $BUTTON_DISABLED
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun '{URL_ACTIVATION_PROGRAM}' -AVWarning -Execute $CHECKBOX_StartActivationProgram.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun '{URL_ACTIVATION_PROGRAM}' -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked }
 New-Button 'Activation Program' $BUTTON_FUNCTION
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Checked

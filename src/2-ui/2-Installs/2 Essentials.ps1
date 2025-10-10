@@ -1,7 +1,7 @@
 New-GroupBox 'Essentials'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun '{URL_SDIO}' -Execute $CHECKBOX_StartSDI.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun '{URL_SDIO}' -Execute:$CHECKBOX_StartSDI.Checked }
 New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 
 [System.Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
