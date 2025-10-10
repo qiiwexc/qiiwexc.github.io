@@ -7,7 +7,7 @@
 
     Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
 
-    [Collections.Generic.List[String]]$ConfigLines = "Windows Registry Editor Version 5.00`n"
+    [Collections.Generic.List[String]]$ConfigLines = @()
 
     try {
         Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
@@ -39,7 +39,7 @@
         Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
     }
 
-    if ($ConfigLines) {
+    if ($ConfigLines.Count) {
         Import-RegistryConfiguration $FileName $ConfigLines
     } else {
         Out-Success $LogIndentLevel
