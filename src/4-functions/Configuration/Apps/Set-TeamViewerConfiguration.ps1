@@ -5,9 +5,9 @@
 
     Write-ActivityProgress -PercentComplete 40 -Task "Configuring $AppName..."
 
-    [String]$ConfigLines = $CONFIG_TEAMVIEWER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-    $ConfigLines += "`n"
-    $ConfigLines += $CONFIG_TEAMVIEWER
+    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_TEAMVIEWER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+    $ConfigLines.Add("`n")
+    $ConfigLines.Add($CONFIG_TEAMVIEWER)
 
     Import-RegistryConfiguration $AppName $ConfigLines
 }

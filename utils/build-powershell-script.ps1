@@ -2,7 +2,7 @@ function New-PowerShellScript {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$SourcePath,
         [String][Parameter(Position = 1, Mandatory = $True)]$Ps1File,
-        [Object[]][Parameter(Position = 2, Mandatory = $True)]$Config
+        [Collections.Generic.List[Object]][Parameter(Position = 2, Mandatory = $True)]$Config
     )
 
     Write-LogInfo 'Building PowerShell script...'
@@ -12,7 +12,7 @@ function New-PowerShellScript {
     Set-Variable -Option Constant ProjectFiles (Get-ChildItem -Recurse -File $SourcePath)
     Set-Variable -Option Constant FileCount $ProjectFiles.Length
 
-    [String[]]$OutputStrings = @()
+    [Collections.Generic.List[String]]$OutputStrings = @()
 
     [Int]$CurrentFileNum = 1
     [String]$PreviousRegion = ''
@@ -25,28 +25,28 @@ function New-PowerShellScript {
         [String]$CurrentRegion = $FilePath.Replace('\src\', '|').Split('|')[1].Replace('\', ' > ') -replace '\..{1,}$', '' -replace '\d{1,2}(-|\s)', ''
 
         if ($CurrentFileNum -eq 1) {
-            $OutputStrings += "#region $CurrentRegion`n"
+            $OutputStrings.Add("#region $CurrentRegion`n")
         } else {
-            $OutputStrings += "`n#endregion $PreviousRegion`n"
-            $OutputStrings += "`n#region $CurrentRegion`n"
+            $OutputStrings.Add("`n#endregion $PreviousRegion`n")
+            $OutputStrings.Add("`n#region $CurrentRegion`n")
         }
 
         $PreviousRegion = $CurrentRegion
 
-        [String[]]$Content = Get-Content $FilePath
+        [Collections.Generic.List[String]]$Content = Get-Content $FilePath
 
         if ($IsConfigFile) {
             [String]$VariableName = "CONFIG_$(($FileName.Replace(' ', '_') -replace '\..{1,}$', '').ToUpper())"
-            [String[]]$EscapedContent = $Content.Replace("'", '"')
+            [Collections.Generic.List[String]]$EscapedContent = $Content.Replace("'", '"')
             $EscapedContent[0] = "Set-Variable -Option Constant $VariableName '$($EscapedContent[0])"
             $OutputStrings += $EscapedContent
-            $OutputStrings += "'"
+            $OutputStrings.Add("'")
         } else {
             $OutputStrings += $Content
         }
 
         if ($CurrentFileNum -eq $FileCount) {
-            $OutputStrings += "`n#endregion $CurrentRegion"
+            $OutputStrings.Add("`n#endregion $CurrentRegion")
         }
 
         $CurrentFileNum++

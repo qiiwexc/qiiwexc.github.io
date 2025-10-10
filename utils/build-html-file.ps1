@@ -1,7 +1,7 @@
 function New-HtmlFile {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AssetsPath,
-        [Object[]][Parameter(Position = 1, Mandatory = $True)]$Config
+        [Collections.Generic.List[Object]][Parameter(Position = 1, Mandatory = $True)]$Config
     )
 
     Write-LogInfo 'Building the web page...'
@@ -9,7 +9,7 @@ function New-HtmlFile {
     Set-Variable -Option Constant TemplateFile "$AssetsPath\template.html"
     Set-Variable -Option Constant OutputFile '.\index.html'
 
-    [String[]]$TemplateContent = Get-Content $TemplateFile
+    [Collections.Generic.List[String]]$TemplateContent = Get-Content $TemplateFile
 
     $Config | ForEach-Object { $TemplateContent = $TemplateContent.Replace("{$($_.key)}", $_.value) }
 
