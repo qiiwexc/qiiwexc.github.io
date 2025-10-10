@@ -1,7 +1,7 @@
 function Import-RegistryConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Content
+        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory = $True)]$Content
     )
 
     Set-Variable -Option Constant LogIndentLevel 2
@@ -12,7 +12,7 @@ function Import-RegistryConfiguration {
 
     Initialize-AppDirectory
 
-    "Windows Registry Editor Version 5.00`n`n" + $Content | Out-File $RegFilePath
+    "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Out-File $RegFilePath
 
     try {
         Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""

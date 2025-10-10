@@ -9,11 +9,11 @@ function Get-NiniteInstaller {
         [Switch][Parameter(Position = 1)]$Execute
     )
 
-    [String[]]$AppIds = @()
+    [Collections.Generic.List[String]]$AppIds = @()
 
     foreach ($Checkbox in $NINITE_CHECKBOXES) {
         if ($Checkbox.Checked) {
-            $AppIds += $Checkbox.Name
+            $AppIds.Add($Checkbox.Name)
         }
     }
 
@@ -22,11 +22,11 @@ function Get-NiniteInstaller {
     if ($OpenInBrowser) {
         Open-InBrowser "{URL_NINITE}/?select=$Query"
     } else {
-        [String[]]$AppNames = @()
+        [Collections.Generic.List[String]]$AppNames = @()
 
         foreach ($Checkbox in $NINITE_CHECKBOXES) {
             if ($Checkbox.Checked) {
-                $AppNames += $Checkbox.Text
+                $AppNames.Add($Checkbox.Text)
             }
         }
 
