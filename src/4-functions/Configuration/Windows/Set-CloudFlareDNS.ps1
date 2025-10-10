@@ -23,7 +23,7 @@ function Set-CloudFlareDNS {
             Write-LogError 'Failed to change DNS server'
         }
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Failed to change DNS server'
+        Write-LogException $_ 'Failed to change DNS server'
         return
     }
 

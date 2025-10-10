@@ -1,4 +1,6 @@
 function Set-FileAssociations {
+    Set-Variable -Option Constant LogIndentLevel 1
+
     Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
 
     Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
@@ -41,5 +43,5 @@ function Set-FileAssociations {
 
     Remove-File $SophiaScriptPath
 
-    Out-Success
+    Out-Success $LogIndentLevel
 }

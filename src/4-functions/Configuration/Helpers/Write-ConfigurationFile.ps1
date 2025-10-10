@@ -5,14 +5,15 @@ function Write-ConfigurationFile {
         [String][Parameter(Position = 2, Mandatory = $True)]$Path,
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
+    Set-Variable -Option Constant LogIndentLevel 2
 
     Stop-ProcessIfRunning $ProcessName
 
-    Write-LogInfo "Writing $AppName configuration to '$Path'..."
+    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 
     New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 
     $Content | Out-File $Path -Encoding UTF8
 
-    Out-Success
+    Out-Success $LogIndentLevel
 }

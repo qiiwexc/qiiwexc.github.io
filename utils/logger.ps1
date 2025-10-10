@@ -27,7 +27,7 @@ function Out-Failure {
     Write-LogInfo "   > Failed $(Get-Emoji '274C')"
 }
 
-function Write-ExceptionLog {
+function Write-LogException {
     param(
         [Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
         [String][Parameter(Position = 1, Mandatory = $True)]$Message

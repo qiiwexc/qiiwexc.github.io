@@ -15,7 +15,7 @@ function Write-ActivityProgress {
     )
 
     if ($Task) {
-        Set-Variable -Scope Script CURRENT_TASK $Task
+        Set-Variable -Scope Script CURRENT_TASK "  $Task"
         Write-LogInfo $CURRENT_TASK
     }
 

@@ -8,6 +8,6 @@ function Open-InBrowser {
     try {
         [System.Diagnostics.Process]::Start($URL)
     } catch [Exception] {
-        Write-ExceptionLog $_ 'Could not open the URL'
+        Write-LogException $_ 'Could not open the URL'
     }
 }
