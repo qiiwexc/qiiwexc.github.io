@@ -20,8 +20,8 @@ function Start-OoShutUp10 {
     $CONFIG_OOSHUTUP10 | Out-File $ConfigFile -Encoding UTF8
 
     if ($Silent) {
-        Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute $Execute -Params $ConfigFile
+        Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute -Params $ConfigFile
     } else {
-        Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute $Execute
+        Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute
     }
 }
