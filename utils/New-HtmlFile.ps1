@@ -4,7 +4,7 @@ function New-HtmlFile {
         [Collections.Generic.List[Object]][Parameter(Position = 1, Mandatory = $True)]$Config
     )
 
-    Write-LogInfo 'Building the web page...'
+    Write-LogInfo 'Building web page...'
 
     Set-Variable -Option Constant TemplateFile "$AssetsPath\template.html"
     Set-Variable -Option Constant OutputFile '.\index.html'

@@ -12,6 +12,7 @@ Set-Variable -Option Constant AssetsPath '.\assets'
 Set-Variable -Option Constant UtilsPath '.\utils'
 Set-Variable -Option Constant SourcePath '.\src'
 Set-Variable -Option Constant DistPath '.\d'
+Set-Variable -Option Constant UnattendedPath "$UtilsPath\unattended"
 
 . "$UtilsPath\logger.ps1"
 . "$UtilsPath\Get-Config.ps1"
@@ -19,10 +20,12 @@ Set-Variable -Option Constant DistPath '.\d'
 . "$UtilsPath\New-HtmlFile.ps1"
 . "$UtilsPath\New-PowerShellScript.ps1"
 . "$UtilsPath\Write-VersionFile.ps1"
+. "$UnattendedPath\New-UnattendedFile.ps1"
 
 Set-Variable -Option Constant VersionFile "$DistPath\version"
 Set-Variable -Option Constant Ps1File "$DistPath\$ProjectName.ps1"
 Set-Variable -Option Constant BatchFile "$DistPath\$ProjectName.bat"
+Set-Variable -Option Constant UnattendedFile "$DistPath\autounattend-{LOCALE}.xml"
 
 Write-LogInfo 'Build task started'
 Write-LogInfo "Version     = $Version"
@@ -38,6 +41,9 @@ Write-VersionFile $Version $VersionFile
 Write-Progress -Activity 'Build' -PercentComplete 20
 
 New-HtmlFile $AssetsPath $Config
+Write-Progress -Activity 'Build' -PercentComplete 40
+
+New-UnattendedFile $UnattendedPath $SourcePath $AssetsPath $UnattendedFile
 Write-Progress -Activity 'Build' -PercentComplete 60
 
 New-PowerShellScript $SourcePath $Ps1File -Config $Config
