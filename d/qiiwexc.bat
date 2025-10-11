@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.10')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.11')
 ::
 ::#endregion init > Version
 ::
@@ -75,11 +75,11 @@ if "%debug%"=="true" (
 ::    [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
 ::}
 ::
-::[System.Windows.Forms.Application]::EnableVisualStyles()
+::[Windows.Forms.Application]::EnableVisualStyles()
 ::
 ::
 ::Set-Variable -Option Constant PATH_WORKING_DIR $WorkingDirectory
-::Set-Variable -Option Constant PATH_TEMP_DIR ([System.IO.Path]::GetTempPath())
+::Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
 ::Set-Variable -Option Constant PATH_APP_DIR "$($PATH_TEMP_DIR)qiiwexc"
 ::Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
 ::Set-Variable -Option Constant PATH_WINUTIL "$env:ProgramData\WinUtil"
@@ -109,8 +109,8 @@ if "%debug%"=="true" (
 ::
 ::#region components > Constants
 ::
-::Set-Variable -Option Constant BUTTON_WIDTH    170
-::Set-Variable -Option Constant BUTTON_HEIGHT   30
+::Set-Variable -Option Constant BUTTON_WIDTH 170
+::Set-Variable -Option Constant BUTTON_HEIGHT 30
 ::
 ::Set-Variable -Option Constant CHECKBOX_HEIGHT ($BUTTON_HEIGHT - 10)
 ::
@@ -122,7 +122,7 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant GROUP_WIDTH (15 + $BUTTON_WIDTH + 15)
 ::
-::Set-Variable -Option Constant FORM_WIDTH  (($GROUP_WIDTH + 15) * 3 + 30)
+::Set-Variable -Option Constant FORM_WIDTH (($GROUP_WIDTH + 15) * 3 + 30)
 ::Set-Variable -Option Constant FORM_HEIGHT 560
 ::
 ::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON '15, 20'
@@ -130,7 +130,7 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant SHIFT_CHECKBOX "0, $INTERVAL_CHECKBOX"
 ::
 ::
-::Set-Variable -Option Constant FONT_NAME   'Microsoft Sans Serif'
+::Set-Variable -Option Constant FONT_NAME 'Microsoft Sans Serif'
 ::Set-Variable -Option Constant BUTTON_FONT "$FONT_NAME, 10"
 ::
 ::#endregion components > Constants
@@ -145,10 +145,10 @@ if "%debug%"=="true" (
 ::        [Switch]$Disabled
 ::    )
 ::
-::    Set-Variable -Option Constant Button (New-Object System.Windows.Forms.Button)
+::    Set-Variable -Option Constant Button (New-Object Windows.Forms.Button)
 ::
-::    [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
-::    [System.Drawing.Point]$Shift = '0, 0'
+::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
+::    [Drawing.Point]$Shift = '0, 0'
 ::
 ::    if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
 ::        [Int]$PreviousLabelOrCheckboxY = if ($PREVIOUS_LABEL_OR_CHECKBOX) { $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y } else { 0 }
@@ -164,7 +164,7 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::
-::    [System.Drawing.Point]$Location = $InitialLocation + $Shift
+::    [Drawing.Point]$Location = $InitialLocation + $Shift
 ::
 ::    $Button.Font = $BUTTON_FONT
 ::    $Button.Height = $BUTTON_HEIGHT
@@ -215,10 +215,10 @@ if "%debug%"=="true" (
 ::        [Switch]$Checked
 ::    )
 ::
-::    Set-Variable -Option Constant CheckBox (New-Object System.Windows.Forms.CheckBox)
+::    Set-Variable -Option Constant CheckBox (New-Object Windows.Forms.CheckBox)
 ::
-::    [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
-::    [System.Drawing.Point]$Shift = '0, 0'
+::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
+::    [Drawing.Point]$Shift = '0, 0'
 ::
 ::    if ($PREVIOUS_BUTTON) {
 ::        $InitialLocation = $PREVIOUS_BUTTON.Location
@@ -235,7 +235,7 @@ if "%debug%"=="true" (
 ::        }
 ::    }
 ::
-::    [System.Drawing.Point]$Location = $InitialLocation + $Shift
+::    [Drawing.Point]$Location = $InitialLocation + $Shift
 ::
 ::    $CheckBox.Text = $Text
 ::    $CheckBox.Name = $Name
@@ -277,7 +277,7 @@ if "%debug%"=="true" (
 ::        [Int][Parameter(Position = 1)]$IndexOverride
 ::    )
 ::
-::    Set-Variable -Option Constant GroupBox (New-Object System.Windows.Forms.GroupBox)
+::    Set-Variable -Option Constant GroupBox (New-Object Windows.Forms.GroupBox)
 ::
 ::    Set-Variable -Scope Script PREVIOUS_GROUP $CURRENT_GROUP
 ::    Set-Variable -Scope Script PAD_CHECKBOXES $True
@@ -320,9 +320,9 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Text
 ::    )
 ::
-::    Set-Variable -Option Constant Label (New-Object System.Windows.Forms.Label)
+::    Set-Variable -Option Constant Label (New-Object Windows.Forms.Label)
 ::
-::    [System.Drawing.Point]$Location = ($PREVIOUS_BUTTON.Location + "30, $BUTTON_HEIGHT")
+::    [Drawing.Point]$Location = $PREVIOUS_BUTTON.Location + "30, $BUTTON_HEIGHT"
 ::
 ::    $Label.Size = "145, $CHECKBOX_HEIGHT"
 ::    $Label.Text = $Text
@@ -346,10 +346,10 @@ if "%debug%"=="true" (
 ::        [Switch]$Disabled
 ::    )
 ::
-::    Set-Variable -Option Constant RadioButton (New-Object System.Windows.Forms.RadioButton)
+::    Set-Variable -Option Constant RadioButton (New-Object Windows.Forms.RadioButton)
 ::
-::    [System.Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
-::    [System.Drawing.Point]$Shift = '0, 0'
+::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
+::    [Drawing.Point]$Shift = '0, 0'
 ::
 ::    if ($PREVIOUS_RADIO) {
 ::        $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
@@ -363,7 +363,7 @@ if "%debug%"=="true" (
 ::        $Shift = "10, $BUTTON_HEIGHT"
 ::    }
 ::
-::    [System.Drawing.Point]$Location = $InitialLocation + $Shift
+::    [Drawing.Point]$Location = $InitialLocation + $Shift
 ::
 ::    $RadioButton.Text = $Text
 ::    $RadioButton.Checked = $Checked
@@ -389,7 +389,7 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Text
 ::    )
 ::
-::    Set-Variable -Option Constant TabPage (New-Object System.Windows.Forms.TabPage)
+::    Set-Variable -Option Constant TabPage (New-Object Windows.Forms.TabPage)
 ::
 ::    $TabPage.UseVisualStyleBackColor = $True
 ::    $TabPage.Text = $Text
@@ -405,10 +405,10 @@ if "%debug%"=="true" (
 ::
 ::#region ui > Form
 ::
-::Set-Variable -Option Constant FORM (New-Object System.Windows.Forms.Form)
+::Set-Variable -Option Constant FORM (New-Object Windows.Forms.Form)
 ::$FORM.Text = $HOST.UI.RawUI.WindowTitle
 ::$FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
-::$FORM.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\PowerShell.exe')
+::$FORM.Icon = [Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\PowerShell.exe')
 ::$FORM.FormBorderStyle = 'Fixed3D'
 ::$FORM.StartPosition = 'CenterScreen'
 ::$FORM.MaximizeBox = $False
@@ -417,7 +417,7 @@ if "%debug%"=="true" (
 ::$FORM.Add_FormClosing( { Reset-State } )
 ::
 ::
-::Set-Variable -Option Constant LOG (New-Object System.Windows.Forms.RichTextBox)
+::Set-Variable -Option Constant LOG (New-Object Windows.Forms.RichTextBox)
 ::$LOG.Height = 200
 ::$LOG.Width = $FORM_WIDTH - 10
 ::$LOG.Location = "5, $($FORM_HEIGHT - $LOG.Height - 5)"
@@ -426,7 +426,7 @@ if "%debug%"=="true" (
 ::$FORM.Controls.Add($LOG)
 ::
 ::
-::Set-Variable -Option Constant TAB_CONTROL (New-Object System.Windows.Forms.TabControl)
+::Set-Variable -Option Constant TAB_CONTROL (New-Object Windows.Forms.TabControl)
 ::$TAB_CONTROL.Size = "$($LOG.Width + 1), $($FORM_HEIGHT - $LOG.Height - 1)"
 ::$TAB_CONTROL.Location = '5, 5'
 ::$FORM.Controls.Add($TAB_CONTROL)
@@ -473,10 +473,10 @@ if "%debug%"=="true" (
 ::New-Button 'MAS Activator' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked 'https://qiiwexc.github.io/d/ActivationProgram.zip' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://qiiwexc.github.io/d/ActivationProgram.zip' -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked }
 ::New-Button 'Activation Program' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Checked
 ::
 ::#endregion ui > Home > Activators
 ::
@@ -488,17 +488,17 @@ if "%debug%"=="true" (
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = {
 ::    Set-Variable -Option Constant FileName $((Split-Path -Leaf 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip').Replace('-windows', ''))
-::    Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartVentoy.Checked 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip' -FileName:$FileName
+::    Start-DownloadUnzipAndRun 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip' $FileName -Execute:$CHECKBOX_StartVentoy.Checked
 ::}
 ::New-Button 'Windows Ventoy' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Checked
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartRufus.Checked 'https://github.com/pbatard/rufus/releases/download/v4.11/rufus-4.11p.exe' -Params:'-g' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://github.com/pbatard/rufus/releases/download/v4.11/rufus-4.11p.exe' -Execute:$CHECKBOX_StartRufus.Checked -Params '-g' }
 ::New-Button 'Rufus' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Checked
 ::
 ::#endregion ui > Home > Bootable USB tools
 ::
@@ -528,22 +528,22 @@ if "%debug%"=="true" (
 ::[Switch]$PAD_CHECKBOXES = $False
 ::
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
 ::$CHECKBOX_Ninite_Chrome.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
 ::$CHECKBOX_Ninite_7zip.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
 ::$CHECKBOX_Ninite_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
 ::$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
 ::$CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
 ::$CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::
@@ -551,9 +551,9 @@ if "%debug%"=="true" (
 ::New-Button 'Download selected' $BUTTON_FUNCTION
 ::
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser:$True }
+::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser }
 ::New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 ::
 ::
@@ -574,27 +574,27 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartSDI.Checked 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip' -Execute:$CHECKBOX_StartSDI.Checked }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Install-MicrosoftOffice -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
 ::New-Button 'Office Installer+' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Checked
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Install-Unchecky -Execute:$CHECKBOX_StartUnchecky.Checked -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked }
 ::New-Button 'Unchecky' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Checked
 ::$CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
-::        Set-CheckboxState -Control:$CHECKBOX_StartUnchecky -Dependant:$CHECKBOX_SilentlyInstallUnchecky
+::        Set-CheckboxState -Control $CHECKBOX_StartUnchecky -Dependant $CHECKBOX_SilentlyInstallUnchecky
 ::    } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Checked
 ::
 ::#endregion ui > Installs > Essentials
 ::
@@ -630,17 +630,17 @@ if "%debug%"=="true" (
 ::[Switch]$PAD_CHECKBOXES = $False
 ::
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_TeamViewer = New-CheckBox 'TeamViewer' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_TeamViewer = New-CheckBox 'TeamViewer' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 ::
 ::
 ::Set-Variable -Option Constant AppsConfigurationParameters @{
@@ -664,15 +664,15 @@ if "%debug%"=="true" (
 ::[Switch]$PAD_CHECKBOXES = $False
 ::
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBase = New-CheckBox 'Base config and privacy' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBase = New-CheckBox 'Base config and privacy' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_PowerScheme = New-CheckBox 'Set power scheme' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_PowerScheme = New-CheckBox 'Set power scheme' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsSearch = New-CheckBox 'Configure search index' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsSearch = New-CheckBox 'Configure search index' -Checked
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_FileAssociations = New-CheckBox 'Set file associations'
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_FileAssociations = New-CheckBox 'Set file associations'
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 ::
 ::
 ::Set-Variable -Option Constant WindowsConfigurationParameters @{
@@ -696,34 +696,34 @@ if "%debug%"=="true" (
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat -UsePreset:$CHECKBOX_UseDebloatPreset.Checked -Personalisation:$CHECKBOX_DebloatAndPersonalise.Checked -Silent:$CHECKBOX_SilentlyRunDebloat.Checked }
 ::New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Checked
 ::$CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
-::        Set-CheckboxState -Control:$CHECKBOX_UseDebloatPreset -Dependant:$CHECKBOX_SilentlyRunDebloat
-::        Set-CheckboxState -Control:$CHECKBOX_UseDebloatPreset -Dependant:$CHECKBOX_DebloatAndPersonalise
+::        Set-CheckboxState -Control $CHECKBOX_UseDebloatPreset -Dependant $CHECKBOX_SilentlyRunDebloat
+::        Set-CheckboxState -Control $CHECKBOX_UseDebloatPreset -Dependant $CHECKBOX_DebloatAndPersonalise
 ::    } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings'
+::[Windows.Forms.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings'
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks'
+::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks'
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -Personalisation:$CHECKBOX_WinUtilPersonalisation.Checked -AutomaticallyApply:$CHECKBOX_AutomaticallyRunWinUtil.Checked }
 ::New-Button 'WinUtil' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_WinUtilPersonalisation = New-CheckBox '+ Personalisation settings'
+::[Windows.Forms.CheckBox]$CHECKBOX_WinUtilPersonalisation = New-CheckBox '+ Personalisation settings'
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_AutomaticallyRunWinUtil = New-CheckBox 'Auto apply tweaks'
+::[Windows.Forms.CheckBox]$CHECKBOX_AutomaticallyRunWinUtil = New-CheckBox 'Auto apply tweaks'
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-OoShutUp10 -Execute:$CHECKBOX_StartOoShutUp10.Checked -Silent:($CHECKBOX_StartOoShutUp10.Checked -and $CHECKBOX_SilentlyRunOoShutUp10.Checked) }
 ::New-Button 'OOShutUp10++ privacy' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartOoShutUp10 = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartOoShutUp10 = New-CheckBoxRunAfterDownload -Checked
 ::$CHECKBOX_StartOoShutUp10.Add_CheckStateChanged( {
-::        Set-CheckboxState -Control:$CHECKBOX_StartOoShutUp10 -Dependant:$CHECKBOX_SilentlyRunOoShutUp10
+::        Set-CheckboxState -Control $CHECKBOX_StartOoShutUp10 -Dependant $CHECKBOX_SilentlyRunOoShutUp10
 ::    } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks'
+::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks'
 ::
 ::#endregion ui > Configuration > Configure and debloat Windows
 ::
@@ -747,12 +747,12 @@ if "%debug%"=="true" (
 ::[ScriptBlock]$BUTTON_FUNCTION = { Set-CloudFlareDNS -MalwareProtection:$CHECKBOX_CloudFlareAntiMalware.Checked -FamilyFriendly:$CHECKBOX_CloudFlareFamilyFriendly.Checked }
 ::New-Button 'Setup CloudFlare DNS' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
 ::$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
-::        Set-CheckboxState -Control:$CHECKBOX_CloudFlareAntiMalware -Dependant:$CHECKBOX_CloudFlareFamilyFriendly
+::        Set-CheckboxState -Control $CHECKBOX_CloudFlareAntiMalware -Dependant $CHECKBOX_CloudFlareFamilyFriendly
 ::    } )
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
+::[Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
 ::
 ::#endregion ui > Configuration > Alternative DNS
 ::
@@ -769,10 +769,10 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Hardware info'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartCpuZ.Checked 'https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip' -Execute:$CHECKBOX_StartCpuZ.Checked }
 ::New-Button 'CPU-Z' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartCpuZ = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartCpuZ = New-CheckBoxRunAfterDownload -Checked
 ::
 ::#endregion ui > Diagnostics and recovery > Hardware info
 ::
@@ -782,10 +782,10 @@ if "%debug%"=="true" (
 ::New-GroupBox 'HDD diagnostics'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun -Execute:$CHECKBOX_StartVictoria.Checked 'https://hdd.by/Victoria/Victoria537.zip' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://hdd.by/Victoria/Victoria537.zip' -Execute:$CHECKBOX_StartVictoria.Checked }
 ::New-Button 'Victoria' $BUTTON_FUNCTION
 ::
-::[System.Windows.Forms.CheckBox]$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Checked
 ::
 ::#endregion ui > Diagnostics and recovery > HDD diagnostics
 ::
@@ -2072,9 +2072,6 @@ if "%debug%"=="true" (
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs\Command]
-::@="cmd /c DISM.exe /Online /Add-Package /PackagePath:"%1" /NoRestart & pause""
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs]
 ::"HasLUAShield"=""
@@ -4331,7 +4328,7 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        if ($ZIP_SUPPORTED) {
-::            [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
+::            [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
 ::        } else {
 ::            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
 ::                $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
@@ -4472,13 +4469,13 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    Set-Variable -Option Constant ExecutionPolicy $(if ($BypassExecutionPolicy) { '-ExecutionPolicy Bypass' } else { '' })
-::    Set-Variable -Option Constant WorkingDir $(if ($WorkingDirectory) { "-WorkingDirectory:$WorkingDirectory" } else { '' })
+::    Set-Variable -Option Constant WorkingDir $(if ($WorkingDirectory) { "-WorkingDirectory $WorkingDirectory" } else { '' })
 ::    Set-Variable -Option Constant Verb $(if ($Elevated) { 'RunAs' } else { 'Open' })
 ::    Set-Variable -Option Constant WindowStyle $(if ($HideWindow) { 'Hidden' } else { 'Normal' })
 ::
 ::    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $WorkingDir"
 ::
-::    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb:$Verb -WindowStyle:$WindowStyle
+::    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle
 ::}
 ::
 ::#endregion functions > Common > Invoke-CustomCommand
@@ -4604,9 +4601,9 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$Code
 ::    )
 ::
-::    Set-Variable -Option Constant Emoji ([System.Convert]::toInt32($Code, 16))
+::    Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))
 ::
-::    return [System.Char]::ConvertFromUtf32($Emoji)
+::    return [Char]::ConvertFromUtf32($Emoji)
 ::}
 ::
 ::#endregion functions > Common > Logger
@@ -4653,7 +4650,7 @@ if "%debug%"=="true" (
 ::    Write-LogInfo "Opening URL in the default browser: $URL"
 ::
 ::    try {
-::        [System.Diagnostics.Process]::Start($URL)
+::        [Diagnostics.Process]::Start($URL)
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Could not open the URL'
 ::    }
@@ -4744,8 +4741,8 @@ if "%debug%"=="true" (
 ::
 ::function Set-CheckboxState {
 ::    param(
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Control,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$Dependant
+::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Control,
+::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$Dependant
 ::    )
 ::
 ::    $Dependant.Enabled = $Control.Checked
@@ -4840,7 +4837,7 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
 ::    Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
-::    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:$($Execute -or $IsZip))
+::    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:($Execute -or $IsZip))
 ::
 ::    if ($DownloadedFile) {
 ::        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Temp:$Execute } else { $DownloadedFile })
@@ -5013,9 +5010,9 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 25 -Task "Configuring $AppName..."
 ::
-::    [String]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines += "`n"
-::    $ConfigLines += $CONFIG_7ZIP
+::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($CONFIG_7ZIP)
 ::
 ::    Import-RegistryConfiguration $AppName $ConfigLines
 ::}
@@ -5027,12 +5024,12 @@ if "%debug%"=="true" (
 ::
 ::function Set-AppsConfiguration {
 ::    param(
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$7zip,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$VLC,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$TeamViewer,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$qBittorrent,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Edge,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory = $True)]$Chrome
+::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$7zip,
+::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$VLC,
+::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$TeamViewer,
+::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$qBittorrent,
+::        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Edge,
+::        [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory = $True)]$Chrome
 ::    )
 ::
 ::    New-Activity 'Configuring apps...'
@@ -5129,9 +5126,9 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 40 -Task "Configuring $AppName..."
 ::
-::    [String]$ConfigLines = $CONFIG_TEAMVIEWER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines += "`n"
-::    $ConfigLines += $CONFIG_TEAMVIEWER
+::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_TEAMVIEWER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($CONFIG_TEAMVIEWER)
 ::
 ::    Import-RegistryConfiguration $AppName $ConfigLines
 ::}
@@ -5168,7 +5165,7 @@ if "%debug%"=="true" (
 ::function Import-RegistryConfiguration {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Content
+::        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory = $True)]$Content
 ::    )
 ::
 ::    Set-Variable -Option Constant LogIndentLevel 2
@@ -5179,7 +5176,7 @@ if "%debug%"=="true" (
 ::
 ::    Initialize-AppDirectory
 ::
-::    "Windows Registry Editor Version 5.00`n`n" + $Content | Out-File $RegFilePath
+::    "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Out-File $RegFilePath
 ::
 ::    try {
 ::        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
@@ -5559,7 +5556,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
 ::
-::    [String]$ConfigLines = "Windows Registry Editor Version 5.00`n"
+::    [Collections.Generic.List[String]]$ConfigLines = @()
 ::
 ::    try {
 ::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
@@ -5580,9 +5577,9 @@ if "%debug%"=="true" (
 ::                [String]$DefaultHandler = (Get-ItemProperty "Registry::$PersistentHandler").'(default)'
 ::
 ::                if ($DefaultHandler -and -not ($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
-::                    $ConfigLines += "`n[$Registry\PersistentHandler]`n"
-::                    $ConfigLines += "@=`"{098F2470-BAE0-11CD-B579-08002B30BFEB}`"`n"
-::                    $ConfigLines += "`"OriginalPersistentHandler`"=`"$DefaultHandler`"`n"
+::                    $ConfigLines.Add("`n[$Registry\PersistentHandler]`n")
+::                    $ConfigLines.Add("@=`"{098F2470-BAE0-11CD-B579-08002B30BFEB}`"`n")
+::                    $ConfigLines.Add("`"OriginalPersistentHandler`"=`"$DefaultHandler`"`n")
 ::                }
 ::
 ::            }
@@ -5591,7 +5588,7 @@ if "%debug%"=="true" (
 ::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
 ::    }
 ::
-::    if ($ConfigLines) {
+::    if ($ConfigLines.Count) {
 ::        Import-RegistryConfiguration $FileName $ConfigLines
 ::    } else {
 ::        Out-Success $LogIndentLevel
@@ -5613,21 +5610,7 @@ if "%debug%"=="true" (
 ::    Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
 ::
 ::    if ($PS_VERSION -ge 5) {
-::        Set-MpPreference -CheckForSignaturesBefore $True
-::        Set-MpPreference -DisableBlockAtFirstSeen $False
-::        Set-MpPreference -DisableCatchupQuickScan $False
-::        Set-MpPreference -DisableEmailScanning $False
-::        Set-MpPreference -DisableRemovableDriveScanning $False
-::        Set-MpPreference -DisableRestorePoint $False
-::        Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan $False
-::        Set-MpPreference -DisableScanningNetworkFiles $False
-::        Set-MpPreference -EnableFileHashComputation $True
-::        Set-MpPreference -EnableNetworkProtection Enabled
-::        Set-MpPreference -PUAProtection Enabled
-::        Set-MpPreference -AllowSwitchToAsyncInspection $True
-::        Set-MpPreference -MeteredConnectionUpdates $True
-::        Set-MpPreference -IntelTDTEnabled $True
-::        Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
+::        Set-WindowsSecurityConfiguration
 ::    }
 ::
 ::    Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
@@ -5640,40 +5623,40 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant LocalisedConfig $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH })
 ::
-::    [String]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines += "`n"
-::    $ConfigLines += $CONFIG_WINDOWS_HKEY_CLASSES_ROOT
-::    $ConfigLines += "`n"
-::    $ConfigLines += $CONFIG_WINDOWS_HKEY_CURRENT_USER
-::    $ConfigLines += "`n"
-::    $ConfigLines += $CONFIG_WINDOWS_HKEY_LOCAL_MACHINE
-::    $ConfigLines += "`n"
-::    $ConfigLines += $LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines += "`n"
-::    $ConfigLines += $LocalisedConfig
+::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($CONFIG_WINDOWS_HKEY_CLASSES_ROOT)
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($CONFIG_WINDOWS_HKEY_CURRENT_USER)
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($CONFIG_WINDOWS_HKEY_LOCAL_MACHINE)
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT'))
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($LocalisedConfig)
 ::
 ::    Write-ActivityProgress -PercentComplete 10
 ::
 ::    try {
 ::        foreach ($Registry in (Get-UsersRegistryKeys)) {
 ::            [String]$User = $Registry.Replace('HKEY_USERS\', '')
-::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n"
-::            $ConfigLines += "`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n"
+::            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
+::            $ConfigLines.Add("`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n")
 ::
-::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n"
-::            $ConfigLines += "`"EnableAppOffloading`"=dword:00000000`n"
+::            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n")
+::            $ConfigLines.Add("`"EnableAppOffloading`"=dword:00000000`n")
 ::
-::            $ConfigLines += "`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]`n"
-::            $ConfigLines += "`"DoNotTrack`"=dword:00000001`n"
+::            $ConfigLines.Add("`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]`n")
+::            $ConfigLines.Add("`"DoNotTrack`"=dword:00000001`n")
 ::
-::            $ConfigLines += "`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]`n"
-::            $ConfigLines += "`"EnableCortana`"=dword:00000000`n"
+::            $ConfigLines.Add("`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]`n")
+::            $ConfigLines.Add("`"EnableCortana`"=dword:00000000`n")
 ::        }
 ::
 ::        Set-Variable -Option Constant VolumeRegistries ((Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
 ::        foreach ($Registry in $VolumeRegistries) {
-::            $ConfigLines += "`n[$Registry]`n"
-::            $ConfigLines += "`"MaxCapacity`"=dword:000FFFFF`n"
+::            $ConfigLines.Add("`n[$Registry]`n")
+::            $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
 ::        }
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
@@ -5689,11 +5672,11 @@ if "%debug%"=="true" (
 ::
 ::function Set-WindowsConfiguration {
 ::    param(
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Base,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$PowerScheme,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$Search,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$FileAssociations,
-::        [System.Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Personalisation
+::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Base,
+::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$PowerScheme,
+::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$Search,
+::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$FileAssociations,
+::        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Personalisation
 ::    )
 ::
 ::    New-Activity 'Configuring Windows...'
@@ -5743,13 +5726,13 @@ if "%debug%"=="true" (
 ::        Set-WinUserLanguageList $LanguageList -Force
 ::    }
 ::
-::    [String]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines += "`n"
-::    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT
-::    $ConfigLines += "`n"
-::    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER
-::    $ConfigLines += "`n"
-::    $ConfigLines += $CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE
+::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT)
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER)
+::    $ConfigLines.Add("`n")
+::    $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE)
 ::
 ::    Write-ActivityProgress -PercentComplete 95
 ::
@@ -5757,14 +5740,14 @@ if "%debug%"=="true" (
 ::        if ($OS_VERSION -gt 10) {
 ::            Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
 ::            foreach ($Registry in $NotificationRegistries) {
-::                $ConfigLines += "`n[$Registry]`n"
-::                $ConfigLines += "`"IsPromoted`"=dword:00000001`n"
+::                $ConfigLines.Add("`n[$Registry]`n")
+::                $ConfigLines.Add("`"IsPromoted`"=dword:00000001`n")
 ::            }
 ::        }
 ::
 ::        foreach ($User in (Get-UsersRegistryKeys)) {
-::            $ConfigLines += "`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n"
-::            $ConfigLines += "`"RotatingLockScreenEnabled`"=dword:00000001`n"
+::            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
+::            $ConfigLines.Add("`"RotatingLockScreenEnabled`"=dword:00000001`n")
 ::        }
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
@@ -5774,6 +5757,29 @@ if "%debug%"=="true" (
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-WindowsPersonalisationConfig
+::
+::
+::#region functions > Configuration > Windows > Set-WindowsSecurityConfiguration
+::
+::function Set-WindowsSecurityConfiguration {
+::    Set-MpPreference -CheckForSignaturesBefore $True
+::    Set-MpPreference -DisableBlockAtFirstSeen $False
+::    Set-MpPreference -DisableCatchupQuickScan $False
+::    Set-MpPreference -DisableEmailScanning $False
+::    Set-MpPreference -DisableRemovableDriveScanning $False
+::    Set-MpPreference -DisableRestorePoint $False
+::    Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan $False
+::    Set-MpPreference -DisableScanningNetworkFiles $False
+::    Set-MpPreference -EnableFileHashComputation $True
+::    Set-MpPreference -EnableNetworkProtection Enabled
+::    Set-MpPreference -PUAProtection Enabled
+::    Set-MpPreference -AllowSwitchToAsyncInspection $True
+::    Set-MpPreference -MeteredConnectionUpdates $True
+::    Set-MpPreference -IntelTDTEnabled $True
+::    Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
+::}
+::
+::#endregion functions > Configuration > Windows > Set-WindowsSecurityConfiguration
 ::
 ::
 ::#region functions > Configuration > Windows > Tools > Start-OoShutUp10
@@ -5800,9 +5806,9 @@ if "%debug%"=="true" (
 ::    $CONFIG_OOSHUTUP10 | Out-File $ConfigFile -Encoding UTF8
 ::
 ::    if ($Silent) {
-::        Start-DownloadUnzipAndRun -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Params $ConfigFile
+::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute -Params $ConfigFile
 ::    } else {
-::        Start-DownloadUnzipAndRun -Execute:$Execute 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe'
+::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute
 ::    }
 ::}
 ::
@@ -6089,7 +6095,7 @@ if "%debug%"=="true" (
 ::        Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
 ::    }
 ::
-::    Start-DownloadUnzipAndRun -AVWarning -Execute:$Execute 'https://qiiwexc.github.io/d/Office_Installer+.zip'
+::    Start-DownloadUnzipAndRun 'https://qiiwexc.github.io/d/Office_Installer+.zip' -AVWarning -Execute:$Execute
 ::}
 ::
 ::#endregion functions > Installs > Install-MicrosoftOffice
@@ -6109,7 +6115,7 @@ if "%debug%"=="true" (
 ::    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1
 ::
 ::    Set-Variable -Option Constant Params $(if ($Silent) { '-install -no_desktop_icon' })
-::    Start-DownloadUnzipAndRun -Execute:$Execute 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Params:$Params -Silent:$Silent
+::    Start-DownloadUnzipAndRun 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Execute:$Execute -Params $Params -Silent:$Silent
 ::}
 ::
 ::#endregion functions > Installs > Install-Unchecky
@@ -6128,11 +6134,11 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 1)]$Execute
 ::    )
 ::
-::    [String[]]$AppIds = @()
+::    [Collections.Generic.List[String]]$AppIds = @()
 ::
 ::    foreach ($Checkbox in $NINITE_CHECKBOXES) {
 ::        if ($Checkbox.Checked) {
-::            $AppIds += $Checkbox.Name
+::            $AppIds.Add($Checkbox.Name)
 ::        }
 ::    }
 ::
@@ -6141,18 +6147,18 @@ if "%debug%"=="true" (
 ::    if ($OpenInBrowser) {
 ::        Open-InBrowser "https://ninite.com/?select=$Query"
 ::    } else {
-::        [String[]]$AppNames = @()
+::        [Collections.Generic.List[String]]$AppNames = @()
 ::
 ::        foreach ($Checkbox in $NINITE_CHECKBOXES) {
 ::            if ($Checkbox.Checked) {
-::                $AppNames += $Checkbox.Text
+::                $AppNames.Add($Checkbox.Text)
 ::            }
 ::        }
 ::
 ::        Set-Variable -Option Constant FileName "Ninite $($AppNames -Join ' ') Installer.exe"
 ::        Set-Variable -Option Constant DownloadUrl "https://ninite.com/$Query/ninite.exe"
 ::
-::        Start-DownloadUnzipAndRun -Execute:$Execute $DownloadUrl $FileName
+::        Start-DownloadUnzipAndRun $DownloadUrl $FileName -Execute:$Execute
 ::    }
 ::}
 ::
