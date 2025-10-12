@@ -44,7 +44,7 @@
   <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
   <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
   <Association Identifier=".mov" ProgId="VLC.mov" ApplicationName="VLC media player" />
-  <Association Identifier=".mp2" ProgId="VLC.mp2" ApplicationName="VLC media player" _resistant="false" />
+  <Association Identifier=".mp2" ProgId="VLC.mp2" ApplicationName="VLC media player" _resistant="true" />
   <Association Identifier=".mp2v" ProgId="VLC.mp2v" ApplicationName="VLC media player" />
   <Association Identifier=".mp3" ProgId="VLC.mp3" ApplicationName="VLC media player" />
   <Association Identifier=".mp4" ProgId="VLC.mp4" ApplicationName="VLC media player" />
