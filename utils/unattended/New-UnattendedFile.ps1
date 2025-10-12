@@ -9,9 +9,9 @@ function New-UnattendedFile {
     . "$UnattendedPath\Set-AppRemovalList.ps1"
     . "$UnattendedPath\Set-CapabilitiesRemovalList.ps1"
     . "$UnattendedPath\Set-FeaturesRemovalList.ps1"
+    . "$UnattendedPath\Set-InlineFiles.ps1"
     . "$UnattendedPath\Set-LocaleSettings.ps1"
     . "$UnattendedPath\Set-PowerSchemeConfiguration.ps1"
-    . "$UnattendedPath\Set-RegistryConfiguration.ps1"
     . "$UnattendedPath\Set-WindowsSecurityConfiguration.ps1"
 
     Write-LogInfo 'Building unattended files...'
@@ -38,7 +38,7 @@ function New-UnattendedFile {
 
         $TemplateContent = Set-PowerSchemeConfiguration $ConfigsPath $TemplateContent
 
-        $TemplateContent = Set-RegistryConfiguration $Locale $ConfigsPath $TemplateContent
+        $TemplateContent = Set-InlineFiles $Locale $ConfigsPath $TemplateContent
 
         $TemplateContent | Out-File $OutputFileName -Encoding UTF8
     }
