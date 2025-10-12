@@ -56,7 +56,6 @@ Microsoft.People                               # Required for & included with Ma
 Microsoft.PowerAutomateDesktop                 # Desktop automation tool (RPA)
 Microsoft.Print3D                              # 3D printing preparation software
 Microsoft.RemoteDesktop                        # Remote Desktop client app
-Microsoft.ScreenSketch                         # Snipping Tool (Screenshot and annotation tool)
 Microsoft.SkypeApp                             # Skype communication app (Universal Windows Platform version)
 Microsoft.StartExperiencesApp                  # This app powers Windows Widgets My Feed
 Microsoft.Todos                                # To-do list and task management app

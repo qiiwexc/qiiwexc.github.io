@@ -45,7 +45,6 @@ Set-Variable -Option Constant CONFIG_FILE_ASSOCIATIONS @(
     @{Method = 'Registry'; Application = 'VLC.mkv'; Extension = '.mkv' },
     @{Method = 'Registry'; Application = 'VLC.mod'; Extension = '.mod' },
     @{Method = 'Registry'; Application = 'VLC.mov'; Extension = '.mov' },
-    @{Method = 'Registry'; Application = 'VLC.mp2'; Extension = '.mp2' },
     @{Method = 'Registry'; Application = 'VLC.mp2v'; Extension = '.mp2v' },
     @{Method = 'Registry'; Application = 'VLC.mp3'; Extension = '.mp3' },
     @{Method = 'Registry'; Application = 'VLC.mp4'; Extension = '.mp4' },
