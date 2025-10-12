@@ -1,6 +1,6 @@
 function Start-Download {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
+        [String][Parameter(Position = 0, Mandatory)]$URL,
         [String][Parameter(Position = 1)]$SaveAs,
         [Switch]$Temp
     )

@@ -1,7 +1,7 @@
 function Set-FeaturesRemovalList {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$ConfigsPath,
-        [Parameter(Position = 1, Mandatory = $True)]$TemplateContent
+        [String][Parameter(Position = 0, Mandatory)]$ConfigsPath,
+        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)][AllowEmptyString()]$TemplateContent
     )
 
     . "$ConfigsPath\Windows\Features to remove.ps1"

@@ -1,9 +1,9 @@
 function New-UnattendedFile {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$UnattendedPath,
-        [String][Parameter(Position = 1, Mandatory = $True)]$SourcePath,
-        [String][Parameter(Position = 2, Mandatory = $True)]$AssetsPath,
-        [String][Parameter(Position = 3, Mandatory = $True)]$FileNameTemplate
+        [String][Parameter(Position = 0, Mandatory)]$UnattendedPath,
+        [String][Parameter(Position = 1, Mandatory)]$SourcePath,
+        [String][Parameter(Position = 2, Mandatory)]$AssetsPath,
+        [String][Parameter(Position = 3, Mandatory)]$FileNameTemplate
     )
 
     . "$UnattendedPath\Set-AppRemovalList.ps1"

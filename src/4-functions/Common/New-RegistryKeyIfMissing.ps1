@@ -1,6 +1,6 @@
 function New-RegistryKeyIfMissing {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$RegistryPath
+        [String][Parameter(Position = 0, Mandatory)]$RegistryPath
     )
 
     if (-not (Test-Path $RegistryPath)) {

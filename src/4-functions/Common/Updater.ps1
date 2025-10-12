@@ -53,7 +53,7 @@ function Get-UpdateAvailability {
 
 function Get-NewVersion {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$AppBatFile
+        [String][Parameter(Position = 0, Mandatory)]$AppBatFile
     )
 
     Write-LogWarning 'Downloading new version...'

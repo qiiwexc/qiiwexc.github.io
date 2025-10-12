@@ -1,6 +1,6 @@
 ﻿function Set-WindowsBaseConfiguration {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
+        [String][Parameter(Position = 0, Mandatory)]$FileName
     )
 
     Set-Variable -Option Constant LogIndentLevel 1

@@ -1,20 +1,20 @@
 function Write-LogInfo {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+        [String][Parameter(Position = 0, Mandatory)]$Message
     )
     Write-Log 'INFO' $Message
 }
 
 function Write-LogWarning {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+        [String][Parameter(Position = 0, Mandatory)]$Message
     )
     Write-Log 'WARN' "$(Get-Emoji '26A0') $Message"
 }
 
 function Write-LogError {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Message
+        [String][Parameter(Position = 0, Mandatory)]$Message
     )
     Write-Log 'ERROR' "$(Get-Emoji '274C') $Message"
 }
@@ -29,8 +29,8 @@ function Out-Failure {
 
 function Write-LogException {
     param(
-        [Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+        [Object][Parameter(Position = 0, Mandatory)]$Exception,
+        [String][Parameter(Position = 1, Mandatory)]$Message
     )
 
     Write-LogError "$($Message): $($Exception.Exception.Message)"
@@ -38,8 +38,8 @@ function Write-LogException {
 
 function Write-Log {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('INFO', 'WARN', 'ERROR')]$Level,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Message
+        [String][Parameter(Position = 0, Mandatory)][ValidateSet('INFO', 'WARN', 'ERROR')]$Level,
+        [String][Parameter(Position = 1, Mandatory)]$Message
     )
 
     Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Message"
@@ -62,7 +62,7 @@ function Write-Log {
 
 function Get-Emoji {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Code
+        [String][Parameter(Position = 0, Mandatory)]$Code
     )
 
     Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))

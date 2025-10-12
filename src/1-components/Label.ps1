@@ -1,6 +1,6 @@
 function New-Label {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Text
+        [String][Parameter(Position = 0, Mandatory)]$Text
     )
 
     Set-Variable -Option Constant Label (New-Object Windows.Forms.Label)

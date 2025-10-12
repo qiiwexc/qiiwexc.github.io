@@ -1,6 +1,6 @@
 function Open-InBrowser {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$URL
+        [String][Parameter(Position = 0, Mandatory)]$URL
     )
 
     Write-LogInfo "Opening URL in the default browser: $URL"

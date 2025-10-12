@@ -1,6 +1,6 @@
 ﻿function Set-TeamViewerConfiguration {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+        [String][Parameter(Position = 0, Mandatory)]$AppName
     )
 
     Write-ActivityProgress -PercentComplete 40 -Task "Configuring $AppName..."

@@ -1,6 +1,6 @@
 function Remove-File {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$FilePath,
+        [String][Parameter(Position = 0, Mandatory)]$FilePath,
         [Switch]$Silent
     )
 

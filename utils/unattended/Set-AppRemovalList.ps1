@@ -1,7 +1,7 @@
 function Set-AppRemovalList {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$ConfigsPath,
-        [Parameter(Position = 1, Mandatory = $True)]$TemplateContent
+        [String][Parameter(Position = 0, Mandatory)]$ConfigsPath,
+        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)][AllowEmptyString()]$TemplateContent
     )
 
     [Collections.Generic.List[String]]$AppList = Get-Content "$ConfigsPath\Windows\Tools\Debloat app list.txt"

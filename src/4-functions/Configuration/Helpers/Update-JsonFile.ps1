@@ -1,9 +1,9 @@
 function Update-JsonFile {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-        [String][Parameter(Position = 1, Mandatory = $True)]$ProcessName,
-        [String][Parameter(Position = 2, Mandatory = $True)]$Content,
-        [String][Parameter(Position = 3, Mandatory = $True)]$Path
+        [String][Parameter(Position = 0, Mandatory)]$AppName,
+        [String][Parameter(Position = 1, Mandatory)]$ProcessName,
+        [String][Parameter(Position = 2, Mandatory)]$Content,
+        [String][Parameter(Position = 3, Mandatory)]$Path
     )
 
     Set-Variable -Option Constant LogIndentLevel 2

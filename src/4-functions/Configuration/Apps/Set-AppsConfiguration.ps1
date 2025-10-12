@@ -1,11 +1,11 @@
 function Set-AppsConfiguration {
     param(
-        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$7zip,
-        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$VLC,
-        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$TeamViewer,
-        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$qBittorrent,
-        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Edge,
-        [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory = $True)]$Chrome
+        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$7zip,
+        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$VLC,
+        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$TeamViewer,
+        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$qBittorrent,
+        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory)]$Edge,
+        [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory)]$Chrome
     )
 
     New-Activity 'Configuring apps...'

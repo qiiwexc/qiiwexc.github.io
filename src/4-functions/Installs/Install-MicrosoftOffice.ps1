@@ -1,6 +1,6 @@
 function Install-MicrosoftOffice {
     param(
-        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute
+        [Switch][Parameter(Position = 0, Mandatory)]$Execute
     )
 
     Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })

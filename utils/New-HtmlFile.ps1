@@ -1,7 +1,7 @@
 function New-HtmlFile {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$AssetsPath,
-        [Collections.Generic.List[Object]][Parameter(Position = 1, Mandatory = $True)]$Config
+        [String][Parameter(Position = 0, Mandatory)]$AssetsPath,
+        [Collections.Generic.List[Object]][Parameter(Position = 1, Mandatory)]$Config
     )
 
     Write-LogInfo 'Building web page...'

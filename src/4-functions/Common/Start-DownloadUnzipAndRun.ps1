@@ -1,6 +1,6 @@
 function Start-DownloadUnzipAndRun {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
+        [String][Parameter(Position = 0, Mandatory)]$URL,
         [String][Parameter(Position = 1)]$FileName,
         [String][Parameter(Position = 2)]$Params,
         [Switch]$AVWarning,

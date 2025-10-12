@@ -1,7 +1,7 @@
 function Start-OoShutUp10 {
     param(
-        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
-        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+        [Switch][Parameter(Position = 0, Mandatory)]$Execute,
+        [Switch][Parameter(Position = 1, Mandatory)]$Silent
     )
 
     Write-LogInfo 'Starting OOShutUp10++ utility...'

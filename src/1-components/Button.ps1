@@ -1,6 +1,6 @@
 function New-Button {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+        [String][Parameter(Position = 0, Mandatory)]$Text,
         [ScriptBlock][Parameter(Position = 1)]$Function,
         [Switch]$Disabled
     )

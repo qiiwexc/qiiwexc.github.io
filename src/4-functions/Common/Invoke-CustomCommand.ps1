@@ -1,6 +1,6 @@
 function Invoke-CustomCommand {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Command,
+        [String][Parameter(Position = 0, Mandatory)]$Command,
         [String]$WorkingDirectory,
         [Switch]$BypassExecutionPolicy,
         [Switch]$Elevated,
