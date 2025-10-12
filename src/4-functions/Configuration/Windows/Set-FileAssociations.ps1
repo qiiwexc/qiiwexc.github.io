@@ -6,6 +6,18 @@ function Set-FileAssociations {
     Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
     Set-Variable -Option Constant SophiaScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
 
+    [Collections.Generic.List[Object]]$AppAssociations = @()
+
+    Select-Xml -Xml ([xml]$CONFIG_APP_ASSOCIATIONS) -XPath '//Association' | ForEach-Object {
+        [String][ValidateSet('Registry', 'Sophia')]$Method = $(if ($_.Node._resistant -eq 'true') { 'Sophia' } else { 'Registry' })
+
+        $AppAssociations.Add(@{
+                Method      = $Method
+                Application = $_.Node.ProgId
+                Extension   = $_.Node.Identifier
+            })
+    }
+
     Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
     if (-not $NoConnection) {
         Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
@@ -15,11 +27,11 @@ function Set-FileAssociations {
         . $SophiaScriptPath
     }
 
-    Set-Variable -Option Constant FileTypeCount ($CONFIG_FILE_ASSOCIATIONS.Count)
+    Set-Variable -Option Constant FileTypeCount ($AppAssociations.Count)
     Set-Variable -Option Constant Step ([Math]::Floor(20 / $FileTypeCount))
 
     [Int]$Iteration = 1
-    foreach ($FileAssociation in $CONFIG_FILE_ASSOCIATIONS) {
+    foreach ($FileAssociation in $AppAssociations) {
         [Int]$Percentage = 70 + $Iteration * $Step
         Write-ActivityProgress -PercentComplete $Percentage
         $Iteration++

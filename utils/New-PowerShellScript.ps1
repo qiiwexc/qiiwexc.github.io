@@ -12,7 +12,7 @@ function New-PowerShellScript {
     Set-Variable -Option Constant ProjectFiles (Get-ChildItem -Recurse -File $SourcePath)
     Set-Variable -Option Constant FileCount $ProjectFiles.Length
 
-    [Collections.Generic.List[String]]$OutputStrings = @()
+    [Collections.Generic.List[String]]$OutputLines = @()
 
     [Int]$CurrentFileNum = 1
     [String]$PreviousRegion = ''
@@ -25,10 +25,10 @@ function New-PowerShellScript {
         [String]$CurrentRegion = $FilePath.Replace('\src\', '|').Split('|')[1].Replace('\', ' > ') -replace '\..{1,}$', '' -replace '\d{1,2}(-|\s)', ''
 
         if ($CurrentFileNum -eq 1) {
-            $OutputStrings.Add("#region $CurrentRegion`n")
+            $OutputLines.Add("#region $CurrentRegion`n")
         } else {
-            $OutputStrings.Add("`n#endregion $PreviousRegion`n")
-            $OutputStrings.Add("`n#region $CurrentRegion`n")
+            $OutputLines.Add("`n#endregion $PreviousRegion`n")
+            $OutputLines.Add("`n#region $CurrentRegion`n")
         }
 
         $PreviousRegion = $CurrentRegion
@@ -39,23 +39,23 @@ function New-PowerShellScript {
             [String]$VariableName = "CONFIG_$(($FileName.Replace(' ', '_') -replace '\..{1,}$', '').ToUpper())"
             [Collections.Generic.List[String]]$EscapedContent = $Content.Replace("'", '"')
             $EscapedContent[0] = "Set-Variable -Option Constant $VariableName '$($EscapedContent[0])"
-            $OutputStrings += $EscapedContent
-            $OutputStrings.Add("'")
+            $OutputLines += $EscapedContent
+            $OutputLines.Add("'")
         } else {
-            $OutputStrings += $Content
+            $OutputLines += $Content
         }
 
         if ($CurrentFileNum -eq $FileCount) {
-            $OutputStrings.Add("`n#endregion $CurrentRegion")
+            $OutputLines.Add("`n#endregion $CurrentRegion")
         }
 
         $CurrentFileNum++
     }
 
-    $Config | ForEach-Object { $OutputStrings = $OutputStrings.Replace("{$($_.key)}", $_.value) }
+    $Config | ForEach-Object { $OutputLines = $OutputLines.Replace("{$($_.key)}", $_.value) }
 
     Write-LogInfo "Writing output file $Ps1File"
-    $OutputStrings | Out-File $Ps1File
+    $OutputLines | Out-File $Ps1File
 
     Out-Success
 }

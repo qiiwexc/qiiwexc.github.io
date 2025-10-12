@@ -6,31 +6,31 @@ function New-BatchScript {
 
     Write-LogInfo 'Building batch script...'
 
-    [Collections.Generic.List[String]]$PowerShellStrings = Get-Content $Ps1File
+    [Collections.Generic.List[String]]$PowerShellLines = Get-Content $Ps1File
 
-    [Collections.Generic.List[String]]$BatchStrings = "@echo off`n"
-    $BatchStrings.Add("if `"%~1`"==`"Debug`" set debug=true`n")
-    $BatchStrings.Add("set `"psfile=%temp%\$ProjectName.ps1`"`n")
-    $BatchStrings.Add('> "%psfile%" (')
-    $BatchStrings.Add("  for /f `"delims=`" %%A in ('findstr `"^::`" `"%~f0`"') do (")
-    $BatchStrings.Add('    set "line=%%A"')
-    $BatchStrings.Add('    setlocal enabledelayedexpansion')
-    $BatchStrings.Add('    echo(!line:~2!')
-    $BatchStrings.Add('    endlocal')
-    $BatchStrings.Add('  )')
-    $BatchStrings.Add(")`n")
-    $BatchStrings.Add('if "%debug%"=="true" (')
-    $BatchStrings.Add("  powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%' -DevMode`"")
-    $BatchStrings.Add(') else (')
-    $BatchStrings.Add("  powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%'`"")
-    $BatchStrings.Add(")`n")
+    [Collections.Generic.List[String]]$BatchLines = "@echo off`n"
+    $BatchLines.Add("if `"%~1`"==`"Debug`" set debug=true`n")
+    $BatchLines.Add("set `"psfile=%temp%\$ProjectName.ps1`"`n")
+    $BatchLines.Add('> "%psfile%" (')
+    $BatchLines.Add("  for /f `"delims=`" %%A in ('findstr `"^::`" `"%~f0`"') do (")
+    $BatchLines.Add('    set "line=%%A"')
+    $BatchLines.Add('    setlocal enabledelayedexpansion')
+    $BatchLines.Add('    echo(!line:~2!')
+    $BatchLines.Add('    endlocal')
+    $BatchLines.Add('  )')
+    $BatchLines.Add(")`n")
+    $BatchLines.Add('if "%debug%"=="true" (')
+    $BatchLines.Add("  powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%' -DevMode`"")
+    $BatchLines.Add(') else (')
+    $BatchLines.Add("  powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%'`"")
+    $BatchLines.Add(")`n")
 
-    foreach ($String in $PowerShellStrings) {
-        $BatchStrings.Add("::$($String.Replace("`n", "`n::"))")
+    foreach ($Line in $PowerShellLines) {
+        $BatchLines.Add("::$($Line.Replace("`n", "`n::"))")
     }
 
     Write-LogInfo "Writing batch file $BatchFile"
-    $BatchStrings | Out-File $BatchFile -Encoding ASCII
+    $BatchLines | Out-File $BatchFile -Encoding ASCII
 
     Out-Success
 }
