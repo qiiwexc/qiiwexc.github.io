@@ -32,6 +32,7 @@ function Set-InlineFiles {
 
 Set-Variable -Option Constant KEY_FILE_MAP @(
     @{Key = 'CONFIG_7ZIP'; File = 'Apps\7zip.reg' },
+    @{Key = 'CONFIG_APP_ASSOCIATIONS'; File = 'Windows\App associations.xml' },
     @{Key = 'CONFIG_MICROSOFT_OFFICE'; File = 'Apps\Microsoft Office.reg' },
     @{Key = 'CONFIG_QBITTORRENT_LOCALIZED'; File = 'Apps\qBittorrent {LOCALE}.ini' },
     @{Key = 'CONFIG_QBITTORRENT'; File = 'Apps\qBittorrent base.ini' },
