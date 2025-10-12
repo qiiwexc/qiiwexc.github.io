@@ -10,21 +10,23 @@ function Set-InlineFiles {
 
         [Collections.Generic.List[String]]$FileContent = Get-Content "$ConfigsPath\$FileName"
 
-        [Collections.Generic.List[String]]$EscapedContent = @()
-        foreach ($Line in $FileContent) {
-            $EscapedContent.Add([Security.SecurityElement]::Escape($Line))
-        }
-
         [Collections.Generic.List[String]]$FullContent = @()
 
         if ($FileName -match '.reg$') {
             $FullContent = "Windows Registry Editor Version 5.00`n"
-            $FullContent += $EscapedContent.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\DefaultUser')
+            $FullContent += $FileContent.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\DefaultUser')
+        } elseif ($FileName -match '.xml$') {
+            $FullContent += $FileContent.Replace(' _resistant="true"', '')
         } else {
-            $FullContent = $EscapedContent
+            $FullContent = $FileContent
         }
 
-        $TemplateContent = $TemplateContent.Replace("{$($_.Key)}", ($FullContent -join "`n"))
+        [Collections.Generic.List[String]]$EscapedContent = @()
+        foreach ($Line in $FullContent) {
+            $EscapedContent.Add([Security.SecurityElement]::Escape($Line))
+        }
+
+        $TemplateContent = $TemplateContent.Replace("{$($_.Key)}", ($EscapedContent -join "`n"))
     }
 
     return $TemplateContent
