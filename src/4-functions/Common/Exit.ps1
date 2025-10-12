@@ -1,4 +1,8 @@
 function Reset-State {
+    param(
+        [Switch][Parameter(Position = 0)]$Update
+    )
+
     Write-LogInfo 'Cleaning up files on exit...'
 
     Set-Variable -Option Constant PowerShellScript "$PATH_TEMP_DIR\qiiwexc.ps1"
@@ -7,7 +11,9 @@ function Reset-State {
     Remove-Directory $PATH_OOSHUTUP10 -Silent
     Remove-Directory $PATH_APP_DIR -Silent
 
-    Remove-File $PowerShellScript -Silent
+    if (-not $Update) {
+        Remove-File $PowerShellScript -Silent
+    }
 
     $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
     Write-Host ''
