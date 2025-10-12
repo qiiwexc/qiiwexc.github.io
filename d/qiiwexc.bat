@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.12')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.13')
 ::
 ::#endregion init > Version
 ::
@@ -1299,6 +1299,105 @@ if "%debug%"=="true" (
 ::#endregion configs > Installs > Office Installer
 ::
 ::
+::#region configs > Windows > App associations
+::
+::Set-Variable -Option Constant CONFIG_APP_ASSOCIATIONS '<?xml version="1.0" encoding="UTF-8"?>
+::<DefaultAssociations>
+::  <Association Identifier=".3g2" ProgId="VLC.3g2" ApplicationName="VLC media player" />
+::  <Association Identifier=".3gp" ProgId="VLC.3gp" ApplicationName="VLC media player" />
+::  <Association Identifier=".3gp2" ProgId="VLC.3gp2" ApplicationName="VLC media player" />
+::  <Association Identifier=".3gpp" ProgId="VLC.3gpp" ApplicationName="VLC media player" />
+::  <Association Identifier=".7z" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
+::  <Association Identifier=".aac" ProgId="VLC.aac" ApplicationName="VLC media player" />
+::  <Association Identifier=".adt" ProgId="VLC.adt" ApplicationName="VLC media player" />
+::  <Association Identifier=".adts" ProgId="VLC.adts" ApplicationName="VLC media player" />
+::  <Association Identifier=".aif" ProgId="VLC.aif" ApplicationName="VLC media player" />
+::  <Association Identifier=".aifc" ProgId="VLC.aifc" ApplicationName="VLC media player" />
+::  <Association Identifier=".aiff" ProgId="VLC.aiff" ApplicationName="VLC media player" />
+::  <Association Identifier=".asf" ProgId="VLC.asf" ApplicationName="VLC media player" />
+::  <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
+::  <Association Identifier=".au" ProgId="VLC.au" ApplicationName="VLC media player" />
+::  <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
+::  <Association Identifier=".bmp" ProgId="PhotoViewer.FileAssoc.Bitmap" ApplicationName="Windows Photo Viewer" />
+::  <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
+::  <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
+::  <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
+::  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="Contacts" />
+::  <Association Identifier=".cr2" ProgId="TIFImage.Document" ApplicationName="Windows Photo Viewer" />
+::  <Association Identifier=".dib" ProgId="PhotoViewer.FileAssoc.Bitmap" ApplicationName="Windows Photo Viewer" />
+::  <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
+::  <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
+::  <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="Contacts" />
+::  <Association Identifier=".gz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
+::  <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".iso" ProgId="Windows.IsoFile" ApplicationName="File Explorer" />
+::  <Association Identifier=".jxr" ProgId="wdpfile" ApplicationName="Windows Photo Viewer" />
+::  <Association Identifier=".m1v" ProgId="VLC.m1v" ApplicationName="VLC media player" />
+::  <Association Identifier=".m2t" ProgId="VLC.m2t" ApplicationName="VLC media player" />
+::  <Association Identifier=".m2ts" ProgId="VLC.m2ts" ApplicationName="VLC media player" />
+::  <Association Identifier=".m2v" ProgId="VLC.m2v" ApplicationName="VLC media player" />
+::  <Association Identifier=".m3u" ProgId="VLC.m3u" ApplicationName="VLC media player" />
+::  <Association Identifier=".m4a" ProgId="VLC.m4a" ApplicationName="VLC media player" />
+::  <Association Identifier=".m4v" ProgId="VLC.m4v" ApplicationName="VLC media player" />
+::  <Association Identifier=".mhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".mid" ProgId="VLC.mid" ApplicationName="VLC media player" />
+::  <Association Identifier=".mka" ProgId="VLC.mka" ApplicationName="VLC media player" />
+::  <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
+::  <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
+::  <Association Identifier=".mov" ProgId="VLC.mov" ApplicationName="VLC media player" />
+::  <Association Identifier=".mp2" ProgId="VLC.mp2" ApplicationName="VLC media player" _resistant="false" />
+::  <Association Identifier=".mp2v" ProgId="VLC.mp2v" ApplicationName="VLC media player" />
+::  <Association Identifier=".mp3" ProgId="VLC.mp3" ApplicationName="VLC media player" />
+::  <Association Identifier=".mp4" ProgId="VLC.mp4" ApplicationName="VLC media player" />
+::  <Association Identifier=".mp4v" ProgId="VLC.mp4v" ApplicationName="VLC media player" />
+::  <Association Identifier=".mpa" ProgId="VLC.mpa" ApplicationName="VLC media player" />
+::  <Association Identifier=".mpe" ProgId="VLC.mpe" ApplicationName="VLC media player" />
+::  <Association Identifier=".mpeg" ProgId="VLC.mpeg" ApplicationName="VLC media player" />
+::  <Association Identifier=".mpg" ProgId="VLC.mpg" ApplicationName="VLC media player" />
+::  <Association Identifier=".mpv2" ProgId="VLC.mpv2" ApplicationName="VLC media player" />
+::  <Association Identifier=".mts" ProgId="VLC.mts" ApplicationName="VLC media player" />
+::  <Association Identifier=".pdf" ProgId="ChromePDF" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".rar" ProgId="7-Zip.rar" ApplicationName="7-Zip File Manager" />
+::  <Association Identifier=".rmi" ProgId="VLC.rmi" ApplicationName="VLC media player" />
+::  <Association Identifier=".shtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".snd" ProgId="VLC.snd" ApplicationName="VLC media player" />
+::  <Association Identifier=".svg" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".tar" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
+::  <Association Identifier=".tbz2" ProgId="7-Zip.tbz2" ApplicationName="7-Zip File Manager" />
+::  <Association Identifier=".tgz" ProgId="7-Zip.tgz" ApplicationName="7-Zip File Manager" />
+::  <Association Identifier=".torrent" ProgId="qBittorrent.File.Torrent" ApplicationName="qBittorrent - A Bittorrent Client" />
+::  <Association Identifier=".ts" ProgId="VLC.ts" ApplicationName="VLC media player" />
+::  <Association Identifier=".tts" ProgId="VLC.tts" ApplicationName="VLC media player" />
+::  <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
+::  <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="Contacts" />
+::  <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
+::  <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
+::  <Association Identifier=".wdp" ProgId="wdpfile" ApplicationName="Windows Photo Viewer" />
+::  <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
+::  <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
+::  <Association Identifier=".wpl" ProgId="VLC.wpl" ApplicationName="VLC media player" />
+::  <Association Identifier=".wsz" ProgId="VLC.wsz" ApplicationName="VLC media player" />
+::  <Association Identifier=".wtv" ProgId="VLC.wtv" ApplicationName="VLC media player" />
+::  <Association Identifier=".wvx" ProgId="VLC.wvx" ApplicationName="VLC media player" />
+::  <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
+::  <Association Identifier="http" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier="https" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier="mailto" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier="mms" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier="tel" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier="webcal" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::</DefaultAssociations>
+::'
+::
+::#endregion configs > Windows > App associations
+::
+::
 ::#region configs > Windows > Capabilities to remove
 ::
 ::Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE @(
@@ -1328,103 +1427,6 @@ if "%debug%"=="true" (
 ::)
 ::
 ::#endregion configs > Windows > Features to remove
-::
-::
-::#region configs > Windows > File associations
-::
-::Set-Variable -Option Constant CONFIG_FILE_ASSOCIATIONS @(
-::    @{Method = 'Registry'; Application = '7-Zip.rar'; Extension = '.rar' },
-::    @{Method = 'Registry'; Application = '7-Zip.tbz2'; Extension = '.tbz2' },
-::    @{Method = 'Registry'; Application = '7-Zip.tgz'; Extension = '.tgz' },
-::    @{Method = 'Registry'; Application = '7-Zip.txz'; Extension = '.txz' },
-::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.7z' },
-::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.bz2' },
-::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.gz' },
-::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.tar' },
-::    @{Method = 'Registry'; Application = 'ArchiveFolder'; Extension = '.xz' },
-::    @{Method = 'Registry'; Application = 'CABFolder'; Extension = '.cab' },
-::    @{Method = 'Registry'; Application = 'contact_wab_auto_file'; Extension = '.contact' },
-::    @{Method = 'Registry'; Application = 'group_wab_auto_file'; Extension = '.group' },
-::    @{Method = 'Registry'; Application = 'PhotoViewer.FileAssoc.Bitmap'; Extension = '.bmp' },
-::    @{Method = 'Registry'; Application = 'PhotoViewer.FileAssoc.Bitmap'; Extension = '.dib' },
-::    @{Method = 'Registry'; Application = 'qBittorrent.File.Torrent'; Extension = '.torrent' },
-::    @{Method = 'Registry'; Application = 'TIFImage.Document'; Extension = '.cr2' },
-::    @{Method = 'Registry'; Application = 'vcard_wab_auto_file'; Extension = '.vcf' },
-::    @{Method = 'Registry'; Application = 'VLC.3g2'; Extension = '.3g2' },
-::    @{Method = 'Registry'; Application = 'VLC.3gp'; Extension = '.3gp' },
-::    @{Method = 'Registry'; Application = 'VLC.3gp2'; Extension = '.3gp2' },
-::    @{Method = 'Registry'; Application = 'VLC.3gpp'; Extension = '.3gpp' },
-::    @{Method = 'Registry'; Application = 'VLC.aac'; Extension = '.aac' },
-::    @{Method = 'Registry'; Application = 'VLC.adt'; Extension = '.adt' },
-::    @{Method = 'Registry'; Application = 'VLC.adts'; Extension = '.adts' },
-::    @{Method = 'Registry'; Application = 'VLC.aif'; Extension = '.aif' },
-::    @{Method = 'Registry'; Application = 'VLC.aifc'; Extension = '.aifc' },
-::    @{Method = 'Registry'; Application = 'VLC.aiff'; Extension = '.aiff' },
-::    @{Method = 'Registry'; Application = 'VLC.asf'; Extension = '.asf' },
-::    @{Method = 'Registry'; Application = 'VLC.asx'; Extension = '.asx' },
-::    @{Method = 'Registry'; Application = 'VLC.au'; Extension = '.au' },
-::    @{Method = 'Registry'; Application = 'VLC.avi'; Extension = '.avi' },
-::    @{Method = 'Registry'; Application = 'VLC.cda'; Extension = '.cda' },
-::    @{Method = 'Registry'; Application = 'VLC.dvr-ms'; Extension = '.dvr-ms' },
-::    @{Method = 'Registry'; Application = 'VLC.flac'; Extension = '.flac' },
-::    @{Method = 'Registry'; Application = 'VLC.m1v'; Extension = '.m1v' },
-::    @{Method = 'Registry'; Application = 'VLC.m2t'; Extension = '.m2t' },
-::    @{Method = 'Registry'; Application = 'VLC.m2ts'; Extension = '.m2ts' },
-::    @{Method = 'Registry'; Application = 'VLC.m2v'; Extension = '.m2v' },
-::    @{Method = 'Registry'; Application = 'VLC.m3u'; Extension = '.m3u' },
-::    @{Method = 'Registry'; Application = 'VLC.m4a'; Extension = '.m4a' },
-::    @{Method = 'Registry'; Application = 'VLC.m4v'; Extension = '.m4v' },
-::    @{Method = 'Registry'; Application = 'VLC.mid'; Extension = '.mid' },
-::    @{Method = 'Registry'; Application = 'VLC.mka'; Extension = '.mka' },
-::    @{Method = 'Registry'; Application = 'VLC.mkv'; Extension = '.mkv' },
-::    @{Method = 'Registry'; Application = 'VLC.mod'; Extension = '.mod' },
-::    @{Method = 'Registry'; Application = 'VLC.mov'; Extension = '.mov' },
-::    @{Method = 'Registry'; Application = 'VLC.mp2v'; Extension = '.mp2v' },
-::    @{Method = 'Registry'; Application = 'VLC.mp3'; Extension = '.mp3' },
-::    @{Method = 'Registry'; Application = 'VLC.mp4'; Extension = '.mp4' },
-::    @{Method = 'Registry'; Application = 'VLC.mp4v'; Extension = '.mp4v' },
-::    @{Method = 'Registry'; Application = 'VLC.mpa'; Extension = '.mpa' },
-::    @{Method = 'Registry'; Application = 'VLC.mpe'; Extension = '.mpe' },
-::    @{Method = 'Registry'; Application = 'VLC.mpeg'; Extension = '.mpeg' },
-::    @{Method = 'Registry'; Application = 'VLC.mpg'; Extension = '.mpg' },
-::    @{Method = 'Registry'; Application = 'VLC.mpv2'; Extension = '.mpv2' },
-::    @{Method = 'Registry'; Application = 'VLC.mts'; Extension = '.mts' },
-::    @{Method = 'Registry'; Application = 'VLC.rmi'; Extension = '.rmi' },
-::    @{Method = 'Registry'; Application = 'VLC.snd'; Extension = '.snd' },
-::    @{Method = 'Registry'; Application = 'VLC.ts'; Extension = '.ts' },
-::    @{Method = 'Registry'; Application = 'VLC.tts'; Extension = '.tts' },
-::    @{Method = 'Registry'; Application = 'VLC.vlt'; Extension = '.vlt' },
-::    @{Method = 'Registry'; Application = 'VLC.wav'; Extension = '.wav' },
-::    @{Method = 'Registry'; Application = 'VLC.wma'; Extension = '.wma' },
-::    @{Method = 'Registry'; Application = 'VLC.wmv'; Extension = '.wmv' },
-::    @{Method = 'Registry'; Application = 'VLC.wpl'; Extension = '.wpl' },
-::    @{Method = 'Registry'; Application = 'VLC.wsz'; Extension = '.wsz' },
-::    @{Method = 'Registry'; Application = 'VLC.wtv'; Extension = '.wtv' },
-::    @{Method = 'Registry'; Application = 'VLC.wvx'; Extension = '.wvx' },
-::    @{Method = 'Registry'; Application = 'wdpfile'; Extension = '.jxr' },
-::    @{Method = 'Registry'; Application = 'wdpfile'; Extension = '.wdp' },
-::    @{Method = 'Registry'; Application = 'Windows.IsoFile'; Extension = '.iso' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.gif' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.htm' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.html' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.mhtml' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.shtml' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.svg' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.webp' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.xht' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.xhtml' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'http' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'https' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'mailto' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'mms' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'tel' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = 'webcal' },
-::    @{Method = 'Sophia'; Application = 'ChromePDF'; Extension = '.pdf' },
-::    @{Method = 'Sophia'; Application = 'ChromeHTML'; Extension = '.url' },
-::    @{Method = 'Sophia'; Application = 'VLC.mp2'; Extension = '.mp2' }
-::)
-::
-::#endregion configs > Windows > File associations
 ::
 ::
 ::#region configs > Windows > Power settings
@@ -2072,6 +2074,9 @@ if "%debug%"=="true" (
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs\Command]
+::@="cmd /c DISM.exe /Online /Add-Package /PackagePath:"%1" /NoRestart & pause""
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs]
 ::"HasLUAShield"=""
@@ -4263,6 +4268,10 @@ if "%debug%"=="true" (
 ::#region functions > Common > Exit
 ::
 ::function Reset-State {
+::    param(
+::        [Switch][Parameter(Position = 0)]$Update
+::    )
+::
 ::    Write-LogInfo 'Cleaning up files on exit...'
 ::
 ::    Set-Variable -Option Constant PowerShellScript "$PATH_TEMP_DIR\qiiwexc.ps1"
@@ -4271,7 +4280,9 @@ if "%debug%"=="true" (
 ::    Remove-Directory $PATH_OOSHUTUP10 -Silent
 ::    Remove-Directory $PATH_APP_DIR -Silent
 ::
-::    Remove-File $PowerShellScript -Silent
+::    if (-not $Update) {
+::        Remove-File $PowerShellScript -Silent
+::    }
 ::
 ::    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
 ::    Write-Host ''
@@ -4933,7 +4944,7 @@ if "%debug%"=="true" (
 ::            return
 ::        }
 ::
-::        Exit-App
+::        Exit-App -Update
 ::    }
 ::}
 ::
@@ -5473,6 +5484,18 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
 ::    Set-Variable -Option Constant SophiaScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
 ::
+::    [Collections.Generic.List[Object]]$AppAssociations = @()
+::
+::    Select-Xml -Xml ([xml]$CONFIG_APP_ASSOCIATIONS) -XPath '//Association' | ForEach-Object {
+::        [String][ValidateSet('Registry', 'Sophia')]$Method = $(if ($_.Node._resistant -eq 'true') { 'Sophia' } else { 'Registry' })
+::
+::        $AppAssociations.Add(@{
+::                Method      = $Method
+::                Application = $_.Node.ProgId
+::                Extension   = $_.Node.Identifier
+::            })
+::    }
+::
 ::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
 ::    if (-not $NoConnection) {
 ::        Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
@@ -5482,11 +5505,11 @@ if "%debug%"=="true" (
 ::        . $SophiaScriptPath
 ::    }
 ::
-::    Set-Variable -Option Constant FileTypeCount ($CONFIG_FILE_ASSOCIATIONS.Count)
+::    Set-Variable -Option Constant FileTypeCount ($AppAssociations.Count)
 ::    Set-Variable -Option Constant Step ([Math]::Floor(20 / $FileTypeCount))
 ::
 ::    [Int]$Iteration = 1
-::    foreach ($FileAssociation in $CONFIG_FILE_ASSOCIATIONS) {
+::    foreach ($FileAssociation in $AppAssociations) {
 ::        [Int]$Percentage = 70 + $Iteration * $Step
 ::        Write-ActivityProgress -PercentComplete $Percentage
 ::        $Iteration++
