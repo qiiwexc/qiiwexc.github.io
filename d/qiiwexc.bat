@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.11')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.12')
 ::
 ::#endregion init > Version
 ::
@@ -140,7 +140,7 @@ if "%debug%"=="true" (
 ::
 ::function New-Button {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+::        [String][Parameter(Position = 0, Mandatory)]$Text,
 ::        [ScriptBlock][Parameter(Position = 1)]$Function,
 ::        [Switch]$Disabled
 ::    )
@@ -193,8 +193,8 @@ if "%debug%"=="true" (
 ::
 ::function New-ButtonBrowser {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
-::        [ScriptBlock][Parameter(Position = 1, Mandatory = $True)]$Function
+::        [String][Parameter(Position = 0, Mandatory)]$Text,
+::        [ScriptBlock][Parameter(Position = 1, Mandatory)]$Function
 ::    )
 ::
 ::    New-Button $Text $Function
@@ -209,7 +209,7 @@ if "%debug%"=="true" (
 ::
 ::function New-CheckBox {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+::        [String][Parameter(Position = 0, Mandatory)]$Text,
 ::        [String][Parameter(Position = 1)]$Name,
 ::        [Switch]$Disabled,
 ::        [Switch]$Checked
@@ -273,7 +273,7 @@ if "%debug%"=="true" (
 ::
 ::function New-GroupBox {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+::        [String][Parameter(Position = 0, Mandatory)]$Text,
 ::        [Int][Parameter(Position = 1)]$IndexOverride
 ::    )
 ::
@@ -317,7 +317,7 @@ if "%debug%"=="true" (
 ::
 ::function New-Label {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Text
+::        [String][Parameter(Position = 0, Mandatory)]$Text
 ::    )
 ::
 ::    Set-Variable -Option Constant Label (New-Object Windows.Forms.Label)
@@ -341,7 +341,7 @@ if "%debug%"=="true" (
 ::
 ::function New-RadioButton {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+::        [String][Parameter(Position = 0, Mandatory)]$Text,
 ::        [Switch]$Checked,
 ::        [Switch]$Disabled
 ::    )
@@ -386,7 +386,7 @@ if "%debug%"=="true" (
 ::
 ::function New-TabPage {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Text
+::        [String][Parameter(Position = 0, Mandatory)]$Text
 ::    )
 ::
 ::    Set-Variable -Option Constant TabPage (New-Object Windows.Forms.TabPage)
@@ -1309,6 +1309,7 @@ if "%debug%"=="true" (
 ::    'Language.TextToSpeech'
 ::    'MathRecognizer'
 ::    'Media.WindowsMediaPlayer'
+::    'Microsoft.Windows.SnippingTool'
 ::    'Microsoft.Windows.WordPad'
 ::    'OneCoreUAP.OneSync'
 ::    'OpenSSH.Client'
@@ -1378,7 +1379,6 @@ if "%debug%"=="true" (
 ::    @{Method = 'Registry'; Application = 'VLC.mkv'; Extension = '.mkv' },
 ::    @{Method = 'Registry'; Application = 'VLC.mod'; Extension = '.mod' },
 ::    @{Method = 'Registry'; Application = 'VLC.mov'; Extension = '.mov' },
-::    @{Method = 'Registry'; Application = 'VLC.mp2'; Extension = '.mp2' },
 ::    @{Method = 'Registry'; Application = 'VLC.mp2v'; Extension = '.mp2v' },
 ::    @{Method = 'Registry'; Application = 'VLC.mp3'; Extension = '.mp3' },
 ::    @{Method = 'Registry'; Application = 'VLC.mp4'; Extension = '.mp4' },
@@ -3871,7 +3871,6 @@ if "%debug%"=="true" (
 ::Microsoft.PowerAutomateDesktop                 # Desktop automation tool (RPA)
 ::Microsoft.Print3D                              # 3D printing preparation software
 ::Microsoft.RemoteDesktop                        # Remote Desktop client app
-::Microsoft.ScreenSketch                         # Snipping Tool (Screenshot and annotation tool)
 ::Microsoft.SkypeApp                             # Skype communication app (Universal Windows Platform version)
 ::Microsoft.StartExperiencesApp                  # This app powers Windows Widgets My Feed
 ::Microsoft.Todos                                # To-do list and task management app
@@ -4291,7 +4290,7 @@ if "%debug%"=="true" (
 ::
 ::function Expand-Zip {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$ZipPath,
+::        [String][Parameter(Position = 0, Mandatory)]$ZipPath,
 ::        [Switch]$Temp
 ::    )
 ::
@@ -4433,10 +4432,6 @@ if "%debug%"=="true" (
 ::        Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
 ::    }
 ::
-::    Set-Variable -Option Constant IeRegistryPath 'HKLM:\Software\Policies\Microsoft\Internet Explorer\Main'
-::    New-RegistryKeyIfMissing $IeRegistryPath
-::    Set-ItemProperty -Path $IeRegistryPath -Name 'DisableFirstRunCustomize' -Value 1
-::
 ::    Get-SystemInformation
 ::
 ::    Initialize-AppDirectory
@@ -4460,7 +4455,7 @@ if "%debug%"=="true" (
 ::
 ::function Invoke-CustomCommand {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Command,
+::        [String][Parameter(Position = 0, Mandatory)]$Command,
 ::        [String]$WorkingDirectory,
 ::        [Switch]$BypassExecutionPolicy,
 ::        [Switch]$Elevated,
@@ -4485,7 +4480,7 @@ if "%debug%"=="true" (
 ::
 ::function Write-LogDebug {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+::        [String][Parameter(Position = 0, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::    Write-Log 'DEBUG' $Message -IndentLevel $Level
@@ -4493,7 +4488,7 @@ if "%debug%"=="true" (
 ::
 ::function Write-LogInfo {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+::        [String][Parameter(Position = 0, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::    Write-Log 'INFO' $Message -IndentLevel $Level
@@ -4501,7 +4496,7 @@ if "%debug%"=="true" (
 ::
 ::function Write-LogWarning {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+::        [String][Parameter(Position = 0, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::    Write-Log 'WARN' "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
@@ -4509,7 +4504,7 @@ if "%debug%"=="true" (
 ::
 ::function Write-LogError {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+::        [String][Parameter(Position = 0, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::    Write-Log 'ERROR' "$(Get-Emoji '274C') $Message" -IndentLevel $Level
@@ -4517,8 +4512,8 @@ if "%debug%"=="true" (
 ::
 ::function Write-Log {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Message,
+::        [String][Parameter(Position = 0, Mandatory)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
+::        [String][Parameter(Position = 1, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 2)]$IndentLevel = 0,
 ::        [Switch][Parameter(Position = 3)]$NoNewLine
 ::    )
@@ -4561,7 +4556,7 @@ if "%debug%"=="true" (
 ::
 ::function Out-Status {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Status,
+::        [String][Parameter(Position = 0, Mandatory)]$Status,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::
@@ -4588,8 +4583,8 @@ if "%debug%"=="true" (
 ::
 ::function Write-LogException {
 ::    param(
-::        [Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Message,
+::        [Object][Parameter(Position = 0, Mandatory)]$Exception,
+::        [String][Parameter(Position = 1, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 2)]$Level = 0
 ::    )
 ::
@@ -4598,7 +4593,7 @@ if "%debug%"=="true" (
 ::
 ::function Get-Emoji {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Code
+::        [String][Parameter(Position = 0, Mandatory)]$Code
 ::    )
 ::
 ::    Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))
@@ -4628,7 +4623,7 @@ if "%debug%"=="true" (
 ::
 ::function New-RegistryKeyIfMissing {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$RegistryPath
+::        [String][Parameter(Position = 0, Mandatory)]$RegistryPath
 ::    )
 ::
 ::    if (-not (Test-Path $RegistryPath)) {
@@ -4644,7 +4639,7 @@ if "%debug%"=="true" (
 ::
 ::function Open-InBrowser {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$URL
+::        [String][Parameter(Position = 0, Mandatory)]$URL
 ::    )
 ::
 ::    Write-LogInfo "Opening URL in the default browser: $URL"
@@ -4663,7 +4658,7 @@ if "%debug%"=="true" (
 ::
 ::function New-Activity {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Activity
+::        [String][Parameter(Position = 0, Mandatory)]$Activity
 ::    )
 ::
 ::    Write-LogInfo $Activity
@@ -4673,7 +4668,7 @@ if "%debug%"=="true" (
 ::
 ::function Write-ActivityProgress {
 ::    param(
-::        [Int][Parameter(Position = 0, Mandatory = $True)]$PercentComplete,
+::        [Int][Parameter(Position = 0, Mandatory)]$PercentComplete,
 ::        [String][Parameter(Position = 1)]$Task
 ::    )
 ::
@@ -4701,7 +4696,7 @@ if "%debug%"=="true" (
 ::
 ::function Remove-Directory {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$DirectoryPath,
+::        [String][Parameter(Position = 0, Mandatory)]$DirectoryPath,
 ::        [Switch]$Silent
 ::    )
 ::
@@ -4721,7 +4716,7 @@ if "%debug%"=="true" (
 ::
 ::function Remove-File {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$FilePath,
+::        [String][Parameter(Position = 0, Mandatory)]$FilePath,
 ::        [Switch]$Silent
 ::    )
 ::
@@ -4741,8 +4736,8 @@ if "%debug%"=="true" (
 ::
 ::function Set-CheckboxState {
 ::    param(
-::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Control,
-::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$Dependant
+::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Control,
+::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$Dependant
 ::    )
 ::
 ::    $Dependant.Enabled = $Control.Checked
@@ -4759,7 +4754,7 @@ if "%debug%"=="true" (
 ::
 ::function Start-Download {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
+::        [String][Parameter(Position = 0, Mandatory)]$URL,
 ::        [String][Parameter(Position = 1)]$SaveAs,
 ::        [Switch]$Temp
 ::    )
@@ -4813,7 +4808,7 @@ if "%debug%"=="true" (
 ::
 ::function Start-DownloadUnzipAndRun {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$URL,
+::        [String][Parameter(Position = 0, Mandatory)]$URL,
 ::        [String][Parameter(Position = 1)]$FileName,
 ::        [String][Parameter(Position = 2)]$Params,
 ::        [Switch]$AVWarning,
@@ -4857,7 +4852,7 @@ if "%debug%"=="true" (
 ::
 ::function Start-Executable {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Executable,
+::        [String][Parameter(Position = 0, Mandatory)]$Executable,
 ::        [String][Parameter(Position = 1)]$Switches,
 ::        [Switch]$Silent
 ::    )
@@ -4904,7 +4899,7 @@ if "%debug%"=="true" (
 ::
 ::function Stop-ProcessIfRunning {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$ProcessName
+::        [String][Parameter(Position = 0, Mandatory)]$ProcessName
 ::    )
 ::
 ::    Set-Variable -Option Constant LogIndentLevel 3
@@ -4959,7 +4954,7 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
-::        Set-Variable -Option Constant LatestVersion ([Version](([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version' -UseBasicParsing)).Trim()))
+::        Set-Variable -Option Constant LatestVersion ([Version](([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version')).Trim()))
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to check for updates'
 ::        return
@@ -4976,7 +4971,7 @@ if "%debug%"=="true" (
 ::
 ::function Get-NewVersion {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppBatFile
+::        [String][Parameter(Position = 0, Mandatory)]$AppBatFile
 ::    )
 ::
 ::    Write-LogWarning 'Downloading new version...'
@@ -4989,7 +4984,7 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        Start-BitsTransfer -Source 'https://bit.ly/qiiwexc_bat' -Destination $AppBatFile -Dynamic
+::        Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_bat' -OutFile $AppBatFile
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to download update'
 ::        return
@@ -5005,7 +5000,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-7zipConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
 ::    Write-ActivityProgress -PercentComplete 25 -Task "Configuring $AppName..."
@@ -5024,12 +5019,12 @@ if "%debug%"=="true" (
 ::
 ::function Set-AppsConfiguration {
 ::    param(
-::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$7zip,
-::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$VLC,
-::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$TeamViewer,
-::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$qBittorrent,
-::        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Edge,
-::        [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory = $True)]$Chrome
+::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$7zip,
+::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$VLC,
+::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$TeamViewer,
+::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$qBittorrent,
+::        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory)]$Edge,
+::        [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory)]$Chrome
 ::    )
 ::
 ::    New-Activity 'Configuring apps...'
@@ -5068,7 +5063,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-GoogleChromeConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
 ::    Write-ActivityProgress -PercentComplete 75 -Task "Configuring $AppName..."
@@ -5086,7 +5081,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-MicrosoftEdgeConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
 ::    Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
@@ -5104,7 +5099,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-qBittorrentConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
 ::    Write-ActivityProgress -PercentComplete 15 -Task "Configuring $AppName..."
@@ -5121,7 +5116,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-TeamViewerConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
 ::    Write-ActivityProgress -PercentComplete 40 -Task "Configuring $AppName..."
@@ -5140,7 +5135,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-VlcConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
 ::    Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
@@ -5164,8 +5159,8 @@ if "%debug%"=="true" (
 ::
 ::function Import-RegistryConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-::        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory = $True)]$Content
+::        [String][Parameter(Position = 0, Mandatory)]$AppName,
+::        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)]$Content
 ::    )
 ::
 ::    Set-Variable -Option Constant LogIndentLevel 2
@@ -5195,8 +5190,8 @@ if "%debug%"=="true" (
 ::
 ::function Merge-JsonObject {
 ::    param(
-::        [Parameter(Position = 0, Mandatory = $True)]$Source,
-::        [Parameter(Position = 1, Mandatory = $True)]$Extend
+::        [Parameter(Position = 0, Mandatory)]$Source,
+::        [Parameter(Position = 1, Mandatory)]$Extend
 ::    )
 ::
 ::    if ($Source -is [PSCustomObject] -and $Extend -is [PSCustomObject]) {
@@ -5243,8 +5238,8 @@ if "%debug%"=="true" (
 ::
 ::function Set-FileAssociation {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$Application,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$RegistryPath,
+::        [String][Parameter(Position = 0, Mandatory)]$Application,
+::        [String][Parameter(Position = 1, Mandatory)]$RegistryPath,
 ::        [Switch][Parameter(Position = 2)]$SetDefault
 ::    )
 ::
@@ -5286,10 +5281,10 @@ if "%debug%"=="true" (
 ::
 ::function Update-JsonFile {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$ProcessName,
-::        [String][Parameter(Position = 2, Mandatory = $True)]$Content,
-::        [String][Parameter(Position = 3, Mandatory = $True)]$Path
+::        [String][Parameter(Position = 0, Mandatory)]$AppName,
+::        [String][Parameter(Position = 1, Mandatory)]$ProcessName,
+::        [String][Parameter(Position = 2, Mandatory)]$Content,
+::        [String][Parameter(Position = 3, Mandatory)]$Path
 ::    )
 ::
 ::    Set-Variable -Option Constant LogIndentLevel 2
@@ -5333,9 +5328,9 @@ if "%debug%"=="true" (
 ::
 ::function Write-ConfigurationFile {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-::        [String][Parameter(Position = 1, Mandatory = $True)]$Content,
-::        [String][Parameter(Position = 2, Mandatory = $True)]$Path,
+::        [String][Parameter(Position = 0, Mandatory)]$AppName,
+::        [String][Parameter(Position = 1, Mandatory)]$Content,
+::        [String][Parameter(Position = 2, Mandatory)]$Path,
 ::        [String][Parameter(Position = 3)]$ProcessName = $AppName
 ::    )
 ::    Set-Variable -Option Constant LogIndentLevel 2
@@ -5435,8 +5430,8 @@ if "%debug%"=="true" (
 ::
 ::function Set-CloudFlareDNS {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$MalwareProtection,
-::        [Switch][Parameter(Position = 1, Mandatory = $True)]$FamilyFriendly
+::        [Switch][Parameter(Position = 0, Mandatory)]$MalwareProtection,
+::        [Switch][Parameter(Position = 1, Mandatory)]$FamilyFriendly
 ::    )
 ::
 ::    Set-Variable -Option Constant PreferredDnsServer $(if ($FamilyFriendly) { '1.1.1.3' } else { if ($MalwareProtection) { '1.1.1.2' } else { '1.1.1.1' } })
@@ -5549,7 +5544,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-SearchConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
+::        [String][Parameter(Position = 0, Mandatory)]$FileName
 ::    )
 ::
 ::    Set-Variable -Option Constant LogIndentLevel 1
@@ -5602,7 +5597,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-WindowsBaseConfiguration {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
+::        [String][Parameter(Position = 0, Mandatory)]$FileName
 ::    )
 ::
 ::    Set-Variable -Option Constant LogIndentLevel 1
@@ -5672,11 +5667,11 @@ if "%debug%"=="true" (
 ::
 ::function Set-WindowsConfiguration {
 ::    param(
-::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory = $True)]$Base,
-::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory = $True)]$PowerScheme,
-::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory = $True)]$Search,
-::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory = $True)]$FileAssociations,
-::        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory = $True)]$Personalisation
+::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Base,
+::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$PowerScheme,
+::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$Search,
+::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$FileAssociations,
+::        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory)]$Personalisation
 ::    )
 ::
 ::    New-Activity 'Configuring Windows...'
@@ -5711,7 +5706,7 @@ if "%debug%"=="true" (
 ::
 ::function Set-WindowsPersonalisationConfig {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory = $True)]$FileName
+::        [String][Parameter(Position = 0, Mandatory)]$FileName
 ::    )
 ::
 ::    Set-Variable -Option Constant LogIndentLevel 1
@@ -5786,8 +5781,8 @@ if "%debug%"=="true" (
 ::
 ::function Start-OoShutUp10 {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
-::        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+::        [Switch][Parameter(Position = 0, Mandatory)]$Execute,
+::        [Switch][Parameter(Position = 1, Mandatory)]$Silent
 ::    )
 ::
 ::    Write-LogInfo 'Starting OOShutUp10++ utility...'
@@ -5819,9 +5814,9 @@ if "%debug%"=="true" (
 ::
 ::function Start-WindowsDebloat {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$UsePreset,
-::        [Switch][Parameter(Position = 1, Mandatory = $True)]$Personalisation,
-::        [Switch][Parameter(Position = 2, Mandatory = $True)]$Silent
+::        [Switch][Parameter(Position = 0, Mandatory)]$UsePreset,
+::        [Switch][Parameter(Position = 1, Mandatory)]$Personalisation,
+::        [Switch][Parameter(Position = 2, Mandatory)]$Silent
 ::    )
 ::
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
@@ -5861,8 +5856,8 @@ if "%debug%"=="true" (
 ::
 ::function Start-WinUtil {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Personalisation,
-::        [Switch][Parameter(Position = 1, Mandatory = $True)]$AutomaticallyApply
+::        [Switch][Parameter(Position = 0, Mandatory)]$Personalisation,
+::        [Switch][Parameter(Position = 1, Mandatory)]$AutomaticallyApply
 ::    )
 ::
 ::    Write-LogInfo 'Starting WinUtil utility...'
@@ -6081,7 +6076,7 @@ if "%debug%"=="true" (
 ::
 ::function Install-MicrosoftOffice {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute
+::        [Switch][Parameter(Position = 0, Mandatory)]$Execute
 ::    )
 ::
 ::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
@@ -6105,8 +6100,8 @@ if "%debug%"=="true" (
 ::
 ::function Install-Unchecky {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
-::        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+::        [Switch][Parameter(Position = 0, Mandatory)]$Execute,
+::        [Switch][Parameter(Position = 1, Mandatory)]$Silent
 ::    )
 ::
 ::    Set-Variable -Option Constant Registry_Key 'HKCU:\Software\Unchecky'
@@ -6130,7 +6125,7 @@ if "%debug%"=="true" (
 ::
 ::function Get-NiniteInstaller {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory = $True)]$OpenInBrowser,
+::        [Switch][Parameter(Position = 0, Mandatory)]$OpenInBrowser,
 ::        [Switch][Parameter(Position = 1)]$Execute
 ::    )
 ::
