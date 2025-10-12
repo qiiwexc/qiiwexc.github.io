@@ -1,6 +1,6 @@
 function New-RadioButton {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+        [String][Parameter(Position = 0, Mandatory)]$Text,
         [Switch]$Checked,
         [Switch]$Disabled
     )

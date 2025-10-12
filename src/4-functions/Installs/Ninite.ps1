@@ -5,7 +5,7 @@ function Set-NiniteButtonState {
 
 function Get-NiniteInstaller {
     param(
-        [Switch][Parameter(Position = 0, Mandatory = $True)]$OpenInBrowser,
+        [Switch][Parameter(Position = 0, Mandatory)]$OpenInBrowser,
         [Switch][Parameter(Position = 1)]$Execute
     )
 

@@ -1,6 +1,6 @@
 function Write-LogDebug {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+        [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
     Write-Log 'DEBUG' $Message -IndentLevel $Level
@@ -8,7 +8,7 @@ function Write-LogDebug {
 
 function Write-LogInfo {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+        [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
     Write-Log 'INFO' $Message -IndentLevel $Level
@@ -16,7 +16,7 @@ function Write-LogInfo {
 
 function Write-LogWarning {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+        [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
     Write-Log 'WARN' "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
@@ -24,7 +24,7 @@ function Write-LogWarning {
 
 function Write-LogError {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Message,
+        [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
     Write-Log 'ERROR' "$(Get-Emoji '274C') $Message" -IndentLevel $Level
@@ -32,8 +32,8 @@ function Write-LogError {
 
 function Write-Log {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Message,
+        [String][Parameter(Position = 0, Mandatory)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
+        [String][Parameter(Position = 1, Mandatory)]$Message,
         [Int][Parameter(Position = 2)]$IndentLevel = 0,
         [Switch][Parameter(Position = 3)]$NoNewLine
     )
@@ -76,7 +76,7 @@ function Write-Log {
 
 function Out-Status {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Status,
+        [String][Parameter(Position = 0, Mandatory)]$Status,
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
@@ -103,8 +103,8 @@ function Out-Failure {
 
 function Write-LogException {
     param(
-        [Object][Parameter(Position = 0, Mandatory = $True)]$Exception,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Message,
+        [Object][Parameter(Position = 0, Mandatory)]$Exception,
+        [String][Parameter(Position = 1, Mandatory)]$Message,
         [Int][Parameter(Position = 2)]$Level = 0
     )
 
@@ -113,7 +113,7 @@ function Write-LogException {
 
 function Get-Emoji {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Code
+        [String][Parameter(Position = 0, Mandatory)]$Code
     )
 
     Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))

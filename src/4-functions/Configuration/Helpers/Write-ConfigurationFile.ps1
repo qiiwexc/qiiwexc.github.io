@@ -1,8 +1,8 @@
 function Write-ConfigurationFile {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$AppName,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Content,
-        [String][Parameter(Position = 2, Mandatory = $True)]$Path,
+        [String][Parameter(Position = 0, Mandatory)]$AppName,
+        [String][Parameter(Position = 1, Mandatory)]$Content,
+        [String][Parameter(Position = 2, Mandatory)]$Path,
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
     Set-Variable -Option Constant LogIndentLevel 2

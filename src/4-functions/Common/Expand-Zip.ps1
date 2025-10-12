@@ -1,6 +1,6 @@
 function Expand-Zip {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$ZipPath,
+        [String][Parameter(Position = 0, Mandatory)]$ZipPath,
         [Switch]$Temp
     )
 

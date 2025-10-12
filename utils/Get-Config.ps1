@@ -1,7 +1,7 @@
 function Get-Config {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$AssetsPath,
-        [String][Parameter(Position = 1, Mandatory = $True)]$Version
+        [String][Parameter(Position = 0, Mandatory)]$AssetsPath,
+        [String][Parameter(Position = 1, Mandatory)]$Version
     )
 
     Write-LogInfo 'Loading config...'

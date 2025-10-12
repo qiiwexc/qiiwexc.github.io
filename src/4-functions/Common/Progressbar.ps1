@@ -1,6 +1,6 @@
 function New-Activity {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Activity
+        [String][Parameter(Position = 0, Mandatory)]$Activity
     )
 
     Write-LogInfo $Activity
@@ -10,7 +10,7 @@ function New-Activity {
 
 function Write-ActivityProgress {
     param(
-        [Int][Parameter(Position = 0, Mandatory = $True)]$PercentComplete,
+        [Int][Parameter(Position = 0, Mandatory)]$PercentComplete,
         [String][Parameter(Position = 1)]$Task
     )
 

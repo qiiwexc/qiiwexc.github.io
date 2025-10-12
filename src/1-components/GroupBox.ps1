@@ -1,6 +1,6 @@
 function New-GroupBox {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Text,
+        [String][Parameter(Position = 0, Mandatory)]$Text,
         [Int][Parameter(Position = 1)]$IndexOverride
     )
 

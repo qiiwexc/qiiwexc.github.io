@@ -1,7 +1,7 @@
 function Merge-JsonObject {
     param(
-        [Parameter(Position = 0, Mandatory = $True)]$Source,
-        [Parameter(Position = 1, Mandatory = $True)]$Extend
+        [Parameter(Position = 0, Mandatory)]$Source,
+        [Parameter(Position = 1, Mandatory)]$Extend
     )
 
     if ($Source -is [PSCustomObject] -and $Extend -is [PSCustomObject]) {

@@ -1,6 +1,6 @@
 ﻿function Set-GoogleChromeConfiguration {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+        [String][Parameter(Position = 0, Mandatory)]$AppName
     )
 
     Write-ActivityProgress -PercentComplete 75 -Task "Configuring $AppName..."

@@ -1,6 +1,6 @@
 ﻿function Set-7zipConfiguration {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$AppName
+        [String][Parameter(Position = 0, Mandatory)]$AppName
     )
 
     Write-ActivityProgress -PercentComplete 25 -Task "Configuring $AppName..."

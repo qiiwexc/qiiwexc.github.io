@@ -1,7 +1,7 @@
 function New-BatchScript {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Ps1File,
-        [String][Parameter(Position = 1, Mandatory = $True)]$BatchFile
+        [String][Parameter(Position = 0, Mandatory)]$Ps1File,
+        [String][Parameter(Position = 1, Mandatory)]$BatchFile
     )
 
     Write-LogInfo 'Building batch script...'

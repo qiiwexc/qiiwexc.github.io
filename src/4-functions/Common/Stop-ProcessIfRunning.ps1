@@ -1,6 +1,6 @@
 function Stop-ProcessIfRunning {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$ProcessName
+        [String][Parameter(Position = 0, Mandatory)]$ProcessName
     )
 
     Set-Variable -Option Constant LogIndentLevel 3

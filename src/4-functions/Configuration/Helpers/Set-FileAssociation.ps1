@@ -1,7 +1,7 @@
 function Set-FileAssociation {
     param(
-        [String][Parameter(Position = 0, Mandatory = $True)]$Application,
-        [String][Parameter(Position = 1, Mandatory = $True)]$RegistryPath,
+        [String][Parameter(Position = 0, Mandatory)]$Application,
+        [String][Parameter(Position = 1, Mandatory)]$RegistryPath,
         [Switch][Parameter(Position = 2)]$SetDefault
     )
 

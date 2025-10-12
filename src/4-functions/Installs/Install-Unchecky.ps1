@@ -1,7 +1,7 @@
 function Install-Unchecky {
     param(
-        [Switch][Parameter(Position = 0, Mandatory = $True)]$Execute,
-        [Switch][Parameter(Position = 1, Mandatory = $True)]$Silent
+        [Switch][Parameter(Position = 0, Mandatory)]$Execute,
+        [Switch][Parameter(Position = 1, Mandatory)]$Silent
     )
 
     Set-Variable -Option Constant Registry_Key 'HKCU:\Software\Unchecky'

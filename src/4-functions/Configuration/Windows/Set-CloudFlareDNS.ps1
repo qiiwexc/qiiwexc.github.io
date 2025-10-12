@@ -1,7 +1,7 @@
 function Set-CloudFlareDNS {
     param(
-        [Switch][Parameter(Position = 0, Mandatory = $True)]$MalwareProtection,
-        [Switch][Parameter(Position = 1, Mandatory = $True)]$FamilyFriendly
+        [Switch][Parameter(Position = 0, Mandatory)]$MalwareProtection,
+        [Switch][Parameter(Position = 1, Mandatory)]$FamilyFriendly
     )
 
     Set-Variable -Option Constant PreferredDnsServer $(if ($FamilyFriendly) { '1.1.1.3' } else { if ($MalwareProtection) { '1.1.1.2' } else { '1.1.1.1' } })
