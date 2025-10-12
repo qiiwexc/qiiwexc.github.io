@@ -15,7 +15,7 @@ function Update-App {
             return
         }
 
-        Exit-App
+        Exit-App -Update
     }
 }
 
