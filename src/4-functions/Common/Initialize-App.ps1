@@ -15,10 +15,6 @@ function Initialize-App {
         Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
     }
 
-    Set-Variable -Option Constant IeRegistryPath 'HKLM:\Software\Policies\Microsoft\Internet Explorer\Main'
-    New-RegistryKeyIfMissing $IeRegistryPath
-    Set-ItemProperty -Path $IeRegistryPath -Name 'DisableFirstRunCustomize' -Value 1
-
     Get-SystemInformation
 
     Initialize-AppDirectory
