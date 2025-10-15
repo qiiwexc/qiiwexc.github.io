@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.13')
+::Set-Variable -Option Constant VERSION ([Version]'25.10.15')
 ::
 ::#endregion init > Version
 ::
@@ -604,13 +604,13 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Windows images'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w16.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html' }
 ::New-ButtonBrowser 'Windows 11' $BUTTON_FUNCTION
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w16.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html' }
 ::New-ButtonBrowser 'Windows 10' $BUTTON_FUNCTION
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w16.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' }
 ::New-ButtonBrowser 'Windows 7' $BUTTON_FUNCTION
 ::
 ::#endregion ui > Installs > Windows images
@@ -1347,7 +1347,7 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mov" ProgId="VLC.mov" ApplicationName="VLC media player" />
-::  <Association Identifier=".mp2" ProgId="VLC.mp2" ApplicationName="VLC media player" _resistant="false" />
+::  <Association Identifier=".mp2" ProgId="VLC.mp2" ApplicationName="VLC media player" _resistant="true" />
 ::  <Association Identifier=".mp2v" ProgId="VLC.mp2v" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mp3" ProgId="VLC.mp3" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mp4" ProgId="VLC.mp4" ApplicationName="VLC media player" />
