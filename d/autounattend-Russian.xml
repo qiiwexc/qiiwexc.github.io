@@ -147,13 +147,13 @@ foreach( $file in $Document.unattend.Extensions.File ) {
   &lt;Association Identifier=&quot;.bz2&quot; ProgId=&quot;ArchiveFolder&quot; ApplicationName=&quot;File Explorer&quot; /&gt;
   &lt;Association Identifier=&quot;.cab&quot; ProgId=&quot;CABFolder&quot; ApplicationName=&quot;File Explorer&quot; /&gt;
   &lt;Association Identifier=&quot;.cda&quot; ProgId=&quot;VLC.cda&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
-  &lt;Association Identifier=&quot;.contact&quot; ProgId=&quot;contact_wab_auto_file&quot; ApplicationName=&quot;Contacts&quot; /&gt;
+  &lt;Association Identifier=&quot;.contact&quot; ProgId=&quot;contact_wab_auto_file&quot; ApplicationName=&quot;contact_wab_auto_file&quot; /&gt;
   &lt;Association Identifier=&quot;.cr2&quot; ProgId=&quot;TIFImage.Document&quot; ApplicationName=&quot;Windows Photo Viewer&quot; /&gt;
   &lt;Association Identifier=&quot;.dib&quot; ProgId=&quot;PhotoViewer.FileAssoc.Bitmap&quot; ApplicationName=&quot;Windows Photo Viewer&quot; /&gt;
   &lt;Association Identifier=&quot;.dvr-ms&quot; ProgId=&quot;VLC.dvr-ms&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.flac&quot; ProgId=&quot;VLC.flac&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.gif&quot; ProgId=&quot;ChromeHTML&quot; ApplicationName=&quot;Google Chrome&quot; /&gt;
-  &lt;Association Identifier=&quot;.group&quot; ProgId=&quot;group_wab_auto_file&quot; ApplicationName=&quot;Contacts&quot; /&gt;
+  &lt;Association Identifier=&quot;.group&quot; ProgId=&quot;group_wab_auto_file&quot; ApplicationName=&quot;group_wab_auto_file&quot; /&gt;
   &lt;Association Identifier=&quot;.gz&quot; ProgId=&quot;ArchiveFolder&quot; ApplicationName=&quot;File Explorer&quot; /&gt;
   &lt;Association Identifier=&quot;.htm&quot; ProgId=&quot;ChromeHTML&quot; ApplicationName=&quot;Google Chrome&quot; /&gt;
   &lt;Association Identifier=&quot;.html&quot; ProgId=&quot;ChromeHTML&quot; ApplicationName=&quot;Google Chrome&quot; /&gt;
@@ -197,7 +197,7 @@ foreach( $file in $Document.unattend.Extensions.File ) {
   &lt;Association Identifier=&quot;.tts&quot; ProgId=&quot;VLC.tts&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.txz&quot; ProgId=&quot;7-Zip.txz&quot; ApplicationName=&quot;7-Zip File Manager&quot; /&gt;
   &lt;Association Identifier=&quot;.url&quot; ProgId=&quot;ChromeHTML&quot; ApplicationName=&quot;Google Chrome&quot; /&gt;
-  &lt;Association Identifier=&quot;.vcf&quot; ProgId=&quot;vcard_wab_auto_file&quot; ApplicationName=&quot;Contacts&quot; /&gt;
+  &lt;Association Identifier=&quot;.vcf&quot; ProgId=&quot;vcard_wab_auto_file&quot; ApplicationName=&quot;vcard_wab_auto_file&quot; /&gt;
   &lt;Association Identifier=&quot;.vlt&quot; ProgId=&quot;VLC.vlt&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.wav&quot; ProgId=&quot;VLC.wav&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.wdp&quot; ProgId=&quot;wdpfile&quot; ApplicationName=&quot;Windows Photo Viewer&quot; /&gt;
