@@ -19,13 +19,13 @@
   <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
   <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
   <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
-  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="Contacts" />
+  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
   <Association Identifier=".cr2" ProgId="TIFImage.Document" ApplicationName="Windows Photo Viewer" />
   <Association Identifier=".dib" ProgId="PhotoViewer.FileAssoc.Bitmap" ApplicationName="Windows Photo Viewer" />
   <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
   <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
   <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-  <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="Contacts" />
+  <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="group_wab_auto_file" />
   <Association Identifier=".gz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
   <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
@@ -69,7 +69,7 @@
   <Association Identifier=".tts" ProgId="VLC.tts" ApplicationName="VLC media player" />
   <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
   <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-  <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="Contacts" />
+  <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
   <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
   <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
   <Association Identifier=".wdp" ProgId="wdpfile" ApplicationName="Windows Photo Viewer" />
