@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.10.16')
+::Set-Variable -Option Constant VERSION ([Version]'25.11.2')
 ::
 ::#endregion init > Version
 ::
@@ -604,7 +604,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Windows images'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2025/01/windows-11-v24h2-rus-eng-20in1-hwid-act.html' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2025/10/windows-11-v25h2-rus-eng-20in1-hwid-act.html' }
 ::New-ButtonBrowser 'Windows 11' $BUTTON_FUNCTION
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html' }
