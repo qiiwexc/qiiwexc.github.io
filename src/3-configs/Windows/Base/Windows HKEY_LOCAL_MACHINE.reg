@@ -177,7 +177,6 @@
 "ConsentPromptBehaviorUser"=dword:00000000
 "FilterAdministratorToken"=dword:00000001
 "PromptOnSecureDesktop"=dword:00000000
-"TypeOfAdminApprovalMode"=dword:00000002
 
 ; Disable "Tailored experiences with diagnostic data"
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
@@ -781,7 +780,6 @@
 "ConsentPromptBehaviorUser"=dword:00000000
 "FilterAdministratorToken"=dword:00000001
 "PromptOnSecureDesktop"=dword:00000000
-"TypeOfAdminApprovalMode"=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Acrobat.exe]
 "MitigationOptions"=hex:00,03,00,01,00,00,11,01,10,00,11,00,00,10,00,10,00,00,\
