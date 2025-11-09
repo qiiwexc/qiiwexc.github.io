@@ -28,7 +28,7 @@ function Start-WindowsDebloat {
     Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
     Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
     Set-Variable -Option Constant SysprepParam $(if ($OS_VERSION -gt 10) { '-Sysprep' } else { '' })
-    Set-Variable -Option Constant Params "$SysprepParam $UsePresetParam $SilentParam"
+    Set-Variable -Option Constant Params "-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam"
 
     Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 
