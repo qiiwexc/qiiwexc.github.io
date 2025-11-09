@@ -12,7 +12,10 @@ $CHECKBOX_Ninite_7zip.Add_CheckStateChanged( { Set-NiniteButtonState } )
 [Windows.Forms.CheckBox]$CHECKBOX_Ninite_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
 $CHECKBOX_Ninite_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
+[Windows.Forms.CheckBox]$CHECKBOX_Ninite_AnyDesk = New-CheckBox 'AnyDesk' -Name 'anydesk' -Checked
+$CHECKBOX_Ninite_AnyDesk.Add_CheckStateChanged( { Set-NiniteButtonState } )
+
+[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15'
 $CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
 [Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
@@ -35,6 +38,7 @@ New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 Set-Variable -Option Constant NINITE_CHECKBOXES @(
     $CHECKBOX_Ninite_7zip,
     $CHECKBOX_Ninite_VLC,
+    $CHECKBOX_Ninite_AnyDesk,
     $CHECKBOX_Ninite_TeamViewer,
     $CHECKBOX_Ninite_Chrome,
     $CHECKBOX_Ninite_qBittorrent,
