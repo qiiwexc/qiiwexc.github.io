@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.11.2')
+::Set-Variable -Option Constant VERSION ([Version]'25.11.21')
 ::
 ::#endregion init > Version
 ::
@@ -490,7 +490,7 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant FileName $((Split-Path -Leaf 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip').Replace('-windows', ''))
 ::    Start-DownloadUnzipAndRun 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip' $FileName -Execute:$CHECKBOX_StartVentoy.Checked
 ::}
-::New-Button 'Windows Ventoy' $BUTTON_FUNCTION
+::New-Button 'Ventoy' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Checked
 ::
@@ -537,7 +537,10 @@ if "%debug%"=="true" (
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
 ::$CHECKBOX_Ninite_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_AnyDesk = New-CheckBox 'AnyDesk' -Name 'anydesk' -Checked
+::$CHECKBOX_Ninite_AnyDesk.Add_CheckStateChanged( { Set-NiniteButtonState } )
+::
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15'
 ::$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
@@ -560,6 +563,7 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant NINITE_CHECKBOXES @(
 ::    $CHECKBOX_Ninite_7zip,
 ::    $CHECKBOX_Ninite_VLC,
+::    $CHECKBOX_Ninite_AnyDesk,
 ::    $CHECKBOX_Ninite_TeamViewer,
 ::    $CHECKBOX_Ninite_Chrome,
 ::    $CHECKBOX_Ninite_qBittorrent,
@@ -574,7 +578,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.15.6.817.zip' -Execute:$CHECKBOX_StartSDI.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.16.0.818.zip' -Execute:$CHECKBOX_StartSDI.Checked }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
@@ -1841,7 +1845,7 @@ if "%debug%"=="true" (
 ::"value"="Deny"
 ::
 ::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
-::"Value"="Allow"
+::"value"="Allow"
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
 ::"value"="Deny"
@@ -2130,7 +2134,7 @@ if "%debug%"=="true" (
 ::"value"="Deny"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
-::"Value"="Allow"
+::"value"="Allow"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
 ::"value"="Deny"
@@ -2249,7 +2253,6 @@ if "%debug%"=="true" (
 ::"ConsentPromptBehaviorUser"=dword:00000000
 ::"FilterAdministratorToken"=dword:00000001
 ::"PromptOnSecureDesktop"=dword:00000000
-::"TypeOfAdminApprovalMode"=dword:00000002
 ::
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
@@ -2853,7 +2856,6 @@ if "%debug%"=="true" (
 ::"ConsentPromptBehaviorUser"=dword:00000000
 ::"FilterAdministratorToken"=dword:00000001
 ::"PromptOnSecureDesktop"=dword:00000000
-::"TypeOfAdminApprovalMode"=dword:00000002
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Acrobat.exe]
 ::"MitigationOptions"=hex:00,03,00,01,00,00,11,01,10,00,11,00,00,10,00,10,00,00,\
@@ -3360,6 +3362,12 @@ if "%debug%"=="true" (
 ::"NtlmMinClientSec"=dword:20080000
 ::"NtlmMinServerSec"=dword:20080000
 ::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Language]
+::"Default"="0419"
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Locale]
+::"(Default)"="00000419"
+::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
 ::"PowerThrottlingOff"=dword:00000001
 ::
@@ -3724,6 +3732,7 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 ::"Hidden"=dword:00000001 ; Show hidden files
 ::"LaunchTo"=dword:00000001 ; Launch File Explorer to "This PC"
+::"MMTaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
 ::"NavPaneExpandToCurrentFolder"=dword:00000001
 ::"NavPaneShowAllFolders"=dword:00000001
 ::"ShowTaskViewButton"=dword:00000000 ; Hide Task View in the taskbar
@@ -3859,6 +3868,7 @@ if "%debug%"=="true" (
 ::Microsoft.BingTravel                           # Travel planning and news via Bing (Discontinued)
 ::Microsoft.Copilot                              # AI assistant integrated into Windows
 ::Microsoft.Getstarted                           # Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)
+::Microsoft.M365Companions                       # Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin
 ::Microsoft.Messaging                            # Messaging app, often integrates with Skype (Largely deprecated)
 ::Microsoft.Microsoft3DViewer                    # Viewer for 3D models
 ::Microsoft.MicrosoftJournal                     # Digital note-taking app optimized for pen input
@@ -3953,7 +3963,8 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Tools > Debloat preset personalisation
 ::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALISATION 'CombineTaskbarWhenFull#- Combine taskbar buttons and hide labels when taskbar is full
+::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALISATION 'CombineMMTaskbarWhenFull#- Combine taskbar buttons and hide labels when taskbar is full in multi-monitor mode
+::CombineTaskbarWhenFull#- Combine taskbar buttons and hide labels when taskbar is full
 ::DisableLockscreenTips#- Disable tips & tricks on the lockscreen
 ::DisableStartRecommended#- Disable the recommended section in the start menu.
 ::DisableWidgets#- Disable widgets on the taskbar & lockscreen
@@ -3973,7 +3984,7 @@ if "%debug%"=="true" (
 ::P003	+	# Disable Inventory Collector (Category: Privacy)
 ::P004	+	# Disable camera in logon screen (Category: Privacy)
 ::P005	+	# Disable and reset Advertising ID and info for the machine (Category: Privacy)
-::P006	+	# Disable and reset Advertising ID and info (Category: Privacy)
+::P006	+	# Disable and reset Advertising ID and info for current user (Category: Privacy)
 ::P008	+	# Disable transmission of typing information (Category: Privacy)
 ::P026	+	# Disable advertisements via Bluetooth (Category: Privacy)
 ::P027	+	# Disable the Windows Customer Experience Improvement Program (Category: Privacy)
@@ -3990,69 +4001,69 @@ if "%debug%"=="true" (
 ::P068	-	# Disable text suggestions when typing on the software keyboard (Category: Privacy)
 ::P016	-	# Disable sending URLs from apps to Windows Store (Category: Privacy)
 ::A001	+	# Disable recordings of user activity (Category: Activity History and Clipboard)
-::A002	+	# Disable storing users" activity history (Category: Activity History and Clipboard)
+::A002	+	# Disable storing users" activity history on this device (Category: Activity History and Clipboard)
 ::A003	+	# Disable the submission of user activities to Microsoft (Category: Activity History and Clipboard)
 ::A004	+	# Disable storage of clipboard history for whole machine (Category: Activity History and Clipboard)
-::A006	+	# Disable storage of clipboard history (Category: Activity History and Clipboard)
+::A006	+	# Disable storage of clipboard history for current user (Category: Activity History and Clipboard)
 ::A005	+	# Disable the transfer of the clipboard to other devices via the cloud (Category: Activity History and Clipboard)
-::P007	+	# Disable app access to user account information (Category: App Privacy)
-::P036	+	# Disable app access to user account information (Category: App Privacy)
+::P007	+	# Disable app access to user account information on this device (Category: App Privacy)
+::P036	+	# Disable app access to user account information for current user (Category: App Privacy)
 ::P025	+	# Disable Windows tracking of app starts (Category: App Privacy)
-::P033	+	# Disable app access to diagnostics information (Category: App Privacy)
-::P023	+	# Disable app access to diagnostics information (Category: App Privacy)
-::P056	-	# Disable app access to device location (Category: App Privacy)
-::P057	-	# Disable app access to device location (Category: App Privacy)
-::P012	-	# Disable app access to camera (Category: App Privacy)
-::P034	-	# Disable app access to camera (Category: App Privacy)
-::P013	-	# Disable app access to microphone (Category: App Privacy)
-::P035	-	# Disable app access to microphone (Category: App Privacy)
-::P062	-	# Disable app access to use voice activation (Category: App Privacy)
-::P063	-	# Disable app access to use voice activation when device is locked (Category: App Privacy)
+::P033	+	# Disable app access to diagnostics information on this device (Category: App Privacy)
+::P023	+	# Disable app access to diagnostics information for current user (Category: App Privacy)
+::P056	-	# Disable app access to device location on this device (Category: App Privacy)
+::P057	-	# Disable app access to device location for current user (Category: App Privacy)
+::P012	-	# Disable app access to camera on this device (Category: App Privacy)
+::P034	-	# Disable app access to camera for current user (Category: App Privacy)
+::P013	-	# Disable app access to microphone on this device (Category: App Privacy)
+::P035	-	# Disable app access to microphone for current user (Category: App Privacy)
+::P062	-	# Disable app access to use voice activation for current user (Category: App Privacy)
+::P063	-	# Disable app access to use voice activation when device is locked for current user (Category: App Privacy)
 ::P081	-	# Disable the standard app for the headset button (Category: App Privacy)
-::P047	-	# Disable app access to notifications (Category: App Privacy)
-::P019	-	# Disable app access to notifications (Category: App Privacy)
-::P048	-	# Disable app access to motion (Category: App Privacy)
-::P049	-	# Disable app access to movements (Category: App Privacy)
-::P020	-	# Disable app access to contacts (Category: App Privacy)
-::P037	-	# Disable app access to contacts (Category: App Privacy)
-::P011	-	# Disable app access to calendar (Category: App Privacy)
-::P038	-	# Disable app access to calendar (Category: App Privacy)
-::P050	-	# Disable app access to phone calls (Category: App Privacy)
-::P051	-	# Disable app access to phone calls (Category: App Privacy)
-::P018	-	# Disable app access to call history (Category: App Privacy)
-::P039	-	# Disable app access to call history (Category: App Privacy)
-::P021	-	# Disable app access to email (Category: App Privacy)
-::P040	-	# Disable app access to email (Category: App Privacy)
-::P022	-	# Disable app access to tasks (Category: App Privacy)
-::P041	-	# Disable app access to tasks (Category: App Privacy)
-::P014	-	# Disable app access to messages (Category: App Privacy)
-::P042	-	# Disable app access to messages (Category: App Privacy)
-::P052	-	# Disable app access to radios (Category: App Privacy)
-::P053	-	# Disable app access to radios (Category: App Privacy)
-::P054	-	# Disable app access to unpaired devices (Category: App Privacy)
-::P055	-	# Disable app access to unpaired devices (Category: App Privacy)
-::P029	-	# Disable app access to documents (Category: App Privacy)
-::P043	-	# Disable app access to documents (Category: App Privacy)
-::P030	-	# Disable app access to images (Category: App Privacy)
-::P044	-	# Disable app access to images (Category: App Privacy)
-::P031	-	# Disable app access to videos (Category: App Privacy)
-::P045	-	# Disable app access to videos (Category: App Privacy)
-::P032	-	# Disable app access to the file system (Category: App Privacy)
-::P046	-	# Disable app access to the file system (Category: App Privacy)
-::P058	-	# Disable app access to wireless equipment (Category: App Privacy)
-::P059	-	# Disable app access to wireless technology (Category: App Privacy)
-::P060	-	# Disable app access to eye tracking (Category: App Privacy)
-::P061	-	# Disable app access to eye tracking (Category: App Privacy)
-::P071	-	# Disable the ability for apps to take screenshots (Category: App Privacy)
-::P072	-	# Disable the ability for apps to take screenshots (Category: App Privacy)
-::P073	-	# Disable the ability for desktop apps to take screenshots (Category: App Privacy)
-::P074	-	# Disable the ability for apps to take screenshots without borders (Category: App Privacy)
-::P075	-	# Disable the ability for apps to take screenshots without borders (Category: App Privacy)
-::P076	-	# Disable the ability for desktop apps to take screenshots without margins (Category: App Privacy)
-::P077	-	# Disable app access to music libraries (Category: App Privacy)
-::P078	-	# Disable app access to music libraries (Category: App Privacy)
-::P079	-	# Disable app access to downloads folder (Category: App Privacy)
-::P080	-	# Disable app access to downloads folder (Category: App Privacy)
+::P047	-	# Disable app access to notifications on this device (Category: App Privacy)
+::P019	-	# Disable app access to notifications for current user (Category: App Privacy)
+::P048	-	# Disable app access to motion on this device (Category: App Privacy)
+::P049	-	# Disable app access to movements for current user (Category: App Privacy)
+::P020	-	# Disable app access to contacts on this device (Category: App Privacy)
+::P037	-	# Disable app access to contacts for current user (Category: App Privacy)
+::P011	-	# Disable app access to calendar on this device (Category: App Privacy)
+::P038	-	# Disable app access to calendar for current user (Category: App Privacy)
+::P050	-	# Disable app access to phone calls on this device (Category: App Privacy)
+::P051	-	# Disable app access to phone calls for current user (Category: App Privacy)
+::P018	-	# Disable app access to call history on this device (Category: App Privacy)
+::P039	-	# Disable app access to call history for current user (Category: App Privacy)
+::P021	-	# Disable app access to email on this device (Category: App Privacy)
+::P040	-	# Disable app access to email for current user (Category: App Privacy)
+::P022	-	# Disable app access to tasks on this device (Category: App Privacy)
+::P041	-	# Disable app access to tasks for current user (Category: App Privacy)
+::P014	-	# Disable app access to messages on this device (Category: App Privacy)
+::P042	-	# Disable app access to messages for current user (Category: App Privacy)
+::P052	-	# Disable app access to radios on this device (Category: App Privacy)
+::P053	-	# Disable app access to radios for current user (Category: App Privacy)
+::P054	-	# Disable app access to unpaired devices on this device (Category: App Privacy)
+::P055	-	# Disable app access to unpaired devices for current user (Category: App Privacy)
+::P029	-	# Disable app access to documents on this device (Category: App Privacy)
+::P043	-	# Disable app access to documents for current user (Category: App Privacy)
+::P030	-	# Disable app access to images on this device (Category: App Privacy)
+::P044	-	# Disable app access to images for current user (Category: App Privacy)
+::P031	-	# Disable app access to videos on this device (Category: App Privacy)
+::P045	-	# Disable app access to videos for current user (Category: App Privacy)
+::P032	-	# Disable app access to the file system on this device (Category: App Privacy)
+::P046	-	# Disable app access to the file system for current user (Category: App Privacy)
+::P058	-	# Disable app access to wireless equipment on this device (Category: App Privacy)
+::P059	-	# Disable app access to wireless technology for current user (Category: App Privacy)
+::P060	-	# Disable app access to eye tracking on this device (Category: App Privacy)
+::P061	-	# Disable app access to eye tracking for current user (Category: App Privacy)
+::P071	-	# Disable the ability for apps to take screenshots on this device (Category: App Privacy)
+::P072	-	# Disable the ability for apps to take screenshots for current user (Category: App Privacy)
+::P073	-	# Disable the ability for desktop apps to take screenshots for current user (Category: App Privacy)
+::P074	-	# Disable the ability for apps to take screenshots without borders on this device (Category: App Privacy)
+::P075	-	# Disable the ability for apps to take screenshots without borders for current user (Category: App Privacy)
+::P076	-	# Disable the ability for desktop apps to take screenshots without margins for current user (Category: App Privacy)
+::P077	-	# Disable app access to music libraries on this device (Category: App Privacy)
+::P078	-	# Disable app access to music libraries for current user (Category: App Privacy)
+::P079	-	# Disable app access to downloads folder on this device (Category: App Privacy)
+::P080	-	# Disable app access to downloads folder for current user (Category: App Privacy)
 ::P024	-	# Prohibit apps from running in the background (Category: App Privacy)
 ::S001	-	# Disable password reveal button (Category: Security)
 ::S002	+	# Disable user steps recorder (Category: Security)
@@ -4164,7 +4175,7 @@ if "%debug%"=="true" (
 ::L005	-	# Disable Windows Geolocation Service (Category: Location Services)
 ::U001	+	# Disable application telemetry (Category: User Behavior)
 ::U004	+	# Disable diagnostic data from customizing user experiences for whole machine (Category: User Behavior)
-::U005	+	# Disable the use of diagnostic data for a tailor-made user experience (Category: User Behavior)
+::U005	+	# Disable the use of diagnostic data for a tailor-made user experience for current user (Category: User Behavior)
 ::U006	+	# Disable diagnostic log collection (Category: User Behavior)
 ::U007	+	# Disable downloading of OneSettings configuration settings (Category: User Behavior)
 ::W001	+	# Disable Windows Update via peer-to-peer (Category: Windows Update)
@@ -4195,21 +4206,21 @@ if "%debug%"=="true" (
 ::M003	+	# Disable extension of Windows search with Bing (Category: Search)
 ::M015	+	# Disable People icon in the taskbar (Category: Taskbar)
 ::M016	-	# Disable search box in task bar (Category: Taskbar)
-::M017	+	# Disable "Meet now" in the task bar (Category: Taskbar)
-::M018	+	# Disable "Meet now" in the task bar (Category: Taskbar)
-::M019	+	# Disable news and interests in the task bar (Category: Taskbar)
+::M017	+	# Disable "Meet now" in the task bar on this device (Category: Taskbar)
+::M018	+	# Disable "Meet now" in the task bar for current user (Category: Taskbar)
+::M019	+	# Disable news and interests in the task bar on this device (Category: Taskbar)
 ::M021	+	# Disable widgets in Windows Explorer (Category: Taskbar)
-::M022	+	# Disable feedback reminders (Category: Miscellaneous)
-::M001	+	# Disable feedback reminders (Category: Miscellaneous)
+::M022	+	# Disable feedback reminders on this device (Category: Miscellaneous)
+::M001	+	# Disable feedback reminders for current user (Category: Miscellaneous)
 ::M004	+	# Disable automatic installation of recommended Windows Store Apps (Category: Miscellaneous)
 ::M005	+	# Disable tips, tricks, and suggestions while using Windows (Category: Miscellaneous)
 ::M024	+	# Disable Windows Media Player Diagnostics (Category: Miscellaneous)
-::M026	+	# Disable remote assistance connections to this computer (Category: Miscellaneous)
-::M027	+	# Disable remote connections to this computer (Category: Miscellaneous)
-::M028	+	# Disable the desktop icon for information on "Windows Spotlight" (Category: Miscellaneous)
 ::M012	-	# Disable Key Management Service Online Activation (Category: Miscellaneous)
 ::M013	-	# Disable automatic download and update of map data (Category: Miscellaneous)
 ::M014	-	# Disable unsolicited network traffic on the offline maps settings page (Category: Miscellaneous)
+::M026	+	# Disable remote assistance connections to this computer (Category: Miscellaneous)
+::M027	+	# Disable remote connections to this computer (Category: Miscellaneous)
+::M028	+	# Disable the desktop icon for information on "Windows Spotlight" (Category: Miscellaneous)
 ::N001	-	# Disable Network Connectivity Status Indicator (Category: Miscellaneous)
 ::'
 ::
@@ -4240,7 +4251,6 @@ if "%debug%"=="true" (
 ::                      "WPFTweaksDVR",
 ::                      "WPFTweaksEdgeDebloat",
 ::                      "WPFTweaksEndTaskOnTaskbar",
-::                      "WPFTweaksHome",
 ::                      "WPFTweaksLoc",
 ::                      "WPFTweaksPowershell7Tele",
 ::                      "WPFTweaksRecallOff",
@@ -4256,7 +4266,6 @@ if "%debug%"=="true" (
 ::
 ::                   ],
 ::    "WPFFeature":  [
-::                       "WPFFeatureDisableSearchSuggestions",
 ::                       "WPFFeatureRegBackup"
 ::                   ]
 ::}
@@ -5865,7 +5874,7 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
 ::    Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
 ::    Set-Variable -Option Constant SysprepParam $(if ($OS_VERSION -gt 10) { '-Sysprep' } else { '' })
-::    Set-Variable -Option Constant Params "$SysprepParam $UsePresetParam $SilentParam"
+::    Set-Variable -Option Constant Params "-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam"
 ::
 ::    Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 ::
@@ -5970,16 +5979,16 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 20 -Task 'Clearing Windows temp folder...'
 ::    Set-Variable -Option Constant WindowsTemp "$env:SystemRoot\Temp"
-::    Get-ChildItem -Path $WindowsTemp -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
+::    Remove-Item -Path "$WindowsTemp\*" -Recurse -Force -ErrorAction Ignore
 ::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 30 -Task 'Clearing user temp folder...'
-::    Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
+::    Remove-Item -Path "$PATH_TEMP_DIR\*" -Recurse -Force -ErrorAction Ignore
 ::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 40 -Task 'Clearing software distribution folder...'
 ::    Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
-::    Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
+::    Remove-Item -Path "$SoftwareDistributionPath\*" -Recurse -Force -ErrorAction Ignore
 ::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 60 -Task 'Running system cleanup...'
