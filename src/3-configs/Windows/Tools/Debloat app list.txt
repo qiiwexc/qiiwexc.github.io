@@ -39,6 +39,7 @@ Microsoft.BingTranslator                       # Translation service via Bing
 Microsoft.BingTravel                           # Travel planning and news via Bing (Discontinued)
 Microsoft.Copilot                              # AI assistant integrated into Windows
 Microsoft.Getstarted                           # Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)
+Microsoft.M365Companions                       # Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin
 Microsoft.Messaging                            # Messaging app, often integrates with Skype (Largely deprecated)
 Microsoft.Microsoft3DViewer                    # Viewer for 3D models
 Microsoft.MicrosoftJournal                     # Digital note-taking app optimized for pen input

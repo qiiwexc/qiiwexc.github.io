@@ -5,7 +5,7 @@ New-GroupBox 'Bootable USB tools'
     Set-Variable -Option Constant FileName $((Split-Path -Leaf '{URL_VENTOY}').Replace('-windows', ''))
     Start-DownloadUnzipAndRun '{URL_VENTOY}' $FileName -Execute:$CHECKBOX_StartVentoy.Checked
 }
-New-Button 'Windows Ventoy' $BUTTON_FUNCTION
+New-Button 'Ventoy' $BUTTON_FUNCTION
 
 [Windows.Forms.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Checked
 

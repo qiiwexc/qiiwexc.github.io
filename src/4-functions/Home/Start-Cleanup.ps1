@@ -9,16 +9,16 @@ function Start-Cleanup {
 
     Write-ActivityProgress -PercentComplete 20 -Task 'Clearing Windows temp folder...'
     Set-Variable -Option Constant WindowsTemp "$env:SystemRoot\Temp"
-    Get-ChildItem -Path $WindowsTemp -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path "$WindowsTemp\*" -Recurse -Force -ErrorAction Ignore
     Out-Success $LogIndentLevel
 
     Write-ActivityProgress -PercentComplete 30 -Task 'Clearing user temp folder...'
-    Get-ChildItem -Path $PATH_TEMP_DIR -Recurse -Force -ErrorAction Ignore | Remove-Item -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path "$PATH_TEMP_DIR\*" -Recurse -Force -ErrorAction Ignore
     Out-Success $LogIndentLevel
 
     Write-ActivityProgress -PercentComplete 40 -Task 'Clearing software distribution folder...'
     Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
-    Get-ChildItem -Path $SoftwareDistributionPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path "$SoftwareDistributionPath\*" -Recurse -Force -ErrorAction Ignore
     Out-Success $LogIndentLevel
 
     Write-ActivityProgress -PercentComplete 60 -Task 'Running system cleanup...'

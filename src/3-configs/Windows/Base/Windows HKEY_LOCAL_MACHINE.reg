@@ -58,7 +58,7 @@
 "value"="Deny"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
-"Value"="Allow"
+"value"="Allow"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
 "value"="Deny"
@@ -1285,6 +1285,12 @@
 "allownullsessionfallback"=dword:00000000
 "NtlmMinClientSec"=dword:20080000
 "NtlmMinServerSec"=dword:20080000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Language]
+"Default"="0419"
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Locale]
+"(Default)"="00000419"
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
 "PowerThrottlingOff"=dword:00000001
