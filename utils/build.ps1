@@ -12,14 +12,16 @@ Set-Variable -Option Constant AssetsPath '.\assets'
 Set-Variable -Option Constant UtilsPath '.\utils'
 Set-Variable -Option Constant SourcePath '.\src'
 Set-Variable -Option Constant DistPath '.\d'
-Set-Variable -Option Constant UnattendedPath "$UtilsPath\unattended"
+Set-Variable -Option Constant BuilderPath "$UtilsPath\build"
+Set-Variable -Option Constant CommonPath "$UtilsPath\common"
+Set-Variable -Option Constant UnattendedPath "$BuilderPath\unattended"
 
-. "$UtilsPath\logger.ps1"
-. "$UtilsPath\Get-Config.ps1"
-. "$UtilsPath\New-BatchScript.ps1"
-. "$UtilsPath\New-HtmlFile.ps1"
-. "$UtilsPath\New-PowerShellScript.ps1"
-. "$UtilsPath\Write-VersionFile.ps1"
+. "$CommonPath\logger.ps1"
+. "$BuilderPath\Get-Config.ps1"
+. "$BuilderPath\New-BatchScript.ps1"
+. "$BuilderPath\New-HtmlFile.ps1"
+. "$BuilderPath\New-PowerShellScript.ps1"
+. "$BuilderPath\Write-VersionFile.ps1"
 . "$UnattendedPath\New-UnattendedFile.ps1"
 
 Set-Variable -Option Constant VersionFile "$DistPath\version"
