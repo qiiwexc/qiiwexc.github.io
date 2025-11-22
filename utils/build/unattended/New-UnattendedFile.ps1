@@ -2,7 +2,7 @@ function New-UnattendedFile {
     param(
         [String][Parameter(Position = 0, Mandatory)]$UnattendedPath,
         [String][Parameter(Position = 1, Mandatory)]$SourcePath,
-        [String][Parameter(Position = 2, Mandatory)]$AssetsPath,
+        [String][Parameter(Position = 2, Mandatory)]$TemplatesPath,
         [String][Parameter(Position = 3, Mandatory)]$FileNameTemplate
     )
 
@@ -17,7 +17,7 @@ function New-UnattendedFile {
     Write-LogInfo 'Building unattended files...'
 
     Set-Variable -Option Constant ConfigsPath "$SourcePath\3-configs"
-    Set-Variable -Option Constant TemplateFile "$AssetsPath\autounattend-template.xml"
+    Set-Variable -Option Constant TemplateFile "$TemplatesPath\autounattend.xml"
 
     Set-Variable -Option Constant Locales @('English', 'Russian')
 
