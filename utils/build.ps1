@@ -8,7 +8,8 @@ param(
 Set-Variable -Option Constant Version (Get-Date -Format 'y.M.d')
 Set-Variable -Option Constant ProjectName 'qiiwexc'
 
-Set-Variable -Option Constant AssetsPath '.\assets'
+Set-Variable -Option Constant ConfigPath '.\config'
+Set-Variable -Option Constant TemplatesPath '.\templates'
 Set-Variable -Option Constant UtilsPath '.\utils'
 Set-Variable -Option Constant SourcePath '.\src'
 Set-Variable -Option Constant DistPath '.\d'
@@ -36,16 +37,16 @@ Write-LogInfo "Output file = $Ps1File"
 
 Write-Progress -Activity 'Build' -PercentComplete 1
 
-Set-Variable -Option Constant Config (Get-Config $AssetsPath $Version)
+Set-Variable -Option Constant Config (Get-Config $ConfigPath $Version)
 Write-Progress -Activity 'Build' -PercentComplete 10
 
 Write-VersionFile $Version $VersionFile
 Write-Progress -Activity 'Build' -PercentComplete 20
 
-New-HtmlFile $AssetsPath $Config
+New-HtmlFile $TemplatesPath $Config
 Write-Progress -Activity 'Build' -PercentComplete 40
 
-New-UnattendedFile $UnattendedPath $SourcePath $AssetsPath $UnattendedFile
+New-UnattendedFile $UnattendedPath $SourcePath $TemplatesPath $UnattendedFile
 Write-Progress -Activity 'Build' -PercentComplete 60
 
 New-PowerShellScript $SourcePath $Ps1File -Config $Config
