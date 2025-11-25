@@ -12,7 +12,12 @@ function Start-OoShutUp10 {
         return
     }
 
-    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_OOSHUTUP10 } else { $PATH_WORKING_DIR })
+    if ($Execute) {
+        Set-Variable -Option Constant TargetPath $PATH_OOSHUTUP10
+    } else {
+        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+    }
+
     Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
 
     New-Item -Force -ItemType Directory $TargetPath | Out-Null

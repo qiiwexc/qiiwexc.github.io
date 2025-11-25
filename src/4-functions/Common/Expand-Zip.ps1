@@ -11,18 +11,48 @@ function Expand-Zip {
     Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
     Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
     Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
-    Set-Variable -Option Constant TargetPath $(if ($Temp) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
+
+    if ($Temp) {
+        Set-Variable -Option Constant TargetPath $PATH_APP_DIR
+    } else {
+        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+    }
 
     Initialize-AppDirectory
 
-    [String]$Executable = switch -Wildcard ($ZipName) {
-        'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
-        'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
-        'cpu-z_*' { "$ExtractionDir\cpuz_x$(if ($OS_64_BIT) {'64'} else {'32'}).exe" }
-        'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
-        'ventoy*' { "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe" }
-        'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
-        Default { $ZipName.TrimEnd('.zip') + '.exe' }
+    switch -Wildcard ($ZipName) {
+        'ActivationProgram.zip' {
+            if (-not $OS_64_BIT) {
+                Set-Variable -Option Constant Suffix '_x86.exe'
+            }
+            Set-Variable -Option Constant Executable "ActivationProgram$Suffix.exe"
+        }
+        'Office_Installer+.zip' {
+            if (-not $OS_64_BIT) {
+                Set-Variable -Option Constant Suffix ' x86.exe'
+            }
+            Set-Variable -Option Constant Executable "Office Installer+$Suffix.exe"
+        }
+        'cpu-z_*' {
+            if ($OS_64_BIT) {
+                Set-Variable -Option Constant Suffix '64'
+            } else {
+                Set-Variable -Option Constant Suffix '32'
+            }
+            Set-Variable -Option Constant Executable "$ExtractionDir\cpuz_x$Suffix.exe"
+        }
+        'SDIO_*' {
+            Set-Variable -Option Constant Executable "$ExtractionDir\SDIO_auto.bat"
+        }
+        'ventoy*' {
+            Set-Variable -Option Constant Executable "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe"
+        }
+        'Victoria*' {
+            Set-Variable -Option Constant Executable "$ExtractionDir\$ExtractionDir\Victoria.exe"
+        }
+        Default {
+            Set-Variable -Option Constant Executable ($ZipName.TrimEnd('.zip') + '.exe')
+        }
     }
 
     Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -like "$ExtractionDir\*")

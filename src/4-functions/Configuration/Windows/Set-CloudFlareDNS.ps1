@@ -4,8 +4,21 @@ function Set-CloudFlareDNS {
         [Switch][Parameter(Position = 1, Mandatory)]$FamilyFriendly
     )
 
-    Set-Variable -Option Constant PreferredDnsServer $(if ($FamilyFriendly) { '1.1.1.3' } else { if ($MalwareProtection) { '1.1.1.2' } else { '1.1.1.1' } })
-    Set-Variable -Option Constant AlternateDnsServer $(if ($FamilyFriendly) { '1.0.0.3' } else { if ($MalwareProtection) { '1.0.0.2' } else { '1.0.0.1' } })
+    if ($FamilyFriendly) {
+        Set-Variable -Option Constant PreferredDnsServer '1.1.1.3'
+    } elseif ($MalwareProtection) {
+        Set-Variable -Option Constant PreferredDnsServer '1.1.1.2'
+    } else {
+        Set-Variable -Option Constant PreferredDnsServer '1.1.1.1'
+    }
+
+    if ($FamilyFriendly) {
+        Set-Variable -Option Constant AlternateDnsServer '1.0.0.3'
+    } elseif ($MalwareProtection) {
+        Set-Variable -Option Constant AlternateDnsServer '1.0.0.2'
+    } else {
+        Set-Variable -Option Constant AlternateDnsServer '1.0.0.1'
+    }
 
     Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
     Write-LogWarning 'Internet connection may get interrupted briefly'

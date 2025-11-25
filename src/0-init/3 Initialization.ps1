@@ -35,11 +35,39 @@ Set-Variable -Option Constant PS_VERSION $PSVersionTable.PSVersion.Major
 Set-Variable -Option Constant OPERATING_SYSTEM (Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture)
 Set-Variable -Option Constant IsWindows11 ($OPERATING_SYSTEM.Caption -match 'Windows 11')
 Set-Variable -Option Constant WindowsBuild $OPERATING_SYSTEM.Version
-Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { switch -Wildcard ($WindowsBuild) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
+
+Set-Variable -Option Constant OS_64_BIT ($env:PROCESSOR_ARCHITECTURE -like '*64')
+
+if ($IsWindows11) {
+    Set-Variable -Option Constant OS_VERSION 11
+} else {
+    switch -Wildcard ($WindowsBuild) {
+        '10.0.*' {
+            Set-Variable -Option Constant OS_VERSION 10
+        }
+        '6.3.*' {
+            Set-Variable -Option Constant OS_VERSION 8.1
+        }
+        '6.2.*' {
+            Set-Variable -Option Constant OS_VERSION 8
+        }
+        '6.1.*' {
+            Set-Variable -Option Constant OS_VERSION 7
+        }
+        Default {
+            Set-Variable -Option Constant OS_VERSION 'Vista or less / Unknown'
+        }
+    }
+}
 
 Set-Variable -Option Constant WordRegPath 'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer'
 if (Test-Path $WordRegPath) {
     Set-Variable -Option Constant WordPath (Get-ItemProperty $WordRegPath)
     Set-Variable -Option Constant OFFICE_VERSION ($WordPath.'(default)' -replace '\D+', '')
-    Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' })
+
+    if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {
+        Set-Variable -Option Constant OFFICE_INSTALL_TYPE 'C2R'
+    } else {
+        Set-Variable -Option Constant OFFICE_INSTALL_TYPE 'MSI'
+    }
 }
