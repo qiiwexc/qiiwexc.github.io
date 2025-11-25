@@ -67,7 +67,11 @@ function Write-Log {
     }
 
     if ($Level -ne 'DEBUG') {
-        $LOG.AppendText($(if ($NoNewLine) { $Text } else { "`n$Text" }))
+        if ($NoNewLine) {
+            $LOG.AppendText($Text)
+        } else {
+            $LOG.AppendText("`n$Text")
+        }
         $LOG.SelectionColor = 'black'
         $LOG.ScrollToCaret()
     }

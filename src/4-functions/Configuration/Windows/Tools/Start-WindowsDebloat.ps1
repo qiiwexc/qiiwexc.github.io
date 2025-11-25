@@ -17,17 +17,34 @@ function Start-WindowsDebloat {
 
     New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
-    Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
-    Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + $(if ($Personalisation) { 'Microsoft.OneDrive' } else { '' }))
-    $AppsList | Out-File $CustomAppsListFile -Encoding UTF8
+    if ($Personalisation) {
+        Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive')
+    } else {
+        Set-Variable -Option Constant AppsList $CONFIG_DEBLOAT_APP_LIST
+    }
 
-    Set-Variable -Option Constant SavedSettingsFile "$TargetPath\SavedSettings"
-    Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $(if ($Personalisation) { $CONFIG_DEBLOAT_PRESET_PERSONALISATION } else { '' }))
-    $Configuration | Out-File $SavedSettingsFile -Encoding UTF8
+    $AppsList | Out-File "$TargetPath\CustomAppsList" -Encoding UTF8
 
-    Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
-    Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
-    Set-Variable -Option Constant SysprepParam $(if ($OS_VERSION -gt 10) { '-Sysprep' } else { '' })
+    if ($Personalisation) {
+        Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $CONFIG_DEBLOAT_PRESET_PERSONALISATION)
+    } else {
+        Set-Variable -Option Constant Configuration $CONFIG_DEBLOAT_PRESET_BASE
+    }
+
+    $Configuration | Out-File "$TargetPath\SavedSettings" -Encoding UTF8
+
+    if ($UsePreset) {
+        Set-Variable -Option Constant UsePresetParam '-RunSavedSettings'
+    }
+
+    if ($Silent) {
+        Set-Variable -Option Constant SilentParam '-Silent'
+    }
+
+    if ($OS_VERSION -gt 10) {
+        Set-Variable -Option Constant SysprepParam '-Sysprep'
+    }
+
     Set-Variable -Option Constant Params "-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam"
 
     Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"

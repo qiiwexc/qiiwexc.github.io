@@ -9,9 +9,19 @@ function Start-Download {
 
     Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
 
-    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
+    if ($SaveAs) {
+        Set-Variable -Option Constant FileName $SaveAs
+    } else {
+        Set-Variable -Option Constant FileName (Split-Path -Leaf $URL)
+    }
+
     Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
-    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_WORKING_DIR\$FileName" })
+
+    if ($Temp) {
+        Set-Variable -Option Constant SavePath $TempPath
+    } else {
+        Set-Variable -Option Constant SavePath "$PATH_WORKING_DIR\$FileName"
+    }
 
     Initialize-AppDirectory
 

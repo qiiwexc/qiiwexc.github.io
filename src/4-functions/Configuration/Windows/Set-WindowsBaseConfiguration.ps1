@@ -19,7 +19,11 @@
         Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
     }
 
-    Set-Variable -Option Constant LocalisedConfig $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH })
+    if ($SYSTEM_LANGUAGE -match 'ru') {
+        Set-Variable -Option Constant LocalisedConfig $CONFIG_WINDOWS_RUSSIAN
+    } else {
+        Set-Variable -Option Constant LocalisedConfig $CONFIG_WINDOWS_ENGLISH
+    }
 
     [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
     $ConfigLines.Add("`n")

@@ -11,10 +11,23 @@ function New-Button {
     [Drawing.Point]$Shift = '0, 0'
 
     if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
-        [Int]$PreviousLabelOrCheckboxY = if ($PREVIOUS_LABEL_OR_CHECKBOX) { $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y } else { 0 }
-        [Int]$PreviousRadioY = if ($PREVIOUS_RADIO) { $PREVIOUS_RADIO.Location.Y } else { 0 }
+        if ($PREVIOUS_LABEL_OR_CHECKBOX) {
+            Set-Variable -Option Constant PreviousLabelOrCheckboxY $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
+        } else {
+            Set-Variable -Option Constant PreviousLabelOrCheckboxY 0
+        }
 
-        [Int]$PreviousMiscElement = if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) { $PreviousLabelOrCheckboxY } else { $PreviousRadioY }
+        if ($PREVIOUS_RADIO) {
+            Set-Variable -Option Constant PreviousRadioY $PREVIOUS_RADIO.Location.Y
+        } else {
+            Set-Variable -Option Constant PreviousRadioY 0
+        }
+
+        if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) {
+            Set-Variable -Option Constant PreviousMiscElement $PreviousLabelOrCheckboxY
+        } else {
+            Set-Variable -Option Constant PreviousMiscElement $PreviousRadioY
+        }
 
         $InitialLocation.Y = $PreviousMiscElement
         $Shift = '0, 30'

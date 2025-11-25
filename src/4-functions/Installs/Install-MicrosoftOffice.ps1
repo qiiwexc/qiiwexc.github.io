@@ -3,8 +3,17 @@ function Install-MicrosoftOffice {
         [Switch][Parameter(Position = 0, Mandatory)]$Execute
     )
 
-    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
-    Set-Variable -Option Constant Config $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU') } else { $CONFIG_OFFICE_INSTALLER })
+    if ($Execute) {
+        Set-Variable -Option Constant TargetPath $PATH_APP_DIR
+    } else {
+        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+    }
+
+    if ($SYSTEM_LANGUAGE -match 'ru') {
+        Set-Variable -Option Constant Config $CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU')
+    } else {
+        Set-Variable -Option Constant Config $CONFIG_OFFICE_INSTALLER
+    }
 
     Initialize-AppDirectory
 
