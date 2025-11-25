@@ -39,7 +39,7 @@ function Write-Log {
     )
 
     Set-Variable -Option Constant Indent $('   ' * $IndentLevel)
-    Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Indent $Message"
+    Set-Variable -Option Constant Text "[$((Get-Date).ToString())]$Indent $Message"
 
     $LOG.SelectionStart = $LOG.TextLength
 
