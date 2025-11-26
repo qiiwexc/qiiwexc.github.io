@@ -8,7 +8,7 @@
         "projectId":  "10658830"
     },
     {
-        "name":  "Tron Script",
+        "name":  "TronScript",
         "version":  "v12.0.6",
         "source":  "GitHub",
         "mode":  "compare",
@@ -78,7 +78,7 @@
         "regex":  "^\u003cdiv class=\u0027post-header\u0027[^\u003e]*\u003e\n\u003cdiv class=\u0027post-header-line-1\u0027[^\u003e]*\u003e\u003c/div\u003e\nОпубликовал\n\u003cb style=\u0027color: #999;\u0027[^\u003e]*\u003em0nkrus\u003c/b\u003e\n(.*?)\n\u003c/div\u003e"
     },
     {
-        "name":  "SDI",
+        "name":  "SDIO",
         "version":  "1.17.1.822",
         "source":  "URL",
         "url":  "https://www.glenn.delahoy.com/downloads/sdio/changelog.txt",
