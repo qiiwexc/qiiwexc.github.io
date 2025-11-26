@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "key": "URL_VERSION_FILE",
     "value": "https://bit.ly/qiiwexc_version"
@@ -20,7 +20,7 @@
     "value": "https://w17.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html"
   },
   {
-    "key": "URL_UNATTENDED_GENERATOR",
+    "key": "URL_UNATTEND_GENERATOR",
     "value": "https://schneegans.de/windows/unattend-generator/"
   },
   {
@@ -33,7 +33,7 @@
   },
   {
     "key": "URL_SDIO",
-    "value": "https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.16.0.818.zip"
+    "value": "https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.17.1.822.zip"
   },
   {
     "key": "URL_VICTORIA",
@@ -41,7 +41,7 @@
   },
   {
     "key": "URL_CPU_Z",
-    "value": "https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip"
+    "value": "https://download.cpuid.com/cpu-z/cpu-z_2.17-en.zip"
   },
   {
     "key": "URL_OFFICE_INSTALLER",
