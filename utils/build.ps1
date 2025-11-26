@@ -22,6 +22,7 @@ Set-Variable -Option Constant UnattendedPath "$BuilderPath\unattended"
 . "$BuilderPath\New-BatchScript.ps1"
 . "$BuilderPath\New-HtmlFile.ps1"
 . "$BuilderPath\New-PowerShellScript.ps1"
+. "$BuilderPath\Set-Urls.ps1"
 . "$BuilderPath\Write-VersionFile.ps1"
 . "$UnattendedPath\New-UnattendedFile.ps1"
 
@@ -37,14 +38,17 @@ Write-LogInfo "Output file = $Ps1File"
 
 Write-Progress -Activity 'Build' -PercentComplete 1
 
-Set-Variable -Option Constant Config (Get-Config $ConfigPath $Version)
+Set-Urls $ConfigPath $TemplatesPath
 Write-Progress -Activity 'Build' -PercentComplete 10
 
-Write-VersionFile $Version $VersionFile
+Set-Variable -Option Constant Config (Get-Config $ConfigPath $Version)
 Write-Progress -Activity 'Build' -PercentComplete 20
 
+Write-VersionFile $Version $VersionFile
+Write-Progress -Activity 'Build' -PercentComplete 30
+
 New-HtmlFile $TemplatesPath $Config
-Write-Progress -Activity 'Build' -PercentComplete 40
+Write-Progress -Activity 'Build' -PercentComplete 50
 
 New-UnattendedFile $UnattendedPath $SourcePath $TemplatesPath $UnattendedFile
 Write-Progress -Activity 'Build' -PercentComplete 60
