@@ -1,0 +1,94 @@
+﻿[
+    {
+        "name":  "SystemRescue",
+        "version":  "12.02",
+        "source":  "GitLab",
+        "mode":  "compare",
+        "repository":  "systemrescue/systemrescue-sources",
+        "projectId":  "10658830"
+    },
+    {
+        "name":  "Tron Script",
+        "version":  "v12.0.6",
+        "source":  "GitHub",
+        "mode":  "compare",
+        "repository":  "bmrf/tron"
+    },
+    {
+        "name":  "Sophia Script",
+        "version":  "6.9.2",
+        "source":  "GitHub",
+        "mode":  "tags",
+        "repository":  "farag2/Sophia-Script-for-Windows"
+    },
+    {
+        "name":  "Microsoft Activation Scripts",
+        "version":  "3.9",
+        "source":  "GitHub",
+        "mode":  "tags",
+        "repository":  "massgravel/Microsoft-Activation-Scripts"
+    },
+    {
+        "name":  "Unattend Generator",
+        "version":  "54e431afcd14269ca0da3b801f50230a1660facc",
+        "source":  "GitHub",
+        "mode":  "commits",
+        "repository":  "cschneegans/unattend-generator"
+    },
+    {
+        "name":  "WinUtil",
+        "version":  "25.11.17",
+        "source":  "GitHub",
+        "mode":  "tags",
+        "repository":  "ChrisTitusTech/winutil"
+    },
+    {
+        "name":  "Win11Debloat",
+        "version":  "2025.10.06",
+        "source":  "GitHub",
+        "mode":  "tags",
+        "repository":  "Raphire/Win11Debloat"
+    },
+    {
+        "name":  "Ventoy",
+        "version":  "v1.1.07",
+        "source":  "GitHub",
+        "mode":  "tags",
+        "repository":  "ventoy/Ventoy"
+    },
+    {
+        "name":  "Rufus",
+        "version":  "v4.11",
+        "source":  "GitHub",
+        "mode":  "tags",
+        "repository":  "pbatard/rufus"
+    },
+    {
+        "name":  "OOShutUp10",
+        "version":  "2.1",
+        "source":  "URL",
+        "url":  "https://www.oo-software.com/en/shutup10/changelog",
+        "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
+    },
+    {
+        "name":  "Windows",
+        "version":  "13 ноября 2025\u0026#8239;г. в 07:02",
+        "source":  "URL",
+        "url":  "https://w17.monkrus.ws/search/label/Windows",
+        "regex":  "^\u003cdiv class=\u0027post-header\u0027[^\u003e]*\u003e\n\u003cdiv class=\u0027post-header-line-1\u0027[^\u003e]*\u003e\u003c/div\u003e\nОпубликовал\n\u003cb style=\u0027color: #999;\u0027[^\u003e]*\u003em0nkrus\u003c/b\u003e\n(.*?)\n\u003c/div\u003e"
+    },
+    {
+        "name":  "SDI",
+        "version":  "1.17.1.822",
+        "source":  "URL",
+        "url":  "https://www.glenn.delahoy.com/downloads/sdio/changelog.txt",
+        "regex":  "^Version (.*?)\r$"
+    },
+    {
+        "name":  "CPU-Z",
+        "version":  "2.17",
+        "source":  "URL",
+        "url":  "https://cpuid.com/softwares/cpu-z.html",
+        "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
+    }
+]
