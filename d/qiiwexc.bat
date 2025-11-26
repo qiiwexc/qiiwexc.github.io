@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.11.21')
+::Set-Variable -Option Constant VERSION ([Version]'25.11.26')
 ::
 ::#endregion init > Version
 ::
@@ -95,13 +95,41 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant OPERATING_SYSTEM (Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture)
 ::Set-Variable -Option Constant IsWindows11 ($OPERATING_SYSTEM.Caption -match 'Windows 11')
 ::Set-Variable -Option Constant WindowsBuild $OPERATING_SYSTEM.Version
-::Set-Variable -Option Constant OS_VERSION $(if ($IsWindows11) { 11 } else { switch -Wildcard ($WindowsBuild) { '10.0.*' { 10 } '6.3.*' { 8.1 } '6.2.*' { 8 } '6.1.*' { 7 } Default { 'Vista or less / Unknown' } } })
+::
+::Set-Variable -Option Constant OS_64_BIT ($env:PROCESSOR_ARCHITECTURE -like '*64')
+::
+::if ($IsWindows11) {
+::    Set-Variable -Option Constant OS_VERSION 11
+::} else {
+::    switch -Wildcard ($WindowsBuild) {
+::        '10.0.*' {
+::            Set-Variable -Option Constant OS_VERSION 10
+::        }
+::        '6.3.*' {
+::            Set-Variable -Option Constant OS_VERSION 8.1
+::        }
+::        '6.2.*' {
+::            Set-Variable -Option Constant OS_VERSION 8
+::        }
+::        '6.1.*' {
+::            Set-Variable -Option Constant OS_VERSION 7
+::        }
+::        Default {
+::            Set-Variable -Option Constant OS_VERSION 'Vista or less / Unknown'
+::        }
+::    }
+::}
 ::
 ::Set-Variable -Option Constant WordRegPath 'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer'
 ::if (Test-Path $WordRegPath) {
 ::    Set-Variable -Option Constant WordPath (Get-ItemProperty $WordRegPath)
 ::    Set-Variable -Option Constant OFFICE_VERSION ($WordPath.'(default)' -replace '\D+', '')
-::    Set-Variable -Option Constant OFFICE_INSTALL_TYPE $(if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) { 'C2R' } else { 'MSI' })
+::
+::    if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {
+::        Set-Variable -Option Constant OFFICE_INSTALL_TYPE 'C2R'
+::    } else {
+::        Set-Variable -Option Constant OFFICE_INSTALL_TYPE 'MSI'
+::    }
 ::}
 ::
 ::#endregion init > Initialization
@@ -151,10 +179,23 @@ if "%debug%"=="true" (
 ::    [Drawing.Point]$Shift = '0, 0'
 ::
 ::    if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
-::        [Int]$PreviousLabelOrCheckboxY = if ($PREVIOUS_LABEL_OR_CHECKBOX) { $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y } else { 0 }
-::        [Int]$PreviousRadioY = if ($PREVIOUS_RADIO) { $PREVIOUS_RADIO.Location.Y } else { 0 }
+::        if ($PREVIOUS_LABEL_OR_CHECKBOX) {
+::            Set-Variable -Option Constant PreviousLabelOrCheckboxY $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
+::        } else {
+::            Set-Variable -Option Constant PreviousLabelOrCheckboxY 0
+::        }
 ::
-::        [Int]$PreviousMiscElement = if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) { $PreviousLabelOrCheckboxY } else { $PreviousRadioY }
+::        if ($PREVIOUS_RADIO) {
+::            Set-Variable -Option Constant PreviousRadioY $PREVIOUS_RADIO.Location.Y
+::        } else {
+::            Set-Variable -Option Constant PreviousRadioY 0
+::        }
+::
+::        if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) {
+::            Set-Variable -Option Constant PreviousMiscElement $PreviousLabelOrCheckboxY
+::        } else {
+::            Set-Variable -Option Constant PreviousMiscElement $PreviousRadioY
+::        }
 ::
 ::        $InitialLocation.Y = $PreviousMiscElement
 ::        $Shift = '0, 30'
@@ -291,7 +332,11 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    if ($GroupIndex -lt 3) {
-::        Set-Variable -Option Constant Location $(if ($GroupIndex -eq 0) { '15, 15' } else { $PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0" })
+::        if ($GroupIndex -eq 0) {
+::            Set-Variable -Option Constant Location '15, 15'
+::        } else {
+::            Set-Variable -Option Constant Location ($PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0")
+::        }
 ::    } else {
 ::        Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
 ::        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + 15)")
@@ -322,7 +367,7 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant Label (New-Object Windows.Forms.Label)
 ::
-::    [Drawing.Point]$Location = $PREVIOUS_BUTTON.Location + "30, $BUTTON_HEIGHT"
+::    Set-Variable -Option Constant Location ($PREVIOUS_BUTTON.Location + "30, $BUTTON_HEIGHT")
 ::
 ::    $Label.Size = "145, $CHECKBOX_HEIGHT"
 ::    $Label.Text = $Text
@@ -354,13 +399,13 @@ if "%debug%"=="true" (
 ::    if ($PREVIOUS_RADIO) {
 ::        $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
 ::        $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
-::        $Shift = '90, 0'
+::        Set-Variable -Option Constant Shift '90, 0'
 ::    } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
 ::        $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
-::        $Shift = '-15, 20'
+::        Set-Variable -Option Constant Shift '-15, 20'
 ::    } elseif ($PREVIOUS_BUTTON) {
 ::        $InitialLocation = $PREVIOUS_BUTTON.Location
-::        $Shift = "10, $BUTTON_HEIGHT"
+::        Set-Variable -Option Constant Shift "10, $BUTTON_HEIGHT"
 ::    }
 ::
 ::    [Drawing.Point]$Location = $InitialLocation + $Shift
@@ -540,11 +585,11 @@ if "%debug%"=="true" (
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_AnyDesk = New-CheckBox 'AnyDesk' -Name 'anydesk' -Checked
 ::$CHECKBOX_Ninite_AnyDesk.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15'
-::$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
 ::$CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
+::
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15'
+::$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
 ::$CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
@@ -578,7 +623,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.16.0.818.zip' -Execute:$CHECKBOX_StartSDI.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.17.1.822.zip' -Execute:$CHECKBOX_StartSDI.Checked }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
@@ -773,7 +818,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Hardware info'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://download.cpuid.com/cpu-z/cpu-z_2.16-en.zip' -Execute:$CHECKBOX_StartCpuZ.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://download.cpuid.com/cpu-z/cpu-z_2.17-en.zip' -Execute:$CHECKBOX_StartCpuZ.Checked }
 ::New-Button 'CPU-Z' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartCpuZ = New-CheckBoxRunAfterDownload -Checked
@@ -4321,18 +4366,48 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
 ::    Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
 ::    Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
-::    Set-Variable -Option Constant TargetPath $(if ($Temp) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
+::
+::    if ($Temp) {
+::        Set-Variable -Option Constant TargetPath $PATH_APP_DIR
+::    } else {
+::        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+::    }
 ::
 ::    Initialize-AppDirectory
 ::
-::    [String]$Executable = switch -Wildcard ($ZipName) {
-::        'ActivationProgram.zip' { "ActivationProgram$(if ($OS_64_BIT) {''} else {'_x86'}).exe" }
-::        'Office_Installer+.zip' { "Office Installer+$(if ($OS_64_BIT) {''} else {' x86'}).exe" }
-::        'cpu-z_*' { "$ExtractionDir\cpuz_x$(if ($OS_64_BIT) {'64'} else {'32'}).exe" }
-::        'SDIO_*' { "$ExtractionDir\SDIO_auto.bat" }
-::        'ventoy*' { "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe" }
-::        'Victoria*' { "$ExtractionDir\$ExtractionDir\Victoria.exe" }
-::        Default { $ZipName.TrimEnd('.zip') + '.exe' }
+::    switch -Wildcard ($ZipName) {
+::        'ActivationProgram.zip' {
+::            if (-not $OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix '_x86.exe'
+::            }
+::            Set-Variable -Option Constant Executable "ActivationProgram$Suffix.exe"
+::        }
+::        'Office_Installer+.zip' {
+::            if (-not $OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix ' x86.exe'
+::            }
+::            Set-Variable -Option Constant Executable "Office Installer+$Suffix.exe"
+::        }
+::        'cpu-z_*' {
+::            if ($OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix '64'
+::            } else {
+::                Set-Variable -Option Constant Suffix '32'
+::            }
+::            Set-Variable -Option Constant Executable "$ExtractionDir\cpuz_x$Suffix.exe"
+::        }
+::        'SDIO_*' {
+::            Set-Variable -Option Constant Executable "$ExtractionDir\SDIO_auto.bat"
+::        }
+::        'ventoy*' {
+::            Set-Variable -Option Constant Executable "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe"
+::        }
+::        'Victoria*' {
+::            Set-Variable -Option Constant Executable "$ExtractionDir\$ExtractionDir\Victoria.exe"
+::        }
+::        Default {
+::            Set-Variable -Option Constant Executable ($ZipName.TrimEnd('.zip') + '.exe')
+::        }
 ::    }
 ::
 ::    Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -like "$ExtractionDir\*")
@@ -4412,22 +4487,51 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant LogIndentLevel 1
 ::
 ::    Set-Variable -Option Constant Motherboard (Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product)
+::    Write-LogInfo "Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)" $LogIndentLevel
+::
 ::    Set-Variable -Option Constant BIOS (Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate)
+::    Write-LogInfo "BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))" $LogIndentLevel
+::
+::    Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
 ::
 ::    Set-Variable -Option Constant WindowsRelease ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion)
+::    if ($OS_VERSION -ge 10) {
+::        Write-LogInfo "OS release: v$WindowsRelease" $LogIndentLevel
+::    }
 ::
-::    Set-Variable -Option Constant -Scope Script OS_64_BIT $(if ($env:PROCESSOR_ARCHITECTURE -like '*64') { $True })
-::
-::    Set-Variable -Option Constant OfficeYear $(switch ($OFFICE_VERSION) { 16 { '2016 / 2019 / 2021 / 2024' } 15 { '2013' } 14 { '2010' } 12 { '2007' } 11 { '2003' } })
-::    Set-Variable -Option Constant OfficeName $(if ($OfficeYear) { "Microsoft Office $OfficeYear" } else { 'Unknown version or not installed' })
-::
-::    Write-LogInfo "Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)" $LogIndentLevel
-::    Write-LogInfo "BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))" $LogIndentLevel
-::    Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
-::    Write-LogInfo "$(if ($OS_VERSION -ge 10) {'OS release / '})Build number: $(if ($OS_VERSION -ge 10) {"v$WindowsRelease / "})$($OPERATING_SYSTEM.Version)" $LogIndentLevel
+::    Write-LogInfo "Build number: $($OPERATING_SYSTEM.Version)" $LogIndentLevel
 ::    Write-LogInfo "OS architecture: $($OPERATING_SYSTEM.OSArchitecture)" $LogIndentLevel
 ::    Write-LogInfo "OS language: $SYSTEM_LANGUAGE" $LogIndentLevel
-::    Write-LogInfo "Office version: $OfficeName $(if ($OFFICE_INSTALL_TYPE) {`"($OFFICE_INSTALL_TYPE installation type)`"})" $LogIndentLevel
+::
+::    switch ($OFFICE_VERSION) {
+::        16 {
+::            Set-Variable -Option Constant OfficeYear '2016 / 2019 / 2021 / 2024'
+::        }
+::        15 {
+::            Set-Variable -Option Constant OfficeYear '2013'
+::        }
+::        14 {
+::            Set-Variable -Option Constant OfficeYear '2010'
+::        }
+::        12 {
+::            Set-Variable -Option Constant OfficeYear '2007'
+::        }
+::        11 {
+::            Set-Variable -Option Constant OfficeYear '2003'
+::        }
+::    }
+::
+::    if ($OfficeYear) {
+::        Set-Variable -Option Constant OfficeName "Microsoft Office $OfficeYear"
+::    } else {
+::        Set-Variable -Option Constant OfficeName 'Unknown version or not installed'
+::    }
+::
+::    Write-LogInfo "Office version: $OfficeName" $LogIndentLevel
+::
+::    if ($OFFICE_INSTALL_TYPE) {
+::        Write-LogInfo "Office installation type: $OFFICE_INSTALL_TYPE" $LogIndentLevel
+::    }
 ::}
 ::
 ::#endregion functions > Common > Get-SystemInformation
@@ -4539,7 +4643,7 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    Set-Variable -Option Constant Indent $('   ' * $IndentLevel)
-::    Set-Variable -Option Constant Text "[$((Get-Date).ToString())] $Indent $Message"
+::    Set-Variable -Option Constant Text "[$((Get-Date).ToString())]$Indent $Message"
 ::
 ::    $LOG.SelectionStart = $LOG.TextLength
 ::
@@ -4567,7 +4671,11 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    if ($Level -ne 'DEBUG') {
-::        $LOG.AppendText($(if ($NoNewLine) { $Text } else { "`n$Text" }))
+::        if ($NoNewLine) {
+::            $LOG.AppendText($Text)
+::        } else {
+::            $LOG.AppendText("`n$Text")
+::        }
 ::        $LOG.SelectionColor = 'black'
 ::        $LOG.ScrollToCaret()
 ::    }
@@ -4783,9 +4891,19 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
 ::
-::    Set-Variable -Option Constant FileName $(if ($SaveAs) { $SaveAs } else { Split-Path -Leaf $URL })
+::    if ($SaveAs) {
+::        Set-Variable -Option Constant FileName $SaveAs
+::    } else {
+::        Set-Variable -Option Constant FileName (Split-Path -Leaf $URL)
+::    }
+::
 ::    Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
-::    Set-Variable -Option Constant SavePath $(if ($Temp) { $TempPath } else { "$PATH_WORKING_DIR\$FileName" })
+::
+::    if ($Temp) {
+::        Set-Variable -Option Constant SavePath $TempPath
+::    } else {
+::        Set-Variable -Option Constant SavePath "$PATH_WORKING_DIR\$FileName"
+::    }
 ::
 ::    Initialize-AppDirectory
 ::
@@ -4855,7 +4973,11 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:($Execute -or $IsZip))
 ::
 ::    if ($DownloadedFile) {
-::        Set-Variable -Option Constant Executable $(if ($IsZip) { Expand-Zip $DownloadedFile -Temp:$Execute } else { $DownloadedFile })
+::        if ($IsZip) {
+::            Set-Variable -Option Constant Executable (Expand-Zip $DownloadedFile -Temp:$Execute)
+::        } else {
+::            Set-Variable -Option Constant Executable $DownloadedFile
+::        }
 ::
 ::        if ($Execute) {
 ::            Start-Executable $Executable $Params -Silent:$Silent
@@ -5124,7 +5246,12 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 15 -Task "Configuring $AppName..."
 ::
-::    Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_QBITTORRENT_RUSSIAN } else { $CONFIG_QBITTORRENT_ENGLISH }))
+::
+::    if ($SYSTEM_LANGUAGE -match 'ru') {
+::        Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN)
+::    } else {
+::        Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH)
+::    }
 ::
 ::    Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
 ::}
@@ -5454,8 +5581,21 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 1, Mandatory)]$FamilyFriendly
 ::    )
 ::
-::    Set-Variable -Option Constant PreferredDnsServer $(if ($FamilyFriendly) { '1.1.1.3' } else { if ($MalwareProtection) { '1.1.1.2' } else { '1.1.1.1' } })
-::    Set-Variable -Option Constant AlternateDnsServer $(if ($FamilyFriendly) { '1.0.0.3' } else { if ($MalwareProtection) { '1.0.0.2' } else { '1.0.0.1' } })
+::    if ($FamilyFriendly) {
+::        Set-Variable -Option Constant PreferredDnsServer '1.1.1.3'
+::    } elseif ($MalwareProtection) {
+::        Set-Variable -Option Constant PreferredDnsServer '1.1.1.2'
+::    } else {
+::        Set-Variable -Option Constant PreferredDnsServer '1.1.1.1'
+::    }
+::
+::    if ($FamilyFriendly) {
+::        Set-Variable -Option Constant AlternateDnsServer '1.0.0.3'
+::    } elseif ($MalwareProtection) {
+::        Set-Variable -Option Constant AlternateDnsServer '1.0.0.2'
+::    } else {
+::        Set-Variable -Option Constant AlternateDnsServer '1.0.0.1'
+::    }
 ::
 ::    Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
 ::    Write-LogWarning 'Internet connection may get interrupted briefly'
@@ -5648,7 +5788,11 @@ if "%debug%"=="true" (
 ::        Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
 ::    }
 ::
-::    Set-Variable -Option Constant LocalisedConfig $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_WINDOWS_RUSSIAN } else { $CONFIG_WINDOWS_ENGLISH })
+::    if ($SYSTEM_LANGUAGE -match 'ru') {
+::        Set-Variable -Option Constant LocalisedConfig $CONFIG_WINDOWS_RUSSIAN
+::    } else {
+::        Set-Variable -Option Constant LocalisedConfig $CONFIG_WINDOWS_ENGLISH
+::    }
 ::
 ::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
 ::    $ConfigLines.Add("`n")
@@ -5825,7 +5969,12 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
-::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_OOSHUTUP10 } else { $PATH_WORKING_DIR })
+::    if ($Execute) {
+::        Set-Variable -Option Constant TargetPath $PATH_OOSHUTUP10
+::    } else {
+::        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+::    }
+::
 ::    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
 ::
 ::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
@@ -5863,17 +6012,34 @@ if "%debug%"=="true" (
 ::
 ::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 ::
-::    Set-Variable -Option Constant CustomAppsListFile "$TargetPath\CustomAppsList"
-::    Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + $(if ($Personalisation) { 'Microsoft.OneDrive' } else { '' }))
-::    $AppsList | Out-File $CustomAppsListFile -Encoding UTF8
+::    if ($Personalisation) {
+::        Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive')
+::    } else {
+::        Set-Variable -Option Constant AppsList $CONFIG_DEBLOAT_APP_LIST
+::    }
 ::
-::    Set-Variable -Option Constant SavedSettingsFile "$TargetPath\SavedSettings"
-::    Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $(if ($Personalisation) { $CONFIG_DEBLOAT_PRESET_PERSONALISATION } else { '' }))
-::    $Configuration | Out-File $SavedSettingsFile -Encoding UTF8
+::    $AppsList | Out-File "$TargetPath\CustomAppsList" -Encoding UTF8
 ::
-::    Set-Variable -Option Constant UsePresetParam $(if ($UsePreset) { '-RunSavedSettings' } else { '' })
-::    Set-Variable -Option Constant SilentParam $(if ($Silent) { '-Silent' } else { '' })
-::    Set-Variable -Option Constant SysprepParam $(if ($OS_VERSION -gt 10) { '-Sysprep' } else { '' })
+::    if ($Personalisation) {
+::        Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $CONFIG_DEBLOAT_PRESET_PERSONALISATION)
+::    } else {
+::        Set-Variable -Option Constant Configuration $CONFIG_DEBLOAT_PRESET_BASE
+::    }
+::
+::    $Configuration | Out-File "$TargetPath\SavedSettings" -Encoding UTF8
+::
+::    if ($UsePreset) {
+::        Set-Variable -Option Constant UsePresetParam '-RunSavedSettings'
+::    }
+::
+::    if ($Silent) {
+::        Set-Variable -Option Constant SilentParam '-Silent'
+::    }
+::
+::    if ($OS_VERSION -gt 10) {
+::        Set-Variable -Option Constant SysprepParam '-Sysprep'
+::    }
+::
 ::    Set-Variable -Option Constant Params "-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam"
 ::
 ::    Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
@@ -5914,7 +6080,10 @@ if "%debug%"=="true" (
 ::    $Configuration | Out-File $ConfigFile -Encoding UTF8
 ::
 ::    Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
-::    Set-Variable -Option Constant RunParam $(if ($AutomaticallyApply) { '-Run' } else { '' })
+::
+::    if ($AutomaticallyApply) {
+::        Set-Variable -Option Constant RunParam '-Run'
+::    }
 ::
 ::    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
 ::
@@ -6111,8 +6280,17 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 0, Mandatory)]$Execute
 ::    )
 ::
-::    Set-Variable -Option Constant TargetPath $(if ($Execute) { $PATH_APP_DIR } else { $PATH_WORKING_DIR })
-::    Set-Variable -Option Constant Config $(if ($SYSTEM_LANGUAGE -match 'ru') { $CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU') } else { $CONFIG_OFFICE_INSTALLER })
+::    if ($Execute) {
+::        Set-Variable -Option Constant TargetPath $PATH_APP_DIR
+::    } else {
+::        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+::    }
+::
+::    if ($SYSTEM_LANGUAGE -match 'ru') {
+::        Set-Variable -Option Constant Config $CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU')
+::    } else {
+::        Set-Variable -Option Constant Config $CONFIG_OFFICE_INSTALLER
+::    }
 ::
 ::    Initialize-AppDirectory
 ::
@@ -6141,7 +6319,10 @@ if "%debug%"=="true" (
 ::
 ::    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1
 ::
-::    Set-Variable -Option Constant Params $(if ($Silent) { '-install -no_desktop_icon' })
+::    if ($Silent) {
+::        Set-Variable -Option Constant Params '-install -no_desktop_icon'
+::    }
+::
 ::    Start-DownloadUnzipAndRun 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Execute:$Execute -Params $Params -Silent:$Silent
 ::}
 ::
