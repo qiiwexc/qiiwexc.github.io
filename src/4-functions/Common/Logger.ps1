@@ -1,9 +1,19 @@
+Add-Type -TypeDefinition @'
+    public enum LogLevel {
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR
+    }
+'@
+
 function Write-LogDebug {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
-    Write-Log 'DEBUG' $Message -IndentLevel $Level
+
+    Write-Log ([LogLevel]::DEBUG) $Message -IndentLevel $Level
 }
 
 function Write-LogInfo {
@@ -11,7 +21,8 @@ function Write-LogInfo {
         [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
-    Write-Log 'INFO' $Message -IndentLevel $Level
+
+    Write-Log ([LogLevel]::INFO) $Message -IndentLevel $Level
 }
 
 function Write-LogWarning {
@@ -19,7 +30,8 @@ function Write-LogWarning {
         [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
-    Write-Log 'WARN' "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
+
+    Write-Log ([LogLevel]::WARN) "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
 }
 
 function Write-LogError {
@@ -27,36 +39,38 @@ function Write-LogError {
         [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
-    Write-Log 'ERROR' "$(Get-Emoji '274C') $Message" -IndentLevel $Level
+
+    Write-Log ([LogLevel]::ERROR) "$(Get-Emoji '274C') $Message" -IndentLevel $Level
 }
 
 function Write-Log {
     param(
-        [String][Parameter(Position = 0, Mandatory)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
+        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
         [String][Parameter(Position = 1, Mandatory)]$Message,
         [Int][Parameter(Position = 2)]$IndentLevel = 0,
         [Switch][Parameter(Position = 3)]$NoNewLine
     )
 
-    Set-Variable -Option Constant Indent $('   ' * $IndentLevel)
-    Set-Variable -Option Constant Text "[$((Get-Date).ToString())]$Indent $Message"
+    Set-Variable -Option Constant Date ([String](Get-Date).ToString())
+    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
+    Set-Variable -Option Constant Text ([String]"[$Date]$Indent $Message")
 
     $LOG.SelectionStart = $LOG.TextLength
 
     switch ($Level) {
-        'DEBUG' {
+        ([LogLevel]::DEBUG) {
             $LOG.SelectionColor = 'black'
             Write-Host $Text
         }
-        'INFO' {
+        ([LogLevel]::INFO) {
             $LOG.SelectionColor = 'black'
             Write-Host $Text
         }
-        'WARN' {
+        ([LogLevel]::WARN) {
             $LOG.SelectionColor = 'blue'
             Write-Warning $Text
         }
-        'ERROR' {
+        ([LogLevel]::ERROR) {
             $LOG.SelectionColor = 'red'
             Write-Error $Text
         }
@@ -66,7 +80,7 @@ function Write-Log {
         }
     }
 
-    if ($Level -ne 'DEBUG') {
+    if ($Level -ne ([LogLevel]::DEBUG)) {
         if ($NoNewLine) {
             $LOG.AppendText($Text)
         } else {
@@ -112,7 +126,7 @@ function Write-LogException {
         [Int][Parameter(Position = 2)]$Level = 0
     )
 
-    Write-Log 'ERROR' "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
+    Write-Log ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
 }
 
 function Get-Emoji {

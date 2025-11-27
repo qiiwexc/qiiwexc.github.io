@@ -9,9 +9,9 @@ function Initialize-App {
 
     try {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
-        Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED $True
+        Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED ([Bool]$True)
     } catch [Exception] {
-        Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
+        Set-Variable -Option Constant -Scope Script SHELL ([COMObject](New-Object -com Shell.Application))
         Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
     }
 

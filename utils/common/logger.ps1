@@ -1,9 +1,18 @@
+Add-Type -TypeDefinition @'
+    public enum LogLevel {
+        INFO,
+        WARN,
+        ERROR
+    }
+'@
+
 function Write-LogInfo {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
-    Write-Log 'INFO' $Message -IndentLevel $Level
+
+    Write-Log ([LogLevel]::INFO) $Message -IndentLevel $Level
 }
 
 function Write-LogWarning {
@@ -11,7 +20,8 @@ function Write-LogWarning {
         [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
-    Write-Log 'WARN' "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
+
+    Write-Log ([LogLevel]::WARN) "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
 }
 
 function Write-LogError {
@@ -19,27 +29,29 @@ function Write-LogError {
         [String][Parameter(Position = 0, Mandatory)]$Message,
         [Int][Parameter(Position = 1)]$Level = 0
     )
-    Write-Log 'ERROR' "$(Get-Emoji '274C') $Message" -IndentLevel $Level
+
+    Write-Log ([LogLevel]::ERROR) "$(Get-Emoji '274C') $Message" -IndentLevel $Level
 }
 
 function Write-Log {
     param(
-        [String][Parameter(Position = 0, Mandatory)][ValidateSet('INFO', 'WARN', 'ERROR')]$Level,
+        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
         [String][Parameter(Position = 1, Mandatory)]$Message,
         [Int][Parameter(Position = 2)]$IndentLevel = 0
     )
 
-    Set-Variable -Option Constant Indent $('   ' * $IndentLevel)
-    Set-Variable -Option Constant Text "[$((Get-Date).ToString())]$Indent $Message"
+    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
+    Set-Variable -Option Constant Date ([String]$((Get-Date).ToString()))
+    Set-Variable -Option Constant Text ([String]"[$Date]$Indent $Message")
 
     switch ($Level) {
-        'INFO' {
+        ([LogLevel]::INFO) {
             Write-Host $Text
         }
-        'WARN' {
+        ([LogLevel]::WARN) {
             Write-Warning $Text
         }
-        'ERROR' {
+        ([LogLevel]::ERROR) {
             Write-Error $Text
         }
         Default {
@@ -83,7 +95,7 @@ function Write-LogException {
         [Int][Parameter(Position = 2)]$Level = 0
     )
 
-    Write-Log 'ERROR' "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
+    Write-Log ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
 }
 
 function Get-Emoji {

@@ -1,17 +1,17 @@
 function Get-SystemInformation {
     Write-LogInfo 'Current system information:'
 
-    Set-Variable -Option Constant LogIndentLevel 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    Set-Variable -Option Constant Motherboard (Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product)
+    Set-Variable -Option Constant Motherboard ([Object](Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product))
     Write-LogInfo "Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)" $LogIndentLevel
 
-    Set-Variable -Option Constant BIOS (Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate)
+    Set-Variable -Option Constant BIOS ([Object](Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate))
     Write-LogInfo "BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))" $LogIndentLevel
 
     Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
 
-    Set-Variable -Option Constant WindowsRelease ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion)
+    Set-Variable -Option Constant WindowsRelease ([String](Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion)
     if ($OS_VERSION -ge 10) {
         Write-LogInfo "OS release: v$WindowsRelease" $LogIndentLevel
     }
@@ -22,26 +22,26 @@ function Get-SystemInformation {
 
     switch ($OFFICE_VERSION) {
         16 {
-            Set-Variable -Option Constant OfficeYear '2016 / 2019 / 2021 / 2024'
+            Set-Variable -Option Constant OfficeYear ([String]'2016 / 2019 / 2021 / 2024')
         }
         15 {
-            Set-Variable -Option Constant OfficeYear '2013'
+            Set-Variable -Option Constant OfficeYear ([String]'2013')
         }
         14 {
-            Set-Variable -Option Constant OfficeYear '2010'
+            Set-Variable -Option Constant OfficeYear ([String]'2010')
         }
         12 {
-            Set-Variable -Option Constant OfficeYear '2007'
+            Set-Variable -Option Constant OfficeYear ([String]'2007')
         }
         11 {
-            Set-Variable -Option Constant OfficeYear '2003'
+            Set-Variable -Option Constant OfficeYear ([String]'2003')
         }
     }
 
     if ($OfficeYear) {
-        Set-Variable -Option Constant OfficeName "Microsoft Office $OfficeYear"
+        Set-Variable -Option Constant OfficeName ([String]"Microsoft Office $OfficeYear")
     } else {
-        Set-Variable -Option Constant OfficeName 'Unknown version or not installed'
+        Set-Variable -Option Constant OfficeName ([String]'Unknown version or not installed')
     }
 
     Write-LogInfo "Office version: $OfficeName" $LogIndentLevel

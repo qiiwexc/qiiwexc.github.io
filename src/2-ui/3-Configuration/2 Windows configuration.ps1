@@ -14,12 +14,14 @@ New-GroupBox 'Windows configuration'
 [Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 
 
-Set-Variable -Option Constant WindowsConfigurationParameters @{
-    Base             = $CHECKBOX_Config_WindowsBase
-    PowerScheme      = $CHECKBOX_Config_PowerScheme
-    Search           = $CHECKBOX_Config_WindowsSearch
-    FileAssociations = $CHECKBOX_Config_FileAssociations
-    Personalisation  = $CHECKBOX_Config_WindowsPersonalisation
-}
+Set-Variable -Option Constant WindowsConfigurationParameters (
+    [hashtable]@{
+        Base             = $CHECKBOX_Config_WindowsBase
+        PowerScheme      = $CHECKBOX_Config_PowerScheme
+        Search           = $CHECKBOX_Config_WindowsSearch
+        FileAssociations = $CHECKBOX_Config_FileAssociations
+        Personalisation  = $CHECKBOX_Config_WindowsPersonalisation
+    }
+)
 [ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration @WindowsConfigurationParameters }
 New-Button 'Apply configuration' $BUTTON_FUNCTION

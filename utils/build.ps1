@@ -5,17 +5,17 @@ param(
     [Switch]$Run
 )
 
-Set-Variable -Option Constant Version (Get-Date -Format 'y.M.d')
-Set-Variable -Option Constant ProjectName 'qiiwexc'
+Set-Variable -Option Constant Version ([String](Get-Date -Format 'y.M.d'))
+Set-Variable -Option Constant ProjectName ([String]'qiiwexc')
 
-Set-Variable -Option Constant ConfigPath '.\config'
-Set-Variable -Option Constant TemplatesPath '.\templates'
-Set-Variable -Option Constant UtilsPath '.\utils'
-Set-Variable -Option Constant SourcePath '.\src'
-Set-Variable -Option Constant DistPath '.\d'
-Set-Variable -Option Constant BuilderPath "$UtilsPath\build"
-Set-Variable -Option Constant CommonPath "$UtilsPath\common"
-Set-Variable -Option Constant UnattendedPath "$BuilderPath\unattended"
+Set-Variable -Option Constant ConfigPath ([String]'.\config')
+Set-Variable -Option Constant TemplatesPath ([String]'.\templates')
+Set-Variable -Option Constant UtilsPath ([String]'.\utils')
+Set-Variable -Option Constant SourcePath ([String]'.\src')
+Set-Variable -Option Constant DistPath ([String]'.\d')
+Set-Variable -Option Constant BuilderPath ([String]"$UtilsPath\build")
+Set-Variable -Option Constant CommonPath ([String]"$UtilsPath\common")
+Set-Variable -Option Constant UnattendedPath ([String]"$BuilderPath\unattended")
 
 . "$CommonPath\logger.ps1"
 . "$BuilderPath\Get-Config.ps1"
@@ -26,10 +26,10 @@ Set-Variable -Option Constant UnattendedPath "$BuilderPath\unattended"
 . "$BuilderPath\Write-VersionFile.ps1"
 . "$UnattendedPath\New-UnattendedFile.ps1"
 
-Set-Variable -Option Constant VersionFile "$DistPath\version"
-Set-Variable -Option Constant Ps1File "$DistPath\$ProjectName.ps1"
-Set-Variable -Option Constant BatchFile "$DistPath\$ProjectName.bat"
-Set-Variable -Option Constant UnattendedFile "$DistPath\autounattend-{LOCALE}.xml"
+Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
+Set-Variable -Option Constant Ps1File ([String]"$DistPath\$ProjectName.ps1")
+Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
+Set-Variable -Option Constant UnattendedFile ([String]"$DistPath\autounattend-{LOCALE}.xml")
 
 Write-LogInfo 'Build task started'
 Write-LogInfo "Version     = $Version"

@@ -16,13 +16,15 @@ New-GroupBox 'Apps configuration'
 [Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 
 
-Set-Variable -Option Constant AppsConfigurationParameters @{
-    '7zip'      = $CHECKBOX_Config_7zip
-    VLC         = $CHECKBOX_Config_VLC
-    TeamViewer  = $CHECKBOX_Config_TeamViewer
-    qBittorrent = $CHECKBOX_Config_qBittorrent
-    Edge        = $CHECKBOX_Config_Edge
-    Chrome      = $CHECKBOX_Config_Chrome
-}
+Set-Variable -Option Constant AppsConfigurationParameters (
+    [hashtable]@{
+        '7zip'      = $CHECKBOX_Config_7zip
+        VLC         = $CHECKBOX_Config_VLC
+        TeamViewer  = $CHECKBOX_Config_TeamViewer
+        qBittorrent = $CHECKBOX_Config_qBittorrent
+        Edge        = $CHECKBOX_Config_Edge
+        Chrome      = $CHECKBOX_Config_Chrome
+    }
+)
 [ScriptBlock]$BUTTON_FUNCTION = { Set-AppsConfiguration @AppsConfigurationParameters }
 New-Button 'Apply configuration' $BUTTON_FUNCTION

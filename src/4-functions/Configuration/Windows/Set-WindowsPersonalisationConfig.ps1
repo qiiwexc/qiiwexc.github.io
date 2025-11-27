@@ -3,13 +3,13 @@
         [String][Parameter(Position = 0, Mandatory)]$FileName
     )
 
-    Set-Variable -Option Constant LogIndentLevel 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     Write-ActivityProgress -PercentComplete 90 -Task 'Applying Windows personalisation configuration...'
 
     Set-WinHomeLocation -GeoId 140
 
-    Set-Variable -Option Constant LanguageList (Get-WinUserLanguageList)
+    Set-Variable -Option Constant LanguageList ([Collections.Generic.List[Object]](Get-WinUserLanguageList))
     if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
         $LanguageList.Add('lv')
         Set-WinUserLanguageList $LanguageList -Force
@@ -27,7 +27,7 @@
 
     try {
         if ($OS_VERSION -gt 10) {
-            Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
+            Set-Variable -Option Constant NotificationRegistries ([Collections.Generic.List[String]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
             foreach ($Registry in $NotificationRegistries) {
                 $ConfigLines.Add("`n[$Registry]`n")
                 $ConfigLines.Add("`"IsPromoted`"=dword:00000001`n")

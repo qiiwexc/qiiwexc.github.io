@@ -5,7 +5,7 @@ function Start-Executable {
         [Switch]$Silent
     )
 
-    Set-Variable -Option Constant LogIndentLevel 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     if ($Switches -and $Silent) {
         Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."

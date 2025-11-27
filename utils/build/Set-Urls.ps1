@@ -6,17 +6,17 @@ function Set-Urls {
 
     Write-LogInfo 'Setting URLs...'
 
-    Set-Variable -Option Constant TemplateFile "$TemplatesPath\urls.json"
-    Set-Variable -Option Constant DependenciesFile "$ConfigPath\dependencies.json"
+    Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\urls.json")
+    Set-Variable -Option Constant DependenciesFile ([String]"$ConfigPath\dependencies.json")
 
-    Set-Variable -Option Constant OutputFile "$ConfigPath\urls.json"
+    Set-Variable -Option Constant OutputFile ([String]"$ConfigPath\urls.json")
 
     [Collections.Generic.List[Object]]$Dependencies = Get-Content $DependenciesFile | ConvertFrom-Json
     [Collections.Generic.List[Object]]$TemplateContent = Get-Content $TemplateFile | ConvertFrom-Json
 
     foreach ($Dependency in $Dependencies) {
-        $Name = $Dependency.name.ToUpper().Replace(' ', '_').Replace('-', '_')
-        $Version = $Dependency.version.TrimStart('v')
+        [String]$Name = $Dependency.name.ToUpper().Replace(' ', '_').Replace('-', '_')
+        [String]$Version = $Dependency.version.TrimStart('v')
 
         foreach ($Entry in $TemplateContent) {
             if ($Name -eq $Entry.key.Replace('URL_', '')) {

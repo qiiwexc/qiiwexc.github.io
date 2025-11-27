@@ -6,7 +6,7 @@ function New-CheckBox {
         [Switch]$Checked
     )
 
-    Set-Variable -Option Constant CheckBox (New-Object Windows.Forms.CheckBox)
+    Set-Variable -Option Constant CheckBox ([Windows.Forms.CheckBox](New-Object Windows.Forms.CheckBox))
 
     [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
     [Drawing.Point]$Shift = '0, 0'
@@ -38,7 +38,7 @@ function New-CheckBox {
     $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
     $CURRENT_GROUP.Controls.Add($CheckBox)
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $CheckBox
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Forms.CheckBox]$CheckBox)
 
     return $CheckBox
 }

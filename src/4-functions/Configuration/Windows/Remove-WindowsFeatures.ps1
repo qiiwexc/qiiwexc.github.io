@@ -6,9 +6,9 @@ function Remove-WindowsFeatures {
     if ($PS_VERSION -ge 5) {
         try {
             Write-ActivityProgress -PercentComplete 5 -Task 'Collecting capabilities to remove...'
-            Set-Variable -Option Constant InstalledCapabilities (Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' })
-            Set-Variable -Option Constant CapabilitiesToRemove ($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE })
-            Set-Variable -Option Constant CapabilityCount ($CapabilitiesToRemove.Count)
+            Set-Variable -Option Constant InstalledCapabilities ([Object](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
+            Set-Variable -Option Constant CapabilitiesToRemove ([Object]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
+            Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
             Out-Success $LogIndentLevel
         } catch [Exception] {
             Write-LogException $_ 'Failed to collect capabilities to remove' $LogIndentLevel
@@ -17,9 +17,9 @@ function Remove-WindowsFeatures {
 
     try {
         Write-ActivityProgress -PercentComplete 10 -Task 'Collecting features to remove...'
-        Set-Variable -Option Constant InstalledFeatures (Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' })
-        Set-Variable -Option Constant FeaturesToRemove ($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE })
-        Set-Variable -Option Constant FeatureCount ($FeaturesToRemove.Count)
+        Set-Variable -Option Constant InstalledFeatures ([Object](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
+        Set-Variable -Option Constant FeaturesToRemove ([Object]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
+        Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
         Out-Success $LogIndentLevel
     } catch [Exception] {
         Write-LogException $_ 'Failed to collect features to remove' $LogIndentLevel

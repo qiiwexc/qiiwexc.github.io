@@ -5,28 +5,28 @@ function New-Button {
         [Switch]$Disabled
     )
 
-    Set-Variable -Option Constant Button (New-Object Windows.Forms.Button)
+    Set-Variable -Option Constant Button ([Windows.Forms.Button](New-Object Windows.Forms.Button))
 
     [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
     [Drawing.Point]$Shift = '0, 0'
 
     if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
         if ($PREVIOUS_LABEL_OR_CHECKBOX) {
-            Set-Variable -Option Constant PreviousLabelOrCheckboxY $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
+            Set-Variable -Option Constant PreviousLabelOrCheckboxY ([Int]$PREVIOUS_LABEL_OR_CHECKBOX.Location.Y)
         } else {
-            Set-Variable -Option Constant PreviousLabelOrCheckboxY 0
+            Set-Variable -Option Constant PreviousLabelOrCheckboxY ([Int]0)
         }
 
         if ($PREVIOUS_RADIO) {
-            Set-Variable -Option Constant PreviousRadioY $PREVIOUS_RADIO.Location.Y
+            Set-Variable -Option Constant PreviousRadioY ([Int]$PREVIOUS_RADIO.Location.Y)
         } else {
-            Set-Variable -Option Constant PreviousRadioY 0
+            Set-Variable -Option Constant PreviousRadioY ([Int]0)
         }
 
         if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) {
-            Set-Variable -Option Constant PreviousMiscElement $PreviousLabelOrCheckboxY
+            Set-Variable -Option Constant PreviousMiscElement ([Int]$PreviousLabelOrCheckboxY)
         } else {
-            Set-Variable -Option Constant PreviousMiscElement $PreviousRadioY
+            Set-Variable -Option Constant PreviousMiscElement ([Int]$PreviousRadioY)
         }
 
         $InitialLocation.Y = $PreviousMiscElement
@@ -56,5 +56,5 @@ function New-Button {
 
     Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
     Set-Variable -Scope Script PREVIOUS_RADIO $Null
-    Set-Variable -Scope Script PREVIOUS_BUTTON $Button
+    Set-Variable -Scope Script PREVIOUS_BUTTON ([Windows.Forms.Button]$Button)
 }

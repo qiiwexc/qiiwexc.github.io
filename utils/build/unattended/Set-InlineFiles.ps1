@@ -26,26 +26,29 @@ function Set-InlineFiles {
             $EscapedContent.Add([Security.SecurityElement]::Escape($Line))
         }
 
-        $TemplateContent = $TemplateContent.Replace("{$($_.Key)}", ($EscapedContent -join "`n"))
+        [String]$Placeholder = "{$($_.Key)}"
+        $TemplateContent = $TemplateContent.Replace($Placeholder, ($EscapedContent -join "`n"))
     }
 
     return $TemplateContent
 }
 
-Set-Variable -Option Constant KEY_FILE_MAP @(
-    @{Key = 'CONFIG_7ZIP'; File = 'Apps\7zip.reg' },
-    @{Key = 'CONFIG_APP_ASSOCIATIONS'; File = 'Windows\App associations.xml' },
-    @{Key = 'CONFIG_MICROSOFT_OFFICE'; File = 'Apps\Microsoft Office.reg' },
-    @{Key = 'CONFIG_QBITTORRENT_LOCALIZED'; File = 'Apps\qBittorrent {LOCALE}.ini' },
-    @{Key = 'CONFIG_QBITTORRENT'; File = 'Apps\qBittorrent base.ini' },
-    @{Key = 'CONFIG_TEAMVIEWER'; File = 'Apps\TeamViewer.reg' },
-    @{Key = 'CONFIG_VLC'; File = 'Apps\VLC.ini' },
-    @{Key = 'CONFIG_WINDOWS_HKEY_CLASSES_ROOT'; File = 'Windows\Base\Windows HKEY_CLASSES_ROOT.reg' },
-    @{Key = 'CONFIG_WINDOWS_HKEY_CURRENT_USER'; File = 'Windows\Base\Windows HKEY_CURRENT_USER.reg' },
-    @{Key = 'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'; File = 'Windows\Base\Windows HKEY_LOCAL_MACHINE.reg' },
-    @{Key = 'CONFIG_WINDOWS_HKEY_USERS'; File = 'Windows\Base\Windows HKEY_USERS.reg' },
-    @{Key = 'CONFIG_WINDOWS_LOCALISED'; File = 'Windows\Base\Windows {LOCALE}.reg' },
-    @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT'; File = 'Windows\Personalisation\Windows personalisation HKEY_CLASSES_ROOT.reg' },
-    @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'; File = 'Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg' },
-    @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE'; File = 'Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg' }
+Set-Variable -Option Constant KEY_FILE_MAP (
+    [Collections.Generic.List[hashtable]]@(
+        @{Key = 'CONFIG_7ZIP'; File = 'Apps\7zip.reg' },
+        @{Key = 'CONFIG_APP_ASSOCIATIONS'; File = 'Windows\App associations.xml' },
+        @{Key = 'CONFIG_MICROSOFT_OFFICE'; File = 'Apps\Microsoft Office.reg' },
+        @{Key = 'CONFIG_QBITTORRENT_LOCALIZED'; File = 'Apps\qBittorrent {LOCALE}.ini' },
+        @{Key = 'CONFIG_QBITTORRENT'; File = 'Apps\qBittorrent base.ini' },
+        @{Key = 'CONFIG_TEAMVIEWER'; File = 'Apps\TeamViewer.reg' },
+        @{Key = 'CONFIG_VLC'; File = 'Apps\VLC.ini' },
+        @{Key = 'CONFIG_WINDOWS_HKEY_CLASSES_ROOT'; File = 'Windows\Base\Windows HKEY_CLASSES_ROOT.reg' },
+        @{Key = 'CONFIG_WINDOWS_HKEY_CURRENT_USER'; File = 'Windows\Base\Windows HKEY_CURRENT_USER.reg' },
+        @{Key = 'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'; File = 'Windows\Base\Windows HKEY_LOCAL_MACHINE.reg' },
+        @{Key = 'CONFIG_WINDOWS_HKEY_USERS'; File = 'Windows\Base\Windows HKEY_USERS.reg' },
+        @{Key = 'CONFIG_WINDOWS_LOCALISED'; File = 'Windows\Base\Windows {LOCALE}.reg' },
+        @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT'; File = 'Windows\Personalisation\Windows personalisation HKEY_CLASSES_ROOT.reg' },
+        @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'; File = 'Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg' },
+        @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE'; File = 'Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg' }
+    )
 )

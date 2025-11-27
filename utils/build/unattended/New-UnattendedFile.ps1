@@ -16,10 +16,10 @@ function New-UnattendedFile {
 
     Write-LogInfo 'Building unattended files...'
 
-    Set-Variable -Option Constant ConfigsPath "$SourcePath\3-configs"
-    Set-Variable -Option Constant TemplateFile "$TemplatesPath\autounattend.xml"
+    Set-Variable -Option Constant ConfigsPath ([String]"$SourcePath\3-configs")
+    Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\autounattend.xml")
 
-    Set-Variable -Option Constant Locales @('English', 'Russian')
+    Set-Variable -Option Constant Locales ([Collections.Generic.List[String]]@('English', 'Russian'))
 
     foreach ($Locale in $Locales) {
         [String]$OutputFileName = $FileNameTemplate.Replace('{LOCALE}', $Locale)

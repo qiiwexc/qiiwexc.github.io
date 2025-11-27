@@ -5,7 +5,7 @@ function New-RadioButton {
         [Switch]$Disabled
     )
 
-    Set-Variable -Option Constant RadioButton (New-Object Windows.Forms.RadioButton)
+    Set-Variable -Option Constant RadioButton ([Windows.Forms.RadioButton](New-Object Windows.Forms.RadioButton))
 
     [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
     [Drawing.Point]$Shift = '0, 0'
@@ -13,13 +13,13 @@ function New-RadioButton {
     if ($PREVIOUS_RADIO) {
         $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
         $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
-        Set-Variable -Option Constant Shift '90, 0'
+        Set-Variable -Option Constant Shift ([Drawing.Point]'90, 0')
     } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
         $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
-        Set-Variable -Option Constant Shift '-15, 20'
+        Set-Variable -Option Constant Shift ([Drawing.Point]'-15, 20')
     } elseif ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
-        Set-Variable -Option Constant Shift "10, $BUTTON_HEIGHT"
+        Set-Variable -Option Constant Shift ([Drawing.Point]"10, $BUTTON_HEIGHT")
     }
 
     [Drawing.Point]$Location = $InitialLocation + $Shift
@@ -33,7 +33,7 @@ function New-RadioButton {
     $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
     $CURRENT_GROUP.Controls.Add($RadioButton)
 
-    Set-Variable -Scope Script PREVIOUS_RADIO $RadioButton
+    Set-Variable -Scope Script PREVIOUS_RADIO ([Windows.Forms.RadioButton]$RadioButton)
 
     return $RadioButton
 }

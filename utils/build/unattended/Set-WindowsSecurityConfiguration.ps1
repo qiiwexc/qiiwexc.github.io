@@ -10,7 +10,10 @@ function Set-WindowsSecurityConfiguration {
     $Configuration.RemoveAt($Configuration.Count - 1)
 
     [Collections.Generic.List[String]]$FormattedConfiguration = ''
-    $Configuration | ForEach-Object { $FormattedConfiguration.Add("$($_.trim())`n") }
+    $Configuration | ForEach-Object {
+        [String]$Line = $_.trim()
+        $FormattedConfiguration.Add("$Line`n")
+    }
 
     return $TemplateContent.Replace('{WINDOWS_SECURITY_CONFIGURATION}', -join $FormattedConfiguration)
 }

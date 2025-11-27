@@ -6,7 +6,7 @@ function Update-JsonFile {
         [String][Parameter(Position = 3, Mandatory)]$Path
     )
 
-    Set-Variable -Option Constant LogIndentLevel 2
+    Set-Variable -Option Constant LogIndentLevel ([Int]2)
 
     Stop-ProcessIfRunning $ProcessName
 
@@ -30,10 +30,10 @@ function Update-JsonFile {
         }
     }
 
-    Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw -Encoding UTF8 | ConvertFrom-Json)
-    Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
+    Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 | ConvertFrom-Json))
+    Set-Variable -Option Constant PatchConfig ([PSCustomObject]($Content | ConvertFrom-Json))
 
-    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
+    Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress))
 
     $UpdatedConfig | Out-File $Path -Encoding UTF8
 

@@ -1,19 +1,27 @@
+Add-Type -TypeDefinition @'
+    public enum Mode {
+        compare,
+        tags,
+        commits
+    }
+'@
+
 function Update-GitDependency {
     param(
         [Object][Parameter(Position = 0, Mandatory)]$Dependency,
         [String][Parameter(Position = 1)]$GitHubToken
     )
 
-    Set-Variable -Option Constant Mode $Dependency.mode
+    Set-Variable -Option Constant Mode ([Mode]$Dependency.mode)
 
     switch ($Mode) {
-        'compare' {
+        ([Mode]::compare) {
             return Compare-Tags $Dependency $GitHubToken
         }
-        'tags' {
+        ([Mode]::tags) {
             return Select-Tags $Dependency $GitHubToken
         }
-        'commits' {
+        ([Mode]::commits) {
             return Compare-Commits $Dependency $GitHubToken
         }
         Default {

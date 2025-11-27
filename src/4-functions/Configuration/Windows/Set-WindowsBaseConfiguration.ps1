@@ -3,7 +3,7 @@
         [String][Parameter(Position = 0, Mandatory)]$FileName
     )
 
-    Set-Variable -Option Constant LogIndentLevel 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
 
@@ -14,15 +14,15 @@
     Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
 
-    Set-Variable -Option Constant UnelevatedExplorerTaskName 'CreateExplorerShellUnelevatedTask'
+    Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
     if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
         Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
     }
 
     if ($SYSTEM_LANGUAGE -match 'ru') {
-        Set-Variable -Option Constant LocalisedConfig $CONFIG_WINDOWS_RUSSIAN
+        Set-Variable -Option Constant LocalisedConfig ([Collections.Generic.List[String]]$CONFIG_WINDOWS_RUSSIAN)
     } else {
-        Set-Variable -Option Constant LocalisedConfig $CONFIG_WINDOWS_ENGLISH
+        Set-Variable -Option Constant LocalisedConfig ([Collections.Generic.List[String]]$CONFIG_WINDOWS_ENGLISH)
     }
 
     [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
@@ -55,7 +55,7 @@
             $ConfigLines.Add("`"EnableCortana`"=dword:00000000`n")
         }
 
-        Set-Variable -Option Constant VolumeRegistries ((Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
+        Set-Variable -Option Constant VolumeRegistries ([Collections.Generic.List[String]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
         foreach ($Registry in $VolumeRegistries) {
             $ConfigLines.Add("`n[$Registry]`n")
             $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")

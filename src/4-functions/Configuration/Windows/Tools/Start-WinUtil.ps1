@@ -6,7 +6,7 @@ function Start-WinUtil {
 
     Write-LogInfo 'Starting WinUtil utility...'
 
-    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
     if ($NoConnection) {
         Write-LogError "Failed to start: $NoConnection"
         return
@@ -14,7 +14,7 @@ function Start-WinUtil {
 
     New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
 
-    Set-Variable -Option Constant ConfigFile "$PATH_WINUTIL\WinUtil.json"
+    Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 
     [String]$Configuration = $CONFIG_WINUTIL
     if ($Personalisation) {
@@ -25,10 +25,10 @@ function Start-WinUtil {
 
     $Configuration | Out-File $ConfigFile -Encoding UTF8
 
-    Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
+    Set-Variable -Option Constant ConfigParam ([String]"-Config $ConfigFile")
 
     if ($AutomaticallyApply) {
-        Set-Variable -Option Constant RunParam '-Run'
+        Set-Variable -Option Constant RunParam ([String]'-Run')
     }
 
     Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
