@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.11.26')
+::Set-Variable -Option Constant VERSION ([Version]'25.11.28')
 ::
 ::#endregion init > Version
 ::
@@ -60,7 +60,7 @@ if "%debug%"=="true" (
 ::
 ::Write-Host 'Initializing...'
 ::
-::Set-Variable -Option Constant OLD_WINDOW_TITLE ($HOST.UI.RawUI.WindowTitle)
+::Set-Variable -Option Constant OLD_WINDOW_TITLE ([String]$HOST.UI.RawUI.WindowTitle)
 ::$HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION"
 ::
 ::try {
@@ -78,57 +78,57 @@ if "%debug%"=="true" (
 ::[Windows.Forms.Application]::EnableVisualStyles()
 ::
 ::
-::Set-Variable -Option Constant PATH_WORKING_DIR $WorkingDirectory
+::Set-Variable -Option Constant PATH_WORKING_DIR ([String]$WorkingDirectory)
 ::Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
-::Set-Variable -Option Constant PATH_APP_DIR "$($PATH_TEMP_DIR)qiiwexc"
-::Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE "$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe"
-::Set-Variable -Option Constant PATH_WINUTIL "$env:ProgramData\WinUtil"
-::Set-Variable -Option Constant PATH_OOSHUTUP10 "$env:ProgramData\OOShutUp10++"
+::Set-Variable -Option Constant PATH_APP_DIR ([String]"$($PATH_TEMP_DIR)qiiwexc")
+::Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE ([String]"$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe")
+::Set-Variable -Option Constant PATH_WINUTIL ([String]"$env:ProgramData\WinUtil")
+::Set-Variable -Option Constant PATH_OOSHUTUP10 ([String]"$env:ProgramData\OOShutUp10++")
 ::
 ::
-::Set-Variable -Option Constant IS_LAPTOP ((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2)
+::Set-Variable -Option Constant IS_LAPTOP ([Bool]((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2))
 ::
-::Set-Variable -Option Constant SYSTEM_LANGUAGE (Get-SystemLanguage)
+::Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
 ::
-::Set-Variable -Option Constant PS_VERSION $PSVersionTable.PSVersion.Major
+::Set-Variable -Option Constant PS_VERSION ([Int]$PSVersionTable.PSVersion.Major)
 ::
-::Set-Variable -Option Constant OPERATING_SYSTEM (Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture)
-::Set-Variable -Option Constant IsWindows11 ($OPERATING_SYSTEM.Caption -match 'Windows 11')
-::Set-Variable -Option Constant WindowsBuild $OPERATING_SYSTEM.Version
+::Set-Variable -Option Constant OPERATING_SYSTEM ([Object](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
+::Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
+::Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
 ::
-::Set-Variable -Option Constant OS_64_BIT ($env:PROCESSOR_ARCHITECTURE -like '*64')
+::Set-Variable -Option Constant OS_64_BIT ([Bool]($env:PROCESSOR_ARCHITECTURE -like '*64'))
 ::
 ::if ($IsWindows11) {
-::    Set-Variable -Option Constant OS_VERSION 11
+::    Set-Variable -Option Constant OS_VERSION ([Int]11)
 ::} else {
 ::    switch -Wildcard ($WindowsBuild) {
 ::        '10.0.*' {
-::            Set-Variable -Option Constant OS_VERSION 10
+::            Set-Variable -Option Constant OS_VERSION ([Int]10)
 ::        }
 ::        '6.3.*' {
-::            Set-Variable -Option Constant OS_VERSION 8.1
+::            Set-Variable -Option Constant OS_VERSION ([Double]8.1)
 ::        }
 ::        '6.2.*' {
-::            Set-Variable -Option Constant OS_VERSION 8
+::            Set-Variable -Option Constant OS_VERSION ([Int]8)
 ::        }
 ::        '6.1.*' {
-::            Set-Variable -Option Constant OS_VERSION 7
+::            Set-Variable -Option Constant OS_VERSION ([Int]7)
 ::        }
 ::        Default {
-::            Set-Variable -Option Constant OS_VERSION 'Vista or less / Unknown'
+::            Set-Variable -Option Constant OS_VERSION ([String]'Vista or less / Unknown')
 ::        }
 ::    }
 ::}
 ::
-::Set-Variable -Option Constant WordRegPath 'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer'
+::Set-Variable -Option Constant WordRegPath ([String]'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer')
 ::if (Test-Path $WordRegPath) {
-::    Set-Variable -Option Constant WordPath (Get-ItemProperty $WordRegPath)
-::    Set-Variable -Option Constant OFFICE_VERSION ($WordPath.'(default)' -replace '\D+', '')
+::    Set-Variable -Option Constant WordPath ([Object](Get-ItemProperty $WordRegPath))
+::    Set-Variable -Option Constant OFFICE_VERSION ([String]($WordPath.'(default)' -replace '\D+', ''))
 ::
 ::    if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {
-::        Set-Variable -Option Constant OFFICE_INSTALL_TYPE 'C2R'
+::        Set-Variable -Option Constant OFFICE_INSTALL_TYPE ([String]'C2R')
 ::    } else {
-::        Set-Variable -Option Constant OFFICE_INSTALL_TYPE 'MSI'
+::        Set-Variable -Option Constant OFFICE_INSTALL_TYPE ([String]'MSI')
 ::    }
 ::}
 ::
@@ -137,29 +137,29 @@ if "%debug%"=="true" (
 ::
 ::#region components > Constants
 ::
-::Set-Variable -Option Constant BUTTON_WIDTH 170
-::Set-Variable -Option Constant BUTTON_HEIGHT 30
+::Set-Variable -Option Constant BUTTON_WIDTH ([Int]170)
+::Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
 ::
-::Set-Variable -Option Constant CHECKBOX_HEIGHT ($BUTTON_HEIGHT - 10)
-::
-::
-::Set-Variable -Option Constant INTERVAL_BUTTON ($BUTTON_HEIGHT + 15)
-::
-::Set-Variable -Option Constant INTERVAL_CHECKBOX ($CHECKBOX_HEIGHT + 5)
+::Set-Variable -Option Constant CHECKBOX_HEIGHT ([Int]($BUTTON_HEIGHT - 10))
 ::
 ::
-::Set-Variable -Option Constant GROUP_WIDTH (15 + $BUTTON_WIDTH + 15)
+::Set-Variable -Option Constant INTERVAL_BUTTON ([Int]($BUTTON_HEIGHT + 15))
 ::
-::Set-Variable -Option Constant FORM_WIDTH (($GROUP_WIDTH + 15) * 3 + 30)
-::Set-Variable -Option Constant FORM_HEIGHT 560
-::
-::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON '15, 20'
-::
-::Set-Variable -Option Constant SHIFT_CHECKBOX "0, $INTERVAL_CHECKBOX"
+::Set-Variable -Option Constant INTERVAL_CHECKBOX ([Int]($CHECKBOX_HEIGHT + 5))
 ::
 ::
-::Set-Variable -Option Constant FONT_NAME 'Microsoft Sans Serif'
-::Set-Variable -Option Constant BUTTON_FONT "$FONT_NAME, 10"
+::Set-Variable -Option Constant GROUP_WIDTH ([Int](15 + $BUTTON_WIDTH + 15))
+::
+::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH + 15) * 3 + 30))
+::Set-Variable -Option Constant FORM_HEIGHT ([Int]560)
+::
+::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
+::
+::Set-Variable -Option Constant SHIFT_CHECKBOX ([Drawing.Point]"0, $INTERVAL_CHECKBOX")
+::
+::
+::Set-Variable -Option Constant FONT_NAME ([String]'Microsoft Sans Serif')
+::Set-Variable -Option Constant BUTTON_FONT ([String]"$FONT_NAME, 10")
 ::
 ::#endregion components > Constants
 ::
@@ -173,28 +173,28 @@ if "%debug%"=="true" (
 ::        [Switch]$Disabled
 ::    )
 ::
-::    Set-Variable -Option Constant Button (New-Object Windows.Forms.Button)
+::    Set-Variable -Option Constant Button ([Windows.Forms.Button](New-Object Windows.Forms.Button))
 ::
 ::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
 ::    [Drawing.Point]$Shift = '0, 0'
 ::
 ::    if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
 ::        if ($PREVIOUS_LABEL_OR_CHECKBOX) {
-::            Set-Variable -Option Constant PreviousLabelOrCheckboxY $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
+::            Set-Variable -Option Constant PreviousLabelOrCheckboxY ([Int]$PREVIOUS_LABEL_OR_CHECKBOX.Location.Y)
 ::        } else {
-::            Set-Variable -Option Constant PreviousLabelOrCheckboxY 0
+::            Set-Variable -Option Constant PreviousLabelOrCheckboxY ([Int]0)
 ::        }
 ::
 ::        if ($PREVIOUS_RADIO) {
-::            Set-Variable -Option Constant PreviousRadioY $PREVIOUS_RADIO.Location.Y
+::            Set-Variable -Option Constant PreviousRadioY ([Int]$PREVIOUS_RADIO.Location.Y)
 ::        } else {
-::            Set-Variable -Option Constant PreviousRadioY 0
+::            Set-Variable -Option Constant PreviousRadioY ([Int]0)
 ::        }
 ::
 ::        if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) {
-::            Set-Variable -Option Constant PreviousMiscElement $PreviousLabelOrCheckboxY
+::            Set-Variable -Option Constant PreviousMiscElement ([Int]$PreviousLabelOrCheckboxY)
 ::        } else {
-::            Set-Variable -Option Constant PreviousMiscElement $PreviousRadioY
+::            Set-Variable -Option Constant PreviousMiscElement ([Int]$PreviousRadioY)
 ::        }
 ::
 ::        $InitialLocation.Y = $PreviousMiscElement
@@ -224,7 +224,7 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
 ::    Set-Variable -Scope Script PREVIOUS_RADIO $Null
-::    Set-Variable -Scope Script PREVIOUS_BUTTON $Button
+::    Set-Variable -Scope Script PREVIOUS_BUTTON ([Windows.Forms.Button]$Button)
 ::}
 ::
 ::#endregion components > Button
@@ -256,7 +256,7 @@ if "%debug%"=="true" (
 ::        [Switch]$Checked
 ::    )
 ::
-::    Set-Variable -Option Constant CheckBox (New-Object Windows.Forms.CheckBox)
+::    Set-Variable -Option Constant CheckBox ([Windows.Forms.CheckBox](New-Object Windows.Forms.CheckBox))
 ::
 ::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
 ::    [Drawing.Point]$Shift = '0, 0'
@@ -288,7 +288,7 @@ if "%debug%"=="true" (
 ::    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
 ::    $CURRENT_GROUP.Controls.Add($CheckBox)
 ::
-::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $CheckBox
+::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Forms.CheckBox]$CheckBox)
 ::
 ::    return $CheckBox
 ::}
@@ -318,10 +318,10 @@ if "%debug%"=="true" (
 ::        [Int][Parameter(Position = 1)]$IndexOverride
 ::    )
 ::
-::    Set-Variable -Option Constant GroupBox (New-Object Windows.Forms.GroupBox)
+::    Set-Variable -Option Constant GroupBox ([Windows.Forms.GroupBox](New-Object Windows.Forms.GroupBox))
 ::
-::    Set-Variable -Scope Script PREVIOUS_GROUP $CURRENT_GROUP
-::    Set-Variable -Scope Script PAD_CHECKBOXES $True
+::    Set-Variable -Scope Script PREVIOUS_GROUP ([Windows.Forms.GroupBox]$CURRENT_GROUP)
+::    Set-Variable -Scope Script PAD_CHECKBOXES ([Bool]$True)
 ::
 ::    [Int]$GroupIndex = 0
 ::
@@ -333,13 +333,13 @@ if "%debug%"=="true" (
 ::
 ::    if ($GroupIndex -lt 3) {
 ::        if ($GroupIndex -eq 0) {
-::            Set-Variable -Option Constant Location '15, 15'
+::            Set-Variable -Option Constant Location ([Drawing.Point]'15, 15')
 ::        } else {
-::            Set-Variable -Option Constant Location ($PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0")
+::            Set-Variable -Option Constant Location ($PREVIOUS_GROUP.Location + [Drawing.Point]"$($GROUP_WIDTH + 15), 0")
 ::        }
 ::    } else {
 ::        Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
-::        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + 15)")
+::        Set-Variable -Option Constant Location ($PreviousGroup.Location + [Drawing.Point]"0, $($PreviousGroup.Height + 15)")
 ::    }
 ::
 ::    $GroupBox.Width = $GROUP_WIDTH
@@ -365,9 +365,9 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$Text
 ::    )
 ::
-::    Set-Variable -Option Constant Label (New-Object Windows.Forms.Label)
+::    Set-Variable -Option Constant Label ([Windows.Forms.Label](New-Object Windows.Forms.Label))
 ::
-::    Set-Variable -Option Constant Location ($PREVIOUS_BUTTON.Location + "30, $BUTTON_HEIGHT")
+::    Set-Variable -Option Constant Location ([Drawing.Point]$PREVIOUS_BUTTON.Location + [Drawing.Point]"30, $BUTTON_HEIGHT")
 ::
 ::    $Label.Size = "145, $CHECKBOX_HEIGHT"
 ::    $Label.Text = $Text
@@ -376,7 +376,7 @@ if "%debug%"=="true" (
 ::    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
 ::    $CURRENT_GROUP.Controls.Add($Label)
 ::
-::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Label
+::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Forms.Label]$Label)
 ::}
 ::
 ::#endregion components > Label
@@ -391,7 +391,7 @@ if "%debug%"=="true" (
 ::        [Switch]$Disabled
 ::    )
 ::
-::    Set-Variable -Option Constant RadioButton (New-Object Windows.Forms.RadioButton)
+::    Set-Variable -Option Constant RadioButton ([Windows.Forms.RadioButton](New-Object Windows.Forms.RadioButton))
 ::
 ::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
 ::    [Drawing.Point]$Shift = '0, 0'
@@ -399,13 +399,13 @@ if "%debug%"=="true" (
 ::    if ($PREVIOUS_RADIO) {
 ::        $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
 ::        $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
-::        Set-Variable -Option Constant Shift '90, 0'
+::        Set-Variable -Option Constant Shift ([Drawing.Point]'90, 0')
 ::    } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
 ::        $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
-::        Set-Variable -Option Constant Shift '-15, 20'
+::        Set-Variable -Option Constant Shift ([Drawing.Point]'-15, 20')
 ::    } elseif ($PREVIOUS_BUTTON) {
 ::        $InitialLocation = $PREVIOUS_BUTTON.Location
-::        Set-Variable -Option Constant Shift "10, $BUTTON_HEIGHT"
+::        Set-Variable -Option Constant Shift ([Drawing.Point]"10, $BUTTON_HEIGHT")
 ::    }
 ::
 ::    [Drawing.Point]$Location = $InitialLocation + $Shift
@@ -419,7 +419,7 @@ if "%debug%"=="true" (
 ::    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
 ::    $CURRENT_GROUP.Controls.Add($RadioButton)
 ::
-::    Set-Variable -Scope Script PREVIOUS_RADIO $RadioButton
+::    Set-Variable -Scope Script PREVIOUS_RADIO ([Windows.Forms.RadioButton]$RadioButton)
 ::
 ::    return $RadioButton
 ::}
@@ -434,7 +434,7 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$Text
 ::    )
 ::
-::    Set-Variable -Option Constant TabPage (New-Object Windows.Forms.TabPage)
+::    Set-Variable -Option Constant TabPage ([Windows.Forms.TabPage](New-Object Windows.Forms.TabPage))
 ::
 ::    $TabPage.UseVisualStyleBackColor = $True
 ::    $TabPage.Text = $Text
@@ -442,7 +442,7 @@ if "%debug%"=="true" (
 ::    $TAB_CONTROL.Controls.Add($TabPage)
 ::
 ::    Set-Variable -Scope Script PREVIOUS_GROUP $Null
-::    Set-Variable -Scope Script CURRENT_TAB $TabPage
+::    Set-Variable -Scope Script CURRENT_TAB ([Windows.Forms.TabPage]$TabPage)
 ::}
 ::
 ::#endregion components > TabPage
@@ -450,7 +450,7 @@ if "%debug%"=="true" (
 ::
 ::#region ui > Form
 ::
-::Set-Variable -Option Constant FORM (New-Object Windows.Forms.Form)
+::Set-Variable -Option Constant FORM ([Windows.Forms.Form](New-Object Windows.Forms.Form))
 ::$FORM.Text = $HOST.UI.RawUI.WindowTitle
 ::$FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
 ::$FORM.Icon = [Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\PowerShell.exe')
@@ -462,7 +462,7 @@ if "%debug%"=="true" (
 ::$FORM.Add_FormClosing( { Reset-State } )
 ::
 ::
-::Set-Variable -Option Constant LOG (New-Object Windows.Forms.RichTextBox)
+::Set-Variable -Option Constant LOG ([Windows.Forms.RichTextBox](New-Object Windows.Forms.RichTextBox))
 ::$LOG.Height = 200
 ::$LOG.Width = $FORM_WIDTH - 10
 ::$LOG.Location = "5, $($FORM_HEIGHT - $LOG.Height - 5)"
@@ -471,7 +471,7 @@ if "%debug%"=="true" (
 ::$FORM.Controls.Add($LOG)
 ::
 ::
-::Set-Variable -Option Constant TAB_CONTROL (New-Object Windows.Forms.TabControl)
+::Set-Variable -Option Constant TAB_CONTROL ([Windows.Forms.TabControl](New-Object Windows.Forms.TabControl))
 ::$TAB_CONTROL.Size = "$($LOG.Width + 1), $($FORM_HEIGHT - $LOG.Height - 1)"
 ::$TAB_CONTROL.Location = '5, 5'
 ::$FORM.Controls.Add($TAB_CONTROL)
@@ -481,7 +481,7 @@ if "%debug%"=="true" (
 ::
 ::#region ui > Home > Tab
 ::
-::Set-Variable -Option Constant TAB_HOME (New-TabPage 'Home')
+::Set-Variable -Option Constant TAB_HOME ([Windows.Forms.TabPage](New-TabPage 'Home'))
 ::
 ::#endregion ui > Home > Tab
 ::
@@ -561,7 +561,7 @@ if "%debug%"=="true" (
 ::
 ::#region ui > Installs > Tab
 ::
-::Set-Variable -Option Constant TAB_INSTALLS (New-TabPage 'Installs')
+::Set-Variable -Option Constant TAB_INSTALLS ([Windows.Forms.TabPage](New-TabPage 'Installs'))
 ::
 ::#endregion ui > Installs > Tab
 ::
@@ -605,14 +605,16 @@ if "%debug%"=="true" (
 ::New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 ::
 ::
-::Set-Variable -Option Constant NINITE_CHECKBOXES @(
-::    $CHECKBOX_Ninite_7zip,
-::    $CHECKBOX_Ninite_VLC,
-::    $CHECKBOX_Ninite_AnyDesk,
-::    $CHECKBOX_Ninite_TeamViewer,
-::    $CHECKBOX_Ninite_Chrome,
-::    $CHECKBOX_Ninite_qBittorrent,
-::    $CHECKBOX_Ninite_Malwarebytes
+::Set-Variable -Option Constant NINITE_CHECKBOXES (
+::    [Collections.Generic.List[Windows.Forms.CheckBox]]@(
+::        $CHECKBOX_Ninite_7zip,
+::        $CHECKBOX_Ninite_VLC,
+::        $CHECKBOX_Ninite_AnyDesk,
+::        $CHECKBOX_Ninite_TeamViewer,
+::        $CHECKBOX_Ninite_Chrome,
+::        $CHECKBOX_Ninite_qBittorrent,
+::        $CHECKBOX_Ninite_Malwarebytes
+::    )
 ::)
 ::
 ::#endregion ui > Installs > Ninite
@@ -667,7 +669,7 @@ if "%debug%"=="true" (
 ::
 ::#region ui > Configuration > Tab
 ::
-::Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Configuration')
+::Set-Variable -Option Constant TAB_CONFIGURATION ([Windows.Forms.TabPage](New-TabPage 'Configuration'))
 ::
 ::#endregion ui > Configuration > Tab
 ::
@@ -692,14 +694,16 @@ if "%debug%"=="true" (
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 ::
 ::
-::Set-Variable -Option Constant AppsConfigurationParameters @{
-::    '7zip'      = $CHECKBOX_Config_7zip
-::    VLC         = $CHECKBOX_Config_VLC
-::    TeamViewer  = $CHECKBOX_Config_TeamViewer
-::    qBittorrent = $CHECKBOX_Config_qBittorrent
-::    Edge        = $CHECKBOX_Config_Edge
-::    Chrome      = $CHECKBOX_Config_Chrome
-::}
+::Set-Variable -Option Constant AppsConfigurationParameters (
+::    [hashtable]@{
+::        '7zip'      = $CHECKBOX_Config_7zip
+::        VLC         = $CHECKBOX_Config_VLC
+::        TeamViewer  = $CHECKBOX_Config_TeamViewer
+::        qBittorrent = $CHECKBOX_Config_qBittorrent
+::        Edge        = $CHECKBOX_Config_Edge
+::        Chrome      = $CHECKBOX_Config_Chrome
+::    }
+::)
 ::[ScriptBlock]$BUTTON_FUNCTION = { Set-AppsConfiguration @AppsConfigurationParameters }
 ::New-Button 'Apply configuration' $BUTTON_FUNCTION
 ::
@@ -724,13 +728,15 @@ if "%debug%"=="true" (
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 ::
 ::
-::Set-Variable -Option Constant WindowsConfigurationParameters @{
-::    Base             = $CHECKBOX_Config_WindowsBase
-::    PowerScheme      = $CHECKBOX_Config_PowerScheme
-::    Search           = $CHECKBOX_Config_WindowsSearch
-::    FileAssociations = $CHECKBOX_Config_FileAssociations
-::    Personalisation  = $CHECKBOX_Config_WindowsPersonalisation
-::}
+::Set-Variable -Option Constant WindowsConfigurationParameters (
+::    [hashtable]@{
+::        Base             = $CHECKBOX_Config_WindowsBase
+::        PowerScheme      = $CHECKBOX_Config_PowerScheme
+::        Search           = $CHECKBOX_Config_WindowsSearch
+::        FileAssociations = $CHECKBOX_Config_FileAssociations
+::        Personalisation  = $CHECKBOX_Config_WindowsPersonalisation
+::    }
+::)
 ::[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration @WindowsConfigurationParameters }
 ::New-Button 'Apply configuration' $BUTTON_FUNCTION
 ::
@@ -808,7 +814,7 @@ if "%debug%"=="true" (
 ::
 ::#region ui > Diagnostics and recovery > Tab
 ::
-::Set-Variable -Option Constant TAB_DIAGNOSTICS (New-TabPage 'Diagnostics and recovery')
+::Set-Variable -Option Constant TAB_DIAGNOSTICS ([Windows.Forms.TabPage](New-TabPage 'Diagnostics and recovery'))
 ::
 ::#endregion ui > Diagnostics and recovery > Tab
 ::
@@ -1449,18 +1455,20 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Capabilities to remove
 ::
-::Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE @(
-::    'App.StepsRecorder'
-::    'App.Support.QuickAssist'
-::    'Language.Handwriting'
-::    'Language.Speech'
-::    'Language.TextToSpeech'
-::    'MathRecognizer'
-::    'Media.WindowsMediaPlayer'
-::    'Microsoft.Windows.SnippingTool'
-::    'Microsoft.Windows.WordPad'
-::    'OneCoreUAP.OneSync'
-::    'OpenSSH.Client'
+::Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
+::    [Collections.Generic.List[String]]@(
+::        'App.StepsRecorder'
+::        'App.Support.QuickAssist'
+::        'Language.Handwriting'
+::        'Language.Speech'
+::        'Language.TextToSpeech'
+::        'MathRecognizer'
+::        'Media.WindowsMediaPlayer'
+::        'Microsoft.Windows.SnippingTool'
+::        'Microsoft.Windows.WordPad'
+::        'OneCoreUAP.OneSync'
+::        'OpenSSH.Client'
+::    )
 ::)
 ::
 ::#endregion configs > Windows > Capabilities to remove
@@ -1468,11 +1476,13 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Features to remove
 ::
-::Set-Variable -Option Constant CONFIG_FEATURES_TO_REMOVE @(
-::    'MediaPlayback'
-::    'Microsoft-RemoteDesktopConnection'
-::    'MicrosoftWindowsPowerShellV2Root'
-::    'Recall'
+::Set-Variable -Option Constant CONFIG_FEATURES_TO_REMOVE (
+::    [Collections.Generic.List[String]]@(
+::        'MediaPlayback'
+::        'Microsoft-RemoteDesktopConnection'
+::        'MicrosoftWindowsPowerShellV2Root'
+::        'Recall'
+::    )
 ::)
 ::
 ::#endregion configs > Windows > Features to remove
@@ -1480,18 +1490,20 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Power settings
 ::
-::Set-Variable -Option Constant CONFIG_POWER_SETTINGS @(
-::    @{SubGroup = '0d7dbae2-4294-402a-ba8e-26777e8488cd'; Setting = '309dce9b-bef4-4119-9921-a851fb12f0f4'; Value = 0 },
-::    @{SubGroup = '02f815b5-a5cf-4c84-bf20-649d1f75d3d8'; Setting = '4c793e7d-a264-42e1-87d3-7a0d2f523ccd'; Value = 1 },
-::    @{SubGroup = '19cbb8fa-5279-450e-9fac-8a3d5fedd0c1'; Setting = '12bbebe6-58d6-4636-95bb-3217ef867c1a'; Value = 0 },
-::    @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4'; Value = 0 },
-::    @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '03680956-93bc-4294-bba6-4e0f09bb717f'; Value = 1 },
-::    @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '10778347-1370-4ee0-8bbd-33bdacaade49'; Value = 1 },
-::    @{SubGroup = 'de830923-a562-41af-a086-e3a2c6bad2da'; Setting = 'e69653ca-cf7f-4f05-aa73-cb833fa90ad4'; Value = 0 },
-::    @{SubGroup = 'SUB_PCIEXPRESS'; Setting = 'ASPM'; Value = 0 },
-::    @{SubGroup = 'SUB_PROCESSOR'; Setting = 'SYSCOOLPOL'; Value = 1 },
-::    @{SubGroup = 'SUB_SLEEP'; Setting = 'HYBRIDSLEEP'; Value = 1 },
-::    @{SubGroup = 'SUB_SLEEP'; Setting = 'RTCWAKE'; Value = 1 }
+::Set-Variable -Option Constant CONFIG_POWER_SETTINGS (
+::    [Collections.Generic.List[hashtable]]@(
+::        @{SubGroup = '0d7dbae2-4294-402a-ba8e-26777e8488cd'; Setting = '309dce9b-bef4-4119-9921-a851fb12f0f4'; Value = 0 },
+::        @{SubGroup = '02f815b5-a5cf-4c84-bf20-649d1f75d3d8'; Setting = '4c793e7d-a264-42e1-87d3-7a0d2f523ccd'; Value = 1 },
+::        @{SubGroup = '19cbb8fa-5279-450e-9fac-8a3d5fedd0c1'; Setting = '12bbebe6-58d6-4636-95bb-3217ef867c1a'; Value = 0 },
+::        @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4'; Value = 0 },
+::        @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '03680956-93bc-4294-bba6-4e0f09bb717f'; Value = 1 },
+::        @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '10778347-1370-4ee0-8bbd-33bdacaade49'; Value = 1 },
+::        @{SubGroup = 'de830923-a562-41af-a086-e3a2c6bad2da'; Setting = 'e69653ca-cf7f-4f05-aa73-cb833fa90ad4'; Value = 0 },
+::        @{SubGroup = 'SUB_PCIEXPRESS'; Setting = 'ASPM'; Value = 0 },
+::        @{SubGroup = 'SUB_PROCESSOR'; Setting = 'SYSCOOLPOL'; Value = 1 },
+::        @{SubGroup = 'SUB_SLEEP'; Setting = 'HYBRIDSLEEP'; Value = 1 },
+::        @{SubGroup = 'SUB_SLEEP'; Setting = 'RTCWAKE'; Value = 1 }
+::    )
 ::)
 ::
 ::#endregion configs > Windows > Power settings
@@ -4328,7 +4340,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Cleaning up files on exit...'
 ::
-::    Set-Variable -Option Constant PowerShellScript "$PATH_TEMP_DIR\qiiwexc.ps1"
+::    Set-Variable -Option Constant PowerShellScript ([String]"$PATH_TEMP_DIR\qiiwexc.ps1")
 ::
 ::    Remove-Directory $PATH_WINUTIL -Silent
 ::    Remove-Directory $PATH_OOSHUTUP10 -Silent
@@ -4359,18 +4371,18 @@ if "%debug%"=="true" (
 ::        [Switch]$Temp
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
 ::
-::    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
-::    Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
-::    Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
+::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath))
+::    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.zip'))
+::    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath))
 ::
 ::    if ($Temp) {
-::        Set-Variable -Option Constant TargetPath $PATH_APP_DIR
+::        Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
 ::    } else {
-::        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+::        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
 ::    }
 ::
 ::    Initialize-AppDirectory
@@ -4378,41 +4390,41 @@ if "%debug%"=="true" (
 ::    switch -Wildcard ($ZipName) {
 ::        'ActivationProgram.zip' {
 ::            if (-not $OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix '_x86.exe'
+::                Set-Variable -Option Constant Suffix ([String]'_x86.exe')
 ::            }
-::            Set-Variable -Option Constant Executable "ActivationProgram$Suffix.exe"
+::            Set-Variable -Option Constant Executable ([String]"ActivationProgram$Suffix.exe")
 ::        }
 ::        'Office_Installer+.zip' {
 ::            if (-not $OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix ' x86.exe'
+::                Set-Variable -Option Constant Suffix ([String]' x86.exe')
 ::            }
-::            Set-Variable -Option Constant Executable "Office Installer+$Suffix.exe"
+::            Set-Variable -Option Constant Executable ([String]"Office Installer+$Suffix.exe")
 ::        }
 ::        'cpu-z_*' {
 ::            if ($OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix '64'
+::                Set-Variable -Option Constant Suffix ([String]'64')
 ::            } else {
-::                Set-Variable -Option Constant Suffix '32'
+::                Set-Variable -Option Constant Suffix ([String]'32')
 ::            }
-::            Set-Variable -Option Constant Executable "$ExtractionDir\cpuz_x$Suffix.exe"
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\cpuz_x$Suffix.exe")
 ::        }
 ::        'SDIO_*' {
-::            Set-Variable -Option Constant Executable "$ExtractionDir\SDIO_auto.bat"
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDIO_auto.bat")
 ::        }
 ::        'ventoy*' {
-::            Set-Variable -Option Constant Executable "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe"
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe")
 ::        }
 ::        'Victoria*' {
-::            Set-Variable -Option Constant Executable "$ExtractionDir\$ExtractionDir\Victoria.exe"
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Victoria.exe")
 ::        }
 ::        Default {
-::            Set-Variable -Option Constant Executable ($ZipName.TrimEnd('.zip') + '.exe')
+::            Set-Variable -Option Constant Executable ([String]($ZipName.TrimEnd('.zip') + '.exe'))
 ::        }
 ::    }
 ::
-::    Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -like "$ExtractionDir\*")
-::    Set-Variable -Option Constant TemporaryExe "$ExtractionPath\$Executable"
-::    Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
+::    Set-Variable -Option Constant IsDirectory ([Bool]($ExtractionDir -and $Executable -like "$ExtractionDir\*"))
+::    Set-Variable -Option Constant TemporaryExe ([String]"$ExtractionPath\$Executable")
+::    Set-Variable -Option Constant TargetExe ([String]"$TargetPath\$Executable")
 ::
 ::    Remove-File $TemporaryExe
 ::
@@ -4458,13 +4470,13 @@ if "%debug%"=="true" (
 ::
 ::function Get-MicrosoftSecurityStatus {
 ::    if ($PS_VERSION -ge 5) {
-::        Set-Variable -Option Constant Status (Get-MpComputerStatus)
+::        Set-Variable -Option Constant Status ([Microsoft.Management.Infrastructure.CimInstance](Get-MpComputerStatus))
 ::
-::        Set-Variable -Option Constant Properties (($Status | Get-Member -MemberType Property).Name)
+::        Set-Variable -Option Constant Properties ([Collections.Generic.List[String]](($Status | Get-Member -MemberType Property).Name))
 ::
-::        Set-Variable -Option Constant Filtered ($Properties | Where-Object { $_ -eq 'BehaviorMonitorEnabled' -or $_ -eq 'IoavProtectionEnabled' -or $_ -eq 'NISEnabled' -or $_ -eq 'OnAccessProtectionEnabled' -or $_ -eq 'RealTimeProtectionEnabled' })
+::        Set-Variable -Option Constant Filtered ([Collections.Generic.List[String]]($Properties | Where-Object { $_ -eq 'BehaviorMonitorEnabled' -or $_ -eq 'IoavProtectionEnabled' -or $_ -eq 'NISEnabled' -or $_ -eq 'OnAccessProtectionEnabled' -or $_ -eq 'RealTimeProtectionEnabled' }))
 ::
-::        [Boolean]$IsEnabled = $False
+::        [Bool]$IsEnabled = $False
 ::        foreach ($Property in $Filtered) {
 ::            if ($Status.$Property) {
 ::                $IsEnabled = $True
@@ -4484,17 +4496,17 @@ if "%debug%"=="true" (
 ::function Get-SystemInformation {
 ::    Write-LogInfo 'Current system information:'
 ::
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
-::    Set-Variable -Option Constant Motherboard (Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product)
+::    Set-Variable -Option Constant Motherboard ([Object](Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product))
 ::    Write-LogInfo "Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)" $LogIndentLevel
 ::
-::    Set-Variable -Option Constant BIOS (Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate)
+::    Set-Variable -Option Constant BIOS ([Object](Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate))
 ::    Write-LogInfo "BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))" $LogIndentLevel
 ::
 ::    Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
 ::
-::    Set-Variable -Option Constant WindowsRelease ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion)
+::    Set-Variable -Option Constant WindowsRelease ([String](Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion)
 ::    if ($OS_VERSION -ge 10) {
 ::        Write-LogInfo "OS release: v$WindowsRelease" $LogIndentLevel
 ::    }
@@ -4505,26 +4517,26 @@ if "%debug%"=="true" (
 ::
 ::    switch ($OFFICE_VERSION) {
 ::        16 {
-::            Set-Variable -Option Constant OfficeYear '2016 / 2019 / 2021 / 2024'
+::            Set-Variable -Option Constant OfficeYear ([String]'2016 / 2019 / 2021 / 2024')
 ::        }
 ::        15 {
-::            Set-Variable -Option Constant OfficeYear '2013'
+::            Set-Variable -Option Constant OfficeYear ([String]'2013')
 ::        }
 ::        14 {
-::            Set-Variable -Option Constant OfficeYear '2010'
+::            Set-Variable -Option Constant OfficeYear ([String]'2010')
 ::        }
 ::        12 {
-::            Set-Variable -Option Constant OfficeYear '2007'
+::            Set-Variable -Option Constant OfficeYear ([String]'2007')
 ::        }
 ::        11 {
-::            Set-Variable -Option Constant OfficeYear '2003'
+::            Set-Variable -Option Constant OfficeYear ([String]'2003')
 ::        }
 ::    }
 ::
 ::    if ($OfficeYear) {
-::        Set-Variable -Option Constant OfficeName "Microsoft Office $OfficeYear"
+::        Set-Variable -Option Constant OfficeName ([String]"Microsoft Office $OfficeYear")
 ::    } else {
-::        Set-Variable -Option Constant OfficeName 'Unknown version or not installed'
+::        Set-Variable -Option Constant OfficeName ([String]'Unknown version or not installed')
 ::    }
 ::
 ::    Write-LogInfo "Office version: $OfficeName" $LogIndentLevel
@@ -4550,9 +4562,9 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Add-Type -AssemblyName System.IO.Compression.FileSystem
-::        Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED $True
+::        Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED ([Bool]$True)
 ::    } catch [Exception] {
-::        Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
+::        Set-Variable -Option Constant -Scope Script SHELL ([COMObject](New-Object -com Shell.Application))
 ::        Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
 ::    }
 ::
@@ -4587,13 +4599,27 @@ if "%debug%"=="true" (
 ::        [Switch]$Wait
 ::    )
 ::
-::    Set-Variable -Option Constant ExecutionPolicy $(if ($BypassExecutionPolicy) { '-ExecutionPolicy Bypass' } else { '' })
-::    Set-Variable -Option Constant WorkingDir $(if ($WorkingDirectory) { "-WorkingDirectory $WorkingDirectory" } else { '' })
-::    Set-Variable -Option Constant Verb $(if ($Elevated) { 'RunAs' } else { 'Open' })
-::    Set-Variable -Option Constant WindowStyle $(if ($HideWindow) { 'Hidden' } else { 'Normal' })
+::    if ($BypassExecutionPolicy) {
+::        Set-Variable -Option Constant ExecutionPolicy ([String]'-ExecutionPolicy Bypass')
+::    }
 ::
-::    Set-Variable -Option Constant FullCommand "$ExecutionPolicy $Command $WorkingDir"
+::    if ($WorkingDirectory) {
+::        Set-Variable -Option Constant WorkingDir ([String]"-WorkingDirectory $WorkingDirectory")
+::    }
 ::
+::    if ($Elevated) {
+::        Set-Variable -Option Constant Verb ([String]'RunAs')
+::    } else {
+::        Set-Variable -Option Constant Verb ([String]'Open')
+::    }
+::
+::    if ($HideWindow) {
+::        Set-Variable -Option Constant WindowStyle ([String]'Hidden')
+::    } else {
+::        Set-Variable -Option Constant WindowStyle ([String]'Normal')
+::    }
+::
+::    Set-Variable -Option Constant FullCommand ([String]"$ExecutionPolicy $Command $WorkingDir")
 ::    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle
 ::}
 ::
@@ -4602,12 +4628,22 @@ if "%debug%"=="true" (
 ::
 ::#region functions > Common > Logger
 ::
+::Add-Type -TypeDefinition @'
+::    public enum LogLevel {
+::        DEBUG,
+::        INFO,
+::        WARN,
+::        ERROR
+::    }
+::'@
+::
 ::function Write-LogDebug {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
-::    Write-Log 'DEBUG' $Message -IndentLevel $Level
+::
+::    Write-Log ([LogLevel]::DEBUG) $Message -IndentLevel $Level
 ::}
 ::
 ::function Write-LogInfo {
@@ -4615,7 +4651,8 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
-::    Write-Log 'INFO' $Message -IndentLevel $Level
+::
+::    Write-Log ([LogLevel]::INFO) $Message -IndentLevel $Level
 ::}
 ::
 ::function Write-LogWarning {
@@ -4623,7 +4660,8 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
-::    Write-Log 'WARN' "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
+::
+::    Write-Log ([LogLevel]::WARN) "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
 ::}
 ::
 ::function Write-LogError {
@@ -4631,36 +4669,38 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
-::    Write-Log 'ERROR' "$(Get-Emoji '274C') $Message" -IndentLevel $Level
+::
+::    Write-Log ([LogLevel]::ERROR) "$(Get-Emoji '274C') $Message" -IndentLevel $Level
 ::}
 ::
 ::function Write-Log {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory)][ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]$Level,
+::        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
 ::        [String][Parameter(Position = 1, Mandatory)]$Message,
 ::        [Int][Parameter(Position = 2)]$IndentLevel = 0,
 ::        [Switch][Parameter(Position = 3)]$NoNewLine
 ::    )
 ::
-::    Set-Variable -Option Constant Indent $('   ' * $IndentLevel)
-::    Set-Variable -Option Constant Text "[$((Get-Date).ToString())]$Indent $Message"
+::    Set-Variable -Option Constant Date ([String](Get-Date).ToString())
+::    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
+::    Set-Variable -Option Constant Text ([String]"[$Date]$Indent $Message")
 ::
 ::    $LOG.SelectionStart = $LOG.TextLength
 ::
 ::    switch ($Level) {
-::        'DEBUG' {
+::        ([LogLevel]::DEBUG) {
 ::            $LOG.SelectionColor = 'black'
 ::            Write-Host $Text
 ::        }
-::        'INFO' {
+::        ([LogLevel]::INFO) {
 ::            $LOG.SelectionColor = 'black'
 ::            Write-Host $Text
 ::        }
-::        'WARN' {
+::        ([LogLevel]::WARN) {
 ::            $LOG.SelectionColor = 'blue'
 ::            Write-Warning $Text
 ::        }
-::        'ERROR' {
+::        ([LogLevel]::ERROR) {
 ::            $LOG.SelectionColor = 'red'
 ::            Write-Error $Text
 ::        }
@@ -4670,7 +4710,7 @@ if "%debug%"=="true" (
 ::        }
 ::    }
 ::
-::    if ($Level -ne 'DEBUG') {
+::    if ($Level -ne ([LogLevel]::DEBUG)) {
 ::        if ($NoNewLine) {
 ::            $LOG.AppendText($Text)
 ::        } else {
@@ -4716,7 +4756,7 @@ if "%debug%"=="true" (
 ::        [Int][Parameter(Position = 2)]$Level = 0
 ::    )
 ::
-::    Write-Log 'ERROR' "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
+::    Write-Log ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
 ::}
 ::
 ::function Get-Emoji {
@@ -4790,7 +4830,7 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    Write-LogInfo $Activity
-::    Set-Variable -Scope Script CURRENT_ACTIVITY $Activity
+::    Set-Variable -Scope Script CURRENT_ACTIVITY ([String]$Activity)
 ::    Write-Progress -Activity $CURRENT_ACTIVITY -PercentComplete 1
 ::}
 ::
@@ -4801,7 +4841,7 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    if ($Task) {
-::        Set-Variable -Scope Script CURRENT_TASK "  $Task"
+::        Set-Variable -Scope Script CURRENT_TASK ([String]"  $Task")
 ::        Write-LogInfo $CURRENT_TASK
 ::    }
 ::
@@ -4887,27 +4927,27 @@ if "%debug%"=="true" (
 ::        [Switch]$Temp
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
 ::
 ::    if ($SaveAs) {
-::        Set-Variable -Option Constant FileName $SaveAs
+::        Set-Variable -Option Constant FileName ([String]$SaveAs)
 ::    } else {
-::        Set-Variable -Option Constant FileName (Split-Path -Leaf $URL)
+::        Set-Variable -Option Constant FileName ([String](Split-Path -Leaf $URL))
 ::    }
 ::
-::    Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
+::    Set-Variable -Option Constant TempPath ([String]"$PATH_APP_DIR\$FileName")
 ::
 ::    if ($Temp) {
-::        Set-Variable -Option Constant SavePath $TempPath
+::        Set-Variable -Option Constant SavePath ([String]$TempPath)
 ::    } else {
-::        Set-Variable -Option Constant SavePath "$PATH_WORKING_DIR\$FileName"
+::        Set-Variable -Option Constant SavePath ([String]"$PATH_WORKING_DIR\$FileName")
 ::    }
 ::
 ::    Initialize-AppDirectory
 ::
-::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 ::    if ($NoConnection) {
 ::        Write-LogError "Download failed: $NoConnection" $LogIndentLevel
 ::
@@ -4962,21 +5002,21 @@ if "%debug%"=="true" (
 ::        Write-LogWarning 'This file may trigger anti-virus false positive!'
 ::        Write-LogWarning 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
 ::        Write-LogWarning 'Click the button again to continue'
-::        Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN $True
+::        Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN ([Bool]$True)
 ::        return
 ::    }
 ::
 ::    New-Activity 'Download and run'
 ::
-::    Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
-::    Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
-::    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:($Execute -or $IsZip))
+::    Set-Variable -Option Constant UrlEnding ([String]$URL.Substring($URL.Length - 4))
+::    Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq '.zip'))
+::    Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
 ::
 ::    if ($DownloadedFile) {
 ::        if ($IsZip) {
-::            Set-Variable -Option Constant Executable (Expand-Zip $DownloadedFile -Temp:$Execute)
+::            Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
 ::        } else {
-::            Set-Variable -Option Constant Executable $DownloadedFile
+::            Set-Variable -Option Constant Executable ([String]$DownloadedFile)
 ::        }
 ::
 ::        if ($Execute) {
@@ -4999,7 +5039,7 @@ if "%debug%"=="true" (
 ::        [Switch]$Silent
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    if ($Switches -and $Silent) {
 ::        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
@@ -5044,7 +5084,7 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$ProcessName
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 3
+::    Set-Variable -Option Constant LogIndentLevel ([Int]3)
 ::
 ::    if (Get-Process | Where-Object { $_.ProcessName -eq $ProcessName } ) {
 ::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
@@ -5059,9 +5099,9 @@ if "%debug%"=="true" (
 ::#region functions > Common > Updater
 ::
 ::function Update-App {
-::    Set-Variable -Option Constant AppBatFile "$PATH_WORKING_DIR\qiiwexc.bat"
+::    Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
 ::
-::    Set-Variable -Option Constant IsUpdateAvailable (Get-UpdateAvailability)
+::    Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
 ::
 ::    if ($IsUpdateAvailable) {
 ::        Get-NewVersion $AppBatFile
@@ -5088,15 +5128,16 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
-::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 ::    if ($NoConnection) {
 ::        Write-LogError "Failed to check for updates: $NoConnection"
 ::        return
 ::    }
 ::
 ::    try {
-::        Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
-::        Set-Variable -Option Constant LatestVersion ([Version](([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version')).Trim()))
+::        Set-Variable -Option Constant VersionFile ([String]"$PATH_APP_DIR\version")
+::        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version'))
+::        Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to check for updates'
 ::        return
@@ -5118,7 +5159,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogWarning 'Downloading new version...'
 ::
-::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 ::
 ::    if ($NoConnection) {
 ::        Write-LogError "Failed to download update: $NoConnection"
@@ -5210,7 +5251,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 75 -Task "Configuring $AppName..."
 ::
-::    Set-Variable -Option Constant ProcessName 'chrome'
+::    Set-Variable -Option Constant ProcessName ([String]'chrome')
 ::
 ::    Update-JsonFile $AppName $ProcessName $CONFIG_CHROME_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"
 ::    Update-JsonFile $AppName $ProcessName $CONFIG_CHROME_PREFERENCES "$env:LocalAppData\Google\Chrome\User Data\Default\Preferences"
@@ -5228,7 +5269,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
 ::
-::    Set-Variable -Option Constant ProcessName 'msedge'
+::    Set-Variable -Option Constant ProcessName ([String]'msedge')
 ::
 ::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
 ::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
@@ -5248,9 +5289,9 @@ if "%debug%"=="true" (
 ::
 ::
 ::    if ($SYSTEM_LANGUAGE -match 'ru') {
-::        Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN)
+::        Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN))
 ::    } else {
-::        Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH)
+::        Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH))
 ::    }
 ::
 ::    Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
@@ -5314,7 +5355,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
 ::
-::    Set-Variable -Option Constant RegFilePath "$PATH_APP_DIR\$AppName.reg"
+::    Set-Variable -Option Constant RegFilePath ([String]"$PATH_APP_DIR\$AppName.reg")
 ::
 ::    Initialize-AppDirectory
 ::
@@ -5393,19 +5434,19 @@ if "%debug%"=="true" (
 ::    New-RegistryKeyIfMissing $RegistryPath
 ::
 ::    if ($SetDefault) {
-::        Set-Variable -Option Constant DefaultAssociation (Get-ItemProperty -Path $RegistryPath).'(Default)'
+::        Set-Variable -Option Constant DefaultAssociation ([String](Get-ItemProperty -Path $RegistryPath).'(Default)')
 ::        if ($DefaultAssociation -ne $Application) {
 ::            Set-ItemProperty -Path $RegistryPath -Name '(Default)' -Value $Application
 ::        }
 ::    }
 ::
-::    Set-Variable -Option Constant OpenWithProgidsPath "$RegistryPath\OpenWithProgids"
+::    Set-Variable -Option Constant OpenWithProgidsPath ([String]"$RegistryPath\OpenWithProgids")
 ::    New-RegistryKeyIfMissing $OpenWithProgidsPath
 ::
 ::    Set-Variable -Option Constant OpenWithProgids (Get-ItemProperty -Path $OpenWithProgidsPath)
 ::    if ($OpenWithProgids) {
-::        Set-Variable -Option Constant OpenWithProgidsNames ($OpenWithProgids | Get-Member -MemberType NoteProperty).Name
-::        Set-Variable -Option Constant Progids ($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' })
+::        Set-Variable -Option Constant OpenWithProgidsNames ([Collections.Generic.List[String]]($OpenWithProgids | Get-Member -MemberType NoteProperty).Name)
+::        Set-Variable -Option Constant Progids ([Collections.Generic.List[String]]($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' }))
 ::
 ::        foreach ($Progid in $Progids) {
 ::            if ($Progid -ne $Application) {
@@ -5434,7 +5475,7 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 3, Mandatory)]$Path
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 2
+::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
 ::
 ::    Stop-ProcessIfRunning $ProcessName
 ::
@@ -5458,10 +5499,10 @@ if "%debug%"=="true" (
 ::        }
 ::    }
 ::
-::    Set-Variable -Option Constant CurrentConfig (Get-Content $Path -Raw -Encoding UTF8 | ConvertFrom-Json)
-::    Set-Variable -Option Constant PatchConfig ($Content | ConvertFrom-Json)
+::    Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 | ConvertFrom-Json))
+::    Set-Variable -Option Constant PatchConfig ([PSCustomObject]($Content | ConvertFrom-Json))
 ::
-::    Set-Variable -Option Constant UpdatedConfig (Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress)
+::    Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress))
 ::
 ::    $UpdatedConfig | Out-File $Path -Encoding UTF8
 ::
@@ -5480,7 +5521,7 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 2, Mandatory)]$Path,
 ::        [String][Parameter(Position = 3)]$ProcessName = $AppName
 ::    )
-::    Set-Variable -Option Constant LogIndentLevel 2
+::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
 ::
 ::    Stop-ProcessIfRunning $ProcessName
 ::
@@ -5506,9 +5547,9 @@ if "%debug%"=="true" (
 ::    if ($PS_VERSION -ge 5) {
 ::        try {
 ::            Write-ActivityProgress -PercentComplete 5 -Task 'Collecting capabilities to remove...'
-::            Set-Variable -Option Constant InstalledCapabilities (Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' })
-::            Set-Variable -Option Constant CapabilitiesToRemove ($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE })
-::            Set-Variable -Option Constant CapabilityCount ($CapabilitiesToRemove.Count)
+::            Set-Variable -Option Constant InstalledCapabilities ([Object](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
+::            Set-Variable -Option Constant CapabilitiesToRemove ([Object]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
+::            Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
 ::            Out-Success $LogIndentLevel
 ::        } catch [Exception] {
 ::            Write-LogException $_ 'Failed to collect capabilities to remove' $LogIndentLevel
@@ -5517,9 +5558,9 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Write-ActivityProgress -PercentComplete 10 -Task 'Collecting features to remove...'
-::        Set-Variable -Option Constant InstalledFeatures (Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' })
-::        Set-Variable -Option Constant FeaturesToRemove ($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE })
-::        Set-Variable -Option Constant FeatureCount ($FeaturesToRemove.Count)
+::        Set-Variable -Option Constant InstalledFeatures ([Object](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
+::        Set-Variable -Option Constant FeaturesToRemove ([Object]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
+::        Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
 ::        Out-Success $LogIndentLevel
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to collect features to remove' $LogIndentLevel
@@ -5582,19 +5623,19 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    if ($FamilyFriendly) {
-::        Set-Variable -Option Constant PreferredDnsServer '1.1.1.3'
+::        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.3')
 ::    } elseif ($MalwareProtection) {
-::        Set-Variable -Option Constant PreferredDnsServer '1.1.1.2'
+::        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.2')
 ::    } else {
-::        Set-Variable -Option Constant PreferredDnsServer '1.1.1.1'
+::        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.1')
 ::    }
 ::
 ::    if ($FamilyFriendly) {
-::        Set-Variable -Option Constant AlternateDnsServer '1.0.0.3'
+::        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.3')
 ::    } elseif ($MalwareProtection) {
-::        Set-Variable -Option Constant AlternateDnsServer '1.0.0.2'
+::        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.2')
 ::    } else {
-::        Set-Variable -Option Constant AlternateDnsServer '1.0.0.1'
+::        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.1')
 ::    }
 ::
 ::    Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
@@ -5607,9 +5648,9 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        Set-Variable -Option Constant Status (Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue
+::        Set-Variable -Option Constant Status ([Object[]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue)
 ::
-::        if ($Status -ne 0) {
+::        if ($Status[0] -ne 0 -or $Status[1] -ne 0) {
 ::            Write-LogError 'Failed to change DNS server'
 ::        }
 ::    } catch [Exception] {
@@ -5630,8 +5671,8 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
 ::
-::    Set-Variable -Option Constant SophiaScriptUrl "https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1"
-::    Set-Variable -Option Constant SophiaScriptPath "$PATH_TEMP_DIR\Sophia.ps1"
+::    Set-Variable -Option Constant SophiaScriptUrl ([String]"https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1")
+::    Set-Variable -Option Constant SophiaScriptPath ([String]"$PATH_TEMP_DIR\Sophia.ps1")
 ::
 ::    [Collections.Generic.List[Object]]$AppAssociations = @()
 ::
@@ -5645,7 +5686,7 @@ if "%debug%"=="true" (
 ::            })
 ::    }
 ::
-::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 ::    if (-not $NoConnection) {
 ::        Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
 ::
@@ -5654,7 +5695,7 @@ if "%debug%"=="true" (
 ::        . $SophiaScriptPath
 ::    }
 ::
-::    Set-Variable -Option Constant FileTypeCount ($AppAssociations.Count)
+::    Set-Variable -Option Constant FileTypeCount ([Int]$AppAssociations.Count)
 ::    Set-Variable -Option Constant Step ([Math]::Floor(20 / $FileTypeCount))
 ::
 ::    [Int]$Iteration = 1
@@ -5691,7 +5732,7 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Windows > Set-PowerSchemeConfiguration
 ::
 ::function Set-PowerSchemeConfiguration {
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    Write-ActivityProgress -PercentComplete 15 -Task 'Setting power scheme overlay...'
 ::
@@ -5719,7 +5760,7 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$FileName
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
 ::
@@ -5729,7 +5770,7 @@ if "%debug%"=="true" (
 ::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
 ::        Write-ActivityProgress -PercentComplete 50
 ::
-::        Set-Variable -Option Constant RegistriesCount ($FileExtensionRegistries.Count)
+::        Set-Variable -Option Constant RegistriesCount ([Int]$FileExtensionRegistries.Count)
 ::        Set-Variable -Option Constant Step ([Math]::Floor(20 / $RegistriesCount))
 ::
 ::        [Int]$Iteration = 1
@@ -5772,7 +5813,7 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$FileName
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
 ::
@@ -5783,15 +5824,15 @@ if "%debug%"=="true" (
 ::    Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
 ::    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
 ::
-::    Set-Variable -Option Constant UnelevatedExplorerTaskName 'CreateExplorerShellUnelevatedTask'
+::    Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
 ::    if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
 ::        Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
 ::    }
 ::
 ::    if ($SYSTEM_LANGUAGE -match 'ru') {
-::        Set-Variable -Option Constant LocalisedConfig $CONFIG_WINDOWS_RUSSIAN
+::        Set-Variable -Option Constant LocalisedConfig ([Collections.Generic.List[String]]$CONFIG_WINDOWS_RUSSIAN)
 ::    } else {
-::        Set-Variable -Option Constant LocalisedConfig $CONFIG_WINDOWS_ENGLISH
+::        Set-Variable -Option Constant LocalisedConfig ([Collections.Generic.List[String]]$CONFIG_WINDOWS_ENGLISH)
 ::    }
 ::
 ::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
@@ -5824,7 +5865,7 @@ if "%debug%"=="true" (
 ::            $ConfigLines.Add("`"EnableCortana`"=dword:00000000`n")
 ::        }
 ::
-::        Set-Variable -Option Constant VolumeRegistries ((Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
+::        Set-Variable -Option Constant VolumeRegistries ([Collections.Generic.List[String]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
 ::        foreach ($Registry in $VolumeRegistries) {
 ::            $ConfigLines.Add("`n[$Registry]`n")
 ::            $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
@@ -5885,13 +5926,13 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$FileName
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    Write-ActivityProgress -PercentComplete 90 -Task 'Applying Windows personalisation configuration...'
 ::
 ::    Set-WinHomeLocation -GeoId 140
 ::
-::    Set-Variable -Option Constant LanguageList (Get-WinUserLanguageList)
+::    Set-Variable -Option Constant LanguageList ([Collections.Generic.List[Object]](Get-WinUserLanguageList))
 ::    if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
 ::        $LanguageList.Add('lv')
 ::        Set-WinUserLanguageList $LanguageList -Force
@@ -5909,7 +5950,7 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        if ($OS_VERSION -gt 10) {
-::            Set-Variable -Option Constant NotificationRegistries ((Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
+::            Set-Variable -Option Constant NotificationRegistries ([Collections.Generic.List[String]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
 ::            foreach ($Registry in $NotificationRegistries) {
 ::                $ConfigLines.Add("`n[$Registry]`n")
 ::                $ConfigLines.Add("`"IsPromoted`"=dword:00000001`n")
@@ -5963,19 +6004,19 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting OOShutUp10++ utility...'
 ::
-::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 ::    if ($NoConnection) {
 ::        Write-LogError "Failed to start: $NoConnection"
 ::        return
 ::    }
 ::
 ::    if ($Execute) {
-::        Set-Variable -Option Constant TargetPath $PATH_OOSHUTUP10
+::        Set-Variable -Option Constant TargetPath ([String]$PATH_OOSHUTUP10)
 ::    } else {
-::        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+::        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
 ::    }
 ::
-::    Set-Variable -Option Constant ConfigFile "$TargetPath\ooshutup10.cfg"
+::    Set-Variable -Option Constant ConfigFile ([String]"$TargetPath\ooshutup10.cfg")
 ::
 ::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 ::
@@ -6002,45 +6043,45 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 ::
-::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 ::    if ($NoConnection) {
 ::        Write-LogError "Failed to start: $NoConnection"
 ::        return
 ::    }
 ::
-::    Set-Variable -Option Constant TargetPath "$PATH_TEMP_DIR\Win11Debloat"
+::    Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 ::
 ::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 ::
 ::    if ($Personalisation) {
-::        Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive')
+::        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
 ::    } else {
-::        Set-Variable -Option Constant AppsList $CONFIG_DEBLOAT_APP_LIST
+::        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_APP_LIST)
 ::    }
 ::
 ::    $AppsList | Out-File "$TargetPath\CustomAppsList" -Encoding UTF8
 ::
 ::    if ($Personalisation) {
-::        Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $CONFIG_DEBLOAT_PRESET_PERSONALISATION)
+::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_PRESET_BASE + $CONFIG_DEBLOAT_PRESET_PERSONALISATION))
 ::    } else {
-::        Set-Variable -Option Constant Configuration $CONFIG_DEBLOAT_PRESET_BASE
+::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_PRESET_BASE)
 ::    }
 ::
 ::    $Configuration | Out-File "$TargetPath\SavedSettings" -Encoding UTF8
 ::
 ::    if ($UsePreset) {
-::        Set-Variable -Option Constant UsePresetParam '-RunSavedSettings'
+::        Set-Variable -Option Constant UsePresetParam ([String]'-RunSavedSettings')
 ::    }
 ::
 ::    if ($Silent) {
-::        Set-Variable -Option Constant SilentParam '-Silent'
+::        Set-Variable -Option Constant SilentParam ([String]'-Silent')
 ::    }
 ::
 ::    if ($OS_VERSION -gt 10) {
-::        Set-Variable -Option Constant SysprepParam '-Sysprep'
+::        Set-Variable -Option Constant SysprepParam ([String]'-Sysprep')
 ::    }
 ::
-::    Set-Variable -Option Constant Params "-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam"
+::    Set-Variable -Option Constant Params ([String]"-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam")
 ::
 ::    Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 ::
@@ -6060,7 +6101,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting WinUtil utility...'
 ::
-::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 ::    if ($NoConnection) {
 ::        Write-LogError "Failed to start: $NoConnection"
 ::        return
@@ -6068,7 +6109,7 @@ if "%debug%"=="true" (
 ::
 ::    New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
 ::
-::    Set-Variable -Option Constant ConfigFile "$PATH_WINUTIL\WinUtil.json"
+::    Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 ::
 ::    [String]$Configuration = $CONFIG_WINUTIL
 ::    if ($Personalisation) {
@@ -6079,10 +6120,10 @@ if "%debug%"=="true" (
 ::
 ::    $Configuration | Out-File $ConfigFile -Encoding UTF8
 ::
-::    Set-Variable -Option Constant ConfigParam "-Config $ConfigFile"
+::    Set-Variable -Option Constant ConfigParam ([String]"-Config $ConfigFile")
 ::
 ::    if ($AutomaticallyApply) {
-::        Set-Variable -Option Constant RunParam '-Run'
+::        Set-Variable -Option Constant RunParam ([String]'-Run')
 ::    }
 ::
 ::    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
@@ -6098,7 +6139,7 @@ if "%debug%"=="true" (
 ::function Get-BatteryReport {
 ::    Write-LogInfo 'Exporting battery report...'
 ::
-::    Set-Variable -Option Constant ReportPath "$PATH_APP_DIR\battery_report.html"
+::    Set-Variable -Option Constant ReportPath ([String]"$PATH_APP_DIR\battery_report.html")
 ::
 ::    Initialize-AppDirectory
 ::
@@ -6117,7 +6158,7 @@ if "%debug%"=="true" (
 ::function Start-Activator {
 ::    Write-LogInfo 'Starting MAS activator...'
 ::
-::    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 ::    if ($NoConnection) {
 ::        Write-LogError "Failed to start: $NoConnection"
 ::        return
@@ -6140,14 +6181,14 @@ if "%debug%"=="true" (
 ::function Start-Cleanup {
 ::    New-Activity 'Cleaning up the system...'
 ::
-::    Set-Variable -Option Constant LogIndentLevel 1
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    Write-ActivityProgress -PercentComplete 10 -Task 'Clearing delivery optimization cache...'
 ::    Delete-DeliveryOptimizationCache -Force
 ::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 20 -Task 'Clearing Windows temp folder...'
-::    Set-Variable -Option Constant WindowsTemp "$env:SystemRoot\Temp"
+::    Set-Variable -Option Constant WindowsTemp ([String]"$env:SystemRoot\Temp")
 ::    Remove-Item -Path "$WindowsTemp\*" -Recurse -Force -ErrorAction Ignore
 ::    Out-Success $LogIndentLevel
 ::
@@ -6156,7 +6197,7 @@ if "%debug%"=="true" (
 ::    Out-Success $LogIndentLevel
 ::
 ::    Write-ActivityProgress -PercentComplete 40 -Task 'Clearing software distribution folder...'
-::    Set-Variable -Option Constant SoftwareDistributionPath "$env:SystemRoot\SoftwareDistribution\Download"
+::    Set-Variable -Option Constant SoftwareDistributionPath ([String]"$env:SystemRoot\SoftwareDistribution\Download")
 ::    Remove-Item -Path "$SoftwareDistributionPath\*" -Recurse -Force -ErrorAction Ignore
 ::    Out-Success $LogIndentLevel
 ::
@@ -6167,32 +6208,34 @@ if "%debug%"=="true" (
 ::    }
 ::    Write-ActivityProgress -PercentComplete 70
 ::
-::    Set-Variable -Option Constant VolumeCaches @(
-::        'Active Setup Temp Folders',
-::        'BranchCache',
-::        'D3D Shader Cache',
-::        'Delivery Optimization Files',
-::        'Device Driver Packages',
-::        'Diagnostic Data Viewer database files',
-::        'Downloaded Program Files',
-::        'Internet Cache Files',
-::        'Language Pack',
-::        'Old ChkDsk Files',
-::        'Previous Installations',
-::        'Recycle Bin',
-::        'RetailDemo Offline Content',
-::        'Setup Log Files',
-::        'System error memory dump files',
-::        'System error minidump files',
-::        'Temporary Files',
-::        'Temporary Setup Files',
-::        'Thumbnail Cache',
-::        'Update Cleanup',
-::        'User file versions',
-::        'Windows Error Reporting Files',
-::        'Windows ESD installation files',
-::        'Windows Defender',
-::        'Windows Upgrade Log Files'
+::    Set-Variable -Option Constant VolumeCaches (
+::        [Collections.Generic.List[String]]@(
+::            'Active Setup Temp Folders',
+::            'BranchCache',
+::            'D3D Shader Cache',
+::            'Delivery Optimization Files',
+::            'Device Driver Packages',
+::            'Diagnostic Data Viewer database files',
+::            'Downloaded Program Files',
+::            'Internet Cache Files',
+::            'Language Pack',
+::            'Old ChkDsk Files',
+::            'Previous Installations',
+::            'Recycle Bin',
+::            'RetailDemo Offline Content',
+::            'Setup Log Files',
+::            'System error memory dump files',
+::            'System error minidump files',
+::            'Temporary Files',
+::            'Temporary Setup Files',
+::            'Thumbnail Cache',
+::            'Update Cleanup',
+::            'User file versions',
+::            'Windows Error Reporting Files',
+::            'Windows ESD installation files',
+::            'Windows Defender',
+::            'Windows Upgrade Log Files'
+::        )
 ::    )
 ::
 ::    foreach ($VolumeCache in $VolumeCaches) {
@@ -6281,15 +6324,15 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    if ($Execute) {
-::        Set-Variable -Option Constant TargetPath $PATH_APP_DIR
+::        Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
 ::    } else {
-::        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+::        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
 ::    }
 ::
 ::    if ($SYSTEM_LANGUAGE -match 'ru') {
-::        Set-Variable -Option Constant Config $CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU')
+::        Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU'))
 ::    } else {
-::        Set-Variable -Option Constant Config $CONFIG_OFFICE_INSTALLER
+::        Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER)
 ::    }
 ::
 ::    Initialize-AppDirectory
@@ -6314,13 +6357,13 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 1, Mandatory)]$Silent
 ::    )
 ::
-::    Set-Variable -Option Constant Registry_Key 'HKCU:\Software\Unchecky'
+::    Set-Variable -Option Constant Registry_Key ([String]'HKCU:\Software\Unchecky')
 ::    New-RegistryKeyIfMissing $Registry_Key
 ::
 ::    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1
 ::
 ::    if ($Silent) {
-::        Set-Variable -Option Constant Params '-install -no_desktop_icon'
+::        Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
 ::    }
 ::
 ::    Start-DownloadUnzipAndRun 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Execute:$Execute -Params $Params -Silent:$Silent
@@ -6350,7 +6393,7 @@ if "%debug%"=="true" (
 ::        }
 ::    }
 ::
-::    Set-Variable -Option Constant Query ($AppIds -join '-')
+::    Set-Variable -Option Constant Query ([String]($AppIds -join '-'))
 ::
 ::    if ($OpenInBrowser) {
 ::        Open-InBrowser "https://ninite.com/?select=$Query"
@@ -6363,8 +6406,8 @@ if "%debug%"=="true" (
 ::            }
 ::        }
 ::
-::        Set-Variable -Option Constant FileName "Ninite $($AppNames -Join ' ') Installer.exe"
-::        Set-Variable -Option Constant DownloadUrl "https://ninite.com/$Query/ninite.exe"
+::        Set-Variable -Option Constant FileName ([String]"Ninite $($AppNames -Join ' ') Installer.exe")
+::        Set-Variable -Option Constant DownloadUrl ([String]"https://ninite.com/$Query/ninite.exe")
 ::
 ::        Start-DownloadUnzipAndRun $DownloadUrl $FileName -Execute:$Execute
 ::    }
