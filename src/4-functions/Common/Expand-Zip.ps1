@@ -4,18 +4,18 @@ function Expand-Zip {
         [Switch]$Temp
     )
 
-    Set-Variable -Option Constant LogIndentLevel 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
 
-    Set-Variable -Option Constant ZipName (Split-Path -Leaf $ZipPath)
-    Set-Variable -Option Constant ExtractionPath $ZipPath.TrimEnd('.zip')
-    Set-Variable -Option Constant ExtractionDir (Split-Path -Leaf $ExtractionPath)
+    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath))
+    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.zip'))
+    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath))
 
     if ($Temp) {
-        Set-Variable -Option Constant TargetPath $PATH_APP_DIR
+        Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
     } else {
-        Set-Variable -Option Constant TargetPath $PATH_WORKING_DIR
+        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
     }
 
     Initialize-AppDirectory
@@ -23,41 +23,41 @@ function Expand-Zip {
     switch -Wildcard ($ZipName) {
         'ActivationProgram.zip' {
             if (-not $OS_64_BIT) {
-                Set-Variable -Option Constant Suffix '_x86.exe'
+                Set-Variable -Option Constant Suffix ([String]'_x86.exe')
             }
-            Set-Variable -Option Constant Executable "ActivationProgram$Suffix.exe"
+            Set-Variable -Option Constant Executable ([String]"ActivationProgram$Suffix.exe")
         }
         'Office_Installer+.zip' {
             if (-not $OS_64_BIT) {
-                Set-Variable -Option Constant Suffix ' x86.exe'
+                Set-Variable -Option Constant Suffix ([String]' x86.exe')
             }
-            Set-Variable -Option Constant Executable "Office Installer+$Suffix.exe"
+            Set-Variable -Option Constant Executable ([String]"Office Installer+$Suffix.exe")
         }
         'cpu-z_*' {
             if ($OS_64_BIT) {
-                Set-Variable -Option Constant Suffix '64'
+                Set-Variable -Option Constant Suffix ([String]'64')
             } else {
-                Set-Variable -Option Constant Suffix '32'
+                Set-Variable -Option Constant Suffix ([String]'32')
             }
-            Set-Variable -Option Constant Executable "$ExtractionDir\cpuz_x$Suffix.exe"
+            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\cpuz_x$Suffix.exe")
         }
         'SDIO_*' {
-            Set-Variable -Option Constant Executable "$ExtractionDir\SDIO_auto.bat"
+            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDIO_auto.bat")
         }
         'ventoy*' {
-            Set-Variable -Option Constant Executable "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe"
+            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe")
         }
         'Victoria*' {
-            Set-Variable -Option Constant Executable "$ExtractionDir\$ExtractionDir\Victoria.exe"
+            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Victoria.exe")
         }
         Default {
-            Set-Variable -Option Constant Executable ($ZipName.TrimEnd('.zip') + '.exe')
+            Set-Variable -Option Constant Executable ([String]($ZipName.TrimEnd('.zip') + '.exe'))
         }
     }
 
-    Set-Variable -Option Constant IsDirectory ($ExtractionDir -and $Executable -like "$ExtractionDir\*")
-    Set-Variable -Option Constant TemporaryExe "$ExtractionPath\$Executable"
-    Set-Variable -Option Constant TargetExe "$TargetPath\$Executable"
+    Set-Variable -Option Constant IsDirectory ([Bool]($ExtractionDir -and $Executable -like "$ExtractionDir\*"))
+    Set-Variable -Option Constant TemporaryExe ([String]"$ExtractionPath\$Executable")
+    Set-Variable -Option Constant TargetExe ([String]"$TargetPath\$Executable")
 
     Remove-File $TemporaryExe
 

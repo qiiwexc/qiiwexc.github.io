@@ -5,7 +5,7 @@ function Reset-State {
 
     Write-LogInfo 'Cleaning up files on exit...'
 
-    Set-Variable -Option Constant PowerShellScript "$PATH_TEMP_DIR\qiiwexc.ps1"
+    Set-Variable -Option Constant PowerShellScript ([String]"$PATH_TEMP_DIR\qiiwexc.ps1")
 
     Remove-Directory $PATH_WINUTIL -Silent
     Remove-Directory $PATH_OOSHUTUP10 -Silent

@@ -7,45 +7,45 @@ function Start-WindowsDebloat {
 
     Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 
-    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
     if ($NoConnection) {
         Write-LogError "Failed to start: $NoConnection"
         return
     }
 
-    Set-Variable -Option Constant TargetPath "$PATH_TEMP_DIR\Win11Debloat"
+    Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 
     New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
     if ($Personalisation) {
-        Set-Variable -Option Constant AppsList ($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive')
+        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
     } else {
-        Set-Variable -Option Constant AppsList $CONFIG_DEBLOAT_APP_LIST
+        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_APP_LIST)
     }
 
     $AppsList | Out-File "$TargetPath\CustomAppsList" -Encoding UTF8
 
     if ($Personalisation) {
-        Set-Variable -Option Constant Configuration ($CONFIG_DEBLOAT_PRESET_BASE + $CONFIG_DEBLOAT_PRESET_PERSONALISATION)
+        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_PRESET_BASE + $CONFIG_DEBLOAT_PRESET_PERSONALISATION))
     } else {
-        Set-Variable -Option Constant Configuration $CONFIG_DEBLOAT_PRESET_BASE
+        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_PRESET_BASE)
     }
 
     $Configuration | Out-File "$TargetPath\SavedSettings" -Encoding UTF8
 
     if ($UsePreset) {
-        Set-Variable -Option Constant UsePresetParam '-RunSavedSettings'
+        Set-Variable -Option Constant UsePresetParam ([String]'-RunSavedSettings')
     }
 
     if ($Silent) {
-        Set-Variable -Option Constant SilentParam '-Silent'
+        Set-Variable -Option Constant SilentParam ([String]'-Silent')
     }
 
     if ($OS_VERSION -gt 10) {
-        Set-Variable -Option Constant SysprepParam '-Sysprep'
+        Set-Variable -Option Constant SysprepParam ([String]'-Sysprep')
     }
 
-    Set-Variable -Option Constant Params "-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam"
+    Set-Variable -Option Constant Params ([String]"-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam")
 
     Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 

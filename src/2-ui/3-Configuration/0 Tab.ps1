@@ -1,1 +1,1 @@
-Set-Variable -Option Constant TAB_CONFIGURATION (New-TabPage 'Configuration')
+Set-Variable -Option Constant TAB_CONFIGURATION ([Windows.Forms.TabPage](New-TabPage 'Configuration'))

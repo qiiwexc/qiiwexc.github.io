@@ -1,7 +1,7 @@
 function Update-App {
-    Set-Variable -Option Constant AppBatFile "$PATH_WORKING_DIR\qiiwexc.bat"
+    Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
 
-    Set-Variable -Option Constant IsUpdateAvailable (Get-UpdateAvailability)
+    Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
 
     if ($IsUpdateAvailable) {
         Get-NewVersion $AppBatFile
@@ -28,15 +28,16 @@ function Get-UpdateAvailability {
         return
     }
 
-    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
     if ($NoConnection) {
         Write-LogError "Failed to check for updates: $NoConnection"
         return
     }
 
     try {
-        Set-Variable -Option Constant VersionFile "$PATH_APP_DIR\version"
-        Set-Variable -Option Constant LatestVersion ([Version](([String](Invoke-WebRequest -Uri '{URL_VERSION_FILE}')).Trim()))
+        Set-Variable -Option Constant VersionFile ([String]"$PATH_APP_DIR\version")
+        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -Uri '{URL_VERSION_FILE}').Content)
+        Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
     } catch [Exception] {
         Write-LogException $_ 'Failed to check for updates'
         return
@@ -58,7 +59,7 @@ function Get-NewVersion {
 
     Write-LogWarning 'Downloading new version...'
 
-    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
 
     if ($NoConnection) {
         Write-LogError "Failed to download update: $NoConnection"

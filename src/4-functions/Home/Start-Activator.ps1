@@ -1,7 +1,7 @@
 function Start-Activator {
     Write-LogInfo 'Starting MAS activator...'
 
-    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
     if ($NoConnection) {
         Write-LogError "Failed to start: $NoConnection"
         return

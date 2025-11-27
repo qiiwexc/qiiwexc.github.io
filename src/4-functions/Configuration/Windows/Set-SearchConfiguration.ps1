@@ -3,7 +3,7 @@
         [String][Parameter(Position = 0, Mandatory)]$FileName
     )
 
-    Set-Variable -Option Constant LogIndentLevel 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
 
@@ -13,7 +13,7 @@
         Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
         Write-ActivityProgress -PercentComplete 50
 
-        Set-Variable -Option Constant RegistriesCount ($FileExtensionRegistries.Count)
+        Set-Variable -Option Constant RegistriesCount ([Int]$FileExtensionRegistries.Count)
         Set-Variable -Option Constant Step ([Math]::Floor(20 / $RegistriesCount))
 
         [Int]$Iteration = 1

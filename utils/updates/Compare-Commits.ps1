@@ -4,15 +4,15 @@ function Compare-Commits {
         [String][Parameter(Position = 1)]$GitHubToken
     )
 
-    Set-Variable -Option Constant Repository $Dependency.repository
-    Set-Variable -Option Constant CurrentVersion $Dependency.version
+    Set-Variable -Option Constant Repository ([String]$Dependency.repository)
+    Set-Variable -Option Constant CurrentVersion ([String]$Dependency.version)
 
-    Set-Variable -Option Constant Commits (Invoke-GitAPI "https://api.github.com/repos/$Repository/commits" $GitHubToken)
+    Set-Variable -Option Constant Commits ([Collections.Generic.List[Object]](Invoke-GitAPI "https://api.github.com/repos/$Repository/commits" $GitHubToken))
 
-    Set-Variable -Option Constant LatestVersion ($Commits | Select-Object -First 1).Sha
+    Set-Variable -Option Constant LatestVersion ([String]($Commits | Select-Object -First 1).Sha)
 
     if ($LatestVersion -ne $CurrentVersion) {
         Set-NewVersion $Dependency $LatestVersion
-        return @("https://github.com/$Repository/compare/$CurrentVersion...$LatestVersion")
+        return [Collections.Generic.List[Object]]@("https://github.com/$Repository/compare/$CurrentVersion...$LatestVersion")
     }
 }

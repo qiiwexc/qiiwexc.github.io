@@ -16,21 +16,21 @@ function Start-DownloadUnzipAndRun {
         Write-LogWarning 'This file may trigger anti-virus false positive!'
         Write-LogWarning 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
         Write-LogWarning 'Click the button again to continue'
-        Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN $True
+        Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN ([Bool]$True)
         return
     }
 
     New-Activity 'Download and run'
 
-    Set-Variable -Option Constant UrlEnding $URL.Substring($URL.Length - 4)
-    Set-Variable -Option Constant IsZip ($UrlEnding -eq '.zip')
-    Set-Variable -Option Constant DownloadedFile (Start-Download $URL $FileName -Temp:($Execute -or $IsZip))
+    Set-Variable -Option Constant UrlEnding ([String]$URL.Substring($URL.Length - 4))
+    Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq '.zip'))
+    Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
 
     if ($DownloadedFile) {
         if ($IsZip) {
-            Set-Variable -Option Constant Executable (Expand-Zip $DownloadedFile -Temp:$Execute)
+            Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
         } else {
-            Set-Variable -Option Constant Executable $DownloadedFile
+            Set-Variable -Option Constant Executable ([String]$DownloadedFile)
         }
 
         if ($Execute) {

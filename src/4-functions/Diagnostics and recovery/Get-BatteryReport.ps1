@@ -1,7 +1,7 @@
 function Get-BatteryReport {
     Write-LogInfo 'Exporting battery report...'
 
-    Set-Variable -Option Constant ReportPath "$PATH_APP_DIR\battery_report.html"
+    Set-Variable -Option Constant ReportPath ([String]"$PATH_APP_DIR\battery_report.html")
 
     Initialize-AppDirectory
 

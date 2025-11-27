@@ -5,7 +5,7 @@ function Write-ConfigurationFile {
         [String][Parameter(Position = 2, Mandatory)]$Path,
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
-    Set-Variable -Option Constant LogIndentLevel 2
+    Set-Variable -Option Constant LogIndentLevel ([Int]2)
 
     Stop-ProcessIfRunning $ProcessName
 

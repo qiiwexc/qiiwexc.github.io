@@ -9,8 +9,8 @@ function New-PowerShellScript {
 
     New-Item -Force -ItemType Directory $DistPath | Out-Null
 
-    Set-Variable -Option Constant ProjectFiles (Get-ChildItem -Recurse -File $SourcePath)
-    Set-Variable -Option Constant FileCount $ProjectFiles.Length
+    Set-Variable -Option Constant ProjectFiles ([Collections.Generic.List[Object]](Get-ChildItem -Recurse -File $SourcePath))
+    Set-Variable -Option Constant FileCount ([Int]$ProjectFiles.Count)
 
     [Collections.Generic.List[String]]$OutputLines = @()
 
@@ -36,7 +36,8 @@ function New-PowerShellScript {
         [Collections.Generic.List[String]]$Content = Get-Content $FilePath
 
         if ($IsConfigFile) {
-            [String]$VariableName = "CONFIG_$(($FileName.Replace(' ', '_') -replace '\..{1,}$', '').ToUpper())"
+            [String]$NormalizedFileName = $FileName.Replace(' ', '_') -replace '\..{1,}$', ''
+            [String]$VariableName = "CONFIG_$($NormalizedFileName.ToUpper())"
             [Collections.Generic.List[String]]$EscapedContent = $Content.Replace("'", '"')
             $EscapedContent[0] = "Set-Variable -Option Constant $VariableName '$($EscapedContent[0])"
             $OutputLines += $EscapedContent
@@ -52,7 +53,10 @@ function New-PowerShellScript {
         $CurrentFileNum++
     }
 
-    $Config | ForEach-Object { $OutputLines = $OutputLines.Replace("{$($_.key)}", $_.value) }
+    $Config | ForEach-Object {
+        [String]$Placeholder = "{$($_.key)}"
+        $OutputLines = $OutputLines.Replace($Placeholder, $_.value)
+    }
 
     Write-LogInfo "Writing output file $Ps1File"
     $OutputLines | Out-File $Ps1File

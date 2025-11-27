@@ -8,7 +8,10 @@ function Set-AppRemovalList {
     $AppList.Add('Microsoft.OneDrive')
 
     [Collections.Generic.List[String]]$FormattedAppList = "`n"
-    $AppList | ForEach-Object { $FormattedAppList.Add("  '$($_.Split('#')[0].trim())';`n") }
+    $AppList | ForEach-Object {
+        [String]$App = $_.Split('#')[0].trim()
+        $FormattedAppList.Add("  '$App';`n")
+    }
 
     return $TemplateContent.Replace('{APP_REMOVAL_LIST}', -join $FormattedAppList)
 }

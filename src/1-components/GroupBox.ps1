@@ -4,10 +4,10 @@ function New-GroupBox {
         [Int][Parameter(Position = 1)]$IndexOverride
     )
 
-    Set-Variable -Option Constant GroupBox (New-Object Windows.Forms.GroupBox)
+    Set-Variable -Option Constant GroupBox ([Windows.Forms.GroupBox](New-Object Windows.Forms.GroupBox))
 
-    Set-Variable -Scope Script PREVIOUS_GROUP $CURRENT_GROUP
-    Set-Variable -Scope Script PAD_CHECKBOXES $True
+    Set-Variable -Scope Script PREVIOUS_GROUP ([Windows.Forms.GroupBox]$CURRENT_GROUP)
+    Set-Variable -Scope Script PAD_CHECKBOXES ([Bool]$True)
 
     [Int]$GroupIndex = 0
 
@@ -19,13 +19,13 @@ function New-GroupBox {
 
     if ($GroupIndex -lt 3) {
         if ($GroupIndex -eq 0) {
-            Set-Variable -Option Constant Location '15, 15'
+            Set-Variable -Option Constant Location ([Drawing.Point]'15, 15')
         } else {
-            Set-Variable -Option Constant Location ($PREVIOUS_GROUP.Location + "$($GROUP_WIDTH + 15), 0")
+            Set-Variable -Option Constant Location ($PREVIOUS_GROUP.Location + [Drawing.Point]"$($GROUP_WIDTH + 15), 0")
         }
     } else {
         Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
-        Set-Variable -Option Constant Location ($PreviousGroup.Location + "0, $($PreviousGroup.Height + 15)")
+        Set-Variable -Option Constant Location ($PreviousGroup.Location + [Drawing.Point]"0, $($PreviousGroup.Height + 15)")
     }
 
     $GroupBox.Width = $GROUP_WIDTH

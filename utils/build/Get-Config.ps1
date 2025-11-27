@@ -6,7 +6,7 @@ function Get-Config {
 
     Write-LogInfo 'Loading config...'
 
-    Set-Variable -Option Constant UrlsFile "$ConfigPath\urls.json"
+    Set-Variable -Option Constant UrlsFile ([String]"$ConfigPath\urls.json")
 
     [Collections.Generic.List[Object]]$Config = Get-Content $UrlsFile | ConvertFrom-Json
     $Config.Add(@{key = 'PROJECT_VERSION'; value = $Version })

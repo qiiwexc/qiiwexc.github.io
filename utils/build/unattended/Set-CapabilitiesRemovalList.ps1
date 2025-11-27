@@ -7,7 +7,10 @@ function Set-CapabilitiesRemovalList {
     . "$ConfigsPath\Windows\Capabilities to remove.ps1"
 
     [Collections.Generic.List[String]]$FormattedCapabilitiesList = "`n"
-    $CONFIG_CAPABILITIES_TO_REMOVE | ForEach-Object { $FormattedCapabilitiesList.Add("  '$($_)';`n") }
+    $CONFIG_CAPABILITIES_TO_REMOVE | ForEach-Object {
+        [String]$Capability = $_.trim()
+        $FormattedCapabilitiesList.Add("  '$Capability';`n")
+    }
 
     return $TemplateContent.Replace('{CAPABILITY_REMOVAL_LIST}', -join $FormattedCapabilitiesList)
 }

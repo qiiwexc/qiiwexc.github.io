@@ -1,5 +1,5 @@
 ﻿function Set-PowerSchemeConfiguration {
-    Set-Variable -Option Constant LogIndentLevel 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     Write-ActivityProgress -PercentComplete 15 -Task 'Setting power scheme overlay...'
 

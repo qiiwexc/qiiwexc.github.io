@@ -3,7 +3,7 @@ function Stop-ProcessIfRunning {
         [String][Parameter(Position = 0, Mandatory)]$ProcessName
     )
 
-    Set-Variable -Option Constant LogIndentLevel 3
+    Set-Variable -Option Constant LogIndentLevel ([Int]3)
 
     if (Get-Process | Where-Object { $_.ProcessName -eq $ProcessName } ) {
         Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel

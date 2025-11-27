@@ -8,19 +8,19 @@ function Set-FileAssociation {
     New-RegistryKeyIfMissing $RegistryPath
 
     if ($SetDefault) {
-        Set-Variable -Option Constant DefaultAssociation (Get-ItemProperty -Path $RegistryPath).'(Default)'
+        Set-Variable -Option Constant DefaultAssociation ([String](Get-ItemProperty -Path $RegistryPath).'(Default)')
         if ($DefaultAssociation -ne $Application) {
             Set-ItemProperty -Path $RegistryPath -Name '(Default)' -Value $Application
         }
     }
 
-    Set-Variable -Option Constant OpenWithProgidsPath "$RegistryPath\OpenWithProgids"
+    Set-Variable -Option Constant OpenWithProgidsPath ([String]"$RegistryPath\OpenWithProgids")
     New-RegistryKeyIfMissing $OpenWithProgidsPath
 
     Set-Variable -Option Constant OpenWithProgids (Get-ItemProperty -Path $OpenWithProgidsPath)
     if ($OpenWithProgids) {
-        Set-Variable -Option Constant OpenWithProgidsNames ($OpenWithProgids | Get-Member -MemberType NoteProperty).Name
-        Set-Variable -Option Constant Progids ($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' })
+        Set-Variable -Option Constant OpenWithProgidsNames ([Collections.Generic.List[String]]($OpenWithProgids | Get-Member -MemberType NoteProperty).Name)
+        Set-Variable -Option Constant Progids ([Collections.Generic.List[String]]($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' }))
 
         foreach ($Progid in $Progids) {
             if ($Progid -ne $Application) {

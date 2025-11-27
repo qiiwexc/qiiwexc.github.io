@@ -7,9 +7,9 @@
 
 
     if ($SYSTEM_LANGUAGE -match 'ru') {
-        Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN)
+        Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN))
     } else {
-        Set-Variable -Option Constant Content ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH)
+        Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH))
     }
 
     Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"

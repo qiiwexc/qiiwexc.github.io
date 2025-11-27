@@ -4,7 +4,7 @@ function New-Activity {
     )
 
     Write-LogInfo $Activity
-    Set-Variable -Scope Script CURRENT_ACTIVITY $Activity
+    Set-Variable -Scope Script CURRENT_ACTIVITY ([String]$Activity)
     Write-Progress -Activity $CURRENT_ACTIVITY -PercentComplete 1
 }
 
@@ -15,7 +15,7 @@ function Write-ActivityProgress {
     )
 
     if ($Task) {
-        Set-Variable -Scope Script CURRENT_TASK "  $Task"
+        Set-Variable -Scope Script CURRENT_TASK ([String]"  $Task")
         Write-LogInfo $CURRENT_TASK
     }
 

@@ -5,19 +5,19 @@ function Set-CloudFlareDNS {
     )
 
     if ($FamilyFriendly) {
-        Set-Variable -Option Constant PreferredDnsServer '1.1.1.3'
+        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.3')
     } elseif ($MalwareProtection) {
-        Set-Variable -Option Constant PreferredDnsServer '1.1.1.2'
+        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.2')
     } else {
-        Set-Variable -Option Constant PreferredDnsServer '1.1.1.1'
+        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.1')
     }
 
     if ($FamilyFriendly) {
-        Set-Variable -Option Constant AlternateDnsServer '1.0.0.3'
+        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.3')
     } elseif ($MalwareProtection) {
-        Set-Variable -Option Constant AlternateDnsServer '1.0.0.2'
+        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.2')
     } else {
-        Set-Variable -Option Constant AlternateDnsServer '1.0.0.1'
+        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.1')
     }
 
     Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
@@ -30,9 +30,9 @@ function Set-CloudFlareDNS {
     }
 
     try {
-        Set-Variable -Option Constant Status (Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue
+        Set-Variable -Option Constant Status ([Object[]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue)
 
-        if ($Status -ne 0) {
+        if ($Status[0] -ne 0 -or $Status[1] -ne 0) {
             Write-LogError 'Failed to change DNS server'
         }
     } catch [Exception] {

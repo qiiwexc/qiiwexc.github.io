@@ -7,10 +7,10 @@ function Invoke-GitAPI {
     Write-LogInfo "Invoking API: $Uri" 1
 
     if ($GitHubToken) {
-        Set-Variable -Option Constant Response (Invoke-WebRequest -Uri $Uri -Method Get -Headers @{ Authorization = "token $GitHubToken" })
+        Set-Variable -Option Constant Response ([Object](Invoke-WebRequest -Uri $Uri -Method Get -Headers @{ Authorization = "token $GitHubToken" }))
     } else {
-        Set-Variable -Option Constant Response (Invoke-WebRequest -Uri $Uri -Method Get)
+        Set-Variable -Option Constant Response ([Object](Invoke-WebRequest -Uri $Uri -Method Get))
     }
 
-    return ($Response.Content | ConvertFrom-Json)
+    return [Collections.Generic.List[Object]]($Response.Content | ConvertFrom-Json)
 }

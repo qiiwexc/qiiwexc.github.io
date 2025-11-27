@@ -17,7 +17,7 @@ function Get-NiniteInstaller {
         }
     }
 
-    Set-Variable -Option Constant Query ($AppIds -join '-')
+    Set-Variable -Option Constant Query ([String]($AppIds -join '-'))
 
     if ($OpenInBrowser) {
         Open-InBrowser "{URL_NINITE}/?select=$Query"
@@ -30,8 +30,8 @@ function Get-NiniteInstaller {
             }
         }
 
-        Set-Variable -Option Constant FileName "Ninite $($AppNames -Join ' ') Installer.exe"
-        Set-Variable -Option Constant DownloadUrl "{URL_NINITE}/$Query/ninite.exe"
+        Set-Variable -Option Constant FileName ([String]"Ninite $($AppNames -Join ' ') Installer.exe")
+        Set-Variable -Option Constant DownloadUrl ([String]"{URL_NINITE}/$Query/ninite.exe")
 
         Start-DownloadUnzipAndRun $DownloadUrl $FileName -Execute:$Execute
     }

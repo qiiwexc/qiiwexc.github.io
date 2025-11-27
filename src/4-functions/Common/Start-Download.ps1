@@ -5,27 +5,27 @@ function Start-Download {
         [Switch]$Temp
     )
 
-    Set-Variable -Option Constant LogIndentLevel 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
 
     if ($SaveAs) {
-        Set-Variable -Option Constant FileName $SaveAs
+        Set-Variable -Option Constant FileName ([String]$SaveAs)
     } else {
-        Set-Variable -Option Constant FileName (Split-Path -Leaf $URL)
+        Set-Variable -Option Constant FileName ([String](Split-Path -Leaf $URL))
     }
 
-    Set-Variable -Option Constant TempPath "$PATH_APP_DIR\$FileName"
+    Set-Variable -Option Constant TempPath ([String]"$PATH_APP_DIR\$FileName")
 
     if ($Temp) {
-        Set-Variable -Option Constant SavePath $TempPath
+        Set-Variable -Option Constant SavePath ([String]$TempPath)
     } else {
-        Set-Variable -Option Constant SavePath "$PATH_WORKING_DIR\$FileName"
+        Set-Variable -Option Constant SavePath ([String]"$PATH_WORKING_DIR\$FileName")
     }
 
     Initialize-AppDirectory
 
-    Set-Variable -Option Constant NoConnection (Test-NetworkConnection)
+    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
     if ($NoConnection) {
         Write-LogError "Download failed: $NoConnection" $LogIndentLevel
 
