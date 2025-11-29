@@ -1,0 +1,41 @@
+function Select-Tags {
+    param(
+        [Object][Parameter(Position = 0, Mandatory)]$Dependency,
+        [String][Parameter(Position = 1)]$GitHubToken
+    )
+
+    Set-Variable -Option Constant Repository ([String]$Dependency.repository)
+    Set-Variable -Option Constant CurrentVersion ([String]$Dependency.version)
+
+    Set-Variable -Option Constant Tags ([Collections.Generic.List[Object]](Invoke-GitAPI "https://api.github.com/repos/$Repository/tags" $GitHubToken))
+
+    if ($Tags -and $Tags.Count -gt 0) {
+        Set-Variable -Option Constant LatestVersion ([String]($Tags | Select-Object -First 1).Name)
+
+        if ($LatestVersion -ne $CurrentVersion) {
+            Set-NewVersion $Dependency $LatestVersion
+
+            if ($LatestVersion.StartsWith('v')) {
+                Set-Variable -Option Constant Prefix ([String]'v')
+            }
+
+            Set-Variable -Option Constant AllVersions ([Collections.Generic.List[String]]($Tags | Select-Object -ExpandProperty Name))
+            Set-Variable -Option Constant NormalizedVersions ([Collections.Generic.List[String]]($AllVersions | ForEach-Object { $_.TrimStart('v') }))
+            Set-Variable -Option Constant SortedVersions ([Collections.Generic.List[String]]($NormalizedVersions | Sort-Object { [Version]$_ } -Descending))
+            Set-Variable -Option Constant FullVersions ([Collections.Generic.List[String]]($SortedVersions | ForEach-Object { "$Prefix$($_)" }))
+            Set-Variable -Option Constant NewVersionCount ([Int]$FullVersions.IndexOf($CurrentVersion))
+
+            if ($NewVersionCount -gt 0) {
+                Set-Variable -Option Constant NewVersions ([Collections.Generic.List[String]]$FullVersions[0..($NewVersionCount - 1)])
+
+                [Collections.Generic.List[String]]$Urls = @()
+
+                foreach ($Version in $NewVersions) {
+                    $Urls.Add("https://github.com/$Repository/releases/tag/$Version")
+                }
+
+                return $Urls
+            }
+        }
+    }
+}

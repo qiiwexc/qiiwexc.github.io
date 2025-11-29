@@ -22,10 +22,12 @@ function Compare-Tags {
         Set-Variable -Option Constant Tags ([Collections.Generic.List[Object]](Invoke-GitAPI "https://api.github.com/repos/$Repository/tags" $GitHubToken))
     }
 
-    Set-Variable -Option Constant LatestVersion ([String]($Tags | Select-Object -First 1).Name)
+    if ($Tags -and $Tags.Count -gt 0) {
+        Set-Variable -Option Constant LatestVersion ([String]($Tags | Select-Object -First 1).Name)
 
-    if ($LatestVersion -ne $CurrentVersion) {
-        Set-NewVersion $Dependency $LatestVersion
-        return [Collections.Generic.List[Object]]@("https://$($Source.ToLower()).com/$Repository/compare/$CurrentVersion...$LatestVersion")
+        if ($LatestVersion -ne $CurrentVersion) {
+            Set-NewVersion $Dependency $LatestVersion
+            return [Collections.Generic.List[Object]]@("https://$($Source.ToString().ToLower()).com/$Repository/compare/$CurrentVersion...$LatestVersion")
+        }
     }
 }
