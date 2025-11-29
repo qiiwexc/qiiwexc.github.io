@@ -12,7 +12,7 @@ Set-Variable -Option Constant INTERVAL_CHECKBOX ([Int]($CHECKBOX_HEIGHT + 5))
 Set-Variable -Option Constant GROUP_WIDTH ([Int](15 + $BUTTON_WIDTH + 15))
 
 Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH + 15) * 3 + 30))
-Set-Variable -Option Constant FORM_HEIGHT ([Int]560)
+Set-Variable -Option Constant FORM_HEIGHT ([Int]570)
 
 Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
 
