@@ -1,7 +1,7 @@
 function Initialize-App {
     $FORM.Activate()
 
-    Write-Log -NoNewLine 'INFO' 'Initializing...'
+    Write-FormLog ([LogLevel]::INFO) ([String]"[$((Get-Date).ToString())] Initializing...") -NoNewLine
 
     if ($OS_VERSION -lt 8) {
         Write-LogWarning "Windows $OS_VERSION detected, some features are not supported."
