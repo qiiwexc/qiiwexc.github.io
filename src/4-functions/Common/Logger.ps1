@@ -13,7 +13,8 @@ function Write-LogDebug {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Write-Log ([LogLevel]::DEBUG) $Message -IndentLevel $Level
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::DEBUG) $Message -IndentLevel $Level))
+    Write-Host $FormattedMessage
 }
 
 function Write-LogInfo {
@@ -22,7 +23,9 @@ function Write-LogInfo {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Write-Log ([LogLevel]::INFO) $Message -IndentLevel $Level
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::INFO) $Message -IndentLevel $Level))
+    Write-Host $FormattedMessage
+    Write-FormLog ([LogLevel]::INFO) $FormattedMessage
 }
 
 function Write-LogWarning {
@@ -31,7 +34,9 @@ function Write-LogWarning {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Write-Log ([LogLevel]::WARN) "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::WARN) $Message -IndentLevel $Level))
+    Write-Warning $FormattedMessage
+    Write-FormLog ([LogLevel]::WARN) $FormattedMessage
 }
 
 function Write-LogError {
@@ -40,57 +45,22 @@ function Write-LogError {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Write-Log ([LogLevel]::ERROR) "$(Get-Emoji '274C') $Message" -IndentLevel $Level
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) $Message -IndentLevel $Level))
+    Write-Error $FormattedMessage
+    Write-FormLog ([LogLevel]::ERROR) $FormattedMessage
 }
 
-function Write-Log {
+function Write-LogException {
     param(
-        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
+        [Object][Parameter(Position = 0, Mandatory)]$Exception,
         [String][Parameter(Position = 1, Mandatory)]$Message,
-        [Int][Parameter(Position = 2)]$IndentLevel = 0,
-        [Switch][Parameter(Position = 3)]$NoNewLine
+        [Int][Parameter(Position = 2)]$Level = 0
     )
 
-    Set-Variable -Option Constant Date ([String](Get-Date).ToString())
-    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
-    Set-Variable -Option Constant Text ([String]"[$Date]$Indent $Message")
-
-    $LOG.SelectionStart = $LOG.TextLength
-
-    switch ($Level) {
-        ([LogLevel]::DEBUG) {
-            $LOG.SelectionColor = 'black'
-            Write-Host $Text
-        }
-        ([LogLevel]::INFO) {
-            $LOG.SelectionColor = 'black'
-            Write-Host $Text
-        }
-        ([LogLevel]::WARN) {
-            $LOG.SelectionColor = 'blue'
-            Write-Warning $Text
-        }
-        ([LogLevel]::ERROR) {
-            $LOG.SelectionColor = 'red'
-            Write-Error $Text
-        }
-        Default {
-            $LOG.SelectionColor = 'black'
-            Write-Host $Text
-        }
-    }
-
-    if ($Level -ne ([LogLevel]::DEBUG)) {
-        if ($NoNewLine) {
-            $LOG.AppendText($Text)
-        } else {
-            $LOG.AppendText("`n$Text")
-        }
-        $LOG.SelectionColor = 'black'
-        $LOG.ScrollToCaret()
-    }
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level))
+    Write-Error $FormattedMessage
+    Write-FormLog ([LogLevel]::ERROR) $FormattedMessage
 }
-
 
 function Out-Status {
     param(
@@ -119,16 +89,6 @@ function Out-Failure {
 }
 
 
-function Write-LogException {
-    param(
-        [Object][Parameter(Position = 0, Mandatory)]$Exception,
-        [String][Parameter(Position = 1, Mandatory)]$Message,
-        [Int][Parameter(Position = 2)]$Level = 0
-    )
-
-    Write-Log ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
-}
-
 function Get-Emoji {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Code
@@ -137,4 +97,59 @@ function Get-Emoji {
     Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))
 
     return [Char]::ConvertFromUtf32($Emoji)
+}
+
+
+function Format-Message {
+    param(
+        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
+        [String][Parameter(Position = 1, Mandatory)]$Message,
+        [Int][Parameter(Position = 2)]$IndentLevel = 0
+    )
+
+    switch ($Level) {
+        ([LogLevel]::WARN) {
+            Set-Variable -Option Constant Emoji (Get-Emoji '26A0')
+        }
+        ([LogLevel]::ERROR) {
+            Set-Variable -Option Constant Emoji (Get-Emoji '274C')
+        }
+        Default {}
+    }
+
+    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
+    Set-Variable -Option Constant Date ([String]$((Get-Date).ToString()))
+
+    return ([String]"[$Date]$Indent$Emoji $Message")
+}
+
+
+function Write-FormLog {
+    param(
+        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
+        [String][Parameter(Position = 1, Mandatory)]$Message,
+        [Switch][Parameter(Position = 2)]$NoNewLine
+    )
+
+    $LOG.SelectionStart = $LOG.TextLength
+
+    switch ($Level) {
+        ([LogLevel]::WARN) {
+            $LOG.SelectionColor = 'blue'
+        }
+        ([LogLevel]::ERROR) {
+            $LOG.SelectionColor = 'red'
+        }
+        Default {
+            $LOG.SelectionColor = 'black'
+        }
+    }
+
+    if ($NoNewLine) {
+        $LOG.AppendText($Message)
+    } else {
+        $LOG.AppendText("`n$Message")
+    }
+    $LOG.SelectionColor = 'black'
+    $LOG.ScrollToCaret()
 }
