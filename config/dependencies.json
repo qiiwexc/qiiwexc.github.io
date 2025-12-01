@@ -44,7 +44,7 @@
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2025.10.06",
+        "version":  "2025.11.30",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "Raphire/Win11Debloat"
@@ -90,5 +90,17 @@
         "source":  "URL",
         "url":  "https://cpuid.com/softwares/cpu-z.html",
         "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
+    },
+    {
+        "name":  "ActivationProgram",
+        "version":  "1.1.2.0",
+        "source":  "File",
+        "delimiter":  "_"
+    },
+    {
+        "name":  "Office Installer+",
+        "version":  "1.2.8.0",
+        "source":  "File",
+        "delimiter":  " "
     }
 ]

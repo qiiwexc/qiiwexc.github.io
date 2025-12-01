@@ -31,10 +31,12 @@ Set-Variable -Option Constant Version ([String](Get-Date -Format 'y.M.d'))
 Set-Variable -Option Constant ProjectName ([String]'qiiwexc')
 
 Set-Variable -Option Constant ConfigPath ([String]'.\config')
+Set-Variable -Option Constant DistPath ([String]'.\d')
+Set-Variable -Option Constant SourcePath ([String]'.\src')
 Set-Variable -Option Constant TemplatesPath ([String]'.\templates')
 Set-Variable -Option Constant UtilsPath ([String]'.\utils')
-Set-Variable -Option Constant SourcePath ([String]'.\src')
-Set-Variable -Option Constant DistPath ([String]'.\d')
+Set-Variable -Option Constant WipPath ([String]'.\wip')
+
 Set-Variable -Option Constant BuilderPath ([String]"$UtilsPath\build")
 Set-Variable -Option Constant CommonPath ([String]"$UtilsPath\common")
 
@@ -54,14 +56,19 @@ Set-Variable -Option Constant UnattendedFile ([String]"$DistPath\autounattend-{L
 . "$BuilderPath\Write-VersionFile.ps1"
 
 Write-LogInfo 'Build task started'
-Write-LogInfo "Version     = $Version"
-Write-LogInfo "Source path = $SourcePath"
-Write-LogInfo "Output file = $Ps1File"
+Write-LogInfo "Version                  : $Version"
+Write-LogInfo "Full build               : $Full"
+Write-LogInfo "Check for updates        : $Update"
+Write-LogInfo "Build HTML page          : $Html"
+Write-LogInfo "Build autounattend files : $Autounattend"
+Write-LogInfo "Build PowerShell script  : $Ps1"
+Write-LogInfo "Build batch script       : $Bat"
+Write-LogInfo "Run in dev mode          : $Dev"
 
 Write-Progress -Activity 'Build' -PercentComplete 1
 
 if ($Update) {
-    Update-Dependencies $ConfigPath $BuilderPath
+    Update-Dependencies $ConfigPath $BuilderPath $WipPath
     Write-Progress -Activity 'Build' -PercentComplete 30
 }
 
