@@ -1,7 +1,8 @@
 function Update-Dependencies {
     param(
         [String][Parameter(Position = 0, Mandatory)]$ConfigPath,
-        [String][Parameter(Position = 1, Mandatory)]$BuilderPath
+        [String][Parameter(Position = 1, Mandatory)]$BuilderPath,
+        [String][Parameter(Position = 2, Mandatory)]$WipPath
     )
 
     Set-Variable -Option Constant UpdatesPath ([String]"$BuilderPath\updates")
@@ -15,6 +16,7 @@ function Update-Dependencies {
     . "$UpdatesPath\Read-GitHubToken.ps1"
     . "$UpdatesPath\Select-Tags.ps1"
     . "$UpdatesPath\Set-NewVersion.ps1"
+    . "$UpdatesPath\Update-FileDependency.ps1"
     . "$UpdatesPath\Update-GitDependency.ps1"
     . "$UpdatesPath\Update-WebDependency.ps1"
 
@@ -35,11 +37,13 @@ function Update-Dependencies {
 
     [Int]$Iteration = 1
     foreach ($Dependency in $Dependencies) {
-        Write-LogInfo "Checking for updates for $($Dependency.name) (current version: $($Dependency.version))"
-
+        [String]$Source = $Dependency.source
+        [String]$Name = $Dependency.name
         [Int]$Percentage = 10 + $Iteration * $DependencyStep
 
-        switch ($Dependency.source) {
+        Write-LogInfo "Checking for updates for '$Name' (current version: $($Dependency.version))"
+
+        switch ($Source) {
             'GitHub' {
                 $ChangeLogs.Add((Update-GitDependency $Dependency $GitHubToken))
             }
@@ -49,7 +53,12 @@ function Update-Dependencies {
             'URL' {
                 $ChangeLogs.Add((Update-WebDependency $Dependency))
             }
-            Default {}
+            'File' {
+                $ChangeLogs.Add((Update-FileDependency $Dependency $WipPath))
+            }
+            Default {
+                Write-LogWarning "Unknown source '$($Source)' for dependency '$Name'. Skipping."
+            }
         }
 
         Write-Progress -Activity 'Update' -PercentComplete $Percentage
@@ -67,11 +76,11 @@ function Update-Dependencies {
             Write-LogInfo "Opening URL: $Url"
             [Diagnostics.Process]::Start($Url)
         }
-
-        Write-LogInfo "Saving updated dependencies to $DependenciesFile"
-        Set-Variable -Option Constant UpdatedDependencies ([String]($Dependencies | ConvertTo-Json -Depth 10))
-        Set-Content -Path $DependenciesFile -Value $UpdatedDependencies -Encoding UTF8
     }
+
+    Write-LogInfo "Saving updated dependencies to $DependenciesFile"
+    Set-Variable -Option Constant UpdatedDependencies ([String]($Dependencies | ConvertTo-Json -Depth 10))
+    Set-Content -Path $DependenciesFile -Value $UpdatedDependencies -Encoding UTF8
 
     Write-Progress -Activity 'Update' -Complete
 
