@@ -16,7 +16,7 @@
     },
     {
         "name":  "Sophia Script",
-        "version":  "6.9.2",
+        "version":  "7.0.0",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "farag2/Sophia-Script-for-Windows"
@@ -30,14 +30,14 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "54e431afcd14269ca0da3b801f50230a1660facc",
+        "version":  "0e0428e7947234e3134dc05398cc838385de5606",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "25.11.17",
+        "version":  "25.12.01",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "ChrisTitusTech/winutil"
