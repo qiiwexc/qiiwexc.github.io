@@ -30,9 +30,9 @@ function Set-CloudFlareDNS {
     }
 
     try {
-        Set-Variable -Option Constant Status ([Object[]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue)
+        Set-Variable -Option Constant Status ([Collections.Generic.List[Int]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue)
 
-        if ($Status[0] -ne 0 -or $Status[1] -ne 0) {
+        if ($Status | Where-Object { $_ -ne 0 }) {
             Write-LogError 'Failed to change DNS server'
         }
     } catch [Exception] {
