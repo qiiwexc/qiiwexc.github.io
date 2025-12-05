@@ -10,8 +10,8 @@
     Write-ActivityProgress -PercentComplete 20 -Task 'Applying Windows power scheme settings...'
 
     foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
-        powercfg /SetAcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
-        powercfg /SetDcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+        powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+        powercfg /SetDcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
     }
 
     Out-Success $LogIndentLevel
