@@ -6,9 +6,9 @@ function Set-PowerSchemeConfiguration {
 
     . "$ConfigsPath\Windows\Power settings.ps1"
 
-    [Collections.Generic.List[String]]$PowerSettings = @()
+    [Collections.Generic.List[String]]$PowerSettings = @("powercfg /OverlaySetActive OVERLAY_SCHEME_MAX`n")
     foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
-        [String]$Config = "SCHEME_BALANCED $($PowerSetting.SubGroup) $($PowerSetting.Setting) $($PowerSetting.Value)"
+        [String]$Config = "SCHEME_ALL $($PowerSetting.SubGroup) $($PowerSetting.Setting) $($PowerSetting.Value)"
         $PowerSettings.Add("powercfg /SetAcValueIndex $Config`n")
         $PowerSettings.Add("powercfg /SetDcValueIndex $Config`n")
     }

@@ -15,7 +15,7 @@ New-GroupBox 'Windows configuration'
 
 
 Set-Variable -Option Constant WindowsConfigurationParameters (
-    [hashtable]@{
+    [Hashtable]@{
         Base             = $CHECKBOX_Config_WindowsBase
         PowerScheme      = $CHECKBOX_Config_PowerScheme
         Search           = $CHECKBOX_Config_WindowsSearch

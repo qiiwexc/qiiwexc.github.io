@@ -1,5 +1,5 @@
 Set-Variable -Option Constant CONFIG_POWER_SETTINGS (
-    [Collections.Generic.List[hashtable]]@(
+    [Collections.Generic.List[Hashtable]]@(
         @{SubGroup = '0d7dbae2-4294-402a-ba8e-26777e8488cd'; Setting = '309dce9b-bef4-4119-9921-a851fb12f0f4'; Value = 0 },
         @{SubGroup = '02f815b5-a5cf-4c84-bf20-649d1f75d3d8'; Setting = '4c793e7d-a264-42e1-87d3-7a0d2f523ccd'; Value = 1 },
         @{SubGroup = '19cbb8fa-5279-450e-9fac-8a3d5fedd0c1'; Setting = '12bbebe6-58d6-4636-95bb-3217ef867c1a'; Value = 0 },
