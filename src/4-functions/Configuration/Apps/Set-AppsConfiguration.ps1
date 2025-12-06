@@ -22,6 +22,10 @@ function Set-AppsConfiguration {
         Set-7zipConfiguration $7zip.Text
     }
 
+    if ($AnyDesk.Checked) {
+        Set-AnyDeskConfiguration $AnyDesk.Text
+    }
+
     if ($Edge.Checked) {
         Set-MicrosoftEdgeConfiguration $Edge.Text
     }
