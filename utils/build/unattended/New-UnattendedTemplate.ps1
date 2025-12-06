@@ -27,7 +27,8 @@ function New-UnattendedTemplate {
             @{OldValue = "`t"; NewValue = '  ' },
             @{OldValue = "Windows Registry Editor Version 5.00`r`n`r`n"; NewValue = '' },
             @{OldValue = '</ExtractScript>'; NewValue = $ConfigFiles },
-            @{OldValue = 'C:\Windows\Setup\Scripts\'; NewValue = 'C:\Windows\Setup\' }
+            @{OldValue = 'C:\Windows\Setup\Scripts\'; NewValue = 'C:\Windows\Setup\' },
+            @{OldValue = 'HideOnlineAccountScreens>false</HideOnlineAccountScreens'; NewValue = 'HideOnlineAccountScreens>true</HideOnlineAccountScreens' }
         )
     )
 
@@ -38,10 +39,16 @@ function New-UnattendedTemplate {
         )
     )
 
-    if ($FullBuild) {
-        $RegexReplacementMap.Add(@{Regex = '\s*<File path="C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1">([\s\S]*?)<\/File>'; NewValue = '' })
-        $RegexReplacementMap.Add(@{Regex = "\s*{\s*&amp; 'C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1';\s*}"; NewValue = '' })
-    }
+    Set-Variable -Option Constant DevRegexReplacementMap ([Collections.Generic.List[Hashtable]]@(
+            @{Regex = '\s*<File path="C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1">([\s\S]*?)<\/File>'; NewValue = '' },
+            @{Regex = "\s*{\s*&amp; 'C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1';\s*};"; NewValue = '' },
+            @{Regex = '\s*<ImageInstall>([\s\S]*?)<\/ImageInstall>'; NewValue = '' },
+            @{Regex = '\s*<UserAccounts>([\s\S]*?)<\/UserAccounts>'; NewValue = '' },
+            @{Regex = '\s*<AutoLogon>([\s\S]*?)<\/AutoLogon>'; NewValue = '' },
+            @{Regex = '\s*<RunSynchronousCommand wcm:action="add">(?:[\s\S](?!<RunSynchronousCommand))*?diskpart[\s\S]*?<\/RunSynchronousCommand>'; NewValue = '' },
+            @{Regex = '(?s)\s*\{[^{}]*?AutoLogonCount[^{}]*?\}\s*;'; NewValue = '' }
+        )
+    )
 
     [String]$Content = Get-Content -Raw -Path $BaseFile -Encoding UTF8
 
@@ -51,6 +58,12 @@ function New-UnattendedTemplate {
 
     foreach ($Item in $RegexReplacementMap) {
         $Content = $Content -replace $Item.Regex, $Item.NewValue
+    }
+
+    if ($FullBuild) {
+        foreach ($Item in $DevRegexReplacementMap) {
+            $Content = $Content -replace $Item.Regex, $Item.NewValue
+        }
     }
 
     $Content = "<!-- Version: {VERSION} -->`n" + $Content
