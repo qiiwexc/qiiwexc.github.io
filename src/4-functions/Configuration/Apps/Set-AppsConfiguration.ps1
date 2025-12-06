@@ -2,7 +2,7 @@ function Set-AppsConfiguration {
     param(
         [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$7zip,
         [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$VLC,
-        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$TeamViewer,
+        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$AnyDesk,
         [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$qBittorrent,
         [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory)]$Edge,
         [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory)]$Chrome
@@ -20,10 +20,6 @@ function Set-AppsConfiguration {
 
     if ($7zip.Checked) {
         Set-7zipConfiguration $7zip.Text
-    }
-
-    if ($TeamViewer.Checked) {
-        Set-TeamViewerConfiguration $TeamViewer.Text
     }
 
     if ($Edge.Checked) {
