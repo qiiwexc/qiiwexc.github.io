@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.12.6')
+::Set-Variable -Option Constant VERSION ([Version]'25.12.7')
 ::
 ::#endregion init > Version
 ::
@@ -1889,13 +1889,13 @@ if "%debug%"=="true" (
 ::  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
-::"value"="Deny"
+::"Value"="Deny"
 ::
 ::[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
-::"value"="Allow"
+::"Value"="Allow"
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
-::"value"="Deny"
+::"Value"="Deny"
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
 ::"ContentDeliveryAllowed"=dword:00000000
@@ -1942,6 +1942,7 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 ::"NavPaneShowAllCloudStates"=dword:00000001
 ::"SeparateProcess"=dword:00000001
+::"ShowClockInNotificationCenter"=dword:00000001
 ::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
 ::"ShowSyncProviderNotifications"=dword:00000000 ; Sync provider ads
 ::"Start_AccountNotifications"=dword:00000000 ; Disable Show account-related notifications
@@ -1950,7 +1951,6 @@ if "%debug%"=="true" (
 ::
 ::; Enable "End task" in the taskbar
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
-::"ShowClockInNotificationCenter"=dword:00000001
 ::"TaskbarEndTask"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
@@ -2179,13 +2179,13 @@ if "%debug%"=="true" (
 ::"Enabled"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
-::"value"="Deny"
+::"Value"="Deny"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
-::"value"="Allow"
+::"Value"="Allow"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
-::"value"="Deny"
+::"Value"="Deny"
 ::
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CPSS\Store]
@@ -2683,6 +2683,9 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
 ::"NetworkThrottlingIndex"=dword:FFFFFFFF
 ::"SystemResponsiveness"=dword:00000010
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
+::"SensorPermissionState"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
 ::"scremoveoption"="1"
