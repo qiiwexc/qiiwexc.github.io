@@ -7,6 +7,8 @@ New-GroupBox 'Apps configuration'
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
 
+[Windows.Forms.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Checked
+
 [Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
@@ -18,6 +20,7 @@ Set-Variable -Option Constant AppsConfigurationParameters (
     [Hashtable]@{
         '7zip'      = $CHECKBOX_Config_7zip
         VLC         = $CHECKBOX_Config_VLC
+        AnyDesk     = $CHECKBOX_Config_AnyDesk
         qBittorrent = $CHECKBOX_Config_qBittorrent
         Edge        = $CHECKBOX_Config_Edge
         Chrome      = $CHECKBOX_Config_Chrome

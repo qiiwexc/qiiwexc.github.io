@@ -11,6 +11,9 @@ function New-UnattendedTemplate {
     <File path="C:\Windows\Setup\Scripts\AppAssociations.xml">
 {CONFIG_APP_ASSOCIATIONS}
     </File>
+    <File path="C:\Users\Default\AppData\Roaming\AnyDesk\user.conf">
+{CONFIG_ANYDESK}
+    </File>
     <File path="C:\Users\Default\AppData\Roaming\vlc\vlcrc">
 {CONFIG_VLC}
     </File>
