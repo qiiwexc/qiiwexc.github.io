@@ -89,7 +89,7 @@ if ($Html) {
 }
 
 if ($Autounattend) {
-    New-UnattendedFile $ConfigPath $BuilderPath $SourcePath $TemplatesPath $UnattendedFile
+    New-UnattendedFile $Version $ConfigPath $BuilderPath $SourcePath $TemplatesPath $UnattendedFile $Full
     Write-Progress -Activity 'Build' -PercentComplete 80
 }
 
