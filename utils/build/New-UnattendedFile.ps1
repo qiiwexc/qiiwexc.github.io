@@ -1,10 +1,12 @@
 function New-UnattendedFile {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ConfigPath,
-        [String][Parameter(Position = 1, Mandatory)]$BuilderPath,
-        [String][Parameter(Position = 2, Mandatory)]$SourcePath,
-        [String][Parameter(Position = 3, Mandatory)]$TemplatesPath,
-        [String][Parameter(Position = 4, Mandatory)]$FileNameTemplate
+        [String][Parameter(Position = 0, Mandatory)]$Version,
+        [String][Parameter(Position = 1, Mandatory)]$ConfigPath,
+        [String][Parameter(Position = 2, Mandatory)]$BuilderPath,
+        [String][Parameter(Position = 3, Mandatory)]$SourcePath,
+        [String][Parameter(Position = 4, Mandatory)]$TemplatesPath,
+        [String][Parameter(Position = 5, Mandatory)]$FileNameTemplate,
+        [Switch][Parameter(Position = 6, Mandatory)]$FullBuild
     )
 
     Write-LogInfo 'Building unattended files...'
@@ -25,7 +27,7 @@ function New-UnattendedFile {
     . "$UnattendedPath\Set-PowerSchemeConfiguration.ps1"
     . "$UnattendedPath\Set-WindowsSecurityConfiguration.ps1"
 
-    New-UnattendedTemplate $ConfigPath $TemplateFile
+    New-UnattendedTemplate $ConfigPath $TemplateFile $FullBuild
 
     foreach ($Locale in $Locales) {
         [String]$OutputFileName = $FileNameTemplate.Replace('{LOCALE}', $Locale)
@@ -45,6 +47,8 @@ function New-UnattendedFile {
         $TemplateContent = Set-PowerSchemeConfiguration $ConfigsPath $TemplateContent
 
         $TemplateContent = Set-InlineFiles $Locale $ConfigsPath $TemplateContent
+
+        $TemplateContent = $TemplateContent.Replace('{VERSION}', $Version)
 
         $TemplateContent | Out-File $OutputFileName -Encoding UTF8
     }
