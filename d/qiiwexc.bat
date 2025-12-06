@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.11.28')
+::Set-Variable -Option Constant VERSION ([Version]'25.12.6')
 ::
 ::#endregion init > Version
 ::
@@ -151,7 +151,7 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant GROUP_WIDTH ([Int](15 + $BUTTON_WIDTH + 15))
 ::
 ::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH + 15) * 3 + 30))
-::Set-Variable -Option Constant FORM_HEIGHT ([Int]560)
+::Set-Variable -Option Constant FORM_HEIGHT ([Int]570)
 ::
 ::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
 ::
@@ -588,9 +588,6 @@ if "%debug%"=="true" (
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
 ::$CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15'
-::$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
 ::$CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
@@ -610,7 +607,6 @@ if "%debug%"=="true" (
 ::        $CHECKBOX_Ninite_7zip,
 ::        $CHECKBOX_Ninite_VLC,
 ::        $CHECKBOX_Ninite_AnyDesk,
-::        $CHECKBOX_Ninite_TeamViewer,
 ::        $CHECKBOX_Ninite_Chrome,
 ::        $CHECKBOX_Ninite_qBittorrent,
 ::        $CHECKBOX_Ninite_Malwarebytes
@@ -685,7 +681,7 @@ if "%debug%"=="true" (
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_TeamViewer = New-CheckBox 'TeamViewer' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Checked
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
 ::
@@ -695,10 +691,10 @@ if "%debug%"=="true" (
 ::
 ::
 ::Set-Variable -Option Constant AppsConfigurationParameters (
-::    [hashtable]@{
+::    [Hashtable]@{
 ::        '7zip'      = $CHECKBOX_Config_7zip
 ::        VLC         = $CHECKBOX_Config_VLC
-::        TeamViewer  = $CHECKBOX_Config_TeamViewer
+::        AnyDesk     = $CHECKBOX_Config_AnyDesk
 ::        qBittorrent = $CHECKBOX_Config_qBittorrent
 ::        Edge        = $CHECKBOX_Config_Edge
 ::        Chrome      = $CHECKBOX_Config_Chrome
@@ -729,7 +725,7 @@ if "%debug%"=="true" (
 ::
 ::
 ::Set-Variable -Option Constant WindowsConfigurationParameters (
-::    [hashtable]@{
+::    [Hashtable]@{
 ::        Base             = $CHECKBOX_Config_WindowsBase
 ::        PowerScheme      = $CHECKBOX_Config_PowerScheme
 ::        Search           = $CHECKBOX_Config_WindowsSearch
@@ -898,6 +894,22 @@ if "%debug%"=="true" (
 ::'
 ::
 ::#endregion configs > Apps > 7zip
+::
+::
+::#region configs > Apps > AnyDesk
+::
+::Set-Variable -Option Constant CONFIG_ANYDESK 'ad.discovery.show_tile=0
+::ad.image.show_remote_cursor_option=1
+::ad.telemetry.consent=0,29497,0,0
+::ad.ui.main_win.height=0
+::ad.ui.main_win.max=true
+::ad.ui.main_win.width=0
+::ad.ui.main_win.x=-8
+::ad.ui.main_win.y=-8
+::ad.ui.show_tile.telemetry=false
+::'
+::
+::#endregion configs > Apps > AnyDesk
 ::
 ::
 ::#region configs > Apps > Chrome local state
@@ -1284,28 +1296,6 @@ if "%debug%"=="true" (
 ::#endregion configs > Apps > qBittorrent Russian
 ::
 ::
-::#region configs > Apps > TeamViewer
-::
-::Set-Variable -Option Constant CONFIG_TEAMVIEWER '[HKEY_CURRENT_USER\Software\TeamViewer]
-::"AutoHideServerControl"=dword:00000001
-::"ColorScheme"=dword:00000001
-::"CustomInvitationSubject"=" "
-::"CustomInvitationText"=" "
-::"Pres_Compression"=dword:00000064
-::"Pres_DisableGuiAnimations"=dword:00000000
-::"Pres_QualityMode"=dword:00000003
-::"Remote_Colors"=dword:00000020
-::"Remote_DisableGuiAnimations"=dword:00000000
-::"Remote_QualityMode"=dword:00000003
-::"Remote_RemoteCursor"=dword:00000001
-::"Remote_RemoveWallpaper"=dword:00000000
-::"RemotePrintingPreferPDFFormat"=dword:00000001
-::"SsoKmsEnabled"=dword:00000002
-::'
-::
-::#endregion configs > Apps > TeamViewer
-::
-::
 ::#region configs > Apps > VLC
 ::
 ::Set-Variable -Option Constant CONFIG_VLC '[qt]
@@ -1491,7 +1481,7 @@ if "%debug%"=="true" (
 ::#region configs > Windows > Power settings
 ::
 ::Set-Variable -Option Constant CONFIG_POWER_SETTINGS (
-::    [Collections.Generic.List[hashtable]]@(
+::    [Collections.Generic.List[Hashtable]]@(
 ::        @{SubGroup = '0d7dbae2-4294-402a-ba8e-26777e8488cd'; Setting = '309dce9b-bef4-4119-9921-a851fb12f0f4'; Value = 0 },
 ::        @{SubGroup = '02f815b5-a5cf-4c84-bf20-649d1f75d3d8'; Setting = '4c793e7d-a264-42e1-87d3-7a0d2f523ccd'; Value = 1 },
 ::        @{SubGroup = '19cbb8fa-5279-450e-9fac-8a3d5fedd0c1'; Setting = '12bbebe6-58d6-4636-95bb-3217ef867c1a'; Value = 0 },
@@ -1960,6 +1950,7 @@ if "%debug%"=="true" (
 ::
 ::; Enable "End task" in the taskbar
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
+::"ShowClockInNotificationCenter"=dword:00000001
 ::"TaskbarEndTask"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
@@ -2692,9 +2683,6 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
 ::"NetworkThrottlingIndex"=dword:FFFFFFFF
 ::"SystemResponsiveness"=dword:00000010
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
-::"SensorPermissionState"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
 ::"scremoveoption"="1"
@@ -4554,7 +4542,7 @@ if "%debug%"=="true" (
 ::function Initialize-App {
 ::    $FORM.Activate()
 ::
-::    Write-Log -NoNewLine 'INFO' 'Initializing...'
+::    Write-FormLog ([LogLevel]::INFO) ([String]"[$((Get-Date).ToString())] Initializing...") -NoNewLine
 ::
 ::    if ($OS_VERSION -lt 8) {
 ::        Write-LogWarning "Windows $OS_VERSION detected, some features are not supported."
@@ -4643,7 +4631,8 @@ if "%debug%"=="true" (
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::
-::    Write-Log ([LogLevel]::DEBUG) $Message -IndentLevel $Level
+::    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::DEBUG) $Message -IndentLevel $Level))
+::    Write-Host $FormattedMessage
 ::}
 ::
 ::function Write-LogInfo {
@@ -4652,7 +4641,9 @@ if "%debug%"=="true" (
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::
-::    Write-Log ([LogLevel]::INFO) $Message -IndentLevel $Level
+::    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::INFO) $Message -IndentLevel $Level))
+::    Write-Host $FormattedMessage
+::    Write-FormLog ([LogLevel]::INFO) $FormattedMessage
 ::}
 ::
 ::function Write-LogWarning {
@@ -4661,7 +4652,9 @@ if "%debug%"=="true" (
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::
-::    Write-Log ([LogLevel]::WARN) "$(Get-Emoji '26A0') $Message" -IndentLevel $Level
+::    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::WARN) $Message -IndentLevel $Level))
+::    Write-Warning $FormattedMessage
+::    Write-FormLog ([LogLevel]::WARN) $FormattedMessage
 ::}
 ::
 ::function Write-LogError {
@@ -4670,57 +4663,22 @@ if "%debug%"=="true" (
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::
-::    Write-Log ([LogLevel]::ERROR) "$(Get-Emoji '274C') $Message" -IndentLevel $Level
+::    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) $Message -IndentLevel $Level))
+::    Write-Error $FormattedMessage
+::    Write-FormLog ([LogLevel]::ERROR) $FormattedMessage
 ::}
 ::
-::function Write-Log {
+::function Write-LogException {
 ::    param(
-::        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
+::        [Object][Parameter(Position = 0, Mandatory)]$Exception,
 ::        [String][Parameter(Position = 1, Mandatory)]$Message,
-::        [Int][Parameter(Position = 2)]$IndentLevel = 0,
-::        [Switch][Parameter(Position = 3)]$NoNewLine
+::        [Int][Parameter(Position = 2)]$Level = 0
 ::    )
 ::
-::    Set-Variable -Option Constant Date ([String](Get-Date).ToString())
-::    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
-::    Set-Variable -Option Constant Text ([String]"[$Date]$Indent $Message")
-::
-::    $LOG.SelectionStart = $LOG.TextLength
-::
-::    switch ($Level) {
-::        ([LogLevel]::DEBUG) {
-::            $LOG.SelectionColor = 'black'
-::            Write-Host $Text
-::        }
-::        ([LogLevel]::INFO) {
-::            $LOG.SelectionColor = 'black'
-::            Write-Host $Text
-::        }
-::        ([LogLevel]::WARN) {
-::            $LOG.SelectionColor = 'blue'
-::            Write-Warning $Text
-::        }
-::        ([LogLevel]::ERROR) {
-::            $LOG.SelectionColor = 'red'
-::            Write-Error $Text
-::        }
-::        Default {
-::            $LOG.SelectionColor = 'black'
-::            Write-Host $Text
-::        }
-::    }
-::
-::    if ($Level -ne ([LogLevel]::DEBUG)) {
-::        if ($NoNewLine) {
-::            $LOG.AppendText($Text)
-::        } else {
-::            $LOG.AppendText("`n$Text")
-::        }
-::        $LOG.SelectionColor = 'black'
-::        $LOG.ScrollToCaret()
-::    }
+::    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level))
+::    Write-Error $FormattedMessage
+::    Write-FormLog ([LogLevel]::ERROR) $FormattedMessage
 ::}
-::
 ::
 ::function Out-Status {
 ::    param(
@@ -4749,16 +4707,6 @@ if "%debug%"=="true" (
 ::}
 ::
 ::
-::function Write-LogException {
-::    param(
-::        [Object][Parameter(Position = 0, Mandatory)]$Exception,
-::        [String][Parameter(Position = 1, Mandatory)]$Message,
-::        [Int][Parameter(Position = 2)]$Level = 0
-::    )
-::
-::    Write-Log ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level
-::}
-::
 ::function Get-Emoji {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory)]$Code
@@ -4767,6 +4715,61 @@ if "%debug%"=="true" (
 ::    Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))
 ::
 ::    return [Char]::ConvertFromUtf32($Emoji)
+::}
+::
+::
+::function Format-Message {
+::    param(
+::        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
+::        [String][Parameter(Position = 1, Mandatory)]$Message,
+::        [Int][Parameter(Position = 2)]$IndentLevel = 0
+::    )
+::
+::    switch ($Level) {
+::        ([LogLevel]::WARN) {
+::            Set-Variable -Option Constant Emoji (Get-Emoji '26A0')
+::        }
+::        ([LogLevel]::ERROR) {
+::            Set-Variable -Option Constant Emoji (Get-Emoji '274C')
+::        }
+::        Default {}
+::    }
+::
+::    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
+::    Set-Variable -Option Constant Date ([String]$((Get-Date).ToString()))
+::
+::    return ([String]"[$Date]$Indent$Emoji $Message")
+::}
+::
+::
+::function Write-FormLog {
+::    param(
+::        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
+::        [String][Parameter(Position = 1, Mandatory)]$Message,
+::        [Switch][Parameter(Position = 2)]$NoNewLine
+::    )
+::
+::    $LOG.SelectionStart = $LOG.TextLength
+::
+::    switch ($Level) {
+::        ([LogLevel]::WARN) {
+::            $LOG.SelectionColor = 'blue'
+::        }
+::        ([LogLevel]::ERROR) {
+::            $LOG.SelectionColor = 'red'
+::        }
+::        Default {
+::            $LOG.SelectionColor = 'black'
+::        }
+::    }
+::
+::    if ($NoNewLine) {
+::        $LOG.AppendText($Message)
+::    } else {
+::        $LOG.AppendText("`n$Message")
+::    }
+::    $LOG.SelectionColor = 'black'
+::    $LOG.ScrollToCaret()
 ::}
 ::
 ::#endregion functions > Common > Logger
@@ -5088,7 +5091,7 @@ if "%debug%"=="true" (
 ::
 ::    if (Get-Process | Where-Object { $_.ProcessName -eq $ProcessName } ) {
 ::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
-::        Stop-Process -Name $ProcessName
+::        Stop-Process -Name $ProcessName -Force
 ::        Out-Success $LogIndentLevel
 ::    }
 ::}
@@ -5136,7 +5139,7 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Set-Variable -Option Constant VersionFile ([String]"$PATH_APP_DIR\version")
-::        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version'))
+::        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version').Trim())
 ::        Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to check for updates'
@@ -5198,13 +5201,36 @@ if "%debug%"=="true" (
 ::#endregion functions > Configuration > Apps > Set-7zipConfiguration
 ::
 ::
+::#region functions > Configuration > Apps > Set-AnyDeskConfiguration
+::
+::function Set-AnyDeskConfiguration {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$AppName
+::    )
+::
+::    Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
+::
+::    Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\AnyDesk\user.conf")
+::
+::    if (Test-Path $ConfigPath) {
+::        Set-Variable -Option Constant CurrentConfig ([String](Get-Content $ConfigPath -Raw -Encoding UTF8))
+::    } else {
+::        Set-Variable -Option Constant CurrentConfig ([String]'')
+::    }
+::
+::    Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) $ConfigPath
+::}
+::
+::#endregion functions > Configuration > Apps > Set-AnyDeskConfiguration
+::
+::
 ::#region functions > Configuration > Apps > Set-AppsConfiguration
 ::
 ::function Set-AppsConfiguration {
 ::    param(
 ::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$7zip,
 ::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$VLC,
-::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$TeamViewer,
+::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$AnyDesk,
 ::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$qBittorrent,
 ::        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory)]$Edge,
 ::        [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory)]$Chrome
@@ -5224,8 +5250,8 @@ if "%debug%"=="true" (
 ::        Set-7zipConfiguration $7zip.Text
 ::    }
 ::
-::    if ($TeamViewer.Checked) {
-::        Set-TeamViewerConfiguration $TeamViewer.Text
+::    if ($AnyDesk.Checked) {
+::        Set-AnyDeskConfiguration $AnyDesk.Text
 ::    }
 ::
 ::    if ($Edge.Checked) {
@@ -5298,25 +5324,6 @@ if "%debug%"=="true" (
 ::}
 ::
 ::#endregion functions > Configuration > Apps > Set-qBittorrentConfiguration
-::
-::
-::#region functions > Configuration > Apps > Set-TeamViewerConfiguration
-::
-::function Set-TeamViewerConfiguration {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$AppName
-::    )
-::
-::    Write-ActivityProgress -PercentComplete 40 -Task "Configuring $AppName..."
-::
-::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_TEAMVIEWER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines.Add("`n")
-::    $ConfigLines.Add($CONFIG_TEAMVIEWER)
-::
-::    Import-RegistryConfiguration $AppName $ConfigLines
-::}
-::
-::#endregion functions > Configuration > Apps > Set-TeamViewerConfiguration
 ::
 ::
 ::#region functions > Configuration > Apps > Set-VlcConfiguration
@@ -5648,9 +5655,9 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        Set-Variable -Option Constant Status ([Object[]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue)
+::        Set-Variable -Option Constant Status ([Collections.Generic.List[Int]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue)
 ::
-::        if ($Status[0] -ne 0 -or $Status[1] -ne 0) {
+::        if ($Status | Where-Object { $_ -ne 0 }) {
 ::            Write-LogError 'Failed to change DNS server'
 ::        }
 ::    } catch [Exception] {
@@ -5743,8 +5750,8 @@ if "%debug%"=="true" (
 ::    Write-ActivityProgress -PercentComplete 20 -Task 'Applying Windows power scheme settings...'
 ::
 ::    foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
-::        powercfg /SetAcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
-::        powercfg /SetDcValueIndex SCHEME_BALANCED $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+::        powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+::        powercfg /SetDcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
 ::    }
 ::
 ::    Out-Success $LogIndentLevel
