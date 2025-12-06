@@ -36,15 +36,15 @@ function Get-UpdateAvailability {
 
     try {
         Set-Variable -Option Constant VersionFile ([String]"$PATH_APP_DIR\version")
-        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -Uri '{URL_VERSION_FILE}').Trim())
+        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -Uri '{URL_VERSION_FILE}'))
         Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
     } catch [Exception] {
         Write-LogException $_ 'Failed to check for updates'
         return
     }
 
-    if ($LatestVersion -gt $VERSION) {
-        Write-LogWarning "Newer version available: v$LatestVersion"
+    if ($AvailableVersion -gt $VERSION) {
+        Write-LogWarning "Newer version available: v$AvailableVersion"
         return $True
     } else {
         Out-Status 'No updates available'
