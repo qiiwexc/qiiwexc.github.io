@@ -478,16 +478,23 @@ Windows Registry Editor Version 5.00
 {CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE}
 		</File>
 		<File path="C:\Windows\Setup\Scripts\unattend-09.ps1">
-Set-Variable -Option Constant BatchFilePath ([String]"$env:USERPROFILE\Desktop\qiiwexc.bat")
-Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_bat' -OutFile $BatchFilePath
-if (Test-Path $BatchFilePath) {
-  Start-Process PowerShell "&amp; $BatchFilePath"
-}
+Set-ItemProperty -LiteralPath 'Registry::HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location' -Name 'Value' -Force -Value "Allow"
+Set-ItemProperty -LiteralPath 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location' -Name 'Value' -Force -Value "Allow"
 
 Remove-Item "C:\Windows\Setup\*.xml"
 Remove-Item "C:\Windows\Setup\*.reg"
 Remove-Item "C:\Windows\Setup\*.cmd"
 Remove-Item "C:\Windows\Setup\*.ps1" -Exclude *UserOnce*
+
+Set-Variable -Option Constant BatchFileUrl ([String]'https://bit.ly/qiiwexc_bat')
+Set-Variable -Option Constant BatchFilePath ([String]"$env:USERPROFILE\Desktop\qiiwexc.bat")
+
+Invoke-WebRequest -Uri $BatchFileUrl -OutFile $BatchFilePath
+if (Test-Path $BatchFilePath) {
+    Start-Process PowerShell "&amp; $BatchFilePath"
+} else {
+    [Diagnostics.Process]::Start($BatchFileUrl )
+}
 		</File>
 		<File path="C:\Windows\Setup\Scripts\unattend-0a.ps1">
 Set-Variable -Option Constant NetworkAdapter (Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
