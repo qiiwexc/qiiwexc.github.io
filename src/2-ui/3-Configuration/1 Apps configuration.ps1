@@ -7,8 +7,6 @@ New-GroupBox 'Apps configuration'
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
 
-[Windows.Forms.CheckBox]$CHECKBOX_Config_TeamViewer = New-CheckBox 'TeamViewer' -Checked
-
 [Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
@@ -17,10 +15,9 @@ New-GroupBox 'Apps configuration'
 
 
 Set-Variable -Option Constant AppsConfigurationParameters (
-    [hashtable]@{
+    [Hashtable]@{
         '7zip'      = $CHECKBOX_Config_7zip
         VLC         = $CHECKBOX_Config_VLC
-        TeamViewer  = $CHECKBOX_Config_TeamViewer
         qBittorrent = $CHECKBOX_Config_qBittorrent
         Edge        = $CHECKBOX_Config_Edge
         Chrome      = $CHECKBOX_Config_Chrome

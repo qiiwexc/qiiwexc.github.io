@@ -34,13 +34,12 @@ function Set-InlineFiles {
 }
 
 Set-Variable -Option Constant KEY_FILE_MAP (
-    [Collections.Generic.List[hashtable]]@(
+    [Collections.Generic.List[Hashtable]]@(
         @{Key = 'CONFIG_7ZIP'; File = 'Apps\7zip.reg' },
         @{Key = 'CONFIG_APP_ASSOCIATIONS'; File = 'Windows\App associations.xml' },
         @{Key = 'CONFIG_MICROSOFT_OFFICE'; File = 'Apps\Microsoft Office.reg' },
         @{Key = 'CONFIG_QBITTORRENT_LOCALIZED'; File = 'Apps\qBittorrent {LOCALE}.ini' },
         @{Key = 'CONFIG_QBITTORRENT'; File = 'Apps\qBittorrent base.ini' },
-        @{Key = 'CONFIG_TEAMVIEWER'; File = 'Apps\TeamViewer.reg' },
         @{Key = 'CONFIG_VLC'; File = 'Apps\VLC.ini' },
         @{Key = 'CONFIG_WINDOWS_HKEY_CLASSES_ROOT'; File = 'Windows\Base\Windows HKEY_CLASSES_ROOT.reg' },
         @{Key = 'CONFIG_WINDOWS_HKEY_CURRENT_USER'; File = 'Windows\Base\Windows HKEY_CURRENT_USER.reg' },

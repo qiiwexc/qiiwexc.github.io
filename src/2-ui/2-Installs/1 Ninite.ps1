@@ -18,9 +18,6 @@ $CHECKBOX_Ninite_AnyDesk.Add_CheckStateChanged( { Set-NiniteButtonState } )
 [Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
 $CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
-[Windows.Forms.CheckBox]$CHECKBOX_Ninite_TeamViewer = New-CheckBox 'TeamViewer' -Name 'teamviewer15'
-$CHECKBOX_Ninite_TeamViewer.Add_CheckStateChanged( { Set-NiniteButtonState } )
-
 [Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
 $CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
 
@@ -40,7 +37,6 @@ Set-Variable -Option Constant NINITE_CHECKBOXES (
         $CHECKBOX_Ninite_7zip,
         $CHECKBOX_Ninite_VLC,
         $CHECKBOX_Ninite_AnyDesk,
-        $CHECKBOX_Ninite_TeamViewer,
         $CHECKBOX_Ninite_Chrome,
         $CHECKBOX_Ninite_qBittorrent,
         $CHECKBOX_Ninite_Malwarebytes
