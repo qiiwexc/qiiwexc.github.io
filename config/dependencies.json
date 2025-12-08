@@ -51,7 +51,7 @@
     },
     {
         "name":  "Ventoy",
-        "version":  "v1.1.07",
+        "version":  "v1.1.08",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "ventoy/Ventoy"
