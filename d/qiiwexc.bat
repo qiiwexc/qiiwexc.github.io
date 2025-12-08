@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.12.8')
+::Set-Variable -Option Constant VERSION ([Version]'25.12.9')
 ::
 ::#endregion init > Version
 ::
@@ -532,8 +532,8 @@ if "%debug%"=="true" (
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = {
-::    Set-Variable -Option Constant FileName $((Split-Path -Leaf 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip').Replace('-windows', ''))
-::    Start-DownloadUnzipAndRun 'https://github.com/ventoy/Ventoy/releases/download/v1.1.07/ventoy-1.1.07-windows.zip' $FileName -Execute:$CHECKBOX_StartVentoy.Checked
+::    Set-Variable -Option Constant FileName $((Split-Path -Leaf 'https://github.com/ventoy/Ventoy/releases/download/v1.1.08/ventoy-1.1.08-windows.zip').Replace('-windows', ''))
+::    Start-DownloadUnzipAndRun 'https://github.com/ventoy/Ventoy/releases/download/v1.1.08/ventoy-1.1.08-windows.zip' $FileName -Execute:$CHECKBOX_StartVentoy.Checked
 ::}
 ::New-Button 'Ventoy' $BUTTON_FUNCTION
 ::
