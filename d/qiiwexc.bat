@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.12.7')
+::Set-Variable -Option Constant VERSION ([Version]'25.12.8')
 ::
 ::#endregion init > Version
 ::
@@ -621,7 +621,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.17.1.822.zip' -Execute:$CHECKBOX_StartSDI.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.17.2.823.zip' -Execute:$CHECKBOX_StartSDI.Checked }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
