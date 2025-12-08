@@ -79,7 +79,7 @@
     },
     {
         "name":  "SDIO",
-        "version":  "1.17.1.822",
+        "version":  "1.17.2.823",
         "source":  "URL",
         "url":  "https://www.glenn.delahoy.com/downloads/sdio/changelog.txt",
         "regex":  "^Version (.*?)\r$"
