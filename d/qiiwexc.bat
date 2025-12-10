@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.12.10')
+::Set-Variable -Option Constant VERSION ([Version]'25.12.11')
 ::
 ::#endregion init > Version
 ::
@@ -4458,7 +4458,7 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Set-Variable -Option Constant VersionFile ([String]"$PATH_APP_DIR\version")
-::        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_version'))
+::        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version'))
 ::        Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to check for updates'
