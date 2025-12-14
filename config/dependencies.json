@@ -1,7 +1,7 @@
 ﻿[
     {
         "name":  "SystemRescue",
-        "version":  "12.02",
+        "version":  "12.03",
         "source":  "GitLab",
         "mode":  "compare",
         "repository":  "systemrescue/systemrescue-sources",
@@ -30,7 +30,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "0e0428e7947234e3134dc05398cc838385de5606",
+        "version":  "eaad9eefbe55f3f250c3b8b9c7b9048fb9f4c13d",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
@@ -51,7 +51,7 @@
     },
     {
         "name":  "Ventoy",
-        "version":  "v1.1.08",
+        "version":  "v1.1.09",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "ventoy/Ventoy"
