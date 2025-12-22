@@ -37,21 +37,21 @@
     },
     {
         "name":  "WinUtil",
-        "version":  "25.12.01",
+        "version":  "25.12.18",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "ChrisTitusTech/winutil"
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2025.11.30",
+        "version":  "2025.12.16",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "Raphire/Win11Debloat"
     },
     {
         "name":  "Ventoy",
-        "version":  "v1.1.09",
+        "version":  "v1.1.10",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "ventoy/Ventoy"
