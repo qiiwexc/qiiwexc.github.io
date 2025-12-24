@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.12.22')
+::Set-Variable -Option Constant VERSION ([Version]'25.12.25')
 ::
 ::#endregion init > Version
 ::
@@ -621,7 +621,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.17.2.823.zip' -Execute:$CHECKBOX_StartSDI.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://driveroff.net/drv/SDI_1.25.3.7z' -Execute:$CHECKBOX_StartSDI.Checked }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
@@ -3683,7 +3683,7 @@ if "%debug%"=="true" (
 ::    Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
 ::
 ::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath))
-::    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.zip'))
+::    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
 ::    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath))
 ::
 ::    if ($Temp) {
@@ -3715,8 +3715,11 @@ if "%debug%"=="true" (
 ::            }
 ::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\cpuz_x$Suffix.exe")
 ::        }
-::        'SDIO_*' {
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDIO_auto.bat")
+::        'SDI_*' {
+::            if ($OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix ([String]'64')
+::            }
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDI$Suffix-drv.exe")
 ::        }
 ::        'ventoy*' {
 ::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe")
@@ -3740,9 +3743,13 @@ if "%debug%"=="true" (
 ::    New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 ::
 ::    try {
-::        if ($ZIP_SUPPORTED) {
+::        if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
 ::            [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
 ::        } else {
+::            if (-not $SHELL) {
+::                Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
+::            }
+::
 ::            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
 ::                $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
 ::            }
@@ -3871,7 +3878,6 @@ if "%debug%"=="true" (
 ::        Add-Type -AssemblyName System.IO.Compression.FileSystem
 ::        Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED ([Bool]$True)
 ::    } catch [Exception] {
-::        Set-Variable -Option Constant -Scope Script SHELL ([COMObject](New-Object -com Shell.Application))
 ::        Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
 ::    }
 ::
@@ -4330,8 +4336,8 @@ if "%debug%"=="true" (
 ::
 ::    New-Activity 'Download and run'
 ::
-::    Set-Variable -Option Constant UrlEnding ([String]$URL.Substring($URL.Length - 4))
-::    Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq '.zip'))
+::    Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
+::    Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
 ::    Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
 ::
 ::    if ($DownloadedFile) {
