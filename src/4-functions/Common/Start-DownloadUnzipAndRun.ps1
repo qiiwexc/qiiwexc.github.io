@@ -22,8 +22,8 @@ function Start-DownloadUnzipAndRun {
 
     New-Activity 'Download and run'
 
-    Set-Variable -Option Constant UrlEnding ([String]$URL.Substring($URL.Length - 4))
-    Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq '.zip'))
+    Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
+    Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
     Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
 
     if ($DownloadedFile) {

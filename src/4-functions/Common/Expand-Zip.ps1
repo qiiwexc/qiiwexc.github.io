@@ -9,7 +9,7 @@ function Expand-Zip {
     Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
 
     Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath))
-    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.zip'))
+    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
     Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath))
 
     if ($Temp) {
@@ -41,8 +41,11 @@ function Expand-Zip {
             }
             Set-Variable -Option Constant Executable ([String]"$ExtractionDir\cpuz_x$Suffix.exe")
         }
-        'SDIO_*' {
-            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDIO_auto.bat")
+        'SDI_*' {
+            if ($OS_64_BIT) {
+                Set-Variable -Option Constant Suffix ([String]'64')
+            }
+            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDI$Suffix-drv.exe")
         }
         'ventoy*' {
             Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe")
@@ -66,9 +69,13 @@ function Expand-Zip {
     New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
 
     try {
-        if ($ZIP_SUPPORTED) {
+        if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
             [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
         } else {
+            if (-not $SHELL) {
+                Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
+            }
+
             foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
                 $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
             }
