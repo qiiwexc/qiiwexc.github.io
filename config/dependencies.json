@@ -78,11 +78,11 @@
         "regex":  "^\u003cdiv class=\u0027post-header\u0027[^\u003e]*\u003e\n\u003cdiv class=\u0027post-header-line-1\u0027[^\u003e]*\u003e\u003c/div\u003e\nОпубликовал\n\u003cb style=\u0027color: #999;\u0027[^\u003e]*\u003em0nkrus\u003c/b\u003e\n(.*?)\n\u003c/div\u003e"
     },
     {
-        "name":  "SDIO",
-        "version":  "1.17.2.823",
+        "name":  "SDI",
+        "version":  "1.25.3",
         "source":  "URL",
-        "url":  "https://www.glenn.delahoy.com/downloads/sdio/changelog.txt",
-        "regex":  "^Version (.*?)\r$"
+        "url":  "https://sdi-tool.org/download/",
+        "regex":  "^\\s+\u003ctd\u003eDirect\u003c/td\u003e\n\\s+\u003ctd\u003e\\d\\.\\d\\sMB\u003c/td\u003e\n\\s+\u003ctd\u003e(.*?)\\s\\(R\\d{4}\\)\u003c/td\u003e$"
     },
     {
         "name":  "CPU-Z",

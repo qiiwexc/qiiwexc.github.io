@@ -28,8 +28,8 @@
         "value":  "https://github.com/ventoy/Ventoy/releases/download/v1.1.10/ventoy-1.1.10-windows.zip"
     },
     {
-        "key":  "URL_SDIO",
-        "value":  "https://www.glenn.delahoy.com/downloads/sdio/SDIO_1.17.2.823.zip"
+        "key":  "URL_SDI",
+        "value":  "https://driveroff.net/drv/SDI_1.25.3.7z"
     },
     {
         "key":  "URL_VICTORIA",
