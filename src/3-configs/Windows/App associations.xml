@@ -15,13 +15,10 @@
   <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
   <Association Identifier=".au" ProgId="VLC.au" ApplicationName="VLC media player" />
   <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
-  <Association Identifier=".bmp" ProgId="PhotoViewer.FileAssoc.Bitmap" ApplicationName="Windows Photo Viewer" />
   <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
   <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
   <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
   <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
-  <Association Identifier=".cr2" ProgId="TIFImage.Document" ApplicationName="Windows Photo Viewer" />
-  <Association Identifier=".dib" ProgId="PhotoViewer.FileAssoc.Bitmap" ApplicationName="Windows Photo Viewer" />
   <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
   <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
   <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
@@ -30,7 +27,6 @@
   <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".iso" ProgId="Windows.IsoFile" ApplicationName="File Explorer" />
-  <Association Identifier=".jxr" ProgId="wdpfile" ApplicationName="Windows Photo Viewer" />
   <Association Identifier=".m1v" ProgId="VLC.m1v" ApplicationName="VLC media player" />
   <Association Identifier=".m2t" ProgId="VLC.m2t" ApplicationName="VLC media player" />
   <Association Identifier=".m2ts" ProgId="VLC.m2ts" ApplicationName="VLC media player" />
@@ -72,7 +68,6 @@
   <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
   <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
   <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
-  <Association Identifier=".wdp" ProgId="wdpfile" ApplicationName="Windows Photo Viewer" />
   <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
   <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
