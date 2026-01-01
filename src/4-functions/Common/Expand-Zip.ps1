@@ -21,12 +21,6 @@ function Expand-Zip {
     Initialize-AppDirectory
 
     switch -Wildcard ($ZipName) {
-        'ActivationProgram.zip' {
-            if (-not $OS_64_BIT) {
-                Set-Variable -Option Constant Suffix ([String]'_x86.exe')
-            }
-            Set-Variable -Option Constant Executable ([String]"ActivationProgram$Suffix.exe")
-        }
         'Office_Installer+.zip' {
             if (-not $OS_64_BIT) {
                 Set-Variable -Option Constant Suffix ([String]' x86.exe')
