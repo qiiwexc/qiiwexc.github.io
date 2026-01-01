@@ -1,4 +1,4 @@
-﻿<!-- Version: 25.12.24 -->
+﻿<!-- Version: 26.1.1 -->
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
   <!--https://schneegans.de/windows/unattend-generator/?LanguageMode=Unattended&UILanguage=en-US&Locale=en-GB&Keyboard=00000809&GeoLocation=140&ProcessorArchitecture=amd64&BypassRequirementsCheck=true&ComputerNameMode=Random&CompactOsMode=Default&TimeZoneMode=Implicit&PartitionMode=Unattended&PartitionLayout=GPT&EspSize=300&RecoveryMode=Partition&RecoverySize=1000&DiskAssertionMode=Skip&WindowsEditionMode=Interactive&InstallFromMode=Name&InstallFromName=Windows+11+Home&PEMode=Default&UserAccountMode=Unattended&AccountName0=Test&AccountDisplayName0=&AccountPassword0=&AccountGroup0=Administrators&AutoLogonMode=Own&PasswordExpirationMode=Unlimited&LockoutMode=Default&HideFiles=Hidden&TaskbarSearch=Box&TaskbarIconsMode=Default&StartTilesMode=Custom&StartTilesXml=%3CLayoutModificationTemplate+xmlns%3Adefaultlayout%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FFullDefaultLayout%22+xmlns%3Astart%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FStartLayout%22+Version%3D%221%22+xmlns%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FLayoutModification%22%3E%0D%0A++%3CLayoutOptions+StartTileGroupCellWidth%3D%226%22+%2F%3E%0D%0A++%3CDefaultLayoutOverride%3E%0D%0A++++%3CStartLayoutCollection%3E%0D%0A++++++%3Cdefaultlayout%3AStartLayout+GroupCellWidth%3D%226%22%3E%0D%0A++++++++%3Cstart%3AGroup+Name%3D%22%22%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5Ccomputer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CMicrosoft+Edge.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%220%22+AppUserModelID%3D%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%222%22+AppUserModelID%3D%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CPaint.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CNotepad.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CControl+Panel.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.Windows.SecHealthUI_cw5n1h2txyewy%21SecHealthUI%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CTask+Manager.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CInternet+Explorer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CCommand+Prompt.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%2210%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CWindows+PowerShell%5CWindows+PowerShell.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%2210%22+AppUserModelID%3D%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++%3C%2Fstart%3AGroup%3E%0D%0A++++++%3C%2Fdefaultlayout%3AStartLayout%3E%0D%0A++++%3C%2FStartLayoutCollection%3E%0D%0A++%3C%2FDefaultLayoutOverride%3E%0D%0A%3C%2FLayoutModificationTemplate%3E%0D%0A&StartPinsMode=Custom&StartPinsJson=%7B%0D%0A++%22pinnedList%22%3A+%5B%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CFile+Explorer.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22MSTeams_8wekyb3d8bbwe%21MSTeams%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.Paint_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsNotepad_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CAdministrative+Tools.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25ALLUSERSPROFILE%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CMicrosoft+Edge.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.SecHealthUI_8wekyb3d8bbwe%21SecHealthUI%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.GetHelp_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%7D%0D%0A++%5D%0D%0A%7D&EnableLongPaths=true&HardenSystemDriveAcl=true&DeleteJunctions=true&HideEdgeFre=true&DisableEdgeStartupBoost=true&DeleteWindowsOld=true&EffectsMode=Appearance&DeleteEdgeDesktopIcon=true&DesktopIconsMode=Custom&IconRecycleBin=true&IconThisPC=true&StartFoldersMode=Custom&StartFolderDownloads=true&StartFolderSettings=true&VBoxGuestAdditions=true&WifiMode=Skip&ExpressSettings=DisableAll&LockKeysMode=Skip&StickyKeysMode=Default&ColorMode=Default&WallpaperMode=Default&LockScreenMode=Default&Remove3DViewer=true&RemoveBingSearch=true&RemoveClipchamp=true&RemoveClock=true&RemoveCopilot=true&RemoveCortana=true&RemoveDevHome=true&RemoveFamily=true&RemoveFeedbackHub=true&RemoveGameAssist=true&RemoveHandwriting=true&RemoveMailCalendar=true&RemoveMaps=true&RemoveMathInputPanel=true&RemoveMediaFeatures=true&RemoveMixedReality=true&RemoveZuneVideo=true&RemoveNews=true&RemoveOffice365=true&RemoveOneDrive=true&RemoveOneNote=true&RemoveOneSync=true&RemoveOpenSSHClient=true&RemoveOutlook=true&RemovePaint3D=true&RemovePeople=true&RemovePowerAutomate=true&RemovePowerShell2=true&RemoveQuickAssist=true&RemoveRecall=true&RemoveRdpClient=true&RemoveSkype=true&RemoveSnippingTool=true&RemoveSpeech=true&RemoveStepsRecorder=true&RemoveStickyNotes=true&RemoveGetStarted=true&RemoveToDo=true&RemoveVoiceRecorder=true&RemoveWallet=true&RemoveWindowsMediaPlayer=true&RemoveZuneMusic=true&RemoveWindowsTerminal=true&RemoveWordPad=true&RemoveXboxApps=true&RemoveYourPhone=true&SystemScript0=Set-ItemProperty+-Path+%27HKLM%3A%5CSYSTEM%5CCurrentControlSet%5CServices%5Ctzautoupdate%27+-Name+%27Start%27+-Value+3%0D%0Adism+%2Fonline+%2FImport-DefaultAppAssociations%3A%27C%3A%5CWindows%5CSetup%5CScripts%5CAppAssociations.xml%27&SystemScriptType0=Ps1&SystemScript1=%7BWINDOWS_SECURITY_CONFIGURATION%7D&SystemScriptType1=Ps1&SystemScript2=%7BPOWER_SCHEME_CONFIGURATION%7D&SystemScriptType2=Cmd&SystemScript3=%7BCONFIG_WINDOWS_HKEY_USERS%7D&SystemScriptType3=Reg&SystemScript4=%7BCONFIG_WINDOWS_HKEY_CLASSES_ROOT%7D&SystemScriptType4=Reg&SystemScript5=%7BCONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT%7D&SystemScriptType5=Reg&SystemScript6=%7BCONFIG_WINDOWS_HKEY_LOCAL_MACHINE%7D&SystemScriptType6=Reg&SystemScript7=%7BCONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE%7D&SystemScriptType7=Reg&DefaultUserScript0=Set-Variable+-Option+Constant+NetworkAdapter+%28Get-CimInstance+Win32_NetworkAdapterConfiguration+-Filter+%27IPEnabled%3DTrue%27%29%0D%0Aif+%28%24NetworkAdapter%29+%7B%0D%0A++++%24NetworkAdapter+%7C+Invoke-CimMethod+-MethodName+%27SetDNSServerSearchOrder%27+-Arguments+%40%7B+DNSServerSearchOrder+%3D+%40%28%271.1.1.2%27%2C+%271.0.0.2%27%29+%7D%0D%0A%7D&DefaultUserScriptType0=Ps1&DefaultUserScript1=%7BCONFIG_7ZIP%7D&DefaultUserScriptType1=Reg&DefaultUserScript2=%7BCONFIG_MICROSOFT_OFFICE%7D&DefaultUserScriptType2=Reg&DefaultUserScript3=%7BCONFIG_WINDOWS_HKEY_CURRENT_USER%7D&DefaultUserScriptType3=Reg&DefaultUserScript4=%7BCONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER%7D&DefaultUserScriptType4=Reg&DefaultUserScript5=%7BCONFIG_WINDOWS_LOCALISED%7D&DefaultUserScriptType5=Reg&FirstLogonScript0=Set-ItemProperty+-LiteralPath+%27Registry%3A%3AHKLM%5CSOFTWARE%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0ASet-ItemProperty+-LiteralPath+%27Registry%3A%3AHKEY_CURRENT_USER%5CSoftware%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0A%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.xml%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.reg%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.cmd%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.ps1%22+-Exclude+*UserOnce*%0D%0A%0D%0ASet-Variable+-Option+Constant+BatchFileUrl+%28%5BString%5D%27https%3A%2F%2Fbit.ly%2Fqiiwexc_bat%27%29%0D%0ASet-Variable+-Option+Constant+BatchFilePath+%28%5BString%5D%22%24env%3AUSERPROFILE%5CDesktop%5Cqiiwexc.bat%22%29%0D%0A%0D%0AInvoke-WebRequest+-Uri+%24BatchFileUrl+-OutFile+%24BatchFilePath%0D%0Aif+%28Test-Path+%24BatchFilePath%29+%7B%0D%0A++++Start-Process+PowerShell+%22%26+%24BatchFilePath%22%0D%0A%7D+else+%7B%0D%0A++++%5BDiagnostics.Process%5D%3A%3AStart%28%24BatchFileUrl+%29%0D%0A%7D%0D%0A&FirstLogonScriptType0=Ps1&WdacMode=Skip&AppLockerMode=Skip&ComponentContent0=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSetupUILanguage%3E%0D%0A++%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3C%2FSetupUILanguage%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component0=Microsoft-Windows-International-Core-WinPE-windowsPE&ComponentContent1=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUILanguageFallback%3E%7BUI_LANGUAGE_FALLBACK%7D%3C%2FUILanguageFallback%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component1=Microsoft-Windows-International-Core-oobeSystem&ComponentContent2=%3CDisableWER%3E1%3C%2FDisableWER%3E&Component2=Microsoft-Windows-ErrorReportingCore-specialize&ComponentContent3=%3CDisableFirstRunWizard%3Etrue%3C%2FDisableFirstRunWizard%3E%0D%0A%3CDisableOOBAccelerators%3Etrue%3C%2FDisableOOBAccelerators%3E%0D%0A%3CFavoritesDelete%3Etrue%3C%2FFavoritesDelete%3E%0D%0A%3CHome_Page%3Eabout%3Ablank%3C%2FHome_Page%3E%0D%0A%3CSearchScopes%3E%0D%0A++%3CScope+wcm%3Aaction%3D%22add%22%3E%0D%0A++++%3CScopeDefault%3Etrue%3C%2FScopeDefault%3E%0D%0A++++%3CScopeDisplayName%3EGoogle%3C%2FScopeDisplayName%3E%0D%0A++++%3CScopeKey%3EGoogle%3C%2FScopeKey%3E%0D%0A++++%3CScopeUrl%3Ehttp%3A%2F%2Fwww.google.lv%2Fsearch%3Fq%3D%7BsearchTerms%7D%3C%2FScopeUrl%3E%0D%0A++%3C%2FScope%3E%0D%0A%3C%2FSearchScopes%3E%0D%0A%3CSuggestedSitesEnabled%3Efalse%3C%2FSuggestedSitesEnabled%3E&Component3=Microsoft-Windows-IE-InternetExplorer-specialize&ComponentContent4=%3CPreferredPlan%3E8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c%3C%2FPreferredPlan%3E&Component4=Microsoft-Windows-PowerCPL-generalize-->
@@ -148,13 +148,10 @@ foreach( $file in $Document.unattend.Extensions.File ) {
   &lt;Association Identifier=&quot;.asx&quot; ProgId=&quot;VLC.asx&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.au&quot; ProgId=&quot;VLC.au&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.avi&quot; ProgId=&quot;VLC.avi&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
-  &lt;Association Identifier=&quot;.bmp&quot; ProgId=&quot;PhotoViewer.FileAssoc.Bitmap&quot; ApplicationName=&quot;Windows Photo Viewer&quot; /&gt;
   &lt;Association Identifier=&quot;.bz2&quot; ProgId=&quot;ArchiveFolder&quot; ApplicationName=&quot;File Explorer&quot; /&gt;
   &lt;Association Identifier=&quot;.cab&quot; ProgId=&quot;CABFolder&quot; ApplicationName=&quot;File Explorer&quot; /&gt;
   &lt;Association Identifier=&quot;.cda&quot; ProgId=&quot;VLC.cda&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.contact&quot; ProgId=&quot;contact_wab_auto_file&quot; ApplicationName=&quot;contact_wab_auto_file&quot; /&gt;
-  &lt;Association Identifier=&quot;.cr2&quot; ProgId=&quot;TIFImage.Document&quot; ApplicationName=&quot;Windows Photo Viewer&quot; /&gt;
-  &lt;Association Identifier=&quot;.dib&quot; ProgId=&quot;PhotoViewer.FileAssoc.Bitmap&quot; ApplicationName=&quot;Windows Photo Viewer&quot; /&gt;
   &lt;Association Identifier=&quot;.dvr-ms&quot; ProgId=&quot;VLC.dvr-ms&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.flac&quot; ProgId=&quot;VLC.flac&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.gif&quot; ProgId=&quot;ChromeHTML&quot; ApplicationName=&quot;Google Chrome&quot; /&gt;
@@ -163,7 +160,6 @@ foreach( $file in $Document.unattend.Extensions.File ) {
   &lt;Association Identifier=&quot;.htm&quot; ProgId=&quot;ChromeHTML&quot; ApplicationName=&quot;Google Chrome&quot; /&gt;
   &lt;Association Identifier=&quot;.html&quot; ProgId=&quot;ChromeHTML&quot; ApplicationName=&quot;Google Chrome&quot; /&gt;
   &lt;Association Identifier=&quot;.iso&quot; ProgId=&quot;Windows.IsoFile&quot; ApplicationName=&quot;File Explorer&quot; /&gt;
-  &lt;Association Identifier=&quot;.jxr&quot; ProgId=&quot;wdpfile&quot; ApplicationName=&quot;Windows Photo Viewer&quot; /&gt;
   &lt;Association Identifier=&quot;.m1v&quot; ProgId=&quot;VLC.m1v&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.m2t&quot; ProgId=&quot;VLC.m2t&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.m2ts&quot; ProgId=&quot;VLC.m2ts&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
@@ -205,7 +201,6 @@ foreach( $file in $Document.unattend.Extensions.File ) {
   &lt;Association Identifier=&quot;.vcf&quot; ProgId=&quot;vcard_wab_auto_file&quot; ApplicationName=&quot;vcard_wab_auto_file&quot; /&gt;
   &lt;Association Identifier=&quot;.vlt&quot; ProgId=&quot;VLC.vlt&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.wav&quot; ProgId=&quot;VLC.wav&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
-  &lt;Association Identifier=&quot;.wdp&quot; ProgId=&quot;wdpfile&quot; ApplicationName=&quot;Windows Photo Viewer&quot; /&gt;
   &lt;Association Identifier=&quot;.webp&quot; ProgId=&quot;ChromeHTML&quot; ApplicationName=&quot;Google Chrome&quot; /&gt;
   &lt;Association Identifier=&quot;.wma&quot; ProgId=&quot;VLC.wma&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
   &lt;Association Identifier=&quot;.wmv&quot; ProgId=&quot;VLC.wmv&quot; ApplicationName=&quot;VLC media player&quot; /&gt;
@@ -238,7 +233,6 @@ ad.ui.show_tile.telemetry=false
     <File path="C:\Users\Default\AppData\Roaming\vlc\vlcrc">
 [qt]
 qt-system-tray=0
-qt-updates-days=1
 qt-privacy-ask=0
 
 [core]
@@ -301,7 +295,6 @@ Size=@Size(1255 829)
 
 [RSS]
 AutoDownloader\DownloadRepacks=true
-Session\MaxArticlesPerFeed=9999999
 Session\RefreshInterval=1
 
 [SpeedWidget]
@@ -497,7 +490,6 @@ $selectors = @(
   'Media.WindowsMediaPlayer';
   'Microsoft.Windows.SnippingTool';
   'Microsoft.Windows.WordPad';
-  'OneCoreUAP.OneSync';
   'OpenSSH.Client';
 );
 $getCommand = {
@@ -726,61 +718,6 @@ Windows Registry Editor Version 5.00
 
 ; Disable &quot;Include in library&quot; context menu
 [-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
-
-[HKEY_CLASSES_ROOT\icofile\shell\open\DropTarget]
-&quot;Clsid&quot;=&quot;{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}&quot;
-
-[HKEY_CLASSES_ROOT\jpegfile\shell\open\DropTarget]
-&quot;Clsid&quot;=&quot;{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}&quot;
-
-[HKEY_CLASSES_ROOT\pngfile\shell\open\DropTarget]
-&quot;Clsid&quot;=&quot;{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}&quot;
-
-[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap]
-&quot;FriendlyTypeName&quot;=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
-  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
-  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
-  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
-  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,36,00,00,\
-  00
-&quot;ImageOptionFlags&quot;=dword:00000001
-
-[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\DefaultIcon]
-@=&quot;%SystemRoot%\\System32\\imageres.dll,-70&quot;
-
-[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open]
-&quot;MuiVerb&quot;=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
-  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
-  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
-  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
-  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
-
-[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\command]
-@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-  00,31,00,00,00
-
-[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\DropTarget]
-&quot;Clsid&quot;=&quot;{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}&quot;
-
-[HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\Image Preview\command]
-@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-  00,31,00,00,00
     </File>
     <File path="C:\Windows\Setup\unattend-06.reg">
 Windows Registry Editor Version 5.00
@@ -1030,23 +967,6 @@ Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
 &quot;scremoveoption&quot;=&quot;1&quot;
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities]
-&quot;ApplicationDescription&quot;=&quot;@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3069&quot;
-&quot;ApplicationName&quot;=&quot;@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3009&quot;
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities\FileAssociations]
-&quot;.bmp&quot;=&quot;PhotoViewer.FileAssoc.Bitmap&quot;
-&quot;.cr2&quot;=&quot;TIFImage.Document&quot;
-&quot;.dib&quot;=&quot;PhotoViewer.FileAssoc.Bitmap&quot;
-&quot;.ico&quot;=&quot;icofile&quot;
-&quot;.jfif&quot;=&quot;pjpegfile&quot;
-&quot;.jpe&quot;=&quot;jpegfile&quot;
-&quot;.jpeg&quot;=&quot;jpegfile&quot;
-&quot;.jpg&quot;=&quot;jpegfile&quot;
-&quot;.jxr&quot;=&quot;wdpfile&quot;
-&quot;.png&quot;=&quot;pngfile&quot;
-&quot;.wdp&quot;=&quot;wdpfile&quot;
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search]
 &quot;EnableFindMyFiles&quot;=dword:00000001
@@ -1583,9 +1503,6 @@ if ($NetworkAdapter) {
     </File>
     <File path="C:\Windows\Setup\unattend-0b.reg">
 Windows Registry Editor Version 5.00
-
-[HKEY_USERS\DefaultUser\Software\7-Zip]
-&quot;LargePages&quot;=dword:00000001
 
 [HKEY_USERS\DefaultUser\Software\7-Zip\FM]
 &quot;AlternativeSelection&quot;=dword:00000001
