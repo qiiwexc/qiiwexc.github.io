@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'25.12.25')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.1')
 ::
 ::#endregion init > Version
 ::
@@ -367,7 +367,7 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant Label ([Windows.Forms.Label](New-Object Windows.Forms.Label))
 ::
-::    Set-Variable -Option Constant Location ([Drawing.Point]$PREVIOUS_BUTTON.Location + [Drawing.Point]"30, $BUTTON_HEIGHT")
+::    Set-Variable -Option Constant Location ([Drawing.Point]$PREVIOUS_BUTTON.Location + [Drawing.Point]"40, $BUTTON_HEIGHT")
 ::
 ::    $Label.Size = "145, $CHECKBOX_HEIGHT"
 ::    $Label.Text = $Text
@@ -486,9 +486,9 @@ if "%debug%"=="true" (
 ::#endregion ui > Home > Tab
 ::
 ::
-::#region ui > Home > Check for updates
+::#region ui > Home > Updates
 ::
-::New-GroupBox 'Check for updates'
+::New-GroupBox 'Updates'
 ::
 ::
 ::[Switch]$BUTTON_DISABLED = $OS_VERSION -lt 7
@@ -505,25 +505,23 @@ if "%debug%"=="true" (
 ::[ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftOffice }
 ::New-Button 'Microsoft Office updates' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 ::
-::#endregion ui > Home > Check for updates
+::#endregion ui > Home > Updates
 ::
 ::
-::#region ui > Home > Activators
+::#region ui > Home > Activation
 ::
-::New-GroupBox 'Activators (Windows 7+, Office)'
+::New-GroupBox 'Activation'
 ::
 ::
 ::[Switch]$BUTTON_DISABLED = $OS_VERSION -lt 7
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-Activator }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-Activator -ActivateWindows:$CHECKBOX_ActivateWindows.Checked -ActivateOffice:$CHECKBOX_ActivateOffice.Checked }
 ::New-Button 'MAS Activator' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 ::
+::[Windows.Forms.CheckBox]$CHECKBOX_ActivateWindows = New-CheckBox 'Activate Windows'
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://qiiwexc.github.io/d/ActivationProgram.zip' -AVWarning -Execute:$CHECKBOX_StartActivationProgram.Checked }
-::New-Button 'Activation Program' $BUTTON_FUNCTION
+::[Windows.Forms.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office'
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_StartActivationProgram = New-CheckBoxRunAfterDownload -Checked
-::
-::#endregion ui > Home > Activators
+::#endregion ui > Home > Activation
 ::
 ::
 ::#region ui > Home > Bootable USB tools
@@ -550,7 +548,7 @@ if "%debug%"=="true" (
 ::
 ::#region ui > Home > Cleanup
 ::
-::New-GroupBox 'Cleanup'
+::New-GroupBox 'Cleanup' 4
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-Cleanup }
@@ -621,7 +619,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://driveroff.net/drv/SDI_1.25.3.7z' -Execute:$CHECKBOX_StartSDI.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://driveroff.net/drv/SDI_1.25.3.7z' -Execute:$CHECKBOX_StartSDI.Checked -ConfigFile 'sdi.cfg' -Configuration $CONFIG_SDI }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
@@ -651,13 +649,13 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Windows images'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2025/10/windows-11-v25h2-rus-eng-20in1-hwid-act.html' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://uztracker.net/viewtopic.php?t=40164' }
 ::New-ButtonBrowser 'Windows 11' $BUTTON_FUNCTION
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2022/11/windows-10-v22h2-rus-eng-x86-x64-32in1.html' }
 ::New-ButtonBrowser 'Windows 10' $BUTTON_FUNCTION
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://w17.monkrus.ws/2024/02/windows-7-sp1-rus-eng-x86-x64-18in1.html' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser 'https://pb.wtf/t/398282' }
 ::New-ButtonBrowser 'Windows 7' $BUTTON_FUNCTION
 ::
 ::#endregion ui > Installs > Windows images
@@ -865,10 +863,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Apps > 7zip
 ::
-::Set-Variable -Option Constant CONFIG_7ZIP '[HKEY_CURRENT_USER\Software\7-Zip]
-::"LargePages"=dword:00000001
-::
-::[HKEY_CURRENT_USER\Software\7-Zip\FM]
+::Set-Variable -Option Constant CONFIG_7ZIP '[HKEY_CURRENT_USER\Software\7-Zip\FM]
 ::"AlternativeSelection"=dword:00000001
 ::"Columns\RootFolder"=hex:01,00,00,00,00,00,00,00,01,00,00,00,04,00,00,00,01,00,00,00,A0,00,00,00
 ::"FlatViewArc0"=dword:00000000
@@ -1227,7 +1222,6 @@ if "%debug%"=="true" (
 ::
 ::[RSS]
 ::AutoDownloader\DownloadRepacks=true
-::Session\MaxArticlesPerFeed=9999999
 ::Session\RefreshInterval=1
 ::
 ::[SpeedWidget]
@@ -1300,7 +1294,6 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant CONFIG_VLC '[qt]
 ::qt-system-tray=0
-::qt-updates-days=1
 ::qt-privacy-ask=0
 ::
 ::[core]
@@ -1363,13 +1356,10 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
 ::  <Association Identifier=".au" ProgId="VLC.au" ApplicationName="VLC media player" />
 ::  <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
-::  <Association Identifier=".bmp" ProgId="PhotoViewer.FileAssoc.Bitmap" ApplicationName="Windows Photo Viewer" />
 ::  <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
 ::  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
-::  <Association Identifier=".cr2" ProgId="TIFImage.Document" ApplicationName="Windows Photo Viewer" />
-::  <Association Identifier=".dib" ProgId="PhotoViewer.FileAssoc.Bitmap" ApplicationName="Windows Photo Viewer" />
 ::  <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
 ::  <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
 ::  <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
@@ -1378,7 +1368,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".iso" ProgId="Windows.IsoFile" ApplicationName="File Explorer" />
-::  <Association Identifier=".jxr" ProgId="wdpfile" ApplicationName="Windows Photo Viewer" />
 ::  <Association Identifier=".m1v" ProgId="VLC.m1v" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2t" ProgId="VLC.m2t" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2ts" ProgId="VLC.m2ts" ApplicationName="VLC media player" />
@@ -1420,7 +1409,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
 ::  <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
-::  <Association Identifier=".wdp" ProgId="wdpfile" ApplicationName="Windows Photo Viewer" />
 ::  <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
@@ -1456,7 +1444,6 @@ if "%debug%"=="true" (
 ::        'Media.WindowsMediaPlayer'
 ::        'Microsoft.Windows.SnippingTool'
 ::        'Microsoft.Windows.WordPad'
-::        'OneCoreUAP.OneSync'
 ::        'OpenSSH.Client'
 ::    )
 ::)
@@ -1719,61 +1706,6 @@ if "%debug%"=="true" (
 ::
 ::; Disable "Include in library" context menu
 ::[-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
-::
-::[HKEY_CLASSES_ROOT\icofile\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\jpegfile\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\pngfile\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap]
-::"FriendlyTypeName"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,\
-::  00,46,00,69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,\
-::  77,00,73,00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,\
-::  00,65,00,72,00,5c,00,50,00,68,00,6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,\
-::  65,00,72,00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,35,00,36,00,00,\
-::  00
-::"ImageOptionFlags"=dword:00000001
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\DefaultIcon]
-::@="%SystemRoot%\\System32\\imageres.dll,-70"
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open]
-::"MuiVerb"=hex(2):40,00,25,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,\
-::  69,00,6c,00,65,00,73,00,25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,\
-::  00,20,00,50,00,68,00,6f,00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,\
-::  72,00,5c,00,70,00,68,00,6f,00,74,00,6f,00,76,00,69,00,65,00,77,00,65,00,72,\
-::  00,2e,00,64,00,6c,00,6c,00,2c,00,2d,00,33,00,30,00,34,00,33,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
-::
-::[HKEY_CLASSES_ROOT\PhotoViewer.FileAssoc.Bitmap\shell\open\DropTarget]
-::"Clsid"="{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-::
-::[HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\Image Preview\command]
-::@=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\
-::  00,5c,00,53,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,72,00,75,00,\
-::  6e,00,64,00,6c,00,6c,00,33,00,32,00,2e,00,65,00,78,00,65,00,20,00,22,00,25,\
-::  00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,46,00,69,00,6c,00,65,00,73,00,\
-::  25,00,5c,00,57,00,69,00,6e,00,64,00,6f,00,77,00,73,00,20,00,50,00,68,00,6f,\
-::  00,74,00,6f,00,20,00,56,00,69,00,65,00,77,00,65,00,72,00,5c,00,50,00,68,00,\
-::  6f,00,74,00,6f,00,56,00,69,00,65,00,77,00,65,00,72,00,2e,00,64,00,6c,00,6c,\
-::  00,22,00,2c,00,20,00,49,00,6d,00,61,00,67,00,65,00,56,00,69,00,65,00,77,00,\
-::  5f,00,46,00,75,00,6c,00,6c,00,73,00,63,00,72,00,65,00,65,00,6e,00,20,00,25,\
-::  00,31,00,00,00
 ::'
 ::
 ::#endregion configs > Windows > Base > Windows HKEY_CLASSES_ROOT
@@ -2347,23 +2279,6 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
 ::"scremoveoption"="1"
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities]
-::"ApplicationDescription"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3069"
-::"ApplicationName"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3009"
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities\FileAssociations]
-::".bmp"="PhotoViewer.FileAssoc.Bitmap"
-::".cr2"="TIFImage.Document"
-::".dib"="PhotoViewer.FileAssoc.Bitmap"
-::".ico"="icofile"
-::".jfif"="pjpegfile"
-::".jpe"="jpegfile"
-::".jpeg"="jpegfile"
-::".jpg"="jpegfile"
-::".jxr"="wdpfile"
-::".png"="pngfile"
-::".wdp"="wdpfile"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search]
 ::"EnableFindMyFiles"=dword:00000001
@@ -3299,27 +3214,75 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Tools > Debloat preset base
 ::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE 'CreateRestorePoint#- Create a system restore point
-::DisableBing#- Disable & remove Bing web search, Bing AI and Cortana from Windows search
-::DisableClickToDo#- Disable Click to Do (AI text & image analysis)
-::DisableCopilot#- Disable & remove Microsoft Copilot
-::DisableEdgeAds#- Disable ads, suggestions and the MSN news feed in Microsoft Edge
-::DisableRecall#- Disable Windows Recall
-::DisableSettings365Ads#- Disable Microsoft 365 ads in Settings Home
-::DisableStartPhoneLink#- Disable the Phone Link mobile devices integration in the start menu.
-::DisableStickyKeys#- Disable the Sticky Keys keyboard shortcut
-::DisableSuggestions#- Disable tips, tricks, suggestions and ads in start, settings, notifications and File Explorer
-::DisableTelemetry#- Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads
-::EnableEndTask#- Enable the "End Task" option in the taskbar right click menu
-::HideDupliDrive#- Hide duplicate removable drive entries from the File Explorer sidepanel
-::HideGallery#- Hide the Gallery section from the File Explorer sidepanel
-::HideGiveAccessTo#- Hide the "Give access to" option in the context menu
-::HideHome#- Hide the Home section from the File Explorer sidepanel
-::HideIncludeInLibrary#- Hide the "Include in library" option in the context menu
-::HideShare#- Hide the "Share" option in the context menu
-::ShowHiddenFolders#- Show hidden files, folders and drives
-::ShowSearchLabelTb#- Show search icon with label on the taskbar
-::RemoveAppsCustom#- Remove 101 apps:
+::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE '{
+::  "Version": "1.0",
+::  "Settings": [
+::    { "Name": "AddFoldersToThisPC", "Value": false },
+::    { "Name": "ClearStart", "Value": false },
+::    { "Name": "ClearStartAllUsers", "Value": false },
+::    { "Name": "CombineMMTaskbarAlways", "Value": false },
+::    { "Name": "CombineMMTaskbarNever", "Value": false },
+::    { "Name": "CombineMMTaskbarWhenFull", "Value": false },
+::    { "Name": "CombineTaskbarAlways", "Value": false },
+::    { "Name": "CombineTaskbarNever", "Value": false },
+::    { "Name": "CombineTaskbarWhenFull", "Value": false },
+::    { "Name": "CreateRestorePoint", "Value": true },
+::    { "Name": "DisableAnimations", "Value": false },
+::    { "Name": "DisableBing", "Value": true },
+::    { "Name": "DisableClickToDo", "Value": true },
+::    { "Name": "DisableCopilot", "Value": true },
+::    { "Name": "DisableDesktopSpotlight", "Value": false },
+::    { "Name": "DisableDVR", "Value": false },
+::    { "Name": "DisableEdgeAds", "Value": true },
+::    { "Name": "DisableEdgeAI", "Value": false },
+::    { "Name": "DisableFastStartup", "Value": false },
+::    { "Name": "DisableGameBarIntegration", "Value": false },
+::    { "Name": "DisableLockscreenTips", "Value": false },
+::    { "Name": "DisableModernStandbyNetworking", "Value": false },
+::    { "Name": "DisableMouseAcceleration", "Value": false },
+::    { "Name": "DisableNotepadAI", "Value": false },
+::    { "Name": "DisablePaintAI", "Value": false },
+::    { "Name": "DisableRecall", "Value": true },
+::    { "Name": "DisableSettings365Ads", "Value": true },
+::    { "Name": "DisableStartPhoneLink", "Value": true },
+::    { "Name": "DisableStartRecommended", "Value": false },
+::    { "Name": "DisableStickyKeys", "Value": true },
+::    { "Name": "DisableSuggestions", "Value": true },
+::    { "Name": "DisableTelemetry", "Value": true },
+::    { "Name": "DisableTransparency", "Value": false },
+::    { "Name": "DisableWidgets", "Value": false },
+::    { "Name": "EnableDarkMode", "Value": false },
+::    { "Name": "EnableEndTask", "Value": true },
+::    { "Name": "EnableLastActiveClick", "Value": false },
+::    { "Name": "ExplorerToDownloads", "Value": false },
+::    { "Name": "ExplorerToHome", "Value": false },
+::    { "Name": "ExplorerToOneDrive", "Value": false },
+::    { "Name": "ExplorerToThisPC", "Value": false },
+::    { "Name": "ForceRemoveEdge", "Value": false },
+::    { "Name": "Hide3dObjects", "Value": true },
+::    { "Name": "HideChat", "Value": false },
+::    { "Name": "HideDupliDrive", "Value": true },
+::    { "Name": "HideGallery", "Value": false },
+::    { "Name": "HideGiveAccessTo", "Value": true },
+::    { "Name": "HideHome", "Value": false },
+::    { "Name": "HideIncludeInLibrary", "Value": true },
+::    { "Name": "HideMusic", "Value": false },
+::    { "Name": "HideOnedrive", "Value": false },
+::    { "Name": "HideSearchTb", "Value": false },
+::    { "Name": "HideShare", "Value": true },
+::    { "Name": "HideTaskview", "Value": false },
+::    { "Name": "MMTaskbarModeActive", "Value": false },
+::    { "Name": "MMTaskbarModeAll", "Value": false },
+::    { "Name": "MMTaskbarModeMainActive", "Value": false },
+::    { "Name": "RevertContextMenu", "Value": false },
+::    { "Name": "ShowHiddenFolders", "Value": true },
+::    { "Name": "ShowKnownFileExt", "Value": false },
+::    { "Name": "ShowSearchBoxTb", "Value": false },
+::    { "Name": "ShowSearchIconTb", "Value": false },
+::    { "Name": "ShowSearchLabelTb", "Value": true },
+::    { "Name": "TaskbarAlignLeft", "Value": false }
+::  ]
+::}
 ::'
 ::
 ::#endregion configs > Windows > Tools > Debloat preset base
@@ -3327,15 +3290,75 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Tools > Debloat preset personalisation
 ::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALISATION 'CombineMMTaskbarWhenFull#- Combine taskbar buttons and hide labels when taskbar is full in multi-monitor mode
-::CombineTaskbarWhenFull#- Combine taskbar buttons and hide labels when taskbar is full
-::DisableLockscreenTips#- Disable tips & tricks on the lockscreen
-::DisableStartRecommended#- Disable the recommended section in the start menu.
-::DisableWidgets#- Disable widgets on the taskbar & lockscreen
-::ExplorerToThisPC#- Change the default location that File Explorer opens to "This PC"
-::HideTaskview#- Hide the taskview button from the taskbar
-::RevertContextMenu#- Restore the old Windows 10 style context menu
-::TaskbarAlignLeft#- Align taskbar icons to the left
+::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALISATION '{
+::  "Version": "1.0",
+::  "Settings": [
+::    { "Name": "AddFoldersToThisPC", "Value": false },
+::    { "Name": "ClearStart", "Value": false },
+::    { "Name": "ClearStartAllUsers", "Value": false },
+::    { "Name": "CombineMMTaskbarAlways", "Value": false },
+::    { "Name": "CombineMMTaskbarNever", "Value": false },
+::    { "Name": "CombineMMTaskbarWhenFull", "Value": true },
+::    { "Name": "CombineTaskbarAlways", "Value": false },
+::    { "Name": "CombineTaskbarNever", "Value": false },
+::    { "Name": "CombineTaskbarWhenFull", "Value": true },
+::    { "Name": "CreateRestorePoint", "Value": true },
+::    { "Name": "DisableAnimations", "Value": false },
+::    { "Name": "DisableBing", "Value": true },
+::    { "Name": "DisableClickToDo", "Value": true },
+::    { "Name": "DisableCopilot", "Value": true },
+::    { "Name": "DisableDesktopSpotlight", "Value": false },
+::    { "Name": "DisableDVR", "Value": false },
+::    { "Name": "DisableEdgeAds", "Value": true },
+::    { "Name": "DisableEdgeAI", "Value": false },
+::    { "Name": "DisableFastStartup", "Value": false },
+::    { "Name": "DisableGameBarIntegration", "Value": false },
+::    { "Name": "DisableLockscreenTips", "Value": true },
+::    { "Name": "DisableModernStandbyNetworking", "Value": false },
+::    { "Name": "DisableMouseAcceleration", "Value": false },
+::    { "Name": "DisableNotepadAI", "Value": false },
+::    { "Name": "DisablePaintAI", "Value": false },
+::    { "Name": "DisableRecall", "Value": true },
+::    { "Name": "DisableSettings365Ads", "Value": true },
+::    { "Name": "DisableStartPhoneLink", "Value": true },
+::    { "Name": "DisableStartRecommended", "Value": true },
+::    { "Name": "DisableStickyKeys", "Value": true },
+::    { "Name": "DisableSuggestions", "Value": true },
+::    { "Name": "DisableTelemetry", "Value": true },
+::    { "Name": "DisableTransparency", "Value": false },
+::    { "Name": "DisableWidgets", "Value": true },
+::    { "Name": "EnableDarkMode", "Value": false },
+::    { "Name": "EnableEndTask", "Value": true },
+::    { "Name": "EnableLastActiveClick", "Value": false },
+::    { "Name": "ExplorerToDownloads", "Value": false },
+::    { "Name": "ExplorerToHome", "Value": false },
+::    { "Name": "ExplorerToOneDrive", "Value": false },
+::    { "Name": "ExplorerToThisPC", "Value": true },
+::    { "Name": "ForceRemoveEdge", "Value": false },
+::    { "Name": "Hide3dObjects", "Value": true },
+::    { "Name": "HideChat", "Value": false },
+::    { "Name": "HideDupliDrive", "Value": true },
+::    { "Name": "HideGallery", "Value": true },
+::    { "Name": "HideGiveAccessTo", "Value": true },
+::    { "Name": "HideHome", "Value": true },
+::    { "Name": "HideIncludeInLibrary", "Value": true },
+::    { "Name": "HideMusic", "Value": false },
+::    { "Name": "HideOnedrive", "Value": false },
+::    { "Name": "HideSearchTb", "Value": false },
+::    { "Name": "HideShare", "Value": true },
+::    { "Name": "HideTaskview", "Value": true },
+::    { "Name": "MMTaskbarModeActive", "Value": false },
+::    { "Name": "MMTaskbarModeAll", "Value": false },
+::    { "Name": "MMTaskbarModeMainActive", "Value": false },
+::    { "Name": "RevertContextMenu", "Value": true },
+::    { "Name": "ShowHiddenFolders", "Value": true },
+::    { "Name": "ShowKnownFileExt", "Value": false },
+::    { "Name": "ShowSearchBoxTb", "Value": false },
+::    { "Name": "ShowSearchIconTb", "Value": false },
+::    { "Name": "ShowSearchLabelTb", "Value": true },
+::    { "Name": "TaskbarAlignLeft", "Value": true }
+::  ]
+::}
 ::'
 ::
 ::#endregion configs > Windows > Tools > Debloat preset personalisation
@@ -3591,6 +3614,23 @@ if "%debug%"=="true" (
 ::#endregion configs > Windows > Tools > OOShutUp10
 ::
 ::
+::#region configs > Windows > Tools > sdi
+::
+::Set-Variable -Option Constant CONFIG_SDI '
+::-checkupdates
+::-delextrainfs
+::-expertmode
+::-filters:166
+::-license:1
+::-port:443
+::-showdrpnames2
+::-theme:Metro
+::-wndsc:3
+::'
+::
+::#endregion configs > Windows > Tools > sdi
+::
+::
 ::#region configs > Windows > Tools > WinUtil Personalisation
 ::
 ::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION '                      "WPFTweaksRemoveGallery",
@@ -3695,12 +3735,6 @@ if "%debug%"=="true" (
 ::    Initialize-AppDirectory
 ::
 ::    switch -Wildcard ($ZipName) {
-::        'ActivationProgram.zip' {
-::            if (-not $OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix ([String]'_x86.exe')
-::            }
-::            Set-Variable -Option Constant Executable ([String]"ActivationProgram$Suffix.exe")
-::        }
 ::        'Office_Installer+.zip' {
 ::            if (-not $OS_64_BIT) {
 ::                Set-Variable -Option Constant Suffix ([String]' x86.exe')
@@ -4317,6 +4351,8 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$URL,
 ::        [String][Parameter(Position = 1)]$FileName,
 ::        [String][Parameter(Position = 2)]$Params,
+::        [String]$ConfigFile,
+::        [String]$Configuration,
 ::        [Switch]$AVWarning,
 ::        [Switch]$Execute,
 ::        [Switch]$Silent
@@ -4345,6 +4381,11 @@ if "%debug%"=="true" (
 ::            Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
 ::        } else {
 ::            Set-Variable -Option Constant Executable ([String]$DownloadedFile)
+::        }
+::
+::        if ($Configuration) {
+::            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
+::            $Configuration | Out-File "$ParentPath\$ConfigFile" -Encoding UTF8
 ::        }
 ::
 ::        if ($Execute) {
@@ -5394,12 +5435,12 @@ if "%debug%"=="true" (
 ::    $AppsList | Out-File "$TargetPath\CustomAppsList" -Encoding UTF8
 ::
 ::    if ($Personalisation) {
-::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_PRESET_BASE + $CONFIG_DEBLOAT_PRESET_PERSONALISATION))
+::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
 ::    } else {
 ::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_PRESET_BASE)
 ::    }
 ::
-::    $Configuration | Out-File "$TargetPath\SavedSettings" -Encoding UTF8
+::    $Configuration | Out-File "$TargetPath\LastUsedSettings.json" -Encoding UTF8
 ::
 ::    if ($UsePreset) {
 ::        Set-Variable -Option Constant UsePresetParam ([String]'-RunSavedSettings')
@@ -5488,6 +5529,11 @@ if "%debug%"=="true" (
 ::#region functions > Home > Start-Activator
 ::
 ::function Start-Activator {
+::    param(
+::        [Switch][Parameter(Position = 0, Mandatory)]$ActivateWindows,
+::        [Switch][Parameter(Position = 1, Mandatory)]$ActivateOffice
+::    )
+::
 ::    Write-LogInfo 'Starting MAS activator...'
 ::
 ::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
@@ -5496,10 +5542,20 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
+::    [String]$Params = ''
+::
+::    if ($ActivateWindows) {
+::        $Params += ' /HWID'
+::    }
+::
+::    if ($ActivateOffice) {
+::        $Params += ' /Ohook'
+::    }
+::
 ::    if ($OS_VERSION -eq 7) {
-::        Invoke-CustomCommand -HideWindow "iex ((New-Object Net.WebClient).DownloadString('https://get.activated.win'))"
+::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win'))) $Params"
 ::    } else {
-::        Invoke-CustomCommand -HideWindow "irm 'https://get.activated.win' | iex"
+::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win))) $Params"
 ::    }
 ::
 ::    Out-Success
@@ -5577,7 +5633,7 @@ if "%debug%"=="true" (
 ::
 ::    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224'
 ::
-::    Start-Sleep -Seconds 3
+::    Start-Sleep -Seconds 2
 ::
 ::    Write-ActivityProgress -PercentComplete 90
 ::    Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
