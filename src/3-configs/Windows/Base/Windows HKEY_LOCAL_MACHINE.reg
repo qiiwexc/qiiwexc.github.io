@@ -224,19 +224,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
 "scremoveoption"="1"
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities]
-"ApplicationDescription"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3069"
-"ApplicationName"="@%ProgramFiles%\\Windows Photo Viewer\\photoviewer.dll,-3009"
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Photo Viewer\Capabilities\FileAssociations]
-".bmp"="PhotoViewer.FileAssoc.Bitmap"
-".cr2"="TIFImage.Document"
-".dib"="PhotoViewer.FileAssoc.Bitmap"
-".ico"="icofile"
-".jfif"="pjpegfile"
-".jxr"="wdpfile"
-".wdp"="wdpfile"
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search]
 "EnableFindMyFiles"=dword:00000001
 "SystemIndexNormalization"=dword:00000003
