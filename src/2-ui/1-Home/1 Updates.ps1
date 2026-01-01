@@ -1,4 +1,4 @@
-New-GroupBox 'Check for updates'
+New-GroupBox 'Updates'
 
 
 [Switch]$BUTTON_DISABLED = $OS_VERSION -lt 7
