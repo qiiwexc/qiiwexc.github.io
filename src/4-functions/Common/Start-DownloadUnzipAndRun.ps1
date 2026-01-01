@@ -3,6 +3,8 @@ function Start-DownloadUnzipAndRun {
         [String][Parameter(Position = 0, Mandatory)]$URL,
         [String][Parameter(Position = 1)]$FileName,
         [String][Parameter(Position = 2)]$Params,
+        [String]$ConfigFile,
+        [String]$Configuration,
         [Switch]$AVWarning,
         [Switch]$Execute,
         [Switch]$Silent
@@ -31,6 +33,11 @@ function Start-DownloadUnzipAndRun {
             Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
         } else {
             Set-Variable -Option Constant Executable ([String]$DownloadedFile)
+        }
+
+        if ($Configuration) {
+            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
+            $Configuration | Out-File "$ParentPath\$ConfigFile" -Encoding UTF8
         }
 
         if ($Execute) {
