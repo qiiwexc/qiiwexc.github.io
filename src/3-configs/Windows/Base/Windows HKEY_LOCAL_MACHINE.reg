@@ -234,11 +234,7 @@
 ".dib"="PhotoViewer.FileAssoc.Bitmap"
 ".ico"="icofile"
 ".jfif"="pjpegfile"
-".jpe"="jpegfile"
-".jpeg"="jpegfile"
-".jpg"="jpegfile"
 ".jxr"="wdpfile"
-".png"="pngfile"
 ".wdp"="wdpfile"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search]

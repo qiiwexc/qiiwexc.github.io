@@ -9,7 +9,6 @@ Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
         'Media.WindowsMediaPlayer'
         'Microsoft.Windows.SnippingTool'
         'Microsoft.Windows.WordPad'
-        'OneCoreUAP.OneSync'
         'OpenSSH.Client'
     )
 )
