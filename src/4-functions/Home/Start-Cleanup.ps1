@@ -65,7 +65,7 @@ function Start-Cleanup {
 
     Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224'
 
-    Start-Sleep -Seconds 3
+    Start-Sleep -Seconds 2
 
     Write-ActivityProgress -PercentComplete 90
     Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
