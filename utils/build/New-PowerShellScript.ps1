@@ -9,7 +9,7 @@ function New-PowerShellScript {
 
     New-Item -Force -ItemType Directory $DistPath | Out-Null
 
-    Set-Variable -Option Constant ProjectFiles ([Collections.Generic.List[Object]](Get-ChildItem -Recurse -File $SourcePath))
+    Set-Variable -Option Constant ProjectFiles ([Collections.Generic.List[Object]](Get-ChildItem -Recurse -File $SourcePath -Exclude '*.Tests.ps1'))
     Set-Variable -Option Constant FileCount ([Int]$ProjectFiles.Count)
 
     [Collections.Generic.List[String]]$OutputLines = @()

@@ -8,6 +8,7 @@ param(
     [Switch]$Full,
     [Switch]$Html,
     [Switch]$Ps1,
+    [Switch]$Tests,
     [Switch]$Update
 )
 
@@ -16,6 +17,7 @@ if ($Full) {
     $Bat = $true
     $Html = $true
     $Ps1 = $true
+    $Tests = $true
     $Update = $true
 }
 
@@ -40,6 +42,7 @@ Set-Variable -Option Constant WipPath ([String]'.\wip')
 Set-Variable -Option Constant BuilderPath ([String]"$UtilsPath\build")
 Set-Variable -Option Constant CommonPath ([String]"$UtilsPath\common")
 
+Set-Variable -Option Constant TestsFile ([String]'.\Start-Tests.ps1')
 Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
 Set-Variable -Option Constant Ps1File ([String]"$DistPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
@@ -58,6 +61,7 @@ Set-Variable -Option Constant UnattendedFile ([String]"$DistPath\autounattend-{L
 Write-LogInfo 'Build task started'
 Write-LogInfo "Version                  : $Version"
 Write-LogInfo "Full build               : $Full"
+Write-LogInfo "Run tests                : $Tests"
 Write-LogInfo "Check for updates        : $Update"
 Write-LogInfo "Build HTML page          : $Html"
 Write-LogInfo "Build autounattend files : $Autounattend"
@@ -66,6 +70,10 @@ Write-LogInfo "Build batch script       : $Bat"
 Write-LogInfo "Run in dev mode          : $Dev"
 
 Write-Progress -Activity 'Build' -PercentComplete 1
+
+if ($Tests) {
+    . $TestsFile
+}
 
 if ($Update) {
     Update-Dependencies $ConfigPath $BuilderPath $WipPath
