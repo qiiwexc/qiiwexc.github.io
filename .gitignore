@@ -1,3 +1,2 @@
 .env
-coverage.xml
-d/qiiwexc.ps1
+build/*
