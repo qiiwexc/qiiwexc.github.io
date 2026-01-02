@@ -32,6 +32,7 @@ if ($Bat) {
 Set-Variable -Option Constant Version ([String](Get-Date -Format 'y.M.d'))
 Set-Variable -Option Constant ProjectName ([String]'qiiwexc')
 
+Set-Variable -Option Constant BuildPath ([String]'.\build')
 Set-Variable -Option Constant ConfigPath ([String]'.\config')
 Set-Variable -Option Constant DistPath ([String]'.\d')
 Set-Variable -Option Constant SourcePath ([String]'.\src')
@@ -44,7 +45,7 @@ Set-Variable -Option Constant CommonPath ([String]"$UtilsPath\common")
 
 Set-Variable -Option Constant TestsFile ([String]'.\Start-Tests.ps1')
 Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
-Set-Variable -Option Constant Ps1File ([String]"$DistPath\$ProjectName.ps1")
+Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
 Set-Variable -Option Constant UnattendedFile ([String]"$DistPath\autounattend-{LOCALE}.xml")
 
@@ -71,6 +72,8 @@ Write-LogInfo "Run in dev mode          : $Dev"
 
 Write-Progress -Activity 'Build' -PercentComplete 1
 
+New-Item -Force -ItemType Directory $BuildPath | Out-Null
+
 if ($Tests) {
     . $TestsFile
 }
@@ -81,10 +84,10 @@ if ($Update) {
 }
 
 if ($Html -or $Ps1) {
-    Set-Urls $ConfigPath $TemplatesPath
+    Set-Urls $ConfigPath $TemplatesPath $BuildPath
     Write-Progress -Activity 'Build' -PercentComplete 40
 
-    Set-Variable -Option Constant Config (Get-Config $ConfigPath $Version)
+    Set-Variable -Option Constant Config (Get-Config $BuildPath $Version)
     Write-Progress -Activity 'Build' -PercentComplete 50
 
     Write-VersionFile $Version $VersionFile
@@ -97,7 +100,7 @@ if ($Html) {
 }
 
 if ($Autounattend) {
-    New-UnattendedFile $Version $ConfigPath $BuilderPath $SourcePath $TemplatesPath $UnattendedFile $Full
+    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $UnattendedFile $Full
     Write-Progress -Activity 'Build' -PercentComplete 80
 }
 

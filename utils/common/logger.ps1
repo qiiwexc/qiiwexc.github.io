@@ -1,5 +1,5 @@
 Add-Type -TypeDefinition @'
-    public enum LogLevel {
+    public enum DevLogLevel {
         INFO,
         WARN,
         ERROR
@@ -12,7 +12,7 @@ function Write-LogInfo {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::INFO) $Message -IndentLevel $Level))
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([DevLogLevel]::INFO) $Message -IndentLevel $Level))
     Write-Host $FormattedMessage
 }
 
@@ -22,7 +22,7 @@ function Write-LogWarning {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::WARN) $Message -IndentLevel $Level))
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([DevLogLevel]::WARN) $Message -IndentLevel $Level))
     Write-Warning $FormattedMessage
 }
 
@@ -32,7 +32,7 @@ function Write-LogError {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) $Message -IndentLevel $Level))
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([DevLogLevel]::ERROR) $Message -IndentLevel $Level))
     Write-Error $FormattedMessage
 }
 
@@ -43,7 +43,7 @@ function Write-LogException {
         [Int][Parameter(Position = 2)]$Level = 0
     )
 
-    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level))
+    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([DevLogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level))
     Write-Error $FormattedMessage
 }
 
@@ -87,16 +87,16 @@ function Get-Emoji {
 
 function Format-Message {
     param(
-        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
+        [DevLogLevel][Parameter(Position = 0, Mandatory)]$Level,
         [String][Parameter(Position = 1, Mandatory)]$Message,
         [Int][Parameter(Position = 2)]$IndentLevel = 0
     )
 
     switch ($Level) {
-        ([LogLevel]::WARN) {
+        ([DevLogLevel]::WARN) {
             Set-Variable -Option Constant Emoji (Get-Emoji '26A0')
         }
-        ([LogLevel]::ERROR) {
+        ([DevLogLevel]::ERROR) {
             Set-Variable -Option Constant Emoji (Get-Emoji '274C')
         }
         Default {}
