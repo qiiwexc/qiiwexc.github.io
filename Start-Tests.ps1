@@ -1,12 +1,13 @@
-$options = @{
+Set-Variable -Option Constant PesterOptions @{
     CodeCoverage = @{
-        Enabled = $true
+        Enabled    = $true
+        OutputPath = 'build\coverage.xml'
     }
     Output       = @{
         Verbosity = 'Detailed'
     }
 }
 
-$config = New-PesterConfiguration -Hashtable $options
+Set-Variable -Option Constant PesterConfig (New-PesterConfiguration -Hashtable $PesterOptions)
 
-Invoke-Pester -Configuration $config
+Invoke-Pester -Configuration $PesterConfig

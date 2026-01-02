@@ -1,11 +1,11 @@
-function New-UnattendedTemplate {
+function New-UnattendedBase {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ConfigPath,
-        [String][Parameter(Position = 1, Mandatory)]$TemplateFile,
+        [String][Parameter(Position = 0, Mandatory)]$TemplatesPath,
+        [String][Parameter(Position = 1, Mandatory)]$BaseFile,
         [Switch][Parameter(Position = 2, Mandatory)]$FullBuild
     )
 
-    Set-Variable -Option Constant BaseFile ([String]"$ConfigPath\autounattend.xml")
+    Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\autounattend.xml")
 
     Set-Variable -Option Constant ConfigFiles ([String]'</ExtractScript>
     <File path="C:\Windows\Setup\Scripts\AppAssociations.xml">
@@ -50,7 +50,7 @@ function New-UnattendedTemplate {
         )
     )
 
-    [String]$Content = Get-Content -Raw -Path $BaseFile -Encoding UTF8
+    [String]$Content = Get-Content -Raw -Path $TemplateFile -Encoding UTF8
 
     foreach ($Item in $StringReplacementMap) {
         $Content = $Content.Replace($Item.OldValue, $Item.NewValue)
@@ -68,5 +68,5 @@ function New-UnattendedTemplate {
 
     $Content = "<!-- Version: {VERSION} -->`n" + $Content
 
-    Set-Content -Path $TemplateFile -Value $Content -Encoding UTF8
+    Set-Content -Path $BaseFile -Value $Content -Encoding UTF8
 }
