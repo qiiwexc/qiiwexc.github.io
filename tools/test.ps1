@@ -8,7 +8,7 @@ Set-Variable -Option Constant Tag $(if ($Wip) { 'WIP' } else { $Null })
 
 Set-Variable -Option Constant PesterOptions @{
     Run          = @{
-        Path = @('src', 'utils')
+        Path = @('src', 'tools')
     }
     Filter       = @{
         Tag = $Tag

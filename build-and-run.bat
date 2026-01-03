@@ -1,1 +1,1 @@
-powershell -ExecutionPolicy Bypass ".\utils\build.ps1 -Full -Dev"
+powershell -ExecutionPolicy Bypass ".\tools\build.ps1 -Full -Dev"
