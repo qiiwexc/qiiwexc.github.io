@@ -102,7 +102,7 @@ if ($Html) {
 }
 
 if ($Autounattend) {
-    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath $Full
+    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath
     Write-Progress -Activity 'Build' -PercentComplete 80
 }
 
