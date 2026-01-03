@@ -5,8 +5,9 @@ function New-UnattendedFile {
         [String][Parameter(Position = 2, Mandatory)]$SourcePath,
         [String][Parameter(Position = 3, Mandatory)]$TemplatesPath,
         [String][Parameter(Position = 4, Mandatory)]$BuildPath,
-        [String][Parameter(Position = 5, Mandatory)]$FileNameTemplate,
-        [Switch][Parameter(Position = 6, Mandatory)]$FullBuild
+        [String][Parameter(Position = 5, Mandatory)]$DistPath,
+        [String][Parameter(Position = 6, Mandatory)]$VmPath,
+        [Switch][Parameter(Position = 7, Mandatory)]$FullBuild
     )
 
     Write-LogInfo 'Building unattended files...'
@@ -14,9 +15,10 @@ function New-UnattendedFile {
     Set-Variable -Option Constant UnattendedPath ([String]"$BuilderPath\unattended")
     Set-Variable -Option Constant ConfigsPath ([String]"$SourcePath\3-configs")
 
-    Set-Variable -Option Constant BaseFile ([String]"$BuildPath\autounattend.xml")
+    Set-Variable -Option Constant NonLocalisedFileName ([String]'autounattend.xml')
+    Set-Variable -Option Constant LocalisedFileNameTemplate ([String]'autounattend-{LOCALE}.xml')
 
-    Set-Variable -Option Constant Locales ([Collections.Generic.List[String]]@('English', 'Russian'))
+    Set-Variable -Option Constant BaseFile ([String]"$BuildPath\$NonLocalisedFileName")
 
     . "$UnattendedPath\New-UnattendedBase.ps1"
     . "$UnattendedPath\Set-AppRemovalList.ps1"
@@ -30,7 +32,7 @@ function New-UnattendedFile {
     New-UnattendedBase $TemplatesPath $BaseFile $FullBuild
 
     foreach ($Locale in $Locales) {
-        [String]$OutputFileName = $FileNameTemplate.Replace('{LOCALE}', $Locale)
+        [String]$OutputFileName = "$DistPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
 
         [Collections.Generic.List[String]]$TemplateContent = Get-Content $BaseFile
 
@@ -52,6 +54,11 @@ function New-UnattendedFile {
 
         $TemplateContent | Out-File $OutputFileName -Encoding UTF8
     }
+
+    Set-Variable -Option Constant TestLocale ([String]'English')
+    Set-Variable -Option Constant DistFile ([String]("$DistPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
+    Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalisedFileName"))
+    Copy-Item $DistFile $VmFile
 
     Out-Success
 }
