@@ -1,4 +1,4 @@
-#Requires -Version 3
+#Requires -Version 4
 
 param(
     [String][Parameter(Position = 0)]$WorkingDirectory,

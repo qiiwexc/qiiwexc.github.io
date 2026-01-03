@@ -1,5 +1,5 @@
 #Requires -PSEdition Desktop
-#Requires -Version 3
+#Requires -Version 4
 
 param(
     [Switch]$Autounattend,
