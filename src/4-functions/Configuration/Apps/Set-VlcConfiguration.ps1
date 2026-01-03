@@ -1,4 +1,4 @@
-﻿function Set-VlcConfiguration {
+function Set-VlcConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$AppName
     )

@@ -1,4 +1,4 @@
-﻿function Set-7zipConfiguration {
+function Set-7zipConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$AppName
     )

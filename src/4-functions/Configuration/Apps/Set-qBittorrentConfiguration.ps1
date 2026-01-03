@@ -1,4 +1,4 @@
-﻿function Set-qBittorrentConfiguration {
+function Set-qBittorrentConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$AppName
     )

@@ -1,4 +1,4 @@
-﻿function Set-SearchConfiguration {
+function Set-SearchConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$FileName
     )

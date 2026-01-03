@@ -1,4 +1,4 @@
-﻿function Set-AnyDeskConfiguration {
+function Set-AnyDeskConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$AppName
     )

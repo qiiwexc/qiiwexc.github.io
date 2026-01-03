@@ -1,4 +1,4 @@
-﻿function Set-GoogleChromeConfiguration {
+function Set-GoogleChromeConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$AppName
     )

@@ -1,4 +1,4 @@
-﻿function Set-WindowsBaseConfiguration {
+function Set-WindowsBaseConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$FileName
     )
