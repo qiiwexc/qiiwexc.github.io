@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.3')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.4')
 ::
 ::#endregion init > Version
 ::
@@ -859,59 +859,6 @@ if "%debug%"=="true" (
 ::New-ButtonBrowser 'Download TronScript' $BUTTON_FUNCTION
 ::
 ::#endregion ui > Diagnostics and recovery > Windows disinfection
-::
-::
-::#region ui > automation > Tab
-::
-::Set-Variable -Option Constant TAB_AUTOMATION ([Windows.Forms.TabPage](New-TabPage 'Automation'))
-::
-::#endregion ui > automation > Tab
-::
-::
-::#region ui > automation > Task chaining
-::
-::New-GroupBox 'Task chaining'
-::
-::[Switch]$PAD_CHECKBOXES = $False
-::
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Automation_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
-::$CHECKBOX_Automation_Chrome.Add_CheckStateChanged( { Set-AutomationButtonState } )
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Automation_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
-::$CHECKBOX_Automation_7zip.Add_CheckStateChanged( { Set-AutomationButtonState } )
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Automation_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
-::$CHECKBOX_Automation_VLC.Add_CheckStateChanged( { Set-AutomationButtonState } )
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Automation_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
-::$CHECKBOX_Automation_qBittorrent.Add_CheckStateChanged( { Set-AutomationButtonState } )
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Automation_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
-::$CHECKBOX_Automation_Malwarebytes.Add_CheckStateChanged( { Set-AutomationButtonState } )
-::
-::
-::[ScriptBlock]$BUTTON_FUNCTION = { Get-AutomationInstaller -OpenInBrowser:(-not $CHECKBOX_StartAutomation.Enabled) -Execute:$CHECKBOX_StartAutomation.Checked }
-::New-Button 'Download selected' $BUTTON_FUNCTION
-::
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_StartAutomation = New-CheckBoxRunAfterDownload -Checked
-::
-::[ScriptBlock]$BUTTON_FUNCTION = { Get-AutomationInstaller -OpenInBrowser }
-::New-ButtonBrowser 'View other' $BUTTON_FUNCTION
-::
-::
-::Set-Variable -Option Constant Automation_CHECKBOXES (
-::    [Collections.Generic.List[Windows.Forms.CheckBox]]@(
-::        $CHECKBOX_Automation_7zip,
-::        $CHECKBOX_Automation_VLC,
-::        $CHECKBOX_Automation_Chrome,
-::        $CHECKBOX_Automation_qBittorrent,
-::        $CHECKBOX_Automation_Malwarebytes
-::    )
-::)
-::
-::#endregion ui > automation > Task chaining
 ::
 ::
 ::#region configs > Apps > 7zip
@@ -3669,8 +3616,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Tools > sdi
 ::
-::Set-Variable -Option Constant CONFIG_SDI '
-::-checkupdates
+::Set-Variable -Option Constant CONFIG_SDI '-checkupdates
 ::-delextrainfs
 ::-expertmode
 ::-filters:166
@@ -4438,7 +4384,7 @@ if "%debug%"=="true" (
 ::
 ::        if ($Configuration) {
 ::            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
-::            $Configuration | Out-File "$ParentPath\$ConfigFile" -Encoding UTF8
+::            $Configuration | Set-Content "$ParentPath\$ConfigFile" -NoNewline
 ::        }
 ::
 ::        if ($Execute) {
@@ -4785,7 +4731,7 @@ if "%debug%"=="true" (
 ::
 ::    Initialize-AppDirectory
 ::
-::    "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Out-File $RegFilePath
+::    "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Set-Content $RegFilePath -NoNewline
 ::
 ::    try {
 ::        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
@@ -4930,7 +4876,7 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress))
 ::
-::    $UpdatedConfig | Out-File $Path -Encoding UTF8
+::    $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline
 ::
 ::    Out-Success $LogIndentLevel
 ::}
@@ -4955,7 +4901,7 @@ if "%debug%"=="true" (
 ::
 ::    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
 ::
-::    $Content | Out-File $Path -Encoding UTF8
+::    $Content | Set-Content $Path -NoNewline
 ::
 ::    Out-Success $LogIndentLevel
 ::}
@@ -5116,7 +5062,7 @@ if "%debug%"=="true" (
 ::    if (-not $NoConnection) {
 ::        Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
 ::
-::        (Get-Content -Path $SophiaScriptPath -Force) | Set-Content -Path $SophiaScriptPath -Encoding UTF8 -Force
+::        (Get-Content $SophiaScriptPath -Raw -Encoding UTF8 -Force) | Set-Content $SophiaScriptPath -Force
 ::
 ::        . $SophiaScriptPath
 ::    }
@@ -5446,7 +5392,7 @@ if "%debug%"=="true" (
 ::
 ::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 ::
-::    $CONFIG_OOSHUTUP10 | Out-File $ConfigFile -Encoding UTF8
+::    $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline
 ::
 ::    if ($Silent) {
 ::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute -Params $ConfigFile
@@ -5485,7 +5431,7 @@ if "%debug%"=="true" (
 ::        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_APP_LIST)
 ::    }
 ::
-::    $AppsList | Out-File "$TargetPath\CustomAppsList" -Encoding UTF8
+::    $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline
 ::
 ::    if ($Personalisation) {
 ::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
@@ -5493,7 +5439,7 @@ if "%debug%"=="true" (
 ::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_PRESET_BASE)
 ::    }
 ::
-::    $Configuration | Out-File "$TargetPath\LastUsedSettings.json" -Encoding UTF8
+::    $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
 ::
 ::    if ($UsePreset) {
 ::        Set-Variable -Option Constant UsePresetParam ([String]'-RunSavedSettings')
@@ -5544,7 +5490,7 @@ if "%debug%"=="true" (
 ::' + $CONFIG_WINUTIL_PERSONALISATION)
 ::    }
 ::
-::    $Configuration | Out-File $ConfigFile -Encoding UTF8
+::    $Configuration | Set-Content $ConfigFile -NoNewline
 ::
 ::    Set-Variable -Option Constant ConfigParam ([String]"-Config $ConfigFile")
 ::
@@ -5778,7 +5724,7 @@ if "%debug%"=="true" (
 ::
 ::    Initialize-AppDirectory
 ::
-::    $Config | Out-File "$TargetPath\Office Installer+.ini" -Encoding UTF8
+::    $Config | Set-Content "$TargetPath\Office Installer+.ini" -NoNewline
 ::
 ::    if ($Execute -and $AV_WARNING_SHOWN) {
 ::        Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
@@ -5862,3 +5808,4 @@ if "%debug%"=="true" (
 ::[Void]$FORM.ShowDialog()
 ::
 ::#endregion interface > Show window
+::
