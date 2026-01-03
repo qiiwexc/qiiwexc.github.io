@@ -1,10 +1,13 @@
 ﻿BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    Add-Type -AssemblyName System.Windows.Forms
+
     Set-Variable -Option Constant EmojiCodeDone '2705'
     Set-Variable -Option Constant EmojiCodeWarning '26A0'
     Set-Variable -Option Constant EmojiCodeError '274C'
 
+    Set-Variable -Option Constant LogLevelDebug 'DEBUG'
     Set-Variable -Option Constant LogLevelInfo 'INFO'
     Set-Variable -Option Constant LogLevelWarning 'WARN'
     Set-Variable -Option Constant LogLevelError 'ERROR'
@@ -35,7 +38,7 @@ Describe 'Get-Emoji' {
 
 Describe 'Format-Message' {
     BeforeEach {
-        function ToString {}
+        function ToString { }
 
         Mock ToString { return $TestDate }
         Mock Get-Date { return ToString }
@@ -89,12 +92,91 @@ Describe 'Format-Message' {
     }
 }
 
+Describe 'Write-FormLog' {
+    BeforeEach {
+        function AppendText {}
+        function ScrollToCaret {}
+
+        $LOG = New-MockObject -Type Windows.Forms.RichTextBox -Properties @{
+            TextLength     = 123
+            SelectionStart = 0
+            SelectionColor = ''
+        } -Methods @{
+            AppendText    = { return AppendText }
+            ScrollToCaret = { return ScrollToCaret }
+        }
+
+        Mock AppendText {
+            $LOG.SelectionColor | Should -Be $Expected
+        }
+        Mock ScrollToCaret {}
+    }
+
+    Context 'Log levels' {
+        It 'Should log message correctly for <LogLevel> level' -ForEach @(
+            @{ LogLevel = 'INFO'; Expected = 'black' }
+            @{ LogLevel = 'WARN'; Expected = 'blue' }
+            @{ LogLevel = 'ERROR'; Expected = 'red' }
+        ) {
+            Write-FormLog $LogLevel $TestMessage
+
+            $LOG.SelectionStart | Should -Be 123
+            $LOG.SelectionColor | Should -Be 'black'
+
+            Should -Invoke AppendText -Exactly 1
+            Should -Invoke AppendText -Exactly 1 -ParameterFilter { $TestMessage }
+            Should -Invoke ScrollToCaret -Exactly 1
+        }
+    }
+
+    Context 'New line' {
+        It 'Should log message correctly with new line' {
+            Mock AppendText {}
+
+            Write-FormLog $LogLevelInfo $TestMessage -NoNewLine
+
+            Should -Invoke AppendText -Exactly 1
+            Should -Invoke AppendText -Exactly 1 -ParameterFilter { "`n$TestMessage" }
+        }
+    }
+}
+
+Describe 'Write-LogDebug' {
+    BeforeEach {
+        Mock Format-Message { return $FormattedMessage }
+        Mock Write-Host {}
+        Mock Write-Warning {}
+        Mock Write-Error {}
+        Mock Write-FormLog {}
+    }
+
+    It 'Should log message correctly for debug level with indent level <Level>' -ForEach @(
+        @{ Level = 1; Expected = 1 }
+        @{ Level = $null; Expected = 0 }
+    ) {
+        Write-LogDebug $TestMessage $Level
+
+        Should -Invoke Format-Message -Exactly 1
+        Should -Invoke Format-Message -Exactly 1 -ParameterFilter {
+            $Level -eq $LogLevelDebug -and
+            $Message -eq $TestMessage -and
+            $IndentLevel -eq $Expected
+        }
+        Should -Invoke Write-Host -Exactly 1
+        Should -Invoke Write-Host -Exactly 1 -ParameterFilter { $Object -eq $FormattedMessage }
+        Should -Invoke Write-Warning -Exactly 0
+        Should -Invoke Write-Error -Exactly 0
+        Should -Invoke Write-FormLog -Exactly 0
+    }
+}
+
 Describe 'Write-LogInfo' {
     BeforeEach {
         Mock Format-Message { return $FormattedMessage }
         Mock Write-Host {}
         Mock Write-Warning {}
         Mock Write-Error {}
+        Mock Write-FormLog {}
     }
 
     It 'Should log message correctly for info level with indent level <Level>' -ForEach @(
@@ -113,6 +195,11 @@ Describe 'Write-LogInfo' {
         Should -Invoke Write-Host -Exactly 1 -ParameterFilter { $Object -eq $FormattedMessage }
         Should -Invoke Write-Warning -Exactly 0
         Should -Invoke Write-Error -Exactly 0
+        Should -Invoke Write-FormLog -Exactly 1
+        Should -Invoke Write-FormLog -Exactly 1 -ParameterFilter {
+            $Level -eq $LogLevelInfo -and
+            $Message -eq $FormattedMessage
+        }
     }
 }
 
@@ -122,6 +209,7 @@ Describe 'Write-LogWarning' {
         Mock Write-Host {}
         Mock Write-Warning {}
         Mock Write-Error {}
+        Mock Write-FormLog {}
     }
 
     It 'Should log message correctly for warning level with indent level <Level>' -ForEach @(
@@ -140,6 +228,11 @@ Describe 'Write-LogWarning' {
         Should -Invoke Write-Warning -Exactly 1
         Should -Invoke Write-Warning -Exactly 1 -ParameterFilter { $Message -eq $FormattedMessage }
         Should -Invoke Write-Error -Exactly 0
+        Should -Invoke Write-FormLog -Exactly 1
+        Should -Invoke Write-FormLog -Exactly 1 -ParameterFilter {
+            $Level -eq $LogLevelWarning -and
+            $Message -eq $FormattedMessage
+        }
     }
 }
 
@@ -149,6 +242,7 @@ Describe 'Write-LogError' {
         Mock Write-Host {}
         Mock Write-Warning {}
         Mock Write-Error {}
+        Mock Write-FormLog {}
     }
 
     It 'Should log message correctly for error level with indent level <Level>' -ForEach @(
@@ -167,6 +261,11 @@ Describe 'Write-LogError' {
         Should -Invoke Write-Warning -Exactly 0
         Should -Invoke Write-Error -Exactly 1
         Should -Invoke Write-Error -Exactly 1 -ParameterFilter { $Message -eq $FormattedMessage }
+        Should -Invoke Write-FormLog -Exactly 1
+        Should -Invoke Write-FormLog -Exactly 1 -ParameterFilter {
+            $Level -eq $LogLevelError -and
+            $Message -eq $FormattedMessage
+        }
     }
 }
 
@@ -176,6 +275,7 @@ Describe 'Write-LogException' {
         Mock Write-Host {}
         Mock Write-Warning {}
         Mock Write-Error {}
+        Mock Write-FormLog {}
     }
 
     It 'Should log exception correctly with indent level <Level>' -ForEach @(
@@ -194,6 +294,11 @@ Describe 'Write-LogException' {
         Should -Invoke Write-Warning -Exactly 0
         Should -Invoke Write-Error -Exactly 1
         Should -Invoke Write-Error -Exactly 1 -ParameterFilter { $Message -eq $FormattedMessage }
+        Should -Invoke Write-FormLog -Exactly 1
+        Should -Invoke Write-FormLog -Exactly 1 -ParameterFilter {
+            $Level -eq $LogLevelError -and
+            $Message -eq $FormattedMessage
+        }
     }
 }
 

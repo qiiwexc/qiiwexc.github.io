@@ -1,4 +1,7 @@
 Set-Variable -Option Constant PesterOptions @{
+    Run          = @{
+        Path = @('src', 'utils')
+    }
     CodeCoverage = @{
         Enabled    = $true
         OutputPath = 'build\coverage.xml'
