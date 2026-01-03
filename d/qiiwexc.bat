@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.1')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.3')
 ::
 ::#endregion init > Version
 ::
@@ -859,6 +859,59 @@ if "%debug%"=="true" (
 ::New-ButtonBrowser 'Download TronScript' $BUTTON_FUNCTION
 ::
 ::#endregion ui > Diagnostics and recovery > Windows disinfection
+::
+::
+::#region ui > automation > Tab
+::
+::Set-Variable -Option Constant TAB_AUTOMATION ([Windows.Forms.TabPage](New-TabPage 'Automation'))
+::
+::#endregion ui > automation > Tab
+::
+::
+::#region ui > automation > Task chaining
+::
+::New-GroupBox 'Task chaining'
+::
+::[Switch]$PAD_CHECKBOXES = $False
+::
+::
+::[Windows.Forms.CheckBox]$CHECKBOX_Automation_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
+::$CHECKBOX_Automation_Chrome.Add_CheckStateChanged( { Set-AutomationButtonState } )
+::
+::[Windows.Forms.CheckBox]$CHECKBOX_Automation_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
+::$CHECKBOX_Automation_7zip.Add_CheckStateChanged( { Set-AutomationButtonState } )
+::
+::[Windows.Forms.CheckBox]$CHECKBOX_Automation_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
+::$CHECKBOX_Automation_VLC.Add_CheckStateChanged( { Set-AutomationButtonState } )
+::
+::[Windows.Forms.CheckBox]$CHECKBOX_Automation_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
+::$CHECKBOX_Automation_qBittorrent.Add_CheckStateChanged( { Set-AutomationButtonState } )
+::
+::[Windows.Forms.CheckBox]$CHECKBOX_Automation_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
+::$CHECKBOX_Automation_Malwarebytes.Add_CheckStateChanged( { Set-AutomationButtonState } )
+::
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Get-AutomationInstaller -OpenInBrowser:(-not $CHECKBOX_StartAutomation.Enabled) -Execute:$CHECKBOX_StartAutomation.Checked }
+::New-Button 'Download selected' $BUTTON_FUNCTION
+::
+::
+::[Windows.Forms.CheckBox]$CHECKBOX_StartAutomation = New-CheckBoxRunAfterDownload -Checked
+::
+::[ScriptBlock]$BUTTON_FUNCTION = { Get-AutomationInstaller -OpenInBrowser }
+::New-ButtonBrowser 'View other' $BUTTON_FUNCTION
+::
+::
+::Set-Variable -Option Constant Automation_CHECKBOXES (
+::    [Collections.Generic.List[Windows.Forms.CheckBox]]@(
+::        $CHECKBOX_Automation_7zip,
+::        $CHECKBOX_Automation_VLC,
+::        $CHECKBOX_Automation_Chrome,
+::        $CHECKBOX_Automation_qBittorrent,
+::        $CHECKBOX_Automation_Malwarebytes
+::    )
+::)
+::
+::#endregion ui > automation > Task chaining
 ::
 ::
 ::#region configs > Apps > 7zip
