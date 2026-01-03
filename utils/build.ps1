@@ -38,16 +38,16 @@ Set-Variable -Option Constant DistPath ([String]'.\d')
 Set-Variable -Option Constant SourcePath ([String]'.\src')
 Set-Variable -Option Constant TemplatesPath ([String]'.\templates')
 Set-Variable -Option Constant UtilsPath ([String]'.\utils')
+Set-Variable -Option Constant VmPath ([String]'.\vm')
 Set-Variable -Option Constant WipPath ([String]'.\wip')
 
 Set-Variable -Option Constant BuilderPath ([String]"$UtilsPath\build")
 Set-Variable -Option Constant CommonPath ([String]"$UtilsPath\common")
 
-Set-Variable -Option Constant TestsFile ([String]'.\Start-Tests.ps1')
+Set-Variable -Option Constant TestsFile ([String]"$UtilsPath\test.ps1")
 Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
-Set-Variable -Option Constant UnattendedFile ([String]"$DistPath\autounattend-{LOCALE}.xml")
 
 . "$CommonPath\logger.ps1"
 . "$BuilderPath\Get-Config.ps1"
@@ -75,7 +75,8 @@ Write-Progress -Activity 'Build' -PercentComplete 1
 New-Item -Force -ItemType Directory $BuildPath | Out-Null
 
 if ($Tests) {
-    . $TestsFile
+    . $TestsFile -Coverage
+    Write-Progress -Activity 'Build' -PercentComplete 20
 }
 
 if ($Update) {
@@ -100,7 +101,7 @@ if ($Html) {
 }
 
 if ($Autounattend) {
-    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $UnattendedFile $Full
+    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath $Full
     Write-Progress -Activity 'Build' -PercentComplete 80
 }
 
@@ -110,7 +111,7 @@ if ($Ps1) {
 }
 
 if ($Bat) {
-    New-BatchScript $Ps1File $BatchFile
+    New-BatchScript $ProjectName $Ps1File $BatchFile $VmPath
 }
 
 Write-Progress -Activity 'Build' -Complete

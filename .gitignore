@@ -1,2 +1,6 @@
 .env
 build/*
+vm/*.iso
+vm/*.vdi
+vm/unattend
+vm/qiiwexc.bat

@@ -1,7 +1,9 @@
 function New-BatchScript {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Ps1File,
-        [String][Parameter(Position = 1, Mandatory)]$BatchFile
+        [String][Parameter(Position = 0, Mandatory)]$ProjectName,
+        [String][Parameter(Position = 1, Mandatory)]$Ps1File,
+        [String][Parameter(Position = 2, Mandatory)]$BatchFile,
+        [String][Parameter(Position = 3, Mandatory)]$VmPath
     )
 
     Write-LogInfo 'Building batch script...'
@@ -31,6 +33,7 @@ function New-BatchScript {
 
     Write-LogInfo "Writing batch file $BatchFile"
     $BatchLines | Out-File $BatchFile -Encoding ASCII
+    Copy-Item $BatchFile "$VmPath\$ProjectName.bat"
 
     Out-Success
 }
