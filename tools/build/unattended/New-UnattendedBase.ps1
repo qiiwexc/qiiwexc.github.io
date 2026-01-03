@@ -1,8 +1,7 @@
 function New-UnattendedBase {
     param(
         [String][Parameter(Position = 0, Mandatory)]$TemplatesPath,
-        [String][Parameter(Position = 1, Mandatory)]$BaseFile,
-        [Switch][Parameter(Position = 2, Mandatory)]$FullBuild
+        [String][Parameter(Position = 1, Mandatory)]$BaseFile
     )
 
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\autounattend.xml")
@@ -39,17 +38,6 @@ function New-UnattendedBase {
         )
     )
 
-    Set-Variable -Option Constant DevRegexReplacementMap ([Collections.Generic.List[Hashtable]]@(
-            @{Regex = '\s*<File path="C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1">([\s\S]*?)<\/File>'; NewValue = '' },
-            @{Regex = "\s*{\s*&amp; 'C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1';\s*};"; NewValue = '' },
-            @{Regex = '\s*<ImageInstall>([\s\S]*?)<\/ImageInstall>'; NewValue = '' },
-            @{Regex = '\s*<UserAccounts>([\s\S]*?)<\/UserAccounts>'; NewValue = '' },
-            @{Regex = '\s*<AutoLogon>([\s\S]*?)<\/AutoLogon>'; NewValue = '' },
-            @{Regex = '\s*<RunSynchronousCommand wcm:action="add">(?:[\s\S](?!<RunSynchronousCommand))*?diskpart[\s\S]*?<\/RunSynchronousCommand>'; NewValue = '' },
-            @{Regex = '(?s)\s*\{[^{}]*?AutoLogonCount[^{}]*?\}\s*;'; NewValue = '' }
-        )
-    )
-
     [String]$Content = Get-Content $TemplateFile -Raw -Encoding UTF8
 
     foreach ($Item in $StringReplacementMap) {
@@ -58,12 +46,6 @@ function New-UnattendedBase {
 
     foreach ($Item in $RegexReplacementMap) {
         $Content = $Content -replace $Item.Regex, $Item.NewValue
-    }
-
-    if ($FullBuild) {
-        foreach ($Item in $DevRegexReplacementMap) {
-            $Content = $Content -replace $Item.Regex, $Item.NewValue
-        }
     }
 
     $Content = "<!-- Version: {VERSION} -->`n" + $Content

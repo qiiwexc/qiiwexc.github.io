@@ -6,11 +6,12 @@ function New-UnattendedFile {
         [String][Parameter(Position = 3, Mandatory)]$TemplatesPath,
         [String][Parameter(Position = 4, Mandatory)]$BuildPath,
         [String][Parameter(Position = 5, Mandatory)]$DistPath,
-        [String][Parameter(Position = 6, Mandatory)]$VmPath,
-        [Switch][Parameter(Position = 7, Mandatory)]$FullBuild
+        [String][Parameter(Position = 6, Mandatory)]$VmPath
     )
 
     Write-LogInfo 'Building unattended files...'
+
+    Set-Variable -Option Constant TestLocale ([String]'English')
 
     Set-Variable -Option Constant UnattendedPath ([String]"$BuilderPath\unattended")
     Set-Variable -Option Constant ConfigsPath ([String]"$SourcePath\3-configs")
@@ -31,10 +32,10 @@ function New-UnattendedFile {
     . "$UnattendedPath\Set-PowerSchemeConfiguration.ps1"
     . "$UnattendedPath\Set-WindowsSecurityConfiguration.ps1"
 
-    New-UnattendedBase $TemplatesPath $BaseFile $FullBuild
+    New-UnattendedBase $TemplatesPath $BaseFile
 
     foreach ($Locale in $Locales) {
-        [String]$OutputFileName = "$DistPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
+        [String]$OutputFileName = "$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
 
         [String]$TemplateContent = Get-Content $BaseFile -Raw -Encoding UTF8
 
@@ -57,10 +58,33 @@ function New-UnattendedFile {
         Set-Content $OutputFileName $TemplateContent
     }
 
-    Set-Variable -Option Constant TestLocale ([String]'English')
-    Set-Variable -Option Constant DistFile ([String]("$DistPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
+    Set-Variable -Option Constant BuiltFile ([String]("$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
     Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalisedFileName"))
-    Copy-Item $DistFile $VmFile
+    Copy-Item $BuiltFile $VmFile
+
+    Set-Variable -Option Constant DevRegexReplacementMap ([Collections.Generic.List[Hashtable]]@(
+            @{Regex = '\s*<File path="C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1">([\s\S]*?)<\/File>'; NewValue = '' },
+            @{Regex = "\s*{\s*&amp; 'C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1';\s*};"; NewValue = '' },
+            @{Regex = '\s*<ImageInstall>([\s\S]*?)<\/ImageInstall>'; NewValue = '' },
+            @{Regex = '\s*<UserAccounts>([\s\S]*?)<\/UserAccounts>'; NewValue = '' },
+            @{Regex = '\s*<AutoLogon>([\s\S]*?)<\/AutoLogon>'; NewValue = '' },
+            @{Regex = '\s*<RunSynchronousCommand wcm:action="add">(?:[\s\S](?!<RunSynchronousCommand))*?diskpart[\s\S]*?<\/RunSynchronousCommand>'; NewValue = '' },
+            @{Regex = '(?s)\s*\{[^{}]*?AutoLogonCount[^{}]*?\}\s*;'; NewValue = '' }
+        )
+    )
+
+    foreach ($Locale in $Locales) {
+        [String]$InputFileName = "$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
+        [String]$OutputFileName = "$DistPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
+
+        [String]$FileContent = Get-Content $InputFileName -Raw -Encoding UTF8
+
+        foreach ($Item in $DevRegexReplacementMap) {
+            $FileContent = $FileContent -replace $Item.Regex, $Item.NewValue
+        }
+
+        Set-Content $OutputFileName $FileContent
+    }
 
     Out-Success
 }
