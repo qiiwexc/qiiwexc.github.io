@@ -1,1 +1,1 @@
-powershell -ExecutionPolicy Bypass ".\utils\test.ps1 -Wip"
+powershell -ExecutionPolicy Bypass ".\tools\test.ps1 -Wip"

@@ -1,1 +1,1 @@
-powershell -ExecutionPolicy Bypass ".\utils\test.ps1 -Coverage"
+powershell -ExecutionPolicy Bypass ".\tools\test.ps1 -Coverage"
