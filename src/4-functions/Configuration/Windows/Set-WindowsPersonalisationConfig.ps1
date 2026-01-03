@@ -1,4 +1,4 @@
-﻿function Set-WindowsPersonalisationConfig {
+function Set-WindowsPersonalisationConfig {
     param(
         [String][Parameter(Position = 0, Mandatory)]$FileName
     )

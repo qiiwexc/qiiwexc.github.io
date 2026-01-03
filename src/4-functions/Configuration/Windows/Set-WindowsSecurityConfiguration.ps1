@@ -1,4 +1,4 @@
-﻿function Set-WindowsSecurityConfiguration {
+function Set-WindowsSecurityConfiguration {
     Set-MpPreference -CheckForSignaturesBefore $True
     Set-MpPreference -DisableBlockAtFirstSeen $False
     Set-MpPreference -DisableCatchupQuickScan $False
