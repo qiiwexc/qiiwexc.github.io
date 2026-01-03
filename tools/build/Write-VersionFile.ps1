@@ -6,7 +6,7 @@ function Write-VersionFile {
 
     Write-LogInfo 'Writing version file...'
 
-    $Version | Out-File $VersionFile -Encoding ASCII
+    Write-File $VersionFile $Version
 
     Out-Success
 }

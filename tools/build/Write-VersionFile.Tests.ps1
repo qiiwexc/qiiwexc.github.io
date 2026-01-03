@@ -12,7 +12,7 @@ BeforeAll {
 Describe 'Write-VersionFile' {
     BeforeEach {
         Mock Write-LogInfo {}
-        Mock Out-File {}
+        Mock Write-File {}
         Mock Out-Success {}
     }
 
@@ -20,26 +20,24 @@ Describe 'Write-VersionFile' {
         Write-VersionFile $TestVersion $TestFilePath
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Out-File -Exactly 1
-        Should -Invoke Out-File -Exactly 1 -ParameterFilter {
-            $Encoding -eq 'ASCII' -and
-            $FilePath -eq $TestFilePath -and
-            $InputObject -eq $TestVersion
+        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
+            $Path -eq $TestFilePath -and
+            $Content -eq $TestVersion
         }
         Should -Invoke Out-Success -Exactly 1
     }
 
-    It 'Should handle Out-File failure' {
-        Mock Out-File { throw $TestException }
+    It 'Should handle Set-Content failure' {
+        Mock Write-File { throw $TestException }
 
         { Write-VersionFile $TestVersion $TestFilePath } | Should -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Out-File -Exactly 1
-        Should -Invoke Out-File -Exactly 1 -ParameterFilter {
-            $Encoding -eq 'ASCII' -and
-            $FilePath -eq $TestFilePath -and
-            $InputObject -eq $TestVersion
+        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
+            $Path -eq $TestFilePath -and
+            $Content -eq $TestVersion
         }
         Should -Invoke Out-Success -Exactly 0
     }

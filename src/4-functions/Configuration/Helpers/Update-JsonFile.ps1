@@ -35,7 +35,7 @@ function Update-JsonFile {
 
     Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress))
 
-    $UpdatedConfig | Out-File $Path -Encoding UTF8
+    $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline
 
     Out-Success $LogIndentLevel
 }

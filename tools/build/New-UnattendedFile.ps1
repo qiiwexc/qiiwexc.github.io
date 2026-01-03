@@ -18,6 +18,8 @@ function New-UnattendedFile {
     Set-Variable -Option Constant NonLocalisedFileName ([String]'autounattend.xml')
     Set-Variable -Option Constant LocalisedFileNameTemplate ([String]'autounattend-{LOCALE}.xml')
 
+    Set-Variable -Option Constant Locales ([Collections.Generic.List[String]]@('English', 'Russian'))
+
     Set-Variable -Option Constant BaseFile ([String]"$BuildPath\$NonLocalisedFileName")
 
     . "$UnattendedPath\New-UnattendedBase.ps1"
@@ -34,7 +36,7 @@ function New-UnattendedFile {
     foreach ($Locale in $Locales) {
         [String]$OutputFileName = "$DistPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
 
-        [Collections.Generic.List[String]]$TemplateContent = Get-Content $BaseFile
+        [String]$TemplateContent = Get-Content $BaseFile -Raw -Encoding UTF8
 
         $TemplateContent = Set-LocaleSettings $Locale $TemplateContent
 
@@ -52,7 +54,7 @@ function New-UnattendedFile {
 
         $TemplateContent = $TemplateContent.Replace('{VERSION}', $Version)
 
-        $TemplateContent | Out-File $OutputFileName -Encoding UTF8
+        Set-Content $OutputFileName $TemplateContent
     }
 
     Set-Variable -Option Constant TestLocale ([String]'English')

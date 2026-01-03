@@ -37,7 +37,7 @@ function Start-DownloadUnzipAndRun {
 
         if ($Configuration) {
             Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
-            $Configuration | Out-File "$ParentPath\$ConfigFile" -Encoding UTF8
+            $Configuration | Set-Content "$ParentPath\$ConfigFile" -NoNewline
         }
 
         if ($Execute) {

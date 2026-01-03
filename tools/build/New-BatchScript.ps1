@@ -8,7 +8,7 @@ function New-BatchScript {
 
     Write-LogInfo 'Building batch script...'
 
-    [Collections.Generic.List[String]]$PowerShellLines = Get-Content $Ps1File
+    [Collections.Generic.List[String]]$PowerShellLines = Get-Content $Ps1File -Raw -Encoding UTF8
 
     [Collections.Generic.List[String]]$BatchLines = "@echo off`n"
     $BatchLines.Add("if `"%~1`"==`"Debug`" set debug=true`n")
@@ -32,7 +32,7 @@ function New-BatchScript {
     }
 
     Write-LogInfo "Writing batch file $BatchFile"
-    $BatchLines | Out-File $BatchFile -Encoding ASCII
+    Set-Content $BatchFile $BatchLines
     Copy-Item $BatchFile "$VmPath\$ProjectName.bat"
 
     Out-Success

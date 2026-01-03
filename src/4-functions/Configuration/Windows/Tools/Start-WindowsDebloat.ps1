@@ -23,7 +23,7 @@ function Start-WindowsDebloat {
         Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_APP_LIST)
     }
 
-    $AppsList | Out-File "$TargetPath\CustomAppsList" -Encoding UTF8
+    $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline
 
     if ($Personalisation) {
         Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
@@ -31,7 +31,7 @@ function Start-WindowsDebloat {
         Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_PRESET_BASE)
     }
 
-    $Configuration | Out-File "$TargetPath\LastUsedSettings.json" -Encoding UTF8
+    $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
 
     if ($UsePreset) {
         Set-Variable -Option Constant UsePresetParam ([String]'-RunSavedSettings')
