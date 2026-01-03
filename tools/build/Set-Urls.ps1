@@ -11,8 +11,8 @@ function Set-Urls {
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\urls.json")
     Set-Variable -Option Constant OutputFile ([String]"$BuildPath\urls.json")
 
-    [Collections.Generic.List[Object]]$Dependencies = Get-Content $DependenciesFile | ConvertFrom-Json
-    [Collections.Generic.List[Object]]$TemplateContent = Get-Content $TemplateFile | ConvertFrom-Json
+    [Collections.Generic.List[Object]]$Dependencies = Get-Content $DependenciesFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    [Collections.Generic.List[Object]]$TemplateContent = Get-Content $TemplateFile -Raw -Encoding UTF8 | ConvertFrom-Json
 
     foreach ($Dependency in $Dependencies) {
         [String]$Name = $Dependency.name.ToUpper().Replace(' ', '_').Replace('-', '_')
@@ -25,7 +25,7 @@ function Set-Urls {
         }
     }
 
-    $TemplateContent | ConvertTo-Json | Out-File $OutputFile -Encoding UTF8
+    Write-File $OutputFile ($TemplateContent | ConvertTo-Json)
 
     Out-Success
 }

@@ -23,7 +23,7 @@ function Start-WinUtil {
 ' + $CONFIG_WINUTIL_PERSONALISATION)
     }
 
-    $Configuration | Out-File $ConfigFile -Encoding UTF8
+    $Configuration | Set-Content $ConfigFile -NoNewline
 
     Set-Variable -Option Constant ConfigParam ([String]"-Config $ConfigFile")
 

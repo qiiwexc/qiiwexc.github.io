@@ -50,7 +50,7 @@ function New-UnattendedBase {
         )
     )
 
-    [String]$Content = Get-Content -Raw -Path $TemplateFile -Encoding UTF8
+    [String]$Content = Get-Content $TemplateFile -Raw -Encoding UTF8
 
     foreach ($Item in $StringReplacementMap) {
         $Content = $Content.Replace($Item.OldValue, $Item.NewValue)
@@ -68,5 +68,5 @@ function New-UnattendedBase {
 
     $Content = "<!-- Version: {VERSION} -->`n" + $Content
 
-    Set-Content -Path $BaseFile -Value $Content -Encoding UTF8
+    Write-File $BaseFile $Content
 }

@@ -50,6 +50,7 @@ Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
 
 . "$CommonPath\logger.ps1"
+. "$CommonPath\Write-File.ps1"
 . "$BuilderPath\Get-Config.ps1"
 . "$BuilderPath\New-BatchScript.ps1"
 . "$BuilderPath\New-HtmlFile.ps1"

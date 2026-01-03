@@ -22,7 +22,7 @@ function Start-OoShutUp10 {
 
     New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
-    $CONFIG_OOSHUTUP10 | Out-File $ConfigFile -Encoding UTF8
+    $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline
 
     if ($Silent) {
         Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute -Params $ConfigFile

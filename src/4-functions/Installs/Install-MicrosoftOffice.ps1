@@ -17,7 +17,7 @@ function Install-MicrosoftOffice {
 
     Initialize-AppDirectory
 
-    $Config | Out-File "$TargetPath\Office Installer+.ini" -Encoding UTF8
+    $Config | Set-Content "$TargetPath\Office Installer+.ini" -NoNewline
 
     if ($Execute -and $AV_WARNING_SHOWN) {
         Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE

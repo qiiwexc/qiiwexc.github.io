@@ -28,7 +28,7 @@ function Update-Dependencies {
     }
     Write-Progress -Activity 'Update' -PercentComplete 5
 
-    Set-Variable -Option Constant Dependencies ([Collections.Generic.List[Object]](Get-Content -Raw -Path $DependenciesFile -Encoding UTF8 | ConvertFrom-Json))
+    Set-Variable -Option Constant Dependencies ([Collections.Generic.List[Object]](Get-Content $DependenciesFile -Raw -Encoding UTF8 | ConvertFrom-Json))
     Write-Progress -Activity 'Update' -PercentComplete 10
 
     [Collections.Generic.List[Collections.Generic.List[String]]]$ChangeLogs = @()
@@ -80,7 +80,7 @@ function Update-Dependencies {
 
     Write-LogInfo "Saving updated dependencies to $DependenciesFile"
     Set-Variable -Option Constant UpdatedDependencies ([String]($Dependencies | ConvertTo-Json -Depth 10))
-    Set-Content -Path $DependenciesFile -Value $UpdatedDependencies -Encoding UTF8
+    Set-Content $DependenciesFile $UpdatedDependencies -Encoding UTF8
 
     Write-Progress -Activity 'Update' -Complete
 
