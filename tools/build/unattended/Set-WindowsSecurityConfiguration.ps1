@@ -4,7 +4,7 @@ function Set-WindowsSecurityConfiguration {
         [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)][AllowEmptyString()]$TemplateContent
     )
 
-    [Collections.Generic.List[String]]$Configuration = Get-Content "$SourcePath\4-functions\Configuration\Windows\Set-WindowsSecurityConfiguration.ps1"
+    [Collections.Generic.List[String]]$Configuration = Get-Content -Raw -Encoding UTF8 "$SourcePath\4-functions\Configuration\Windows\Set-WindowsSecurityConfiguration.ps1"
 
     $Configuration.RemoveAt(0)
     $Configuration.RemoveAt($Configuration.Count - 1)
