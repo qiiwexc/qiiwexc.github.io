@@ -8,7 +8,7 @@ function Set-InlineFiles {
     $KEY_FILE_MAP | ForEach-Object {
         [String]$FileName = $_.File.Replace('{LOCALE}', $Locale)
 
-        [Collections.Generic.List[String]]$FileContent = Get-Content "$ConfigsPath\$FileName"
+        [String]$FileContent = Get-Content "$ConfigsPath\$FileName" -Raw -Encoding UTF8
 
         [Collections.Generic.List[String]]$FullContent = @()
 

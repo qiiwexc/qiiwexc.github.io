@@ -22,7 +22,7 @@ function Set-FileAssociations {
     if (-not $NoConnection) {
         Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
 
-        (Get-Content -Path $SophiaScriptPath -Force) | Set-Content -Path $SophiaScriptPath -Encoding UTF8 -Force
+        (Get-Content $SophiaScriptPath -Raw -Encoding UTF8 -Force) | Set-Content $SophiaScriptPath -Encoding UTF8 -Force
 
         . $SophiaScriptPath
     }
