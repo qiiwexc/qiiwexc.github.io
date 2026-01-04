@@ -7,7 +7,7 @@ function Update-WebDependency {
 
     Write-LogInfo "Fetching URL: $Uri" 1
 
-    Set-Variable -Option Constant Response ([Object](Invoke-WebRequest -UseBasicParsing -Uri $Uri))
+    Set-Variable -Option Constant Response ([Object](Invoke-WebRequest $Uri -UseBasicParsing))
 
     if (-not $Response.Content) {
         Write-LogError "Failed to fetch URL: $Uri" 1

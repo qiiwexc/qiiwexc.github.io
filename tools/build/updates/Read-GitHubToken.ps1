@@ -12,7 +12,7 @@ function Read-GitHubToken {
         if ($Line -match '^GITHUB_TOKEN=(.+)$') {
             Set-Variable -Option Constant Value ([String]$Matches[1].Trim())
 
-            if ($Value.StartsWith('"') -and $Value.EndsWith('"') -or $Value.StartsWith("'") -and $Value.EndsWith("'")) {
+            if (($Value.StartsWith('"') -and $Value.EndsWith('"')) -or ($Value.StartsWith("'") -and $Value.EndsWith("'"))) {
                 return $Value.Substring(1, $Value.Length - 2)
             } else {
                 return $Value
