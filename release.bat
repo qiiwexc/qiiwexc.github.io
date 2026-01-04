@@ -1,5 +1,6 @@
+@echo off
+
 set /p version=< d/version
-echo %version%
 
 git fetch --all --prune
 git pull --tags --autostash -r origin master
