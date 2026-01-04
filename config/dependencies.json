@@ -92,7 +92,7 @@
         "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
     },
     {
-        "name":  "Office Installer+",
+        "name":  "Office Installer",
         "version":  "1.2.8.0",
         "source":  "File",
         "delimiter":  " "

@@ -21,11 +21,11 @@ function Expand-Zip {
     Initialize-AppDirectory
 
     switch -Wildcard ($ZipName) {
-        'Office_Installer+.zip' {
+        'Office_Installer.zip' {
             if (-not $OS_64_BIT) {
                 Set-Variable -Option Constant Suffix ([String]' x86.exe')
             }
-            Set-Variable -Option Constant Executable ([String]"Office Installer+$Suffix.exe")
+            Set-Variable -Option Constant Executable ([String]"Office Installer$Suffix.exe")
         }
         'cpu-z_*' {
             if ($OS_64_BIT) {
