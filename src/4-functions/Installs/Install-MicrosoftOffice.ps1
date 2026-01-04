@@ -17,11 +17,11 @@ function Install-MicrosoftOffice {
 
     Initialize-AppDirectory
 
-    $Config | Set-Content "$TargetPath\Office Installer+.ini" -NoNewline
+    $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
 
     if ($Execute -and $AV_WARNING_SHOWN) {
         Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
     }
 
-    Start-DownloadUnzipAndRun '{URL_OFFICE_INSTALLER}' -AVWarning -Execute:$Execute
+    Start-DownloadUnzipAndRun '{URL_OFFICE_INSTALLER}' -Execute:$Execute
 }

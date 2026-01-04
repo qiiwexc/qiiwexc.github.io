@@ -8,7 +8,7 @@ New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 
 
 [ScriptBlock]$BUTTON_FUNCTION = { Install-MicrosoftOffice -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
-New-Button 'Office Installer+' $BUTTON_FUNCTION
+New-Button 'Office Installer' $BUTTON_FUNCTION
 
 [Windows.Forms.CheckBox]$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Checked
 
