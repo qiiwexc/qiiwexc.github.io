@@ -7,17 +7,17 @@ function Update-FileDependency {
     Set-Variable -Option Constant Name ([String]$Dependency.name)
 
     Set-Variable -Option Constant FileName64 ([String]"$Name.exe")
-    Set-Variable -Option Constant FileName86 ([String]"$Name$($Dependency.delimiter)x86.exe")
+    Set-Variable -Option Constant FileName32 ([String]"$Name x86.exe")
 
     [Collections.Generic.List[String]]$NewVersions = @()
 
-    foreach ($FileName in @($FileName64, $FileName86)) {
+    foreach ($FileName in @($FileName64, $FileName32)) {
         Write-LogInfo "Checking file: $FileName" 1
 
         try {
             [System.IO.FileInfo]$File = Get-Item "$WipPath\$FileName" -ErrorAction Stop
             $NewVersions.Add($File.VersionInfo.FileVersionRaw)
-        } catch {
+        } catch [Exception] {
             Write-LogWarning "File '$FileName' not found. Skipping."
             continue
         }

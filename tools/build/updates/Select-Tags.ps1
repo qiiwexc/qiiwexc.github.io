@@ -19,7 +19,7 @@ function Select-Tags {
                 Set-Variable -Option Constant Prefix ([String]'v')
             }
 
-            Set-Variable -Option Constant AllVersions ([Collections.Generic.List[String]]($Tags | Select-Object -ExpandProperty Name))
+            Set-Variable -Option Constant AllVersions ([Collections.Generic.List[String]]($Tags | ForEach-Object { $_.Name }))
             Set-Variable -Option Constant NormalizedVersions ([Collections.Generic.List[String]]($AllVersions | ForEach-Object { $_.TrimStart('v') }))
             Set-Variable -Option Constant SortedVersions ([Collections.Generic.List[String]]($NormalizedVersions | Sort-Object { [Version]$_ } -Descending))
             Set-Variable -Option Constant FullVersions ([Collections.Generic.List[String]]($SortedVersions | ForEach-Object { "$Prefix$($_)" }))

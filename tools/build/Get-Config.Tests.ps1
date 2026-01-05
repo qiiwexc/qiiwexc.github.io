@@ -1,17 +1,16 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Set-Variable -Option Constant TestBuildPath 'TEST_BUILD_PATH'
-    Set-Variable -Option Constant TestVersion 'TEST_VERSION'
-    Set-Variable -Option Constant TestContent '[{"key":"TEST_KEY_1","value":"TEST_VALUE_1"},{"key":"TEST_KEY_2","value":"TEST_VALUE_2"}]'
+    . "$(Split-Path $PSCommandPath -Parent)\..\common\logger.ps1"
 
-    Set-Variable -Option Constant TestKey1 'TEST_KEY_1'
-    Set-Variable -Option Constant TestValue1 'TEST_VALUE_1'
-    Set-Variable -Option Constant TestKey2 'TEST_KEY_2'
-    Set-Variable -Option Constant TestValue2 'TEST_VALUE_2'
+    Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
+    Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
+    Set-Variable -Option Constant TestContent ([String]'[{"key":"TEST_KEY_1","value":"TEST_VALUE_1"},{"key":"TEST_KEY_2","value":"TEST_VALUE_2"}]')
 
-    function Write-LogInfo {}
-    function Out-Success {}
+    Set-Variable -Option Constant TestKey1 ([String]'TEST_KEY_1')
+    Set-Variable -Option Constant TestValue1 ([String]'TEST_VALUE_1')
+    Set-Variable -Option Constant TestKey2 ([String]'TEST_KEY_2')
+    Set-Variable -Option Constant TestValue2 ([String]'TEST_VALUE_2')
 }
 
 Describe 'Get-Config' {
@@ -29,12 +28,12 @@ Describe 'Get-Config' {
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
         Should -Invoke Out-Success -Exactly 1
 
-        $Result[0].key | Should -Be $TestKey1
-        $Result[0].value | Should -Be $TestValue1
-        $Result[1].key | Should -Be $TestKey2
-        $Result[1].value | Should -Be $TestValue2
-        $Result[2].key | Should -Be 'PROJECT_VERSION'
-        $Result[2].value | Should -Be $TestVersion
+        $Result[0].key | Should -BeExactly $TestKey1
+        $Result[0].value | Should -BeExactly $TestValue1
+        $Result[1].key | Should -BeExactly $TestKey2
+        $Result[1].value | Should -BeExactly $TestValue2
+        $Result[2].key | Should -BeExactly 'PROJECT_VERSION'
+        $Result[2].value | Should -BeExactly $TestVersion
     }
 
     It 'Should handle Get-Content failure' {

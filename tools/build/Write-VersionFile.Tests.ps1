@@ -1,12 +1,12 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Set-Variable -Option Constant TestVersion 'TEST_VERSION'
-    Set-Variable -Option Constant TestFilePath 'TEST_FILE_PATH'
-    Set-Variable -Option Constant TestException 'TEST_EXCEPTION'
+    . "$(Split-Path $PSCommandPath -Parent)\..\common\logger.ps1"
+    . "$(Split-Path $PSCommandPath -Parent)\..\common\Write-File.ps1"
 
-    function Write-LogInfo {}
-    function Out-Success {}
+    Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
+    Set-Variable -Option Constant TestFilePath ([String]'TEST_FILE_PATH')
+    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 }
 
 Describe 'Write-VersionFile' {
