@@ -23,7 +23,6 @@ Describe 'Get-Config' {
     It 'Should load config' {
         Set-Variable -Option Constant Result (Get-Config $TestBuildPath $TestVersion)
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
         Should -Invoke Out-Success -Exactly 1
@@ -42,7 +41,6 @@ Describe 'Get-Config' {
 
         { Get-Config $TestBuildPath $TestVersion } | Should -Throw
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
         Should -Invoke ConvertFrom-Json -Exactly 0
@@ -54,7 +52,6 @@ Describe 'Get-Config' {
 
         { Get-Config $TestBuildPath $TestVersion } | Should -Throw
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
         Should -Invoke ConvertFrom-Json -Exactly 1

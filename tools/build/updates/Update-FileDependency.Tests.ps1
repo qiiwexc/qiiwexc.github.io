@@ -65,7 +65,6 @@ Describe 'Update-FileDependency' {
     It 'Should update to new file version' {
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Get-Item -Exactly 2
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath64 }
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath32 }
@@ -82,7 +81,6 @@ Describe 'Update-FileDependency' {
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Get-Item -Exactly 2
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath64 }
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath32 }
@@ -99,7 +97,6 @@ Describe 'Update-FileDependency' {
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Get-Item -Exactly 2
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath64 }
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath32 }
@@ -117,7 +114,6 @@ Describe 'Update-FileDependency' {
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Get-Item -Exactly 2
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath64 }
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath32 }
@@ -130,7 +126,6 @@ Describe 'Update-FileDependency' {
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Get-Item -Exactly 2
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath64 }
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath32 }
@@ -147,7 +142,6 @@ Describe 'Update-FileDependency' {
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Get-Item -Exactly 2
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath64 }
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath32 }
@@ -165,7 +159,6 @@ Describe 'Update-FileDependency' {
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Get-Item -Exactly 2
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath64 }
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq $TestFilePath32 }

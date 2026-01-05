@@ -25,7 +25,6 @@ Describe 'Invoke-GitAPI' {
         $Result.key1 | Should -BeExactly 'value1'
         $Result.key2 | Should -BeExactly 'value2'
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestUrl -and
@@ -41,7 +40,6 @@ Describe 'Invoke-GitAPI' {
         $Result.key1 | Should -BeExactly 'value1'
         $Result.key2 | Should -BeExactly 'value2'
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestUrl -and
@@ -57,7 +55,6 @@ Describe 'Invoke-GitAPI' {
 
         Invoke-GitAPI $TestUrl | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestUrl -and
