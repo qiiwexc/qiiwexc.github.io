@@ -21,7 +21,7 @@ if "%debug%"=="true" (
 
 ::#region init > Parameters
 ::
-::#Requires -Version 3
+::#Requires -Version 4
 ::
 ::param(
 ::    [String][Parameter(Position = 0)]$WorkingDirectory,
@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.4')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.5')
 ::
 ::#endregion init > Version
 ::
@@ -626,7 +626,7 @@ if "%debug%"=="true" (
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Install-MicrosoftOffice -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
-::New-Button 'Office Installer+' $BUTTON_FUNCTION
+::New-Button 'Office Installer' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Checked
 ::
@@ -2058,13 +2058,6 @@ if "%debug%"=="true" (
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs\Command]
-::@="cmd /c DISM.exe /Online /Add-Package /PackagePath:"%1" /NoRestart & pause""
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CABFolder\Shell\RunAs]
-::"HasLUAShield"=""
-::"MUIVerb"="@shell32.dll,-10210"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract\Command]
 ::@="msiexec.exe /a "%1" /qb TARGETDIR"="%1 extracted""
@@ -3734,11 +3727,11 @@ if "%debug%"=="true" (
 ::    Initialize-AppDirectory
 ::
 ::    switch -Wildcard ($ZipName) {
-::        'Office_Installer+.zip' {
+::        'Office_Installer.zip' {
 ::            if (-not $OS_64_BIT) {
 ::                Set-Variable -Option Constant Suffix ([String]' x86.exe')
 ::            }
-::            Set-Variable -Option Constant Executable ([String]"Office Installer+$Suffix.exe")
+::            Set-Variable -Option Constant Executable ([String]"Office Installer$Suffix.exe")
 ::        }
 ::        'cpu-z_*' {
 ::            if ($OS_64_BIT) {
@@ -5632,7 +5625,7 @@ if "%debug%"=="true" (
 ::
 ::    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224'
 ::
-::    Start-Sleep -Seconds 2
+::    Start-Sleep -Seconds 1
 ::
 ::    Write-ActivityProgress -PercentComplete 90
 ::    Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
@@ -5724,13 +5717,13 @@ if "%debug%"=="true" (
 ::
 ::    Initialize-AppDirectory
 ::
-::    $Config | Set-Content "$TargetPath\Office Installer+.ini" -NoNewline
+::    $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
 ::
 ::    if ($Execute -and $AV_WARNING_SHOWN) {
 ::        Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
 ::    }
 ::
-::    Start-DownloadUnzipAndRun 'https://qiiwexc.github.io/d/Office_Installer+.zip' -AVWarning -Execute:$Execute
+::    Start-DownloadUnzipAndRun 'https://qiiwexc.github.io/d/Office_Installer.zip' -Execute:$Execute
 ::}
 ::
 ::#endregion functions > Installs > Install-MicrosoftOffice
