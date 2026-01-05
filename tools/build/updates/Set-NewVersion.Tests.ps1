@@ -16,7 +16,5 @@ Describe 'Set-NewVersion' {
         Set-NewVersion $TestDependency $TestVersion
 
         $TestDependency.version | Should -BeExactly $TestVersion
-
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 }

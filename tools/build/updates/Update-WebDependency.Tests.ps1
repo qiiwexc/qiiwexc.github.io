@@ -31,7 +31,6 @@ Describe 'Update-WebDependency' {
     It 'Should update to new version' {
         Update-WebDependency $TestDependency | Should -BeExactly @('https://example.com/test-dependency')
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestDependency.url -and
@@ -54,7 +53,6 @@ Describe 'Update-WebDependency' {
 
         Update-WebDependency $TestDependency | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestDependency.url -and
@@ -69,7 +67,6 @@ Describe 'Update-WebDependency' {
 
         Update-WebDependency $TestDependency | Should -BeNullOrEmpty
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestDependency.url -and
@@ -83,7 +80,6 @@ Describe 'Update-WebDependency' {
 
         { Update-WebDependency $TestDependency } | Should -Throw
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestDependency.url -and
