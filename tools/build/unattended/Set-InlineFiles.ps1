@@ -2,7 +2,7 @@ function Set-InlineFiles {
     param(
         [String][Parameter(Position = 0, Mandatory)][ValidateSet('English', 'Russian')]$Locale,
         [String][Parameter(Position = 1, Mandatory)]$ConfigsPath,
-        [Collections.Generic.List[String]][Parameter(Position = 2, Mandatory)][AllowEmptyString()]$TemplateContent
+        [Collections.Generic.List[String]][Parameter(Position = 2, Mandatory)]$TemplateContent
     )
 
     $KEY_FILE_MAP | ForEach-Object {
