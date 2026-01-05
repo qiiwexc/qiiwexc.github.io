@@ -1,3 +1,6 @@
+#Requires -PSEdition Desktop
+#Requires -Version 5
+
 param(
     [Switch]$Coverage,
     [Switch]$Wip

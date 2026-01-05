@@ -30,8 +30,6 @@ Set-Variable -Option Constant IS_LAPTOP ([Bool]((Get-CimInstance -Class Win32_Co
 
 Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
 
-Set-Variable -Option Constant PS_VERSION ([Int]$PSVersionTable.PSVersion.Major)
-
 Set-Variable -Option Constant OPERATING_SYSTEM ([Object](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
 Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
 Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)

@@ -30,7 +30,7 @@
             IgnoreOneLineBlock = $True
         }
         PSUseCompatibleCmdlets                     = @{
-            compatibility = @('desktop-4.0-windows')
+            compatibility = @('desktop-5.1.14393.206-windows')
         }
         PSUseCompatibleSyntax                      = @{
             Enable         = $True
@@ -42,8 +42,7 @@
                 '6.1',
                 '6.0',
                 '5.1',
-                '5.0',
-                '4.0'
+                '5.0'
             )
         }
         PSUseConsistentIndentation                 = @{
