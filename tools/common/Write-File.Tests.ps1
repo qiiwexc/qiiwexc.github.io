@@ -1,9 +1,10 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
+
     Set-Variable -Option Constant TestPath ([String]'TEST_PATH')
     Set-Variable -Option Constant TestContent ([String]"TEST_CONTENT_LINE1`r`nTEST_CONTENT_LINE2`r`n`r`n ")
-    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 }
 
 Describe 'Write-File' {
