@@ -94,7 +94,6 @@
     {
         "name":  "Office Installer",
         "version":  "1.2.8.0",
-        "source":  "File",
-        "delimiter":  " "
+        "source":  "File"
     }
 ]

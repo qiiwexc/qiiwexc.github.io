@@ -1,8 +1,7 @@
 Add-Type -TypeDefinition @'
-    public enum Source {
+    public enum GitSource {
         GitHub,
-        GitLab,
-        URL
+        GitLab
     }
 '@
 
@@ -12,14 +11,14 @@ function Compare-Tags {
         [String][Parameter(Position = 1)]$GitHubToken
     )
 
-    Set-Variable -Option Constant Source ([Source]$Dependency.source)
+    Set-Variable -Option Constant Source ([GitSource]$Dependency.source)
     Set-Variable -Option Constant Repository ([String]$Dependency.repository)
     Set-Variable -Option Constant CurrentVersion ([String]$Dependency.version)
 
-    if ($Source -eq ([Source]::GitLab)) {
-        Set-Variable -Option Constant Tags ([Collections.Generic.List[Object]](Invoke-GitAPI "https://gitlab.com/api/v4/projects/$($Dependency.projectId)/repository/tags"))
-    } else {
+    if ($Source -eq ([GitSource]::GitHub)) {
         Set-Variable -Option Constant Tags ([Collections.Generic.List[Object]](Invoke-GitAPI "https://api.github.com/repos/$Repository/tags" $GitHubToken))
+    } elseif ($Source -eq ([GitSource]::GitLab)) {
+        Set-Variable -Option Constant Tags ([Collections.Generic.List[Object]](Invoke-GitAPI "https://gitlab.com/api/v4/projects/$($Dependency.projectId)/repository/tags"))
     }
 
     if ($Tags -and $Tags.Count -gt 0) {

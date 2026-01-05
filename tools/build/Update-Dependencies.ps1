@@ -1,3 +1,12 @@
+Add-Type -TypeDefinition @'
+    public enum Source {
+        File,
+        GitHub,
+        GitLab,
+        URL
+    }
+'@
+
 function Update-Dependencies {
     param(
         [String][Parameter(Position = 0, Mandatory)]$ConfigPath,
@@ -44,20 +53,17 @@ function Update-Dependencies {
         Write-LogInfo "Checking for updates for '$Name' (current version: $($Dependency.version))"
 
         switch ($Source) {
-            'GitHub' {
+            ([Source]::GitHub) {
                 $ChangeLogs.Add((Update-GitDependency $Dependency $GitHubToken))
             }
-            'GitLab' {
+            ([Source]::GitLab) {
                 $ChangeLogs.Add((Update-GitDependency $Dependency))
             }
-            'URL' {
+            ([Source]::URL) {
                 $ChangeLogs.Add((Update-WebDependency $Dependency))
             }
-            'File' {
+            ([Source]::File) {
                 $ChangeLogs.Add((Update-FileDependency $Dependency $WipPath))
-            }
-            Default {
-                Write-LogWarning "Unknown source '$($Source)' for dependency '$Name'. Skipping."
             }
         }
 

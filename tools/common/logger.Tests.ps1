@@ -1,26 +1,24 @@
 ﻿BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Set-Variable -Option Constant EmojiCodeDone '2705'
-    Set-Variable -Option Constant EmojiCodeWarning '26A0'
-    Set-Variable -Option Constant EmojiCodeError '274C'
+    Set-Variable -Option Constant EmojiCodeDone ([String]'2705')
+    Set-Variable -Option Constant EmojiCodeWarning ([String]'26A0')
+    Set-Variable -Option Constant EmojiCodeError ([String]'274C')
 
-    Set-Variable -Option Constant LogLevelInfo 'INFO'
-    Set-Variable -Option Constant LogLevelWarning 'WARN'
-    Set-Variable -Option Constant LogLevelError 'ERROR'
+    Set-Variable -Option Constant LogLevelInfo ([String]'INFO')
+    Set-Variable -Option Constant LogLevelWarning ([String]'WARN')
+    Set-Variable -Option Constant LogLevelError ([String]'ERROR')
 
-    Set-Variable -Option Constant TestDate 'TEST_DATE'
-    Set-Variable -Option Constant TestEmoji 'TEST_EMOJI'
+    Set-Variable -Option Constant TestDate ([String]'TEST_DATE')
+    Set-Variable -Option Constant TestEmoji ([String]'TEST_EMOJI')
 
-    Set-Variable -Option Constant TestMessage 'TEST_MESSAGE'
-    Set-Variable -Option Constant FormattedMessage 'FORMATTED_MESSAGE'
+    Set-Variable -Option Constant TestMessage ([String]'TEST_MESSAGE')
+    Set-Variable -Option Constant FormattedMessage ([String]'FORMATTED_MESSAGE')
 
-    Set-Variable -Option Constant TestExceptionMessage 'TEST_EXCEPTION_MESSAGE'
-    Set-Variable -Option Constant TestException @{
-        Exception = @{
-            Message = $TestExceptionMessage
-        }
-    }
+    Set-Variable -Option Constant TestExceptionMessage ([String]'TEST_EXCEPTION_MESSAGE')
+    Set-Variable -Option Constant TestException (
+        [Object]@{Exception = @{Message = $TestExceptionMessage } }
+    )
 }
 
 Describe 'Get-Emoji' {
@@ -29,7 +27,7 @@ Describe 'Get-Emoji' {
         @{ Code = '26A0'; Expected = '⚠' }
         @{ Code = '274C'; Expected = '❌' }
     ) {
-        Get-Emoji -Code $Code | Should -Be $Expected
+        Get-Emoji -Code $Code | Should -BeExactly $Expected
     }
 }
 
@@ -44,7 +42,7 @@ Describe 'Format-Message' {
 
     Context 'Log levels' {
         It 'Should format message correctly for info level' {
-            Format-Message $LogLevelInfo $TestMessage | Should -Be "[$TestDate] $TestMessage"
+            Format-Message $LogLevelInfo $TestMessage | Should -BeExactly "[$TestDate] $TestMessage"
 
             Should -Invoke Get-Date -Exactly 1
             Should -Invoke ToString -Exactly 1
@@ -52,7 +50,7 @@ Describe 'Format-Message' {
         }
 
         It 'Should format message correctly for warning level' {
-            Format-Message $LogLevelWarning $TestMessage | Should -Be "[$TestDate]$TestEmoji $TestMessage"
+            Format-Message $LogLevelWarning $TestMessage | Should -BeExactly "[$TestDate]$TestEmoji $TestMessage"
 
             Should -Invoke Get-Date -Exactly 1
             Should -Invoke ToString -Exactly 1
@@ -61,7 +59,7 @@ Describe 'Format-Message' {
         }
 
         It 'Should format message correctly for error level' {
-            Format-Message $LogLevelError $TestMessage | Should -Be "[$TestDate]$TestEmoji $TestMessage"
+            Format-Message $LogLevelError $TestMessage | Should -BeExactly "[$TestDate]$TestEmoji $TestMessage"
 
             Should -Invoke Get-Date -Exactly 1
             Should -Invoke ToString -Exactly 1
@@ -72,19 +70,19 @@ Describe 'Format-Message' {
 
     Context 'Indent levels' {
         It 'Should format message correctly with emoji and indent level 0' {
-            Format-Message $LogLevelWarning $TestMessage 0 | Should -Be "[$TestDate]$TestEmoji $TestMessage"
+            Format-Message $LogLevelWarning $TestMessage 0 | Should -BeExactly "[$TestDate]$TestEmoji $TestMessage"
         }
 
         It 'Should format message correctly without emoji and indent level 0' {
-            Format-Message $LogLevelInfo $TestMessage 0 | Should -Be "[$TestDate] $TestMessage"
+            Format-Message $LogLevelInfo $TestMessage 0 | Should -BeExactly "[$TestDate] $TestMessage"
         }
 
         It 'Should format message correctly with emoji and indent level 2' {
-            Format-Message $LogLevelError $TestMessage 2 | Should -Be "[$TestDate]      $TestEmoji $TestMessage"
+            Format-Message $LogLevelError $TestMessage 2 | Should -BeExactly "[$TestDate]      $TestEmoji $TestMessage"
         }
 
         It 'Should format message correctly without emoji and indent level 2' {
-            Format-Message $LogLevelInfo $TestMessage 2 | Should -Be "[$TestDate]       $TestMessage"
+            Format-Message $LogLevelInfo $TestMessage 2 | Should -BeExactly "[$TestDate]       $TestMessage"
         }
     }
 }

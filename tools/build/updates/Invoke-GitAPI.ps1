@@ -8,9 +8,9 @@ function Invoke-GitAPI {
 
     try {
         if ($GitHubToken) {
-            Set-Variable -Option Constant Response ([Object](Invoke-WebRequest -UseBasicParsing -Uri $Uri -Method Get -Headers @{ Authorization = "token $GitHubToken" }))
+            Set-Variable -Option Constant Response ([Object](Invoke-WebRequest $Uri -Method Get -UseBasicParsing -Headers @{ Authorization = "token $GitHubToken" }))
         } else {
-            Set-Variable -Option Constant Response ([Object](Invoke-WebRequest -UseBasicParsing -Uri $Uri -Method Get))
+            Set-Variable -Option Constant Response ([Object](Invoke-WebRequest $Uri -Method Get -UseBasicParsing))
         }
     } catch {
         Write-LogError "Failed to invoke API: $Uri`n$_" 1

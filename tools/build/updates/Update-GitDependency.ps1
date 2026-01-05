@@ -24,8 +24,5 @@ function Update-GitDependency {
         ([Mode]::commits) {
             return Compare-Commits $Dependency $GitHubToken
         }
-        Default {
-            Write-LogWarning "Unknown mode '$($Mode)' for dependency '$($Dependency.name)'. Skipping."
-        }
     }
 }
