@@ -55,7 +55,7 @@ function New-UnattendedFile {
 
         $TemplateContent = $TemplateContent.Replace('{VERSION}', $Version)
 
-        Set-Content $OutputFileName $TemplateContent
+        Set-Content $OutputFileName $TemplateContent -NoNewline
     }
 
     Set-Variable -Option Constant BuiltFile ([String]("$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
@@ -83,7 +83,7 @@ function New-UnattendedFile {
             $FileContent = $FileContent -replace $Item.Regex, $Item.NewValue
         }
 
-        Set-Content $OutputFileName $FileContent
+        Set-Content $OutputFileName $FileContent -NoNewline
     }
 
     Out-Success
