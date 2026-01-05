@@ -7,7 +7,6 @@ Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
         'Language.TextToSpeech'
         'MathRecognizer'
         'Media.WindowsMediaPlayer'
-        'Microsoft.Windows.SnippingTool'
         'Microsoft.Windows.WordPad'
         'OpenSSH.Client'
     )
