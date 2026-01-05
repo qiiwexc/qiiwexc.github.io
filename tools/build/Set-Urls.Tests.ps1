@@ -1,14 +1,15 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . "$(Split-Path $PSCommandPath -Parent)\..\common\logger.ps1"
-    . "$(Split-Path $PSCommandPath -Parent)\..\common\Write-File.ps1"
+    . '.\tools\common\logger.ps1'
+    . '.\tools\common\Write-File.ps1'
+
+    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestConfigPath ([String]'TEST_CONFIG_PATH')
     Set-Variable -Option Constant TestTemplatesPath ([String]'TEST_TEMPLATES_PATH')
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
 
-    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
     Set-Variable -Option Constant TestDependenciesContent ([String]'[{"name":"test dependency-name 1","version":"TEST_VERSION_1"},{"name":"test-dependency name 2","version":"vTEST_VERSION_2"}]')
     Set-Variable -Option Constant TestTemplateContent ([String]'[{"key":"URL_TEST_DEPENDENCY_NAME_1","value":"TEST_VALUE_1_{VERSION}"},{"key":"URL_TEST_DEPENDENCY_NAME_2","value":"{VERSION}_TEST_VALUE_2"}]')
 

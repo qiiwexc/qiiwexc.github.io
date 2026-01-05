@@ -1,10 +1,12 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . "$(Split-Path $PSCommandPath -Parent)\..\..\common\logger.ps1"
+    . '.\tools\common\logger.ps1'
     . "$(Split-Path $PSCommandPath -Parent)\Compare-Tags.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Select-Tags.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Compare-Commits.ps1"
+
+    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestGitHubToken ([String]'TEST_GITHUB_TOKEN')
     Set-Variable -Option Constant TestDependency (
@@ -17,8 +19,6 @@ BeforeAll {
     Set-Variable -Option Constant TestCompareTagsResult @('TEST_COMPARE_TAGS_RESULT')
     Set-Variable -Option Constant TestSelectTagsResult @('TEST_SELECT_TAGS_RESULT')
     Set-Variable -Option Constant TestCompareCommitsResult @('TEST_COMPARE_COMMITS_RESULT')
-
-    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 }
 
 Describe 'Update-GitDependency' {

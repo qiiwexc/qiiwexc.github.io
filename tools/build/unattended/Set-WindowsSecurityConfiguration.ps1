@@ -1,7 +1,7 @@
 function Set-WindowsSecurityConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$SourcePath,
-        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)][AllowEmptyString()]$TemplateContent
+        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)]$TemplateContent
     )
 
     [Collections.Generic.List[String]]$Configuration = Get-Content -Encoding UTF8 "$SourcePath\4-functions\Configuration\Windows\Set-WindowsSecurityConfiguration.ps1"

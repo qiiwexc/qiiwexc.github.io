@@ -1,7 +1,7 @@
 function Set-LocaleSettings {
     param(
         [String][Parameter(Position = 0, Mandatory)][ValidateSet('English', 'Russian')]$Locale,
-        [String][Parameter(Position = 1, Mandatory)][AllowEmptyString()]$TemplateContent
+        [String][Parameter(Position = 1, Mandatory)]$TemplateContent
     )
 
     $LOCALE_PARAMETERS[$Locale] | ForEach-Object {

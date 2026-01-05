@@ -27,7 +27,7 @@ BeforeAll {
     )
 }
 
-Describe 'Select-Tags' -Tag 'WIP' {
+Describe 'Select-Tags' {
     BeforeEach {
         Mock Invoke-GitAPI { return @( @{ Name = $TestNewVersion }, @{ Name = $TestCurrentVersion } ) }
         Mock Set-NewVersion {}

@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . "$(Split-Path $PSCommandPath -Parent)\..\..\common\logger.ps1"
+    . '.\tools\common\logger.ps1'
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')

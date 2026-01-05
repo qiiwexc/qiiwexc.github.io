@@ -1,7 +1,7 @@
 function Set-CapabilitiesRemovalList {
     param(
         [String][Parameter(Position = 0, Mandatory)]$ConfigsPath,
-        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)][AllowEmptyString()]$TemplateContent
+        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)]$TemplateContent
     )
 
     . "$ConfigsPath\Windows\Capabilities to remove.ps1"

@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . "$(Split-Path $PSCommandPath -Parent)\..\common\logger.ps1"
-    . "$(Split-Path $PSCommandPath -Parent)\..\common\Write-File.ps1"
+    . '.\tools\common\logger.ps1'
+    . '.\tools\common\Write-File.ps1'
 
     Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
     Set-Variable -Option Constant TestFilePath ([String]'TEST_FILE_PATH')

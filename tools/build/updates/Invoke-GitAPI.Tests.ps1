@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . "$(Split-Path $PSCommandPath -Parent)\..\..\common\logger.ps1"
+    . '.\tools\common\logger.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -9,7 +9,7 @@ BeforeAll {
     Set-Variable -Option Constant TestUrl ([String]'TEST_URL')
 
     Set-Variable -Option Constant TestResponseContent ([String]'{"key1": "value1", "key2": "value2"}')
-    Set-Variable -Option Constant TestResponse ([Object]@{Content = $TestResponseContent})
+    Set-Variable -Option Constant TestResponse ([Object]@{Content = $TestResponseContent })
 }
 
 Describe 'Invoke-GitAPI' {
