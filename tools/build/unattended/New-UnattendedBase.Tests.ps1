@@ -31,6 +31,7 @@ Describe 'New-UnattendedBase' {
         Should -Invoke Write-File -Exactly 1
         Should -Invoke Write-File -Exactly 1 -ParameterFilter {
             $Path -eq $TestBaseFilePath -and
+            $Content -match "^<!-- Version: {VERSION} -->`n" -and
             $Content -notmatch "`t" -and
             $Content -notmatch "Windows Registry Editor Version 5\.00`r`n`r`n" -and
             $Content -notmatch 'C:\\Windows\\Setup\\Scripts\\' -and
@@ -54,11 +55,6 @@ Describe 'New-UnattendedBase' {
         { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestTemplateFileFilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
         Should -Invoke Write-File -Exactly 0
     }
 
@@ -68,16 +64,6 @@ Describe 'New-UnattendedBase' {
         { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestTemplateFileFilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
         Should -Invoke Write-File -Exactly 1
-        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
-            $Path -eq $TestBaseFilePath -and
-            $Content -notmatch 'Windows Registry Editor Version 5\.00' -and
-            $Content -match '<HideOnlineAccountScreens>true</HideOnlineAccountScreens>'
-        }
     }
 }

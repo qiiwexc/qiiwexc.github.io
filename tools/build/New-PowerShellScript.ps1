@@ -7,8 +7,6 @@ function New-PowerShellScript {
 
     Write-LogInfo 'Building PowerShell script...'
 
-    New-Item -Force -ItemType Directory $DistPath | Out-Null
-
     Set-Variable -Option Constant ProjectFiles ([Collections.Generic.List[Object]](Get-ChildItem $SourcePath -Recurse -File | Where-Object { $_.Name -notmatch '.\.Tests\.ps1$' }))
     Set-Variable -Option Constant FileCount ([Int]$ProjectFiles.Count)
 
@@ -40,10 +38,10 @@ function New-PowerShellScript {
             [String]$VariableName = "CONFIG_$($NormalizedFileName.ToUpper())"
             [Collections.Generic.List[String]]$EscapedContent = $Content.Replace("'", '"')
             $EscapedContent[0] = "Set-Variable -Option Constant $VariableName '$($EscapedContent[0])"
-            $OutputLines += $EscapedContent
+            $OutputLines.Add($EscapedContent)
             $OutputLines.Add("'")
         } else {
-            $OutputLines += $Content
+            $OutputLines.Add($Content)
         }
 
         if ($CurrentFileNum -eq $FileCount) {

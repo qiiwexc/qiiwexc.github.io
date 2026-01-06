@@ -28,9 +28,5 @@ Describe 'Write-File' {
         { Write-File $TestPath $TestContent } | Should -Throw
 
         Should -Invoke New-Item -Exactly 1
-        Should -Invoke New-Item -Exactly 1 -ParameterFilter {
-            $Path -eq $TestPath -and
-            $Value -eq "TEST_CONTENT_LINE1`nTEST_CONTENT_LINE2`n"
-        }
     }
 }

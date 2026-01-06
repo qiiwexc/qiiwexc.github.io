@@ -74,6 +74,7 @@ Write-LogInfo "Run in dev mode          : $Dev"
 Write-Progress -Activity 'Build' -PercentComplete 1
 
 New-Item -Force -ItemType Directory $BuildPath | Out-Null
+New-Item -Force -ItemType Directory $DistPath | Out-Null
 
 if ($Tests) {
     . $TestsFile -Coverage
