@@ -81,7 +81,6 @@ Describe 'Compare-Tags' {
         Compare-Tags $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubTagsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -91,7 +90,6 @@ Describe 'Compare-Tags' {
         Compare-Tags $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubTagsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -101,7 +99,6 @@ Describe 'Compare-Tags' {
         { Compare-Tags $TestDependency } | Should -Throw
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubTagsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 }

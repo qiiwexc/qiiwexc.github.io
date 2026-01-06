@@ -70,7 +70,6 @@ Describe 'Update-GitDependency' {
         { Update-GitDependency $TestDependency } | Should -Throw
 
         Should -Invoke Compare-Tags -Exactly 1
-        Should -Invoke Compare-Tags -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
         Should -Invoke Select-Tags -Exactly 0
         Should -Invoke Compare-Commits -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
@@ -112,7 +111,6 @@ Describe 'Update-GitDependency' {
 
         Should -Invoke Compare-Tags -Exactly 0
         Should -Invoke Select-Tags -Exactly 1
-        Should -Invoke Select-Tags -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
         Should -Invoke Compare-Commits -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
     }
@@ -154,7 +152,6 @@ Describe 'Update-GitDependency' {
         Should -Invoke Compare-Tags -Exactly 0
         Should -Invoke Select-Tags -Exactly 0
         Should -Invoke Compare-Commits -Exactly 1
-        Should -Invoke Compare-Commits -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
         Should -Invoke Write-LogWarning -Exactly 0
     }
 

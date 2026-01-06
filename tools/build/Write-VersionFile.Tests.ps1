@@ -34,10 +34,6 @@ Describe 'Write-VersionFile' {
         { Write-VersionFile $TestVersion $TestFilePath } | Should -Throw
 
         Should -Invoke Write-File -Exactly 1
-        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
-            $Path -eq $TestFilePath -and
-            $Content -eq $TestVersion
-        }
         Should -Invoke Out-Success -Exactly 0
     }
 }

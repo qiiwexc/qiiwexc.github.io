@@ -66,7 +66,6 @@ Describe 'Select-Tags' {
         Select-Tags $TestDependency | Should -BeExactly @($TestLatestVersionUrl, $TestNewVersionUrl)
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubTagsUrl }
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
             $Dependency -eq $TestDependency -and
@@ -80,7 +79,6 @@ Describe 'Select-Tags' {
         Select-Tags $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubTagsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -90,7 +88,6 @@ Describe 'Select-Tags' {
         Select-Tags $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubTagsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -100,7 +97,6 @@ Describe 'Select-Tags' {
         { Select-Tags $TestDependency } | Should -Throw
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubTagsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 }

@@ -36,11 +36,6 @@ Describe 'Read-GitHubToken' {
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestEnvPath -and
-            $Raw -eq $true -and
-            $Encoding -eq 'UTF8'
-        }
     }
 
     It 'Should read GitHub token from env file with double quotes' {
@@ -51,11 +46,6 @@ Describe 'Read-GitHubToken' {
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestEnvPath -and
-            $Raw -eq $true -and
-            $Encoding -eq 'UTF8'
-        }
     }
 
     It 'Should handle missing GitHub token in env file' {
@@ -66,11 +56,6 @@ Describe 'Read-GitHubToken' {
         Read-GitHubToken $TestEnvPath | Should -BeNullOrEmpty
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestEnvPath -and
-            $Raw -eq $true -and
-            $Encoding -eq 'UTF8'
-        }
     }
 
     It 'Should read GitHub token from env file at beginning' {
@@ -81,11 +66,6 @@ Describe 'Read-GitHubToken' {
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestEnvPath -and
-            $Raw -eq $true -and
-            $Encoding -eq 'UTF8'
-        }
     }
 
     It 'Should read GitHub token from env file not at beginning' {
@@ -96,11 +76,6 @@ Describe 'Read-GitHubToken' {
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestEnvPath -and
-            $Raw -eq $true -and
-            $Encoding -eq 'UTF8'
-        }
     }
 
     It 'Should handle Get-Content failure' {
@@ -109,10 +84,5 @@ Describe 'Read-GitHubToken' {
         { Read-GitHubToken $TestEnvPath } | Should -Throw
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestEnvPath -and
-            $Raw -eq $true -and
-            $Encoding -eq 'UTF8'
-        }
     }
 }

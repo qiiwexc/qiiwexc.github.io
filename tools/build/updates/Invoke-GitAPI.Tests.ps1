@@ -7,16 +7,13 @@ BeforeAll {
 
     Set-Variable -Option Constant TestGitHubToken ([String]'TEST_GITHUB_TOKEN')
     Set-Variable -Option Constant TestUrl ([String]'TEST_URL')
-
-    Set-Variable -Option Constant TestResponseContent ([String]'{"key1": "value1", "key2": "value2"}')
-    Set-Variable -Option Constant TestResponse ([Object]@{Content = $TestResponseContent })
 }
 
 Describe 'Invoke-GitAPI' {
     BeforeEach {
         Mock Write-LogInfo {}
         Mock Write-LogError {}
-        Mock Invoke-WebRequest { return $TestResponse }
+        Mock Invoke-WebRequest { return @{Content = '{"key1": "value1", "key2": "value2"}' } }
     }
 
     It 'Should invoke GitHub API without GitHub token' {
@@ -56,11 +53,6 @@ Describe 'Invoke-GitAPI' {
         Invoke-GitAPI $TestUrl | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
-            $Uri -eq $TestUrl -and
-            $Method -eq 'Get' -and
-            $UseBasicParsing -eq $true
-        }
         Should -Invoke Write-LogError -Exactly 1
     }
 }

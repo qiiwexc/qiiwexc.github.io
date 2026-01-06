@@ -13,10 +13,10 @@ function Set-InlineFiles {
         [Collections.Generic.List[String]]$FullContent = @()
 
         if ($FileName -match '.reg$') {
-            $FullContent = "Windows Registry Editor Version 5.00`n"
-            $FullContent += $FileContent.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\DefaultUser')
+            $FullContent.Add("Windows Registry Editor Version 5.00`n")
+            $FullContent.Add($FileContent.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\DefaultUser'))
         } elseif ($FileName -match '.xml$') {
-            $FullContent += $FileContent.Replace(' _resistant="true"', '')
+            $FullContent.Add($FileContent.Replace(' _resistant="true"', ''))
         } else {
             $FullContent = $FileContent
         }

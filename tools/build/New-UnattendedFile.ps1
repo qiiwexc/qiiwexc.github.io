@@ -34,33 +34,33 @@ function New-UnattendedFile {
 
     New-UnattendedBase $TemplatesPath $BaseFile
 
+    Set-Variable -Option Constant TemplateContent ([String](Get-Content $BaseFile -Raw -Encoding UTF8))
+
     foreach ($Locale in $Locales) {
         [String]$OutputFileName = "$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
 
-        [String]$TemplateContent = Get-Content $BaseFile -Raw -Encoding UTF8
+        [String]$UpdatedTemplateContent = Set-LocaleSettings $Locale $TemplateContent
 
-        $TemplateContent = Set-LocaleSettings $Locale $TemplateContent
+        $UpdatedTemplateContent = Set-AppRemovalList $ConfigsPath $UpdatedTemplateContent
 
-        $TemplateContent = Set-AppRemovalList $ConfigsPath $TemplateContent
+        $UpdatedTemplateContent = Set-CapabilitiesRemovalList $ConfigsPath $UpdatedTemplateContent
 
-        $TemplateContent = Set-CapabilitiesRemovalList $ConfigsPath $TemplateContent
+        $UpdatedTemplateContent = Set-FeaturesRemovalList $ConfigsPath $UpdatedTemplateContent
 
-        $TemplateContent = Set-FeaturesRemovalList $ConfigsPath $TemplateContent
+        $UpdatedTemplateContent = Set-WindowsSecurityConfiguration $SourcePath $UpdatedTemplateContent
 
-        $TemplateContent = Set-WindowsSecurityConfiguration $SourcePath $TemplateContent
+        $UpdatedTemplateContent = Set-PowerSchemeConfiguration $ConfigsPath $UpdatedTemplateContent
 
-        $TemplateContent = Set-PowerSchemeConfiguration $ConfigsPath $TemplateContent
+        $UpdatedTemplateContent = Set-InlineFiles $Locale $ConfigsPath $UpdatedTemplateContent
 
-        $TemplateContent = Set-InlineFiles $Locale $ConfigsPath $TemplateContent
+        $UpdatedTemplateContent = $UpdatedTemplateContent.Replace('{VERSION}', $Version)
 
-        $TemplateContent = $TemplateContent.Replace('{VERSION}', $Version)
-
-        Set-Content $OutputFileName $TemplateContent -NoNewline
+        Set-Content $OutputFileName $UpdatedTemplateContent -NoNewline
     }
 
-    Set-Variable -Option Constant BuiltFile ([String]("$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
+    Set-Variable -Option Constant BuildFile ([String]("$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
     Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalisedFileName"))
-    Copy-Item $BuiltFile $VmFile
+    Copy-Item $BuildFile $VmFile
 
     Set-Variable -Option Constant DevRegexReplacementMap ([Collections.Generic.List[Hashtable]]@(
             @{Regex = '\s*<File path="C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1">([\s\S]*?)<\/File>'; NewValue = '' },
@@ -74,10 +74,11 @@ function New-UnattendedFile {
     )
 
     foreach ($Locale in $Locales) {
-        [String]$InputFileName = "$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
-        [String]$OutputFileName = "$DistPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
+        [String]$LocalisedFileName = $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
+        [String]$BuildFileName = "$BuildPath\$LocalisedFileName"
+        [String]$OutputFileName = "$DistPath\$LocalisedFileName"
 
-        [String]$FileContent = Get-Content $InputFileName -Raw -Encoding UTF8
+        [String]$FileContent = Get-Content $BuildFileName -Raw -Encoding UTF8
 
         foreach ($Item in $DevRegexReplacementMap) {
             $FileContent = $FileContent -replace $Item.Regex, $Item.NewValue

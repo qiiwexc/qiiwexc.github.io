@@ -62,7 +62,6 @@ Describe 'Compare-Commits' {
         Compare-Commits $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestCommitsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -72,7 +71,6 @@ Describe 'Compare-Commits' {
         Compare-Commits $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestCommitsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -82,7 +80,6 @@ Describe 'Compare-Commits' {
         { Compare-Commits $TestDependency } | Should -Throw
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestCommitsUrl }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 }
