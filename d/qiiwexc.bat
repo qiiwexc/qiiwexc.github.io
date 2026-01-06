@@ -21,7 +21,7 @@ if "%debug%"=="true" (
 
 ::#region init > Parameters
 ::
-::#Requires -Version 4
+::#Requires -Version 5
 ::
 ::param(
 ::    [String][Parameter(Position = 0)]$WorkingDirectory,
@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.5')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.6')
 ::
 ::#endregion init > Version
 ::
@@ -90,8 +90,6 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
 ::
-::Set-Variable -Option Constant PS_VERSION ([Int]$PSVersionTable.PSVersion.Major)
-::
 ::Set-Variable -Option Constant OPERATING_SYSTEM ([Object](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
 ::Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
 ::Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
@@ -135,7 +133,7 @@ if "%debug%"=="true" (
 ::#endregion init > Initialization
 ::
 ::
-::#region components > Constants
+::#region init > UI constants
 ::
 ::Set-Variable -Option Constant BUTTON_WIDTH ([Int]170)
 ::Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
@@ -161,7 +159,7 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant FONT_NAME ([String]'Microsoft Sans Serif')
 ::Set-Variable -Option Constant BUTTON_FONT ([String]"$FONT_NAME, 10")
 ::
-::#endregion components > Constants
+::#endregion init > UI constants
 ::
 ::
 ::#region components > Button
@@ -1193,7 +1191,7 @@ if "%debug%"=="true" (
 ::Session\PieceExtentAffinity=true
 ::Session\QueueingSystemEnabled=true
 ::Session\ReannounceWhenAddressChanged=true
-::Session\RefreshInterval=500
+::Session\RefreshInterval=1000
 ::Session\SaveResumeDataInterval=1
 ::Session\SaveStatisticsInterval=5
 ::Session\ShareLimitAction=Remove
@@ -1222,7 +1220,6 @@ if "%debug%"=="true" (
 ::
 ::[RSS]
 ::AutoDownloader\DownloadRepacks=true
-::Session\RefreshInterval=1
 ::
 ::[SpeedWidget]
 ::graph_enable_2=true
@@ -1260,7 +1257,6 @@ if "%debug%"=="true" (
 ::
 ::[GUI]
 ::DownloadTrackerFavicon=true
-::Log\Enabled=false
 ::MainWindow\FiltersSidebarWidth=155
 ::Qt6\TorrentProperties\FilesListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6\xd1\0\0\0\x6\x1\x1\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\x6\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0\x7f\0\0\0\x1\0\0\0\0\0\0\0U\0\0\0\x1\0\0\0\0\0\0\x5)\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0W\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 ::Qt6\TorrentProperties\PeerListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\xf\0@\0\0\0\x1\0\0\0\xe\0\0\0\x64\0\0\x4Y\0\0\0\xf\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\xf\0\0\0r\0\0\0\x1\0\0\0\0\0\0\0V\0\0\0\x1\0\0\0\0\0\0\0\x32\0\0\0\x1\0\0\0\0\0\0\0Y\0\0\0\x1\0\0\0\0\0\0\0\x35\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0g\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0\x61\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0`\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0T\0\0\0\x1\0\0\0\0\0\0\0\x32\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
@@ -1278,7 +1274,6 @@ if "%debug%"=="true" (
 ::
 ::[GUI]
 ::DownloadTrackerFavicon=true
-::Log\Enabled=false
 ::MainWindow\FiltersSidebarWidth=153
 ::Qt6\TorrentProperties\FilesListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x6\xd1\0\0\0\x6\x1\x1\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\x6\0\0\0\x33\0\0\0\x1\0\0\0\0\0\0\0r\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0\x8f\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\x4\xfe\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0P\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 ::Qt6\TorrentProperties\PeerListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\xf\0@\0\0\0\x1\0\0\0\xe\0\0\0\x64\0\0\x4:\0\0\0\xf\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\xf\0\0\0n\0\0\0\x1\0\0\0\0\0\0\0K\0\0\0\x1\0\0\0\0\0\0\0\x36\0\0\0\x1\0\0\0\0\0\0\0\x62\0\0\0\x1\0\0\0\0\0\0\0>\0\0\0\x1\0\0\0\0\0\0\0\x44\0\0\0\x1\0\0\0\0\0\0\0^\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0L\0\0\0\x1\0\0\0\0\0\0\0\x42\0\0\0\x1\0\0\0\0\0\0\0X\0\0\0\x1\0\0\0\0\0\0\0\x43\0\0\0\x1\0\0\0\0\0\0\0M\0\0\0\x1\0\0\0\0\0\0\0\x43\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
@@ -1307,31 +1302,31 @@ if "%debug%"=="true" (
 ::#region configs > Installs > Office Installer
 ::
 ::Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER '[Configurations]
-::NOSOUND = 1
-::PosR = 1
 ::ArchR = 1
-::DlndArch = 1
 ::CBBranch = 1
-::Word = 1
-::Excel = 1
+::DlndArch = 1
+::langs = en-GB|lv-LV|
+::NOSOUND = 1
+::OnOff = 1
+::PosR = 1
+::ProofingTools = 0
 ::Access = 0
-::Publisher = 0
-::Teams = 0
+::Excel = 1
 ::Groove = 0
 ::Lync = 0
-::OneNote = 0
 ::OneDrive = 0
+::OneNote = 0
 ::Outlook = 0
 ::PowerPoint = 1
 ::Project = 0
-::ProjectPro = 0
 ::ProjectMondo = 0
+::ProjectPro = 0
+::Publisher = 0
+::Teams = 0
 ::Visio = 0
-::VisioPro = 0
 ::VisioMondo = 0
-::ProofingTools = 0
-::OnOff = 1
-::langs = en-GB|lv-LV|
+::VisioPro = 0
+::Word = 1
 ::'
 ::
 ::#endregion configs > Installs > Office Installer
@@ -1442,7 +1437,6 @@ if "%debug%"=="true" (
 ::        'Language.TextToSpeech'
 ::        'MathRecognizer'
 ::        'Media.WindowsMediaPlayer'
-::        'Microsoft.Windows.SnippingTool'
 ::        'Microsoft.Windows.WordPad'
 ::        'OpenSSH.Client'
 ::    )
@@ -3809,23 +3803,21 @@ if "%debug%"=="true" (
 ::#region functions > Common > Get-MicrosoftSecurityStatus
 ::
 ::function Get-MicrosoftSecurityStatus {
-::    if ($PS_VERSION -ge 5) {
-::        Set-Variable -Option Constant Status ([Microsoft.Management.Infrastructure.CimInstance](Get-MpComputerStatus))
+::    Set-Variable -Option Constant Status ([Microsoft.Management.Infrastructure.CimInstance](Get-MpComputerStatus))
 ::
-::        Set-Variable -Option Constant Properties ([Collections.Generic.List[String]](($Status | Get-Member -MemberType Property).Name))
+::    Set-Variable -Option Constant Properties ([Collections.Generic.List[String]](($Status | Get-Member -MemberType Property).Name))
 ::
-::        Set-Variable -Option Constant Filtered ([Collections.Generic.List[String]]($Properties | Where-Object { $_ -eq 'BehaviorMonitorEnabled' -or $_ -eq 'IoavProtectionEnabled' -or $_ -eq 'NISEnabled' -or $_ -eq 'OnAccessProtectionEnabled' -or $_ -eq 'RealTimeProtectionEnabled' }))
+::    Set-Variable -Option Constant Filtered ([Collections.Generic.List[String]]($Properties | Where-Object { $_ -eq 'BehaviorMonitorEnabled' -or $_ -eq 'IoavProtectionEnabled' -or $_ -eq 'NISEnabled' -or $_ -eq 'OnAccessProtectionEnabled' -or $_ -eq 'RealTimeProtectionEnabled' }))
 ::
-::        [Bool]$IsEnabled = $False
-::        foreach ($Property in $Filtered) {
-::            if ($Status.$Property) {
-::                $IsEnabled = $True
-::            }
-::            break
+::    [Bool]$IsEnabled = $False
+::    foreach ($Property in $Filtered) {
+::        if ($Status.$Property) {
+::            $IsEnabled = $True
 ::        }
-::
-::        return $IsEnabled
+::        break
 ::    }
+::
+::    return $IsEnabled
 ::}
 ::
 ::#endregion functions > Common > Get-MicrosoftSecurityStatus
@@ -4909,16 +4901,14 @@ if "%debug%"=="true" (
 ::
 ::    New-Activity 'Removing miscellaneous Windows features...'
 ::
-::    if ($PS_VERSION -ge 5) {
-::        try {
-::            Write-ActivityProgress -PercentComplete 5 -Task 'Collecting capabilities to remove...'
-::            Set-Variable -Option Constant InstalledCapabilities ([Object](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
-::            Set-Variable -Option Constant CapabilitiesToRemove ([Object]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
-::            Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
-::            Out-Success $LogIndentLevel
-::        } catch [Exception] {
-::            Write-LogException $_ 'Failed to collect capabilities to remove' $LogIndentLevel
-::        }
+::    try {
+::        Write-ActivityProgress -PercentComplete 5 -Task 'Collecting capabilities to remove...'
+::        Set-Variable -Option Constant InstalledCapabilities ([Object](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
+::        Set-Variable -Option Constant CapabilitiesToRemove ([Object]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
+::        Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
+::        Out-Success $LogIndentLevel
+::    } catch [Exception] {
+::        Write-LogException $_ 'Failed to collect capabilities to remove' $LogIndentLevel
 ::    }
 ::
 ::    try {
@@ -5182,9 +5172,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
 ::
-::    if ($PS_VERSION -ge 5) {
-::        Set-WindowsSecurityConfiguration
-::    }
+::    Set-WindowsSecurityConfiguration
 ::
 ::    Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
 ::    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
