@@ -31,10 +31,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Edge\SmartScreenPuaEnabled]
 @=dword:00000001
 
-[HKEY_CURRENT_USER\Software\Microsoft\Feeds]
-"DefaultInterval"=dword:0000000F
-"SyncStatus"=dword:00000001
-
 [HKEY_CURRENT_USER\Software\Microsoft\input\Settings]
 "EnableHwkbTextPrediction"=dword:00000001
 "MultilingualEnabled"=dword:00000001
@@ -68,7 +64,6 @@
 "CleanDownloadHistory"=dword:00000001
 "CleanForms"=dword:00000001
 "CleanPassword"=dword:00000001
-"ClearBrowsingHistoryOnExit"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 "AcceptedPrivacyStatement"=dword:00000001
