@@ -5,7 +5,6 @@ Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
         'Language.Handwriting'
         'Language.Speech'
         'Language.TextToSpeech'
-        'MathRecognizer'
         'Media.WindowsMediaPlayer'
         'Microsoft.Windows.WordPad'
     )
