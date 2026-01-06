@@ -80,7 +80,7 @@ function Update-Dependencies {
     if ($UrlsToOpen.Count -gt 0) {
         foreach ($Url in @($UrlsToOpen | ForEach-Object { $_ })) {
             Write-LogInfo "Opening URL: $Url"
-            [Diagnostics.Process]::Start($Url)
+            Start-Process $Url
         }
     }
 
