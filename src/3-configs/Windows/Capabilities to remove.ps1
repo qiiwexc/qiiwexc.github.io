@@ -8,6 +8,5 @@ Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
         'MathRecognizer'
         'Media.WindowsMediaPlayer'
         'Microsoft.Windows.WordPad'
-        'OpenSSH.Client'
     )
 )
