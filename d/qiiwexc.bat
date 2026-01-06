@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.6')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.7')
 ::
 ::#endregion init > Version
 ::
@@ -1218,9 +1218,6 @@ if "%debug%"=="true" (
 ::LastViewedPage=0
 ::Size=@Size(1255 829)
 ::
-::[RSS]
-::AutoDownloader\DownloadRepacks=true
-::
 ::[SpeedWidget]
 ::graph_enable_2=true
 ::graph_enable_3=true
@@ -1438,7 +1435,6 @@ if "%debug%"=="true" (
 ::        'MathRecognizer'
 ::        'Media.WindowsMediaPlayer'
 ::        'Microsoft.Windows.WordPad'
-::        'OpenSSH.Client'
 ::    )
 ::)
 ::
@@ -2052,13 +2048,6 @@ if "%debug%"=="true" (
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract\Command]
-::@="msiexec.exe /a "%1" /qb TARGETDIR"="%1 extracted""
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract]
-::"Icon"="shell32.dll,-16817"
-::"MUIVerb"="@shell32.dll,-37514"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\Wintrust\Config]
 ::"EnableCertPaddingCheck"="1"
