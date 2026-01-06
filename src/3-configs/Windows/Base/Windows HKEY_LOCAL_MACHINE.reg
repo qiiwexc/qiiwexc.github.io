@@ -3,13 +3,6 @@
 
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract\Command]
-@="msiexec.exe /a "%1" /qb TARGETDIR"="%1 extracted""
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Msi.Package\shell\Extract]
-"Icon"="shell32.dll,-16817"
-"MUIVerb"="@shell32.dll,-37514"
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\Wintrust\Config]
 "EnableCertPaddingCheck"="1"
 
