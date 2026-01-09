@@ -37,7 +37,7 @@
     },
     {
         "name":  "WinUtil",
-        "version":  "25.12.18",
+        "version":  "26.01.08",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "ChrisTitusTech/winutil"
@@ -86,7 +86,7 @@
     },
     {
         "name":  "CPU-Z",
-        "version":  "2.17",
+        "version":  "2.18",
         "source":  "URL",
         "url":  "https://cpuid.com/softwares/cpu-z.html",
         "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
