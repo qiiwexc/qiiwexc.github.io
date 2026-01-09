@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.7')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.9')
 ::
 ::#endregion init > Version
 ::
@@ -816,7 +816,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Hardware info'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://download.cpuid.com/cpu-z/cpu-z_2.17-en.zip' -Execute:$CHECKBOX_StartCpuZ.Checked }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://download.cpuid.com/cpu-z/cpu-z_2.18-en.zip' -Execute:$CHECKBOX_StartCpuZ.Checked }
 ::New-Button 'CPU-Z' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartCpuZ = New-CheckBoxRunAfterDownload -Checked
@@ -1394,7 +1394,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".tbz2" ProgId="7-Zip.tbz2" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".tgz" ProgId="7-Zip.tgz" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".torrent" ProgId="qBittorrent.File.Torrent" ApplicationName="qBittorrent - A Bittorrent Client" />
-::  <Association Identifier=".ts" ProgId="VLC.ts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".tts" ProgId="VLC.tts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
@@ -1413,7 +1412,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier="http" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier="https" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier="mailto" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier="mms" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier="tel" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier="webcal" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
@@ -1432,7 +1430,6 @@ if "%debug%"=="true" (
 ::        'Language.Handwriting'
 ::        'Language.Speech'
 ::        'Language.TextToSpeech'
-::        'MathRecognizer'
 ::        'Media.WindowsMediaPlayer'
 ::        'Microsoft.Windows.WordPad'
 ::    )
@@ -1736,10 +1733,6 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Edge\SmartScreenPuaEnabled]
 ::@=dword:00000001
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Feeds]
-::"DefaultInterval"=dword:0000000F
-::"SyncStatus"=dword:00000001
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\input\Settings]
 ::"EnableHwkbTextPrediction"=dword:00000001
 ::"MultilingualEnabled"=dword:00000001
@@ -1773,7 +1766,6 @@ if "%debug%"=="true" (
 ::"CleanDownloadHistory"=dword:00000001
 ::"CleanForms"=dword:00000001
 ::"CleanPassword"=dword:00000001
-::"ClearBrowsingHistoryOnExit"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 ::"AcceptedPrivacyStatement"=dword:00000001
@@ -2563,9 +2555,6 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\TabletPC]
 ::"PreventHandwritingDataSharing"=dword:00000001
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Feeds]
-::"EnableFeeds"=dword:00000000
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
 ::"AllowCloudSearch"=dword:00000000
 ::"AllowCortana"=dword:00000000 ; Disable Cortana in search
@@ -2934,10 +2923,6 @@ if "%debug%"=="true" (
 ::[HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
-::; Hide Gallery on Navigation Pane
-::[HKEY_CLASSES_ROOT\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
 ::; Hide Home on Navigation Pane
 ::[HKEY_CLASSES_ROOT\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
 ::@="CLSID_MSGraphHomeFolder"
@@ -2963,10 +2948,6 @@ if "%debug%"=="true" (
 ::; Enable classic context menu
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 ::@=""
-::
-::; Hide Gallery on Navigation Pane
-::[HKEY_CURRENT_USER\Software\Classes\CLSID\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
 ::; Hide Home on Navigation Pane
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
@@ -3035,18 +3016,6 @@ if "%debug%"=="true" (
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
-::
-::; Add `Show Gallery` option to File Explorer folder options, with default set to disabled
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowGallery]
-::"CheckedValue"=dword:00000001
-::"DefaultValue"=dword:00000000
-::"HKeyRoot"=dword:80000001
-::"Id"=dword:0000000d
-::"RegPath"="Software\\Classes\\CLSID\\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}"
-::"Text"="Show Gallery"
-::"Type"="checkbox"
-::"UncheckedValue"=dword:00000000
-::"ValueName"="System.IsPinnedToNameSpaceTree"
 ::
 ::; Add `Show Home` option to File Explorer folder options, with default set to disabled
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
