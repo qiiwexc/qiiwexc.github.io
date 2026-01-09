@@ -517,9 +517,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\TabletPC]
 "PreventHandwritingDataSharing"=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Feeds]
-"EnableFeeds"=dword:00000000
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
 "AllowCloudSearch"=dword:00000000
 "AllowCortana"=dword:00000000 ; Disable Cortana in search

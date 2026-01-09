@@ -10,18 +10,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 "value"=dword:00000000
 
-; Add `Show Gallery` option to File Explorer folder options, with default set to disabled
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowGallery]
-"CheckedValue"=dword:00000001
-"DefaultValue"=dword:00000000
-"HKeyRoot"=dword:80000001
-"Id"=dword:0000000d
-"RegPath"="Software\\Classes\\CLSID\\{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}"
-"Text"="Show Gallery"
-"Type"="checkbox"
-"UncheckedValue"=dword:00000000
-"ValueName"="System.IsPinnedToNameSpaceTree"
-
 ; Add `Show Home` option to File Explorer folder options, with default set to disabled
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
 "CheckedValue"=dword:00000001
