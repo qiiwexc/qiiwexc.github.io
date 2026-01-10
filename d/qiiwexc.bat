@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.9')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.10')
 ::
 ::#endregion init > Version
 ::
@@ -1404,9 +1404,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wpl" ProgId="VLC.wpl" ApplicationName="VLC media player" />
-::  <Association Identifier=".wsz" ProgId="VLC.wsz" ApplicationName="VLC media player" />
-::  <Association Identifier=".wtv" ProgId="VLC.wtv" ApplicationName="VLC media player" />
-::  <Association Identifier=".wvx" ProgId="VLC.wvx" ApplicationName="VLC media player" />
 ::  <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
@@ -1443,7 +1440,6 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant CONFIG_FEATURES_TO_REMOVE (
 ::    [Collections.Generic.List[String]]@(
 ::        'MediaPlayback'
-::        'Microsoft-RemoteDesktopConnection'
 ::        'MicrosoftWindowsPowerShellV2Root'
 ::        'Recall'
 ::    )
@@ -2923,11 +2919,6 @@ if "%debug%"=="true" (
 ::[HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
-::; Hide Home on Navigation Pane
-::[HKEY_CLASSES_ROOT\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-::@="CLSID_MSGraphHomeFolder"
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
 ::; Hide "OneDrive" folder
 ::[HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
 ::"System.IsPinnedToNameSpaceTree"=dword:00000000
@@ -2948,11 +2939,6 @@ if "%debug%"=="true" (
 ::; Enable classic context menu
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 ::@=""
-::
-::; Hide Home on Navigation Pane
-::[HKEY_CURRENT_USER\Software\Classes\CLSID\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}]
-::@="CLSID_MSGraphHomeFolder"
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
 ::"ContentDeliveryAllowed"=dword:00000001
@@ -3016,18 +3002,6 @@ if "%debug%"=="true" (
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
-::
-::; Add `Show Home` option to File Explorer folder options, with default set to disabled
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
-::"CheckedValue"=dword:00000001
-::"DefaultValue"=dword:00000000
-::"HKeyRoot"=dword:80000001
-::"Id"=dword:0000000d
-::"RegPath"="Software\\Classes\\CLSID\\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}"
-::"Text"="Show Home"
-::"Type"="checkbox"
-::"UncheckedValue"=dword:00000000
-::"ValueName"="System.IsPinnedToNameSpaceTree"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
@@ -3283,9 +3257,9 @@ if "%debug%"=="true" (
 ::    { "Name": "Hide3dObjects", "Value": true },
 ::    { "Name": "HideChat", "Value": false },
 ::    { "Name": "HideDupliDrive", "Value": true },
-::    { "Name": "HideGallery", "Value": true },
+::    { "Name": "HideGallery", "Value": false },
 ::    { "Name": "HideGiveAccessTo", "Value": true },
-::    { "Name": "HideHome", "Value": true },
+::    { "Name": "HideHome", "Value": false },
 ::    { "Name": "HideIncludeInLibrary", "Value": true },
 ::    { "Name": "HideMusic", "Value": false },
 ::    { "Name": "HideOnedrive", "Value": false },
@@ -3577,9 +3551,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Tools > WinUtil Personalisation
 ::
-::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION '                      "WPFTweaksRemoveGallery",
-::                      "WPFTweaksRemoveHome",
-::                      "WPFTweaksRightClickMenu",
+::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION '                      "WPFTweaksRightClickMenu",
 ::                      "WPFTweaksRemoveOnedrive",
 ::'
 ::
