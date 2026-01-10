@@ -10,18 +10,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 "value"=dword:00000000
 
-; Add `Show Home` option to File Explorer folder options, with default set to disabled
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\NavPane\ShowHome]
-"CheckedValue"=dword:00000001
-"DefaultValue"=dword:00000000
-"HKeyRoot"=dword:80000001
-"Id"=dword:0000000d
-"RegPath"="Software\\Classes\\CLSID\\{F874310E-B6B7-47DC-BC84-B9E6B38F5903}"
-"Text"="Show Home"
-"Type"="checkbox"
-"UncheckedValue"=dword:00000000
-"ValueName"="System.IsPinnedToNameSpaceTree"
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 "HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
 "SettingsPageVisibility"="hide:home" ; Disable Home page in settings
