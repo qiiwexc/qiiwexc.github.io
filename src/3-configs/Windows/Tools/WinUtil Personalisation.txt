@@ -1,4 +1,2 @@
-                      "WPFTweaksRemoveGallery",
-                      "WPFTweaksRemoveHome",
                       "WPFTweaksRightClickMenu",
                       "WPFTweaksRemoveOnedrive",
