@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.11')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.12')
 ::
 ::#endregion init > Version
 ::
@@ -1172,7 +1172,6 @@ if "%debug%"=="true" (
 ::FileLogger\AgeType=0
 ::FileLogger\Backup=true
 ::FileLogger\Enabled=true
-::FileLogger\MaxSizeBytes=1024
 ::GUI\Notifications\TorrentAdded=false
 ::
 ::[BitTorrent]
@@ -1358,7 +1357,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".iso" ProgId="Windows.IsoFile" ApplicationName="File Explorer" />
-::  <Association Identifier=".m1v" ProgId="VLC.m1v" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2t" ProgId="VLC.m2t" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2ts" ProgId="VLC.m2ts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2v" ProgId="VLC.m2v" ApplicationName="VLC media player" />
@@ -1384,9 +1382,7 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".mts" ProgId="VLC.mts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".pdf" ProgId="ChromePDF" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".rar" ProgId="7-Zip.rar" ApplicationName="7-Zip File Manager" />
-::  <Association Identifier=".rmi" ProgId="VLC.rmi" ApplicationName="VLC media player" />
 ::  <Association Identifier=".shtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier=".snd" ProgId="VLC.snd" ApplicationName="VLC media player" />
 ::  <Association Identifier=".svg" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".tar" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".tbz2" ProgId="7-Zip.tbz2" ApplicationName="7-Zip File Manager" />
@@ -1423,7 +1419,6 @@ if "%debug%"=="true" (
 ::        'Language.Handwriting'
 ::        'Language.Speech'
 ::        'Language.TextToSpeech'
-::        'Media.WindowsMediaPlayer'
 ::    )
 ::)
 ::
@@ -1668,10 +1663,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Base > Windows HKEY_CLASSES_ROOT
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CLASSES_ROOT '; Disable "Share" context menu
-::[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing]
-::
-::; Disable "Give access to" context menu
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CLASSES_ROOT '; Disable "Give access to" context menu
 ::[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Sharing]
 ::[-HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Sharing]
 ::[-HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Sharing]
@@ -1681,9 +1673,6 @@ if "%debug%"=="true" (
 ::[-HKEY_CLASSES_ROOT\Drive\shellex\PropertySheetHandlers\Sharing]
 ::[-HKEY_CLASSES_ROOT\LibraryFolder\background\shellex\ContextMenuHandlers\Sharing]
 ::[-HKEY_CLASSES_ROOT\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing]
-::
-::; Disable "Include in library" context menu
-::[-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
 ::'
 ::
 ::#endregion configs > Windows > Base > Windows HKEY_CLASSES_ROOT
@@ -2945,7 +2934,6 @@ if "%debug%"=="true" (
 ::"MMTaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
 ::"NavPaneExpandToCurrentFolder"=dword:00000001
 ::"NavPaneShowAllFolders"=dword:00000001
-::"ShowTaskViewButton"=dword:00000000 ; Hide Task View in the taskbar
 ::"Start_Layout"=dword:00000001
 ::"TaskbarAl"=dword:00000000 ; Align taskbar left
 ::"TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
@@ -3172,7 +3160,7 @@ if "%debug%"=="true" (
 ::    { "Name": "HideMusic", "Value": false },
 ::    { "Name": "HideOnedrive", "Value": false },
 ::    { "Name": "HideSearchTb", "Value": false },
-::    { "Name": "HideShare", "Value": true },
+::    { "Name": "HideShare", "Value": false },
 ::    { "Name": "HideTaskview", "Value": false },
 ::    { "Name": "MMTaskbarModeActive", "Value": false },
 ::    { "Name": "MMTaskbarModeAll", "Value": false },
@@ -3248,8 +3236,8 @@ if "%debug%"=="true" (
 ::    { "Name": "HideMusic", "Value": false },
 ::    { "Name": "HideOnedrive", "Value": false },
 ::    { "Name": "HideSearchTb", "Value": false },
-::    { "Name": "HideShare", "Value": true },
-::    { "Name": "HideTaskview", "Value": true },
+::    { "Name": "HideShare", "Value": false },
+::    { "Name": "HideTaskview", "Value": false },
 ::    { "Name": "MMTaskbarModeActive", "Value": false },
 ::    { "Name": "MMTaskbarModeAll", "Value": false },
 ::    { "Name": "MMTaskbarModeMainActive", "Value": false },
@@ -5526,8 +5514,6 @@ if "%debug%"=="true" (
 ::    Write-ActivityProgress -PercentComplete 80
 ::
 ::    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224'
-::
-::    Start-Sleep -Seconds 1
 ::
 ::    Write-ActivityProgress -PercentComplete 90
 ::    Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
