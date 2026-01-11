@@ -53,7 +53,7 @@
     { "Name": "HideMusic", "Value": false },
     { "Name": "HideOnedrive", "Value": false },
     { "Name": "HideSearchTb", "Value": false },
-    { "Name": "HideShare", "Value": true },
+    { "Name": "HideShare", "Value": false },
     { "Name": "HideTaskview", "Value": false },
     { "Name": "MMTaskbarModeActive", "Value": false },
     { "Name": "MMTaskbarModeAll", "Value": false },

@@ -1,6 +1,3 @@
-; Disable "Share" context menu
-[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing]
-
 ; Disable "Give access to" context menu
 [-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Sharing]
 [-HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Sharing]
@@ -11,6 +8,3 @@
 [-HKEY_CLASSES_ROOT\Drive\shellex\PropertySheetHandlers\Sharing]
 [-HKEY_CLASSES_ROOT\LibraryFolder\background\shellex\ContextMenuHandlers\Sharing]
 [-HKEY_CLASSES_ROOT\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing]
-
-; Disable "Include in library" context menu
-[-HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location]
