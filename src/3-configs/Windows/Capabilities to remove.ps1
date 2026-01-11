@@ -6,6 +6,5 @@ Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
         'Language.Speech'
         'Language.TextToSpeech'
         'Media.WindowsMediaPlayer'
-        'Microsoft.Windows.WordPad'
     )
 )
