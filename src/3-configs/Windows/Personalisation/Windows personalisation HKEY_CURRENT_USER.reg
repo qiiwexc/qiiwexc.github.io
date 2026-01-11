@@ -26,7 +26,6 @@
 "MMTaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
 "NavPaneExpandToCurrentFolder"=dword:00000001
 "NavPaneShowAllFolders"=dword:00000001
-"ShowTaskViewButton"=dword:00000000 ; Hide Task View in the taskbar
 "Start_Layout"=dword:00000001
 "TaskbarAl"=dword:00000000 ; Align taskbar left
 "TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full

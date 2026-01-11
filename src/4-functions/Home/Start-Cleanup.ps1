@@ -65,8 +65,6 @@ function Start-Cleanup {
 
     Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224'
 
-    Start-Sleep -Seconds 1
-
     Write-ActivityProgress -PercentComplete 90
     Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
