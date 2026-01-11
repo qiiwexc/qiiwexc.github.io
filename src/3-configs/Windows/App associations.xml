@@ -65,12 +65,10 @@
   <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
   <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
-  <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
   <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
   <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
   <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
-  <Association Identifier=".wpl" ProgId="VLC.wpl" ApplicationName="VLC media player" />
   <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />

@@ -1,7 +1,3 @@
-; Disable sticky keys shortcut
-[HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys]
-"Flags"="506"
-
 [HKEY_CURRENT_USER\Control Panel\Desktop]
 "JPEGImportQuality"=dword:00000064
 
