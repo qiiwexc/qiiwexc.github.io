@@ -35,134 +35,138 @@ Describe 'Update-GitDependency' {
         Mock Write-LogWarning {}
     }
 
-    It 'Should update dependency using compare mode with no token' {
-        $TestDependency.mode = 'compare'
-
-        Update-GitDependency $TestDependency | Should -BeExactly $TestCompareTagsResult
-
-        Should -Invoke Compare-Tags -Exactly 1
-        Should -Invoke Compare-Tags -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
-        Should -Invoke Select-Tags -Exactly 0
-        Should -Invoke Compare-Commits -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-    }
-
-    It 'Should update dependency using compare mode with a token' {
-        $TestDependency.mode = 'compare'
-
-        Update-GitDependency $TestDependency $TestGitHubToken | Should -BeExactly $TestCompareTagsResult
-
-        Should -Invoke Compare-Tags -Exactly 1
-        Should -Invoke Compare-Tags -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
-            $GitHubToken -eq $TestGitHubToken
+    Context 'compare' {
+        BeforeEach {
+            $TestDependency.mode = 'compare'
         }
-        Should -Invoke Select-Tags -Exactly 0
-        Should -Invoke Compare-Commits -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-    }
 
-    It 'Should handle Compare-Tags failure' {
-        $TestDependency.mode = 'compare'
+        It 'Should update dependency with no token' {
+            Update-GitDependency $TestDependency | Should -BeExactly $TestCompareTagsResult
 
-        Mock Compare-Tags { throw $TestException }
-
-        { Update-GitDependency $TestDependency } | Should -Throw
-
-        Should -Invoke Compare-Tags -Exactly 1
-        Should -Invoke Select-Tags -Exactly 0
-        Should -Invoke Compare-Commits -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-    }
-
-    It 'Should update dependency using tags mode with no token' {
-        $TestDependency.mode = 'tags'
-
-        Update-GitDependency $TestDependency | Should -BeExactly $TestSelectTagsResult
-
-        Should -Invoke Compare-Tags -Exactly 0
-        Should -Invoke Select-Tags -Exactly 1
-        Should -Invoke Select-Tags -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
-        Should -Invoke Compare-Commits -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-    }
-
-    It 'Should update dependency using tags mode with a token' {
-        $TestDependency.mode = 'tags'
-
-        Update-GitDependency $TestDependency $TestGitHubToken | Should -BeExactly $TestSelectTagsResult
-
-        Should -Invoke Compare-Tags -Exactly 0
-        Should -Invoke Select-Tags -Exactly 1
-        Should -Invoke Select-Tags -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
-            $GitHubToken -eq $TestGitHubToken
+            Should -Invoke Compare-Tags -Exactly 1
+            Should -Invoke Compare-Tags -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
+            Should -Invoke Select-Tags -Exactly 0
+            Should -Invoke Compare-Commits -Exactly 0
+            Should -Invoke Write-LogWarning -Exactly 0
         }
-        Should -Invoke Compare-Commits -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-    }
 
-    It 'Should handle Select-Tags failure' {
-        $TestDependency.mode = 'tags'
+        It 'Should update dependency with a token' {
+            Update-GitDependency $TestDependency $TestGitHubToken | Should -BeExactly $TestCompareTagsResult
 
-        Mock Select-Tags { throw $TestException }
-
-        { Update-GitDependency $TestDependency } | Should -Throw
-
-        Should -Invoke Compare-Tags -Exactly 0
-        Should -Invoke Select-Tags -Exactly 1
-        Should -Invoke Compare-Commits -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-    }
-
-    It 'Should update dependency using commits mode with no token' {
-        $TestDependency.mode = 'commits'
-
-        Update-GitDependency $TestDependency | Should -BeExactly $TestCompareCommitsResult
-
-        Should -Invoke Compare-Tags -Exactly 0
-        Should -Invoke Select-Tags -Exactly 0
-        Should -Invoke Compare-Commits -Exactly 1
-        Should -Invoke Compare-Commits -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
-        Should -Invoke Write-LogWarning -Exactly 0
-    }
-
-    It 'Should update dependency using commits mode with a token' {
-        $TestDependency.mode = 'commits'
-
-        Update-GitDependency $TestDependency $TestGitHubToken | Should -BeExactly $TestCompareCommitsResult
-
-        Should -Invoke Compare-Tags -Exactly 0
-        Should -Invoke Select-Tags -Exactly 0
-        Should -Invoke Compare-Commits -Exactly 1
-        Should -Invoke Compare-Commits -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
-            $GitHubToken -eq $TestGitHubToken
+            Should -Invoke Compare-Tags -Exactly 1
+            Should -Invoke Compare-Tags -Exactly 1 -ParameterFilter {
+                $Dependency -eq $TestDependency -and
+                $GitHubToken -eq $TestGitHubToken
+            }
+            Should -Invoke Select-Tags -Exactly 0
+            Should -Invoke Compare-Commits -Exactly 0
+            Should -Invoke Write-LogWarning -Exactly 0
         }
-        Should -Invoke Write-LogWarning -Exactly 0
+
+        It 'Should handle Compare-Tags failure' {
+            Mock Compare-Tags { throw $TestException }
+
+            { Update-GitDependency $TestDependency } | Should -Throw
+
+            Should -Invoke Compare-Tags -Exactly 1
+            Should -Invoke Select-Tags -Exactly 0
+            Should -Invoke Compare-Commits -Exactly 0
+            Should -Invoke Write-LogWarning -Exactly 0
+        }
     }
 
-    It 'Should handle Compare-Commits failure' {
-        $TestDependency.mode = 'commits'
+    Context 'tags' {
+        BeforeEach {
+            $TestDependency.mode = 'tags'
+        }
 
-        Mock Compare-Commits { throw $TestException }
+        It 'Should update dependency with no token' {
+            Update-GitDependency $TestDependency | Should -BeExactly $TestSelectTagsResult
 
-        { Update-GitDependency $TestDependency } | Should -Throw
+            Should -Invoke Compare-Tags -Exactly 0
+            Should -Invoke Select-Tags -Exactly 1
+            Should -Invoke Select-Tags -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
+            Should -Invoke Compare-Commits -Exactly 0
+            Should -Invoke Write-LogWarning -Exactly 0
+        }
 
-        Should -Invoke Compare-Tags -Exactly 0
-        Should -Invoke Select-Tags -Exactly 0
-        Should -Invoke Compare-Commits -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
+        It 'Should update dependency with a token' {
+            Update-GitDependency $TestDependency $TestGitHubToken | Should -BeExactly $TestSelectTagsResult
+
+            Should -Invoke Compare-Tags -Exactly 0
+            Should -Invoke Select-Tags -Exactly 1
+            Should -Invoke Select-Tags -Exactly 1 -ParameterFilter {
+                $Dependency -eq $TestDependency -and
+                $GitHubToken -eq $TestGitHubToken
+            }
+            Should -Invoke Compare-Commits -Exactly 0
+            Should -Invoke Write-LogWarning -Exactly 0
+        }
+
+        It 'Should handle Select-Tags failure' {
+            Mock Select-Tags { throw $TestException }
+
+            { Update-GitDependency $TestDependency } | Should -Throw
+
+            Should -Invoke Compare-Tags -Exactly 0
+            Should -Invoke Select-Tags -Exactly 1
+            Should -Invoke Compare-Commits -Exactly 0
+            Should -Invoke Write-LogWarning -Exactly 0
+        }
     }
 
-    It 'Should handle unknown mode' {
-        $TestDependency.mode = 'unknown'
+    Context 'commits' {
+        BeforeEach {
+            $TestDependency.mode = 'commits'
+        }
 
-        { Update-GitDependency $TestDependency } | Should -Throw
+        It 'Should update dependency with no token' {
+            Update-GitDependency $TestDependency | Should -BeExactly $TestCompareCommitsResult
 
-        Should -Invoke Compare-Tags -Exactly 0
-        Should -Invoke Select-Tags -Exactly 0
-        Should -Invoke Compare-Commits -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
+            Should -Invoke Compare-Tags -Exactly 0
+            Should -Invoke Select-Tags -Exactly 0
+            Should -Invoke Compare-Commits -Exactly 1
+            Should -Invoke Compare-Commits -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
+            Should -Invoke Write-LogWarning -Exactly 0
+        }
+
+        It 'Should update dependency with a token' {
+            Update-GitDependency $TestDependency $TestGitHubToken | Should -BeExactly $TestCompareCommitsResult
+
+            Should -Invoke Compare-Tags -Exactly 0
+            Should -Invoke Select-Tags -Exactly 0
+            Should -Invoke Compare-Commits -Exactly 1
+            Should -Invoke Compare-Commits -Exactly 1 -ParameterFilter {
+                $Dependency -eq $TestDependency -and
+                $GitHubToken -eq $TestGitHubToken
+            }
+            Should -Invoke Write-LogWarning -Exactly 0
+        }
+
+        It 'Should handle Compare-Commits failure' {
+            Mock Compare-Commits { throw $TestException }
+
+            { Update-GitDependency $TestDependency } | Should -Throw
+
+            Should -Invoke Compare-Tags -Exactly 0
+            Should -Invoke Select-Tags -Exactly 0
+            Should -Invoke Compare-Commits -Exactly 1
+            Should -Invoke Write-LogWarning -Exactly 0
+        }
+    }
+
+    Context 'unknown' {
+        BeforeEach {
+            $TestDependency.mode = 'unknown'
+        }
+
+        It 'Should handle unknown mode' {
+            { Update-GitDependency $TestDependency } | Should -Throw
+
+            Should -Invoke Compare-Tags -Exactly 0
+            Should -Invoke Select-Tags -Exactly 0
+            Should -Invoke Compare-Commits -Exactly 0
+            Should -Invoke Write-LogWarning -Exactly 0
+        }
     }
 }

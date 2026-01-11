@@ -41,7 +41,7 @@ BeforeAll {
     Set-Variable -Option Constant TestFileChangelogUrl ([Collections.Generic.List[String]]@('TEST_FILE_CHANGELOG_URL'))
 }
 
-Describe 'Update-Dependencies' -Tag 'WIP' {
+Describe 'Update-Dependencies' {
     BeforeEach {
         Mock Write-Progress {}
         Mock Write-LogInfo {}
