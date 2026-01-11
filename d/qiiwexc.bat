@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.10')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.11')
 ::
 ::#endregion init > Version
 ::
@@ -866,7 +866,6 @@ if "%debug%"=="true" (
 ::"Columns\RootFolder"=hex:01,00,00,00,00,00,00,00,01,00,00,00,04,00,00,00,01,00,00,00,A0,00,00,00
 ::"FlatViewArc0"=dword:00000000
 ::"FlatViewArc1"=dword:00000000
-::"FolderHistory"=hex:00,00
 ::"FolderShortcuts"=""
 ::"FullRow"=dword:00000001
 ::"ListMode"=dword:00000303
@@ -1172,7 +1171,6 @@ if "%debug%"=="true" (
 ::FileLogger\Age=1
 ::FileLogger\AgeType=0
 ::FileLogger\Backup=true
-::FileLogger\DeleteOld=true
 ::FileLogger\Enabled=true
 ::FileLogger\MaxSizeBytes=1024
 ::GUI\Notifications\TorrentAdded=false
@@ -1398,12 +1396,10 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
-::  <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
 ::  <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
-::  <Association Identifier=".wpl" ProgId="VLC.wpl" ApplicationName="VLC media player" />
 ::  <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
@@ -1428,7 +1424,6 @@ if "%debug%"=="true" (
 ::        'Language.Speech'
 ::        'Language.TextToSpeech'
 ::        'Media.WindowsMediaPlayer'
-::        'Microsoft.Windows.WordPad'
 ::    )
 ::)
 ::
@@ -1696,11 +1691,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Base > Windows HKEY_CURRENT_USER
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CURRENT_USER '; Disable sticky keys shortcut
-::[HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys]
-::"Flags"="506"
-::
-::[HKEY_CURRENT_USER\Control Panel\Desktop]
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CURRENT_USER '[HKEY_CURRENT_USER\Control Panel\Desktop]
 ::"JPEGImportQuality"=dword:00000064
 ::
 ::[HKEY_CURRENT_USER\Control Panel\International\User Profile]
@@ -2032,10 +2023,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Base > Windows HKEY_LOCAL_MACHINE
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_LOCAL_MACHINE '; Disable "Include in library" context menu
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location]
-::
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_LOCAL_MACHINE '[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\Wintrust\Config]
 ::"EnableCertPaddingCheck"="1"
@@ -2995,10 +2983,6 @@ if "%debug%"=="true" (
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
 ::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
 ::
-::; Hide "Music" folder
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}]
-::
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
@@ -3165,7 +3149,7 @@ if "%debug%"=="true" (
 ::    { "Name": "DisableSettings365Ads", "Value": true },
 ::    { "Name": "DisableStartPhoneLink", "Value": true },
 ::    { "Name": "DisableStartRecommended", "Value": false },
-::    { "Name": "DisableStickyKeys", "Value": true },
+::    { "Name": "DisableStickyKeys", "Value": false },
 ::    { "Name": "DisableSuggestions", "Value": true },
 ::    { "Name": "DisableTelemetry", "Value": true },
 ::    { "Name": "DisableTransparency", "Value": false },
@@ -3184,7 +3168,7 @@ if "%debug%"=="true" (
 ::    { "Name": "HideGallery", "Value": false },
 ::    { "Name": "HideGiveAccessTo", "Value": true },
 ::    { "Name": "HideHome", "Value": false },
-::    { "Name": "HideIncludeInLibrary", "Value": true },
+::    { "Name": "HideIncludeInLibrary", "Value": false },
 ::    { "Name": "HideMusic", "Value": false },
 ::    { "Name": "HideOnedrive", "Value": false },
 ::    { "Name": "HideSearchTb", "Value": false },
@@ -3241,7 +3225,7 @@ if "%debug%"=="true" (
 ::    { "Name": "DisableSettings365Ads", "Value": true },
 ::    { "Name": "DisableStartPhoneLink", "Value": true },
 ::    { "Name": "DisableStartRecommended", "Value": true },
-::    { "Name": "DisableStickyKeys", "Value": true },
+::    { "Name": "DisableStickyKeys", "Value": false },
 ::    { "Name": "DisableSuggestions", "Value": true },
 ::    { "Name": "DisableTelemetry", "Value": true },
 ::    { "Name": "DisableTransparency", "Value": false },
@@ -3260,7 +3244,7 @@ if "%debug%"=="true" (
 ::    { "Name": "HideGallery", "Value": false },
 ::    { "Name": "HideGiveAccessTo", "Value": true },
 ::    { "Name": "HideHome", "Value": false },
-::    { "Name": "HideIncludeInLibrary", "Value": true },
+::    { "Name": "HideIncludeInLibrary", "Value": false },
 ::    { "Name": "HideMusic", "Value": false },
 ::    { "Name": "HideOnedrive", "Value": false },
 ::    { "Name": "HideSearchTb", "Value": false },
