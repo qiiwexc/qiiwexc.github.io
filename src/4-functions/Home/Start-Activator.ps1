@@ -6,9 +6,8 @@ function Start-Activator {
 
     Write-LogInfo 'Starting MAS activator...'
 
-    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-    if ($NoConnection) {
-        Write-LogError "Failed to start: $NoConnection"
+    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+    if (-not $IsConnected) {
         return
     }
 
@@ -22,10 +21,10 @@ function Start-Activator {
         $Params += ' /Ohook'
     }
 
-    if ($OS_VERSION -eq 7) {
-        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win'))) $Params"
+    if ($OS_VERSION -le 7) {
+        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))$Params"
     } else {
-        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win))) $Params"
+        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
     }
 
     Out-Success

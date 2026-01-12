@@ -6,9 +6,8 @@ function Start-WinUtil {
 
     Write-LogInfo 'Starting WinUtil utility...'
 
-    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-    if ($NoConnection) {
-        Write-LogError "Failed to start: $NoConnection"
+    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+    if (-not $IsConnected) {
         return
     }
 

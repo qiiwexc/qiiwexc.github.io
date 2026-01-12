@@ -19,7 +19,7 @@ function Install-MicrosoftOffice {
 
     $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
 
-    if ($Execute -and $AV_WARNING_SHOWN) {
+    if ($Execute) {
         Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
     }
 

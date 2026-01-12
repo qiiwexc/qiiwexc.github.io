@@ -23,7 +23,7 @@ Describe 'Read-GitHubToken' {
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestEnvPath -and
-            $Raw -eq $true -and
+            $Raw -eq $True -and
             $Encoding -eq 'UTF8'
         }
     }

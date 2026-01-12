@@ -3,7 +3,11 @@ function Get-NetworkAdapter {
 }
 
 function Test-NetworkConnection {
-    if (-not (Get-NetworkAdapter)) {
-        return 'Computer is not connected to the Internet'
+    Set-Variable -Option Constant IsConnected ([Boolean](Get-NetworkAdapter))
+
+    if (-not $IsConnected) {
+        Write-LogError 'Computer is not connected to the Internet'
     }
+
+    return $IsConnected
 }

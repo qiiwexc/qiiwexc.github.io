@@ -1,5 +1,5 @@
 function Set-NiniteButtonState {
-    $CHECKBOX_StartNinite.Enabled = $NINITE_CHECKBOXES.Where({ $_.Checked })
+    $CHECKBOX_StartNinite.Enabled = $NINITE_CHECKBOXES.Where({ $_.Checked }, 'First', 1)
 }
 
 

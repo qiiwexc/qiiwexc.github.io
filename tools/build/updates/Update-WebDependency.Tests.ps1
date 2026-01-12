@@ -34,7 +34,7 @@ Describe 'Update-WebDependency' {
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestDependency.url -and
-            $UseBasicParsing -eq $true
+            $UseBasicParsing -eq $True
         }
         Should -Invoke Write-LogError -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 1
