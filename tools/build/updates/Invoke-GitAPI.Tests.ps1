@@ -26,7 +26,7 @@ Describe 'Invoke-GitAPI' {
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestUrl -and
             $Method -eq 'Get' -and
-            $UseBasicParsing -eq $true
+            $UseBasicParsing -eq $True
         }
         Should -Invoke Write-LogError -Exactly 0
     }
@@ -41,7 +41,7 @@ Describe 'Invoke-GitAPI' {
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestUrl -and
             $Method -eq 'Get' -and
-            $UseBasicParsing -eq $true -and
+            $UseBasicParsing -eq $True -and
             $Headers.Authorization -eq "token $TestGitHubToken"
         }
         Should -Invoke Write-LogError -Exactly 0

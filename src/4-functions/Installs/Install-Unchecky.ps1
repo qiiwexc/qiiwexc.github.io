@@ -4,12 +4,13 @@ function Install-Unchecky {
         [Switch][Parameter(Position = 1, Mandatory)]$Silent
     )
 
-    Set-Variable -Option Constant Registry_Key ([String]'HKCU:\Software\Unchecky')
-    New-RegistryKeyIfMissing $Registry_Key
+    if ($Execute) {
+        Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
+        New-RegistryKeyIfMissing $RegistryKey
+        Set-ItemProperty -Path $RegistryKey -Name 'HideTrayIcon' -Value 1
+    }
 
-    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1
-
-    if ($Silent) {
+    if ($Execute -and $Silent) {
         Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
     }
 

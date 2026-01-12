@@ -25,10 +25,8 @@ function Start-Download {
 
     Initialize-AppDirectory
 
-    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-    if ($NoConnection) {
-        Write-LogError "Download failed: $NoConnection" $LogIndentLevel
-
+    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+    if (-not $IsConnected) {
         if (Test-Path $SavePath) {
             Write-LogWarning 'Previous download found, returning it' $LogIndentLevel
             return $SavePath

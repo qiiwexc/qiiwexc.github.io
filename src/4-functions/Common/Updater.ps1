@@ -28,9 +28,8 @@ function Get-UpdateAvailability {
         return
     }
 
-    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-    if ($NoConnection) {
-        Write-LogError "Failed to check for updates: $NoConnection"
+    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+    if (-not $IsConnected) {
         return
     }
 
@@ -59,10 +58,8 @@ function Get-NewVersion {
 
     Write-LogWarning 'Downloading new version...'
 
-    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-
-    if ($NoConnection) {
-        Write-LogError "Failed to download update: $NoConnection"
+    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+    if (-not $IsConnected) {
         return
     }
 

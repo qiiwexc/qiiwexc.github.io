@@ -35,9 +35,11 @@ Describe 'Get-Emoji' {
 }
 
 Describe 'Format-Message' {
-    BeforeEach {
+    BeforeAll {
         function ToString { }
+    }
 
+    BeforeEach {
         Mock ToString { return $TestDate }
         Mock Get-Date { return ToString }
         Mock Get-Emoji { return $TestEmoji }
