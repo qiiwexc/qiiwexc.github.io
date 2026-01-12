@@ -27,7 +27,7 @@ Describe 'Start-Cleanup' {
         Mock Write-ActivityCompleted { }
     }
 
-    It 'Should run cleanup successfully' {
+    It 'Should run cleanup' {
         Start-Cleanup
 
         Should -Invoke New-Activity -Exactly 1

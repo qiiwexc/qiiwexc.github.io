@@ -19,7 +19,7 @@ Describe 'Update-Windows' {
         [Int]$OS_VERSION = 11
     }
 
-    It 'Should update Windows successfully' {
+    It 'Should update Windows' {
         Update-Windows
 
         Should -Invoke Write-LogInfo -Exactly 1

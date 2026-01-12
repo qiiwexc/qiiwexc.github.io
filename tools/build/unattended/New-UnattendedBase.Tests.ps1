@@ -19,7 +19,7 @@ Describe 'New-UnattendedBase' {
         Mock Get-Content { return $TestTemplateFileContent }
     }
 
-    It 'Should create unattended base file successfully' {
+    It 'Should create unattended base file' {
         Set-Variable -Option Constant Result (New-UnattendedBase $TestTemplatesPath $TestBaseFilePath)
 
         Should -Invoke Get-Content -Exactly 1

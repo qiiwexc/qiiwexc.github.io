@@ -121,7 +121,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Out-Success -Exactly 1
     }
 
-    It 'Should update GitLab dependencies successfully' {
+    It 'Should update GitLab dependencies' {
         Mock Get-Content { return $TestGitLabDependency }
 
         Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
@@ -149,7 +149,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Out-Success -Exactly 1
     }
 
-    It 'Should update web dependencies successfully' {
+    It 'Should update web dependencies' {
         Mock Get-Content { return $TestWebDependency }
 
         Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
@@ -176,7 +176,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Out-Success -Exactly 1
     }
 
-    It 'Should update file dependencies successfully' {
+    It 'Should update file dependencies' {
         Mock Get-Content { return $TestFileDependency }
 
         Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath

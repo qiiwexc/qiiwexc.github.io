@@ -21,7 +21,7 @@ Describe 'Get-BatteryReport' {
         Mock Out-Success { }
     }
 
-    It 'Should export and open battery report successfully' {
+    It 'Should export and open battery report' {
         Get-BatteryReport
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
