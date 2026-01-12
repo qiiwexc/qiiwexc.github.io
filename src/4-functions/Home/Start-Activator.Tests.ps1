@@ -21,7 +21,7 @@ Describe 'Start-Activator' {
         [Int]$OS_VERSION = 11
     }
 
-    It 'Should start MAS activator successfully' {
+    It 'Should start MAS activator' {
         Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
 
         Should -Invoke Write-LogInfo -Exactly 1

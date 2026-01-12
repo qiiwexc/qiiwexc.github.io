@@ -24,7 +24,7 @@ Describe 'New-BatchScript' {
         Mock Out-Success {}
     }
 
-    It 'Should create batch script successfully' {
+    It 'Should create batch script' {
         New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath
 
         Should -Invoke Get-Content -Exactly 1

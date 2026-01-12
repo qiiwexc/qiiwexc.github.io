@@ -13,13 +13,13 @@ function New-RadioButton {
     if ($PREVIOUS_RADIO) {
         $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
         $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
-        Set-Variable -Option Constant Shift ([Drawing.Point]'90, 0')
+        $Shift = '90, 0'
     } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
         $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
-        Set-Variable -Option Constant Shift ([Drawing.Point]'-15, 20')
+        $Shift = '-15, 20'
     } elseif ($PREVIOUS_BUTTON) {
         $InitialLocation = $PREVIOUS_BUTTON.Location
-        Set-Variable -Option Constant Shift ([Drawing.Point]"10, $BUTTON_HEIGHT")
+        $Shift = "10, $BUTTON_HEIGHT"
     }
 
     [Drawing.Point]$Location = $InitialLocation + $Shift

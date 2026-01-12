@@ -15,7 +15,7 @@ Describe 'Update-MicrosoftStoreApps' {
         Mock Write-LogException { }
     }
 
-    It 'Should update Microsoft Store apps successfully' {
+    It 'Should update Microsoft Store apps' {
         Update-MicrosoftStoreApps
 
         Should -Invoke Write-LogInfo -Exactly 1

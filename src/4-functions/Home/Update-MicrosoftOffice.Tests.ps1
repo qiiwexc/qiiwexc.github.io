@@ -16,7 +16,7 @@ Describe 'Update-MicrosoftOffice' {
         Mock Write-LogException { }
     }
 
-    It 'Should update Microsoft Office successfully' {
+    It 'Should update Microsoft Office' {
         Update-MicrosoftOffice
 
         Should -Invoke Write-LogInfo -Exactly 1

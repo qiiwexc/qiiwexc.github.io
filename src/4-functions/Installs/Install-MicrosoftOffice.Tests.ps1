@@ -28,7 +28,7 @@ Describe 'Install-MicrosoftOffice' {
         [String]$SYSTEM_LANGUAGE = 'en-GB'
     }
 
-    It 'Should download Microsoft Office installer successfully' {
+    It 'Should download Microsoft Office installer' {
         $TestExecute = $False
 
         Install-MicrosoftOffice -Execute:$TestExecute
@@ -48,7 +48,7 @@ Describe 'Install-MicrosoftOffice' {
         }
     }
 
-    It 'Should download and start Microsoft Office installer successfully' {
+    It 'Should download and start Microsoft Office installer' {
         Install-MicrosoftOffice -Execute:$TestExecute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1

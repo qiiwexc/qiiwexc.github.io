@@ -1,19 +1,19 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    Set-Variable -Option Constant BuilderPath ([String]'.\tools\build')
+
     . '.\tools\common\logger.ps1'
-    . '.\tools\build\unattended\New-UnattendedBase.ps1'
-    . '.\tools\build\unattended\Set-AppRemovalList.ps1'
-    . '.\tools\build\unattended\Set-CapabilitiesRemovalList.ps1'
-    . '.\tools\build\unattended\Set-FeaturesRemovalList.ps1'
-    . '.\tools\build\unattended\Set-InlineFiles.ps1'
-    . '.\tools\build\unattended\Set-LocaleSettings.ps1'
-    . '.\tools\build\unattended\Set-PowerSchemeConfiguration.ps1'
-    . '.\tools\build\unattended\Set-WindowsSecurityConfiguration.ps1'
+    . "$BuilderPath\unattended\New-UnattendedBase.ps1"
+    . "$BuilderPath\unattended\Set-AppRemovalList.ps1"
+    . "$BuilderPath\unattended\Set-CapabilitiesRemovalList.ps1"
+    . "$BuilderPath\unattended\Set-FeaturesRemovalList.ps1"
+    . "$BuilderPath\unattended\Set-InlineFiles.ps1"
+    . "$BuilderPath\unattended\Set-LocaleSettings.ps1"
+    . "$BuilderPath\unattended\Set-PowerSchemeConfiguration.ps1"
+    . "$BuilderPath\unattended\Set-WindowsSecurityConfiguration.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
-
-    Set-Variable -Option Constant BuilderPath ([String]'.\tools\build')
 
     Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
     Set-Variable -Option Constant TestSourcePath ([String]'TEST_SOURCE_PATH')
@@ -96,7 +96,7 @@ Describe 'New-UnattendedFile' {
         Mock Out-Success {}
     }
 
-    It 'Should create unattended files successfully' {
+    It 'Should create unattended files' {
         New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath
 
         Should -Invoke New-UnattendedBase -Exactly 1

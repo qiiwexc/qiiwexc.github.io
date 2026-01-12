@@ -36,7 +36,6 @@ function New-Button {
         $Shift = "0, $INTERVAL_BUTTON"
     }
 
-
     [Drawing.Point]$Location = $InitialLocation + $Shift
 
     $Button.Font = $BUTTON_FONT

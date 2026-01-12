@@ -20,7 +20,7 @@ Describe 'Install-Unchecky' {
         [Switch]$TestSilent = $True
     }
 
-    It 'Should download Unchecky successfully' {
+    It 'Should download Unchecky' {
         $TestExecute = $False
         $TestSilent = $False
 
@@ -37,7 +37,7 @@ Describe 'Install-Unchecky' {
         }
     }
 
-    It 'Should install Unchecky successfully' {
+    It 'Should install Unchecky' {
         $TestSilent = $False
 
         Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent

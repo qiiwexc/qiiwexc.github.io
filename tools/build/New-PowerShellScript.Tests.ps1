@@ -34,7 +34,7 @@ Describe 'New-PowerShellScript' {
         Mock Out-Success {}
     }
 
-    It 'Should create PowerShell script successfully' {
+    It 'Should create PowerShell script' {
         New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig
 
         Should -Invoke Get-ChildItem -Exactly 1
