@@ -1,4 +1,3 @@
-#Requires -PSEdition Desktop
 #Requires -Version 5
 
 param(
@@ -13,20 +12,20 @@ param(
 )
 
 if ($Full) {
-    $Autounattend = $true
-    $Bat = $true
-    $Html = $true
-    $Ps1 = $true
-    $Tests = $true
-    $Update = $true
+    $Autounattend = $True
+    $Bat = $True
+    $Html = $True
+    $Ps1 = $True
+    $Tests = $True
+    $Update = $True
 }
 
 if ($Dev) {
-    $Bat = $true
+    $Bat = $True
 }
 
 if ($Bat) {
-    $Ps1 = $true
+    $Ps1 = $True
 }
 
 Set-Variable -Option Constant Version ([String](Get-Date -Format 'y.M.d'))

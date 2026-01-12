@@ -102,8 +102,8 @@ Describe 'Write-FormLog' {
             SelectionStart = 0
             SelectionColor = ''
         } -Methods @{
-            AppendText    = { return AppendText }
-            ScrollToCaret = { return ScrollToCaret }
+            AppendText    = { AppendText }
+            ScrollToCaret = { ScrollToCaret }
         }
 
         Mock AppendText {

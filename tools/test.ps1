@@ -1,4 +1,3 @@
-#Requires -PSEdition Desktop
 #Requires -Version 5
 
 param(
@@ -6,18 +5,21 @@ param(
     [Switch]$Wip
 )
 
-Set-Variable -Option Constant CoverageEnabled $(if ($Coverage) { $True } else { $False })
 Set-Variable -Option Constant Tag $(if ($Wip) { 'WIP' } else { $Null })
 
 Set-Variable -Option Constant PesterOptions @{
     Run          = @{
-        Path = @('tools/common', 'tools/build', 'src/1-components')
+        Path = @(
+            'tools\common',
+            'tools\build',
+            'src\1-components'
+        )
     }
     Filter       = @{
         Tag = $Tag
     }
     CodeCoverage = @{
-        Enabled    = $CoverageEnabled
+        Enabled    = $Coverage.ToBool()
         OutputPath = 'build\coverage.xml'
     }
     Output       = @{
