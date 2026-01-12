@@ -19,7 +19,6 @@
   <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
   <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
   <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
-  <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
   <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
   <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
   <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="group_wab_auto_file" />
@@ -34,7 +33,6 @@
   <Association Identifier=".m4a" ProgId="VLC.m4a" ApplicationName="VLC media player" />
   <Association Identifier=".m4v" ProgId="VLC.m4v" ApplicationName="VLC media player" />
   <Association Identifier=".mhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-  <Association Identifier=".mid" ProgId="VLC.mid" ApplicationName="VLC media player" />
   <Association Identifier=".mka" ProgId="VLC.mka" ApplicationName="VLC media player" />
   <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
   <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
