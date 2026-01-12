@@ -1,11 +1,7 @@
 {
     "WPFTweaks":  [
-                      "WPFTweaksAH",
                       "WPFTweaksBraveDebloat",
                       "WPFTweaksConsumerFeatures",
-                      "WPFTweaksDeleteTempFiles",
-                      "WPFTweaksDisableLMS1",
-                      "WPFTweaksDiskCleanup",
                       "WPFTweaksDVR",
                       "WPFTweaksEdgeDebloat",
                       "WPFTweaksEndTaskOnTaskbar",
@@ -15,7 +11,9 @@
                       "WPFTweaksRemoveCopilot",
                       "WPFTweaksRestorePoint",
                       "WPFTweaksTele",
-                      "WPFTweaksWifi"
+                      "WPFTweaksWifi",
+                      "WPFTweaksDeleteTempFiles",
+                      "WPFTweaksDiskCleanup"
                   ],
     "Install":  [
 

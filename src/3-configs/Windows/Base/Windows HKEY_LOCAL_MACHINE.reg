@@ -345,7 +345,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
 "AllowClipboardHistory"=dword:00000000
 "AllowCrossDeviceClipboard"=dword:00000000
-"EnableActivityFeed"=dword:00000000
 "EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000
@@ -506,7 +505,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
 "AllowClipboardHistory"=dword:00000000
 "AllowCrossDeviceClipboard"=dword:00000000
-"EnableActivityFeed"=dword:00000000
 "EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000

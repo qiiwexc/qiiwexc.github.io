@@ -68,7 +68,6 @@ Microsoft.WindowsFeedbackHub                   # App for providing feedback to M
 Microsoft.WindowsMaps                          # Mapping and navigation app
 Microsoft.WindowsSoundRecorder                 # Basic audio recording app
 Microsoft.WindowsTerminal                      # New default terminal app in windows 11 (Command Prompt, PowerShell, WSL)
-Microsoft.Xbox.TCUI                            # UI framework, seems to be required for MS store, photos and certain games
 Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
 Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
 Microsoft.XboxSpeechToTextOverlay              # Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)
