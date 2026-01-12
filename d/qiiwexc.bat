@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.12')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.13')
 ::
 ::#endregion init > Version
 ::
@@ -157,7 +157,7 @@ if "%debug%"=="true" (
 ::
 ::
 ::Set-Variable -Option Constant FONT_NAME ([String]'Microsoft Sans Serif')
-::Set-Variable -Option Constant BUTTON_FONT ([String]"$FONT_NAME, 10")
+::Set-Variable -Option Constant BUTTON_FONT ([System.Drawing.Font]"$FONT_NAME, 10")
 ::
 ::#endregion init > UI constants
 ::
@@ -201,7 +201,6 @@ if "%debug%"=="true" (
 ::        $InitialLocation = $PREVIOUS_BUTTON.Location
 ::        $Shift = "0, $INTERVAL_BUTTON"
 ::    }
-::
 ::
 ::    [Drawing.Point]$Location = $InitialLocation + $Shift
 ::
@@ -326,7 +325,7 @@ if "%debug%"=="true" (
 ::    if ($IndexOverride) {
 ::        $GroupIndex = $IndexOverride
 ::    } else {
-::        $CURRENT_TAB.Controls | ForEach-Object { $GroupIndex += $_.Length }
+::        $CURRENT_TAB.Controls | ForEach-Object { $GroupIndex += $_.Count }
 ::    }
 ::
 ::    if ($GroupIndex -lt 3) {
@@ -397,13 +396,13 @@ if "%debug%"=="true" (
 ::    if ($PREVIOUS_RADIO) {
 ::        $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
 ::        $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
-::        Set-Variable -Option Constant Shift ([Drawing.Point]'90, 0')
+::        $Shift = '90, 0'
 ::    } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
 ::        $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
-::        Set-Variable -Option Constant Shift ([Drawing.Point]'-15, 20')
+::        $Shift = '-15, 20'
 ::    } elseif ($PREVIOUS_BUTTON) {
 ::        $InitialLocation = $PREVIOUS_BUTTON.Location
-::        Set-Variable -Option Constant Shift ([Drawing.Point]"10, $BUTTON_HEIGHT")
+::        $Shift = "10, $BUTTON_HEIGHT"
 ::    }
 ::
 ::    [Drawing.Point]$Location = $InitialLocation + $Shift
@@ -4027,9 +4026,13 @@ if "%debug%"=="true" (
 ::}
 ::
 ::function Test-NetworkConnection {
-::    if (-not (Get-NetworkAdapter)) {
-::        return 'Computer is not connected to the Internet'
+::    Set-Variable -Option Constant IsConnected ([Boolean](Get-NetworkAdapter))
+::
+::    if (-not $IsConnected) {
+::        Write-LogError 'Computer is not connected to the Internet'
 ::    }
+::
+::    return $IsConnected
 ::}
 ::
 ::#endregion functions > Common > Network
@@ -4055,13 +4058,13 @@ if "%debug%"=="true" (
 ::
 ::function Open-InBrowser {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$URL
+::        [String][Parameter(Position = 0, Mandatory)]$Url
 ::    )
 ::
-::    Write-LogInfo "Opening URL in the default browser: $URL"
+::    Write-LogInfo "Opening URL in the default browser: $Url"
 ::
 ::    try {
-::        [Diagnostics.Process]::Start($URL)
+::        Start-Process $Url
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Could not open the URL'
 ::    }
@@ -4195,10 +4198,8 @@ if "%debug%"=="true" (
 ::
 ::    Initialize-AppDirectory
 ::
-::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-::    if ($NoConnection) {
-::        Write-LogError "Download failed: $NoConnection" $LogIndentLevel
-::
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
 ::        if (Test-Path $SavePath) {
 ::            Write-LogWarning 'Previous download found, returning it' $LogIndentLevel
 ::            return $SavePath
@@ -4383,9 +4384,8 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
-::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-::    if ($NoConnection) {
-::        Write-LogError "Failed to check for updates: $NoConnection"
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
 ::        return
 ::    }
 ::
@@ -4414,10 +4414,8 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogWarning 'Downloading new version...'
 ::
-::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-::
-::    if ($NoConnection) {
-::        Write-LogError "Failed to download update: $NoConnection"
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
 ::        return
 ::    }
 ::
@@ -5259,9 +5257,8 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting OOShutUp10++ utility...'
 ::
-::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-::    if ($NoConnection) {
-::        Write-LogError "Failed to start: $NoConnection"
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
 ::        return
 ::    }
 ::
@@ -5298,9 +5295,8 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 ::
-::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-::    if ($NoConnection) {
-::        Write-LogError "Failed to start: $NoConnection"
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
 ::        return
 ::    }
 ::
@@ -5356,9 +5352,8 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting WinUtil utility...'
 ::
-::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-::    if ($NoConnection) {
-::        Write-LogError "Failed to start: $NoConnection"
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
 ::        return
 ::    }
 ::
@@ -5418,9 +5413,8 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting MAS activator...'
 ::
-::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-::    if ($NoConnection) {
-::        Write-LogError "Failed to start: $NoConnection"
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
 ::        return
 ::    }
 ::
@@ -5434,10 +5428,10 @@ if "%debug%"=="true" (
 ::        $Params += ' /Ohook'
 ::    }
 ::
-::    if ($OS_VERSION -eq 7) {
-::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win'))) $Params"
+::    if ($OS_VERSION -le 7) {
+::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))$Params"
 ::    } else {
-::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win))) $Params"
+::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
 ::    }
 ::
 ::    Out-Success
@@ -5513,10 +5507,10 @@ if "%debug%"=="true" (
 ::    }
 ::    Write-ActivityProgress -PercentComplete 80
 ::
-::    Start-Process 'cleanmgr.exe' -ArgumentList '/sagerun:3224'
+::    Start-Process 'cleanmgr.exe' '/sagerun:3224'
 ::
 ::    Write-ActivityProgress -PercentComplete 90
-::    Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
+::    Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
 ::        Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
 ::    }
 ::
@@ -5533,12 +5527,10 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user'
+::        Out-Success
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to update Microsoft Office'
-::        return
 ::    }
-::
-::    Out-Success
 ::}
 ::
 ::#endregion functions > Home > Update-MicrosoftOffice
@@ -5551,12 +5543,10 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'"
+::        Out-Success
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to update Microsoft Store apps'
-::        return
 ::    }
-::
-::    Out-Success
 ::}
 ::
 ::#endregion functions > Home > Update-MicrosoftStoreApps
@@ -5573,12 +5563,11 @@ if "%debug%"=="true" (
 ::        } else {
 ::            Start-Process 'wuauclt' '/detectnow /updatenow'
 ::        }
+::
+::        Out-Success
 ::    } catch [Exception] {
 ::        Write-LogException $_ 'Failed to update Windows'
-::        return
 ::    }
-::
-::    Out-Success
 ::}
 ::
 ::#endregion functions > Home > Update-Windows
@@ -5607,7 +5596,7 @@ if "%debug%"=="true" (
 ::
 ::    $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
 ::
-::    if ($Execute -and $AV_WARNING_SHOWN) {
+::    if ($Execute) {
 ::        Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
 ::    }
 ::
@@ -5625,12 +5614,13 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 1, Mandatory)]$Silent
 ::    )
 ::
-::    Set-Variable -Option Constant Registry_Key ([String]'HKCU:\Software\Unchecky')
-::    New-RegistryKeyIfMissing $Registry_Key
+::    if ($Execute) {
+::        Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
+::        New-RegistryKeyIfMissing $RegistryKey
+::        Set-ItemProperty -Path $RegistryKey -Name 'HideTrayIcon' -Value 1
+::    }
 ::
-::    Set-ItemProperty -Path $Registry_Key -Name 'HideTrayIcon' -Value 1
-::
-::    if ($Silent) {
+::    if ($Execute -and $Silent) {
 ::        Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
 ::    }
 ::
@@ -5643,7 +5633,7 @@ if "%debug%"=="true" (
 ::#region functions > Installs > Ninite
 ::
 ::function Set-NiniteButtonState {
-::    $CHECKBOX_StartNinite.Enabled = $NINITE_CHECKBOXES.Where({ $_.Checked })
+::    $CHECKBOX_StartNinite.Enabled = $NINITE_CHECKBOXES.Where({ $_.Checked }, 'First', 1)
 ::}
 ::
 ::
