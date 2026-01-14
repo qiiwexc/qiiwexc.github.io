@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.13')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.14')
 ::
 ::#endregion init > Version
 ::
@@ -1170,7 +1170,6 @@ if "%debug%"=="true" (
 ::FileLogger\Age=1
 ::FileLogger\AgeType=0
 ::FileLogger\Backup=true
-::FileLogger\Enabled=true
 ::GUI\Notifications\TorrentAdded=false
 ::
 ::[BitTorrent]
@@ -1348,7 +1347,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
 ::  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
-::  <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
 ::  <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
 ::  <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
 ::  <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="group_wab_auto_file" />
@@ -1363,7 +1361,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".m4a" ProgId="VLC.m4a" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m4v" ProgId="VLC.m4v" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier=".mid" ProgId="VLC.mid" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mka" ProgId="VLC.mka" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
@@ -1428,7 +1425,6 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant CONFIG_FEATURES_TO_REMOVE (
 ::    [Collections.Generic.List[String]]@(
-::        'MediaPlayback'
 ::        'MicrosoftWindowsPowerShellV2Root'
 ::        'Recall'
 ::    )
@@ -2358,7 +2354,6 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
 ::"AllowClipboardHistory"=dword:00000000
 ::"AllowCrossDeviceClipboard"=dword:00000000
-::"EnableActivityFeed"=dword:00000000
 ::"EnableMmx"=dword:00000000
 ::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 ::"UploadUserActivities"=dword:00000000
@@ -2519,7 +2514,6 @@ if "%debug%"=="true" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
 ::"AllowClipboardHistory"=dword:00000000
 ::"AllowCrossDeviceClipboard"=dword:00000000
-::"EnableActivityFeed"=dword:00000000
 ::"EnableMmx"=dword:00000000
 ::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 ::"UploadUserActivities"=dword:00000000
@@ -3066,7 +3060,6 @@ if "%debug%"=="true" (
 ::Microsoft.WindowsMaps                          # Mapping and navigation app
 ::Microsoft.WindowsSoundRecorder                 # Basic audio recording app
 ::Microsoft.WindowsTerminal                      # New default terminal app in windows 11 (Command Prompt, PowerShell, WSL)
-::Microsoft.Xbox.TCUI                            # UI framework, seems to be required for MS store, photos and certain games
 ::Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
 ::Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
 ::Microsoft.XboxSpeechToTextOverlay              # Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)
@@ -3533,12 +3526,8 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant CONFIG_WINUTIL '{
 ::    "WPFTweaks":  [
-::                      "WPFTweaksAH",
 ::                      "WPFTweaksBraveDebloat",
 ::                      "WPFTweaksConsumerFeatures",
-::                      "WPFTweaksDeleteTempFiles",
-::                      "WPFTweaksDisableLMS1",
-::                      "WPFTweaksDiskCleanup",
 ::                      "WPFTweaksDVR",
 ::                      "WPFTweaksEdgeDebloat",
 ::                      "WPFTweaksEndTaskOnTaskbar",
@@ -3548,7 +3537,9 @@ if "%debug%"=="true" (
 ::                      "WPFTweaksRemoveCopilot",
 ::                      "WPFTweaksRestorePoint",
 ::                      "WPFTweaksTele",
-::                      "WPFTweaksWifi"
+::                      "WPFTweaksWifi",
+::                      "WPFTweaksDeleteTempFiles",
+::                      "WPFTweaksDiskCleanup"
 ::                  ],
 ::    "Install":  [
 ::
