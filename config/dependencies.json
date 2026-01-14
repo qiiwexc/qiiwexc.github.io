@@ -1,4 +1,4 @@
-﻿[
+[
     {
         "name":  "SystemRescue",
         "version":  "12.03",
@@ -30,7 +30,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "476008c3a4d68568b73dde0a8aed127d3b7ebc34",
+        "version":  "1294695711f5601c47308fe27539cfb44b9558e3",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"

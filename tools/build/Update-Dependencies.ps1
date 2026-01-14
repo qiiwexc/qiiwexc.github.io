@@ -86,7 +86,7 @@ function Update-Dependencies {
 
     Write-LogInfo "Saving updated dependencies to $DependenciesFile"
     Set-Variable -Option Constant UpdatedDependencies ([String]($Dependencies | ConvertTo-Json -Depth 10))
-    Set-Content $DependenciesFile $UpdatedDependencies -Encoding UTF8
+    Write-File $DependenciesFile $UpdatedDependencies
 
     Write-Progress -Activity 'Update' -Complete
 
