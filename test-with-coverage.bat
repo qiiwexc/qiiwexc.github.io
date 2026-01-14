@@ -1,3 +1,3 @@
 @echo off
 
-powershell -ExecutionPolicy Bypass ".\tools\test.ps1 -Coverage"
+powershell -ExecutionPolicy Bypass "Invoke-Pester -Configuration (. '.\PesterSettings.ps1' -Coverage)"
