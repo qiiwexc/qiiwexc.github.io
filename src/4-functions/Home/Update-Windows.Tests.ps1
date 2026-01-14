@@ -11,10 +11,10 @@ BeforeAll {
 
 Describe 'Update-Windows' {
     BeforeEach {
-        Mock Write-LogInfo { }
-        Mock Start-Process { }
-        Mock Out-Success { }
-        Mock Write-LogException { }
+        Mock Write-LogInfo {}
+        Mock Start-Process {}
+        Mock Out-Success {}
+        Mock Write-LogException {}
 
         [Int]$OS_VERSION = 11
     }

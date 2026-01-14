@@ -14,11 +14,11 @@ BeforeAll {
 
 Describe 'Get-BatteryReport' {
     BeforeEach {
-        Mock Write-LogInfo { }
-        Mock Initialize-AppDirectory { }
-        Mock powercfg { }
-        Mock Open-InBrowser { }
-        Mock Out-Success { }
+        Mock Write-LogInfo {}
+        Mock Initialize-AppDirectory {}
+        Mock powercfg {}
+        Mock Open-InBrowser {}
+        Mock Out-Success {}
     }
 
     It 'Should export and open battery report' {

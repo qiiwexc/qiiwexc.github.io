@@ -9,7 +9,7 @@ BeforeAll {
     Set-Variable -Option Constant CHECKBOX_HEIGHT ([Int]20)
     Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
 
-    function Add { }
+    function Add {}
 }
 
 Describe 'New-RadioButton' {
@@ -30,7 +30,7 @@ Describe 'New-RadioButton' {
         [Switch]$TestDisabledArg = $False
         [Switch]$TestCheckedArg = $False
 
-        Mock Add { }
+        Mock Add {}
     }
 
     It 'Should create a new radio button' {

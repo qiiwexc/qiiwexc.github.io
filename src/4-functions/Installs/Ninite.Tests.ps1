@@ -76,8 +76,8 @@ Describe 'Get-NiniteInstaller' {
 
         Set-Variable -Option Constant TestExecute ([Switch]$True)
 
-        Mock Open-InBrowser { }
-        Mock Start-DownloadUnzipAndRun { }
+        Mock Open-InBrowser {}
+        Mock Start-DownloadUnzipAndRun {}
     }
 
     It 'Should open Ninite URL in browser' {

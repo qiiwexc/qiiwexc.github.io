@@ -12,9 +12,9 @@ BeforeAll {
 
 Describe 'Install-Unchecky' {
     BeforeEach {
-        Mock New-RegistryKeyIfMissing { }
-        Mock Set-ItemProperty { }
-        Mock Start-DownloadUnzipAndRun { }
+        Mock New-RegistryKeyIfMissing {}
+        Mock Set-ItemProperty {}
+        Mock Start-DownloadUnzipAndRun {}
 
         [Switch]$TestExecute = $True
         [Switch]$TestSilent = $True

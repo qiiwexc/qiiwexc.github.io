@@ -10,10 +10,10 @@ BeforeAll {
 
 Describe 'Update-MicrosoftOffice' {
     BeforeEach {
-        Mock Write-LogInfo { }
-        Mock Start-Process { }
-        Mock Out-Success { }
-        Mock Write-LogException { }
+        Mock Write-LogInfo {}
+        Mock Start-Process {}
+        Mock Out-Success {}
+        Mock Write-LogException {}
     }
 
     It 'Should update Microsoft Office' {

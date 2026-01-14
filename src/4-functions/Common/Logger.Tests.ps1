@@ -36,7 +36,7 @@ Describe 'Get-Emoji' {
 
 Describe 'Format-Message' {
     BeforeAll {
-        function ToString { }
+        function ToString {}
     }
 
     BeforeEach {

@@ -19,10 +19,10 @@ BeforeAll {
 
 Describe 'Install-MicrosoftOffice' {
     BeforeEach {
-        Mock Initialize-AppDirectory { }
-        Mock Set-Content { }
-        Mock Import-RegistryConfiguration { }
-        Mock Start-DownloadUnzipAndRun { }
+        Mock Initialize-AppDirectory {}
+        Mock Set-Content {}
+        Mock Import-RegistryConfiguration {}
+        Mock Start-DownloadUnzipAndRun {}
 
         [Switch]$TestExecute = $True
         [String]$SYSTEM_LANGUAGE = 'en-GB'

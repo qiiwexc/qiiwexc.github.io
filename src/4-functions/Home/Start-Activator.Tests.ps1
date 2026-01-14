@@ -10,10 +10,10 @@ BeforeAll {
 
 Describe 'Start-Activator' {
     BeforeEach {
-        Mock Write-LogInfo { }
+        Mock Write-LogInfo {}
         Mock Test-NetworkConnection { return $True }
-        Mock Invoke-CustomCommand { }
-        Mock Out-Success { }
+        Mock Invoke-CustomCommand {}
+        Mock Out-Success {}
 
         [Switch]$TestActivateWindowsArg = $False
         [Switch]$TestActivateOfficeArg = $False

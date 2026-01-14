@@ -10,7 +10,7 @@ BeforeAll {
 
     Set-Variable -Option Constant PREVIOUS_BUTTON ([Windows.Forms.Button]@{ Location = '15, 20' })
 
-    function Add { }
+    function Add {}
 }
 
 Describe 'New-Label' {
@@ -25,7 +25,7 @@ Describe 'New-Label' {
             }
         )
 
-        Mock Add { }
+        Mock Add {}
     }
 
     It 'Should create a new label' {

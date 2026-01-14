@@ -8,7 +8,7 @@ BeforeAll {
 
     Set-Variable -Option Constant GROUP_WIDTH ([Int]200)
 
-    function Add { }
+    function Add {}
 }
 
 Describe 'New-GroupBox' {
@@ -27,7 +27,7 @@ Describe 'New-GroupBox' {
             }
         }
 
-        Mock Add { }
+        Mock Add {}
     }
 
     It 'Should create a new group box' {
