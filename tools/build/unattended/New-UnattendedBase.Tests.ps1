@@ -52,7 +52,7 @@ Describe 'New-UnattendedBase' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw
+        { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Write-File -Exactly 0
@@ -61,7 +61,7 @@ Describe 'New-UnattendedBase' {
     It 'Should handle Write-File failure' {
         Mock Write-File { throw $TestException }
 
-        { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw
+        { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Write-File -Exactly 1

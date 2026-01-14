@@ -88,7 +88,7 @@ Describe 'Set-InlineFiles' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        { Set-InlineFiles $LocaleEnglish $TestConfigsPath $TestTemplateContent } | Should -Throw
+        { Set-InlineFiles $LocaleEnglish $TestConfigsPath $TestTemplateContent } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 3
     }

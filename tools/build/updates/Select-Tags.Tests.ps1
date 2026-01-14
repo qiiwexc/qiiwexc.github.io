@@ -94,7 +94,7 @@ Describe 'Select-Tags' {
     It 'Should handle Invoke-GitAPI failure' {
         Mock Invoke-GitAPI { throw $TestException }
 
-        { Select-Tags $TestDependency } | Should -Throw
+        { Select-Tags $TestDependency } | Should -Throw $TestException
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0

@@ -197,7 +197,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle New-UnattendedBase failure' {
         Mock New-UnattendedBase { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 0
@@ -216,7 +216,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Get-Content failure when reading base file' {
         Mock Get-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBaseFilePath }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -236,7 +236,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-LocaleSettings failure' {
         Mock Set-LocaleSettings { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -255,7 +255,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-AppRemovalList failure' {
         Mock Set-AppRemovalList { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -274,7 +274,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-CapabilitiesRemovalList failure' {
         Mock Set-CapabilitiesRemovalList { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -293,7 +293,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-FeaturesRemovalList failure' {
         Mock Set-FeaturesRemovalList { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -312,7 +312,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-WindowsSecurityConfiguration failure' {
         Mock Set-WindowsSecurityConfiguration { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -331,7 +331,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-PowerSchemeConfiguration failure' {
         Mock Set-PowerSchemeConfiguration { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -350,7 +350,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-InlineFiles failure' {
         Mock Set-InlineFiles { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -369,7 +369,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-Content failure when writing English build file' {
         Mock Set-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -389,7 +389,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-Content failure when writing Russian build file' {
         Mock Set-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -409,7 +409,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Copy-Item failure' {
         Mock Copy-Item { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -428,7 +428,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Get-Content failure when reading English build file' {
         Mock Get-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 2
@@ -448,7 +448,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Get-Content failure when reading Russian build file' {
         Mock Get-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 3
@@ -470,7 +470,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-Content failure when writing English dist file' {
         Mock Set-Content { throw $TestException } -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 2
@@ -490,7 +490,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-Content failure when writing Russian dist file' {
         Mock Set-Content { throw $TestException } -ParameterFilter { $Path -eq $TestDistFileNameRussian }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 3

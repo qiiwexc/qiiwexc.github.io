@@ -23,7 +23,7 @@ Describe 'Set-WindowsSecurityConfiguration' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        { Set-WindowsSecurityConfiguration $SourcePath $TestTemplateContent } | Should -Throw
+        { Set-WindowsSecurityConfiguration $SourcePath $TestTemplateContent } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {

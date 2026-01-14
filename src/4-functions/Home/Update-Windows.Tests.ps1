@@ -3,7 +3,7 @@ BeforeAll {
 
     . '.\src\4-functions\Common\Logger.ps1'
 
-    Set-Variable -Option Constant OS_VERSION ([String]'TEST_EXCEPTION')
+    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestRegistryKey ([String]'HKCU:\Software\Unchecky')
     Set-Variable -Option Constant TestUncheckyUrl ([String]'{URL_UNCHECKY}')

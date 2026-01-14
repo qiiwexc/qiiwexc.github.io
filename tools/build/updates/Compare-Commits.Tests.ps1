@@ -77,7 +77,7 @@ Describe 'Compare-Commits' {
     It 'Should handle Invoke-GitAPI failure' {
         Mock Invoke-GitAPI { throw $TestException }
 
-        { Compare-Commits $TestDependency } | Should -Throw
+        { Compare-Commits $TestDependency } | Should -Throw $TestException
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0

@@ -103,7 +103,7 @@ Describe 'Start-Cleanup' {
     It 'Should handle Delete-DeliveryOptimizationCache failure' {
         Mock Delete-DeliveryOptimizationCache { throw $TestException }
 
-        { Start-Cleanup } | Should -Throw
+        { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -120,7 +120,7 @@ Describe 'Start-Cleanup' {
     It 'Should handle Remove-Item failure' {
         Mock Remove-Item { throw $TestException }
 
-        { Start-Cleanup } | Should -Throw
+        { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
@@ -137,7 +137,7 @@ Describe 'Start-Cleanup' {
     It 'Should handle Get-ChildItem failure' {
         Mock Get-ChildItem { throw $TestException }
 
-        { Start-Cleanup } | Should -Throw
+        { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
@@ -154,7 +154,7 @@ Describe 'Start-Cleanup' {
     It 'Should handle Remove-ItemProperty failure' {
         Mock Remove-ItemProperty { throw $TestException }
 
-        { Start-Cleanup } | Should -Throw
+        { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
@@ -171,7 +171,7 @@ Describe 'Start-Cleanup' {
     It 'Should handle New-ItemProperty failure' {
         Mock New-ItemProperty { throw $TestException }
 
-        { Start-Cleanup } | Should -Throw
+        { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -188,7 +188,7 @@ Describe 'Start-Cleanup' {
     It 'Should handle Start-Process failure' {
         Mock Start-Process { throw $TestException }
 
-        { Start-Cleanup } | Should -Throw
+        { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 7

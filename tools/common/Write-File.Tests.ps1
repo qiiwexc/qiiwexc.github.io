@@ -25,7 +25,7 @@ Describe 'Write-File' {
     It 'Should handle New-Item failure' {
         Mock New-Item { throw $TestException }
 
-        { Write-File $TestPath $TestContent } | Should -Throw
+        { Write-File $TestPath $TestContent } | Should -Throw $TestException
 
         Should -Invoke New-Item -Exactly 1
     }

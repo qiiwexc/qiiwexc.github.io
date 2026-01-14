@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\Write-File.ps1'
     . '.\tools\build\updates\Read-GitHubToken.ps1'
     . '.\tools\build\updates\Update-FileDependency.ps1'
     . '.\tools\build\updates\Update-GitDependency.ps1'
@@ -57,7 +58,7 @@ Describe 'Update-Dependencies' {
         Mock ConvertTo-Json { return $TestWebUpdatedDependency } -ParameterFilter { $InputObject.source -eq $SourceURL }
         Mock ConvertTo-Json { return $TestFileUpdatedDependency } -ParameterFilter { $InputObject.source -eq $SourceFile }
         Mock Start-Process {}
-        Mock Set-Content {}
+        Mock Write-File {}
         Mock Out-Success {}
     }
 
@@ -84,11 +85,10 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestGitHubChangelogUrl }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
-            $Value -eq $TestGitHubUpdatedDependency -and
-            $Encoding -eq 'UTF8'
+            $Content -eq $TestGitHubUpdatedDependency
         }
         Should -Invoke Out-Success -Exactly 1
     }
@@ -112,11 +112,10 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestGitHubChangelogUrl }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
-            $Value -eq $TestGitHubUpdatedDependency -and
-            $Encoding -eq 'UTF8'
+            $Content -eq $TestGitHubUpdatedDependency
         }
         Should -Invoke Out-Success -Exactly 1
     }
@@ -140,11 +139,10 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestGitLabChangelogUrl }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
-            $Value -eq $TestGitLabUpdatedDependency -and
-            $Encoding -eq 'UTF8'
+            $Content -eq $TestGitLabUpdatedDependency
         }
         Should -Invoke Out-Success -Exactly 1
     }
@@ -167,11 +165,10 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestWebChangelogUrl }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
-            $Value -eq $TestWebUpdatedDependency -and
-            $Encoding -eq 'UTF8'
+            $Content -eq $TestWebUpdatedDependency
         }
         Should -Invoke Out-Success -Exactly 1
     }
@@ -195,11 +192,10 @@ Describe 'Update-Dependencies' {
         }
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestFileChangelogUrl }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
-            $Value -eq $TestFileUpdatedDependency -and
-            $Encoding -eq 'UTF8'
+            $Content -eq $TestFileUpdatedDependency
         }
         Should -Invoke Out-Success -Exactly 1
     }
@@ -207,7 +203,7 @@ Describe 'Update-Dependencies' {
     It 'Should handle Read-GitHubToken failure' {
         Mock Read-GitHubToken { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw
+        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -216,14 +212,14 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw
+        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -232,7 +228,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -240,7 +236,7 @@ Describe 'Update-Dependencies' {
         Mock Get-Content { return $TestGitHubDependency }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw
+        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -249,7 +245,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -257,7 +253,7 @@ Describe 'Update-Dependencies' {
         Mock Get-Content { return $TestGitLabDependency }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitLab }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw
+        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -266,7 +262,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -274,7 +270,7 @@ Describe 'Update-Dependencies' {
         Mock Get-Content { return $TestWebDependency }
         Mock Update-WebDependency { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw
+        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -283,7 +279,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-WebDependency -Exactly 1
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -291,7 +287,7 @@ Describe 'Update-Dependencies' {
         Mock Get-Content { return $TestFileDependency }
         Mock Update-FileDependency { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw
+        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -300,14 +296,14 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 1
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
     It 'Should handle Start-Process failure' {
         Mock Start-Process { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw
+        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -316,14 +312,14 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
-    It 'Should handle Set-Content failure' {
-        Mock Set-Content { throw $TestException }
+    It 'Should handle Write-File failure' {
+        Mock Write-File { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw
+        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -332,7 +328,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-File -Exactly 1
         Should -Invoke Out-Success -Exactly 0
     }
 }

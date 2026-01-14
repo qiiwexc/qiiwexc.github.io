@@ -70,7 +70,7 @@ Describe 'Update-WebDependency' {
     It 'Should handle Invoke-WebRequest failure' {
         Mock Invoke-WebRequest { throw $TestException }
 
-        { Update-WebDependency $TestDependency } | Should -Throw
+        { Update-WebDependency $TestDependency } | Should -Throw $TestException
 
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Write-LogError -Exactly 0

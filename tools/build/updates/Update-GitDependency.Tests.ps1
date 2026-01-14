@@ -66,7 +66,7 @@ Describe 'Update-GitDependency' {
         It 'Should handle Compare-Tags failure' {
             Mock Compare-Tags { throw $TestException }
 
-            { Update-GitDependency $TestDependency } | Should -Throw
+            { Update-GitDependency $TestDependency } | Should -Throw $TestException
 
             Should -Invoke Compare-Tags -Exactly 1
             Should -Invoke Select-Tags -Exactly 0
@@ -106,7 +106,7 @@ Describe 'Update-GitDependency' {
         It 'Should handle Select-Tags failure' {
             Mock Select-Tags { throw $TestException }
 
-            { Update-GitDependency $TestDependency } | Should -Throw
+            { Update-GitDependency $TestDependency } | Should -Throw $TestException
 
             Should -Invoke Compare-Tags -Exactly 0
             Should -Invoke Select-Tags -Exactly 1
@@ -146,7 +146,7 @@ Describe 'Update-GitDependency' {
         It 'Should handle Compare-Commits failure' {
             Mock Compare-Commits { throw $TestException }
 
-            { Update-GitDependency $TestDependency } | Should -Throw
+            { Update-GitDependency $TestDependency } | Should -Throw $TestException
 
             Should -Invoke Compare-Tags -Exactly 0
             Should -Invoke Select-Tags -Exactly 0

@@ -15,7 +15,7 @@ BeforeAll {
     function Add { }
 }
 
-Describe 'New-Button' -Tag 'WIP' {
+Describe 'New-Button' {
     BeforeEach {
         [Windows.Forms.Button]$script:PREVIOUS_BUTTON = $Null
         [Windows.Forms.RadioButton]$script:PREVIOUS_RADIO = $Null

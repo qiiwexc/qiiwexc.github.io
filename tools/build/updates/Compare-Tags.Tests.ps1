@@ -96,7 +96,7 @@ Describe 'Compare-Tags' {
     It 'Should handle Invoke-GitAPI failure' {
         Mock Invoke-GitAPI { throw $TestException }
 
-        { Compare-Tags $TestDependency } | Should -Throw
+        { Compare-Tags $TestDependency } | Should -Throw $TestException
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0

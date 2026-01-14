@@ -81,7 +81,7 @@ Describe 'Read-GitHubToken' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        { Read-GitHubToken $TestEnvPath } | Should -Throw
+        { Read-GitHubToken $TestEnvPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
     }
