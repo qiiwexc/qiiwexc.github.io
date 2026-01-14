@@ -13,11 +13,9 @@
   <Association Identifier=".aiff" ProgId="VLC.aiff" ApplicationName="VLC media player" />
   <Association Identifier=".asf" ProgId="VLC.asf" ApplicationName="VLC media player" />
   <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
-  <Association Identifier=".au" ProgId="VLC.au" ApplicationName="VLC media player" />
   <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
   <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
   <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
-  <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
   <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
   <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
   <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
