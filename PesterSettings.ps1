@@ -10,7 +10,8 @@ param(
             'tools\common',
             'tools\build',
             'src\1-components',
-            'src\4-functions\Common',
+            'src\4-functions\Configuration\Apps',
+            'src\4-functions\Configuration\Windows',
             'src\4-functions\Diagnostics and recovery',
             'src\4-functions\Home',
             'src\4-functions\Installs'
