@@ -47,7 +47,6 @@ Set-Variable -Option Constant KEY_FILE_MAP (
         @{Key = 'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'; File = 'Windows\Base\Windows HKEY_LOCAL_MACHINE.reg' },
         @{Key = 'CONFIG_WINDOWS_HKEY_USERS'; File = 'Windows\Base\Windows HKEY_USERS.reg' },
         @{Key = 'CONFIG_WINDOWS_LOCALISED'; File = 'Windows\Base\Windows {LOCALE}.reg' },
-        @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT'; File = 'Windows\Personalisation\Windows personalisation HKEY_CLASSES_ROOT.reg' },
         @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'; File = 'Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg' },
         @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE'; File = 'Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg' }
     )
