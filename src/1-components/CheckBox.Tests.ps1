@@ -11,7 +11,7 @@ BeforeAll {
     Set-Variable -Option Constant INTERVAL_CHECKBOX ([Int]25)
     Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
 
-    function Add { }
+    function Add {}
 }
 
 Describe 'New-CheckBox' {
@@ -32,7 +32,7 @@ Describe 'New-CheckBox' {
         [Switch]$TestDisabledArg = $False
         [Switch]$TestCheckedArg = $False
 
-        Mock Add { }
+        Mock Add {}
     }
 
     It 'Should create a new checkbox' {

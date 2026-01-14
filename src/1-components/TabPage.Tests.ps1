@@ -5,7 +5,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestText ([String]'TEST_TEXT')
 
-    function Add { }
+    function Add {}
 
     Set-Variable -Option Constant TAB_CONTROL (
         New-MockObject -Type Windows.Forms.TabControl -Properties @{
@@ -21,7 +21,7 @@ Describe 'New-TabPage' {
         [Windows.Forms.GroupBox]$script:PREVIOUS_GROUP = @{}
         [Windows.Forms.TabPage]$script:CURRENT_TAB = $Null
 
-        Mock Add { }
+        Mock Add {}
     }
 
     It 'Should create a new tab' {

@@ -12,7 +12,7 @@ BeforeAll {
     Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
     Set-Variable -Option Constant BUTTON_FONT ([System.Drawing.Font]'Microsoft Sans Serif, 10')
 
-    function Add { }
+    function Add {}
 }
 
 Describe 'New-Button' {
@@ -32,7 +32,7 @@ Describe 'New-Button' {
 
         [Switch]$TestDisabledArg = $False
 
-        Mock Add { }
+        Mock Add {}
     }
 
     It 'Should create a new button' {

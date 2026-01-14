@@ -59,7 +59,7 @@ Describe 'Update-WebDependency' {
     }
 
     It 'Should handle empty content' {
-        Mock Invoke-WebRequest { return @{ } }
+        Mock Invoke-WebRequest { return @{} }
 
         Update-WebDependency $TestDependency | Should -BeNullOrEmpty
 

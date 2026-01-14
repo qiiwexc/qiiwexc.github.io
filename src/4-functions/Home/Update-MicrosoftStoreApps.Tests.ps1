@@ -9,10 +9,10 @@ BeforeAll {
 
 Describe 'Update-MicrosoftStoreApps' {
     BeforeEach {
-        Mock Write-LogInfo { }
-        Mock Invoke-CustomCommand { }
-        Mock Out-Success { }
-        Mock Write-LogException { }
+        Mock Write-LogInfo {}
+        Mock Invoke-CustomCommand {}
+        Mock Out-Success {}
+        Mock Write-LogException {}
     }
 
     It 'Should update Microsoft Store apps' {

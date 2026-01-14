@@ -14,17 +14,17 @@ BeforeAll {
 
 Describe 'Start-Cleanup' {
     BeforeEach {
-        Mock New-Activity { }
-        Mock Write-ActivityProgress { }
-        Mock Delete-DeliveryOptimizationCache { }
-        Mock Out-Success { }
-        Mock Write-ActivityProgress { }
-        Mock Remove-Item { }
+        Mock New-Activity {}
+        Mock Write-ActivityProgress {}
+        Mock Delete-DeliveryOptimizationCache {}
+        Mock Out-Success {}
+        Mock Write-ActivityProgress {}
+        Mock Remove-Item {}
         Mock Get-ChildItem { return @($TestVolumeCache1, $TestVolumeCache2) }
-        Mock Remove-ItemProperty { }
-        Mock New-ItemProperty { }
-        Mock Start-Process { }
-        Mock Write-ActivityCompleted { }
+        Mock Remove-ItemProperty {}
+        Mock New-ItemProperty {}
+        Mock Start-Process {}
+        Mock Write-ActivityCompleted {}
     }
 
     It 'Should run cleanup' {
