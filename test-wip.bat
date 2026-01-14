@@ -1,3 +1,3 @@
 @echo off
 
-powershell -ExecutionPolicy Bypass ".\tools\test.ps1 -Wip"
+powershell -ExecutionPolicy Bypass "Invoke-Pester -Configuration (. '.\PesterSettings.ps1' -Wip)"

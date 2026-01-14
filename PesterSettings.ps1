@@ -1,25 +1,23 @@
-#Requires -Version 5
-
 param(
     [Switch]$Coverage,
     [Switch]$Wip
 )
 
-Set-Variable -Option Constant Tag $(if ($Wip) { 'WIP' } else { $Null })
-
-Set-Variable -Option Constant PesterOptions @{
+@{
     Run          = @{
+        Exit = $True
         Path = @(
             'tools\common',
             'tools\build',
             'src\1-components',
+            'src\4-functions\Common',
             'src\4-functions\Diagnostics and recovery',
             'src\4-functions\Home',
             'src\4-functions\Installs'
         )
     }
     Filter       = @{
-        Tag = $Tag
+        Tag = $(if ($Wip) { 'WIP' } else { $Null })
     }
     CodeCoverage = @{
         Enabled    = $Coverage.ToBool()
@@ -29,7 +27,3 @@ Set-Variable -Option Constant PesterOptions @{
         Verbosity = 'Detailed'
     }
 }
-
-Set-Variable -Option Constant PesterConfig (New-PesterConfiguration -Hashtable $PesterOptions)
-
-Invoke-Pester -Configuration $PesterConfig
