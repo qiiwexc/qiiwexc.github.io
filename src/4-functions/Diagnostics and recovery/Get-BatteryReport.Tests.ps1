@@ -39,7 +39,7 @@ Describe 'Get-BatteryReport' {
     It 'Should handle exceptions during battery report generation' {
         Mock powercfg { throw $TestException }
 
-        { Get-BatteryReport } | Should -Throw
+        { Get-BatteryReport } | Should -Throw $TestException
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke powercfg -Exactly 1

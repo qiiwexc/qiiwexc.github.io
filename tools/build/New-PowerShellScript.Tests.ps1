@@ -71,7 +71,7 @@ Describe 'New-PowerShellScript' {
     It 'Should handle Get-ChildItem failure' {
         Mock Get-ChildItem { throw $TestException }
 
-        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw
+        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke Get-ChildItem -Exactly 1
         Should -Invoke Get-Content -Exactly 0
@@ -82,7 +82,7 @@ Describe 'New-PowerShellScript' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException } -ParameterFilter { $Path -match '.+' }
 
-        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw
+        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke Get-ChildItem -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -93,7 +93,7 @@ Describe 'New-PowerShellScript' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw
+        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke Get-ChildItem -Exactly 1
         Should -Invoke Get-Content -Exactly 2

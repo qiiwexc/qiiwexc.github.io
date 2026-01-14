@@ -31,7 +31,7 @@ Describe 'Write-VersionFile' {
     It 'Should handle Set-Content failure' {
         Mock Write-File { throw $TestException }
 
-        { Write-VersionFile $TestVersion $TestFilePath } | Should -Throw
+        { Write-VersionFile $TestVersion $TestFilePath } | Should -Throw $TestException
 
         Should -Invoke Write-File -Exactly 1
         Should -Invoke Out-Success -Exactly 0

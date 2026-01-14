@@ -3,6 +3,8 @@ BeforeAll {
 
     . '.\tools\common\logger.ps1'
 
+    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
+
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
     Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
     Set-Variable -Option Constant TestContent ([String]'[{"key":"TEST_KEY_1","value":"TEST_VALUE_1"},{"key":"TEST_KEY_2","value":"TEST_VALUE_2"}]')
@@ -39,7 +41,7 @@ Describe 'Get-Config' {
         Mock ConvertFrom-Json {}
         Mock Get-Content { throw $TestException }
 
-        { Get-Config $TestBuildPath $TestVersion } | Should -Throw
+        { Get-Config $TestBuildPath $TestVersion } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
@@ -50,7 +52,7 @@ Describe 'Get-Config' {
     It 'Should handle ConvertFrom-Json failure' {
         Mock ConvertFrom-Json { throw $TestException }
 
-        { Get-Config $TestBuildPath $TestVersion } | Should -Throw
+        { Get-Config $TestBuildPath $TestVersion } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }

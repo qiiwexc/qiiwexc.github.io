@@ -44,7 +44,7 @@ Describe 'New-HtmlFile' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw
+        { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
@@ -59,7 +59,7 @@ Describe 'New-HtmlFile' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw
+        { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {

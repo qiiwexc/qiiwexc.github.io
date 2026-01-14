@@ -53,7 +53,7 @@ Describe 'New-BatchScript' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw
+        { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
@@ -69,7 +69,7 @@ Describe 'New-BatchScript' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw
+        { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
@@ -93,7 +93,7 @@ Describe 'New-BatchScript' {
     It 'Should handle Copy-Item failure' {
         Mock Copy-Item { throw $TestException }
 
-        { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw
+        { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {

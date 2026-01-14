@@ -54,7 +54,7 @@ Describe 'Set-Urls' {
     It 'Should handle first Get-Content failure' {
         Mock Get-Content { throw $TestException } -ParameterFilter { $Path -match $TestConfigPath }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw
+        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
@@ -65,7 +65,7 @@ Describe 'Set-Urls' {
     It 'Should handle second Get-Content failure' {
         Mock Get-Content { throw $TestException } -ParameterFilter { $Path -match $TestTemplatesPath }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw
+        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
@@ -77,7 +77,7 @@ Describe 'Set-Urls' {
     It 'Should handle first ConvertFrom-Json failure' {
         Mock ConvertFrom-Json { throw $TestException } -ParameterFilter { $InputObject -eq $TestDependenciesContent }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw
+        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
@@ -88,7 +88,7 @@ Describe 'Set-Urls' {
     It 'Should handle second ConvertFrom-Json failure' {
         Mock ConvertFrom-Json { throw $TestException } -ParameterFilter { $InputObject -eq $TestTemplateContent }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw
+        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
@@ -100,7 +100,7 @@ Describe 'Set-Urls' {
     It 'Should handle ConvertTo-Json failure' {
         Mock ConvertTo-Json { throw $TestException }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw
+        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
@@ -112,7 +112,7 @@ Describe 'Set-Urls' {
     It 'Should handle Write-File failure' {
         Mock Write-File { throw $TestException }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw
+        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }

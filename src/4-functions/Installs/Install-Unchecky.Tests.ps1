@@ -76,7 +76,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle New-RegistryKeyIfMissing failure' {
         Mock New-RegistryKeyIfMissing { throw $TestException }
 
-        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw
+        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
 
         Should -Invoke New-RegistryKeyIfMissing -Exactly 1
         Should -Invoke Set-ItemProperty -Exactly 0
@@ -86,7 +86,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle Set-ItemProperty failure' {
         Mock Set-ItemProperty { throw $TestException }
 
-        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw
+        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
 
         Should -Invoke New-RegistryKeyIfMissing -Exactly 1
         Should -Invoke Set-ItemProperty -Exactly 1
@@ -96,7 +96,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle Start-DownloadUnzipAndRun failure' {
         Mock Start-DownloadUnzipAndRun { throw $TestException }
 
-        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw
+        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
 
         Should -Invoke New-RegistryKeyIfMissing -Exactly 1
         Should -Invoke Set-ItemProperty -Exactly 1

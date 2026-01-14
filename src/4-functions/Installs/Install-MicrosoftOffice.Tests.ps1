@@ -89,7 +89,7 @@ Describe 'Install-MicrosoftOffice' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw
+        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw $TestException
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -102,7 +102,7 @@ Describe 'Install-MicrosoftOffice' {
 
         Mock Import-RegistryConfiguration { throw $TestException }
 
-        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw
+        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw $TestException
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -113,7 +113,7 @@ Describe 'Install-MicrosoftOffice' {
     It 'Should handle Start-DownloadUnzipAndRun failure' {
         Mock Start-DownloadUnzipAndRun { throw $TestException }
 
-        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw
+        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw $TestException
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
