@@ -50,14 +50,6 @@ Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
 
 . "$CommonPath\logger.ps1"
 . "$CommonPath\Write-File.ps1"
-. "$BuilderPath\Get-Config.ps1"
-. "$BuilderPath\New-BatchScript.ps1"
-. "$BuilderPath\New-HtmlFile.ps1"
-. "$BuilderPath\New-PowerShellScript.ps1"
-. "$BuilderPath\New-UnattendedFile.ps1"
-. "$BuilderPath\Set-Urls.ps1"
-. "$BuilderPath\Update-Dependencies.ps1"
-. "$BuilderPath\Write-VersionFile.ps1"
 
 Write-LogInfo 'Build task started'
 Write-LogInfo "Version                  : $Version"
@@ -76,43 +68,52 @@ New-Item -Force -ItemType Directory $BuildPath | Out-Null
 New-Item -Force -ItemType Directory $DistPath | Out-Null
 
 if ($Tests) {
-    . $TestsFile -Coverage
+    Invoke-Pester -Configuration (. '.\PesterSettings.ps1' -Coverage)
     Write-Progress -Activity 'Build' -PercentComplete 20
 }
 
 if ($Update) {
+    . "$BuilderPath\Update-Dependencies.ps1"
     Update-Dependencies $ConfigPath $BuilderPath $WipPath
     Write-Progress -Activity 'Build' -PercentComplete 30
 }
 
 if ($Html -or $Ps1) {
-    Set-Urls $ConfigPath $TemplatesPath $BuildPath
+    . "$BuilderPath\Get-Config.ps1"
+    . "$BuilderPath\Set-Urls.ps1"
+    . "$BuilderPath\Write-VersionFile.ps1"
+
+    Set-Urls $ConfigPath $TemplatesPath $BuildPath -ErrorAction Stop
     Write-Progress -Activity 'Build' -PercentComplete 40
 
-    Set-Variable -Option Constant Config (Get-Config $BuildPath $Version)
+    Set-Variable -Option Constant Config (Get-Config $BuildPath $Version -ErrorAction Stop)
     Write-Progress -Activity 'Build' -PercentComplete 50
 
-    Write-VersionFile $Version $VersionFile
+    Write-VersionFile $Version $VersionFile -ErrorAction Stop
     Write-Progress -Activity 'Build' -PercentComplete 60
 }
 
 if ($Html) {
-    New-HtmlFile $TemplatesPath $Config
+    . "$BuilderPath\New-HtmlFile.ps1"
+    New-HtmlFile $TemplatesPath $Config -ErrorAction Stop
     Write-Progress -Activity 'Build' -PercentComplete 70
 }
 
 if ($Autounattend) {
-    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath
+    . "$BuilderPath\New-UnattendedFile.ps1"
+    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath -ErrorAction Stop
     Write-Progress -Activity 'Build' -PercentComplete 80
 }
 
 if ($Ps1) {
-    New-PowerShellScript $SourcePath $Ps1File -Config $Config
+    . "$BuilderPath\New-PowerShellScript.ps1"
+    New-PowerShellScript $SourcePath $Ps1File -Config $Config -ErrorAction Stop
     Write-Progress -Activity 'Build' -PercentComplete 90
 }
 
 if ($Bat) {
-    New-BatchScript $ProjectName $Ps1File $BatchFile $VmPath
+    . "$BuilderPath\New-BatchScript.ps1"
+    New-BatchScript $ProjectName $Ps1File $BatchFile $VmPath -ErrorAction Stop
 }
 
 Write-Progress -Activity 'Build' -Complete
