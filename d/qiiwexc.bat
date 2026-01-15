@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.15')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.16')
 ::
 ::#endregion init > Version
 ::
@@ -1167,7 +1167,6 @@ if "%debug%"=="true" (
 ::Style=Fusion
 ::
 ::[Application]
-::FileLogger\Backup=true
 ::GUI\Notifications\TorrentAdded=false
 ::
 ::[BitTorrent]
@@ -1344,11 +1343,11 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
 ::  <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
-::  <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="group_wab_auto_file" />
 ::  <Association Identifier=".gz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
-::  <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".iso" ProgId="Windows.IsoFile" ApplicationName="File Explorer" />
 ::  <Association Identifier=".m2t" ProgId="VLC.m2t" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2ts" ProgId="VLC.m2ts" ApplicationName="VLC media player" />
@@ -1356,12 +1355,12 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".m3u" ProgId="VLC.m3u" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m4a" ProgId="VLC.m4a" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m4v" ProgId="VLC.m4v" ApplicationName="VLC media player" />
-::  <Association Identifier=".mhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".mhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".mka" ProgId="VLC.mka" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mov" ProgId="VLC.mov" ApplicationName="VLC media player" />
-::  <Association Identifier=".mp2" ProgId="VLC.mp2" ApplicationName="VLC media player" _resistant="true" />
+::  <Association Identifier=".mp2" ProgId="VLC.mp2" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mp2v" ProgId="VLC.mp2v" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mp3" ProgId="VLC.mp3" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mp4" ProgId="VLC.mp4" ApplicationName="VLC media player" />
@@ -1372,30 +1371,30 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".mpg" ProgId="VLC.mpg" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mpv2" ProgId="VLC.mpv2" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mts" ProgId="VLC.mts" ApplicationName="VLC media player" />
-::  <Association Identifier=".pdf" ProgId="ChromePDF" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".pdf" ProgId="ChromePDF" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".rar" ProgId="7-Zip.rar" ApplicationName="7-Zip File Manager" />
-::  <Association Identifier=".shtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier=".svg" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".shtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier=".svg" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".tar" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".tbz2" ProgId="7-Zip.tbz2" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".tgz" ProgId="7-Zip.tgz" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".torrent" ProgId="qBittorrent.File.Torrent" ApplicationName="qBittorrent - A Bittorrent Client" />
 ::  <Association Identifier=".tts" ProgId="VLC.tts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
-::  <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
 ::  <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
-::  <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
-::  <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
-::  <Association Identifier="http" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier="https" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier="mms" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier="tel" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
-::  <Association Identifier="webcal" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
+::  <Association Identifier="http" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier="https" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier="mms" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier="tel" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier="webcal" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::</DefaultAssociations>
 ::'
 ::
@@ -1408,7 +1407,6 @@ if "%debug%"=="true" (
 ::    [Collections.Generic.List[String]]@(
 ::        'App.StepsRecorder'
 ::        'App.Support.QuickAssist'
-::        'Language.Handwriting'
 ::        'Language.TextToSpeech'
 ::    )
 ::)
@@ -2934,11 +2932,7 @@ if "%debug%"=="true" (
 ::
 ::#region configs > Windows > Personalisation > Windows personalisation HKEY_LOCAL_MACHINE
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE '; Hide "3D objects" folder
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
-::[-HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}]
-::
-::; Disable widgets service
+::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE '; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
 ::
@@ -3115,7 +3109,7 @@ if "%debug%"=="true" (
 ::    { "Name": "ExplorerToOneDrive", "Value": false },
 ::    { "Name": "ExplorerToThisPC", "Value": false },
 ::    { "Name": "ForceRemoveEdge", "Value": false },
-::    { "Name": "Hide3dObjects", "Value": true },
+::    { "Name": "Hide3dObjects", "Value": false },
 ::    { "Name": "HideChat", "Value": false },
 ::    { "Name": "HideDupliDrive", "Value": true },
 ::    { "Name": "HideGallery", "Value": false },
@@ -3191,7 +3185,7 @@ if "%debug%"=="true" (
 ::    { "Name": "ExplorerToOneDrive", "Value": false },
 ::    { "Name": "ExplorerToThisPC", "Value": true },
 ::    { "Name": "ForceRemoveEdge", "Value": false },
-::    { "Name": "Hide3dObjects", "Value": true },
+::    { "Name": "Hide3dObjects", "Value": false },
 ::    { "Name": "HideChat", "Value": false },
 ::    { "Name": "HideDupliDrive", "Value": true },
 ::    { "Name": "HideGallery", "Value": false },
@@ -4890,28 +4884,13 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
 ::
-::    Set-Variable -Option Constant SophiaScriptUrl ([String]"https://raw.githubusercontent.com/farag2/Sophia-Script-for-Windows/master/src/Sophia_Script_for_Windows_$OS_VERSION/Module/Sophia.psm1")
-::    Set-Variable -Option Constant SophiaScriptPath ([String]"$PATH_TEMP_DIR\Sophia.ps1")
-::
 ::    [Collections.Generic.List[Object]]$AppAssociations = @()
 ::
 ::    Select-Xml -Xml ([xml]$CONFIG_APP_ASSOCIATIONS) -XPath '//Association' | ForEach-Object {
-::        [String][ValidateSet('Registry', 'Sophia')]$Method = $(if ($_.Node._resistant -eq 'true') { 'Sophia' } else { 'Registry' })
-::
 ::        $AppAssociations.Add(@{
-::                Method      = $Method
 ::                Application = $_.Node.ProgId
 ::                Extension   = $_.Node.Identifier
 ::            })
-::    }
-::
-::    Set-Variable -Option Constant NoConnection ([String](Test-NetworkConnection))
-::    if (-not $NoConnection) {
-::        Start-BitsTransfer -Source $SophiaScriptUrl -Destination $SophiaScriptPath -Dynamic
-::
-::        (Get-Content $SophiaScriptPath -Raw -Encoding UTF8 -Force) | Set-Content $SophiaScriptPath -Force
-::
-::        . $SophiaScriptPath
 ::    }
 ::
 ::    Set-Variable -Option Constant FileTypeCount ([Int]$AppAssociations.Count)
@@ -4934,13 +4913,7 @@ if "%debug%"=="true" (
 ::        if ($OriginalAssociation -ne $Application) {
 ::            & cmd.exe /c assoc $Extension=$Application
 ::        }
-::
-::        if (-not $NoConnection -and $FileAssociation.Method -eq 'Sophia') {
-::            Set-Association -ProgramPath $Application -Extension $Extension
-::        }
 ::    }
-::
-::    Remove-File $SophiaScriptPath
 ::
 ::    Out-Success $LogIndentLevel
 ::}
@@ -5236,11 +5209,13 @@ if "%debug%"=="true" (
 ::
 ::    $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline
 ::
-::    if ($Silent) {
+::    if ($Execute -and $Silent) {
 ::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute -Params $ConfigFile
 ::    } else {
 ::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute
 ::    }
+::
+::    Out-Success
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Tools > Start-OoShutUp10
@@ -5266,35 +5241,35 @@ if "%debug%"=="true" (
 ::
 ::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
 ::
-::    if ($Personalisation) {
-::        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
+::    if ($UsePreset -and $Personalisation) {
+::        Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
 ::    } else {
-::        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_APP_LIST)
+::        Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
 ::    }
 ::
 ::    $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline
 ::
-::    if ($Personalisation) {
-::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
+::    if ($UsePreset -and $Personalisation) {
+::        Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
 ::    } else {
-::        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_PRESET_BASE)
+::        Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
 ::    }
 ::
 ::    $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
 ::
-::    if ($UsePreset) {
-::        Set-Variable -Option Constant UsePresetParam ([String]'-RunSavedSettings')
+::    if ($UsePreset -or $Personalisation) {
+::        Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings')
 ::    }
 ::
 ::    if ($Silent) {
-::        Set-Variable -Option Constant SilentParam ([String]'-Silent')
+::        Set-Variable -Option Constant SilentParam ([String]' -Silent')
 ::    }
 ::
 ::    if ($OS_VERSION -gt 10) {
-::        Set-Variable -Option Constant SysprepParam ([String]'-Sysprep')
+::        Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
 ::    }
 ::
-::    Set-Variable -Option Constant Params ([String]"-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam")
+::    Set-Variable -Option Constant Params ([String]"-NoRestartExplorer$SysprepParam$UsePresetParam$SilentParam")
 ::
 ::    Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 ::
@@ -5332,13 +5307,13 @@ if "%debug%"=="true" (
 ::
 ::    $Configuration | Set-Content $ConfigFile -NoNewline
 ::
-::    Set-Variable -Option Constant ConfigParam ([String]"-Config $ConfigFile")
+::    Set-Variable -Option Constant ConfigParam ([String]" -Config $ConfigFile")
 ::
 ::    if ($AutomaticallyApply) {
-::        Set-Variable -Option Constant RunParam ([String]'-Run')
+::        Set-Variable -Option Constant RunParam ([String]' -Run')
 ::    }
 ::
-::    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
+::    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win')))$ConfigParam$RunParam"
 ::
 ::    Out-Success
 ::}
