@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.14')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.15')
 ::
 ::#endregion init > Version
 ::
@@ -1167,8 +1167,6 @@ if "%debug%"=="true" (
 ::Style=Fusion
 ::
 ::[Application]
-::FileLogger\Age=1
-::FileLogger\AgeType=0
 ::FileLogger\Backup=true
 ::GUI\Notifications\TorrentAdded=false
 ::
@@ -1341,11 +1339,9 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".aiff" ProgId="VLC.aiff" ApplicationName="VLC media player" />
 ::  <Association Identifier=".asf" ProgId="VLC.asf" ApplicationName="VLC media player" />
 ::  <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
-::  <Association Identifier=".au" ProgId="VLC.au" ApplicationName="VLC media player" />
 ::  <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
 ::  <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
-::  <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
 ::  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
 ::  <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
 ::  <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" _resistant="true" />
@@ -1413,7 +1409,6 @@ if "%debug%"=="true" (
 ::        'App.StepsRecorder'
 ::        'App.Support.QuickAssist'
 ::        'Language.Handwriting'
-::        'Language.Speech'
 ::        'Language.TextToSpeech'
 ::    )
 ::)
@@ -2883,30 +2878,9 @@ if "%debug%"=="true" (
 ::#endregion configs > Windows > Base > Windows Russian
 ::
 ::
-::#region configs > Windows > Personalisation > Windows personalisation HKEY_CLASSES_ROOT
-::
-::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT '; Hide "OneDrive" folder
-::[HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
-::; Hide "OneDrive" folder
-::[HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::'
-::
-::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_CLASSES_ROOT
-::
-::
 ::#region configs > Windows > Personalisation > Windows personalisation HKEY_CURRENT_USER
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER '; Hide "OneDrive" folder
-::[-HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
-::
-::; Hide "OneDrive" folder
-::[HKEY_CURRENT_USER\Software\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}]
-::"System.IsPinnedToNameSpaceTree"=dword:00000000
-::
-::; Enable classic context menu
+::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER '; Enable classic context menu
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 ::@=""
 ::
@@ -3059,7 +3033,6 @@ if "%debug%"=="true" (
 ::Microsoft.WindowsFeedbackHub                   # App for providing feedback to Microsoft on Windows
 ::Microsoft.WindowsMaps                          # Mapping and navigation app
 ::Microsoft.WindowsSoundRecorder                 # Basic audio recording app
-::Microsoft.WindowsTerminal                      # New default terminal app in windows 11 (Command Prompt, PowerShell, WSL)
 ::Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
 ::Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
 ::Microsoft.XboxSpeechToTextOverlay              # Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)
@@ -4451,7 +4424,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
 ::
-::    Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\AnyDesk\user.conf")
+::    Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
 ::
 ::    if (Test-Path $ConfigPath) {
 ::        Set-Variable -Option Constant CurrentConfig ([String](Get-Content $ConfigPath -Raw -Encoding UTF8))
@@ -5183,8 +5156,6 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines.Add("`n")
-::    $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_CLASSES_ROOT)
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER)
 ::    $ConfigLines.Add("`n")
