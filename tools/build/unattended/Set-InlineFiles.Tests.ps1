@@ -13,7 +13,7 @@ BeforeAll {
     Set-Variable -Option Constant TestGenericFileContent ([String]"TEST_GENERIC_FILE_CONTENT_1`nTEST_GENERIC_FILE_CONTENT_2`t")
 }
 
-Describe 'Set-InlineFiles' -Tag 'WIP' {
+Describe 'Set-InlineFiles' {
     BeforeEach {
         Mock Get-Content { return $TestGenericFileContent }
         Mock Get-Content { return $TestRegFileContent } -ParameterFilter { $Path -match '.reg$' }
