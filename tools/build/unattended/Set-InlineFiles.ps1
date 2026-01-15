@@ -15,8 +15,6 @@ function Set-InlineFiles {
         if ($FileName -match '.reg$') {
             $FullContent.Add("Windows Registry Editor Version 5.00`n")
             $FullContent.Add($FileContent.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\DefaultUser'))
-        } elseif ($FileName -match '.xml$') {
-            $FullContent.Add($FileContent.Replace(' _resistant="true"', ''))
         } else {
             $FullContent = $FileContent
         }

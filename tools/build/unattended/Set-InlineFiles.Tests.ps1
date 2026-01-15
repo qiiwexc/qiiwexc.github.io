@@ -10,15 +10,13 @@ BeforeAll {
     Set-Variable -Option Constant TestTemplateContent ([String]"TEST_TEMPLATE_CONTENT_1`n{CONFIG_APP_ASSOCIATIONS}`n{CONFIG_QBITTORRENT_LOCALIZED}`n{CONFIG_WINDOWS_HKEY_LOCAL_MACHINE}`n{CONFIG_WINDOWS_LOCALISED}`nTEST_TEMPLATE_CONTENT_2")
 
     Set-Variable -Option Constant TestRegFileContent ([String]"TEST_REG_FILE_CONTENT_1`n[HKEY_CURRENT_USER\Test]`n`"TestValue`"=1`nTEST_REG_FILE_CONTENT_2 ")
-    Set-Variable -Option Constant TestXmlFileContent ([String]"TEST_XML_FILE_CONTENT_1`n<tag _resistant=`"true`">TEST_CONTENT</tag>`nTEST_XML_FILE_CONTENT_2`n")
     Set-Variable -Option Constant TestGenericFileContent ([String]"TEST_GENERIC_FILE_CONTENT_1`nTEST_GENERIC_FILE_CONTENT_2`t")
 }
 
-Describe 'Set-InlineFiles' {
+Describe 'Set-InlineFiles' -Tag 'WIP' {
     BeforeEach {
         Mock Get-Content { return $TestGenericFileContent }
         Mock Get-Content { return $TestRegFileContent } -ParameterFilter { $Path -match '.reg$' }
-        Mock Get-Content { return $TestXmlFileContent } -ParameterFilter { $Path -match '.xml$' }
     }
 
     It 'Should inline English configuration files correctly' {
@@ -48,7 +46,6 @@ Describe 'Set-InlineFiles' {
 
         $Result | Should -Match 'TEST_TEMPLATE_CONTENT_1'
         $Result | Should -Match "Windows Registry Editor Version 5\.00`n`nTEST_REG_FILE_CONTENT_1`n\[HKEY_USERS\\DefaultUser\\Test\]`n&quot;TestValue&quot;=1`nTEST_REG_FILE_CONTENT_2"
-        $Result | Should -Match "TEST_XML_FILE_CONTENT_1`n&lt;tag&gt;TEST_CONTENT&lt;/tag&gt;`nTEST_XML_FILE_CONTENT_2"
         $Result | Should -Match "TEST_GENERIC_FILE_CONTENT_1`nTEST_GENERIC_FILE_CONTENT_2"
         $Result | Should -Match 'TEST_TEMPLATE_CONTENT_2'
     }
@@ -80,7 +77,6 @@ Describe 'Set-InlineFiles' {
 
         $Result | Should -Match 'TEST_TEMPLATE_CONTENT_1'
         $Result | Should -Match "Windows Registry Editor Version 5\.00`n`nTEST_REG_FILE_CONTENT_1`n\[HKEY_USERS\\DefaultUser\\Test\]`n&quot;TestValue&quot;=1`nTEST_REG_FILE_CONTENT_2"
-        $Result | Should -Match "TEST_XML_FILE_CONTENT_1`n&lt;tag&gt;TEST_CONTENT&lt;/tag&gt;`nTEST_XML_FILE_CONTENT_2"
         $Result | Should -Match "TEST_GENERIC_FILE_CONTENT_1`nTEST_GENERIC_FILE_CONTENT_2"
         $Result | Should -Match 'TEST_TEMPLATE_CONTENT_2'
     }
@@ -90,6 +86,6 @@ Describe 'Set-InlineFiles' {
 
         { Set-InlineFiles $LocaleEnglish $TestConfigsPath $TestTemplateContent } | Should -Throw $TestException
 
-        Should -Invoke Get-Content -Exactly 3
+        Should -Invoke Get-Content -Exactly 2
     }
 }

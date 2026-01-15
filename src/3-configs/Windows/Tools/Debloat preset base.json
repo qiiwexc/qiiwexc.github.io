@@ -43,7 +43,7 @@
     { "Name": "ExplorerToOneDrive", "Value": false },
     { "Name": "ExplorerToThisPC", "Value": false },
     { "Name": "ForceRemoveEdge", "Value": false },
-    { "Name": "Hide3dObjects", "Value": true },
+    { "Name": "Hide3dObjects", "Value": false },
     { "Name": "HideChat", "Value": false },
     { "Name": "HideDupliDrive", "Value": true },
     { "Name": "HideGallery", "Value": false },
