@@ -23,9 +23,11 @@ function Start-OoShutUp10 {
 
     $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline
 
-    if ($Silent) {
+    if ($Execute -and $Silent) {
         Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute -Params $ConfigFile
     } else {
         Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute
     }
+
+    Out-Success
 }

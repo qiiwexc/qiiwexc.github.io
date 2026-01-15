@@ -20,5 +20,5 @@ function Read-GitHubToken {
         }
     }
 
-    return $null
+    return $Null
 }

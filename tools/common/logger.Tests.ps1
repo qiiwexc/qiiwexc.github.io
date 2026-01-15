@@ -99,7 +99,7 @@ Describe 'Write-LogInfo' {
 
     It 'Should log message correctly for info level with indent level <Level>' -ForEach @(
         @{ Level = 1; Expected = 1 }
-        @{ Level = $null; Expected = 0 }
+        @{ Level = $Null; Expected = 0 }
     ) {
         Write-LogInfo $TestMessage $Level
 
@@ -126,7 +126,7 @@ Describe 'Write-LogWarning' {
 
     It 'Should log message correctly for warning level with indent level <Level>' -ForEach @(
         @{ Level = 1; Expected = 1 }
-        @{ Level = $null; Expected = 0 }
+        @{ Level = $Null; Expected = 0 }
     ) {
         Write-LogWarning $TestMessage $Level
 
@@ -153,7 +153,7 @@ Describe 'Write-LogError' {
 
     It 'Should log message correctly for error level with indent level <Level>' -ForEach @(
         @{ Level = 1; Expected = 1 }
-        @{ Level = $null; Expected = 0 }
+        @{ Level = $Null; Expected = 0 }
     ) {
         Write-LogError $TestMessage $Level
 
@@ -180,7 +180,7 @@ Describe 'Write-LogException' {
 
     It 'Should log exception correctly with indent level <Level>' -ForEach @(
         @{ Level = 1; Expected = 1 }
-        @{ Level = $null; Expected = 0 }
+        @{ Level = $Null; Expected = 0 }
     ) {
         Write-LogException $TestException $TestMessage $Level
 
@@ -204,7 +204,7 @@ Describe 'Out-Status' {
 
     It 'Should log status correctly with indent level <Level>' -ForEach @(
         @{ Level = 1; Expected = 1 }
-        @{ Level = $null; Expected = 0 }
+        @{ Level = $Null; Expected = 0 }
     ) {
         Out-Status $TestMessage $Level
 
@@ -224,7 +224,7 @@ Describe 'Out-Success' {
 
     It 'Should log success correctly with indent level <Level>' -ForEach @(
         @{ Level = 1; Expected = 1 }
-        @{ Level = $null; Expected = 0 }
+        @{ Level = $Null; Expected = 0 }
     ) {
         Out-Success $Level
 
@@ -241,7 +241,7 @@ Describe 'Out-Failure' {
 
     It 'Should log failure correctly with indent level <Level>' -ForEach @(
         @{ Level = 1; Expected = 1 }
-        @{ Level = $null; Expected = 0 }
+        @{ Level = $Null; Expected = 0 }
     ) {
         Out-Failure $Level
 

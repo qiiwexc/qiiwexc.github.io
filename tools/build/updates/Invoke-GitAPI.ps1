@@ -14,7 +14,7 @@ function Invoke-GitAPI {
         }
     } catch {
         Write-LogError "Failed to invoke API: $Uri`n$_" 1
-        return $null
+        return $Null
     }
 
     return [Collections.Generic.List[Object]]($Response.Content | ConvertFrom-Json)

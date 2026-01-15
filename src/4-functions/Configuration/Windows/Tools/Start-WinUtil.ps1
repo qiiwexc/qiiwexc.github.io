@@ -24,13 +24,13 @@ function Start-WinUtil {
 
     $Configuration | Set-Content $ConfigFile -NoNewline
 
-    Set-Variable -Option Constant ConfigParam ([String]"-Config $ConfigFile")
+    Set-Variable -Option Constant ConfigParam ([String]" -Config $ConfigFile")
 
     if ($AutomaticallyApply) {
-        Set-Variable -Option Constant RunParam ([String]'-Run')
+        Set-Variable -Option Constant RunParam ([String]' -Run')
     }
 
-    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) $ConfigParam $RunParam"
+    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win')))$ConfigParam$RunParam"
 
     Out-Success
 }

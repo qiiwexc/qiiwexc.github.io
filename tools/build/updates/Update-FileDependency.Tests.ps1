@@ -26,7 +26,7 @@ BeforeAll {
     Set-Variable -Option Constant TypeDate (Get-TypeData -TypeName System.IO.FileInfo)
     Remove-TypeData -TypeData $TypeDate
     Set-Variable -Option Constant TypeBackup $TypeDate.Copy()
-    $null = $TypeDate.members.Remove('VersionInfo')
+    $Null = $TypeDate.members.Remove('VersionInfo')
     Update-TypeData -TypeData $TypeDate
 
     Set-Variable -Option Constant TestCurrentFile32bit (

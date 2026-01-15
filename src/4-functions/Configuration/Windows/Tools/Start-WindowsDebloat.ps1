@@ -16,35 +16,35 @@ function Start-WindowsDebloat {
 
     New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
-    if ($Personalisation) {
-        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
+    if ($UsePreset -and $Personalisation) {
+        Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
     } else {
-        Set-Variable -Option Constant AppsList ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_APP_LIST)
+        Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
     }
 
     $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline
 
-    if ($Personalisation) {
-        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
+    if ($UsePreset -and $Personalisation) {
+        Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
     } else {
-        Set-Variable -Option Constant Configuration ([Collections.Generic.List[String]]$CONFIG_DEBLOAT_PRESET_BASE)
+        Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
     }
 
     $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
 
-    if ($UsePreset) {
-        Set-Variable -Option Constant UsePresetParam ([String]'-RunSavedSettings')
+    if ($UsePreset -or $Personalisation) {
+        Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings')
     }
 
     if ($Silent) {
-        Set-Variable -Option Constant SilentParam ([String]'-Silent')
+        Set-Variable -Option Constant SilentParam ([String]' -Silent')
     }
 
     if ($OS_VERSION -gt 10) {
-        Set-Variable -Option Constant SysprepParam ([String]'-Sysprep')
+        Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
     }
 
-    Set-Variable -Option Constant Params ([String]"-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam")
+    Set-Variable -Option Constant Params ([String]"-NoRestartExplorer$SysprepParam$UsePresetParam$SilentParam")
 
     Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 
