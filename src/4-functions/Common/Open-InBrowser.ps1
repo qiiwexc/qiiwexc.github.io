@@ -6,7 +6,7 @@ function Open-InBrowser {
     Write-LogInfo "Opening URL in the default browser: $Url"
 
     try {
-        Start-Process $Url
+        Start-Process $Url -ErrorAction Stop
     } catch {
         Write-LogError "Could not open the URL: $_"
     }

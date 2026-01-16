@@ -8,9 +8,9 @@ function Expand-Zip {
 
     Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
 
-    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath))
+    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
     Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
-    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath))
+    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath -ErrorAction Stop))
 
     if ($Temp) {
         Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
@@ -60,7 +60,7 @@ function Expand-Zip {
 
     Remove-Directory $ExtractionPath
 
-    New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
+    New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop | Out-Null
 
     try {
         if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
@@ -82,13 +82,13 @@ function Expand-Zip {
     Remove-File $ZipPath
 
     if (-not $IsDirectory) {
-        Move-Item -Force $TemporaryExe $TargetExe
+        Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop
         Remove-Directory $ExtractionPath
     }
 
     if (-not $Temp -and $IsDirectory) {
         Remove-Directory "$TargetPath\$ExtractionDir"
-        Move-Item -Force $ExtractionPath $TargetPath
+        Move-Item -Force $ExtractionPath $TargetPath -ErrorAction Stop
     }
 
     Out-Success $LogIndentLevel

@@ -3,9 +3,9 @@ function Update-Windows {
 
     try {
         if ($OS_VERSION -gt 7) {
-            Start-Process 'UsoClient' 'StartInteractiveScan'
+            Start-Process 'UsoClient' 'StartInteractiveScan' -ErrorAction Stop
         } else {
-            Start-Process 'wuauclt' '/detectnow /updatenow'
+            Start-Process 'wuauclt' '/detectnow /updatenow' -ErrorAction Stop
         }
 
         Out-Success

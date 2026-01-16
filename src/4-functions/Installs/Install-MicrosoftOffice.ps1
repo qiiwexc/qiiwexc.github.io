@@ -25,7 +25,7 @@ function Install-MicrosoftOffice {
 
         Initialize-AppDirectory
 
-        $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
+        $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize Microsoft Office installer configuration: $_"
     }

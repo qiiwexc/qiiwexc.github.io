@@ -5,15 +5,21 @@ function Write-ConfigurationFile {
         [String][Parameter(Position = 2, Mandatory)]$Path,
         [String][Parameter(Position = 3)]$ProcessName = $AppName
     )
+
     Set-Variable -Option Constant LogIndentLevel ([Int]2)
 
-    Stop-ProcessIfRunning $ProcessName
+    try {
+        Stop-ProcessIfRunning $ProcessName
 
-    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
+        Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 
-    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
+        New-Item -Force -ItemType Directory -ErrorAction Stop (Split-Path -Parent $Path -ErrorAction Stop) | Out-Null
 
-    $Content | Set-Content $Path -NoNewline
+        $Content | Set-Content $Path -NoNewline -ErrorAction Stop
 
-    Out-Success $LogIndentLevel
+        Out-Success $LogIndentLevel
+    } catch {
+        Write-LogWarning "Failed to write configuration file '$Path': $_" $LogIndentLevel
+        throw $_
+    }
 }

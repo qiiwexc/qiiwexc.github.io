@@ -11,7 +11,7 @@ function Start-Executable {
         Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
 
         try {
-            Start-Process -Wait $Executable $Switches
+            Start-Process -Wait $Executable $Switches -ErrorAction Stop
         } catch {
             Write-LogError "Failed to run '$Executable': $_" $LogIndentLevel
             return
@@ -27,9 +27,9 @@ function Start-Executable {
 
         try {
             if ($Switches) {
-                Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable)
+                Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
             } else {
-                Start-Process $Executable -WorkingDirectory (Split-Path $Executable)
+                Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
             }
         } catch {
             Write-LogError "Failed to execute '$Executable': $_" $LogIndentLevel

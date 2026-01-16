@@ -12,7 +12,7 @@ function Start-WinUtil {
     }
 
     try {
-        New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
+        New-Item -Force -ItemType Directory $PATH_WINUTIL -ErrorAction Stop | Out-Null
 
         Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 
@@ -23,7 +23,7 @@ function Start-WinUtil {
 ' + $CONFIG_WINUTIL_PERSONALISATION)
         }
 
-        $Configuration | Set-Content $ConfigFile -NoNewline
+        $Configuration | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize WinUtil configuration: $_"
     }

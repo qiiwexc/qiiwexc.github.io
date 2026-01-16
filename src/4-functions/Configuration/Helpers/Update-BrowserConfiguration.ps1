@@ -1,4 +1,4 @@
-function Update-JsonFile {
+function Update-BrowserConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$AppName,
         [String][Parameter(Position = 1, Mandatory)]$ProcessName,
@@ -17,8 +17,8 @@ function Update-JsonFile {
 
         try {
             Start-Process $ProcessName -ErrorAction Stop
-        } catch [Exception] {
-            Write-LogException $_ "Couldn't start '$AppName'" $LogIndentLevel
+        } catch {
+            Write-LogError "Couldn't start '$AppName': $_" $LogIndentLevel
             return
         }
 
@@ -30,12 +30,12 @@ function Update-JsonFile {
         }
     }
 
-    Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 | ConvertFrom-Json))
-    Set-Variable -Option Constant PatchConfig ([PSCustomObject]($Content | ConvertFrom-Json))
+    Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop))
+    Set-Variable -Option Constant PatchConfig ([PSCustomObject]($Content | ConvertFrom-Json -ErrorAction Stop))
 
-    Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress))
+    Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $PatchConfig -ErrorAction Stop | ConvertTo-Json -Depth 100 -Compress -ErrorAction Stop))
 
-    $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline
+    $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline -ErrorAction Stop
 
     Out-Success $LogIndentLevel
 }

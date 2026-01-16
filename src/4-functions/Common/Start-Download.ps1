@@ -12,7 +12,7 @@ function Start-Download {
     if ($SaveAs) {
         Set-Variable -Option Constant FileName ([String]$SaveAs)
     } else {
-        Set-Variable -Option Constant FileName ([String](Split-Path -Leaf $URL))
+        Set-Variable -Option Constant FileName ([String](Split-Path -Leaf $URL -ErrorAction Stop))
     }
 
     Set-Variable -Option Constant TempPath ([String]"$PATH_APP_DIR\$FileName")
@@ -36,10 +36,10 @@ function Start-Download {
     }
 
     try {
-        Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic
+        Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
 
         if (-not $Temp) {
-            Move-Item -Force $TempPath $SavePath
+            Move-Item -Force $TempPath $SavePath -ErrorAction Stop
         }
 
         if (Test-Path $SavePath) {

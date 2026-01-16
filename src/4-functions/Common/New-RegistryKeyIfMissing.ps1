@@ -5,6 +5,6 @@ function New-RegistryKeyIfMissing {
 
     if (-not (Test-Path $RegistryPath)) {
         Write-LogDebug "Creating registry key '$RegistryPath'"
-        New-Item $RegistryPath
+        New-Item $RegistryPath -ErrorAction Stop
     }
 }
