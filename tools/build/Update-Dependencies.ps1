@@ -44,6 +44,7 @@ function Update-Dependencies {
 
     Set-Variable -Option Constant DependencyStep ([Math]::Floor(80 / $Dependencies.Count))
 
+    $ErrorActionPreference = 'Continue'
     [Int]$Iteration = 1
     foreach ($Dependency in $Dependencies) {
         [String]$Source = $Dependency.source
@@ -70,6 +71,7 @@ function Update-Dependencies {
         Write-Progress -Activity 'Update' -PercentComplete $Percentage
         $Iteration++
     }
+    $ErrorActionPreference = 'Stop'
 
     Write-Progress -Activity 'Update' -PercentComplete 90
 
