@@ -3,15 +3,19 @@ function Set-AnyDeskConfiguration {
         [String][Parameter(Position = 0, Mandatory)]$AppName
     )
 
-    Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
+    try {
+        Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
 
-    Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
+        Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
 
-    if (Test-Path $ConfigPath) {
-        Set-Variable -Option Constant CurrentConfig ([String](Get-Content $ConfigPath -Raw -Encoding UTF8))
-    } else {
-        Set-Variable -Option Constant CurrentConfig ([String]'')
+        if (Test-Path $ConfigPath) {
+            Set-Variable -Option Constant CurrentConfig ([String](Get-Content $ConfigPath -Raw -Encoding UTF8))
+        } else {
+            Set-Variable -Option Constant CurrentConfig ([String]'')
+        }
+
+        Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) $ConfigPath
+    } catch [Exception] {
+        Write-LogException $_ "Failed to configure $AppName"
     }
-
-    Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) $ConfigPath
 }

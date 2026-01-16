@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\src\4-functions\Common\Logger.ps1'
     . '.\src\4-functions\Common\Progressbar.ps1'
     . '.\src\4-functions\Configuration\Helpers\Write-ConfigurationFile.ps1'
 
@@ -19,6 +20,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Mock Test-Path { return $False }
         Mock Get-Content { return $TestExistingConfig }
         Mock Write-ConfigurationFile {}
+        Mock Write-LogException {}
     }
 
     It 'Should configure AnyDesk with no existing config' {
@@ -34,6 +36,7 @@ Describe 'Set-AnyDeskConfiguration' {
             $Content -eq $CONFIG_ANYDESK -and
             $Path -match $TestConfigPath
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should configure AnyDesk with existing config' {
@@ -55,39 +58,43 @@ Describe 'Set-AnyDeskConfiguration' {
             $Content -eq ($TestExistingConfig + $CONFIG_ANYDESK) -and
             $Path -match $TestConfigPath
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Test-Path failure' {
         Mock Test-Path { throw $TestException }
 
-        { Set-AnyDeskConfiguration $TestAppName } | Should -Throw $TestException
+        { Set-AnyDeskConfiguration $TestAppName } | Should -Not -Throw
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Write-ConfigurationFile -Exactly 0
+        Should -Invoke Write-LogException -Exactly 1
     }
 
     It 'Should handle Get-Content failure' {
         Mock Test-Path { return $True }
         Mock Get-Content { throw $TestException }
 
-        { Set-AnyDeskConfiguration $TestAppName } | Should -Throw $TestException
+        { Set-AnyDeskConfiguration $TestAppName } | Should -Not -Throw
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 0
+        Should -Invoke Write-LogException -Exactly 1
     }
 
     It 'Should handle Write-ConfigurationFile failure' {
         Mock Write-ConfigurationFile { throw $TestException }
 
-        { Set-AnyDeskConfiguration $TestAppName } | Should -Throw $TestException
+        { Set-AnyDeskConfiguration $TestAppName } | Should -Not -Throw
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Write-ConfigurationFile -Exactly 1
+        Should -Invoke Write-LogException -Exactly 1
     }
 }
