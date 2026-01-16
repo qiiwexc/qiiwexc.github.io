@@ -3,10 +3,14 @@ function Set-MicrosoftEdgeConfiguration {
         [String][Parameter(Position = 0, Mandatory)]$AppName
     )
 
-    Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
+    try {
+        Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
 
-    Set-Variable -Option Constant ProcessName ([String]'msedge')
+        Set-Variable -Option Constant ProcessName ([String]'msedge')
 
-    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
-    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
+        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
+        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
+    } catch [Exception] {
+        Write-LogException $_ "Failed to configure $AppName"
+    }
 }

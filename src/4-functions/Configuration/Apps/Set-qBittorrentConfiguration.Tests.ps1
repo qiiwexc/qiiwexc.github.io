@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\src\4-functions\Common\Logger.ps1'
     . '.\src\4-functions\Common\Progressbar.ps1'
     . '.\src\4-functions\Configuration\Helpers\Write-ConfigurationFile.ps1'
 
@@ -20,6 +21,7 @@ Describe 'Set-qBittorrentConfiguration' {
 
         Mock Write-ActivityProgress {}
         Mock Write-ConfigurationFile {}
+        Mock Write-LogException {}
     }
 
     It 'Should configure qBittorrent (English)' {
@@ -32,6 +34,7 @@ Describe 'Set-qBittorrentConfiguration' {
             $Content -eq ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH) -and
             $Path -match $TestConfigPath
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should configure qBittorrent (Russian)' {
@@ -46,14 +49,16 @@ Describe 'Set-qBittorrentConfiguration' {
             $Content -eq ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN) -and
             $Path -match $TestConfigPath
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Write-ConfigurationFile failure' {
         Mock Write-ConfigurationFile { throw $TestException }
 
-        { Set-qBittorrentConfiguration $TestAppName } | Should -Throw $TestException
+        { Set-qBittorrentConfiguration $TestAppName } | Should -Not -Throw
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1
+        Should -Invoke Write-LogException -Exactly 1
     }
 }
