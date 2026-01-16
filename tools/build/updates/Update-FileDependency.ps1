@@ -9,14 +9,18 @@ function Update-FileDependency {
     Set-Variable -Option Constant FileName64 ([String]"$Name.exe")
     Set-Variable -Option Constant FileName32 ([String]"$Name x86.exe")
 
-    [Collections.Generic.List[String]]$NewVersions = @()
+    [Collections.Generic.List[Version]]$NewVersions = @()
 
     foreach ($FileName in @($FileName64, $FileName32)) {
         Write-LogInfo "Checking file: $FileName" 1
 
         try {
             [System.IO.FileInfo]$File = Get-Item "$WipPath\$FileName" -ErrorAction Stop
-            $NewVersions.Add($File.VersionInfo.FileVersionRaw)
+
+            [Version]$FileVersion = $File.VersionInfo.FileVersionRaw
+            if ($FileVersion) {
+                $NewVersions.Add($FileVersion)
+            }
         } catch [Exception] {
             Write-LogWarning "File '$FileName' not found. Skipping."
             continue
@@ -28,8 +32,8 @@ function Update-FileDependency {
         return
     }
 
-    Set-Variable -Option Constant SortedVersions ([Collections.Generic.List[String]]($NewVersions | Sort-Object { [Version]$_ } -Descending))
-    Set-Variable -Option Constant LatestVersion ([String]($SortedVersions | Select-Object -First 1))
+    Set-Variable -Option Constant SortedVersions ([Collections.Generic.List[Version]]($NewVersions | Sort-Object { [Version]$_ } -Descending))
+    Set-Variable -Option Constant LatestVersion ([String]($SortedVersions[0]))
 
     if ($LatestVersion -ne $Dependency.version) {
         Set-NewVersion $Dependency $LatestVersion

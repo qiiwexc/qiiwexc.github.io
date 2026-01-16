@@ -84,6 +84,15 @@ Describe 'Compare-Tags' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
+    It 'Should not update if new version is empty' {
+        Mock Invoke-GitAPI { return @( @{}, @{} ) }
+
+        Compare-Tags $TestDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-GitAPI -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
     It 'Should not update if the response is empty' {
         Mock Invoke-GitAPI { return @() }
 

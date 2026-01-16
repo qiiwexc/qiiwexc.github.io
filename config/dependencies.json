@@ -75,7 +75,7 @@
         "version":  "1.26.0",
         "source":  "URL",
         "url":  "https://sdi-tool.org/download/",
-        "regex":  "^\\s+\u003ctd\u003eDirect\u003c/td\u003e\n\\s+\u003ctd\u003e(\\d|\\d\\.\\d)\\sMB\u003c/td\u003e\n\\s+\u003ctd\u003e(.*?)\\s\\(R\\d{4}\\)\u003c/td\u003e$"
+        "regex":  "^\\s+\u003ctd\u003eDirect\u003c/td\u003e\n\\s+\u003ctd\u003e(?:\\d|\\d\\.\\d)\\sMB\u003c/td\u003e\n\\s+\u003ctd\u003e(.*?)\\s\\(R\\d{4}\\)\u003c/td\u003e$"
     },
     {
         "name":  "CPU-Z",
