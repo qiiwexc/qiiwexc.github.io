@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.16')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.17')
 ::
 ::#endregion init > Version
 ::
@@ -45,7 +45,7 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"$($MyInvocation.Line)`""
-::    } catch [Exception] {
+::    } catch {
 ::        Write-Error $_
 ::        Start-Sleep -Seconds 5
 ::    }
@@ -90,7 +90,7 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
 ::
-::Set-Variable -Option Constant OPERATING_SYSTEM ([Object](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
+::Set-Variable -Option Constant OPERATING_SYSTEM ([PSCustomObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
 ::Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
 ::Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
 ::
@@ -120,7 +120,7 @@ if "%debug%"=="true" (
 ::
 ::Set-Variable -Option Constant WordRegPath ([String]'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer')
 ::if (Test-Path $WordRegPath) {
-::    Set-Variable -Option Constant WordPath ([Object](Get-ItemProperty $WordRegPath))
+::    Set-Variable -Option Constant WordPath ([PSCustomObject](Get-ItemProperty $WordRegPath))
 ::    Set-Variable -Option Constant OFFICE_VERSION ([String]($WordPath.'(default)' -replace '\D+', ''))
 ::
 ::    if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {
@@ -450,7 +450,7 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant FORM ([Windows.Forms.Form](New-Object Windows.Forms.Form))
 ::$FORM.Text = $HOST.UI.RawUI.WindowTitle
 ::$FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
-::$FORM.Icon = [Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\PowerShell.exe')
+::$FORM.Icon = [Drawing.Icon]::ExtractAssociatedIcon("$env:SystemRoot\System32\cliconfg.exe")
 ::$FORM.FormBorderStyle = 'Fixed3D'
 ::$FORM.StartPosition = 'CenterScreen'
 ::$FORM.MaximizeBox = $False
@@ -616,7 +616,7 @@ if "%debug%"=="true" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://driveroff.net/drv/SDI_1.25.3.7z' -Execute:$CHECKBOX_StartSDI.Checked -ConfigFile 'sdi.cfg' -Configuration $CONFIG_SDI }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://driveroff.net/drv/SDI_1.26.0.7z' -Execute:$CHECKBOX_StartSDI.Checked -ConfigFile 'sdi.cfg' -Configuration $CONFIG_SDI }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
@@ -712,8 +712,6 @@ if "%debug%"=="true" (
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_PowerScheme = New-CheckBox 'Set power scheme' -Checked
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsSearch = New-CheckBox 'Configure search index' -Checked
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_FileAssociations = New-CheckBox 'Set file associations'
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
@@ -723,7 +721,6 @@ if "%debug%"=="true" (
 ::    [Hashtable]@{
 ::        Base             = $CHECKBOX_Config_WindowsBase
 ::        PowerScheme      = $CHECKBOX_Config_PowerScheme
-::        Search           = $CHECKBOX_Config_WindowsSearch
 ::        FileAssociations = $CHECKBOX_Config_FileAssociations
 ::        Personalisation  = $CHECKBOX_Config_WindowsPersonalisation
 ::    }
@@ -3567,9 +3564,9 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
 ::
-::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath))
+::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
 ::    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
-::    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath))
+::    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath -ErrorAction Stop))
 ::
 ::    if ($Temp) {
 ::        Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
@@ -3619,7 +3616,7 @@ if "%debug%"=="true" (
 ::
 ::    Remove-Directory $ExtractionPath
 ::
-::    New-Item -Force -ItemType Directory $ExtractionPath | Out-Null
+::    New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop | Out-Null
 ::
 ::    try {
 ::        if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
@@ -3633,21 +3630,21 @@ if "%debug%"=="true" (
 ::                $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
 ::            }
 ::        }
-::    } catch [Exception] {
-::        Write-LogException $_ "Failed to extract '$ZipPath'" $LogIndentLevel
+::    } catch {
+::        Write-LogError "Failed to extract '$ZipPath': $_" $LogIndentLevel
 ::        return
 ::    }
 ::
 ::    Remove-File $ZipPath
 ::
 ::    if (-not $IsDirectory) {
-::        Move-Item -Force $TemporaryExe $TargetExe
+::        Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop
 ::        Remove-Directory $ExtractionPath
 ::    }
 ::
 ::    if (-not $Temp -and $IsDirectory) {
 ::        Remove-Directory "$TargetPath\$ExtractionDir"
-::        Move-Item -Force $ExtractionPath $TargetPath
+::        Move-Item -Force $ExtractionPath $TargetPath -ErrorAction Stop
 ::    }
 ::
 ::    Out-Success $LogIndentLevel
@@ -3689,10 +3686,10 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
-::    Set-Variable -Option Constant Motherboard ([Object](Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product))
+::    Set-Variable -Option Constant Motherboard ([PSCustomObject](Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product))
 ::    Write-LogInfo "Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)" $LogIndentLevel
 ::
-::    Set-Variable -Option Constant BIOS ([Object](Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate))
+::    Set-Variable -Option Constant BIOS ([PSCustomObject](Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate))
 ::    Write-LogInfo "BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))" $LogIndentLevel
 ::
 ::    Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
@@ -3754,8 +3751,8 @@ if "%debug%"=="true" (
 ::    try {
 ::        Add-Type -AssemblyName System.IO.Compression.FileSystem
 ::        Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED ([Bool]$True)
-::    } catch [Exception] {
-::        Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $($_.Exception.Message)"
+::    } catch {
+::        Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $_"
 ::    }
 ::
 ::    Get-SystemInformation
@@ -3771,7 +3768,7 @@ if "%debug%"=="true" (
 ::#region functions > Common > Initialize-AppDirectory
 ::
 ::function Initialize-AppDirectory {
-::    New-Item -Force -ItemType Directory $PATH_APP_DIR | Out-Null
+::    New-Item -Force -ItemType Directory $PATH_APP_DIR -ErrorAction Stop | Out-Null
 ::}
 ::
 ::#endregion functions > Common > Initialize-AppDirectory
@@ -3810,7 +3807,7 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    Set-Variable -Option Constant FullCommand ([String]"$ExecutionPolicy $Command $WorkingDir")
-::    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle
+::    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle -ErrorAction Stop
 ::}
 ::
 ::#endregion functions > Common > Invoke-CustomCommand
@@ -3866,18 +3863,6 @@ if "%debug%"=="true" (
 ::    )
 ::
 ::    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) $Message -IndentLevel $Level))
-::    Write-Error $FormattedMessage
-::    Write-FormLog ([LogLevel]::ERROR) $FormattedMessage
-::}
-::
-::function Write-LogException {
-::    param(
-::        [Object][Parameter(Position = 0, Mandatory)]$Exception,
-::        [String][Parameter(Position = 1, Mandatory)]$Message,
-::        [Int][Parameter(Position = 2)]$Level = 0
-::    )
-::
-::    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level))
 ::    Write-Error $FormattedMessage
 ::    Write-FormLog ([LogLevel]::ERROR) $FormattedMessage
 ::}
@@ -4005,7 +3990,7 @@ if "%debug%"=="true" (
 ::
 ::    if (-not (Test-Path $RegistryPath)) {
 ::        Write-LogDebug "Creating registry key '$RegistryPath'"
-::        New-Item $RegistryPath
+::        New-Item $RegistryPath -ErrorAction Stop
 ::    }
 ::}
 ::
@@ -4022,9 +4007,9 @@ if "%debug%"=="true" (
 ::    Write-LogInfo "Opening URL in the default browser: $Url"
 ::
 ::    try {
-::        Start-Process $Url
-::    } catch [Exception] {
-::        Write-LogException $_ 'Could not open the URL'
+::        Start-Process $Url -ErrorAction Stop
+::    } catch {
+::        Write-LogError "Could not open the URL: $_"
 ::    }
 ::}
 ::
@@ -4143,7 +4128,7 @@ if "%debug%"=="true" (
 ::    if ($SaveAs) {
 ::        Set-Variable -Option Constant FileName ([String]$SaveAs)
 ::    } else {
-::        Set-Variable -Option Constant FileName ([String](Split-Path -Leaf $URL))
+::        Set-Variable -Option Constant FileName ([String](Split-Path -Leaf $URL -ErrorAction Stop))
 ::    }
 ::
 ::    Set-Variable -Option Constant TempPath ([String]"$PATH_APP_DIR\$FileName")
@@ -4167,10 +4152,10 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic
+::        Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
 ::
 ::        if (-not $Temp) {
-::            Move-Item -Force $TempPath $SavePath
+::            Move-Item -Force $TempPath $SavePath -ErrorAction Stop
 ::        }
 ::
 ::        if (Test-Path $SavePath) {
@@ -4178,8 +4163,8 @@ if "%debug%"=="true" (
 ::        } else {
 ::            throw 'Possibly computer is offline or disk is full'
 ::        }
-::    } catch [Exception] {
-::        Write-LogException $_ 'Download failed' $LogIndentLevel
+::    } catch {
+::        Write-LogError "Download failed: $_" $LogIndentLevel
 ::        return
 ::    }
 ::
@@ -4229,8 +4214,8 @@ if "%debug%"=="true" (
 ::        }
 ::
 ::        if ($Configuration) {
-::            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
-::            $Configuration | Set-Content "$ParentPath\$ConfigFile" -NoNewline
+::            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable -ErrorAction Stop))
+::            $Configuration | Set-Content "$ParentPath\$ConfigFile" -NoNewline -ErrorAction Stop
 ::        }
 ::
 ::        if ($Execute) {
@@ -4259,9 +4244,9 @@ if "%debug%"=="true" (
 ::        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
 ::
 ::        try {
-::            Start-Process -Wait $Executable $Switches
-::        } catch [Exception] {
-::            Write-LogException $_ "Failed to run '$Executable'" $LogIndentLevel
+::            Start-Process -Wait $Executable $Switches -ErrorAction Stop
+::        } catch {
+::            Write-LogError "Failed to run '$Executable': $_" $LogIndentLevel
 ::            return
 ::        }
 ::
@@ -4275,12 +4260,12 @@ if "%debug%"=="true" (
 ::
 ::        try {
 ::            if ($Switches) {
-::                Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable)
+::                Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
 ::            } else {
-::                Start-Process $Executable -WorkingDirectory (Split-Path $Executable)
+::                Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
 ::            }
-::        } catch [Exception] {
-::            Write-LogException $_ "Failed to execute '$Executable'" $LogIndentLevel
+::        } catch {
+::            Write-LogError "Failed to execute '$Executable': $_" $LogIndentLevel
 ::            return
 ::        }
 ::
@@ -4300,9 +4285,9 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]3)
 ::
-::    if (Get-Process | Where-Object { $_.ProcessName -eq $ProcessName } ) {
+::    if (Get-Process -ErrorAction Stop | Where-Object { $_.ProcessName -eq $ProcessName } ) {
 ::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
-::        Stop-Process -Name $ProcessName -Force
+::        Stop-Process -Name $ProcessName -Force -ErrorAction Stop
 ::        Out-Success $LogIndentLevel
 ::    }
 ::}
@@ -4324,8 +4309,8 @@ if "%debug%"=="true" (
 ::
 ::        try {
 ::            Invoke-CustomCommand $AppBatFile
-::        } catch [Exception] {
-::            Write-LogException $_ 'Failed to start new version'
+::        } catch {
+::            Write-LogError "Failed to start new version: $_"
 ::            return
 ::        }
 ::
@@ -4351,8 +4336,8 @@ if "%debug%"=="true" (
 ::        Set-Variable -Option Constant VersionFile ([String]"$PATH_APP_DIR\version")
 ::        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version'))
 ::        Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to check for updates'
+::    } catch {
+::        Write-LogError "Failed to check for updates: $_"
 ::        return
 ::    }
 ::
@@ -4379,8 +4364,8 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_bat' -OutFile $AppBatFile
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to download update'
+::    } catch {
+::        Write-LogError "Failed to download update: $_"
 ::        return
 ::    }
 ::
@@ -4397,13 +4382,17 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
-::    Write-ActivityProgress -PercentComplete 25 -Task "Configuring $AppName..."
+::    try {
+::        Write-ActivityProgress -PercentComplete 25 -Task "Configuring $AppName..."
 ::
-::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines.Add("`n")
-::    $ConfigLines.Add($CONFIG_7ZIP)
+::        [Collections.Generic.List[String]]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::        $ConfigLines.Add("`n")
+::        $ConfigLines.Add($CONFIG_7ZIP)
 ::
-::    Import-RegistryConfiguration $AppName $ConfigLines
+::        Import-RegistryConfiguration $AppName $ConfigLines
+::    } catch {
+::        Write-LogError "Failed to configure '$AppName': $_"
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Apps > Set-7zipConfiguration
@@ -4416,17 +4405,21 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
-::    Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
+::    try {
+::        Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
 ::
-::    Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
+::        Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
 ::
-::    if (Test-Path $ConfigPath) {
-::        Set-Variable -Option Constant CurrentConfig ([String](Get-Content $ConfigPath -Raw -Encoding UTF8))
-::    } else {
-::        Set-Variable -Option Constant CurrentConfig ([String]'')
+::        if (Test-Path $ConfigPath) {
+::            Set-Variable -Option Constant CurrentConfig ([String](Get-Content $ConfigPath -Raw -Encoding UTF8 -ErrorAction Stop))
+::        } else {
+::            Set-Variable -Option Constant CurrentConfig ([String]'')
+::        }
+::
+::        Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) $ConfigPath
+::    } catch {
+::        Write-LogError "Failed to configure '$AppName': $_"
 ::    }
-::
-::    Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) $ConfigPath
 ::}
 ::
 ::#endregion functions > Configuration > Apps > Set-AnyDeskConfiguration
@@ -4483,12 +4476,16 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
-::    Write-ActivityProgress -PercentComplete 75 -Task "Configuring $AppName..."
+::    try {
+::        Write-ActivityProgress -PercentComplete 75 -Task "Configuring $AppName..."
 ::
-::    Set-Variable -Option Constant ProcessName ([String]'chrome')
+::        Set-Variable -Option Constant ProcessName ([String]'chrome')
 ::
-::    Update-JsonFile $AppName $ProcessName $CONFIG_CHROME_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"
-::    Update-JsonFile $AppName $ProcessName $CONFIG_CHROME_PREFERENCES "$env:LocalAppData\Google\Chrome\User Data\Default\Preferences"
+::        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"
+::        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_PREFERENCES "$env:LocalAppData\Google\Chrome\User Data\Default\Preferences"
+::    } catch {
+::        Write-LogError "Failed to configure '$AppName': $_"
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Apps > Set-GoogleChromeConfiguration
@@ -4501,12 +4498,16 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
-::    Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
+::    try {
+::        Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
 ::
-::    Set-Variable -Option Constant ProcessName ([String]'msedge')
+::        Set-Variable -Option Constant ProcessName ([String]'msedge')
 ::
-::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
-::    Update-JsonFile $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
+::        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
+::        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
+::    } catch {
+::        Write-LogError "Failed to configure '$AppName': $_"
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Apps > Set-MicrosoftEdgeConfiguration
@@ -4519,16 +4520,20 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
-::    Write-ActivityProgress -PercentComplete 15 -Task "Configuring $AppName..."
+::    try {
+::        Write-ActivityProgress -PercentComplete 15 -Task "Configuring $AppName..."
 ::
 ::
-::    if ($SYSTEM_LANGUAGE -match 'ru') {
-::        Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN))
-::    } else {
-::        Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH))
+::        if ($SYSTEM_LANGUAGE -match 'ru') {
+::            Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN))
+::        } else {
+::            Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH))
+::        }
+::
+::        Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
+::    } catch {
+::        Write-LogError "Failed to configure '$AppName': $_"
 ::    }
-::
-::    Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
 ::}
 ::
 ::#endregion functions > Configuration > Apps > Set-qBittorrentConfiguration
@@ -4541,9 +4546,13 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 0, Mandatory)]$AppName
 ::    )
 ::
-::    Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
+::    try {
+::        Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
 ::
-::    Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
+::        Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
+::    } catch {
+::        Write-LogError "Failed to configure '$AppName': $_"
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Apps > Set-VlcConfiguration
@@ -4552,7 +4561,13 @@ if "%debug%"=="true" (
 ::#region functions > Configuration > Helpers > Get-UsersRegistryKeys
 ::
 ::function Get-UsersRegistryKeys {
-::    return ((Get-Item 'Registry::HKEY_USERS\*').Name | Where-Object { $_ -match '^S-1-5-21' -and $_ -notmatch '_Classes$' })
+::    try {
+::        Set-Variable -Option Constant Users ([Collections.Generic.List[String]](Get-Item 'Registry::HKEY_USERS\*' -ErrorAction Stop).Name)
+::    } catch {
+::        Write-LogWarning "Failed to retrieve users registry keys: $_"
+::        return $()
+::    }
+::    return $Users | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' } | ForEach-Object { Split-Path $_ -Leaf }
 ::}
 ::
 ::#endregion functions > Configuration > Helpers > Get-UsersRegistryKeys
@@ -4570,20 +4585,20 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
 ::
-::    Set-Variable -Option Constant RegFilePath ([String]"$PATH_APP_DIR\$AppName.reg")
-::
-::    Initialize-AppDirectory
-::
-::    "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Set-Content $RegFilePath -NoNewline
-::
 ::    try {
-::        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to import file into registry' $LogIndentLevel
-::        return
-::    }
+::        Set-Variable -Option Constant RegFilePath ([String]"$PATH_APP_DIR\$AppName.reg")
 ::
-::    Out-Success $LogIndentLevel
+::        Initialize-AppDirectory
+::
+::        "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Set-Content $RegFilePath -NoNewline -ErrorAction Stop
+::
+::        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`"" -ErrorAction Stop
+::
+::        Out-Success $LogIndentLevel
+::    } catch {
+::        Write-LogWarning "Failed to import file into registry: $_" $LogIndentLevel
+::        throw $_
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Helpers > Import-RegistryConfiguration
@@ -4680,9 +4695,9 @@ if "%debug%"=="true" (
 ::#endregion functions > Configuration > Helpers > Set-FileAssociation
 ::
 ::
-::#region functions > Configuration > Helpers > Update-JsonFile
+::#region functions > Configuration > Helpers > Update-BrowserConfiguration
 ::
-::function Update-JsonFile {
+::function Update-BrowserConfiguration {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory)]$AppName,
 ::        [String][Parameter(Position = 1, Mandatory)]$ProcessName,
@@ -4690,41 +4705,45 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 3, Mandatory)]$Path
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
+::    try {
+::        Set-Variable -Option Constant LogIndentLevel ([Int]2)
 ::
-::    Stop-ProcessIfRunning $ProcessName
+::        Write-LogInfo "Writing '$AppName' configuration to '$Path'..." $LogIndentLevel
 ::
-::    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
+::        Stop-ProcessIfRunning $ProcessName
 ::
-::    if (-not (Test-Path $Path)) {
-::        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it" $LogIndentLevel
+::        if (-not (Test-Path $Path)) {
+::            Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it" $LogIndentLevel
 ::
-::        try {
-::            Start-Process $ProcessName -ErrorAction Stop
-::        } catch [Exception] {
-::            Write-LogException $_ "Couldn't start '$AppName'" $LogIndentLevel
-::            return
-::        }
+::            try {
+::                Start-Process $ProcessName -ErrorAction Stop
+::            } catch {
+::                Write-LogError "Couldn't start '$AppName': $_" $LogIndentLevel
+::                return
+::            }
 ::
-::        for ([Int]$i = 0; $i -lt 5; $i++) {
-::            Start-Sleep -Seconds 10
-::            if (Test-Path $Path) {
-::                break
+::            for ([Int]$i = 0; $i -lt 5; $i++) {
+::                Start-Sleep -Seconds 10
+::                if (Test-Path $Path) {
+::                    break
+::                }
 ::            }
 ::        }
+::
+::        Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop))
+::        Set-Variable -Option Constant ExtendConfig ([PSCustomObject]($Content | ConvertFrom-Json -ErrorAction Stop))
+::
+::        Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $ExtendConfig -ErrorAction Stop | ConvertTo-Json -Depth 100 -Compress -ErrorAction Stop))
+::
+::        $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline -ErrorAction Stop
+::
+::        Out-Success $LogIndentLevel
+::    } catch {
+::        Write-LogError "Failed to update '$AppName' configuration: $_" $LogIndentLevel
 ::    }
-::
-::    Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 | ConvertFrom-Json))
-::    Set-Variable -Option Constant PatchConfig ([PSCustomObject]($Content | ConvertFrom-Json))
-::
-::    Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $PatchConfig | ConvertTo-Json -Depth 100 -Compress))
-::
-::    $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline
-::
-::    Out-Success $LogIndentLevel
 ::}
 ::
-::#endregion functions > Configuration > Helpers > Update-JsonFile
+::#endregion functions > Configuration > Helpers > Update-BrowserConfiguration
 ::
 ::
 ::#region functions > Configuration > Helpers > Write-ConfigurationFile
@@ -4736,17 +4755,23 @@ if "%debug%"=="true" (
 ::        [String][Parameter(Position = 2, Mandatory)]$Path,
 ::        [String][Parameter(Position = 3)]$ProcessName = $AppName
 ::    )
+::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
 ::
-::    Stop-ProcessIfRunning $ProcessName
+::    try {
+::        Stop-ProcessIfRunning $ProcessName
 ::
-::    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
+::        Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 ::
-::    New-Item -Force -ItemType Directory (Split-Path -Parent $Path) | Out-Null
+::        New-Item -Force -ItemType Directory -ErrorAction Stop (Split-Path -Parent $Path -ErrorAction Stop) | Out-Null
 ::
-::    $Content | Set-Content $Path -NoNewline
+::        $Content | Set-Content $Path -NoNewline -ErrorAction Stop
 ::
-::    Out-Success $LogIndentLevel
+::        Out-Success $LogIndentLevel
+::    } catch {
+::        Write-LogWarning "Failed to write configuration file '$Path': $_" $LogIndentLevel
+::        throw $_
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Helpers > Write-ConfigurationFile
@@ -4761,22 +4786,22 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        Write-ActivityProgress -PercentComplete 5 -Task 'Collecting capabilities to remove...'
-::        Set-Variable -Option Constant InstalledCapabilities ([Object](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
-::        Set-Variable -Option Constant CapabilitiesToRemove ([Object]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
+::        Set-Variable -Option Constant InstalledCapabilities ([PSCustomObject](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
+::        Set-Variable -Option Constant CapabilitiesToRemove ([PSCustomObject]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
 ::        Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
 ::        Out-Success $LogIndentLevel
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to collect capabilities to remove' $LogIndentLevel
+::    } catch {
+::        Write-LogError "Failed to collect capabilities to remove: $_" $LogIndentLevel
 ::    }
 ::
 ::    try {
 ::        Write-ActivityProgress -PercentComplete 10 -Task 'Collecting features to remove...'
-::        Set-Variable -Option Constant InstalledFeatures ([Object](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
-::        Set-Variable -Option Constant FeaturesToRemove ([Object]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
+::        Set-Variable -Option Constant InstalledFeatures ([PSCustomObject](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
+::        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
 ::        Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
 ::        Out-Success $LogIndentLevel
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to collect features to remove' $LogIndentLevel
+::    } catch {
+::        Write-LogError "Failed to collect features to remove: $_" $LogIndentLevel
 ::    }
 ::
 ::    if ($CapabilityCount) {
@@ -4791,8 +4816,8 @@ if "%debug%"=="true" (
 ::                $Iteration++
 ::                Remove-WindowsCapability -Online -Name "$Name"
 ::                Out-Success $LogIndentLevel
-::            } catch [Exception] {
-::                Write-LogException $_ "Failed to remove '$Name'" $LogIndentLevel
+::            } catch {
+::                Write-LogError "Failed to remove '$Name': $_" $LogIndentLevel
 ::            }
 ::        }
 ::    }
@@ -4809,8 +4834,8 @@ if "%debug%"=="true" (
 ::                $Iteration++
 ::                Disable-WindowsOptionalFeature -Online -Remove -NoRestart -FeatureName "$Name"
 ::                Out-Success $LogIndentLevel
-::            } catch [Exception] {
-::                Write-LogException $_ "Failed to remove '$Name'" $LogIndentLevel
+::            } catch {
+::                Write-LogError "Failed to remove '$Name': $_" $LogIndentLevel
 ::            }
 ::        }
 ::    }
@@ -4861,13 +4886,13 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        Set-Variable -Option Constant Status ([Collections.Generic.List[Int]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) }).ReturnValue)
+::        Set-Variable -Option Constant Status ([Collections.Generic.List[Int]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) } -ErrorAction Stop).ReturnValue)
 ::
 ::        if ($Status | Where-Object { $_ -ne 0 }) {
 ::            Write-LogError 'Failed to change DNS server'
 ::        }
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to change DNS server'
+::    } catch {
+::        Write-LogError "Failed to change DNS server: $_"
 ::        return
 ::    }
 ::
@@ -4884,7 +4909,7 @@ if "%debug%"=="true" (
 ::
 ::    Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
 ::
-::    [Collections.Generic.List[Object]]$AppAssociations = @()
+::    [Collections.Generic.List[PSCustomObject]]$AppAssociations = @()
 ::
 ::    Select-Xml -Xml ([xml]$CONFIG_APP_ASSOCIATIONS) -XPath '//Association' | ForEach-Object {
 ::        $AppAssociations.Add(@{
@@ -4943,59 +4968,6 @@ if "%debug%"=="true" (
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-PowerSchemeConfiguration
-::
-::
-::#region functions > Configuration > Windows > Set-SearchConfiguration
-::
-::function Set-SearchConfiguration {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$FileName
-::    )
-::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
-::    Write-ActivityProgress -PercentComplete 35 -Task 'Applying Windows search index configuration...'
-::
-::    [Collections.Generic.List[String]]$ConfigLines = @()
-::
-::    try {
-::        Set-Variable -Option Constant FileExtensionRegistries ((Get-Item 'Registry::HKEY_CLASSES_ROOT\*' -ErrorAction Ignore).Name | Where-Object { $_ -match '^HKEY_CLASSES_ROOT\\\.' })
-::        Write-ActivityProgress -PercentComplete 50
-::
-::        Set-Variable -Option Constant RegistriesCount ([Int]$FileExtensionRegistries.Count)
-::        Set-Variable -Option Constant Step ([Math]::Floor(20 / $RegistriesCount))
-::
-::        [Int]$Iteration = 1
-::        foreach ($Registry in $FileExtensionRegistries) {
-::            [Int]$Percentage = 50 + $Iteration * $Step
-::            Write-ActivityProgress -PercentComplete $Percentage
-::            $Iteration++
-::
-::            [Object]$PersistentHandlers = (Get-Item "Registry::$Registry\*").Name | Where-Object { $_ -match 'PersistentHandler' }
-::
-::            foreach ($PersistentHandler in $PersistentHandlers) {
-::                [String]$DefaultHandler = (Get-ItemProperty "Registry::$PersistentHandler").'(default)'
-::
-::                if ($DefaultHandler -and -not ($DefaultHandler -eq '{098F2470-BAE0-11CD-B579-08002B30BFEB}')) {
-::                    $ConfigLines.Add("`n[$Registry\PersistentHandler]`n")
-::                    $ConfigLines.Add("@=`"{098F2470-BAE0-11CD-B579-08002B30BFEB}`"`n")
-::                    $ConfigLines.Add("`"OriginalPersistentHandler`"=`"$DefaultHandler`"`n")
-::                }
-::
-::            }
-::        }
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
-::    }
-::
-::    if ($ConfigLines.Count) {
-::        Import-RegistryConfiguration $FileName $ConfigLines
-::    } else {
-::        Out-Success $LogIndentLevel
-::    }
-::}
-::
-::#endregion functions > Configuration > Windows > Set-SearchConfiguration
 ::
 ::
 ::#region functions > Configuration > Windows > Set-WindowsBaseConfiguration
@@ -5060,8 +5032,8 @@ if "%debug%"=="true" (
 ::            $ConfigLines.Add("`n[$Registry]`n")
 ::            $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
 ::        }
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
+::    } catch {
+::        Write-LogError "Failed to read the registry: $_" $LogIndentLevel
 ::    }
 ::
 ::    Import-RegistryConfiguration $FileName $ConfigLines
@@ -5076,9 +5048,8 @@ if "%debug%"=="true" (
 ::    param(
 ::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Base,
 ::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$PowerScheme,
-::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$Search,
-::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$FileAssociations,
-::        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory)]$Personalisation
+::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$FileAssociations,
+::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$Personalisation
 ::    )
 ::
 ::    New-Activity 'Configuring Windows...'
@@ -5089,10 +5060,6 @@ if "%debug%"=="true" (
 ::
 ::    if ($PowerScheme.Checked) {
 ::        Set-PowerSchemeConfiguration
-::    }
-::
-::    if ($Search.Checked) {
-::        Set-SearchConfiguration $Search.Text
 ::    }
 ::
 ::    if ($FileAssociations.Checked) {
@@ -5122,7 +5089,7 @@ if "%debug%"=="true" (
 ::
 ::    Set-WinHomeLocation -GeoId 140
 ::
-::    Set-Variable -Option Constant LanguageList ([Collections.Generic.List[Object]](Get-WinUserLanguageList))
+::    Set-Variable -Option Constant LanguageList ([Collections.Generic.List[PSCustomObject]](Get-WinUserLanguageList))
 ::    if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
 ::        $LanguageList.Add('lv')
 ::        Set-WinUserLanguageList $LanguageList -Force
@@ -5149,8 +5116,8 @@ if "%debug%"=="true" (
 ::            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
 ::            $ConfigLines.Add("`"RotatingLockScreenEnabled`"=dword:00000001`n")
 ::        }
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
+::    } catch {
+::        Write-LogError "Failed to read the registry: $_" $LogIndentLevel
 ::    }
 ::
 ::    Import-RegistryConfiguration $FileName $ConfigLines
@@ -5197,25 +5164,29 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
-::    if ($Execute) {
-::        Set-Variable -Option Constant TargetPath ([String]$PATH_OOSHUTUP10)
-::    } else {
-::        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
+::    try {
+::        if ($Execute) {
+::            Set-Variable -Option Constant TargetPath ([String]$PATH_OOSHUTUP10)
+::        } else {
+::            Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
+::        }
+::
+::        Set-Variable -Option Constant ConfigFile ([String]"$TargetPath\ooshutup10.cfg")
+::
+::        New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop | Out-Null
+::
+::        $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
+::    } catch {
+::        Write-LogWarning "Failed to initialize OOShutUp10++ configuration: $_"
 ::    }
-::
-::    Set-Variable -Option Constant ConfigFile ([String]"$TargetPath\ooshutup10.cfg")
-::
-::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
-::
-::    $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline
 ::
 ::    if ($Execute -and $Silent) {
 ::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute -Params $ConfigFile
+::        Out-Success
 ::    } else {
 ::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute
+::        Out-Success
 ::    }
-::
-::    Out-Success
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Tools > Start-OoShutUp10
@@ -5237,43 +5208,51 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
-::    Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
+::    try {
+::        Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 ::
-::    New-Item -Force -ItemType Directory $TargetPath | Out-Null
+::        New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop | Out-Null
 ::
-::    if ($UsePreset -and $Personalisation) {
-::        Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
-::    } else {
-::        Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
+::        if ($UsePreset -and $Personalisation) {
+::            Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
+::        } else {
+::            Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
+::        }
+::
+::        $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline -ErrorAction Stop
+::
+::        if ($UsePreset -and $Personalisation) {
+::            Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
+::        } else {
+::            Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
+::        }
+::
+::        $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline -ErrorAction Stop
+::    } catch {
+::        Write-LogWarning "Failed to initialize Windows debloat utility configuration: $_"
 ::    }
 ::
-::    $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline
+::    try {
+::        if ($UsePreset -or $Personalisation) {
+::            Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings')
+::        }
 ::
-::    if ($UsePreset -and $Personalisation) {
-::        Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
-::    } else {
-::        Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
+::        if ($Silent) {
+::            Set-Variable -Option Constant SilentParam ([String]' -Silent')
+::        }
+::
+::        if ($OS_VERSION -gt 10) {
+::            Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
+::        }
+::
+::        Set-Variable -Option Constant Params ([String]"-NoRestartExplorer$SysprepParam$UsePresetParam$SilentParam")
+::
+::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
+::
+::        Out-Success
+::    } catch {
+::        Write-LogError "Failed to start Windows debloat utility: $_"
 ::    }
-::
-::    $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
-::
-::    if ($UsePreset -or $Personalisation) {
-::        Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings')
-::    }
-::
-::    if ($Silent) {
-::        Set-Variable -Option Constant SilentParam ([String]' -Silent')
-::    }
-::
-::    if ($OS_VERSION -gt 10) {
-::        Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
-::    }
-::
-::    Set-Variable -Option Constant Params ([String]"-NoRestartExplorer$SysprepParam$UsePresetParam$SilentParam")
-::
-::    Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
-::
-::    Out-Success
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Tools > Start-WindowsDebloat
@@ -5294,28 +5273,36 @@ if "%debug%"=="true" (
 ::        return
 ::    }
 ::
-::    New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
+::    try {
+::        New-Item -Force -ItemType Directory $PATH_WINUTIL -ErrorAction Stop | Out-Null
 ::
-::    Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
+::        Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 ::
-::    [String]$Configuration = $CONFIG_WINUTIL
-::    if ($Personalisation) {
-::        $Configuration = $CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
+::        [String]$Configuration = $CONFIG_WINUTIL
+::        if ($Personalisation) {
+::            $Configuration = $CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
 ::', '    "WPFTweaks":  [
 ::' + $CONFIG_WINUTIL_PERSONALISATION)
+::        }
+::
+::        $Configuration | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
+::    } catch {
+::        Write-LogWarning "Failed to initialize WinUtil configuration: $_"
 ::    }
 ::
-::    $Configuration | Set-Content $ConfigFile -NoNewline
+::    try {
+::        Set-Variable -Option Constant ConfigParam ([String]" -Config $ConfigFile")
 ::
-::    Set-Variable -Option Constant ConfigParam ([String]" -Config $ConfigFile")
+::        if ($AutomaticallyApply) {
+::            Set-Variable -Option Constant RunParam ([String]' -Run')
+::        }
 ::
-::    if ($AutomaticallyApply) {
-::        Set-Variable -Option Constant RunParam ([String]' -Run')
+::        Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win')))$ConfigParam$RunParam"
+::
+::        Out-Success
+::    } catch {
+::        Write-LogError "Failed to start WinUtil utility: $_"
 ::    }
-::
-::    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win')))$ConfigParam$RunParam"
-::
-::    Out-Success
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Tools > Start-WinUtil
@@ -5326,15 +5313,19 @@ if "%debug%"=="true" (
 ::function Get-BatteryReport {
 ::    Write-LogInfo 'Exporting battery report...'
 ::
-::    Set-Variable -Option Constant ReportPath ([String]"$PATH_APP_DIR\battery_report.html")
+::    try {
+::        Set-Variable -Option Constant ReportPath ([String]"$PATH_APP_DIR\battery_report.html")
 ::
-::    Initialize-AppDirectory
+::        Initialize-AppDirectory
 ::
-::    powercfg /BatteryReport /Output $ReportPath
+::        powercfg /BatteryReport /Output $ReportPath
 ::
-::    Open-InBrowser $ReportPath
+::        Open-InBrowser $ReportPath
 ::
-::    Out-Success
+::        Out-Success
+::    } catch {
+::        Write-LogError "Failed to export battery report: $_"
+::    }
 ::}
 ::
 ::#endregion functions > Diagnostics and recovery > Get-BatteryReport
@@ -5350,28 +5341,32 @@ if "%debug%"=="true" (
 ::
 ::    Write-LogInfo 'Starting MAS activator...'
 ::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
-::        return
+::    try {
+::        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::        if (-not $IsConnected) {
+::            return
+::        }
+::
+::        [String]$Params = ''
+::
+::        if ($ActivateWindows) {
+::            $Params += ' /HWID'
+::        }
+::
+::        if ($ActivateOffice) {
+::            $Params += ' /Ohook'
+::        }
+::
+::        if ($OS_VERSION -le 7) {
+::            Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))$Params"
+::        } else {
+::            Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
+::        }
+::
+::        Out-Success
+::    } catch {
+::        Write-LogError "Failed to start MAS activator: $_"
 ::    }
-::
-::    [String]$Params = ''
-::
-::    if ($ActivateWindows) {
-::        $Params += ' /HWID'
-::    }
-::
-::    if ($ActivateOffice) {
-::        $Params += ' /Ohook'
-::    }
-::
-::    if ($OS_VERSION -le 7) {
-::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))$Params"
-::    } else {
-::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
-::    }
-::
-::    Out-Success
 ::}
 ::
 ::#endregion functions > Home > Start-Activator
@@ -5463,10 +5458,10 @@ if "%debug%"=="true" (
 ::    Write-LogInfo 'Starting Microsoft Office update...'
 ::
 ::    try {
-::        Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user'
+::        Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user' -ErrorAction Stop
 ::        Out-Success
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to update Microsoft Office'
+::    } catch {
+::        Write-LogError "Failed to update Microsoft Office: $_"
 ::    }
 ::}
 ::
@@ -5481,8 +5476,8 @@ if "%debug%"=="true" (
 ::    try {
 ::        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'"
 ::        Out-Success
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to update Microsoft Store apps'
+::    } catch {
+::        Write-LogError "Failed to update Microsoft Store apps: $_"
 ::    }
 ::}
 ::
@@ -5496,14 +5491,14 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        if ($OS_VERSION -gt 7) {
-::            Start-Process 'UsoClient' 'StartInteractiveScan'
+::            Start-Process 'UsoClient' 'StartInteractiveScan' -ErrorAction Stop
 ::        } else {
-::            Start-Process 'wuauclt' '/detectnow /updatenow'
+::            Start-Process 'wuauclt' '/detectnow /updatenow' -ErrorAction Stop
 ::        }
 ::
 ::        Out-Success
-::    } catch [Exception] {
-::        Write-LogException $_ 'Failed to update Windows'
+::    } catch {
+::        Write-LogError "Failed to update Windows: $_"
 ::    }
 ::}
 ::
@@ -5517,24 +5512,39 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 0, Mandatory)]$Execute
 ::    )
 ::
-::    if ($Execute) {
-::        Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
-::    } else {
-::        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
+::    Write-LogInfo 'Starting Microsoft Office installation...'
+::
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
+::        return
 ::    }
 ::
-::    if ($SYSTEM_LANGUAGE -match 'ru') {
-::        Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU'))
-::    } else {
-::        Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER)
+::    try {
+::        if ($Execute) {
+::            Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
+::        } else {
+::            Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
+::        }
+::
+::        if ($SYSTEM_LANGUAGE -match 'ru') {
+::            Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU'))
+::        } else {
+::            Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER)
+::        }
+::
+::        Initialize-AppDirectory
+::
+::        $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline -ErrorAction Stop
+::    } catch {
+::        Write-LogWarning "Failed to initialize Microsoft Office installer configuration: $_"
 ::    }
 ::
-::    Initialize-AppDirectory
-::
-::    $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
-::
 ::    if ($Execute) {
-::        Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
+::        try {
+::            Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
+::        } catch {
+::            Write-LogWarning "Failed to import Microsoft Office registry configuration: $_"
+::        }
 ::    }
 ::
 ::    Start-DownloadUnzipAndRun 'https://qiiwexc.github.io/d/Office_Installer.zip' -Execute:$Execute
@@ -5551,14 +5561,25 @@ if "%debug%"=="true" (
 ::        [Switch][Parameter(Position = 1, Mandatory)]$Silent
 ::    )
 ::
-::    if ($Execute) {
-::        Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
-::        New-RegistryKeyIfMissing $RegistryKey
-::        Set-ItemProperty -Path $RegistryKey -Name 'HideTrayIcon' -Value 1
+::    Write-LogInfo 'Starting Unchecky installation...'
+::
+::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::    if (-not $IsConnected) {
+::        return
 ::    }
 ::
-::    if ($Execute -and $Silent) {
-::        Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
+::    try {
+::        if ($Execute) {
+::            Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
+::            New-RegistryKeyIfMissing $RegistryKey
+::            Set-ItemProperty -Path $RegistryKey -Name 'HideTrayIcon' -Value 1 -ErrorAction Stop
+::        }
+::
+::        if ($Execute -and $Silent) {
+::            Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
+::        }
+::    } catch {
+::        Write-LogWarning "Failed to configure Unchecky parameters: $_"
 ::    }
 ::
 ::    Start-DownloadUnzipAndRun 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Execute:$Execute -Params $Params -Silent:$Silent
