@@ -28,6 +28,8 @@ if ($Bat) {
     $Ps1 = $True
 }
 
+$ErrorActionPreference = 'Stop'
+
 Set-Variable -Option Constant Version ([String](Get-Date -Format 'y.M.d'))
 Set-Variable -Option Constant ProjectName ([String]'qiiwexc')
 
@@ -83,37 +85,37 @@ if ($Html -or $Ps1) {
     . "$BuilderPath\Set-Urls.ps1"
     . "$BuilderPath\Write-VersionFile.ps1"
 
-    Set-Urls $ConfigPath $TemplatesPath $BuildPath -ErrorAction Stop
+    Set-Urls $ConfigPath $TemplatesPath $BuildPath
     Write-Progress -Activity 'Build' -PercentComplete 40
 
-    Set-Variable -Option Constant Config (Get-Config $BuildPath $Version -ErrorAction Stop)
+    Set-Variable -Option Constant Config (Get-Config $BuildPath $Version)
     Write-Progress -Activity 'Build' -PercentComplete 50
 
-    Write-VersionFile $Version $VersionFile -ErrorAction Stop
+    Write-VersionFile $Version $VersionFile
     Write-Progress -Activity 'Build' -PercentComplete 60
 }
 
 if ($Html) {
     . "$BuilderPath\New-HtmlFile.ps1"
-    New-HtmlFile $TemplatesPath $Config -ErrorAction Stop
+    New-HtmlFile $TemplatesPath $Config
     Write-Progress -Activity 'Build' -PercentComplete 70
 }
 
 if ($Autounattend) {
     . "$BuilderPath\New-UnattendedFile.ps1"
-    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath -ErrorAction Stop
+    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath
     Write-Progress -Activity 'Build' -PercentComplete 80
 }
 
 if ($Ps1) {
     . "$BuilderPath\New-PowerShellScript.ps1"
-    New-PowerShellScript $SourcePath $Ps1File -Config $Config -ErrorAction Stop
+    New-PowerShellScript $SourcePath $Ps1File -Config $Config
     Write-Progress -Activity 'Build' -PercentComplete 90
 }
 
 if ($Bat) {
     . "$BuilderPath\New-BatchScript.ps1"
-    New-BatchScript $ProjectName $Ps1File $BatchFile $VmPath -ErrorAction Stop
+    New-BatchScript $ProjectName $Ps1File $BatchFile $VmPath
 }
 
 Write-Progress -Activity 'Build' -Complete
