@@ -1,7 +1,7 @@
 Set-Variable -Option Constant FORM ([Windows.Forms.Form](New-Object Windows.Forms.Form))
 $FORM.Text = $HOST.UI.RawUI.WindowTitle
 $FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
-$FORM.Icon = [Drawing.Icon]::ExtractAssociatedIcon($PSHOME + '\PowerShell.exe')
+$FORM.Icon = [Drawing.Icon]::ExtractAssociatedIcon("$env:SystemRoot\System32\cliconfg.exe")
 $FORM.FormBorderStyle = 'Fixed3D'
 $FORM.StartPosition = 'CenterScreen'
 $FORM.MaximizeBox = $False
