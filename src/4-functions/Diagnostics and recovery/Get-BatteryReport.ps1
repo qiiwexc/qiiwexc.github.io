@@ -1,13 +1,17 @@
 function Get-BatteryReport {
     Write-LogInfo 'Exporting battery report...'
 
-    Set-Variable -Option Constant ReportPath ([String]"$PATH_APP_DIR\battery_report.html")
+    try {
+        Set-Variable -Option Constant ReportPath ([String]"$PATH_APP_DIR\battery_report.html")
 
-    Initialize-AppDirectory
+        Initialize-AppDirectory
 
-    powercfg /BatteryReport /Output $ReportPath
+        powercfg /BatteryReport /Output $ReportPath
 
-    Open-InBrowser $ReportPath
+        Open-InBrowser $ReportPath
 
-    Out-Success
+        Out-Success
+    } catch [Exception] {
+        Write-LogException $_ 'Failed to export battery report'
+    }
 }

@@ -14,6 +14,7 @@ Describe 'Start-Activator' {
         Mock Test-NetworkConnection { return $True }
         Mock Invoke-CustomCommand {}
         Mock Out-Success {}
+        Mock Write-LogException {}
 
         [Switch]$TestActivateWindowsArg = $False
         [Switch]$TestActivateOfficeArg = $False
@@ -31,6 +32,7 @@ Describe 'Start-Activator' {
             $Command -eq '& ([ScriptBlock]::Create((irm https://get.activated.win)))' -and
             $HideWindow -eq $True
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should start MAS activator successfully on Windows 7' {
@@ -45,6 +47,7 @@ Describe 'Start-Activator' {
             $Command -eq "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))" -and
             $HideWindow -eq $True
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should automatically activate Windows' {
@@ -59,6 +62,7 @@ Describe 'Start-Activator' {
             $Command -match '\)\)\) /HWID' -and
             $HideWindow -eq $True
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should automatically activate Office' {
@@ -73,6 +77,7 @@ Describe 'Start-Activator' {
             $Command -match '\)\)\) /Ohook' -and
             $HideWindow -eq $True
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should automatically activate both Windows and Office' {
@@ -88,6 +93,7 @@ Describe 'Start-Activator' {
             $Command -match '\)\)\) /HWID /Ohook' -and
             $HideWindow -eq $True
         }
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should exit if no network connection' {
@@ -98,25 +104,28 @@ Describe 'Start-Activator' {
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 0
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Test-NetworkConnection failure' {
         Mock Test-NetworkConnection { throw $TestException }
 
-        { Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg } | Should -Throw $TestException
+        { Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg } | Should -Not -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 0
+        Should -Invoke Write-LogException -Exactly 1
     }
 
     It 'Should handle Invoke-CustomCommand failure' {
         Mock Invoke-CustomCommand { throw $TestException }
 
-        { Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg } | Should -Throw $TestException
+        { Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg } | Should -Not -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Write-LogException -Exactly 1
     }
 }
