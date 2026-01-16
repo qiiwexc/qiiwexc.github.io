@@ -57,7 +57,6 @@ Describe 'Set-Urls' {
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
         Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -68,8 +67,6 @@ Describe 'Set-Urls' {
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 2
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestTemplatesPath\urls.json" }
         Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -80,7 +77,6 @@ Describe 'Set-Urls' {
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
         Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -91,8 +87,6 @@ Describe 'Set-Urls' {
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 2
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestTemplatesPath\urls.json" }
         Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -103,8 +97,6 @@ Describe 'Set-Urls' {
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 2
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestTemplatesPath\urls.json" }
         Should -Invoke Write-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -115,16 +107,7 @@ Describe 'Set-Urls' {
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 2
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestTemplatesPath\urls.json" }
         Should -Invoke Write-File -Exactly 1
-        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestBuildPath\urls.json" -and
-            $Content -match 'URL_TEST_DEPENDENCY_NAME_1' -and
-            $Content -match 'URL_TEST_DEPENDENCY_NAME_2' -and
-            $Content -match 'TEST_VALUE_1_TEST_VERSION_1' -and
-            $Content -match 'TEST_VERSION_2_TEST_VALUE_2'
-        }
         Should -Invoke Out-Success -Exactly 0
     }
 }

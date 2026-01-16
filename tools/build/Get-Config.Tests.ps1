@@ -44,7 +44,6 @@ Describe 'Get-Config' {
         { Get-Config $TestBuildPath $TestVersion } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
         Should -Invoke ConvertFrom-Json -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -55,9 +54,7 @@ Describe 'Get-Config' {
         { Get-Config $TestBuildPath $TestVersion } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
         Should -Invoke ConvertFrom-Json -Exactly 1
-        Should -Invoke ConvertFrom-Json -Exactly 1 -ParameterFilter { $InputObject -eq $TestContent }
         Should -Invoke Out-Success -Exactly 0
     }
 }

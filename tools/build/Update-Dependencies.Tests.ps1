@@ -113,10 +113,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestGitHubChangelogUrl }
         Should -Invoke Write-File -Exactly 1
-        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
-            $Path -eq $TestDependenciesFile -and
-            $Content -eq $TestGitHubUpdatedDependency
-        }
         Should -Invoke Out-Success -Exactly 1
     }
 

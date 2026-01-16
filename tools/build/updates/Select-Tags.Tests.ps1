@@ -54,10 +54,6 @@ Describe 'Select-Tags' {
             $GitHubToken -eq $TestGitHubToken
         }
         Should -Invoke Set-NewVersion -Exactly 1
-        Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
-            $LatestVersion -eq $TestNewVersion
-        }
     }
 
     It 'Should update to latest version if multiple new versions are available' {

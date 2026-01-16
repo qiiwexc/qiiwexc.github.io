@@ -154,7 +154,7 @@ Describe 'Update-FileDependency' {
         }
     }
 
-    It 'Should handle both files missing' {
+    It 'Should handle Get-Item failure' {
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -match ' x86.exe' }
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -notmatch ' x86.exe' }
 
