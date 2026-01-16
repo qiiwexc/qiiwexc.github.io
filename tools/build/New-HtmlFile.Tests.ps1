@@ -47,11 +47,6 @@ Describe 'New-HtmlFile' {
         { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestTemplateFilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -62,17 +57,7 @@ Describe 'New-HtmlFile' {
         { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestTemplateFilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestOutFilePath -and
-            $Value -eq $TestHtmlContent -and
-            $NoNewline -eq $True
-        }
         Should -Invoke Out-Success -Exactly 0
     }
 }

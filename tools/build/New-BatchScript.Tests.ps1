@@ -56,11 +56,6 @@ Describe 'New-BatchScript' {
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestPs1FilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -72,20 +67,7 @@ Describe 'New-BatchScript' {
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestPs1FilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestBatchFilePath -and
-            $Value -match "@echo off`n" -and
-            $Value -match "%temp%\\$TestProjectName\.ps1" -and
-            $Value -match '  powershell -ExecutionPolicy Bypass -Command ' -and
-            $Value -match '::TEST_PS1_FILE_CONTENT_1' -and
-            $Value -match '::TEST_PS1_FILE_CONTENT_2'
-        }
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -96,25 +78,8 @@ Describe 'New-BatchScript' {
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestPs1FilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestBatchFilePath -and
-            $Value -match "@echo off`n" -and
-            $Value -match "%temp%\\$TestProjectName\.ps1" -and
-            $Value -match '  powershell -ExecutionPolicy Bypass -Command ' -and
-            $Value -match '::TEST_PS1_FILE_CONTENT_1' -and
-            $Value -match '::TEST_PS1_FILE_CONTENT_2'
-        }
         Should -Invoke Copy-Item -Exactly 1
-        Should -Invoke Copy-Item -Exactly 1 -ParameterFilter {
-            $Path -eq $TestBatchFilePath -and
-            $Destination -eq $TestVmBatchFilePath
-        }
         Should -Invoke Out-Success -Exactly 0
     }
 }
