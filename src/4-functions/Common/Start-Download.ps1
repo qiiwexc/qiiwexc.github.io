@@ -47,8 +47,8 @@ function Start-Download {
         } else {
             throw 'Possibly computer is offline or disk is full'
         }
-    } catch [Exception] {
-        Write-LogException $_ 'Download failed' $LogIndentLevel
+    } catch {
+        Write-LogError "Download failed: $_" $LogIndentLevel
         return
     }
 

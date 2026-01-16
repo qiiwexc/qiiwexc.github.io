@@ -18,7 +18,7 @@ Describe 'Set-GoogleChromeConfiguration' {
     BeforeEach {
         Mock Write-ActivityProgress {}
         Mock Update-BrowserConfiguration {}
-        Mock Write-LogException {}
+        Mock Write-LogError {}
     }
 
     It 'Should configure Google Chrome' {
@@ -38,7 +38,7 @@ Describe 'Set-GoogleChromeConfiguration' {
             $Content -eq $CONFIG_CHROME_PREFERENCES -and
             $Path -match '\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Preferences$'
         }
-        Should -Invoke Write-LogException -Exactly 0
+        Should -Invoke Write-LogError -Exactly 0
     }
 
     It 'Should handle Update-BrowserConfiguration failure' {
@@ -48,6 +48,6 @@ Describe 'Set-GoogleChromeConfiguration' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Update-BrowserConfiguration -Exactly 1
-        Should -Invoke Write-LogException -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1
     }
 }

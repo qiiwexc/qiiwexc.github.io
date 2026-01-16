@@ -14,7 +14,7 @@ function Set-qBittorrentConfiguration {
         }
 
         Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
-    } catch [Exception] {
-        Write-LogException $_ "Failed to configure $AppName"
+    } catch {
+        Write-LogError "Failed to configure '$AppName': $_"
     }
 }

@@ -10,7 +10,7 @@ function Set-MicrosoftEdgeConfiguration {
 
         Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
         Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
-    } catch [Exception] {
-        Write-LogException $_ "Failed to configure $AppName"
+    } catch {
+        Write-LogError "Failed to configure '$AppName': $_"
     }
 }

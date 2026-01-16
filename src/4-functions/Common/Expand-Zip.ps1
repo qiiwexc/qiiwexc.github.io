@@ -74,8 +74,8 @@ function Expand-Zip {
                 $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
             }
         }
-    } catch [Exception] {
-        Write-LogException $_ "Failed to extract '$ZipPath'" $LogIndentLevel
+    } catch {
+        Write-LogError "Failed to extract '$ZipPath': $_" $LogIndentLevel
         return
     }
 

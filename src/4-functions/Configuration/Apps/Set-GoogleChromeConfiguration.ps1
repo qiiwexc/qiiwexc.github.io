@@ -10,7 +10,7 @@ function Set-GoogleChromeConfiguration {
 
         Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"
         Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_PREFERENCES "$env:LocalAppData\Google\Chrome\User Data\Default\Preferences"
-    } catch [Exception] {
-        Write-LogException $_ "Failed to configure $AppName"
+    } catch {
+        Write-LogError "Failed to configure '$AppName': $_"
     }
 }

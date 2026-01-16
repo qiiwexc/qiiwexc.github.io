@@ -36,8 +36,8 @@ function Set-WindowsPersonalisationConfig {
             $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
             $ConfigLines.Add("`"RotatingLockScreenEnabled`"=dword:00000001`n")
         }
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
+    } catch {
+        Write-LogError "Failed to read the registry: $_" $LogIndentLevel
     }
 
     Import-RegistryConfiguration $FileName $ConfigLines

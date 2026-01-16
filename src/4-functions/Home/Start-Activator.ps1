@@ -29,7 +29,7 @@ function Start-Activator {
         }
 
         Out-Success
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to start MAS activator'
+    } catch {
+        Write-LogError "Failed to start MAS activator: $_"
     }
 }

@@ -26,15 +26,15 @@ function Install-MicrosoftOffice {
         Initialize-AppDirectory
 
         $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
-    } catch [Exception] {
-        Write-LogWarning 'Failed to initialize Microsoft Office installer configuration'
+    } catch {
+        Write-LogWarning "Failed to initialize Microsoft Office installer configuration: $_"
     }
 
     if ($Execute) {
         try {
             Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
-        } catch [Exception] {
-            Write-LogWarning 'Failed to import Microsoft Office registry configuration'
+        } catch {
+            Write-LogWarning "Failed to import Microsoft Office registry configuration: $_"
         }
     }
 

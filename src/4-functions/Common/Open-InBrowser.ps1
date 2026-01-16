@@ -7,7 +7,7 @@ function Open-InBrowser {
 
     try {
         Start-Process $Url
-    } catch [Exception] {
-        Write-LogException $_ 'Could not open the URL'
+    } catch {
+        Write-LogError "Could not open the URL: $_"
     }
 }

@@ -9,7 +9,7 @@ function Update-Windows {
         }
 
         Out-Success
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to update Windows'
+    } catch {
+        Write-LogError "Failed to update Windows: $_"
     }
 }

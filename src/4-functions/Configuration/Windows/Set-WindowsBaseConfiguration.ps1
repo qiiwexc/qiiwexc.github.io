@@ -58,8 +58,8 @@ function Set-WindowsBaseConfiguration {
             $ConfigLines.Add("`n[$Registry]`n")
             $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
         }
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to read the registry' $LogIndentLevel
+    } catch {
+        Write-LogError "Failed to read the registry: $_" $LogIndentLevel
     }
 
     Import-RegistryConfiguration $FileName $ConfigLines

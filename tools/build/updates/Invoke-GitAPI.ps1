@@ -13,7 +13,7 @@ function Invoke-GitAPI {
             Set-Variable -Option Constant Response ([Object](Invoke-WebRequest $Uri -Method Get -UseBasicParsing))
         }
     } catch {
-        Write-LogError "Failed to invoke API: $Uri`n$_" 1
+        Write-LogError "Failed to invoke API '$Uri': $_" 1
         return $Null
     }
 

@@ -23,8 +23,8 @@ function Start-OoShutUp10 {
         New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
         $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline
-    } catch [Exception] {
-        Write-LogWarning 'Failed to initialize OOShutUp10++ configuration'
+    } catch {
+        Write-LogWarning "Failed to initialize OOShutUp10++ configuration: $_"
     }
 
     if ($Execute -and $Silent) {
