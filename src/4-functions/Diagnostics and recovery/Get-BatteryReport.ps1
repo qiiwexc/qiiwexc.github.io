@@ -11,7 +11,7 @@ function Get-BatteryReport {
         Open-InBrowser $ReportPath
 
         Out-Success
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to export battery report'
+    } catch {
+        Write-LogError "Failed to export battery report: $_"
     }
 }

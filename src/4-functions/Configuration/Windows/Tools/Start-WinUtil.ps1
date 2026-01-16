@@ -24,8 +24,8 @@ function Start-WinUtil {
         }
 
         $Configuration | Set-Content $ConfigFile -NoNewline
-    } catch [Exception] {
-        Write-LogWarning 'Failed to initialize WinUtil configuration'
+    } catch {
+        Write-LogWarning "Failed to initialize WinUtil configuration: $_"
     }
 
     try {
@@ -38,7 +38,7 @@ function Start-WinUtil {
         Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win')))$ConfigParam$RunParam"
 
         Out-Success
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to start WinUtil utility'
+    } catch {
+        Write-LogError "Failed to start WinUtil utility: $_"
     }
 }

@@ -50,18 +50,6 @@ function Write-LogError {
     Write-FormLog ([LogLevel]::ERROR) $FormattedMessage
 }
 
-function Write-LogException {
-    param(
-        [Object][Parameter(Position = 0, Mandatory)]$Exception,
-        [String][Parameter(Position = 1, Mandatory)]$Message,
-        [Int][Parameter(Position = 2)]$Level = 0
-    )
-
-    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) "$($Message): $($Exception.Exception.Message)" -IndentLevel $Level))
-    Write-Error $FormattedMessage
-    Write-FormLog ([LogLevel]::ERROR) $FormattedMessage
-}
-
 function Out-Status {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Status,

@@ -32,8 +32,8 @@ function Start-WindowsDebloat {
         }
 
         $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
-    } catch [Exception] {
-        Write-LogWarning 'Failed to initialize Windows debloat utility configuration'
+    } catch {
+        Write-LogWarning "Failed to initialize Windows debloat utility configuration: $_"
     }
 
     try {
@@ -54,7 +54,7 @@ function Start-WindowsDebloat {
         Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 
         Out-Success
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to start Windows debloat utility'
+    } catch {
+        Write-LogError "Failed to start Windows debloat utility: $_"
     }
 }

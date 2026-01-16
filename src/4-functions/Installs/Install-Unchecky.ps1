@@ -21,8 +21,8 @@ function Install-Unchecky {
         if ($Execute -and $Silent) {
             Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
         }
-    } catch [Exception] {
-        Write-LogWarning 'Failed to configure Unchecky parameters'
+    } catch {
+        Write-LogWarning "Failed to configure Unchecky parameters: $_"
     }
 
     Start-DownloadUnzipAndRun '{URL_UNCHECKY}' -Execute:$Execute -Params $Params -Silent:$Silent

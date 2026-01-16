@@ -21,7 +21,7 @@ function Update-FileDependency {
             if ($FileVersion) {
                 $NewVersions.Add($FileVersion)
             }
-        } catch [Exception] {
+        } catch {
             Write-LogWarning "File '$FileName' not found. Skipping."
             continue
         }

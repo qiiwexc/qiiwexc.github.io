@@ -12,7 +12,7 @@ Describe 'Update-MicrosoftStoreApps' {
         Mock Write-LogInfo {}
         Mock Invoke-CustomCommand {}
         Mock Out-Success {}
-        Mock Write-LogException {}
+        Mock Write-LogError {}
     }
 
     It 'Should update Microsoft Store apps' {
@@ -26,7 +26,7 @@ Describe 'Update-MicrosoftStoreApps' {
             $HideWindow -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogException -Exactly 0
+        Should -Invoke Write-LogError -Exactly 0
     }
 
     It 'Should handle Invoke-CustomCommand failure' {
@@ -37,6 +37,6 @@ Describe 'Update-MicrosoftStoreApps' {
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogException -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1
     }
 }

@@ -9,8 +9,8 @@ function Remove-WindowsFeatures {
         Set-Variable -Option Constant CapabilitiesToRemove ([Object]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
         Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
         Out-Success $LogIndentLevel
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to collect capabilities to remove' $LogIndentLevel
+    } catch {
+        Write-LogError "Failed to collect capabilities to remove: $_" $LogIndentLevel
     }
 
     try {
@@ -19,8 +19,8 @@ function Remove-WindowsFeatures {
         Set-Variable -Option Constant FeaturesToRemove ([Object]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
         Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
         Out-Success $LogIndentLevel
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to collect features to remove' $LogIndentLevel
+    } catch {
+        Write-LogError "Failed to collect features to remove: $_" $LogIndentLevel
     }
 
     if ($CapabilityCount) {
@@ -35,8 +35,8 @@ function Remove-WindowsFeatures {
                 $Iteration++
                 Remove-WindowsCapability -Online -Name "$Name"
                 Out-Success $LogIndentLevel
-            } catch [Exception] {
-                Write-LogException $_ "Failed to remove '$Name'" $LogIndentLevel
+            } catch {
+                Write-LogError "Failed to remove '$Name': $_" $LogIndentLevel
             }
         }
     }
@@ -53,8 +53,8 @@ function Remove-WindowsFeatures {
                 $Iteration++
                 Disable-WindowsOptionalFeature -Online -Remove -NoRestart -FeatureName "$Name"
                 Out-Success $LogIndentLevel
-            } catch [Exception] {
-                Write-LogException $_ "Failed to remove '$Name'" $LogIndentLevel
+            } catch {
+                Write-LogError "Failed to remove '$Name': $_" $LogIndentLevel
             }
         }
     }

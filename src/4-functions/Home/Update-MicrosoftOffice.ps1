@@ -4,7 +4,7 @@ function Update-MicrosoftOffice {
     try {
         Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user'
         Out-Success
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to update Microsoft Office'
+    } catch {
+        Write-LogError "Failed to update Microsoft Office: $_"
     }
 }

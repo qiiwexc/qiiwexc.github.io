@@ -12,8 +12,8 @@ function Start-Executable {
 
         try {
             Start-Process -Wait $Executable $Switches
-        } catch [Exception] {
-            Write-LogException $_ "Failed to run '$Executable'" $LogIndentLevel
+        } catch {
+            Write-LogError "Failed to run '$Executable': $_" $LogIndentLevel
             return
         }
 
@@ -31,8 +31,8 @@ function Start-Executable {
             } else {
                 Start-Process $Executable -WorkingDirectory (Split-Path $Executable)
             }
-        } catch [Exception] {
-            Write-LogException $_ "Failed to execute '$Executable'" $LogIndentLevel
+        } catch {
+            Write-LogError "Failed to execute '$Executable': $_" $LogIndentLevel
             return
         }
 

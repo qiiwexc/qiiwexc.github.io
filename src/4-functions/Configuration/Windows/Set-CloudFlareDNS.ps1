@@ -35,8 +35,8 @@ function Set-CloudFlareDNS {
         if ($Status | Where-Object { $_ -ne 0 }) {
             Write-LogError 'Failed to change DNS server'
         }
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to change DNS server'
+    } catch {
+        Write-LogError "Failed to change DNS server: $_"
         return
     }
 

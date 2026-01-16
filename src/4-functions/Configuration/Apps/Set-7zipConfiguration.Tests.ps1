@@ -17,7 +17,7 @@ Describe 'Set-7zipConfiguration' {
     BeforeEach {
         Mock Write-ActivityProgress {}
         Mock Import-RegistryConfiguration {}
-        Mock Write-LogException {}
+        Mock Write-LogError {}
     }
 
     It 'Should configure 7zip' {
@@ -30,7 +30,7 @@ Describe 'Set-7zipConfiguration' {
             $Content -match 'TEST_CONFIG_7ZIP1\n\[HKEY_USERS\\\.DEFAULT\\Test\]\nTEST_CONFIG_7ZIP2' -and
             $Content -match 'TEST_CONFIG_7ZIP1\n\[HKEY_CURRENT_USER\\Test\]\nTEST_CONFIG_7ZIP2'
         }
-        Should -Invoke Write-LogException -Exactly 0
+        Should -Invoke Write-LogError -Exactly 0
     }
 
     It 'Should handle Import-RegistryConfiguration failure' {
@@ -40,6 +40,6 @@ Describe 'Set-7zipConfiguration' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
-        Should -Invoke Write-LogException -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1
     }
 }

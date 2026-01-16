@@ -170,33 +170,6 @@ Describe 'Write-LogError' {
     }
 }
 
-Describe 'Write-LogException' {
-    BeforeEach {
-        Mock Format-Message { return $FormattedMessage }
-        Mock Write-Host {}
-        Mock Write-Warning {}
-        Mock Write-Error {}
-    }
-
-    It 'Should log exception correctly with indent level <Level>' -ForEach @(
-        @{ Level = 1; Expected = 1 }
-        @{ Level = $Null; Expected = 0 }
-    ) {
-        Write-LogException $TestException $TestMessage $Level
-
-        Should -Invoke Format-Message -Exactly 1
-        Should -Invoke Format-Message -Exactly 1 -ParameterFilter {
-            $Level -eq $LogLevelError -and
-            $Message -eq "$($TestMessage): $TestExceptionMessage" -and
-            $IndentLevel -eq $Expected
-        }
-        Should -Invoke Write-Host -Exactly 0
-        Should -Invoke Write-Warning -Exactly 0
-        Should -Invoke Write-Error -Exactly 1
-        Should -Invoke Write-Error -Exactly 1 -ParameterFilter { $Message -eq $FormattedMessage }
-    }
-}
-
 Describe 'Out-Status' {
     BeforeEach {
         Mock Write-LogInfo {}

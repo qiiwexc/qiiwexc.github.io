@@ -14,7 +14,7 @@ Describe 'Update-Windows' {
         Mock Write-LogInfo {}
         Mock Start-Process {}
         Mock Out-Success {}
-        Mock Write-LogException {}
+        Mock Write-LogError {}
 
         [Int]$OS_VERSION = 11
     }
@@ -29,7 +29,7 @@ Describe 'Update-Windows' {
             $ArgumentList -eq 'StartInteractiveScan'
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogException -Exactly 0
+        Should -Invoke Write-LogError -Exactly 0
     }
 
     It 'Should update Windows successfully on Windows 7' {
@@ -44,7 +44,7 @@ Describe 'Update-Windows' {
             $ArgumentList -eq '/detectnow /updatenow'
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogException -Exactly 0
+        Should -Invoke Write-LogError -Exactly 0
     }
 
     It 'Should handle Start-Process failure' {
@@ -55,6 +55,6 @@ Describe 'Update-Windows' {
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogException -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1
     }
 }
