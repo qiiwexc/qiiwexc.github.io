@@ -20,7 +20,7 @@ BeforeAll {
     Set-Variable -Option Constant TestLatestVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/tag/$TestLatestVersion")
 
     Set-Variable -Option Constant TestDependency (
-        [Object]@{
+        [PSCustomObject]@{
             repository = $TestRepositoryName
             version    = $TestCurrentVersion
         }

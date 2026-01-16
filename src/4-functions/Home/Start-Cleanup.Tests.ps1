@@ -8,8 +8,8 @@ BeforeAll {
 
     Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_PATH_TEMP_DIR')
 
-    Set-Variable -Option Constant TestVolumeCache1 ([Object]@{ PsPath = 'TEST_VOLUME_CACHE_1' })
-    Set-Variable -Option Constant TestVolumeCache2 ([Object]@{ PsPath = 'TEST_VOLUME_CACHE_2' })
+    Set-Variable -Option Constant TestVolumeCache1 ([PSCustomObject]@{ PsPath = 'TEST_VOLUME_CACHE_1' })
+    Set-Variable -Option Constant TestVolumeCache2 ([PSCustomObject]@{ PsPath = 'TEST_VOLUME_CACHE_2' })
 }
 
 Describe 'Start-Cleanup' {

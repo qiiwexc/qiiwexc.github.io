@@ -1,13 +1,13 @@
 function Select-Tags {
     param(
-        [Object][Parameter(Position = 0, Mandatory)]$Dependency,
+        [PSCustomObject][Parameter(Position = 0, Mandatory)]$Dependency,
         [String][Parameter(Position = 1)]$GitHubToken
     )
 
     Set-Variable -Option Constant Repository ([String]$Dependency.repository)
     Set-Variable -Option Constant CurrentVersion ([String]$Dependency.version)
 
-    Set-Variable -Option Constant Tags ([Collections.Generic.List[Object]](Invoke-GitAPI "https://api.github.com/repos/$Repository/tags" $GitHubToken))
+    Set-Variable -Option Constant Tags ([Collections.Generic.List[PSCustomObject]](Invoke-GitAPI "https://api.github.com/repos/$Repository/tags" $GitHubToken))
 
     if ($Tags -and $Tags.Count -gt 0) {
         Set-Variable -Option Constant LatestVersion ([String]($Tags[0].Name))

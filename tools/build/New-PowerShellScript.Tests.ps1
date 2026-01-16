@@ -7,13 +7,13 @@ BeforeAll {
 
     Set-Variable -Option Constant TestSourcePathPath ([String]'TEST_BATCH_FILE_PATH')
     Set-Variable -Option Constant TestBuildPs1FilePath ([String]'TEST_BUILD_PS1_FILE_PATH')
-    Set-Variable -Option Constant TestConfig ([Collections.Generic.List[Object]]@(@{key = 'KEY_1'; value = 'VALUE_1' }, @{key = 'KEY_2'; value = 'VALUE_2' }))
+    Set-Variable -Option Constant TestConfig ([Collections.Generic.List[PSCustomObject]]@(@{key = 'KEY_1'; value = 'VALUE_1' }, @{key = 'KEY_2'; value = 'VALUE_2' }))
 
     Set-Variable -Option Constant TestPs1FilePath ([String]'\src\code\Test-File.ps1')
     Set-Variable -Option Constant TestConfigFilePath ([String]'\src\configs\ConfigFile.ini')
 
     Set-Variable -Option Constant TestSourceFileList (
-        [Collections.Generic.List[Object]]@(
+        [Collections.Generic.List[PSCustomObject]]@(
             @{Name = 'Test-File.ps1'; FullName = $TestPs1FilePath },
             @{Name = 'Test-File.Tests.ps1'; FullName = '\src\code\Test-File.Tests.ps1' },
             @{Name = 'ConfigFile.ini'; FullName = $TestConfigFilePath }

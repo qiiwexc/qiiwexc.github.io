@@ -14,7 +14,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestCommitsUrl ([String]"https://api.github.com/repos/$TestRepositoryName/commits")
     Set-Variable -Option Constant TestDependency (
-        [Object]@{
+        [PSCustomObject]@{
             repository = $TestRepositoryName
             version    = $TestCurrentVersion
         }

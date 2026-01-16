@@ -6,36 +6,40 @@ function Update-BrowserConfiguration {
         [String][Parameter(Position = 3, Mandatory)]$Path
     )
 
-    Set-Variable -Option Constant LogIndentLevel ([Int]2)
+    try {
+        Set-Variable -Option Constant LogIndentLevel ([Int]2)
 
-    Stop-ProcessIfRunning $ProcessName
+        Write-LogInfo "Writing '$AppName' configuration to '$Path'..." $LogIndentLevel
 
-    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
+        Stop-ProcessIfRunning $ProcessName
 
-    if (-not (Test-Path $Path)) {
-        Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it" $LogIndentLevel
+        if (-not (Test-Path $Path)) {
+            Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it" $LogIndentLevel
 
-        try {
-            Start-Process $ProcessName -ErrorAction Stop
-        } catch {
-            Write-LogError "Couldn't start '$AppName': $_" $LogIndentLevel
-            return
-        }
+            try {
+                Start-Process $ProcessName -ErrorAction Stop
+            } catch {
+                Write-LogError "Couldn't start '$AppName': $_" $LogIndentLevel
+                return
+            }
 
-        for ([Int]$i = 0; $i -lt 5; $i++) {
-            Start-Sleep -Seconds 10
-            if (Test-Path $Path) {
-                break
+            for ([Int]$i = 0; $i -lt 5; $i++) {
+                Start-Sleep -Seconds 10
+                if (Test-Path $Path) {
+                    break
+                }
             }
         }
+
+        Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop))
+        Set-Variable -Option Constant ExtendConfig ([PSCustomObject]($Content | ConvertFrom-Json -ErrorAction Stop))
+
+        Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $ExtendConfig -ErrorAction Stop | ConvertTo-Json -Depth 100 -Compress -ErrorAction Stop))
+
+        $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline -ErrorAction Stop
+
+        Out-Success $LogIndentLevel
+    } catch {
+        Write-LogError "Failed to update '$AppName' configuration: $_" $LogIndentLevel
     }
-
-    Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop))
-    Set-Variable -Option Constant PatchConfig ([PSCustomObject]($Content | ConvertFrom-Json -ErrorAction Stop))
-
-    Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $PatchConfig -ErrorAction Stop | ConvertTo-Json -Depth 100 -Compress -ErrorAction Stop))
-
-    $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline -ErrorAction Stop
-
-    Out-Success $LogIndentLevel
 }

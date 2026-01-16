@@ -3,7 +3,7 @@ function Set-FileAssociations {
 
     Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
 
-    [Collections.Generic.List[Object]]$AppAssociations = @()
+    [Collections.Generic.List[PSCustomObject]]$AppAssociations = @()
 
     Select-Xml -Xml ([xml]$CONFIG_APP_ASSOCIATIONS) -XPath '//Association' | ForEach-Object {
         $AppAssociations.Add(@{
