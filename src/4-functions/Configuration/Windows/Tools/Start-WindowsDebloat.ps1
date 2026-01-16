@@ -15,7 +15,7 @@ function Start-WindowsDebloat {
     try {
         Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 
-        New-Item -Force -ItemType Directory $TargetPath | Out-Null
+        New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop | Out-Null
 
         if ($UsePreset -and $Personalisation) {
             Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
@@ -23,7 +23,7 @@ function Start-WindowsDebloat {
             Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
         }
 
-        $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline
+        $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline -ErrorAction Stop
 
         if ($UsePreset -and $Personalisation) {
             Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
@@ -31,7 +31,7 @@ function Start-WindowsDebloat {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
         }
 
-        $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
+        $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize Windows debloat utility configuration: $_"
     }

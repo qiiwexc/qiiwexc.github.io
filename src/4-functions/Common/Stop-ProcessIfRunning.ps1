@@ -5,9 +5,9 @@ function Stop-ProcessIfRunning {
 
     Set-Variable -Option Constant LogIndentLevel ([Int]3)
 
-    if (Get-Process | Where-Object { $_.ProcessName -eq $ProcessName } ) {
+    if (Get-Process -ErrorAction Stop | Where-Object { $_.ProcessName -eq $ProcessName } ) {
         Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
-        Stop-Process -Name $ProcessName -Force
+        Stop-Process -Name $ProcessName -Force -ErrorAction Stop
         Out-Success $LogIndentLevel
     }
 }

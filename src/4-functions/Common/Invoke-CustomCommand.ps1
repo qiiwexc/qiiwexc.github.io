@@ -29,5 +29,5 @@ function Invoke-CustomCommand {
     }
 
     Set-Variable -Option Constant FullCommand ([String]"$ExecutionPolicy $Command $WorkingDir")
-    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle
+    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle -ErrorAction Stop
 }

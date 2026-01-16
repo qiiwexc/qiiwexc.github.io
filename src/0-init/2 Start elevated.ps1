@@ -3,7 +3,7 @@ if (-not (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
 
     try {
         Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"$($MyInvocation.Line)`""
-    } catch [Exception] {
+    } catch {
         Write-Error $_
         Start-Sleep -Seconds 5
     }

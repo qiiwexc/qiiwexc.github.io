@@ -9,7 +9,7 @@ function Set-AnyDeskConfiguration {
         Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
 
         if (Test-Path $ConfigPath) {
-            Set-Variable -Option Constant CurrentConfig ([String](Get-Content $ConfigPath -Raw -Encoding UTF8))
+            Set-Variable -Option Constant CurrentConfig ([String](Get-Content $ConfigPath -Raw -Encoding UTF8 -ErrorAction Stop))
         } else {
             Set-Variable -Option Constant CurrentConfig ([String]'')
         }

@@ -8,18 +8,18 @@ function Import-RegistryConfiguration {
 
     Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
 
-    Set-Variable -Option Constant RegFilePath ([String]"$PATH_APP_DIR\$AppName.reg")
-
-    Initialize-AppDirectory
-
-    "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Set-Content $RegFilePath -NoNewline
-
     try {
-        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`""
-    } catch [Exception] {
-        Write-LogException $_ 'Failed to import file into registry' $LogIndentLevel
-        return
-    }
+        Set-Variable -Option Constant RegFilePath ([String]"$PATH_APP_DIR\$AppName.reg")
 
-    Out-Success $LogIndentLevel
+        Initialize-AppDirectory
+
+        "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Set-Content $RegFilePath -NoNewline -ErrorAction Stop
+
+        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`"" -ErrorAction Stop
+
+        Out-Success $LogIndentLevel
+    } catch {
+        Write-LogWarning "Failed to import file into registry: $_" $LogIndentLevel
+        throw $_
+    }
 }
