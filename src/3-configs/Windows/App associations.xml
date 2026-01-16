@@ -10,8 +10,6 @@
   <Association Identifier=".adts" ProgId="VLC.adts" ApplicationName="VLC media player" />
   <Association Identifier=".aif" ProgId="VLC.aif" ApplicationName="VLC media player" />
   <Association Identifier=".aifc" ProgId="VLC.aifc" ApplicationName="VLC media player" />
-  <Association Identifier=".aiff" ProgId="VLC.aiff" ApplicationName="VLC media player" />
-  <Association Identifier=".asf" ProgId="VLC.asf" ApplicationName="VLC media player" />
   <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
   <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
   <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
