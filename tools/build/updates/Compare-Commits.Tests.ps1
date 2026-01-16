@@ -65,6 +65,15 @@ Describe 'Compare-Commits' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
+    It 'Should not update if new version is empty' {
+        Mock Invoke-GitAPI { return @( @{}, @{} ) }
+
+        Compare-Commits $TestDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-GitAPI -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
     It 'Should not update if the response is empty' {
         Mock Invoke-GitAPI { return @() }
 

@@ -15,9 +15,15 @@ function Update-WebDependency {
     }
 
     Set-Variable -Option Constant Matches ([regex]::Matches($Response.Content, $Dependency.regex, @('IgnoreCase', 'Multiline')))
-    Set-Variable -Option Constant LatestVersion ([String]($Matches | Select-Object -First 1).Groups[1].Value)
 
-    if ($LatestVersion -ne $Dependency.version) {
+    if ($Matches.Count -eq 0) {
+        Write-LogError "Failed to find version number: $Uri" 1
+        return
+    }
+
+    Set-Variable -Option Constant LatestVersion ([String]($Matches[0].Groups[1].Value))
+
+    if ($LatestVersion -ne '' -and $LatestVersion -ne $Dependency.version) {
         Set-NewVersion $Dependency $LatestVersion
         return @($Uri)
     }

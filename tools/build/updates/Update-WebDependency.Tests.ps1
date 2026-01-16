@@ -10,7 +10,7 @@ BeforeAll {
         [Object]@{
             name    = 'TestDependency'
             url     = 'https://example.com/test-dependency'
-            regex   = 'Latest Version:\s*([0-9\.]+)'
+            regex   = 'Latest Version:\s*(\d+\.\d+\.\d+)'
             version = '1.0.0'
         }
     )
@@ -55,6 +55,16 @@ Describe 'Update-WebDependency' {
 
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
+    It 'Should not update if new version was not identified' {
+        Mock Invoke-WebRequest { return @{ Content = 'no new version' } }
+
+        Update-WebDependency $TestDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 

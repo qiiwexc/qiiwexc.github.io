@@ -115,6 +115,17 @@ Describe 'Update-FileDependency' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
+    It 'Should not update if new version is empty' {
+        Mock Get-Item { return (New-MockObject -Type System.IO.FileInfo) } -ParameterFilter { $Path -match ' x86.exe' }
+        Mock Get-Item { return (New-MockObject -Type System.IO.FileInfo) } -ParameterFilter { $Path -notmatch ' x86.exe' }
+
+        Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
+
+        Should -Invoke Get-Item -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
     It 'Should update version and log warning if 32-bit file is missing' {
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -match ' x86.exe' }
 

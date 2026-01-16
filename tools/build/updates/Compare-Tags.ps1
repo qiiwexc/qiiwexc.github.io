@@ -22,9 +22,9 @@ function Compare-Tags {
     }
 
     if ($Tags -and $Tags.Count -gt 0) {
-        Set-Variable -Option Constant LatestVersion ([String]($Tags | Select-Object -First 1).Name)
+        Set-Variable -Option Constant LatestVersion ([String]($Tags[0].Name))
 
-        if ($LatestVersion -ne $CurrentVersion) {
+        if ($LatestVersion -ne '' -and $LatestVersion -ne $CurrentVersion) {
             Set-NewVersion $Dependency $LatestVersion
             return [Collections.Generic.List[Object]]@("https://$($Source.ToString().ToLower()).com/$Repository/compare/$CurrentVersion...$LatestVersion")
         }

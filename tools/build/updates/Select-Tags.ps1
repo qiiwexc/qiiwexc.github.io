@@ -10,9 +10,9 @@ function Select-Tags {
     Set-Variable -Option Constant Tags ([Collections.Generic.List[Object]](Invoke-GitAPI "https://api.github.com/repos/$Repository/tags" $GitHubToken))
 
     if ($Tags -and $Tags.Count -gt 0) {
-        Set-Variable -Option Constant LatestVersion ([String]($Tags | Select-Object -First 1).Name)
+        Set-Variable -Option Constant LatestVersion ([String]($Tags[0].Name))
 
-        if ($LatestVersion -ne $CurrentVersion) {
+        if ($LatestVersion -ne '' -and $LatestVersion -ne $CurrentVersion) {
             Set-NewVersion $Dependency $LatestVersion
 
             if ($LatestVersion.StartsWith('v')) {
