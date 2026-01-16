@@ -25,7 +25,9 @@ Describe 'Start-WinUtil' {
         Mock New-Item {}
         Mock Set-Content {}
         Mock Invoke-CustomCommand {}
+        Mock Write-LogWarning {}
         Mock Out-Success {}
+        Mock Write-LogException {}
 
         [Bool]$TestPersonalisation = $False
         [Bool]$TestAutomaticallyApply = $False
@@ -48,9 +50,11 @@ Describe 'Start-WinUtil' {
             $Value -eq $CONFIG_WINUTIL -and
             $NoNewline -eq $True
         }
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter { $Command -eq $TestCommand }
         Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should start WinUtil with personalisation configuration' {
@@ -67,8 +71,10 @@ Describe 'Start-WinUtil' {
             $Value -eq $TestConfigWithPersonalization -and
             $NoNewline -eq $True
         }
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should start WinUtil and automatically apply' {
@@ -80,9 +86,11 @@ Describe 'Start-WinUtil' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter { $Command -eq "$TestCommand -Run" }
         Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should exit if no network connection' {
@@ -94,8 +102,10 @@ Describe 'Start-WinUtil' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 0
         Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
         Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Test-NetworkConnection failure' {
@@ -107,46 +117,54 @@ Describe 'Start-WinUtil' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 0
         Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
         Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle New-Item failure' {
         Mock New-Item { throw $TestException }
 
-        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Throw $TestException
+        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Not -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Throw $TestException
+        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Not -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Invoke-CustomCommand failure' {
         Mock Invoke-CustomCommand { throw $TestException }
 
-        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Throw $TestException
+        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Not -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogException -Exactly 1
     }
 }

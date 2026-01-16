@@ -25,7 +25,9 @@ Describe 'Start-WindowsDebloat' {
         Mock New-Item {}
         Mock Set-Content {}
         Mock Invoke-CustomCommand {}
+        Mock Write-LogWarning {}
         Mock Out-Success {}
+        Mock Write-LogException {}
 
         [Int]$OS_VERSION = 11
 
@@ -56,12 +58,14 @@ Describe 'Start-WindowsDebloat' {
             $Value -eq $CONFIG_DEBLOAT_PRESET_BASE -and
             $NoNewline -eq $True
         }
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
             $Command -eq "$TestCommand -Sysprep"
         }
         Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should start debloat tool with configuration on Windows versions older than 11' {
@@ -73,12 +77,14 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
             $Command -eq $TestCommand
         }
         Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should start debloat tool with custom preset' {
@@ -90,12 +96,14 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
             $Command -eq "$TestCommand -Sysprep -RunSavedSettings"
         }
         Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should start debloat tool with personalisation configuration' {
@@ -118,12 +126,14 @@ Describe 'Start-WindowsDebloat' {
             $Value -eq $CONFIG_DEBLOAT_PRESET_PERSONALISATION -and
             $NoNewline -eq $True
         }
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
             $Command -eq "$TestCommand -Sysprep -RunSavedSettings"
         }
         Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should start debloat tool and automatically apply' {
@@ -135,12 +145,14 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
             $Command -eq "$TestCommand -Sysprep -Silent"
         }
         Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should exit if no network connection' {
@@ -152,8 +164,10 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 0
         Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
         Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Test-NetworkConnection failure' {
@@ -165,45 +179,52 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 0
         Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
         Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle New-Item failure' {
         Mock New-Item { throw $TestException }
 
-        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Throw $TestException
+        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Not -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Throw $TestException
+        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Not -Throw
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-LogException -Exactly 0
     }
 
     It 'Should handle Invoke-CustomCommand failure' {
         Mock Invoke-CustomCommand { throw $TestException }
 
-        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Throw $TestException
-
+        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Not -Throw
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogException -Exactly 1
     }
 }

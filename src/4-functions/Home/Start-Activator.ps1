@@ -6,26 +6,30 @@ function Start-Activator {
 
     Write-LogInfo 'Starting MAS activator...'
 
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
-        return
+    try {
+        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+        if (-not $IsConnected) {
+            return
+        }
+
+        [String]$Params = ''
+
+        if ($ActivateWindows) {
+            $Params += ' /HWID'
+        }
+
+        if ($ActivateOffice) {
+            $Params += ' /Ohook'
+        }
+
+        if ($OS_VERSION -le 7) {
+            Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))$Params"
+        } else {
+            Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
+        }
+
+        Out-Success
+    } catch [Exception] {
+        Write-LogException $_ 'Failed to start MAS activator'
     }
-
-    [String]$Params = ''
-
-    if ($ActivateWindows) {
-        $Params += ' /HWID'
-    }
-
-    if ($ActivateOffice) {
-        $Params += ' /Ohook'
-    }
-
-    if ($OS_VERSION -le 7) {
-        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))$Params"
-    } else {
-        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
-    }
-
-    Out-Success
 }

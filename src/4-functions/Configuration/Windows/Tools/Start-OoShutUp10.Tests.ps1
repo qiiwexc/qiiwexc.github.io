@@ -22,6 +22,7 @@ Describe 'Start-OoShutUp10' {
         Mock New-Item {}
         Mock Set-Content {}
         Mock Start-DownloadUnzipAndRun {}
+        Mock Write-LogWarning {}
         Mock Out-Success {}
 
         [Bool]$TestExecute = $False
@@ -45,6 +46,7 @@ Describe 'Start-OoShutUp10' {
             $Value -eq $CONFIG_OOSHUTUP10 -and
             $NoNewline -eq $True
         }
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
@@ -73,6 +75,7 @@ Describe 'Start-OoShutUp10' {
             $Value -eq $CONFIG_OOSHUTUP10 -and
             $NoNewline -eq $True
         }
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
@@ -92,6 +95,7 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
@@ -110,6 +114,7 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 0
         Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -123,6 +128,7 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 0
         Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -130,27 +136,29 @@ Describe 'Start-OoShutUp10' {
     It 'Should handle New-Item failure' {
         Mock New-Item { throw $TestException }
 
-        { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
+        { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Not -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
+        { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Not -Throw
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should handle Start-DownloadUnzipAndRun failure' {
@@ -162,6 +170,7 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Out-Success -Exactly 0
     }

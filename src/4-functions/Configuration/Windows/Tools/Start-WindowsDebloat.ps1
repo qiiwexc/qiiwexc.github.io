@@ -12,41 +12,49 @@ function Start-WindowsDebloat {
         return
     }
 
-    Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
+    try {
+        Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 
-    New-Item -Force -ItemType Directory $TargetPath | Out-Null
+        New-Item -Force -ItemType Directory $TargetPath | Out-Null
 
-    if ($UsePreset -and $Personalisation) {
-        Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
-    } else {
-        Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
+        if ($UsePreset -and $Personalisation) {
+            Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
+        } else {
+            Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
+        }
+
+        $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline
+
+        if ($UsePreset -and $Personalisation) {
+            Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
+        } else {
+            Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
+        }
+
+        $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
+    } catch [Exception] {
+        Write-LogWarning 'Failed to initialize Windows debloat utility configuration'
     }
 
-    $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline
+    try {
+        if ($UsePreset -or $Personalisation) {
+            Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings')
+        }
 
-    if ($UsePreset -and $Personalisation) {
-        Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
-    } else {
-        Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
+        if ($Silent) {
+            Set-Variable -Option Constant SilentParam ([String]' -Silent')
+        }
+
+        if ($OS_VERSION -gt 10) {
+            Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
+        }
+
+        Set-Variable -Option Constant Params ([String]"-NoRestartExplorer$SysprepParam$UsePresetParam$SilentParam")
+
+        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
+
+        Out-Success
+    } catch [Exception] {
+        Write-LogException $_ 'Failed to start Windows debloat utility'
     }
-
-    $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline
-
-    if ($UsePreset -or $Personalisation) {
-        Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings')
-    }
-
-    if ($Silent) {
-        Set-Variable -Option Constant SilentParam ([String]' -Silent')
-    }
-
-    if ($OS_VERSION -gt 10) {
-        Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
-    }
-
-    Set-Variable -Option Constant Params ([String]"-NoRestartExplorer$SysprepParam$UsePresetParam$SilentParam")
-
-    Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
-
-    Out-Success
 }

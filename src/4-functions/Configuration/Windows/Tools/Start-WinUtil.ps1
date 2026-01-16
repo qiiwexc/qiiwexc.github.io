@@ -11,26 +11,34 @@ function Start-WinUtil {
         return
     }
 
-    New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
+    try {
+        New-Item -Force -ItemType Directory $PATH_WINUTIL | Out-Null
 
-    Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
+        Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 
-    [String]$Configuration = $CONFIG_WINUTIL
-    if ($Personalisation) {
-        $Configuration = $CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
+        [String]$Configuration = $CONFIG_WINUTIL
+        if ($Personalisation) {
+            $Configuration = $CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
 ', '    "WPFTweaks":  [
 ' + $CONFIG_WINUTIL_PERSONALISATION)
+        }
+
+        $Configuration | Set-Content $ConfigFile -NoNewline
+    } catch [Exception] {
+        Write-LogWarning 'Failed to initialize WinUtil configuration'
     }
 
-    $Configuration | Set-Content $ConfigFile -NoNewline
+    try {
+        Set-Variable -Option Constant ConfigParam ([String]" -Config $ConfigFile")
 
-    Set-Variable -Option Constant ConfigParam ([String]" -Config $ConfigFile")
+        if ($AutomaticallyApply) {
+            Set-Variable -Option Constant RunParam ([String]' -Run')
+        }
 
-    if ($AutomaticallyApply) {
-        Set-Variable -Option Constant RunParam ([String]' -Run')
+        Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win')))$ConfigParam$RunParam"
+
+        Out-Success
+    } catch [Exception] {
+        Write-LogException $_ 'Failed to start WinUtil utility'
     }
-
-    Invoke-CustomCommand "& ([ScriptBlock]::Create((irm 'https://christitus.com/win')))$ConfigParam$RunParam"
-
-    Out-Success
 }

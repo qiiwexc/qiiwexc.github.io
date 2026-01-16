@@ -3,24 +3,39 @@ function Install-MicrosoftOffice {
         [Switch][Parameter(Position = 0, Mandatory)]$Execute
     )
 
-    if ($Execute) {
-        Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
-    } else {
-        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
+    Write-LogInfo 'Starting Microsoft Office installation...'
+
+    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+    if (-not $IsConnected) {
+        return
     }
 
-    if ($SYSTEM_LANGUAGE -match 'ru') {
-        Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU'))
-    } else {
-        Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER)
+    try {
+        if ($Execute) {
+            Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
+        } else {
+            Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
+        }
+
+        if ($SYSTEM_LANGUAGE -match 'ru') {
+            Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER.Replace('en-GB', 'ru-RU'))
+        } else {
+            Set-Variable -Option Constant Config ([String]$CONFIG_OFFICE_INSTALLER)
+        }
+
+        Initialize-AppDirectory
+
+        $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
+    } catch [Exception] {
+        Write-LogWarning 'Failed to initialize Microsoft Office installer configuration'
     }
 
-    Initialize-AppDirectory
-
-    $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline
-
     if ($Execute) {
-        Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
+        try {
+            Import-RegistryConfiguration 'Microsoft Office' $CONFIG_MICROSOFT_OFFICE
+        } catch [Exception] {
+            Write-LogWarning 'Failed to import Microsoft Office registry configuration'
+        }
     }
 
     Start-DownloadUnzipAndRun '{URL_OFFICE_INSTALLER}' -Execute:$Execute
