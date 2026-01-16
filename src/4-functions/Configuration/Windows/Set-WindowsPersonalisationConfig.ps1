@@ -9,7 +9,7 @@ function Set-WindowsPersonalisationConfig {
 
     Set-WinHomeLocation -GeoId 140
 
-    Set-Variable -Option Constant LanguageList ([Collections.Generic.List[Object]](Get-WinUserLanguageList))
+    Set-Variable -Option Constant LanguageList ([Collections.Generic.List[PSCustomObject]](Get-WinUserLanguageList))
     if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
         $LanguageList.Add('lv')
         Set-WinUserLanguageList $LanguageList -Force

@@ -3,10 +3,10 @@ function Get-SystemInformation {
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    Set-Variable -Option Constant Motherboard ([Object](Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product))
+    Set-Variable -Option Constant Motherboard ([PSCustomObject](Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product))
     Write-LogInfo "Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)" $LogIndentLevel
 
-    Set-Variable -Option Constant BIOS ([Object](Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate))
+    Set-Variable -Option Constant BIOS ([PSCustomObject](Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate))
     Write-LogInfo "BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))" $LogIndentLevel
 
     Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel

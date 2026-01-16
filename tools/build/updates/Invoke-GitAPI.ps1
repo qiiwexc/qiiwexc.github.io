@@ -8,14 +8,14 @@ function Invoke-GitAPI {
 
     try {
         if ($GitHubToken) {
-            Set-Variable -Option Constant Response ([Object](Invoke-WebRequest $Uri -Method Get -UseBasicParsing -Headers @{ Authorization = "token $GitHubToken" }))
+            Set-Variable -Option Constant Response ([PSCustomObject](Invoke-WebRequest $Uri -Method Get -UseBasicParsing -Headers @{ Authorization = "token $GitHubToken" }))
         } else {
-            Set-Variable -Option Constant Response ([Object](Invoke-WebRequest $Uri -Method Get -UseBasicParsing))
+            Set-Variable -Option Constant Response ([PSCustomObject](Invoke-WebRequest $Uri -Method Get -UseBasicParsing))
         }
     } catch {
         Write-LogError "Failed to invoke API '$Uri': $_" 1
         return $Null
     }
 
-    return [Collections.Generic.List[Object]]($Response.Content | ConvertFrom-Json)
+    return [Collections.Generic.List[PSCustomObject]]($Response.Content | ConvertFrom-Json)
 }

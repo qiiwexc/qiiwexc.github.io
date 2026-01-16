@@ -1,6 +1,6 @@
 function Update-FileDependency {
     param(
-        [Object][Parameter(Position = 0, Mandatory)]$Dependency,
+        [PSCustomObject][Parameter(Position = 0, Mandatory)]$Dependency,
         [String][Parameter(Position = 1, Mandatory)]$WipPath
     )
 

@@ -15,7 +15,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestGitHubTagsUrl ([String]"https://api.github.com/repos/$TestRepositoryName/tags")
     Set-Variable -Option Constant TestDependency (
-        [Object]@{
+        [PSCustomObject]@{
             projectId  = $TestProjectId
             repository = $TestRepositoryName
             source     = ''

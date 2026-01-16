@@ -5,8 +5,8 @@ function Remove-WindowsFeatures {
 
     try {
         Write-ActivityProgress -PercentComplete 5 -Task 'Collecting capabilities to remove...'
-        Set-Variable -Option Constant InstalledCapabilities ([Object](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
-        Set-Variable -Option Constant CapabilitiesToRemove ([Object]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
+        Set-Variable -Option Constant InstalledCapabilities ([PSCustomObject](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
+        Set-Variable -Option Constant CapabilitiesToRemove ([PSCustomObject]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
         Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
         Out-Success $LogIndentLevel
     } catch {
@@ -15,8 +15,8 @@ function Remove-WindowsFeatures {
 
     try {
         Write-ActivityProgress -PercentComplete 10 -Task 'Collecting features to remove...'
-        Set-Variable -Option Constant InstalledFeatures ([Object](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
-        Set-Variable -Option Constant FeaturesToRemove ([Object]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
+        Set-Variable -Option Constant InstalledFeatures ([PSCustomObject](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
+        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
         Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
         Out-Success $LogIndentLevel
     } catch {

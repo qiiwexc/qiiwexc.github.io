@@ -2,12 +2,12 @@ function New-PowerShellScript {
     param(
         [String][Parameter(Position = 0, Mandatory)]$SourcePath,
         [String][Parameter(Position = 1, Mandatory)]$Ps1File,
-        [Collections.Generic.List[Object]][Parameter(Position = 2, Mandatory)]$Config
+        [Collections.Generic.List[PSCustomObject]][Parameter(Position = 2, Mandatory)]$Config
     )
 
     Write-LogInfo 'Building PowerShell script...'
 
-    Set-Variable -Option Constant ProjectFiles ([Collections.Generic.List[Object]](Get-ChildItem $SourcePath -Recurse -File | Where-Object { $_.Name -notmatch '.\.Tests\.ps1$' }))
+    Set-Variable -Option Constant ProjectFiles ([Collections.Generic.List[PSCustomObject]](Get-ChildItem $SourcePath -Recurse -File | Where-Object { $_.Name -notmatch '.\.Tests\.ps1$' }))
     Set-Variable -Option Constant FileCount ([Int]$ProjectFiles.Count)
 
     [Collections.Generic.List[String]]$OutputLines = @()

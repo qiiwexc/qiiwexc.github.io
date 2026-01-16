@@ -18,7 +18,7 @@ BeforeAll {
     Set-Variable -Option Constant TestKey2 ([String]'URL_TEST_DEPENDENCY_NAME_2')
     Set-Variable -Option Constant TestValue2 ([String]'{VERSION}_TEST_VALUE_2')
     Set-Variable -Option Constant TestUrlsTemplate (
-        [Collections.Generic.List[Object]]@(
+        [Collections.Generic.List[PSCustomObject]]@(
             @{key = $TestKey1; value = $TestValue1 }
             @{key = $TestKey2; value = $TestValue2 }
         )

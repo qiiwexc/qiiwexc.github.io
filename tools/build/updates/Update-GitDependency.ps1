@@ -8,7 +8,7 @@ Add-Type -TypeDefinition @'
 
 function Update-GitDependency {
     param(
-        [Object][Parameter(Position = 0, Mandatory)]$Dependency,
+        [PSCustomObject][Parameter(Position = 0, Mandatory)]$Dependency,
         [String][Parameter(Position = 1)]$GitHubToken
     )
 

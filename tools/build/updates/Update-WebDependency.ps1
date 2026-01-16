@@ -1,6 +1,6 @@
 function Update-WebDependency {
     param(
-        [Object][Parameter(Position = 0, Mandatory)]$Dependency
+        [PSCustomObject][Parameter(Position = 0, Mandatory)]$Dependency
     )
 
     Set-Variable -Option Constant Uri ([String]$Dependency.url)
@@ -8,7 +8,7 @@ function Update-WebDependency {
     Write-LogInfo "Fetching URL: $Uri" 1
 
     try {
-        Set-Variable -Option Constant Response ([Object](Invoke-WebRequest $Uri -UseBasicParsing))
+        Set-Variable -Option Constant Response ([PSCustomObject](Invoke-WebRequest $Uri -UseBasicParsing))
     } catch {
         Write-LogError "Failed to fetch URL '$Uri': $_" 1
         return

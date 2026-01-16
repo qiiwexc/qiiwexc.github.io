@@ -17,11 +17,6 @@
 
     Set-Variable -Option Constant TestMessage ([String]'TEST_MESSAGE')
     Set-Variable -Option Constant FormattedMessage ([String]'FORMATTED_MESSAGE')
-
-    Set-Variable -Option Constant TestExceptionMessage ([String]'TEST_EXCEPTION_MESSAGE')
-    Set-Variable -Option Constant TestException (
-        [Object]@{Exception = @{Message = $TestExceptionMessage } }
-    )
 }
 
 Describe 'Get-Emoji' {
