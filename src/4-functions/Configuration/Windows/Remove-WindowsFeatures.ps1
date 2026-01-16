@@ -59,11 +59,5 @@ function Remove-WindowsFeatures {
         }
     }
 
-    if (Test-Path 'mstsc.exe') {
-        Write-ActivityProgress -PercentComplete 90 -Task "Removing 'mstsc'..."
-        Start-Process 'mstsc' '/uninstall'
-        Out-Success $LogIndentLevel
-    }
-
     Write-ActivityCompleted
 }
