@@ -3,7 +3,7 @@ BeforeAll {
 
     Set-Variable -Option Constant BuilderPath ([String]'.\tools\build')
 
-    . '.\tools\common\logger.ps1'
+    . '.\tools\common\Progressbar.ps1'
     . "$BuilderPath\unattended\New-UnattendedBase.ps1"
     . "$BuilderPath\unattended\Set-AppRemovalList.ps1"
     . "$BuilderPath\unattended\Set-CapabilitiesRemovalList.ps1"
@@ -76,7 +76,8 @@ BeforeAll {
 
 Describe 'New-UnattendedFile' {
     BeforeEach {
-        Mock Write-LogInfo {}
+        Mock New-Activity {}
+        Mock Write-ActivityProgress {}
         Mock New-UnattendedBase {}
         Mock Get-Content { return $TestTemplateContent } -ParameterFilter { $Path -eq $TestBaseFilePath }
         Mock Set-LocaleSettings { return $TestSetLocaleSettingsResult }
@@ -93,12 +94,14 @@ Describe 'New-UnattendedFile' {
         Mock Get-Content { return $TestBuildFileContent } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
         Mock Set-Content {} -ParameterFilter { $Path -eq $TestDistFileNameRussian }
         Mock Set-Content {} -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
-        Mock Out-Success {}
+        Mock Write-ActivityCompleted {}
     }
 
     It 'Should create unattended files' {
         New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 22
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke New-UnattendedBase -Exactly 1 -ParameterFilter {
             $TemplatesPath -eq $TestTemplatesPath -and
@@ -191,7 +194,7 @@ Describe 'New-UnattendedFile' {
             $Value -eq $TestDistFileContent -and
             $NoNewline -eq $True
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should handle New-UnattendedBase failure' {
@@ -199,6 +202,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Set-LocaleSettings -Exactly 0
@@ -210,7 +215,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Get-Content failure when reading base file' {
@@ -218,6 +223,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBaseFilePath }
@@ -230,7 +237,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-LocaleSettings failure' {
@@ -238,6 +245,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -249,7 +258,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-AppRemovalList failure' {
@@ -257,6 +266,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -268,7 +279,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-CapabilitiesRemovalList failure' {
@@ -276,6 +287,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -287,7 +300,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-FeaturesRemovalList failure' {
@@ -295,6 +308,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 7
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -306,7 +321,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-WindowsSecurityConfiguration failure' {
@@ -314,6 +329,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -325,7 +342,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-PowerSchemeConfiguration failure' {
@@ -333,6 +350,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 9
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -344,7 +363,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-InlineFiles failure' {
@@ -352,6 +371,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 10
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -363,7 +384,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-Content failure when writing English build file' {
@@ -371,6 +392,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 11
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -383,7 +406,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-Content failure when writing Russian build file' {
@@ -391,6 +414,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 19
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -403,7 +428,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Copy-Item failure' {
@@ -411,6 +436,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 21
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -422,7 +449,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Copy-Item -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Get-Content failure when reading English build file' {
@@ -430,6 +457,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 22
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -442,7 +471,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Get-Content failure when reading Russian build file' {
@@ -450,6 +479,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 22
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -464,7 +495,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
         Should -Invoke Set-Content -Exactly 0 -ParameterFilter { $Path -eq $TestDistFileNameRussian }
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-Content failure when writing English dist file' {
@@ -472,6 +503,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 22
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -484,7 +517,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-Content -Exactly 3
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-Content failure when writing Russian dist file' {
@@ -492,6 +525,8 @@ Describe 'New-UnattendedFile' {
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 22
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -504,6 +539,6 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-Content -Exactly 4
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameRussian }
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

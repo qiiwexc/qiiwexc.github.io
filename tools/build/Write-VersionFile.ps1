@@ -4,9 +4,9 @@ function Write-VersionFile {
         [String][Parameter(Position = 1, Mandatory)]$VersionFile
     )
 
-    Write-LogInfo 'Writing version file...'
+    New-Activity 'Writing version file'
 
     Write-File $VersionFile $Version
 
-    Out-Success
+    Write-ActivityCompleted
 }

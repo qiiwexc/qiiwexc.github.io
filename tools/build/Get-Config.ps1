@@ -4,7 +4,7 @@ function Get-Config {
         [String][Parameter(Position = 1, Mandatory)]$Version
     )
 
-    Write-LogInfo 'Loading config...'
+    New-Activity 'Loading config'
 
     Set-Variable -Option Constant UrlsFile ([String]"$BuildPath\urls.json")
 
@@ -12,7 +12,7 @@ function Get-Config {
 
     $Config.Add(@{key = 'PROJECT_VERSION'; value = $Version })
 
-    Out-Success
+    Write-ActivityCompleted
 
     return $Config
 }

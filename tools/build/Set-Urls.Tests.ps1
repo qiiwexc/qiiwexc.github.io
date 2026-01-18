@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
+    . '.\tools\common\Progressbar.ps1'
     . '.\tools\common\Write-File.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -27,16 +27,17 @@ BeforeAll {
 
 Describe 'Set-Urls' {
     BeforeEach {
-        Mock Write-LogInfo {}
+        Mock New-Activity {}
         Mock Get-Content { return $TestDependenciesContent } -ParameterFilter { $Path -match $TestConfigPath }
         Mock Get-Content { return $TestTemplateContent } -ParameterFilter { $Path -match $TestTemplatesPath }
         Mock Write-File {}
-        Mock Out-Success {}
+        Mock Write-ActivityCompleted {}
     }
 
     It 'Should set URLs correctly' {
         Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestTemplatesPath\urls.json" }
@@ -48,7 +49,7 @@ Describe 'Set-Urls' {
             $Content -match 'TEST_VALUE_1_TEST_VERSION_1' -and
             $Content -match 'TEST_VERSION_2_TEST_VALUE_2'
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should handle first Get-Content failure' {
@@ -56,9 +57,10 @@ Describe 'Set-Urls' {
 
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle second Get-Content failure' {
@@ -66,9 +68,10 @@ Describe 'Set-Urls' {
 
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle first ConvertFrom-Json failure' {
@@ -76,9 +79,10 @@ Describe 'Set-Urls' {
 
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle second ConvertFrom-Json failure' {
@@ -86,9 +90,10 @@ Describe 'Set-Urls' {
 
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle ConvertTo-Json failure' {
@@ -96,9 +101,10 @@ Describe 'Set-Urls' {
 
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Write-File failure' {
@@ -106,8 +112,9 @@ Describe 'Set-Urls' {
 
         { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Write-File -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

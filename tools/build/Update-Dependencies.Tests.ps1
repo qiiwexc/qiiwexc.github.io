@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\Progressbar.ps1'
     . '.\tools\common\Write-File.ps1'
     . '.\tools\build\updates\Read-GitHubToken.ps1'
     . '.\tools\build\updates\Update-FileDependency.ps1'

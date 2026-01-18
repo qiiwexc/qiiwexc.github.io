@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
+    . '.\tools\common\Progressbar.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -17,17 +17,18 @@ BeforeAll {
 
 Describe 'Get-Config' {
     BeforeEach {
-        Mock Write-LogInfo {}
+        Mock New-Activity {}
         Mock Get-Content { return $TestContent }
-        Mock Out-Success {}
+        Mock Write-ActivityCompleted {}
     }
 
     It 'Should load config' {
         Set-Variable -Option Constant Result (Get-Config $TestBuildPath $TestVersion)
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
 
         $Result[0].key | Should -BeExactly $TestKey1
         $Result[0].value | Should -BeExactly $TestValue1
@@ -43,9 +44,10 @@ Describe 'Get-Config' {
 
         { Get-Config $TestBuildPath $TestVersion } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke ConvertFrom-Json -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle ConvertFrom-Json failure' {
@@ -53,8 +55,9 @@ Describe 'Get-Config' {
 
         { Get-Config $TestBuildPath $TestVersion } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke ConvertFrom-Json -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

@@ -5,7 +5,7 @@ function Set-Urls {
         [String][Parameter(Position = 2, Mandatory)]$BuildPath
     )
 
-    Write-LogInfo 'Setting URLs...'
+    New-Activity 'Setting URLs'
 
     Set-Variable -Option Constant DependenciesFile ([String]"$ConfigPath\dependencies.json")
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\urls.json")
@@ -27,5 +27,5 @@ function Set-Urls {
 
     Write-File $OutputFile ($TemplateContent | ConvertTo-Json)
 
-    Out-Success
+    Write-ActivityCompleted
 }

@@ -9,7 +9,7 @@ function New-UnattendedFile {
         [String][Parameter(Position = 6, Mandatory)]$VmPath
     )
 
-    Write-LogInfo 'Building unattended files...'
+    New-Activity 'Building unattended files'
 
     Set-Variable -Option Constant TestLocale ([String]'English')
 
@@ -23,6 +23,8 @@ function New-UnattendedFile {
 
     Set-Variable -Option Constant BaseFile ([String]"$BuildPath\$NonLocalisedFileName")
 
+    Write-ActivityProgress 5
+
     . "$UnattendedPath\New-UnattendedBase.ps1"
     . "$UnattendedPath\Set-AppRemovalList.ps1"
     . "$UnattendedPath\Set-CapabilitiesRemovalList.ps1"
@@ -32,31 +34,60 @@ function New-UnattendedFile {
     . "$UnattendedPath\Set-PowerSchemeConfiguration.ps1"
     . "$UnattendedPath\Set-WindowsSecurityConfiguration.ps1"
 
+    Write-ActivityProgress 10
+
     New-UnattendedBase $TemplatesPath $BaseFile
+
+    Write-ActivityProgress 15
 
     Set-Variable -Option Constant TemplateContent ([String](Get-Content $BaseFile -Raw -Encoding UTF8))
 
+    Write-ActivityProgress 20
+
+    [Int]$Iteration = 0
     foreach ($Locale in $Locales) {
+        [Int]$Percentage = 20 + $Iteration * 15
+
         [String]$OutputFileName = "$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
 
         [String]$UpdatedTemplateContent = Set-LocaleSettings $Locale $TemplateContent
+        $Percentage += 2
+        Write-ActivityProgress $Percentage
 
         $UpdatedTemplateContent = Set-AppRemovalList $ConfigsPath $UpdatedTemplateContent
+        $Percentage += 2
+        Write-ActivityProgress $Percentage
 
         $UpdatedTemplateContent = Set-CapabilitiesRemovalList $ConfigsPath $UpdatedTemplateContent
+        $Percentage += 2
+        Write-ActivityProgress $Percentage
 
         $UpdatedTemplateContent = Set-FeaturesRemovalList $ConfigsPath $UpdatedTemplateContent
+        $Percentage += 2
+        Write-ActivityProgress $Percentage
 
         $UpdatedTemplateContent = Set-WindowsSecurityConfiguration $SourcePath $UpdatedTemplateContent
+        $Percentage += 2
+        Write-ActivityProgress $Percentage
 
         $UpdatedTemplateContent = Set-PowerSchemeConfiguration $ConfigsPath $UpdatedTemplateContent
+        $Percentage += 2
+        Write-ActivityProgress $Percentage
 
         $UpdatedTemplateContent = Set-InlineFiles $Locale $ConfigsPath $UpdatedTemplateContent
+        $Percentage += 2
+        Write-ActivityProgress $Percentage
 
         $UpdatedTemplateContent = $UpdatedTemplateContent.Replace('{VERSION}', $Version)
 
         Set-Content $OutputFileName $UpdatedTemplateContent -NoNewline
+        $Percentage += 2
+        Write-ActivityProgress $Percentage
+
+        $Iteration++
     }
+
+    Write-ActivityProgress 80
 
     Set-Variable -Option Constant BuildFile ([String]("$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
     Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalisedFileName"))
@@ -73,6 +104,8 @@ function New-UnattendedFile {
         )
     )
 
+    Write-ActivityProgress 85
+
     foreach ($Locale in $Locales) {
         [String]$LocalisedFileName = $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
         [String]$BuildFileName = "$BuildPath\$LocalisedFileName"
@@ -87,5 +120,5 @@ function New-UnattendedFile {
         Set-Content $OutputFileName $FileContent -NoNewline
     }
 
-    Out-Success
+    Write-ActivityCompleted
 }

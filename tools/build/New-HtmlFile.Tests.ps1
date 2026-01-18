@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
+    . '.\tools\common\Progressbar.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -17,15 +17,16 @@ BeforeAll {
 
 Describe 'New-HtmlFile' {
     BeforeEach {
-        Mock Write-LogInfo {}
+        Mock New-Activity {}
         Mock Get-Content { return $TestTemplateContent }
         Mock Set-Content {}
-        Mock Out-Success {}
+        Mock Write-ActivityCompleted {}
     }
 
     It 'Should create new HTML file from template' {
         New-HtmlFile $TestTemplatesPath $TestConfig
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestTemplateFilePath -and
@@ -38,7 +39,7 @@ Describe 'New-HtmlFile' {
             $Value -eq $TestHtmlContent -and
             $NoNewline -eq $True
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should handle Get-Content failure' {
@@ -46,9 +47,10 @@ Describe 'New-HtmlFile' {
 
         { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-Content failure' {
@@ -56,8 +58,9 @@ Describe 'New-HtmlFile' {
 
         { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

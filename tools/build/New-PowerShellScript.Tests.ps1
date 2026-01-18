@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\Progressbar.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -26,17 +27,19 @@ BeforeAll {
 
 Describe 'New-PowerShellScript' {
     BeforeEach {
-        Mock Write-LogInfo {}
+        Mock New-Activity {}
         Mock Get-ChildItem { return $TestSourceFileList }
         Mock Get-Content { return $TestPs1FileContent } -ParameterFilter { $Path -eq $TestPs1FilePath }
         Mock Get-Content { return $TestConfigFileContent } -ParameterFilter { $Path -eq $TestConfigFilePath }
+        Mock Write-LogInfo {}
         Mock Set-Content {}
-        Mock Out-Success {}
+        Mock Write-ActivityCompleted {}
     }
 
     It 'Should create PowerShell script' {
         New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-ChildItem -Exactly 1
         Should -Invoke Get-ChildItem -Exactly 1 -ParameterFilter {
             $Path -eq $TestSourcePathPath -and
@@ -65,7 +68,7 @@ Describe 'New-PowerShellScript' {
             $Value -match "'" -and
             $Value -match "`n#endregion configs > ConfigFile"
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should handle Get-ChildItem failure' {
@@ -73,10 +76,11 @@ Describe 'New-PowerShellScript' {
 
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-ChildItem -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Get-Content failure' {
@@ -84,10 +88,11 @@ Describe 'New-PowerShellScript' {
 
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-ChildItem -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-Content failure' {
@@ -95,9 +100,10 @@ Describe 'New-PowerShellScript' {
 
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-ChildItem -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }
