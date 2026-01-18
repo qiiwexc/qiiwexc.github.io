@@ -6,7 +6,7 @@ function New-BatchScript {
         [String][Parameter(Position = 3, Mandatory)]$VmPath
     )
 
-    Write-LogInfo 'Building batch script...'
+    New-Activity 'Building batch script'
 
     Set-Variable -Option Constant PowerShellLines ([String](Get-Content $Ps1File -Raw -Encoding UTF8))
 
@@ -38,5 +38,5 @@ if `"%~1`"==`"Debug`" (
     Set-Content $BatchFile $BatchLines
     Copy-Item $BatchFile "$VmPath\$ProjectName.bat"
 
-    Out-Success
+    Write-ActivityCompleted
 }

@@ -14,6 +14,10 @@ function Update-Dependencies {
         [String][Parameter(Position = 2, Mandatory)]$WipPath
     )
 
+    New-Activity 'Checking for dependency updates'
+
+    Write-ActivityProgress 5
+
     Set-Variable -Option Constant UpdatesPath ([String]"$BuilderPath\updates")
 
     Set-Variable -Option Constant EnvFile ([String]'.env')
@@ -29,27 +33,27 @@ function Update-Dependencies {
     . "$UpdatesPath\Update-GitDependency.ps1"
     . "$UpdatesPath\Update-WebDependency.ps1"
 
-    Write-Progress -Activity 'Update' -PercentComplete 1
-
     Set-Variable -Option Constant GitHubToken ([String](Read-GitHubToken $EnvFile))
     if (-not $GitHubToken) {
         Write-LogWarning 'GitHub token not found. Continuing unauthenticated (rate limits may apply).'
     }
-    Write-Progress -Activity 'Update' -PercentComplete 5
 
+    Write-ActivityProgress 10
     Set-Variable -Option Constant Dependencies ([PSCustomObject[]](Get-Content $DependenciesFile -Raw -Encoding UTF8 | ConvertFrom-Json))
-    Write-Progress -Activity 'Update' -PercentComplete 10
 
     [Collections.Generic.List[Collections.Generic.List[String]]]$ChangeLogs = @()
 
     Set-Variable -Option Constant DependencyStep ([Math]::Floor(80 / $Dependencies.Count))
+    Write-ActivityProgress 15
 
     $ErrorActionPreference = 'Continue'
     [Int]$Iteration = 1
     foreach ($Dependency in $Dependencies) {
         [String]$Source = $Dependency.source
         [String]$Name = $Dependency.name
+
         [Int]$Percentage = 10 + $Iteration * $DependencyStep
+        Write-ActivityProgress $Percentage
 
         Write-LogInfo "Checking for updates for '$Name' (current version: $($Dependency.version))"
 
@@ -68,16 +72,14 @@ function Update-Dependencies {
             }
         }
 
-        Write-Progress -Activity 'Update' -PercentComplete $Percentage
         $Iteration++
     }
     $ErrorActionPreference = 'Stop'
 
-    Write-Progress -Activity 'Update' -PercentComplete 90
+    Write-ActivityProgress 90
 
     Set-Variable -Option Constant UrlsToOpen ([String[]]($ChangeLogs | Select-Object -Unique | Where-Object { $_ }))
     Write-LogInfo "$($UrlsToOpen.Count) update(s) found"
-    Write-Progress -Activity 'Update' -PercentComplete 95
 
     if ($UrlsToOpen.Count -gt 0) {
         foreach ($Url in @($UrlsToOpen | ForEach-Object { $_ })) {
@@ -86,11 +88,11 @@ function Update-Dependencies {
         }
     }
 
+    Write-ActivityProgress 95
+
     Write-LogInfo "Saving updated dependencies to $DependenciesFile"
     Set-Variable -Option Constant UpdatedDependencies ([String]($Dependencies | ConvertTo-Json -Depth 10))
     Write-File $DependenciesFile $UpdatedDependencies
 
-    Write-Progress -Activity 'Update' -Complete
-
-    Out-Success
+    Write-ActivityCompleted
 }

@@ -4,7 +4,7 @@ function New-HtmlFile {
         [PSCustomObject[]][Parameter(Position = 1, Mandatory)]$Config
     )
 
-    Write-LogInfo 'Building web page...'
+    New-Activity 'Building web page'
 
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\home.html")
     Set-Variable -Option Constant OutputFile ([String]'.\index.html')
@@ -20,5 +20,5 @@ function New-HtmlFile {
 
     Set-Content $OutputFile $TemplateContent -NoNewline
 
-    Out-Success
+    Write-ActivityCompleted
 }

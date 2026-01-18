@@ -5,7 +5,7 @@ function New-PowerShellScript {
         [PSCustomObject[]][Parameter(Position = 2, Mandatory)]$Config
     )
 
-    Write-LogInfo 'Building PowerShell script...'
+    New-Activity 'Building PowerShell script'
 
     Set-Variable -Option Constant ProjectFiles ([PSCustomObject[]](Get-ChildItem $SourcePath -Recurse -File | Where-Object { $_.Name -notmatch '.\.Tests\.ps1$' }))
     Set-Variable -Option Constant FileCount ([Int]$ProjectFiles.Count)
@@ -59,5 +59,5 @@ function New-PowerShellScript {
     Write-LogInfo "Writing output file $Ps1File"
     Set-Content $Ps1File $OutputLines
 
-    Out-Success
+    Write-ActivityCompleted
 }

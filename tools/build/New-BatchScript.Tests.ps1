@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\Progressbar.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -17,16 +18,18 @@ BeforeAll {
 
 Describe 'New-BatchScript' {
     BeforeEach {
+        Mock New-Activity {}
         Mock Write-LogInfo {}
         Mock Get-Content { return $TestPs1FileContent }
         Mock Set-Content {}
         Mock Copy-Item {}
-        Mock Out-Success {}
+        Mock Write-ActivityCompleted {}
     }
 
     It 'Should create batch script' {
         New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestPs1FilePath -and
@@ -47,7 +50,7 @@ Describe 'New-BatchScript' {
             $Path -eq $TestBatchFilePath -and
             $Destination -eq $TestVmBatchFilePath
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should handle Get-Content failure' {
@@ -55,10 +58,11 @@ Describe 'New-BatchScript' {
 
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Set-Content failure' {
@@ -66,10 +70,11 @@ Describe 'New-BatchScript' {
 
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Copy-Item failure' {
@@ -77,9 +82,10 @@ Describe 'New-BatchScript' {
 
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Copy-Item -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }
