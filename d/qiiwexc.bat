@@ -1,22 +1,20 @@
 @echo off
 
-if "%~1"=="Debug" set debug=true
-
 set "psfile=%temp%\qiiwexc.ps1"
 
 > "%psfile%" (
-  for /f "delims=" %%A in ('findstr "^::" "%~f0"') do (
-    set "line=%%A"
-    setlocal enabledelayedexpansion
-    echo(!line:~2!
-    endlocal
-  )
+    for /f "delims=" %%A in ('findstr "^::" "%~f0"') do (
+        set "line=%%A"
+        setlocal enabledelayedexpansion
+        echo(!line:~2!
+        endlocal
+    )
 )
 
-if "%debug%"=="true" (
-  powershell -ExecutionPolicy Bypass -Command "& '%psfile%' -WorkingDirectory '%cd%' -DevMode"
+if "%~1"=="Debug" (
+    powershell -ExecutionPolicy Bypass -Command "& '%psfile%' -WorkingDirectory '%cd%' -DevMode"
 ) else (
-  powershell -ExecutionPolicy Bypass -Command "& '%psfile%' -WorkingDirectory '%cd%'"
+    powershell -ExecutionPolicy Bypass -Command "& '%psfile%' -WorkingDirectory '%cd%'"
 )
 
 ::#region init > Parameters
@@ -33,7 +31,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.18')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.19')
 ::
 ::#endregion init > Version
 ::
@@ -149,7 +147,7 @@ if "%debug%"=="true" (
 ::Set-Variable -Option Constant GROUP_WIDTH ([Int](15 + $BUTTON_WIDTH + 15))
 ::
 ::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH + 15) * 3 + 30))
-::Set-Variable -Option Constant FORM_HEIGHT ([Int]570)
+::Set-Variable -Option Constant FORM_HEIGHT ([Int]575)
 ::
 ::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
 ::
@@ -571,6 +569,9 @@ if "%debug%"=="true" (
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
 ::$CHECKBOX_Ninite_Chrome.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
+::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Firefox = New-CheckBox 'Mozilla Firefox' -Name 'firefox' -Checked
+::$CHECKBOX_Ninite_Firefox.Add_CheckStateChanged( { Set-NiniteButtonState } )
+::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
 ::$CHECKBOX_Ninite_7zip.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
@@ -603,6 +604,7 @@ if "%debug%"=="true" (
 ::        $CHECKBOX_Ninite_VLC,
 ::        $CHECKBOX_Ninite_AnyDesk,
 ::        $CHECKBOX_Ninite_Chrome,
+::        $CHECKBOX_Ninite_Firefox,
 ::        $CHECKBOX_Ninite_qBittorrent,
 ::        $CHECKBOX_Ninite_Malwarebytes
 ::    )
@@ -1153,6 +1155,24 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
 ::"OptionalConnectedExperiencesNoticeVersion"=dword:00000002
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common]
+::"LinkedIn"=dword:00000000
+::"QMEnable"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
+::"Enabled"=dword:00000000
+::"IncludeEmail"=dword:00000000
+::"SurveyEnabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\osm]
+::"EnableFileObfuscation"=dword:00000001
+::"Enablelogging"=dword:00000000
+::"EnableUpload"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
+::"DisableTelemetry"=dword:00000001
+::"SendTelemetry"=dword:00000003
 ::'
 ::
 ::#endregion configs > Apps > Microsoft Office
@@ -1643,23 +1663,6 @@ if "%debug%"=="true" (
 ::#endregion configs > Windows > Base > Windows English
 ::
 ::
-::#region configs > Windows > Base > Windows HKEY_CLASSES_ROOT
-::
-::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CLASSES_ROOT '; Disable "Give access to" context menu
-::[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Sharing]
-::[-HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Sharing]
-::[-HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Sharing]
-::[-HKEY_CLASSES_ROOT\Directory\shellex\CopyHookHandlers\Sharing]
-::[-HKEY_CLASSES_ROOT\Directory\shellex\PropertySheetHandlers\Sharing]
-::[-HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\Sharing]
-::[-HKEY_CLASSES_ROOT\Drive\shellex\PropertySheetHandlers\Sharing]
-::[-HKEY_CLASSES_ROOT\LibraryFolder\background\shellex\ContextMenuHandlers\Sharing]
-::[-HKEY_CLASSES_ROOT\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing]
-::'
-::
-::#endregion configs > Windows > Base > Windows HKEY_CLASSES_ROOT
-::
-::
 ::#region configs > Windows > Base > Windows HKEY_CURRENT_USER
 ::
 ::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CURRENT_USER '[HKEY_CURRENT_USER\Control Panel\Desktop]
@@ -1723,7 +1726,6 @@ if "%debug%"=="true" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
 ::"CleanDownloadHistory"=dword:00000001
 ::"CleanForms"=dword:00000001
-::"CleanPassword"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 ::"AcceptedPrivacyStatement"=dword:00000001
@@ -1737,8 +1739,17 @@ if "%debug%"=="true" (
 ::"iWindowPosX"=dword:FFFFFFF8
 ::"iWindowPosY"=dword:00000000
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\General]
+::"ShownFirstRunOptin"=dword:00000001
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Licensing]
+::"EulasSetAccepted"="0,49,"
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\LinkedIn]
 ::"OfficeLinkedIn"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
+::"OptionalConnectedExperiencesNoticeVersion"=dword:00000002
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Personalization\Settings]
 ::"AcceptedPrivacyPolicy"=dword:00000000
@@ -1938,7 +1949,6 @@ if "%debug%"=="true" (
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Edge]
-::"AutofillCreditCardEnabled"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
 ::"PaymentMethodQueryEnabled"=dword:00000000
@@ -2231,7 +2241,6 @@ if "%debug%"=="true" (
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-::"AlternateErrorPagesEnabled"=dword:00000000
 ::"AudioSandboxEnabled"=dword:00000001
 ::"BasicAuthOverHttpEnabled"=dword:00000000
 ::"ComposeInlineEnabled"=dword:00000000
@@ -2340,7 +2349,6 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
 ::"AllowClipboardHistory"=dword:00000000
-::"AllowCrossDeviceClipboard"=dword:00000000
 ::"EnableMmx"=dword:00000000
 ::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 ::"UploadUserActivities"=dword:00000000
@@ -2413,7 +2421,6 @@ if "%debug%"=="true" (
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
-::"AlternateErrorPagesEnabled"=dword:00000000
 ::"AudioSandboxEnabled"=dword:00000001
 ::"BasicAuthOverHttpEnabled"=dword:00000000
 ::"ComposeInlineEnabled"=dword:00000000
@@ -2500,7 +2507,6 @@ if "%debug%"=="true" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
 ::"AllowClipboardHistory"=dword:00000000
-::"AllowCrossDeviceClipboard"=dword:00000000
 ::"EnableMmx"=dword:00000000
 ::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 ::"UploadUserActivities"=dword:00000000
@@ -3076,7 +3082,7 @@ if "%debug%"=="true" (
 ::    { "Name": "DisableClickToDo", "Value": true },
 ::    { "Name": "DisableCopilot", "Value": true },
 ::    { "Name": "DisableDesktopSpotlight", "Value": false },
-::    { "Name": "DisableDVR", "Value": false },
+::    { "Name": "DisableDVR", "Value": true },
 ::    { "Name": "DisableEdgeAds", "Value": true },
 ::    { "Name": "DisableEdgeAI", "Value": false },
 ::    { "Name": "DisableFastStartup", "Value": false },
@@ -3105,7 +3111,7 @@ if "%debug%"=="true" (
 ::    { "Name": "ForceRemoveEdge", "Value": false },
 ::    { "Name": "Hide3dObjects", "Value": false },
 ::    { "Name": "HideChat", "Value": false },
-::    { "Name": "HideDupliDrive", "Value": true },
+::    { "Name": "HideDupliDrive", "Value": false },
 ::    { "Name": "HideGallery", "Value": false },
 ::    { "Name": "HideGiveAccessTo", "Value": true },
 ::    { "Name": "HideHome", "Value": false },
@@ -3152,7 +3158,7 @@ if "%debug%"=="true" (
 ::    { "Name": "DisableClickToDo", "Value": true },
 ::    { "Name": "DisableCopilot", "Value": true },
 ::    { "Name": "DisableDesktopSpotlight", "Value": false },
-::    { "Name": "DisableDVR", "Value": false },
+::    { "Name": "DisableDVR", "Value": true },
 ::    { "Name": "DisableEdgeAds", "Value": true },
 ::    { "Name": "DisableEdgeAI", "Value": false },
 ::    { "Name": "DisableFastStartup", "Value": false },
@@ -3181,7 +3187,7 @@ if "%debug%"=="true" (
 ::    { "Name": "ForceRemoveEdge", "Value": false },
 ::    { "Name": "Hide3dObjects", "Value": false },
 ::    { "Name": "HideChat", "Value": false },
-::    { "Name": "HideDupliDrive", "Value": true },
+::    { "Name": "HideDupliDrive", "Value": false },
 ::    { "Name": "HideGallery", "Value": false },
 ::    { "Name": "HideGiveAccessTo", "Value": true },
 ::    { "Name": "HideHome", "Value": false },
@@ -4654,17 +4660,14 @@ if "%debug%"=="true" (
 ::function Set-FileAssociation {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory)]$Application,
-::        [String][Parameter(Position = 1, Mandatory)]$RegistryPath,
-::        [Switch][Parameter(Position = 2)]$SetDefault
+::        [String][Parameter(Position = 1, Mandatory)]$RegistryPath
 ::    )
 ::
 ::    New-RegistryKeyIfMissing $RegistryPath
 ::
-::    if ($SetDefault) {
-::        Set-Variable -Option Constant DefaultAssociation ([String](Get-ItemProperty -Path $RegistryPath).'(Default)')
-::        if ($DefaultAssociation -ne $Application) {
-::            Set-ItemProperty -Path $RegistryPath -Name '(Default)' -Value $Application
-::        }
+::    Set-Variable -Option Constant DefaultAssociation ([String](Get-ItemProperty -Path $RegistryPath).'(Default)')
+::    if ($DefaultAssociation -ne $Application) {
+::        Set-ItemProperty -Path $RegistryPath -Name '(Default)' -Value $Application
 ::    }
 ::
 ::    Set-Variable -Option Constant OpenWithProgidsPath ([String]"$RegistryPath\OpenWithProgids")
@@ -4921,8 +4924,7 @@ if "%debug%"=="true" (
 ::        [String]$Extension = $FileAssociation.Extension
 ::        [String]$Application = $FileAssociation.Application
 ::
-::        Set-FileAssociation $Application "Registry::HKEY_CLASSES_ROOT\$Extension"
-::        Set-FileAssociation $Application "HKCU:\Software\Classes\$Extension" -SetDefault
+::        Set-FileAssociation $Application "HKCU:\Software\Classes\$Extension"
 ::
 ::        [String]$OriginalAssociation = $(& cmd.exe /c assoc $Extension 2`>`&1).Replace("$Extension=", '')
 ::        if ($OriginalAssociation -ne $Application) {
@@ -4988,8 +4990,6 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-::    $ConfigLines.Add("`n")
-::    $ConfigLines.Add($CONFIG_WINDOWS_HKEY_CLASSES_ROOT)
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($CONFIG_WINDOWS_HKEY_CURRENT_USER)
 ::    $ConfigLines.Add("`n")
