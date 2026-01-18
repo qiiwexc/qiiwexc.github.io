@@ -9,7 +9,7 @@ BeforeAll {
     Set-Variable -Option Constant PATH_APP_DIR ([String]'TEST_PATH_APP_DIR')
 
     Set-Variable -Option Constant TestAppName ([String]'TEST_APP_NAME')
-    Set-Variable -Option Constant TestContent ([Collections.Generic.List[String]]@("TEST_CONTENT1`n", 'TEST_CONTENT2'))
+    Set-Variable -Option Constant TestContent ([String[]]@("TEST_CONTENT1`n", 'TEST_CONTENT2'))
 
     Set-Variable -Option Constant TestRegFilePath ([String]"$PATH_APP_DIR\$TestAppName.reg")
 }

@@ -6,7 +6,7 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestTemplatesPath ([String]'TEST_TEMPLATES_PATH')
-    Set-Variable -Option Constant TestConfig ([Collections.Generic.List[PSCustomObject]]@(@{key = 'KEY_1'; value = 'VALUE_1' }, @{key = 'KEY_2'; value = 'VALUE_2' }))
+    Set-Variable -Option Constant TestConfig ([PSCustomObject[]]@(@{key = 'KEY_1'; value = 'VALUE_1' }, @{key = 'KEY_2'; value = 'VALUE_2' }))
 
     Set-Variable -Option Constant TestTemplateFilePath ([String]"$TestTemplatesPath\home.html")
     Set-Variable -Option Constant TestOutFilePath ([String]'.\index.html')

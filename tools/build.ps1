@@ -66,8 +66,8 @@ Write-LogInfo "Run in dev mode          : $Dev"
 
 Write-Progress -Activity 'Build' -PercentComplete 1
 
-New-Item -Force -ItemType Directory $BuildPath | Out-Null
-New-Item -Force -ItemType Directory $DistPath | Out-Null
+$Null = New-Item -Force -ItemType Directory $BuildPath
+$Null = New-Item -Force -ItemType Directory $DistPath
 
 if ($Tests) {
     Invoke-Pester -Configuration (. '.\PesterSettings.ps1' -Coverage)

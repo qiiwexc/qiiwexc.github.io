@@ -36,10 +36,10 @@ BeforeAll {
     Set-Variable -Option Constant TestWebUpdatedDependency ([String]"[{'source':'$SourceURL','name':'$TestDependencyName','version':'$TestNewDependencyVersion'}]")
     Set-Variable -Option Constant TestFileUpdatedDependency ([String]"[{'source':'$SourceFile','name':'$TestDependencyName','version':'$TestNewDependencyVersion'}]")
 
-    Set-Variable -Option Constant TestGitHubChangelogUrl ([Collections.Generic.List[String]]@('TEST_GITHUB_CHANGELOG_URL'))
-    Set-Variable -Option Constant TestGitLabChangelogUrl ([Collections.Generic.List[String]]@('TEST_GITLAB_CHANGELOG_URL'))
-    Set-Variable -Option Constant TestWebChangelogUrl ([Collections.Generic.List[String]]@('TEST_WEB_CHANGELOG_URL'))
-    Set-Variable -Option Constant TestFileChangelogUrl ([Collections.Generic.List[String]]@('TEST_FILE_CHANGELOG_URL'))
+    Set-Variable -Option Constant TestGitHubChangelogUrl ([String[]]@('TEST_GITHUB_CHANGELOG_URL'))
+    Set-Variable -Option Constant TestGitLabChangelogUrl ([String[]]@('TEST_GITLAB_CHANGELOG_URL'))
+    Set-Variable -Option Constant TestWebChangelogUrl ([String[]]@('TEST_WEB_CHANGELOG_URL'))
+    Set-Variable -Option Constant TestFileChangelogUrl ([String[]]@('TEST_FILE_CHANGELOG_URL'))
 }
 
 Describe 'Update-Dependencies' {

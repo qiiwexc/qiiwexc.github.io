@@ -7,7 +7,7 @@ function New-UnattendedBase {
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\autounattend.xml")
 
     Set-Variable -Option Constant ConfigFiles ([String]'</ExtractScript>
-    <File path="C:\Windows\Setup\Scripts\AppAssociations.xml">
+    <File path="C:\Windows\Setup\AppAssociations.xml">
 {CONFIG_APP_ASSOCIATIONS}
     </File>
     <File path="C:\Users\Default\AppData\Roaming\AnyDesk\user.conf">
@@ -22,30 +22,30 @@ function New-UnattendedBase {
     </File>'
     )
 
-    Set-Variable -Option Constant StringReplacementMap ([Collections.Generic.List[Hashtable]]@(
-            @{OldValue = "`t"; NewValue = '  ' },
-            @{OldValue = "Windows Registry Editor Version 5.00`r`n`r`n"; NewValue = '' },
-            @{OldValue = '</ExtractScript>'; NewValue = $ConfigFiles },
-            @{OldValue = 'C:\Windows\Setup\Scripts\'; NewValue = 'C:\Windows\Setup\' },
-            @{OldValue = 'HideOnlineAccountScreens>false</HideOnlineAccountScreens'; NewValue = 'HideOnlineAccountScreens>true</HideOnlineAccountScreens' }
-        )
+    Set-Variable -Option Constant StringReplacementMap ([Hashtable]@{
+            "`t"                                                       = '  '
+            "Windows Registry Editor Version 5.00`r`n`r`n"             = ''
+            '</ExtractScript>'                                         = $ConfigFiles
+            'C:\Windows\Setup\Scripts\'                                = 'C:\Windows\Setup\'
+            'HideOnlineAccountScreens>false</HideOnlineAccountScreens' = 'HideOnlineAccountScreens>true</HideOnlineAccountScreens'
+        }
     )
 
-    Set-Variable -Option Constant RegexReplacementMap ([Collections.Generic.List[Hashtable]]@(
-            @{Regex = 'RemoveFeatures\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);'; NewValue = "RemoveFeatures.ps1`">`n`$selectors = @({FEATURE_REMOVAL_LIST});" },
-            @{Regex = 'RemoveCapabilities\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);'; NewValue = "RemoveCapabilities.ps1`">`n`$selectors = @({CAPABILITY_REMOVAL_LIST});" },
-            @{Regex = 'RemovePackages\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);'; NewValue = "RemovePackages.ps1`">`n`$selectors = @({APP_REMOVAL_LIST});" }
-        )
+    Set-Variable -Option Constant RegexReplacementMap ([Hashtable]@{
+            'RemoveFeatures\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);'     = "RemoveFeatures.ps1`">`n`$selectors = @({FEATURE_REMOVAL_LIST});"
+            'RemoveCapabilities\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);' = "RemoveCapabilities.ps1`">`n`$selectors = @({CAPABILITY_REMOVAL_LIST});"
+            'RemovePackages\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);'     = "RemovePackages.ps1`">`n`$selectors = @({APP_REMOVAL_LIST});"
+        }
     )
 
     [String]$Content = Get-Content $TemplateFile -Raw -Encoding UTF8
 
-    foreach ($Item in $StringReplacementMap) {
-        $Content = $Content.Replace($Item.OldValue, $Item.NewValue)
+    $StringReplacementMap.GetEnumerator() | ForEach-Object {
+        $Content = $Content.Replace($_.Key, $_.Value)
     }
 
-    foreach ($Item in $RegexReplacementMap) {
-        $Content = $Content -replace $Item.Regex, $Item.NewValue
+    $RegexReplacementMap.GetEnumerator() | ForEach-Object {
+        $Content = $Content -replace $_.Key, $_.Value
     }
 
     $Content = "<!-- Version: {VERSION} -->`n" + $Content

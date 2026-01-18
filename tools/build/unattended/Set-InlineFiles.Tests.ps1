@@ -86,6 +86,6 @@ Describe 'Set-InlineFiles' {
 
         { Set-InlineFiles $LocaleEnglish $TestConfigsPath $TestTemplateContent } | Should -Throw $TestException
 
-        Should -Invoke Get-Content -Exactly 2
+        Should -Invoke Get-Content -Exactly 1
     }
 }

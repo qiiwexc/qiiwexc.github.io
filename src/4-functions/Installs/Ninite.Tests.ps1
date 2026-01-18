@@ -39,7 +39,7 @@ Describe 'Set-NiniteButtonState' {
     }
 
     It 'Should enable the Ninite button when at least one checkbox is checked' {
-        [Collections.Generic.List[Windows.Forms.CheckBox]]$NINITE_CHECKBOXES =
+        [Windows.Forms.CheckBox[]]$NINITE_CHECKBOXES =
         @(
             $TEST_CHECKBOX_1,
             $TEST_CHECKBOX_2,
@@ -52,7 +52,7 @@ Describe 'Set-NiniteButtonState' {
     }
 
     It 'Should disable the Ninite button when no checkboxes are checked' {
-        [Collections.Generic.List[Windows.Forms.CheckBox]]$NINITE_CHECKBOXES =
+        [Windows.Forms.CheckBox[]]$NINITE_CHECKBOXES =
         @(
             $TEST_CHECKBOX_2,
             $TEST_CHECKBOX_2
@@ -67,7 +67,7 @@ Describe 'Set-NiniteButtonState' {
 Describe 'Get-NiniteInstaller' {
     BeforeEach {
         Set-Variable -Option Constant NINITE_CHECKBOXES (
-            [Collections.Generic.List[Windows.Forms.CheckBox]]@(
+            [Windows.Forms.CheckBox[]]@(
                 $TEST_CHECKBOX_1,
                 $TEST_CHECKBOX_2,
                 $TEST_CHECKBOX_3

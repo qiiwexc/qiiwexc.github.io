@@ -20,7 +20,7 @@ function Start-OoShutUp10 {
 
         Set-Variable -Option Constant ConfigFile ([String]"$TargetPath\ooshutup10.cfg")
 
-        New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop | Out-Null
+        $Null = New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop
 
         $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
     } catch {

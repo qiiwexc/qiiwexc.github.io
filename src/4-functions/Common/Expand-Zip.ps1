@@ -60,7 +60,7 @@ function Expand-Zip {
 
     Remove-Directory $ExtractionPath
 
-    New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop | Out-Null
+    $Null = New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop
 
     try {
         if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {

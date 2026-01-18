@@ -5,7 +5,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant TestUserRegistryKeys ([Collections.Generic.List[hashtable]]@(
+    Set-Variable -Option Constant TestUserRegistryKeys ([Hashtable[]]@(
             @{Name = 'S-1-5-21-1000' },
             @{Name = 'S-1-5-21-1000_Classes' },
             @{Name = 'S-1-5-21-1100' },

@@ -8,7 +8,7 @@ function New-BatchScript {
 
     Write-LogInfo 'Building batch script...'
 
-    [Collections.Generic.List[String]]$PowerShellLines = Get-Content $Ps1File -Raw -Encoding UTF8
+    [String[]]$PowerShellLines = Get-Content $Ps1File -Raw -Encoding UTF8
 
     [Collections.Generic.List[String]]$BatchLines = "@echo off`n"
     $BatchLines.Add("if `"%~1`"==`"Debug`" set debug=true`n")

@@ -19,8 +19,8 @@ function Set-FileAssociation {
 
     Set-Variable -Option Constant OpenWithProgids (Get-ItemProperty -Path $OpenWithProgidsPath)
     if ($OpenWithProgids) {
-        Set-Variable -Option Constant OpenWithProgidsNames ([Collections.Generic.List[String]]($OpenWithProgids | Get-Member -MemberType NoteProperty).Name)
-        Set-Variable -Option Constant Progids ([Collections.Generic.List[String]]($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' }))
+        Set-Variable -Option Constant OpenWithProgidsNames ([String[]]($OpenWithProgids | Get-Member -MemberType NoteProperty).Name)
+        Set-Variable -Option Constant Progids ([String[]]($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' }))
 
         foreach ($Progid in $Progids) {
             if ($Progid -ne $Application) {

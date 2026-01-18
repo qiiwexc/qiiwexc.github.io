@@ -13,7 +13,7 @@ function Write-ConfigurationFile {
 
         Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 
-        New-Item -Force -ItemType Directory -ErrorAction Stop (Split-Path -Parent $Path -ErrorAction Stop) | Out-Null
+        $Null = New-Item -Force -ItemType Directory -ErrorAction Stop (Split-Path -Parent $Path -ErrorAction Stop)
 
         $Content | Set-Content $Path -NoNewline -ErrorAction Stop
 

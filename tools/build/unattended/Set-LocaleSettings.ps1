@@ -4,7 +4,7 @@ function Set-LocaleSettings {
         [String][Parameter(Position = 1, Mandatory)]$TemplateContent
     )
 
-    $LOCALE_PARAMETERS[$Locale] | ForEach-Object {
+    $LOCALE_PARAMETERS[$Locale].GetEnumerator() | ForEach-Object {
         [String]$Placeholder = "{$($_.Key)}"
         $TemplateContent = $TemplateContent.Replace($Placeholder, $_.Value)
     }
@@ -13,29 +13,29 @@ function Set-LocaleSettings {
 }
 
 Set-Variable -Option Constant LOCALE_PARAMETERS_ENGLISH (
-    [Collections.Generic.List[Hashtable]]@(
-        @{Key = 'KEYBOARD1'; Value = '0809' },
-        @{Key = 'KEYBOARD2'; Value = '0426' },
-        @{Key = 'KEYBOARD3'; Value = '0419' },
-        @{Key = 'LOCALE1'; Value = 'en-GB' },
-        @{Key = 'LOCALE2'; Value = 'lv-LV' },
-        @{Key = 'LOCALE3'; Value = 'ru-RU' },
-        @{Key = 'UI_LANGUAGE_FALLBACK'; Value = 'ru-RU' },
-        @{Key = 'UI_LANGUAGE'; Value = 'en-US' }
-    )
+    [Hashtable]@{
+        'KEYBOARD1'            = '0809'
+        'KEYBOARD2'            = '0426'
+        'KEYBOARD3'            = '0419'
+        'LOCALE1'              = 'en-GB'
+        'LOCALE2'              = 'lv-LV'
+        'LOCALE3'              = 'ru-RU'
+        'UI_LANGUAGE_FALLBACK' = 'ru-RU'
+        'UI_LANGUAGE'          = 'en-US'
+    }
 )
 
 Set-Variable -Option Constant LOCALE_PARAMETERS_RUSSIAN (
-    [Collections.Generic.List[Hashtable]]@(
-        @{Key = 'KEYBOARD1'; Value = '0419' }
-        @{Key = 'KEYBOARD2'; Value = '0426' },
-        @{Key = 'KEYBOARD3'; Value = '0409' },
-        @{Key = 'LOCALE1'; Value = 'ru-RU' },
-        @{Key = 'LOCALE2'; Value = 'lv-LV' },
-        @{Key = 'LOCALE3'; Value = 'en-US' },
-        @{Key = 'UI_LANGUAGE_FALLBACK'; Value = 'en-US' },
-        @{Key = 'UI_LANGUAGE'; Value = 'ru-RU' }
-    )
+    [Hashtable]@{
+        'KEYBOARD1'            = '0419'
+        'KEYBOARD2'            = '0426'
+        'KEYBOARD3'            = '0409'
+        'LOCALE1'              = 'ru-RU'
+        'LOCALE2'              = 'lv-LV'
+        'LOCALE3'              = 'en-US'
+        'UI_LANGUAGE_FALLBACK' = 'en-US'
+        'UI_LANGUAGE'          = 'ru-RU'
+    }
 )
 
 Set-Variable -Option Constant LOCALE_PARAMETERS (

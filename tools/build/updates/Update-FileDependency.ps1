@@ -32,7 +32,7 @@ function Update-FileDependency {
         return
     }
 
-    Set-Variable -Option Constant SortedVersions ([Collections.Generic.List[Version]]($NewVersions | Sort-Object { [Version]$_ } -Descending))
+    Set-Variable -Option Constant SortedVersions ([Version[]]($NewVersions | Sort-Object { [Version]$_ } -Descending))
     Set-Variable -Option Constant LatestVersion ([String]($SortedVersions[0]))
 
     if ($LatestVersion -ne $Dependency.version) {

@@ -1,7 +1,7 @@
 function Import-RegistryConfiguration {
     param(
         [String][Parameter(Position = 0, Mandatory)]$AppName,
-        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)]$Content
+        [String[]][Parameter(Position = 1, Mandatory)]$Content
     )
 
     Set-Variable -Option Constant LogIndentLevel 2
