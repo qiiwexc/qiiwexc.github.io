@@ -9,3 +9,21 @@
 
 [HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
 "OptionalConnectedExperiencesNoticeVersion"=dword:00000002
+
+[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common]
+"LinkedIn"=dword:00000000
+"QMEnable"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
+"Enabled"=dword:00000000
+"IncludeEmail"=dword:00000000
+"SurveyEnabled"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\osm]
+"EnableFileObfuscation"=dword:00000001
+"Enablelogging"=dword:00000000
+"EnableUpload"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
+"DisableTelemetry"=dword:00000001
+"SendTelemetry"=dword:00000003
