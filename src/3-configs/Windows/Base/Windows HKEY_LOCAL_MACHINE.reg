@@ -235,7 +235,6 @@
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-"AlternateErrorPagesEnabled"=dword:00000000
 "AudioSandboxEnabled"=dword:00000001
 "BasicAuthOverHttpEnabled"=dword:00000000
 "ComposeInlineEnabled"=dword:00000000
@@ -344,7 +343,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
 "AllowClipboardHistory"=dword:00000000
-"AllowCrossDeviceClipboard"=dword:00000000
 "EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000
@@ -417,7 +415,6 @@
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
-"AlternateErrorPagesEnabled"=dword:00000000
 "AudioSandboxEnabled"=dword:00000001
 "BasicAuthOverHttpEnabled"=dword:00000000
 "ComposeInlineEnabled"=dword:00000000
@@ -504,7 +501,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
 "AllowClipboardHistory"=dword:00000000
-"AllowCrossDeviceClipboard"=dword:00000000
 "EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000

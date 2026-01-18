@@ -45,7 +45,7 @@
     { "Name": "ForceRemoveEdge", "Value": false },
     { "Name": "Hide3dObjects", "Value": false },
     { "Name": "HideChat", "Value": false },
-    { "Name": "HideDupliDrive", "Value": true },
+    { "Name": "HideDupliDrive", "Value": false },
     { "Name": "HideGallery", "Value": false },
     { "Name": "HideGiveAccessTo", "Value": true },
     { "Name": "HideHome", "Value": false },
