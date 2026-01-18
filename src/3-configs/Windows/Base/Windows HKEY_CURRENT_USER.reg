@@ -73,8 +73,17 @@
 "iWindowPosX"=dword:FFFFFFF8
 "iWindowPosY"=dword:00000000
 
+[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\General]
+"ShownFirstRunOptin"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Licensing]
+"EulasSetAccepted"="0,49,"
+
 [HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\LinkedIn]
 "OfficeLinkedIn"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
+"OptionalConnectedExperiencesNoticeVersion"=dword:00000002
 
 [HKEY_CURRENT_USER\Software\Microsoft\Personalization\Settings]
 "AcceptedPrivacyPolicy"=dword:00000000
