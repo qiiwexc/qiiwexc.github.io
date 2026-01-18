@@ -1,27 +1,29 @@
 #Requires -Version 5
 
 param(
-    [Switch]$Autounattend,
-    [Switch]$Bat,
     [Switch]$Dev,
     [Switch]$Full,
-    [Switch]$Html,
-    [Switch]$Ps1,
+    [Switch]$Start,
     [Switch]$Tests,
-    [Switch]$Update
+    [Switch]$Update,
+    [Switch]$Html,
+    [Switch]$Autounattend,
+    [Switch]$Ps1,
+    [Switch]$Bat
 )
 
 if ($Full) {
-    $Autounattend = $True
-    $Bat = $True
-    $Html = $True
-    $Ps1 = $True
     $Tests = $True
     $Update = $True
+    $Html = $True
+    $Autounattend = $True
+    $Ps1 = $True
+    $Bat = $True
 }
 
 if ($Dev) {
     $Bat = $True
+    $Start = $True
 }
 
 if ($Bat) {
@@ -121,7 +123,7 @@ if ($Bat) {
 Write-Progress -Activity 'Build' -Complete
 Write-LogInfo 'Build finished'
 
-if ($Dev) {
+if ($Start) {
     Write-LogInfo "Running $BatchFile"
     Start-Process 'PowerShell' ".\$BatchFile Debug"
 }
