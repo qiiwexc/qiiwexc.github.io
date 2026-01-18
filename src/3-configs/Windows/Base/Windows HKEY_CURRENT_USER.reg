@@ -59,7 +59,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
 "CleanDownloadHistory"=dword:00000001
 "CleanForms"=dword:00000001
-"CleanPassword"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 "AcceptedPrivacyStatement"=dword:00000001
@@ -283,7 +282,6 @@
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Edge]
-"AutofillCreditCardEnabled"=dword:00000000
 "ConfigureDoNotTrack"=dword:00000001
 "EdgeShoppingAssistantEnabled"=dword:00000000
 "PaymentMethodQueryEnabled"=dword:00000000

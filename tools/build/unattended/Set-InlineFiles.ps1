@@ -40,7 +40,6 @@ Set-Variable -Option Constant KEY_FILE_MAP (
         'CONFIG_QBITTORRENT_LOCALIZED'                      = 'Apps\qBittorrent {LOCALE}.ini'
         'CONFIG_QBITTORRENT'                                = 'Apps\qBittorrent base.ini'
         'CONFIG_VLC'                                        = 'Apps\VLC.ini'
-        'CONFIG_WINDOWS_HKEY_CLASSES_ROOT'                  = 'Windows\Base\Windows HKEY_CLASSES_ROOT.reg'
         'CONFIG_WINDOWS_HKEY_CURRENT_USER'                  = 'Windows\Base\Windows HKEY_CURRENT_USER.reg'
         'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'                 = 'Windows\Base\Windows HKEY_LOCAL_MACHINE.reg'
         'CONFIG_WINDOWS_HKEY_USERS'                         = 'Windows\Base\Windows HKEY_USERS.reg'

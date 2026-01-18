@@ -22,7 +22,7 @@ Describe 'Set-InlineFiles' {
     It 'Should inline English configuration files correctly' {
         Set-Variable -Option Constant Result (Set-InlineFiles $LocaleEnglish $TestConfigsPath $TestTemplateContent)
 
-        Should -Invoke Get-Content -Exactly 14
+        Should -Invoke Get-Content -Exactly 13
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
             $Path -eq "$TestConfigsPath\Windows\App associations.xml" -and
             $Raw -eq $True -and
@@ -53,7 +53,7 @@ Describe 'Set-InlineFiles' {
     It 'Should inline Russian configuration files correctly' {
         Set-Variable -Option Constant Result (Set-InlineFiles $LocaleRussian $TestConfigsPath $TestTemplateContent)
 
-        Should -Invoke Get-Content -Exactly 14
+        Should -Invoke Get-Content -Exactly 13
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
             $Path -eq "$TestConfigsPath\Windows\App associations.xml" -and
             $Raw -eq $True -and

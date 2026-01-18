@@ -24,8 +24,7 @@ function Set-FileAssociations {
         [String]$Extension = $FileAssociation.Extension
         [String]$Application = $FileAssociation.Application
 
-        Set-FileAssociation $Application "Registry::HKEY_CLASSES_ROOT\$Extension"
-        Set-FileAssociation $Application "HKCU:\Software\Classes\$Extension" -SetDefault
+        Set-FileAssociation $Application "HKCU:\Software\Classes\$Extension"
 
         [String]$OriginalAssociation = $(& cmd.exe /c assoc $Extension 2`>`&1).Replace("$Extension=", '')
         if ($OriginalAssociation -ne $Application) {

@@ -1,17 +1,14 @@
 function Set-FileAssociation {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Application,
-        [String][Parameter(Position = 1, Mandatory)]$RegistryPath,
-        [Switch][Parameter(Position = 2)]$SetDefault
+        [String][Parameter(Position = 1, Mandatory)]$RegistryPath
     )
 
     New-RegistryKeyIfMissing $RegistryPath
 
-    if ($SetDefault) {
-        Set-Variable -Option Constant DefaultAssociation ([String](Get-ItemProperty -Path $RegistryPath).'(Default)')
-        if ($DefaultAssociation -ne $Application) {
-            Set-ItemProperty -Path $RegistryPath -Name '(Default)' -Value $Application
-        }
+    Set-Variable -Option Constant DefaultAssociation ([String](Get-ItemProperty -Path $RegistryPath).'(Default)')
+    if ($DefaultAssociation -ne $Application) {
+        Set-ItemProperty -Path $RegistryPath -Name '(Default)' -Value $Application
     }
 
     Set-Variable -Option Constant OpenWithProgidsPath ([String]"$RegistryPath\OpenWithProgids")
