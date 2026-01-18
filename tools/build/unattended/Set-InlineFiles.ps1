@@ -5,8 +5,8 @@ function Set-InlineFiles {
         [Collections.Generic.List[String]][Parameter(Position = 2, Mandatory)]$TemplateContent
     )
 
-    $KEY_FILE_MAP | ForEach-Object {
-        [String]$FileName = $_.File.Replace('{LOCALE}', $Locale)
+    $KEY_FILE_MAP.GetEnumerator() | ForEach-Object {
+        [String]$FileName = $_.Value.Replace('{LOCALE}', $Locale)
 
         [String]$FileContent = (Get-Content "$ConfigsPath\$FileName" -Raw -Encoding UTF8).Trim()
 
@@ -32,20 +32,20 @@ function Set-InlineFiles {
 }
 
 Set-Variable -Option Constant KEY_FILE_MAP (
-    [Collections.Generic.List[Hashtable]]@(
-        @{Key = 'CONFIG_7ZIP'; File = 'Apps\7zip.reg' },
-        @{Key = 'CONFIG_APP_ASSOCIATIONS'; File = 'Windows\App associations.xml' },
-        @{Key = 'CONFIG_ANYDESK'; File = 'Apps\AnyDesk.conf' },
-        @{Key = 'CONFIG_MICROSOFT_OFFICE'; File = 'Apps\Microsoft Office.reg' },
-        @{Key = 'CONFIG_QBITTORRENT_LOCALIZED'; File = 'Apps\qBittorrent {LOCALE}.ini' },
-        @{Key = 'CONFIG_QBITTORRENT'; File = 'Apps\qBittorrent base.ini' },
-        @{Key = 'CONFIG_VLC'; File = 'Apps\VLC.ini' },
-        @{Key = 'CONFIG_WINDOWS_HKEY_CLASSES_ROOT'; File = 'Windows\Base\Windows HKEY_CLASSES_ROOT.reg' },
-        @{Key = 'CONFIG_WINDOWS_HKEY_CURRENT_USER'; File = 'Windows\Base\Windows HKEY_CURRENT_USER.reg' },
-        @{Key = 'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'; File = 'Windows\Base\Windows HKEY_LOCAL_MACHINE.reg' },
-        @{Key = 'CONFIG_WINDOWS_HKEY_USERS'; File = 'Windows\Base\Windows HKEY_USERS.reg' },
-        @{Key = 'CONFIG_WINDOWS_LOCALISED'; File = 'Windows\Base\Windows {LOCALE}.reg' },
-        @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'; File = 'Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg' },
-        @{Key = 'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE'; File = 'Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg' }
-    )
+    [Hashtable]@{
+        'CONFIG_7ZIP'                                       = 'Apps\7zip.reg'
+        'CONFIG_APP_ASSOCIATIONS'                           = 'Windows\App associations.xml'
+        'CONFIG_ANYDESK'                                    = 'Apps\AnyDesk.conf'
+        'CONFIG_MICROSOFT_OFFICE'                           = 'Apps\Microsoft Office.reg'
+        'CONFIG_QBITTORRENT_LOCALIZED'                      = 'Apps\qBittorrent {LOCALE}.ini'
+        'CONFIG_QBITTORRENT'                                = 'Apps\qBittorrent base.ini'
+        'CONFIG_VLC'                                        = 'Apps\VLC.ini'
+        'CONFIG_WINDOWS_HKEY_CLASSES_ROOT'                  = 'Windows\Base\Windows HKEY_CLASSES_ROOT.reg'
+        'CONFIG_WINDOWS_HKEY_CURRENT_USER'                  = 'Windows\Base\Windows HKEY_CURRENT_USER.reg'
+        'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'                 = 'Windows\Base\Windows HKEY_LOCAL_MACHINE.reg'
+        'CONFIG_WINDOWS_HKEY_USERS'                         = 'Windows\Base\Windows HKEY_USERS.reg'
+        'CONFIG_WINDOWS_LOCALISED'                          = 'Windows\Base\Windows {LOCALE}.reg'
+        'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'  = 'Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg'
+        'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE' = 'Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg'
+    }
 )

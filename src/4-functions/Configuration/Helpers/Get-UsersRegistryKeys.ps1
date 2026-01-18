@@ -1,6 +1,6 @@
 function Get-UsersRegistryKeys {
     try {
-        Set-Variable -Option Constant Users ([Collections.Generic.List[String]](Get-Item 'Registry::HKEY_USERS\*' -ErrorAction Stop).Name)
+        Set-Variable -Option Constant Users ([String[]](Get-Item 'Registry::HKEY_USERS\*' -ErrorAction Stop).Name)
     } catch {
         Write-LogWarning "Failed to retrieve users registry keys: $_"
         return $()

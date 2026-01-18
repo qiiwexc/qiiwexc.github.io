@@ -17,5 +17,5 @@ function Invoke-GitAPI {
         return $Null
     }
 
-    return [Collections.Generic.List[PSCustomObject]]($Response.Content | ConvertFrom-Json)
+    return [PSCustomObject[]]($Response.Content | ConvertFrom-Json)
 }

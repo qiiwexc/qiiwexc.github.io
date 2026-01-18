@@ -6,7 +6,7 @@ function Read-GitHubToken {
     Write-LogInfo 'Reading GitHub token'
 
     Set-Variable -Option Constant EnvContent ([String](Get-Content $EnvPath -Raw -Encoding UTF8))
-    Set-Variable -Option Constant Lines ([Collections.Generic.List[String]]($EnvContent -split "`n" | ForEach-Object { $_.Trim() }))
+    Set-Variable -Option Constant Lines ([String[]]($EnvContent -split "`n" | ForEach-Object { $_.Trim() }))
 
     foreach ($Line in $Lines) {
         if ($Line -match '^GITHUB_TOKEN=(.+)$') {

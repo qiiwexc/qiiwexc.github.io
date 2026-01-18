@@ -37,7 +37,7 @@ function Update-Dependencies {
     }
     Write-Progress -Activity 'Update' -PercentComplete 5
 
-    Set-Variable -Option Constant Dependencies ([Collections.Generic.List[PSCustomObject]](Get-Content $DependenciesFile -Raw -Encoding UTF8 | ConvertFrom-Json))
+    Set-Variable -Option Constant Dependencies ([PSCustomObject[]](Get-Content $DependenciesFile -Raw -Encoding UTF8 | ConvertFrom-Json))
     Write-Progress -Activity 'Update' -PercentComplete 10
 
     [Collections.Generic.List[Collections.Generic.List[String]]]$ChangeLogs = @()
@@ -75,7 +75,7 @@ function Update-Dependencies {
 
     Write-Progress -Activity 'Update' -PercentComplete 90
 
-    Set-Variable -Option Constant UrlsToOpen ([Collections.Generic.List[String]]($ChangeLogs | Select-Object -Unique | Where-Object { $_ }))
+    Set-Variable -Option Constant UrlsToOpen ([String[]]($ChangeLogs | Select-Object -Unique | Where-Object { $_ }))
     Write-LogInfo "$($UrlsToOpen.Count) update(s) found"
     Write-Progress -Activity 'Update' -PercentComplete 95
 

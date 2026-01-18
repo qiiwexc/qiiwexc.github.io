@@ -29,7 +29,7 @@ function Start-Cleanup {
     Write-ActivityProgress -PercentComplete 70
 
     Set-Variable -Option Constant VolumeCaches (
-        [Collections.Generic.List[String]]@(
+        [String[]]@(
             'Active Setup Temp Folders',
             'BranchCache',
             'D3D Shader Cache',

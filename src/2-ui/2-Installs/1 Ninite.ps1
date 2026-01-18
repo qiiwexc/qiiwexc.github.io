@@ -33,7 +33,7 @@ New-ButtonBrowser 'View other' $BUTTON_FUNCTION
 
 
 Set-Variable -Option Constant NINITE_CHECKBOXES (
-    [Collections.Generic.List[Windows.Forms.CheckBox]]@(
+    [Windows.Forms.CheckBox[]]@(
         $CHECKBOX_Ninite_7zip,
         $CHECKBOX_Ninite_VLC,
         $CHECKBOX_Ninite_AnyDesk,

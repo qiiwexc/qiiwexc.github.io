@@ -19,7 +19,7 @@ function New-UnattendedFile {
     Set-Variable -Option Constant NonLocalisedFileName ([String]'autounattend.xml')
     Set-Variable -Option Constant LocalisedFileNameTemplate ([String]'autounattend-{LOCALE}.xml')
 
-    Set-Variable -Option Constant Locales ([Collections.Generic.List[String]]@('English', 'Russian'))
+    Set-Variable -Option Constant Locales ([String[]]@('English', 'Russian'))
 
     Set-Variable -Option Constant BaseFile ([String]"$BuildPath\$NonLocalisedFileName")
 
@@ -62,14 +62,14 @@ function New-UnattendedFile {
     Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalisedFileName"))
     Copy-Item $BuildFile $VmFile
 
-    Set-Variable -Option Constant DevRegexReplacementMap ([Collections.Generic.List[Hashtable]]@(
-            @{Regex = '\s*<File path="C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1">([\s\S]*?)<\/File>'; NewValue = '' },
-            @{Regex = "\s*{\s*&amp; 'C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1';\s*};"; NewValue = '' },
-            @{Regex = '\s*<ImageInstall>([\s\S]*?)<\/ImageInstall>'; NewValue = '' },
-            @{Regex = '\s*<UserAccounts>([\s\S]*?)<\/UserAccounts>'; NewValue = '' },
-            @{Regex = '\s*<AutoLogon>([\s\S]*?)<\/AutoLogon>'; NewValue = '' },
-            @{Regex = '\s*<RunSynchronousCommand wcm:action="add">(?:[\s\S](?!<RunSynchronousCommand))*?diskpart[\s\S]*?<\/RunSynchronousCommand>'; NewValue = '' },
-            @{Regex = '(?s)\s*\{[^{}]*?AutoLogonCount[^{}]*?\}\s*;'; NewValue = '' }
+    Set-Variable -Option Constant DevRegexRemovals ([String[]]@(
+            '\s*<File path="C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1">([\s\S]*?)<\/File>'
+            "\s*{\s*&amp; 'C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1';\s*};"
+            '\s*<ImageInstall>([\s\S]*?)<\/ImageInstall>'
+            '\s*<UserAccounts>([\s\S]*?)<\/UserAccounts>'
+            '\s*<AutoLogon>([\s\S]*?)<\/AutoLogon>'
+            '\s*<RunSynchronousCommand wcm:action="add">(?:[\s\S](?!<RunSynchronousCommand))*?diskpart[\s\S]*?<\/RunSynchronousCommand>'
+            '(?s)\s*\{[^{}]*?AutoLogonCount[^{}]*?\}\s*;'
         )
     )
 
@@ -80,8 +80,8 @@ function New-UnattendedFile {
 
         [String]$FileContent = Get-Content $BuildFileName -Raw -Encoding UTF8
 
-        foreach ($Item in $DevRegexReplacementMap) {
-            $FileContent = $FileContent -replace $Item.Regex, $Item.NewValue
+        foreach ($Regex in $DevRegexRemovals) {
+            $FileContent = $FileContent -replace $Regex, ''
         }
 
         Set-Content $OutputFileName $FileContent -NoNewline

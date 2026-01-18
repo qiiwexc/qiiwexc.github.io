@@ -25,7 +25,7 @@ function Set-WindowsPersonalisationConfig {
 
     try {
         if ($OS_VERSION -gt 10) {
-            Set-Variable -Option Constant NotificationRegistries ([Collections.Generic.List[String]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
+            Set-Variable -Option Constant NotificationRegistries ([String[]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
             foreach ($Registry in $NotificationRegistries) {
                 $ConfigLines.Add("`n[$Registry]`n")
                 $ConfigLines.Add("`"IsPromoted`"=dword:00000001`n")

@@ -15,7 +15,7 @@ function Start-WindowsDebloat {
     try {
         Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 
-        New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop | Out-Null
+        $Null = New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop
 
         if ($UsePreset -and $Personalisation) {
             Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))

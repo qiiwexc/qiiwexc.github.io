@@ -1,7 +1,7 @@
 function New-HtmlFile {
     param(
         [String][Parameter(Position = 0, Mandatory)]$TemplatesPath,
-        [Collections.Generic.List[PSCustomObject]][Parameter(Position = 1, Mandatory)]$Config
+        [PSCustomObject[]][Parameter(Position = 1, Mandatory)]$Config
     )
 
     Write-LogInfo 'Building web page...'

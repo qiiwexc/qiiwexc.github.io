@@ -18,9 +18,9 @@ function Set-WindowsBaseConfiguration {
     }
 
     if ($SYSTEM_LANGUAGE -match 'ru') {
-        Set-Variable -Option Constant LocalisedConfig ([Collections.Generic.List[String]]$CONFIG_WINDOWS_RUSSIAN)
+        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_RUSSIAN)
     } else {
-        Set-Variable -Option Constant LocalisedConfig ([Collections.Generic.List[String]]$CONFIG_WINDOWS_ENGLISH)
+        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_ENGLISH)
     }
 
     [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
@@ -53,7 +53,7 @@ function Set-WindowsBaseConfiguration {
             $ConfigLines.Add("`"EnableCortana`"=dword:00000000`n")
         }
 
-        Set-Variable -Option Constant VolumeRegistries ([Collections.Generic.List[String]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
+        Set-Variable -Option Constant VolumeRegistries ([String[]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
         foreach ($Registry in $VolumeRegistries) {
             $ConfigLines.Add("`n[$Registry]`n")
             $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
