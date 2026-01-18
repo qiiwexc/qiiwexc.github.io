@@ -33,7 +33,7 @@ if "%debug%"=="true" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.17')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.18')
 ::
 ::#endregion init > Version
 ::
@@ -598,7 +598,7 @@ if "%debug%"=="true" (
 ::
 ::
 ::Set-Variable -Option Constant NINITE_CHECKBOXES (
-::    [Collections.Generic.List[Windows.Forms.CheckBox]]@(
+::    [Windows.Forms.CheckBox[]]@(
 ::        $CHECKBOX_Ninite_7zip,
 ::        $CHECKBOX_Ninite_VLC,
 ::        $CHECKBOX_Ninite_AnyDesk,
@@ -1332,8 +1332,6 @@ if "%debug%"=="true" (
 ::  <Association Identifier=".adts" ProgId="VLC.adts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".aif" ProgId="VLC.aif" ApplicationName="VLC media player" />
 ::  <Association Identifier=".aifc" ProgId="VLC.aifc" ApplicationName="VLC media player" />
-::  <Association Identifier=".aiff" ProgId="VLC.aiff" ApplicationName="VLC media player" />
-::  <Association Identifier=".asf" ProgId="VLC.asf" ApplicationName="VLC media player" />
 ::  <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
 ::  <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
 ::  <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
@@ -1401,10 +1399,9 @@ if "%debug%"=="true" (
 ::#region configs > Windows > Capabilities to remove
 ::
 ::Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
-::    [Collections.Generic.List[String]]@(
+::    [String[]]@(
 ::        'App.StepsRecorder'
 ::        'App.Support.QuickAssist'
-::        'Language.TextToSpeech'
 ::    )
 ::)
 ::
@@ -1414,7 +1411,7 @@ if "%debug%"=="true" (
 ::#region configs > Windows > Features to remove
 ::
 ::Set-Variable -Option Constant CONFIG_FEATURES_TO_REMOVE (
-::    [Collections.Generic.List[String]]@(
+::    [String[]]@(
 ::        'MicrosoftWindowsPowerShellV2Root'
 ::        'Recall'
 ::    )
@@ -1426,7 +1423,7 @@ if "%debug%"=="true" (
 ::#region configs > Windows > Power settings
 ::
 ::Set-Variable -Option Constant CONFIG_POWER_SETTINGS (
-::    [Collections.Generic.List[Hashtable]]@(
+::    [Hashtable[]]@(
 ::        @{SubGroup = '0d7dbae2-4294-402a-ba8e-26777e8488cd'; Setting = '309dce9b-bef4-4119-9921-a851fb12f0f4'; Value = 0 },
 ::        @{SubGroup = '02f815b5-a5cf-4c84-bf20-649d1f75d3d8'; Setting = '4c793e7d-a264-42e1-87d3-7a0d2f523ccd'; Value = 1 },
 ::        @{SubGroup = '19cbb8fa-5279-450e-9fac-8a3d5fedd0c1'; Setting = '12bbebe6-58d6-4636-95bb-3217ef867c1a'; Value = 0 },
@@ -3616,7 +3613,7 @@ if "%debug%"=="true" (
 ::
 ::    Remove-Directory $ExtractionPath
 ::
-::    New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop | Out-Null
+::    $Null = New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop
 ::
 ::    try {
 ::        if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
@@ -3661,9 +3658,9 @@ if "%debug%"=="true" (
 ::function Get-MicrosoftSecurityStatus {
 ::    Set-Variable -Option Constant Status ([Microsoft.Management.Infrastructure.CimInstance](Get-MpComputerStatus))
 ::
-::    Set-Variable -Option Constant Properties ([Collections.Generic.List[String]](($Status | Get-Member -MemberType Property).Name))
+::    Set-Variable -Option Constant Properties ([String[]](($Status | Get-Member -MemberType Property).Name))
 ::
-::    Set-Variable -Option Constant Filtered ([Collections.Generic.List[String]]($Properties | Where-Object { $_ -eq 'BehaviorMonitorEnabled' -or $_ -eq 'IoavProtectionEnabled' -or $_ -eq 'NISEnabled' -or $_ -eq 'OnAccessProtectionEnabled' -or $_ -eq 'RealTimeProtectionEnabled' }))
+::    Set-Variable -Option Constant Filtered ([String[]]($Properties | Where-Object { $_ -eq 'BehaviorMonitorEnabled' -or $_ -eq 'IoavProtectionEnabled' -or $_ -eq 'NISEnabled' -or $_ -eq 'OnAccessProtectionEnabled' -or $_ -eq 'RealTimeProtectionEnabled' }))
 ::
 ::    [Bool]$IsEnabled = $False
 ::    foreach ($Property in $Filtered) {
@@ -3768,7 +3765,7 @@ if "%debug%"=="true" (
 ::#region functions > Common > Initialize-AppDirectory
 ::
 ::function Initialize-AppDirectory {
-::    New-Item -Force -ItemType Directory $PATH_APP_DIR -ErrorAction Stop | Out-Null
+::    $Null = New-Item -Force -ItemType Directory $PATH_APP_DIR -ErrorAction Stop
 ::}
 ::
 ::#endregion functions > Common > Initialize-AppDirectory
@@ -4562,7 +4559,7 @@ if "%debug%"=="true" (
 ::
 ::function Get-UsersRegistryKeys {
 ::    try {
-::        Set-Variable -Option Constant Users ([Collections.Generic.List[String]](Get-Item 'Registry::HKEY_USERS\*' -ErrorAction Stop).Name)
+::        Set-Variable -Option Constant Users ([String[]](Get-Item 'Registry::HKEY_USERS\*' -ErrorAction Stop).Name)
 ::    } catch {
 ::        Write-LogWarning "Failed to retrieve users registry keys: $_"
 ::        return $()
@@ -4578,7 +4575,7 @@ if "%debug%"=="true" (
 ::function Import-RegistryConfiguration {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory)]$AppName,
-::        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)]$Content
+::        [String[]][Parameter(Position = 1, Mandatory)]$Content
 ::    )
 ::
 ::    Set-Variable -Option Constant LogIndentLevel 2
@@ -4675,8 +4672,8 @@ if "%debug%"=="true" (
 ::
 ::    Set-Variable -Option Constant OpenWithProgids (Get-ItemProperty -Path $OpenWithProgidsPath)
 ::    if ($OpenWithProgids) {
-::        Set-Variable -Option Constant OpenWithProgidsNames ([Collections.Generic.List[String]]($OpenWithProgids | Get-Member -MemberType NoteProperty).Name)
-::        Set-Variable -Option Constant Progids ([Collections.Generic.List[String]]($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' }))
+::        Set-Variable -Option Constant OpenWithProgidsNames ([String[]]($OpenWithProgids | Get-Member -MemberType NoteProperty).Name)
+::        Set-Variable -Option Constant Progids ([String[]]($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' }))
 ::
 ::        foreach ($Progid in $Progids) {
 ::            if ($Progid -ne $Application) {
@@ -4763,7 +4760,7 @@ if "%debug%"=="true" (
 ::
 ::        Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 ::
-::        New-Item -Force -ItemType Directory -ErrorAction Stop (Split-Path -Parent $Path -ErrorAction Stop) | Out-Null
+::        $Null = New-Item -Force -ItemType Directory -ErrorAction Stop (Split-Path -Parent $Path -ErrorAction Stop)
 ::
 ::        $Content | Set-Content $Path -NoNewline -ErrorAction Stop
 ::
@@ -4840,12 +4837,6 @@ if "%debug%"=="true" (
 ::        }
 ::    }
 ::
-::    if (Test-Path 'mstsc.exe') {
-::        Write-ActivityProgress -PercentComplete 90 -Task "Removing 'mstsc'..."
-::        Start-Process 'mstsc' '/uninstall'
-::        Out-Success $LogIndentLevel
-::    }
-::
 ::    Write-ActivityCompleted
 ::}
 ::
@@ -4886,7 +4877,7 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        Set-Variable -Option Constant Status ([Collections.Generic.List[Int]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) } -ErrorAction Stop).ReturnValue)
+::        Set-Variable -Option Constant Status ([Int[]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) } -ErrorAction Stop).ReturnValue)
 ::
 ::        if ($Status | Where-Object { $_ -ne 0 }) {
 ::            Write-LogError 'Failed to change DNS server'
@@ -4932,7 +4923,6 @@ if "%debug%"=="true" (
 ::
 ::        Set-FileAssociation $Application "Registry::HKEY_CLASSES_ROOT\$Extension"
 ::        Set-FileAssociation $Application "HKCU:\Software\Classes\$Extension" -SetDefault
-::        Set-FileAssociation $Application "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\$Extension"
 ::
 ::        [String]$OriginalAssociation = $(& cmd.exe /c assoc $Extension 2`>`&1).Replace("$Extension=", '')
 ::        if ($OriginalAssociation -ne $Application) {
@@ -4992,9 +4982,9 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    if ($SYSTEM_LANGUAGE -match 'ru') {
-::        Set-Variable -Option Constant LocalisedConfig ([Collections.Generic.List[String]]$CONFIG_WINDOWS_RUSSIAN)
+::        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_RUSSIAN)
 ::    } else {
-::        Set-Variable -Option Constant LocalisedConfig ([Collections.Generic.List[String]]$CONFIG_WINDOWS_ENGLISH)
+::        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_ENGLISH)
 ::    }
 ::
 ::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
@@ -5027,7 +5017,7 @@ if "%debug%"=="true" (
 ::            $ConfigLines.Add("`"EnableCortana`"=dword:00000000`n")
 ::        }
 ::
-::        Set-Variable -Option Constant VolumeRegistries ([Collections.Generic.List[String]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
+::        Set-Variable -Option Constant VolumeRegistries ([String[]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
 ::        foreach ($Registry in $VolumeRegistries) {
 ::            $ConfigLines.Add("`n[$Registry]`n")
 ::            $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
@@ -5105,7 +5095,7 @@ if "%debug%"=="true" (
 ::
 ::    try {
 ::        if ($OS_VERSION -gt 10) {
-::            Set-Variable -Option Constant NotificationRegistries ([Collections.Generic.List[String]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
+::            Set-Variable -Option Constant NotificationRegistries ([String[]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
 ::            foreach ($Registry in $NotificationRegistries) {
 ::                $ConfigLines.Add("`n[$Registry]`n")
 ::                $ConfigLines.Add("`"IsPromoted`"=dword:00000001`n")
@@ -5173,7 +5163,7 @@ if "%debug%"=="true" (
 ::
 ::        Set-Variable -Option Constant ConfigFile ([String]"$TargetPath\ooshutup10.cfg")
 ::
-::        New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop | Out-Null
+::        $Null = New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop
 ::
 ::        $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
 ::    } catch {
@@ -5211,7 +5201,7 @@ if "%debug%"=="true" (
 ::    try {
 ::        Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 ::
-::        New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop | Out-Null
+::        $Null = New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop
 ::
 ::        if ($UsePreset -and $Personalisation) {
 ::            Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
@@ -5274,7 +5264,7 @@ if "%debug%"=="true" (
 ::    }
 ::
 ::    try {
-::        New-Item -Force -ItemType Directory $PATH_WINUTIL -ErrorAction Stop | Out-Null
+::        $Null = New-Item -Force -ItemType Directory $PATH_WINUTIL -ErrorAction Stop
 ::
 ::        Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 ::
@@ -5405,7 +5395,7 @@ if "%debug%"=="true" (
 ::    Write-ActivityProgress -PercentComplete 70
 ::
 ::    Set-Variable -Option Constant VolumeCaches (
-::        [Collections.Generic.List[String]]@(
+::        [String[]]@(
 ::            'Active Setup Temp Folders',
 ::            'BranchCache',
 ::            'D3D Shader Cache',
