@@ -8,28 +8,31 @@ function New-BatchScript {
 
     Write-LogInfo 'Building batch script...'
 
-    [String[]]$PowerShellLines = Get-Content $Ps1File -Raw -Encoding UTF8
+    Set-Variable -Option Constant PowerShellLines ([String](Get-Content $Ps1File -Raw -Encoding UTF8))
 
-    [Collections.Generic.List[String]]$BatchLines = "@echo off`n"
-    $BatchLines.Add("if `"%~1`"==`"Debug`" set debug=true`n")
-    $BatchLines.Add("set `"psfile=%temp%\$ProjectName.ps1`"`n")
-    $BatchLines.Add('> "%psfile%" (')
-    $BatchLines.Add("  for /f `"delims=`" %%A in ('findstr `"^::`" `"%~f0`"') do (")
-    $BatchLines.Add('    set "line=%%A"')
-    $BatchLines.Add('    setlocal enabledelayedexpansion')
-    $BatchLines.Add('    echo(!line:~2!')
-    $BatchLines.Add('    endlocal')
-    $BatchLines.Add('  )')
-    $BatchLines.Add(")`n")
-    $BatchLines.Add('if "%debug%"=="true" (')
-    $BatchLines.Add("  powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%' -DevMode`"")
-    $BatchLines.Add(') else (')
-    $BatchLines.Add("  powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%'`"")
-    $BatchLines.Add(")`n")
+    Set-Variable -Option Constant BatchLines (
+        [String]("@echo off
 
-    foreach ($Line in $PowerShellLines) {
-        $BatchLines.Add("::$($Line.Replace("`n", "`n::"))")
-    }
+set `"psfile=%temp%\$ProjectName.ps1`"
+
+> `"%psfile%`" (
+    for /f `"delims=`" %%A in ('findstr `"^::`" `"%~f0`"') do (
+        set `"line=%%A`"
+        setlocal enabledelayedexpansion
+        echo(!line:~2!
+        endlocal
+    )
+)
+
+if `"%~1`"==`"Debug`" (
+    powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%' -DevMode`"
+) else (
+    powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%'`"
+)
+
+::$($PowerShellLines.Replace("`n", "`n::"))"
+        )
+    )
 
     Write-LogInfo "Writing batch file $BatchFile"
     Set-Content $BatchFile $BatchLines
