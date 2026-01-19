@@ -75,6 +75,7 @@ if "%~1"=="Debug" (
 ::
 ::[Windows.Forms.Application]::EnableVisualStyles()
 ::
+::Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
 ::
 ::Set-Variable -Option Constant PATH_WORKING_DIR ([String]$WorkingDirectory)
 ::Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
@@ -1352,11 +1353,16 @@ if "%~1"=="Debug" (
 ::  <Association Identifier=".adts" ProgId="VLC.adts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".aif" ProgId="VLC.aif" ApplicationName="VLC media player" />
 ::  <Association Identifier=".aifc" ProgId="VLC.aifc" ApplicationName="VLC media player" />
+::  <Association Identifier=".aiff" ProgId="VLC.aiff" ApplicationName="VLC media player" />
+::  <Association Identifier=".asf" ProgId="VLC.asf" ApplicationName="VLC media player" />
 ::  <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
+::  <Association Identifier=".au" ProgId="VLC.au" ApplicationName="VLC media player" />
 ::  <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
 ::  <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
+::  <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
 ::  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
+::  <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
 ::  <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
 ::  <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="group_wab_auto_file" />
@@ -1364,6 +1370,7 @@ if "%~1"=="Debug" (
 ::  <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".iso" ProgId="Windows.IsoFile" ApplicationName="File Explorer" />
+::  <Association Identifier=".m1v" ProgId="VLC.m1v" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2t" ProgId="VLC.m2t" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2ts" ProgId="VLC.m2ts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m2v" ProgId="VLC.m2v" ApplicationName="VLC media player" />
@@ -1371,6 +1378,7 @@ if "%~1"=="Debug" (
 ::  <Association Identifier=".m4a" ProgId="VLC.m4a" ApplicationName="VLC media player" />
 ::  <Association Identifier=".m4v" ProgId="VLC.m4v" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier=".mid" ProgId="VLC.mid" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mka" ProgId="VLC.mka" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
 ::  <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
@@ -1388,25 +1396,34 @@ if "%~1"=="Debug" (
 ::  <Association Identifier=".mts" ProgId="VLC.mts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".pdf" ProgId="ChromePDF" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".rar" ProgId="7-Zip.rar" ApplicationName="7-Zip File Manager" />
+::  <Association Identifier=".rmi" ProgId="VLC.rmi" ApplicationName="VLC media player" />
 ::  <Association Identifier=".shtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier=".snd" ProgId="VLC.snd" ApplicationName="VLC media player" />
 ::  <Association Identifier=".svg" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".tar" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier=".tbz2" ProgId="7-Zip.tbz2" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".tgz" ProgId="7-Zip.tgz" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".torrent" ProgId="qBittorrent.File.Torrent" ApplicationName="qBittorrent - A Bittorrent Client" />
+::  <Association Identifier=".ts" ProgId="VLC.ts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".tts" ProgId="VLC.tts" ApplicationName="VLC media player" />
 ::  <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
 ::  <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
+::  <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
 ::  <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
 ::  <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
+::  <Association Identifier=".wpl" ProgId="VLC.wpl" ApplicationName="VLC media player" />
+::  <Association Identifier=".wsz" ProgId="VLC.wsz" ApplicationName="VLC media player" />
+::  <Association Identifier=".wtv" ProgId="VLC.wtv" ApplicationName="VLC media player" />
+::  <Association Identifier=".wvx" ProgId="VLC.wvx" ApplicationName="VLC media player" />
 ::  <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
 ::  <Association Identifier="http" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier="https" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+::  <Association Identifier="mailto" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier="mms" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier="tel" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
 ::  <Association Identifier="webcal" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
@@ -1725,7 +1742,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
 ::"CleanDownloadHistory"=dword:00000001
-::"CleanForms"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 ::"AcceptedPrivacyStatement"=dword:00000001
@@ -2938,7 +2954,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
-::"SettingsPageVisibility"="hide:home" ; Disable Home page in settings
 ::
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
@@ -3113,7 +3128,7 @@ if "%~1"=="Debug" (
 ::    { "Name": "HideChat", "Value": false },
 ::    { "Name": "HideDupliDrive", "Value": false },
 ::    { "Name": "HideGallery", "Value": false },
-::    { "Name": "HideGiveAccessTo", "Value": true },
+::    { "Name": "HideGiveAccessTo", "Value": false },
 ::    { "Name": "HideHome", "Value": false },
 ::    { "Name": "HideIncludeInLibrary", "Value": false },
 ::    { "Name": "HideMusic", "Value": false },
@@ -3189,7 +3204,7 @@ if "%~1"=="Debug" (
 ::    { "Name": "HideChat", "Value": false },
 ::    { "Name": "HideDupliDrive", "Value": false },
 ::    { "Name": "HideGallery", "Value": false },
-::    { "Name": "HideGiveAccessTo", "Value": true },
+::    { "Name": "HideGiveAccessTo", "Value": false },
 ::    { "Name": "HideHome", "Value": false },
 ::    { "Name": "HideIncludeInLibrary", "Value": false },
 ::    { "Name": "HideMusic", "Value": false },
@@ -3563,9 +3578,7 @@ if "%~1"=="Debug" (
 ::        [Switch]$Temp
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
-::    Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
+::    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 ::
 ::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
 ::    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
@@ -3634,7 +3647,7 @@ if "%~1"=="Debug" (
 ::            }
 ::        }
 ::    } catch {
-::        Write-LogError "Failed to extract '$ZipPath': $_" $LogIndentLevel
+::        Write-LogError "Failed to extract '$ZipPath': $_"
 ::        return
 ::    }
 ::
@@ -3650,8 +3663,8 @@ if "%~1"=="Debug" (
 ::        Move-Item -Force $ExtractionPath $TargetPath -ErrorAction Stop
 ::    }
 ::
-::    Out-Success $LogIndentLevel
-::    Write-LogInfo "Files extracted to '$TargetPath'" $LogIndentLevel
+::    Out-Success
+::    Write-LogInfo "Files extracted to '$TargetPath'"
 ::
 ::    return $TargetExe
 ::}
@@ -3876,7 +3889,7 @@ if "%~1"=="Debug" (
 ::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::
-::    Write-LogInfo "   > $Status" $Level
+::    Write-LogInfo " > $Status" $Level
 ::}
 ::
 ::
@@ -3925,10 +3938,16 @@ if "%~1"=="Debug" (
 ::        Default {}
 ::    }
 ::
-::    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
+::    if ($ACTIVITIES.Count -le 0) {
+::        Set-Variable -Option Constant Indent ([Int]$IndentLevel)
+::    } else {
+::        Set-Variable -Option Constant Indent ([Int]($ACTIVITIES.Count + $IndentLevel))
+::    }
+::
+::    Set-Variable -Option Constant IndentSpaces ([String]$('   ' * $Indent))
 ::    Set-Variable -Option Constant Date ([String]$((Get-Date).ToString()))
 ::
-::    return ([String]"[$Date]$Indent$Emoji $Message")
+::    return ([String]"[$Date]$IndentSpaces$Emoji $Message")
 ::}
 ::
 ::
@@ -4026,9 +4045,21 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 0, Mandatory)]$Activity
 ::    )
 ::
-::    Write-LogInfo $Activity
-::    Set-Variable -Scope Script CURRENT_ACTIVITY ([String]$Activity)
-::    Write-Progress -Activity $CURRENT_ACTIVITY -PercentComplete 1
+::    Write-LogInfo "$Activity..."
+::
+::    $ACTIVITIES.Push($Activity)
+::
+::    Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
+::
+::    if ($TaskLevel -gt 1) {
+::        Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+::    }
+::
+::    if ($ParentId) {
+::        Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete 1 -ParentId $ParentId
+::    } else {
+::        Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete 1
+::    }
 ::}
 ::
 ::function Write-ActivityProgress {
@@ -4037,20 +4068,61 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 1)]$Task
 ::    )
 ::
-::    if ($Task) {
-::        Set-Variable -Scope Script CURRENT_TASK ([String]"  $Task")
-::        Write-LogInfo $CURRENT_TASK
-::    }
+::    Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
 ::
-::    if ($CURRENT_ACTIVITY) {
-::        Write-Progress -Activity $CURRENT_ACTIVITY -Status $CURRENT_TASK -PercentComplete $PercentComplete
+::    if ($TaskLevel -gt 0) {
+::        Set-Variable -Option Constant Activity ([String]$ACTIVITIES.Peek())
+::
+::        if ($TaskLevel -gt 1) {
+::            Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+::        }
+::
+::        if ($Task) {
+::            Set-Variable -Scope Script CURRENT_TASK ([String]$Task)
+::            Write-LogInfo $Task
+::
+::            if ($ParentId) {
+::                Write-Progress -Id $TaskLevel -Activity $Activity -Status $Task -PercentComplete $PercentComplete -ParentId $ParentId
+::            } else {
+::                Write-Progress -Id $TaskLevel -Activity $Activity -Status $Task -PercentComplete $PercentComplete
+::            }
+::        } else {
+::            if ($ParentId) {
+::                Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete $PercentComplete -ParentId $ParentId
+::            } else {
+::                Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete $PercentComplete
+::            }
+::        }
 ::    }
 ::}
 ::
 ::function Write-ActivityCompleted {
-::    Out-Success
-::    Write-Progress -Activity $CURRENT_ACTIVITY -Completed
-::    Set-Variable -Scope Script CURRENT_ACTIVITY $Null
+::    param(
+::        [Bool][Parameter(Position = 0)]$Success = $True
+::    )
+::
+::    if ($Success) {
+::        Out-Success
+::    } else {
+::        Out-Failure
+::    }
+::
+::    Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
+::
+::    if ($TaskLevel -gt 0) {
+::        Set-Variable -Option Constant Activity ([String]$ACTIVITIES.Pop())
+::
+::        if ($TaskLevel -gt 1) {
+::            Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+::        }
+::
+::        if ($ParentId) {
+::            Write-Progress -Id $TaskLevel -Activity $Activity -Completed -ParentId $ParentId
+::        } else {
+::            Write-Progress -Id $TaskLevel -Activity $Activity -Completed
+::        }
+::    }
+::
 ::    Set-Variable -Scope Script CURRENT_TASK $Null
 ::}
 ::
@@ -4124,9 +4196,7 @@ if "%~1"=="Debug" (
 ::        [Switch]$Temp
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
-::    Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
+::    Write-ActivityProgress 10 "Downloading from $URL"
 ::
 ::    if ($SaveAs) {
 ::        Set-Variable -Option Constant FileName ([String]$SaveAs)
@@ -4147,7 +4217,7 @@ if "%~1"=="Debug" (
 ::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
 ::    if (-not $IsConnected) {
 ::        if (Test-Path $SavePath) {
-::            Write-LogWarning 'Previous download found, returning it' $LogIndentLevel
+::            Write-LogWarning 'Previous download found, returning it'
 ::            return $SavePath
 ::        } else {
 ::            return
@@ -4162,12 +4232,12 @@ if "%~1"=="Debug" (
 ::        }
 ::
 ::        if (Test-Path $SavePath) {
-::            Out-Success $LogIndentLevel
+::            Out-Success
 ::        } else {
 ::            throw 'Possibly computer is offline or disk is full'
 ::        }
 ::    } catch {
-::        Write-LogError "Download failed: $_" $LogIndentLevel
+::        Write-LogError "Download failed: $_"
 ::        return
 ::    }
 ::
@@ -4241,25 +4311,23 @@ if "%~1"=="Debug" (
 ::        [Switch]$Silent
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
 ::    if ($Switches -and $Silent) {
-::        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
+::        Write-ActivityProgress 90 "Running '$Executable' silently..."
 ::
 ::        try {
 ::            Start-Process -Wait $Executable $Switches -ErrorAction Stop
 ::        } catch {
-::            Write-LogError "Failed to run '$Executable': $_" $LogIndentLevel
+::            Write-LogError "Failed to run '$Executable': $_"
 ::            return
 ::        }
 ::
-::        Out-Success $LogIndentLevel
+::        Out-Success
 ::
-::        Write-LogDebug "Removing '$Executable'..." $LogIndentLevel
+::        Write-LogDebug "Removing '$Executable'..."
 ::        Remove-File $Executable
-::        Out-Success $LogIndentLevel
+::        Out-Success
 ::    } else {
-::        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable'..."
+::        Write-ActivityProgress 90 "Running '$Executable'..."
 ::
 ::        try {
 ::            if ($Switches) {
@@ -4268,11 +4336,9 @@ if "%~1"=="Debug" (
 ::                Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
 ::            }
 ::        } catch {
-::            Write-LogError "Failed to execute '$Executable': $_" $LogIndentLevel
+::            Write-LogError "Failed to execute '$Executable': $_"
 ::            return
 ::        }
-::
-::        Out-Success $LogIndentLevel
 ::    }
 ::}
 ::
@@ -4286,7 +4352,7 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 0, Mandatory)]$ProcessName
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]3)
+::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
 ::
 ::    if (Get-Process -ErrorAction Stop | Where-Object { $_.ProcessName -eq $ProcessName } ) {
 ::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
@@ -4386,7 +4452,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    try {
-::        Write-ActivityProgress -PercentComplete 25 -Task "Configuring $AppName..."
+::        Write-ActivityProgress 12 "Configuring $AppName..."
 ::
 ::        [Collections.Generic.List[String]]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
 ::        $ConfigLines.Add("`n")
@@ -4409,7 +4475,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    try {
-::        Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
+::        Write-ActivityProgress 36 "Configuring $AppName..."
 ::
 ::        Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
 ::
@@ -4440,22 +4506,22 @@ if "%~1"=="Debug" (
 ::        [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory)]$Chrome
 ::    )
 ::
-::    New-Activity 'Configuring apps...'
-::
-::    if ($VLC.Checked) {
-::        Set-VlcConfiguration $VLC.Text
-::    }
-::
-::    if ($qBittorrent.Checked) {
-::        Set-qBittorrentConfiguration $qBittorrent.Text
-::    }
+::    New-Activity 'Configuring apps'
 ::
 ::    if ($7zip.Checked) {
 ::        Set-7zipConfiguration $7zip.Text
 ::    }
 ::
+::    if ($VLC.Checked) {
+::        Set-VlcConfiguration $VLC.Text
+::    }
+::
 ::    if ($AnyDesk.Checked) {
 ::        Set-AnyDeskConfiguration $AnyDesk.Text
+::    }
+::
+::    if ($qBittorrent.Checked) {
+::        Set-qBittorrentConfiguration $qBittorrent.Text
 ::    }
 ::
 ::    if ($Edge.Checked) {
@@ -4480,7 +4546,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    try {
-::        Write-ActivityProgress -PercentComplete 75 -Task "Configuring $AppName..."
+::        Write-ActivityProgress 80 "Configuring $AppName..."
 ::
 ::        Set-Variable -Option Constant ProcessName ([String]'chrome')
 ::
@@ -4502,7 +4568,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    try {
-::        Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
+::        Write-ActivityProgress 60 "Configuring $AppName..."
 ::
 ::        Set-Variable -Option Constant ProcessName ([String]'msedge')
 ::
@@ -4524,7 +4590,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    try {
-::        Write-ActivityProgress -PercentComplete 15 -Task "Configuring $AppName..."
+::        Write-ActivityProgress 48 "Configuring $AppName..."
 ::
 ::
 ::        if ($SYSTEM_LANGUAGE -match 'ru') {
@@ -4550,7 +4616,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    try {
-::        Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
+::        Write-ActivityProgress 24 "Configuring $AppName..."
 ::
 ::        Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
 ::    } catch {
@@ -4584,7 +4650,7 @@ if "%~1"=="Debug" (
 ::        [String[]][Parameter(Position = 1, Mandatory)]$Content
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel 2
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
 ::
@@ -4655,46 +4721,6 @@ if "%~1"=="Debug" (
 ::#endregion functions > Configuration > Helpers > Merge-JsonObject
 ::
 ::
-::#region functions > Configuration > Helpers > Set-FileAssociation
-::
-::function Set-FileAssociation {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$Application,
-::        [String][Parameter(Position = 1, Mandatory)]$RegistryPath
-::    )
-::
-::    New-RegistryKeyIfMissing $RegistryPath
-::
-::    Set-Variable -Option Constant DefaultAssociation ([String](Get-ItemProperty -Path $RegistryPath).'(Default)')
-::    if ($DefaultAssociation -ne $Application) {
-::        Set-ItemProperty -Path $RegistryPath -Name '(Default)' -Value $Application
-::    }
-::
-::    Set-Variable -Option Constant OpenWithProgidsPath ([String]"$RegistryPath\OpenWithProgids")
-::    New-RegistryKeyIfMissing $OpenWithProgidsPath
-::
-::    Set-Variable -Option Constant OpenWithProgids (Get-ItemProperty -Path $OpenWithProgidsPath)
-::    if ($OpenWithProgids) {
-::        Set-Variable -Option Constant OpenWithProgidsNames ([String[]]($OpenWithProgids | Get-Member -MemberType NoteProperty).Name)
-::        Set-Variable -Option Constant Progids ([String[]]($OpenWithProgidsNames | Where-Object { $_ -ne 'PSDrive' -and $_ -ne 'PSProvider' -and $_ -ne 'PSPath' -and $_ -ne 'PSParentPath' -and $_ -ne 'PSChildName' }))
-::
-::        foreach ($Progid in $Progids) {
-::            if ($Progid -ne $Application) {
-::                Remove-ItemProperty -Path $OpenWithProgidsPath -Name $Progid
-::            }
-::        }
-::
-::        if (-not ($Progids -contains $Application)) {
-::            New-ItemProperty -Path $OpenWithProgidsPath -Name $Application -Value ''
-::        }
-::    } else {
-::        New-ItemProperty -Path $OpenWithProgidsPath -Name $Application -Value ''
-::    }
-::}
-::
-::#endregion functions > Configuration > Helpers > Set-FileAssociation
-::
-::
 ::#region functions > Configuration > Helpers > Update-BrowserConfiguration
 ::
 ::function Update-BrowserConfiguration {
@@ -4706,7 +4732,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    try {
-::        Set-Variable -Option Constant LogIndentLevel ([Int]2)
+::        Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::        Write-LogInfo "Writing '$AppName' configuration to '$Path'..." $LogIndentLevel
 ::
@@ -4756,7 +4782,7 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 3)]$ProcessName = $AppName
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
 ::    try {
 ::        Stop-ProcessIfRunning $ProcessName
@@ -4780,62 +4806,60 @@ if "%~1"=="Debug" (
 ::#region functions > Configuration > Windows > Remove-WindowsFeatures
 ::
 ::function Remove-WindowsFeatures {
-::    Set-Variable -Option Constant LogIndentLevel 1
-::
-::    New-Activity 'Removing miscellaneous Windows features...'
+::    New-Activity 'Removing miscellaneous Windows features'
 ::
 ::    try {
-::        Write-ActivityProgress -PercentComplete 5 -Task 'Collecting capabilities to remove...'
+::        Write-ActivityProgress 5 'Collecting capabilities to remove...'
 ::        Set-Variable -Option Constant InstalledCapabilities ([PSCustomObject](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
 ::        Set-Variable -Option Constant CapabilitiesToRemove ([PSCustomObject]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
 ::        Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
-::        Out-Success $LogIndentLevel
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to collect capabilities to remove: $_" $LogIndentLevel
+::        Write-LogError "Failed to collect capabilities to remove: $_"
 ::    }
 ::
 ::    try {
-::        Write-ActivityProgress -PercentComplete 10 -Task 'Collecting features to remove...'
+::        Write-ActivityProgress 10 'Collecting features to remove...'
 ::        Set-Variable -Option Constant InstalledFeatures ([PSCustomObject](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
 ::        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
 ::        Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
-::        Out-Success $LogIndentLevel
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to collect features to remove: $_" $LogIndentLevel
+::        Write-LogError "Failed to collect features to remove: $_"
 ::    }
 ::
 ::    if ($CapabilityCount) {
-::        Set-Variable -Option Constant CapabilityStep ([Math]::Floor(50 / $CapabilityCount))
+::        Set-Variable -Option Constant CapabilityStep ([Math]::Floor(40 / $CapabilityCount))
 ::
 ::        [Int]$Iteration = 1
 ::        foreach ($Capability in $CapabilitiesToRemove) {
 ::            [String]$Name = $Capability.Name
 ::            try {
-::                [Int]$Percentage = 15 + $Iteration * $CapabilityStep
-::                Write-ActivityProgress -PercentComplete $Percentage -Task "Removing '$Name'..."
+::                [Int]$Percentage = 20 + $Iteration * $CapabilityStep
+::                Write-ActivityProgress $Percentage "Removing '$Name'..."
 ::                $Iteration++
 ::                Remove-WindowsCapability -Online -Name "$Name"
-::                Out-Success $LogIndentLevel
+::                Out-Success
 ::            } catch {
-::                Write-LogError "Failed to remove '$Name': $_" $LogIndentLevel
+::                Write-LogError "Failed to remove '$Name': $_"
 ::            }
 ::        }
 ::    }
 ::
 ::    if ($FeatureCount) {
-::        Set-Variable -Option Constant FeatureStep ([Math]::Floor(20 / $FeatureCount))
+::        Set-Variable -Option Constant FeatureStep ([Math]::Floor(40 / $FeatureCount))
 ::
 ::        [Int]$Iteration = 1
 ::        foreach ($Feature in $FeaturesToRemove) {
 ::            [String]$Name = $Feature.FeatureName
 ::            try {
-::                [Int]$Percentage = 70 + $Iteration * $FeatureStep
-::                Write-ActivityProgress -PercentComplete $Percentage -Task "Removing '$Name'..."
+::                [Int]$Percentage = 60 + $Iteration * $FeatureStep
+::                Write-ActivityProgress $Percentage "Removing '$Name'..."
 ::                $Iteration++
 ::                Disable-WindowsOptionalFeature -Online -Remove -NoRestart -FeatureName "$Name"
-::                Out-Success $LogIndentLevel
+::                Out-Success
 ::            } catch {
-::                Write-LogError "Failed to remove '$Name': $_" $LogIndentLevel
+::                Write-LogError "Failed to remove '$Name': $_"
 ::            }
 ::        }
 ::    }
@@ -4901,7 +4925,7 @@ if "%~1"=="Debug" (
 ::function Set-FileAssociations {
 ::    Set-Variable -Option Constant LogIndentLevel 1
 ::
-::    Write-ActivityProgress -PercentComplete 70 -Task 'Setting file associations...'
+::    Write-ActivityProgress 30 'Setting file associations...'
 ::
 ::    [Collections.Generic.List[PSCustomObject]]$AppAssociations = @()
 ::
@@ -4917,14 +4941,12 @@ if "%~1"=="Debug" (
 ::
 ::    [Int]$Iteration = 1
 ::    foreach ($FileAssociation in $AppAssociations) {
-::        [Int]$Percentage = 70 + $Iteration * $Step
-::        Write-ActivityProgress -PercentComplete $Percentage
+::        [Int]$Percentage = 40 + $Iteration * $Step
+::        Write-ActivityProgress $Percentage
 ::        $Iteration++
 ::
 ::        [String]$Extension = $FileAssociation.Extension
 ::        [String]$Application = $FileAssociation.Application
-::
-::        Set-FileAssociation $Application "HKCU:\Software\Classes\$Extension"
 ::
 ::        [String]$OriginalAssociation = $(& cmd.exe /c assoc $Extension 2`>`&1).Replace("$Extension=", '')
 ::        if ($OriginalAssociation -ne $Application) {
@@ -4943,13 +4965,13 @@ if "%~1"=="Debug" (
 ::function Set-PowerSchemeConfiguration {
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
-::    Write-ActivityProgress -PercentComplete 15 -Task 'Setting power scheme overlay...'
+::    Write-ActivityProgress 10 'Setting power scheme overlay...'
 ::
 ::    powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 ::
 ::    Out-Success $LogIndentLevel
 ::
-::    Write-ActivityProgress -PercentComplete 20 -Task 'Applying Windows power scheme settings...'
+::    Write-ActivityProgress 20 'Applying Windows power scheme settings...'
 ::
 ::    foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
 ::        powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
@@ -4969,9 +4991,7 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 0, Mandatory)]$FileName
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
-::    Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
+::    Write-ActivityProgress 60 'Applying Windows configuration...'
 ::
 ::    Set-WindowsSecurityConfiguration
 ::
@@ -4999,7 +5019,7 @@ if "%~1"=="Debug" (
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($LocalisedConfig)
 ::
-::    Write-ActivityProgress -PercentComplete 10
+::    Write-ActivityProgress 70
 ::
 ::    try {
 ::        foreach ($Registry in (Get-UsersRegistryKeys)) {
@@ -5023,7 +5043,7 @@ if "%~1"=="Debug" (
 ::            $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
 ::        }
 ::    } catch {
-::        Write-LogError "Failed to read the registry: $_" $LogIndentLevel
+::        Write-LogError "Failed to read the registry: $_"
 ::    }
 ::
 ::    Import-RegistryConfiguration $FileName $ConfigLines
@@ -5042,11 +5062,7 @@ if "%~1"=="Debug" (
 ::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$Personalisation
 ::    )
 ::
-::    New-Activity 'Configuring Windows...'
-::
-::    if ($Base.Checked) {
-::        Set-WindowsBaseConfiguration $Base.Text
-::    }
+::    New-Activity 'Configuring Windows'
 ::
 ::    if ($PowerScheme.Checked) {
 ::        Set-PowerSchemeConfiguration
@@ -5054,6 +5070,10 @@ if "%~1"=="Debug" (
 ::
 ::    if ($FileAssociations.Checked) {
 ::        Set-FileAssociations
+::    }
+::
+::    if ($Base.Checked) {
+::        Set-WindowsBaseConfiguration $Base.Text
 ::    }
 ::
 ::    if ($Personalisation.Checked) {
@@ -5073,9 +5093,7 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 0, Mandatory)]$FileName
 ::    )
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
-::    Write-ActivityProgress -PercentComplete 90 -Task 'Applying Windows personalisation configuration...'
+::    Write-ActivityProgress 80 'Applying Windows personalisation configuration...'
 ::
 ::    Set-WinHomeLocation -GeoId 140
 ::
@@ -5091,7 +5109,7 @@ if "%~1"=="Debug" (
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE)
 ::
-::    Write-ActivityProgress -PercentComplete 95
+::    Write-ActivityProgress 90
 ::
 ::    try {
 ::        if ($OS_VERSION -gt 10) {
@@ -5107,7 +5125,7 @@ if "%~1"=="Debug" (
 ::            $ConfigLines.Add("`"RotatingLockScreenEnabled`"=dword:00000001`n")
 ::        }
 ::    } catch {
-::        Write-LogError "Failed to read the registry: $_" $LogIndentLevel
+::        Write-LogError "Failed to read the registry: $_"
 ::    }
 ::
 ::    Import-RegistryConfiguration $FileName $ConfigLines
@@ -5365,34 +5383,34 @@ if "%~1"=="Debug" (
 ::#region functions > Home > Start-Cleanup
 ::
 ::function Start-Cleanup {
-::    New-Activity 'Cleaning up the system...'
+::    New-Activity 'Cleaning up the system'
 ::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
-::    Write-ActivityProgress -PercentComplete 10 -Task 'Clearing delivery optimization cache...'
+::    Write-ActivityProgress 10 'Clearing delivery optimization cache...'
 ::    Delete-DeliveryOptimizationCache -Force
 ::    Out-Success $LogIndentLevel
 ::
-::    Write-ActivityProgress -PercentComplete 20 -Task 'Clearing Windows temp folder...'
+::    Write-ActivityProgress 20 'Clearing Windows temp folder...'
 ::    Set-Variable -Option Constant WindowsTemp ([String]"$env:SystemRoot\Temp")
 ::    Remove-Item -Path "$WindowsTemp\*" -Recurse -Force -ErrorAction Ignore
 ::    Out-Success $LogIndentLevel
 ::
-::    Write-ActivityProgress -PercentComplete 30 -Task 'Clearing user temp folder...'
+::    Write-ActivityProgress 30 'Clearing user temp folder...'
 ::    Remove-Item -Path "$PATH_TEMP_DIR\*" -Recurse -Force -ErrorAction Ignore
 ::    Out-Success $LogIndentLevel
 ::
-::    Write-ActivityProgress -PercentComplete 40 -Task 'Clearing software distribution folder...'
+::    Write-ActivityProgress 40 'Clearing software distribution folder...'
 ::    Set-Variable -Option Constant SoftwareDistributionPath ([String]"$env:SystemRoot\SoftwareDistribution\Download")
 ::    Remove-Item -Path "$SoftwareDistributionPath\*" -Recurse -Force -ErrorAction Ignore
 ::    Out-Success $LogIndentLevel
 ::
-::    Write-ActivityProgress -PercentComplete 60 -Task 'Running system cleanup...'
+::    Write-ActivityProgress 60 'Running system cleanup...'
 ::
 ::    Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
 ::        Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
 ::    }
-::    Write-ActivityProgress -PercentComplete 70
+::    Write-ActivityProgress 70
 ::
 ::    Set-Variable -Option Constant VolumeCaches (
 ::        [String[]]@(
@@ -5427,11 +5445,11 @@ if "%~1"=="Debug" (
 ::    foreach ($VolumeCache in $VolumeCaches) {
 ::        New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\$VolumeCache" -Name StateFlags3224 -PropertyType DWord -Value 2 -Force
 ::    }
-::    Write-ActivityProgress -PercentComplete 80
+::    Write-ActivityProgress 80
 ::
 ::    Start-Process 'cleanmgr.exe' '/sagerun:3224'
 ::
-::    Write-ActivityProgress -PercentComplete 90
+::    Write-ActivityProgress 90
 ::    Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
 ::        Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
 ::    }
