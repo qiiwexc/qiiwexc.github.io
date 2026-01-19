@@ -6,8 +6,6 @@ BeforeAll {
     . '.\tools\common\Progressbar.ps1'
     . "$BuilderPath\unattended\New-UnattendedBase.ps1"
     . "$BuilderPath\unattended\Set-AppRemovalList.ps1"
-    . "$BuilderPath\unattended\Set-CapabilitiesRemovalList.ps1"
-    . "$BuilderPath\unattended\Set-FeaturesRemovalList.ps1"
     . "$BuilderPath\unattended\Set-InlineFiles.ps1"
     . "$BuilderPath\unattended\Set-LocaleSettings.ps1"
     . "$BuilderPath\unattended\Set-PowerSchemeConfiguration.ps1"
@@ -39,8 +37,6 @@ BeforeAll {
 
     Set-Variable -Option Constant TestSetLocaleSettingsResult ([String]'TEST_SET_LOCALE_SETTINGS_RESULT')
     Set-Variable -Option Constant TestSetAppRemovalListResult ([String]'TEST_SET_APP_REMOVAL_LIST_RESULT')
-    Set-Variable -Option Constant TestSetCapabilitiesRemovalListResult ([String]'TEST_SET_CAPABILITIES_REMOVAL_LIST_RESULT')
-    Set-Variable -Option Constant TestSetFeaturesRemovalListResult ([String]'TEST_SET_FEATURES_REMOVAL_LIST_RESULT')
     Set-Variable -Option Constant TestSetWindowsSecurityConfigurationResult ([String]'TEST_SET_WINDOWS_SECURITY_CONFIGURATION_RESULT')
     Set-Variable -Option Constant TestSetPowerSchemeConfigurationResult ([String]'TEST_SET_POWER_SCHEME_CONFIGURATION_RESULT')
     Set-Variable -Option Constant TestSetInlineFilesResult ([String]'TEST_SET_INLINE_FILES_RESULT')
@@ -82,8 +78,6 @@ Describe 'New-UnattendedFile' {
         Mock Get-Content { return $TestTemplateContent } -ParameterFilter { $Path -eq $TestBaseFilePath }
         Mock Set-LocaleSettings { return $TestSetLocaleSettingsResult }
         Mock Set-AppRemovalList { return $TestSetAppRemovalListResult }
-        Mock Set-CapabilitiesRemovalList { return $TestSetCapabilitiesRemovalListResult }
-        Mock Set-FeaturesRemovalList { return $TestSetFeaturesRemovalListResult }
         Mock Set-WindowsSecurityConfiguration { return $TestSetWindowsSecurityConfigurationResult }
         Mock Set-PowerSchemeConfiguration { return $TestSetPowerSchemeConfigurationResult }
         Mock Set-InlineFiles { return $TestSetInlineFilesResult }
@@ -101,7 +95,7 @@ Describe 'New-UnattendedFile' {
         New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 22
+        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke New-UnattendedBase -Exactly 1 -ParameterFilter {
             $TemplatesPath -eq $TestTemplatesPath -and
@@ -127,20 +121,10 @@ Describe 'New-UnattendedFile' {
             $ConfigsPath -eq $TestConfigsPath -and
             $TemplateContent -eq $TestSetLocaleSettingsResult
         }
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 2
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 2 -ParameterFilter {
-            $ConfigsPath -eq $TestConfigsPath -and
-            $TemplateContent -eq $TestSetAppRemovalListResult
-        }
-        Should -Invoke Set-FeaturesRemovalList -Exactly 2
-        Should -Invoke Set-FeaturesRemovalList -Exactly 2 -ParameterFilter {
-            $ConfigsPath -eq $TestConfigsPath -and
-            $TemplateContent -eq $TestSetCapabilitiesRemovalListResult
-        }
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2 -ParameterFilter {
             $SourcePath -eq $TestSourcePath -and
-            $TemplateContent -eq $TestSetFeaturesRemovalListResult
+            $TemplateContent -eq $TestSetAppRemovalListResult
         }
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2 -ParameterFilter {
@@ -208,8 +192,6 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Set-LocaleSettings -Exactly 0
         Should -Invoke Set-AppRemovalList -Exactly 0
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 0
-        Should -Invoke Set-FeaturesRemovalList -Exactly 0
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
@@ -230,8 +212,6 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBaseFilePath }
         Should -Invoke Set-LocaleSettings -Exactly 0
         Should -Invoke Set-AppRemovalList -Exactly 0
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 0
-        Should -Invoke Set-FeaturesRemovalList -Exactly 0
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
@@ -251,8 +231,6 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 0
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 0
-        Should -Invoke Set-FeaturesRemovalList -Exactly 0
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
@@ -272,50 +250,6 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 0
-        Should -Invoke Set-FeaturesRemovalList -Exactly 0
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
-        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
-        Should -Invoke Set-InlineFiles -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
-    }
-
-    It 'Should handle Set-CapabilitiesRemovalList failure' {
-        Mock Set-CapabilitiesRemovalList { throw $TestException }
-
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
-
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
-        Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Set-LocaleSettings -Exactly 1
-        Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 1
-        Should -Invoke Set-FeaturesRemovalList -Exactly 0
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
-        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
-        Should -Invoke Set-InlineFiles -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Copy-Item -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
-    }
-
-    It 'Should handle Set-FeaturesRemovalList failure' {
-        Mock Set-FeaturesRemovalList { throw $TestException }
-
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
-
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 7
-        Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Set-LocaleSettings -Exactly 1
-        Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 1
-        Should -Invoke Set-FeaturesRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
@@ -330,13 +264,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 8
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 1
-        Should -Invoke Set-FeaturesRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
@@ -351,13 +283,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 9
+        Should -Invoke Write-ActivityProgress -Exactly 7
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 1
-        Should -Invoke Set-FeaturesRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 0
@@ -372,13 +302,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 10
+        Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 1
-        Should -Invoke Set-FeaturesRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 1
@@ -393,13 +321,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 11
+        Should -Invoke Write-ActivityProgress -Exactly 9
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 1
-        Should -Invoke Set-FeaturesRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 1
@@ -415,13 +341,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 19
+        Should -Invoke Write-ActivityProgress -Exactly 15
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 2
-        Should -Invoke Set-FeaturesRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
@@ -437,13 +361,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 21
+        Should -Invoke Write-ActivityProgress -Exactly 17
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 2
-        Should -Invoke Set-FeaturesRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
@@ -458,13 +380,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 22
+        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 2
-        Should -Invoke Set-FeaturesRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
@@ -480,13 +400,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 22
+        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 2
-        Should -Invoke Set-FeaturesRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
@@ -504,13 +422,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 22
+        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 2
-        Should -Invoke Set-FeaturesRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
@@ -526,13 +442,11 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 22
+        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Get-Content -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-CapabilitiesRemovalList -Exactly 2
-        Should -Invoke Set-FeaturesRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
