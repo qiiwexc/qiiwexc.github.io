@@ -4,6 +4,8 @@ function Update-FileDependency {
         [String][Parameter(Position = 1, Mandatory)]$WipPath
     )
 
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
+
     Set-Variable -Option Constant Name ([String]$Dependency.name)
 
     Set-Variable -Option Constant FileName64 ([String]"$Name.exe")
@@ -12,7 +14,7 @@ function Update-FileDependency {
     [Collections.Generic.List[Version]]$NewVersions = @()
 
     foreach ($FileName in @($FileName64, $FileName32)) {
-        Write-LogInfo "Checking file: $FileName" 1
+        Write-LogInfo "Checking file: $FileName" $LogIndentLevel
 
         try {
             [System.IO.FileInfo]$File = Get-Item "$WipPath\$FileName" -ErrorAction Stop
@@ -22,13 +24,13 @@ function Update-FileDependency {
                 $NewVersions.Add($FileVersion)
             }
         } catch {
-            Write-LogWarning "File '$FileName' not found. Skipping."
+            Write-LogWarning "File '$FileName' not found. Skipping." $LogIndentLevel
             continue
         }
     }
 
     if ($NewVersions.Count -eq 0) {
-        Write-LogWarning "No valid files found for dependency '$Name'. Skipping."
+        Write-LogWarning "No valid files found for dependency '$Name'. Skipping." $LogIndentLevel
         return
     }
 

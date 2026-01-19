@@ -3,8 +3,6 @@ function Set-WindowsBaseConfiguration {
         [String][Parameter(Position = 0, Mandatory)]$FileName
     )
 
-    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-
     Write-ActivityProgress 60 'Applying Windows configuration...'
 
     Set-WindowsSecurityConfiguration
@@ -57,7 +55,7 @@ function Set-WindowsBaseConfiguration {
             $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
         }
     } catch {
-        Write-LogError "Failed to read the registry: $_" $LogIndentLevel
+        Write-LogError "Failed to read the registry: $_"
     }
 
     Import-RegistryConfiguration $FileName $ConfigLines

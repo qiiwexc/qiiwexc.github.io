@@ -4,6 +4,6 @@ function Set-NewVersion {
         [String][Parameter(Position = 1)]$LatestVersion
     )
 
-    Write-LogInfo "New version available: $LatestVersion" 1
+    Write-LogInfo "New version available: $LatestVersion"
     $Dependency.version = $LatestVersion
 }

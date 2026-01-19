@@ -4,8 +4,6 @@ function Expand-Zip {
         [Switch]$Temp
     )
 
-    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-
     Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 
     Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
@@ -75,7 +73,7 @@ function Expand-Zip {
             }
         }
     } catch {
-        Write-LogError "Failed to extract '$ZipPath': $_" $LogIndentLevel
+        Write-LogError "Failed to extract '$ZipPath': $_"
         return
     }
 
@@ -91,8 +89,8 @@ function Expand-Zip {
         Move-Item -Force $ExtractionPath $TargetPath -ErrorAction Stop
     }
 
-    Out-Success $LogIndentLevel
-    Write-LogInfo "Files extracted to '$TargetPath'" $LogIndentLevel
+    Out-Success
+    Write-LogInfo "Files extracted to '$TargetPath'"
 
     return $TargetExe
 }

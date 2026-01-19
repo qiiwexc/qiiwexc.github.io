@@ -32,6 +32,8 @@ Describe 'Get-Emoji' {
 Describe 'Format-Message' {
     BeforeAll {
         function ToString {}
+
+        Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
     }
 
     BeforeEach {
@@ -83,6 +85,16 @@ Describe 'Format-Message' {
 
         It 'Should format message correctly without emoji and indent level 2' {
             Format-Message $LogLevelInfo $TestMessage 2 | Should -BeExactly "[$TestDate]       $TestMessage"
+        }
+
+        It 'Should format message correctly with a running activity' {
+            $ACTIVITIES.Push('Activity 1')
+            Format-Message $LogLevelInfo $TestMessage | Should -BeExactly "[$TestDate]    $TestMessage"
+        }
+
+        It 'Should format message correctly with 2 running activities' {
+            $ACTIVITIES.Push('Activity 2')
+            Format-Message $LogLevelInfo $TestMessage | Should -BeExactly "[$TestDate]       $TestMessage"
         }
     }
 }
@@ -277,7 +289,7 @@ Describe 'Out-Status' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter {
-            $Message -eq "   > $TestMessage" -and
+            $Message -eq " > $TestMessage" -and
             $Level -eq $Expected
         }
     }

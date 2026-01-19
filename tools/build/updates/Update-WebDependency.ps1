@@ -3,26 +3,28 @@ function Update-WebDependency {
         [PSCustomObject][Parameter(Position = 0, Mandatory)]$Dependency
     )
 
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
+
     Set-Variable -Option Constant Uri ([String]$Dependency.url)
 
-    Write-LogInfo "Fetching URL: $Uri" 1
+    Write-LogInfo "Fetching URL: $Uri" $LogIndentLevel
 
     try {
         Set-Variable -Option Constant Response ([PSCustomObject](Invoke-WebRequest $Uri -UseBasicParsing))
     } catch {
-        Write-LogError "Failed to fetch URL '$Uri': $_" 1
+        Write-LogError "Failed to fetch URL '$Uri': $_" $LogIndentLevel
         return
     }
 
     if (-not $Response.Content) {
-        Write-LogError "No data fetched from URL '$Uri'" 1
+        Write-LogError "No data fetched from URL '$Uri'" $LogIndentLevel
         return
     }
 
     Set-Variable -Option Constant Matches ([regex]::Matches($Response.Content, $Dependency.regex, @('IgnoreCase', 'Multiline')))
 
     if ($Matches.Count -eq 0) {
-        Write-LogError "Failed to find version number from URL '$Uri'" 1
+        Write-LogError "Failed to find version number from URL '$Uri'" $LogIndentLevel
         return
     }
 

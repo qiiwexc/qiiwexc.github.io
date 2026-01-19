@@ -5,8 +5,6 @@ function Start-Download {
         [Switch]$Temp
     )
 
-    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-
     Write-ActivityProgress 10 "Downloading from $URL"
 
     if ($SaveAs) {
@@ -28,7 +26,7 @@ function Start-Download {
     Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
     if (-not $IsConnected) {
         if (Test-Path $SavePath) {
-            Write-LogWarning 'Previous download found, returning it' $LogIndentLevel
+            Write-LogWarning 'Previous download found, returning it'
             return $SavePath
         } else {
             return
@@ -43,12 +41,12 @@ function Start-Download {
         }
 
         if (Test-Path $SavePath) {
-            Out-Success $LogIndentLevel
+            Out-Success
         } else {
             throw 'Possibly computer is offline or disk is full'
         }
     } catch {
-        Write-LogError "Download failed: $_" $LogIndentLevel
+        Write-LogError "Download failed: $_"
         return
     }
 
