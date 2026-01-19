@@ -27,8 +27,6 @@ function New-UnattendedFile {
 
     . "$UnattendedPath\New-UnattendedBase.ps1"
     . "$UnattendedPath\Set-AppRemovalList.ps1"
-    . "$UnattendedPath\Set-CapabilitiesRemovalList.ps1"
-    . "$UnattendedPath\Set-FeaturesRemovalList.ps1"
     . "$UnattendedPath\Set-InlineFiles.ps1"
     . "$UnattendedPath\Set-LocaleSettings.ps1"
     . "$UnattendedPath\Set-PowerSchemeConfiguration.ps1"
@@ -55,14 +53,6 @@ function New-UnattendedFile {
         Write-ActivityProgress $Percentage
 
         $UpdatedTemplateContent = Set-AppRemovalList $ConfigsPath $UpdatedTemplateContent
-        $Percentage += 2
-        Write-ActivityProgress $Percentage
-
-        $UpdatedTemplateContent = Set-CapabilitiesRemovalList $ConfigsPath $UpdatedTemplateContent
-        $Percentage += 2
-        Write-ActivityProgress $Percentage
-
-        $UpdatedTemplateContent = Set-FeaturesRemovalList $ConfigsPath $UpdatedTemplateContent
         $Percentage += 2
         Write-ActivityProgress $Percentage
 

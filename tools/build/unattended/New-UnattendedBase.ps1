@@ -32,9 +32,7 @@ function New-UnattendedBase {
     )
 
     Set-Variable -Option Constant RegexReplacementMap ([Hashtable]@{
-            'RemoveFeatures\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);'     = "RemoveFeatures.ps1`">`n`$selectors = @({FEATURE_REMOVAL_LIST});"
-            'RemoveCapabilities\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);' = "RemoveCapabilities.ps1`">`n`$selectors = @({CAPABILITY_REMOVAL_LIST});"
-            'RemovePackages\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);'     = "RemovePackages.ps1`">`n`$selectors = @({APP_REMOVAL_LIST});"
+            'RemovePackages\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);' = "RemovePackages.ps1`">`n`$selectors = @({APP_REMOVAL_LIST});"
         }
     )
 
