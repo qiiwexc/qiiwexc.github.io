@@ -24,8 +24,6 @@ function Set-FileAssociations {
         [String]$Extension = $FileAssociation.Extension
         [String]$Application = $FileAssociation.Application
 
-        Set-FileAssociation $Application "HKCU:\Software\Classes\$Extension"
-
         [String]$OriginalAssociation = $(& cmd.exe /c assoc $Extension 2`>`&1).Replace("$Extension=", '')
         if ($OriginalAssociation -ne $Application) {
             & cmd.exe /c assoc $Extension=$Application

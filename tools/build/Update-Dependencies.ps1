@@ -43,7 +43,7 @@ function Update-Dependencies {
 
     [Collections.Generic.List[Collections.Generic.List[String]]]$ChangeLogs = @()
 
-    Set-Variable -Option Constant DependencyStep ([Math]::Floor(80 / $Dependencies.Count))
+    Set-Variable -Option Constant DependencyStep ([Math]::Floor(75 / $Dependencies.Count))
     Write-ActivityProgress 15
 
     $ErrorActionPreference = 'Continue'
@@ -52,7 +52,7 @@ function Update-Dependencies {
         [String]$Source = $Dependency.source
         [String]$Name = $Dependency.name
 
-        [Int]$Percentage = 10 + $Iteration * $DependencyStep
+        [Int]$Percentage = 15 + $Iteration * $DependencyStep
         Write-ActivityProgress $Percentage
 
         Write-LogInfo "Checking for updates for '$Name' (current version: $($Dependency.version))"

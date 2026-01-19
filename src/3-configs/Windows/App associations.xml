@@ -10,11 +10,16 @@
   <Association Identifier=".adts" ProgId="VLC.adts" ApplicationName="VLC media player" />
   <Association Identifier=".aif" ProgId="VLC.aif" ApplicationName="VLC media player" />
   <Association Identifier=".aifc" ProgId="VLC.aifc" ApplicationName="VLC media player" />
+  <Association Identifier=".aiff" ProgId="VLC.aiff" ApplicationName="VLC media player" />
+  <Association Identifier=".asf" ProgId="VLC.asf" ApplicationName="VLC media player" />
   <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
+  <Association Identifier=".au" ProgId="VLC.au" ApplicationName="VLC media player" />
   <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
   <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
   <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
+  <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
   <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
+  <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
   <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
   <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="group_wab_auto_file" />
@@ -22,6 +27,7 @@
   <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier=".iso" ProgId="Windows.IsoFile" ApplicationName="File Explorer" />
+  <Association Identifier=".m1v" ProgId="VLC.m1v" ApplicationName="VLC media player" />
   <Association Identifier=".m2t" ProgId="VLC.m2t" ApplicationName="VLC media player" />
   <Association Identifier=".m2ts" ProgId="VLC.m2ts" ApplicationName="VLC media player" />
   <Association Identifier=".m2v" ProgId="VLC.m2v" ApplicationName="VLC media player" />
@@ -29,6 +35,7 @@
   <Association Identifier=".m4a" ProgId="VLC.m4a" ApplicationName="VLC media player" />
   <Association Identifier=".m4v" ProgId="VLC.m4v" ApplicationName="VLC media player" />
   <Association Identifier=".mhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+  <Association Identifier=".mid" ProgId="VLC.mid" ApplicationName="VLC media player" />
   <Association Identifier=".mka" ProgId="VLC.mka" ApplicationName="VLC media player" />
   <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
   <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
@@ -46,25 +53,34 @@
   <Association Identifier=".mts" ProgId="VLC.mts" ApplicationName="VLC media player" />
   <Association Identifier=".pdf" ProgId="ChromePDF" ApplicationName="Google Chrome" />
   <Association Identifier=".rar" ProgId="7-Zip.rar" ApplicationName="7-Zip File Manager" />
+  <Association Identifier=".rmi" ProgId="VLC.rmi" ApplicationName="VLC media player" />
   <Association Identifier=".shtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+  <Association Identifier=".snd" ProgId="VLC.snd" ApplicationName="VLC media player" />
   <Association Identifier=".svg" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier=".tar" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
   <Association Identifier=".tbz2" ProgId="7-Zip.tbz2" ApplicationName="7-Zip File Manager" />
   <Association Identifier=".tgz" ProgId="7-Zip.tgz" ApplicationName="7-Zip File Manager" />
   <Association Identifier=".torrent" ProgId="qBittorrent.File.Torrent" ApplicationName="qBittorrent - A Bittorrent Client" />
+  <Association Identifier=".ts" ProgId="VLC.ts" ApplicationName="VLC media player" />
   <Association Identifier=".tts" ProgId="VLC.tts" ApplicationName="VLC media player" />
   <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
   <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
+  <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
   <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
   <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
   <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
+  <Association Identifier=".wpl" ProgId="VLC.wpl" ApplicationName="VLC media player" />
+  <Association Identifier=".wsz" ProgId="VLC.wsz" ApplicationName="VLC media player" />
+  <Association Identifier=".wtv" ProgId="VLC.wtv" ApplicationName="VLC media player" />
+  <Association Identifier=".wvx" ProgId="VLC.wvx" ApplicationName="VLC media player" />
   <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
   <Association Identifier="http" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier="https" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+  <Association Identifier="mailto" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier="mms" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier="tel" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
   <Association Identifier="webcal" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
