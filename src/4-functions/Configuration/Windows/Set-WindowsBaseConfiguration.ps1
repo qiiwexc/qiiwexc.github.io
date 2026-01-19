@@ -5,7 +5,7 @@ function Set-WindowsBaseConfiguration {
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    Write-ActivityProgress -PercentComplete 5 -Task 'Applying Windows configuration...'
+    Write-ActivityProgress 60 'Applying Windows configuration...'
 
     Set-WindowsSecurityConfiguration
 
@@ -33,7 +33,7 @@ function Set-WindowsBaseConfiguration {
     $ConfigLines.Add("`n")
     $ConfigLines.Add($LocalisedConfig)
 
-    Write-ActivityProgress -PercentComplete 10
+    Write-ActivityProgress 70
 
     try {
         foreach ($Registry in (Get-UsersRegistryKeys)) {

@@ -4,7 +4,7 @@ function Set-7zipConfiguration {
     )
 
     try {
-        Write-ActivityProgress -PercentComplete 25 -Task "Configuring $AppName..."
+        Write-ActivityProgress 12 "Configuring $AppName..."
 
         [Collections.Generic.List[String]]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
         $ConfigLines.Add("`n")

@@ -1,3 +1,3 @@
 @echo off
 
-powershell -ExecutionPolicy Bypass ".\tools\build.ps1 -Full -Dev"
+powershell -ExecutionPolicy Bypass ".\tools\build.ps1 -Full -Run"

@@ -8,7 +8,7 @@ function Start-Executable {
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     if ($Switches -and $Silent) {
-        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable' silently..."
+        Write-ActivityProgress 90 "Running '$Executable' silently..."
 
         try {
             Start-Process -Wait $Executable $Switches -ErrorAction Stop
@@ -23,7 +23,7 @@ function Start-Executable {
         Remove-File $Executable
         Out-Success $LogIndentLevel
     } else {
-        Write-ActivityProgress -PercentComplete 90 -Task "Running '$Executable'..."
+        Write-ActivityProgress 90 "Running '$Executable'..."
 
         try {
             if ($Switches) {

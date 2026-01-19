@@ -5,7 +5,7 @@ function Set-WindowsPersonalisationConfig {
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    Write-ActivityProgress -PercentComplete 90 -Task 'Applying Windows personalisation configuration...'
+    Write-ActivityProgress 80 'Applying Windows personalisation configuration...'
 
     Set-WinHomeLocation -GeoId 140
 
@@ -21,7 +21,7 @@ function Set-WindowsPersonalisationConfig {
     $ConfigLines.Add("`n")
     $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE)
 
-    Write-ActivityProgress -PercentComplete 95
+    Write-ActivityProgress 90
 
     try {
         if ($OS_VERSION -gt 10) {

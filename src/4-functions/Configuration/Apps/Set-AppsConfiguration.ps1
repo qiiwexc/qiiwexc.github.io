@@ -8,22 +8,22 @@ function Set-AppsConfiguration {
         [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory)]$Chrome
     )
 
-    New-Activity 'Configuring apps...'
-
-    if ($VLC.Checked) {
-        Set-VlcConfiguration $VLC.Text
-    }
-
-    if ($qBittorrent.Checked) {
-        Set-qBittorrentConfiguration $qBittorrent.Text
-    }
+    New-Activity 'Configuring apps'
 
     if ($7zip.Checked) {
         Set-7zipConfiguration $7zip.Text
     }
 
+    if ($VLC.Checked) {
+        Set-VlcConfiguration $VLC.Text
+    }
+
     if ($AnyDesk.Checked) {
         Set-AnyDeskConfiguration $AnyDesk.Text
+    }
+
+    if ($qBittorrent.Checked) {
+        Set-qBittorrentConfiguration $qBittorrent.Text
     }
 
     if ($Edge.Checked) {

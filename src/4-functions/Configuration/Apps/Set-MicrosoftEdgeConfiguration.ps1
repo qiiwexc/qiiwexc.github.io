@@ -4,7 +4,7 @@ function Set-MicrosoftEdgeConfiguration {
     )
 
     try {
-        Write-ActivityProgress -PercentComplete 55 -Task "Configuring $AppName..."
+        Write-ActivityProgress 60 "Configuring $AppName..."
 
         Set-Variable -Option Constant ProcessName ([String]'msedge')
 

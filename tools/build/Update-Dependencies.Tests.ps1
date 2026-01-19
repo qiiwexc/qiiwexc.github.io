@@ -45,7 +45,8 @@ BeforeAll {
 
 Describe 'Update-Dependencies' {
     BeforeEach {
-        Mock Write-Progress {}
+        Mock New-Activity {}
+        Mock Write-ActivityProgress {}
         Mock Write-LogInfo {}
         Mock Write-LogWarning {}
         Mock Read-GitHubToken { return $TestGitHubToken }
@@ -60,12 +61,14 @@ Describe 'Update-Dependencies' {
         Mock ConvertTo-Json { return $TestFileUpdatedDependency } -ParameterFilter { $InputObject.source -eq $SourceFile }
         Mock Start-Process {}
         Mock Write-File {}
-        Mock Out-Success {}
+        Mock Write-ActivityCompleted {}
     }
 
     It 'Should update GitHub dependencies successfully when GitHub token is provided' {
         Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Read-GitHubToken -Exactly 1 -ParameterFilter { $EnvPath -eq '.env' }
         Should -Invoke Write-LogWarning -Exactly 0
@@ -91,7 +94,7 @@ Describe 'Update-Dependencies' {
             $Path -eq $TestDependenciesFile -and
             $Content -eq $TestGitHubUpdatedDependency
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should update GitHub dependencies successfully when no GitHub token is provided' {
@@ -99,6 +102,8 @@ Describe 'Update-Dependencies' {
 
         Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Get-Content -Exactly 1
@@ -114,7 +119,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestGitHubChangelogUrl }
         Should -Invoke Write-File -Exactly 1
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should update GitLab dependencies' {
@@ -122,6 +127,8 @@ Describe 'Update-Dependencies' {
 
         Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -141,7 +148,7 @@ Describe 'Update-Dependencies' {
             $Path -eq $TestDependenciesFile -and
             $Content -eq $TestGitLabUpdatedDependency
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should update web dependencies' {
@@ -149,6 +156,8 @@ Describe 'Update-Dependencies' {
 
         Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -167,7 +176,7 @@ Describe 'Update-Dependencies' {
             $Path -eq $TestDependenciesFile -and
             $Content -eq $TestWebUpdatedDependency
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should update file dependencies' {
@@ -175,6 +184,8 @@ Describe 'Update-Dependencies' {
 
         Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -194,7 +205,7 @@ Describe 'Update-Dependencies' {
             $Path -eq $TestDependenciesFile -and
             $Content -eq $TestFileUpdatedDependency
         }
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should handle Read-GitHubToken failure' {
@@ -202,6 +213,8 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 0
@@ -210,7 +223,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Get-Content failure' {
@@ -218,6 +231,8 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -226,7 +241,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Update-GitDependency failure with a GitHub source' {
@@ -235,6 +250,8 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -243,7 +260,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Update-GitDependency failure with a GitLab source' {
@@ -252,6 +269,8 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -260,7 +279,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Update-WebDependency failure' {
@@ -269,6 +288,8 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -277,7 +298,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Update-FileDependency failure' {
@@ -286,6 +307,8 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -294,7 +317,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 1
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Start-Process failure' {
@@ -302,6 +325,8 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -310,7 +335,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Write-File -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Write-File failure' {
@@ -318,6 +343,8 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -326,6 +353,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Write-File -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

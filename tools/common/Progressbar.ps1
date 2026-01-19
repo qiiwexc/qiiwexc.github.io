@@ -26,14 +26,15 @@ function Write-ActivityProgress {
         [String][Parameter(Position = 1)]$Task
     )
 
-    Set-Variable -Option Constant Activity ([String]$ACTIVITIES.Peek())
     Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
 
-    if ($TaskLevel -gt 1) {
-        Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
-    }
+    if ($TaskLevel -gt 0) {
+        Set-Variable -Option Constant Activity ([String]$ACTIVITIES.Peek())
 
-    if ($Activity) {
+        if ($TaskLevel -gt 1) {
+            Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+        }
+
         if ($Task) {
             Set-Variable -Scope Script CURRENT_TASK ([String]$Task)
             Write-LogInfo $Task
@@ -54,18 +55,31 @@ function Write-ActivityProgress {
 }
 
 function Write-ActivityCompleted {
+    param(
+        [Bool][Parameter(Position = 0)]$Success = $True
+    )
+
+    if ($Success) {
+        Out-Success
+    } else {
+        Out-Failure
+    }
+
     Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
 
-    if ($TaskLevel -gt 1) {
-        Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+    if ($TaskLevel -gt 0) {
+        Set-Variable -Option Constant Activity ([String]$ACTIVITIES.Pop())
+
+        if ($TaskLevel -gt 1) {
+            Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+        }
+
+        if ($ParentId) {
+            Write-Progress -Id $TaskLevel -Activity $Activity -Completed -ParentId $ParentId
+        } else {
+            Write-Progress -Id $TaskLevel -Activity $Activity -Completed
+        }
     }
 
-    if ($ParentId) {
-        Write-Progress -Id $TaskLevel -Activity $ACTIVITIES.Pop() -Completed -ParentId $ParentId
-    } else {
-        Write-Progress -Id $TaskLevel -Activity $ACTIVITIES.Pop() -Completed
-    }
-
-    Out-Success
     Set-Variable -Scope Script CURRENT_TASK $Null
 }

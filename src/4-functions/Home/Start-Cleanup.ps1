@@ -1,32 +1,32 @@
 function Start-Cleanup {
-    New-Activity 'Cleaning up the system...'
+    New-Activity 'Cleaning up the system'
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    Write-ActivityProgress -PercentComplete 10 -Task 'Clearing delivery optimization cache...'
+    Write-ActivityProgress 10 'Clearing delivery optimization cache...'
     Delete-DeliveryOptimizationCache -Force
     Out-Success $LogIndentLevel
 
-    Write-ActivityProgress -PercentComplete 20 -Task 'Clearing Windows temp folder...'
+    Write-ActivityProgress 20 'Clearing Windows temp folder...'
     Set-Variable -Option Constant WindowsTemp ([String]"$env:SystemRoot\Temp")
     Remove-Item -Path "$WindowsTemp\*" -Recurse -Force -ErrorAction Ignore
     Out-Success $LogIndentLevel
 
-    Write-ActivityProgress -PercentComplete 30 -Task 'Clearing user temp folder...'
+    Write-ActivityProgress 30 'Clearing user temp folder...'
     Remove-Item -Path "$PATH_TEMP_DIR\*" -Recurse -Force -ErrorAction Ignore
     Out-Success $LogIndentLevel
 
-    Write-ActivityProgress -PercentComplete 40 -Task 'Clearing software distribution folder...'
+    Write-ActivityProgress 40 'Clearing software distribution folder...'
     Set-Variable -Option Constant SoftwareDistributionPath ([String]"$env:SystemRoot\SoftwareDistribution\Download")
     Remove-Item -Path "$SoftwareDistributionPath\*" -Recurse -Force -ErrorAction Ignore
     Out-Success $LogIndentLevel
 
-    Write-ActivityProgress -PercentComplete 60 -Task 'Running system cleanup...'
+    Write-ActivityProgress 60 'Running system cleanup...'
 
     Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
     }
-    Write-ActivityProgress -PercentComplete 70
+    Write-ActivityProgress 70
 
     Set-Variable -Option Constant VolumeCaches (
         [String[]]@(
@@ -61,11 +61,11 @@ function Start-Cleanup {
     foreach ($VolumeCache in $VolumeCaches) {
         New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\$VolumeCache" -Name StateFlags3224 -PropertyType DWord -Value 2 -Force
     }
-    Write-ActivityProgress -PercentComplete 80
+    Write-ActivityProgress 80
 
     Start-Process 'cleanmgr.exe' '/sagerun:3224'
 
-    Write-ActivityProgress -PercentComplete 90
+    Write-ActivityProgress 90
     Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
     }
