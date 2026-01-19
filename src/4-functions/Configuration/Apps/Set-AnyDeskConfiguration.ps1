@@ -4,7 +4,7 @@ function Set-AnyDeskConfiguration {
     )
 
     try {
-        Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
+        Write-ActivityProgress 36 "Configuring $AppName..."
 
         Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
 

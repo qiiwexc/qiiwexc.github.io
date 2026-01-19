@@ -7,7 +7,7 @@ function Start-Download {
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    Write-ActivityProgress -PercentComplete 5 -Task "Downloading from $URL"
+    Write-ActivityProgress 10 "Downloading from $URL"
 
     if ($SaveAs) {
         Set-Variable -Option Constant FileName ([String]$SaveAs)

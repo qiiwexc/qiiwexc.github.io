@@ -4,7 +4,7 @@ function Set-qBittorrentConfiguration {
     )
 
     try {
-        Write-ActivityProgress -PercentComplete 15 -Task "Configuring $AppName..."
+        Write-ActivityProgress 48 "Configuring $AppName..."
 
 
         if ($SYSTEM_LANGUAGE -match 'ru') {

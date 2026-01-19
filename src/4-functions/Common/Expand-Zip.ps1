@@ -6,7 +6,7 @@ function Expand-Zip {
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    Write-ActivityProgress -PercentComplete 50 -Task "Extracting '$ZipPath'..."
+    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 
     Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
     Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))

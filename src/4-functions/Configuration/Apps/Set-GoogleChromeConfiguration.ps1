@@ -4,7 +4,7 @@ function Set-GoogleChromeConfiguration {
     )
 
     try {
-        Write-ActivityProgress -PercentComplete 75 -Task "Configuring $AppName..."
+        Write-ActivityProgress 80 "Configuring $AppName..."
 
         Set-Variable -Option Constant ProcessName ([String]'chrome')
 

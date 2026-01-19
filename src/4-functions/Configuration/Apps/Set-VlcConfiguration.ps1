@@ -4,7 +4,7 @@ function Set-VlcConfiguration {
     )
 
     try {
-        Write-ActivityProgress -PercentComplete 5 -Task "Configuring $AppName..."
+        Write-ActivityProgress 24 "Configuring $AppName..."
 
         Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
     } catch {

@@ -3,9 +3,21 @@ function New-Activity {
         [String][Parameter(Position = 0, Mandatory)]$Activity
     )
 
-    Write-LogInfo $Activity
-    Set-Variable -Scope Script CURRENT_ACTIVITY ([String]$Activity)
-    Write-Progress -Activity $CURRENT_ACTIVITY -PercentComplete 1
+    Write-LogInfo "$Activity..."
+
+    $ACTIVITIES.Push($Activity)
+
+    Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
+
+    if ($TaskLevel -gt 1) {
+        Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+    }
+
+    if ($ParentId) {
+        Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete 1 -ParentId $ParentId
+    } else {
+        Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete 1
+    }
 }
 
 function Write-ActivityProgress {
@@ -14,19 +26,60 @@ function Write-ActivityProgress {
         [String][Parameter(Position = 1)]$Task
     )
 
-    if ($Task) {
-        Set-Variable -Scope Script CURRENT_TASK ([String]"  $Task")
-        Write-LogInfo $CURRENT_TASK
-    }
+    Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
 
-    if ($CURRENT_ACTIVITY) {
-        Write-Progress -Activity $CURRENT_ACTIVITY -Status $CURRENT_TASK -PercentComplete $PercentComplete
+    if ($TaskLevel -gt 0) {
+        Set-Variable -Option Constant Activity ([String]$ACTIVITIES.Peek())
+
+        if ($TaskLevel -gt 1) {
+            Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+        }
+
+        if ($Task) {
+            Set-Variable -Scope Script CURRENT_TASK ([String]$Task)
+            Write-LogInfo $Task
+
+            if ($ParentId) {
+                Write-Progress -Id $TaskLevel -Activity $Activity -Status $Task -PercentComplete $PercentComplete -ParentId $ParentId
+            } else {
+                Write-Progress -Id $TaskLevel -Activity $Activity -Status $Task -PercentComplete $PercentComplete
+            }
+        } else {
+            if ($ParentId) {
+                Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete $PercentComplete -ParentId $ParentId
+            } else {
+                Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete $PercentComplete
+            }
+        }
     }
 }
 
 function Write-ActivityCompleted {
-    Out-Success
-    Write-Progress -Activity $CURRENT_ACTIVITY -Completed
-    Set-Variable -Scope Script CURRENT_ACTIVITY $Null
+    param(
+        [Bool][Parameter(Position = 0)]$Success = $True
+    )
+
+    if ($Success) {
+        Out-Success
+    } else {
+        Out-Failure
+    }
+
+    Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
+
+    if ($TaskLevel -gt 0) {
+        Set-Variable -Option Constant Activity ([String]$ACTIVITIES.Pop())
+
+        if ($TaskLevel -gt 1) {
+            Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+        }
+
+        if ($ParentId) {
+            Write-Progress -Id $TaskLevel -Activity $Activity -Completed -ParentId $ParentId
+        } else {
+            Write-Progress -Id $TaskLevel -Activity $Activity -Completed
+        }
+    }
+
     Set-Variable -Scope Script CURRENT_TASK $Null
 }

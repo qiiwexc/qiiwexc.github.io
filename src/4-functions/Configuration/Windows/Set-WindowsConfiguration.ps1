@@ -6,11 +6,7 @@ function Set-WindowsConfiguration {
         [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$Personalisation
     )
 
-    New-Activity 'Configuring Windows...'
-
-    if ($Base.Checked) {
-        Set-WindowsBaseConfiguration $Base.Text
-    }
+    New-Activity 'Configuring Windows'
 
     if ($PowerScheme.Checked) {
         Set-PowerSchemeConfiguration
@@ -18,6 +14,10 @@ function Set-WindowsConfiguration {
 
     if ($FileAssociations.Checked) {
         Set-FileAssociations
+    }
+
+    if ($Base.Checked) {
+        Set-WindowsBaseConfiguration $Base.Text
     }
 
     if ($Personalisation.Checked) {
