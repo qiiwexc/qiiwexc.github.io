@@ -4,7 +4,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 "HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
-"SettingsPageVisibility"="hide:home" ; Disable Home page in settings
 
 ; Disable widgets service
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]

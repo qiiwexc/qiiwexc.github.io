@@ -47,7 +47,7 @@
     { "Name": "HideChat", "Value": false },
     { "Name": "HideDupliDrive", "Value": false },
     { "Name": "HideGallery", "Value": false },
-    { "Name": "HideGiveAccessTo", "Value": true },
+    { "Name": "HideGiveAccessTo", "Value": false },
     { "Name": "HideHome", "Value": false },
     { "Name": "HideIncludeInLibrary", "Value": false },
     { "Name": "HideMusic", "Value": false },
