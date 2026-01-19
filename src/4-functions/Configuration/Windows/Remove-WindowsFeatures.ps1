@@ -1,6 +1,4 @@
 function Remove-WindowsFeatures {
-    Set-Variable -Option Constant LogIndentLevel 1
-
     New-Activity 'Removing miscellaneous Windows features'
 
     try {
@@ -8,9 +6,9 @@ function Remove-WindowsFeatures {
         Set-Variable -Option Constant InstalledCapabilities ([PSCustomObject](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
         Set-Variable -Option Constant CapabilitiesToRemove ([PSCustomObject]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
         Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
-        Out-Success $LogIndentLevel
+        Out-Success
     } catch {
-        Write-LogError "Failed to collect capabilities to remove: $_" $LogIndentLevel
+        Write-LogError "Failed to collect capabilities to remove: $_"
     }
 
     try {
@@ -18,9 +16,9 @@ function Remove-WindowsFeatures {
         Set-Variable -Option Constant InstalledFeatures ([PSCustomObject](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
         Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
         Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
-        Out-Success $LogIndentLevel
+        Out-Success
     } catch {
-        Write-LogError "Failed to collect features to remove: $_" $LogIndentLevel
+        Write-LogError "Failed to collect features to remove: $_"
     }
 
     if ($CapabilityCount) {
@@ -34,9 +32,9 @@ function Remove-WindowsFeatures {
                 Write-ActivityProgress $Percentage "Removing '$Name'..."
                 $Iteration++
                 Remove-WindowsCapability -Online -Name "$Name"
-                Out-Success $LogIndentLevel
+                Out-Success
             } catch {
-                Write-LogError "Failed to remove '$Name': $_" $LogIndentLevel
+                Write-LogError "Failed to remove '$Name': $_"
             }
         }
     }
@@ -52,9 +50,9 @@ function Remove-WindowsFeatures {
                 Write-ActivityProgress $Percentage "Removing '$Name'..."
                 $Iteration++
                 Disable-WindowsOptionalFeature -Online -Remove -NoRestart -FeatureName "$Name"
-                Out-Success $LogIndentLevel
+                Out-Success
             } catch {
-                Write-LogError "Failed to remove '$Name': $_" $LogIndentLevel
+                Write-LogError "Failed to remove '$Name': $_"
             }
         }
     }

@@ -5,23 +5,21 @@ function Start-Executable {
         [Switch]$Silent
     )
 
-    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-
     if ($Switches -and $Silent) {
         Write-ActivityProgress 90 "Running '$Executable' silently..."
 
         try {
             Start-Process -Wait $Executable $Switches -ErrorAction Stop
         } catch {
-            Write-LogError "Failed to run '$Executable': $_" $LogIndentLevel
+            Write-LogError "Failed to run '$Executable': $_"
             return
         }
 
-        Out-Success $LogIndentLevel
+        Out-Success
 
-        Write-LogDebug "Removing '$Executable'..." $LogIndentLevel
+        Write-LogDebug "Removing '$Executable'..."
         Remove-File $Executable
-        Out-Success $LogIndentLevel
+        Out-Success
     } else {
         Write-ActivityProgress 90 "Running '$Executable'..."
 
@@ -32,10 +30,8 @@ function Start-Executable {
                 Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
             }
         } catch {
-            Write-LogError "Failed to execute '$Executable': $_" $LogIndentLevel
+            Write-LogError "Failed to execute '$Executable': $_"
             return
         }
-
-        Out-Success $LogIndentLevel
     }
 }

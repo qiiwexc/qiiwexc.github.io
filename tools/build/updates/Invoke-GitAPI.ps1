@@ -4,7 +4,9 @@ function Invoke-GitAPI {
         [String][Parameter(Position = 1)]$GitHubToken
     )
 
-    Write-LogInfo "Invoking API: $Uri" 1
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
+
+    Write-LogInfo "Invoking API: $Uri" $LogIndentLevel
 
     try {
         if ($GitHubToken) {
@@ -13,7 +15,7 @@ function Invoke-GitAPI {
             Set-Variable -Option Constant Response ([PSCustomObject](Invoke-WebRequest $Uri -Method Get -UseBasicParsing))
         }
     } catch {
-        Write-LogError "Failed to invoke API '$Uri': $_" 1
+        Write-LogError "Failed to invoke API '$Uri': $_"$LogIndentLevel
         return $Null
     }
 

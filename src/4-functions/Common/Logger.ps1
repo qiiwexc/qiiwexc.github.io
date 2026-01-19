@@ -56,7 +56,7 @@ function Out-Status {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Write-LogInfo "   > $Status" $Level
+    Write-LogInfo " > $Status" $Level
 }
 
 
@@ -105,10 +105,16 @@ function Format-Message {
         Default {}
     }
 
-    Set-Variable -Option Constant Indent ([String]$('   ' * $IndentLevel))
+    if ($ACTIVITIES.Count -le 0) {
+        Set-Variable -Option Constant Indent ([Int]$IndentLevel)
+    } else {
+        Set-Variable -Option Constant Indent ([Int]($ACTIVITIES.Count + $IndentLevel))
+    }
+
+    Set-Variable -Option Constant IndentSpaces ([String]$('   ' * $Indent))
     Set-Variable -Option Constant Date ([String]$((Get-Date).ToString()))
 
-    return ([String]"[$Date]$Indent$Emoji $Message")
+    return ([String]"[$Date]$IndentSpaces$Emoji $Message")
 }
 
 

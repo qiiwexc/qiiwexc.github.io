@@ -7,7 +7,7 @@ function Update-BrowserConfiguration {
     )
 
     try {
-        Set-Variable -Option Constant LogIndentLevel ([Int]2)
+        Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
         Write-LogInfo "Writing '$AppName' configuration to '$Path'..." $LogIndentLevel
 

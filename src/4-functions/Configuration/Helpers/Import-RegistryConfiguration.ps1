@@ -4,7 +4,7 @@ function Import-RegistryConfiguration {
         [String[]][Parameter(Position = 1, Mandatory)]$Content
     )
 
-    Set-Variable -Option Constant LogIndentLevel 2
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
 
