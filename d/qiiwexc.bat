@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.19')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.20')
 ::
 ::#endregion init > Version
 ::
