@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.20')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.21')
 ::
 ::#endregion init > Version
 ::
@@ -715,17 +715,14 @@ if "%~1"=="Debug" (
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_PowerScheme = New-CheckBox 'Set power scheme' -Checked
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_FileAssociations = New-CheckBox 'Set file associations'
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 ::
 ::
 ::Set-Variable -Option Constant WindowsConfigurationParameters (
 ::    [Hashtable]@{
-::        Base             = $CHECKBOX_Config_WindowsBase
-::        PowerScheme      = $CHECKBOX_Config_PowerScheme
-::        FileAssociations = $CHECKBOX_Config_FileAssociations
-::        Personalisation  = $CHECKBOX_Config_WindowsPersonalisation
+::        Base            = $CHECKBOX_Config_WindowsBase
+::        PowerScheme     = $CHECKBOX_Config_PowerScheme
+::        Personalisation = $CHECKBOX_Config_WindowsPersonalisation
 ::    }
 ::)
 ::[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration @WindowsConfigurationParameters }
@@ -1339,105 +1336,10 @@ if "%~1"=="Debug" (
 ::#endregion configs > Installs > Office Installer
 ::
 ::
-::#region configs > Windows > App associations
-::
-::Set-Variable -Option Constant CONFIG_APP_ASSOCIATIONS '<?xml version="1.0" encoding="UTF-8"?>
-::<DefaultAssociations>
-::  <Association Identifier=".3g2" ProgId="VLC.3g2" ApplicationName="VLC media player" />
-::  <Association Identifier=".3gp" ProgId="VLC.3gp" ApplicationName="VLC media player" />
-::  <Association Identifier=".3gp2" ProgId="VLC.3gp2" ApplicationName="VLC media player" />
-::  <Association Identifier=".3gpp" ProgId="VLC.3gpp" ApplicationName="VLC media player" />
-::  <Association Identifier=".7z" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
-::  <Association Identifier=".aac" ProgId="VLC.aac" ApplicationName="VLC media player" />
-::  <Association Identifier=".adt" ProgId="VLC.adt" ApplicationName="VLC media player" />
-::  <Association Identifier=".adts" ProgId="VLC.adts" ApplicationName="VLC media player" />
-::  <Association Identifier=".aif" ProgId="VLC.aif" ApplicationName="VLC media player" />
-::  <Association Identifier=".aifc" ProgId="VLC.aifc" ApplicationName="VLC media player" />
-::  <Association Identifier=".aiff" ProgId="VLC.aiff" ApplicationName="VLC media player" />
-::  <Association Identifier=".asf" ProgId="VLC.asf" ApplicationName="VLC media player" />
-::  <Association Identifier=".asx" ProgId="VLC.asx" ApplicationName="VLC media player" />
-::  <Association Identifier=".au" ProgId="VLC.au" ApplicationName="VLC media player" />
-::  <Association Identifier=".avi" ProgId="VLC.avi" ApplicationName="VLC media player" />
-::  <Association Identifier=".bz2" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
-::  <Association Identifier=".cab" ProgId="CABFolder" ApplicationName="File Explorer" />
-::  <Association Identifier=".cda" ProgId="VLC.cda" ApplicationName="VLC media player" />
-::  <Association Identifier=".contact" ProgId="contact_wab_auto_file" ApplicationName="contact_wab_auto_file" />
-::  <Association Identifier=".dvr-ms" ProgId="VLC.dvr-ms" ApplicationName="VLC media player" />
-::  <Association Identifier=".flac" ProgId="VLC.flac" ApplicationName="VLC media player" />
-::  <Association Identifier=".gif" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".group" ProgId="group_wab_auto_file" ApplicationName="group_wab_auto_file" />
-::  <Association Identifier=".gz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
-::  <Association Identifier=".htm" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".html" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".iso" ProgId="Windows.IsoFile" ApplicationName="File Explorer" />
-::  <Association Identifier=".m1v" ProgId="VLC.m1v" ApplicationName="VLC media player" />
-::  <Association Identifier=".m2t" ProgId="VLC.m2t" ApplicationName="VLC media player" />
-::  <Association Identifier=".m2ts" ProgId="VLC.m2ts" ApplicationName="VLC media player" />
-::  <Association Identifier=".m2v" ProgId="VLC.m2v" ApplicationName="VLC media player" />
-::  <Association Identifier=".m3u" ProgId="VLC.m3u" ApplicationName="VLC media player" />
-::  <Association Identifier=".m4a" ProgId="VLC.m4a" ApplicationName="VLC media player" />
-::  <Association Identifier=".m4v" ProgId="VLC.m4v" ApplicationName="VLC media player" />
-::  <Association Identifier=".mhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".mid" ProgId="VLC.mid" ApplicationName="VLC media player" />
-::  <Association Identifier=".mka" ProgId="VLC.mka" ApplicationName="VLC media player" />
-::  <Association Identifier=".mkv" ProgId="VLC.mkv" ApplicationName="VLC media player" />
-::  <Association Identifier=".mod" ProgId="VLC.mod" ApplicationName="VLC media player" />
-::  <Association Identifier=".mov" ProgId="VLC.mov" ApplicationName="VLC media player" />
-::  <Association Identifier=".mp2" ProgId="VLC.mp2" ApplicationName="VLC media player" />
-::  <Association Identifier=".mp2v" ProgId="VLC.mp2v" ApplicationName="VLC media player" />
-::  <Association Identifier=".mp3" ProgId="VLC.mp3" ApplicationName="VLC media player" />
-::  <Association Identifier=".mp4" ProgId="VLC.mp4" ApplicationName="VLC media player" />
-::  <Association Identifier=".mp4v" ProgId="VLC.mp4v" ApplicationName="VLC media player" />
-::  <Association Identifier=".mpa" ProgId="VLC.mpa" ApplicationName="VLC media player" />
-::  <Association Identifier=".mpe" ProgId="VLC.mpe" ApplicationName="VLC media player" />
-::  <Association Identifier=".mpeg" ProgId="VLC.mpeg" ApplicationName="VLC media player" />
-::  <Association Identifier=".mpg" ProgId="VLC.mpg" ApplicationName="VLC media player" />
-::  <Association Identifier=".mpv2" ProgId="VLC.mpv2" ApplicationName="VLC media player" />
-::  <Association Identifier=".mts" ProgId="VLC.mts" ApplicationName="VLC media player" />
-::  <Association Identifier=".pdf" ProgId="ChromePDF" ApplicationName="Google Chrome" />
-::  <Association Identifier=".rar" ProgId="7-Zip.rar" ApplicationName="7-Zip File Manager" />
-::  <Association Identifier=".rmi" ProgId="VLC.rmi" ApplicationName="VLC media player" />
-::  <Association Identifier=".shtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".snd" ProgId="VLC.snd" ApplicationName="VLC media player" />
-::  <Association Identifier=".svg" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".tar" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
-::  <Association Identifier=".tbz2" ProgId="7-Zip.tbz2" ApplicationName="7-Zip File Manager" />
-::  <Association Identifier=".tgz" ProgId="7-Zip.tgz" ApplicationName="7-Zip File Manager" />
-::  <Association Identifier=".torrent" ProgId="qBittorrent.File.Torrent" ApplicationName="qBittorrent - A Bittorrent Client" />
-::  <Association Identifier=".ts" ProgId="VLC.ts" ApplicationName="VLC media player" />
-::  <Association Identifier=".tts" ProgId="VLC.tts" ApplicationName="VLC media player" />
-::  <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
-::  <Association Identifier=".url" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".vcf" ProgId="vcard_wab_auto_file" ApplicationName="vcard_wab_auto_file" />
-::  <Association Identifier=".vlt" ProgId="VLC.vlt" ApplicationName="VLC media player" />
-::  <Association Identifier=".wav" ProgId="VLC.wav" ApplicationName="VLC media player" />
-::  <Association Identifier=".webp" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".wma" ProgId="VLC.wma" ApplicationName="VLC media player" />
-::  <Association Identifier=".wmv" ProgId="VLC.wmv" ApplicationName="VLC media player" />
-::  <Association Identifier=".wpl" ProgId="VLC.wpl" ApplicationName="VLC media player" />
-::  <Association Identifier=".wsz" ProgId="VLC.wsz" ApplicationName="VLC media player" />
-::  <Association Identifier=".wtv" ProgId="VLC.wtv" ApplicationName="VLC media player" />
-::  <Association Identifier=".wvx" ProgId="VLC.wvx" ApplicationName="VLC media player" />
-::  <Association Identifier=".xht" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".xhtml" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier=".xz" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
-::  <Association Identifier="http" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier="https" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier="mailto" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier="mms" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier="tel" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::  <Association Identifier="webcal" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
-::</DefaultAssociations>
-::'
-::
-::#endregion configs > Windows > App associations
-::
-::
 ::#region configs > Windows > Capabilities to remove
 ::
 ::Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
 ::    [String[]]@(
-::        'App.StepsRecorder'
 ::        'App.Support.QuickAssist'
 ::    )
 ::)
@@ -1825,9 +1727,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration]
-::"IsResumeAllowed"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization]
 ::"SystemSettingsDownloadMode"=dword:00000000
 ::
@@ -1895,14 +1794,10 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Cache]
 ::"Persistent"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Url History]
-::"DaysToKeep"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
 ::"RotatingLockScreenOverlayEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Mobility]
-::"CrossDeviceEnabled"=dword:00000000
 ::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 ::"PhoneLinkEnabled"=dword:00000000
 ::
@@ -2031,7 +1926,6 @@ if "%~1"=="Debug" (
 ::"fExclude"=dword:00000000
 ::"fTaskEnabled"=dword:00000001
 ::"TaskFrequency"=dword:00000002
-::"Volumes"=" "
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
 ::"PreventNetworkTrafficPreUserSignIn"=dword:00000001
@@ -2051,9 +1945,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
 ::"AllowAutoConnectToWiFiSenseHotspots"=dword:00000000
 ::"AllowWiFiHotSpotReporting"=dword:00000000
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Preferences]
-::"ModelDownloadAllowed"=dword:00000000
 ::
 ::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
@@ -2313,9 +2204,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main]
 ::"AllowPrelaunch"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT]
-::"DontReportInfectionInformation"=dword:00000001
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Speech]
 ::"AllowSpeechModelUpdate"=dword:00000000
 ::
@@ -2405,9 +2293,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
 ::"EnableCertPaddingCheck"="1"
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10}]
-::"allowautoupdatesmetered"=dword:00000001
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}]
 ::"allowautoupdatesmetered"=dword:00000001
 ::
@@ -2481,9 +2366,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MicrosoftEdge\Main]
 ::"AllowPrelaunch"=dword:00000000
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MRT]
-::"DontReportInfectionInformation"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Speech]
 ::"AllowSpeechModelUpdate"=dword:00000000
@@ -4677,12 +4559,12 @@ if "%~1"=="Debug" (
 ::
 ::function Merge-JsonObject {
 ::    param(
-::        [Parameter(Position = 0, Mandatory)]$Source,
-::        [Parameter(Position = 1, Mandatory)]$Extend
+::        [Parameter(Position = 0, Mandatory)][AllowNull()]$Source,
+::        [Parameter(Position = 1, Mandatory)][AllowNull()]$Extend
 ::    )
 ::
 ::    if ($Source -is [PSCustomObject] -and $Extend -is [PSCustomObject]) {
-::        [PSCustomObject]$Merged = [Ordered] @{}
+::        $Merged = [Ordered]@{}
 ::
 ::        foreach ($Property in $Source.PSObject.Properties) {
 ::            if ($Null -eq $Extend.$($Property.Name)) {
@@ -4698,7 +4580,7 @@ if "%~1"=="Debug" (
 ::            }
 ::        }
 ::
-::        $Merged
+::        return $Merged
 ::    } elseif ($Source -is [Collections.IList] -and $Extend -is [Collections.IList]) {
 ::        Set-Variable -Option Constant MaxCount ([Math]::Max($Source.Count, $Extend.Count))
 ::
@@ -4712,9 +4594,9 @@ if "%~1"=="Debug" (
 ::            }
 ::        }
 ::
-::        , $Merged
+::        return , $Merged
 ::    } else {
-::        $Extend
+::        return $Extend
 ::    }
 ::}
 ::
@@ -4920,46 +4802,6 @@ if "%~1"=="Debug" (
 ::#endregion functions > Configuration > Windows > Set-CloudFlareDNS
 ::
 ::
-::#region functions > Configuration > Windows > Set-FileAssociations
-::
-::function Set-FileAssociations {
-::    Set-Variable -Option Constant LogIndentLevel 1
-::
-::    Write-ActivityProgress 30 'Setting file associations...'
-::
-::    [Collections.Generic.List[PSCustomObject]]$AppAssociations = @()
-::
-::    Select-Xml -Xml ([xml]$CONFIG_APP_ASSOCIATIONS) -XPath '//Association' | ForEach-Object {
-::        $AppAssociations.Add(@{
-::                Application = $_.Node.ProgId
-::                Extension   = $_.Node.Identifier
-::            })
-::    }
-::
-::    Set-Variable -Option Constant FileTypeCount ([Int]$AppAssociations.Count)
-::    Set-Variable -Option Constant Step ([Math]::Floor(20 / $FileTypeCount))
-::
-::    [Int]$Iteration = 1
-::    foreach ($FileAssociation in $AppAssociations) {
-::        [Int]$Percentage = 40 + $Iteration * $Step
-::        Write-ActivityProgress $Percentage
-::        $Iteration++
-::
-::        [String]$Extension = $FileAssociation.Extension
-::        [String]$Application = $FileAssociation.Application
-::
-::        [String]$OriginalAssociation = $(& cmd.exe /c assoc $Extension 2`>`&1).Replace("$Extension=", '')
-::        if ($OriginalAssociation -ne $Application) {
-::            & cmd.exe /c assoc $Extension=$Application
-::        }
-::    }
-::
-::    Out-Success $LogIndentLevel
-::}
-::
-::#endregion functions > Configuration > Windows > Set-FileAssociations
-::
-::
 ::#region functions > Configuration > Windows > Set-PowerSchemeConfiguration
 ::
 ::function Set-PowerSchemeConfiguration {
@@ -5022,8 +4864,7 @@ if "%~1"=="Debug" (
 ::    Write-ActivityProgress 70
 ::
 ::    try {
-::        foreach ($Registry in (Get-UsersRegistryKeys)) {
-::            [String]$User = $Registry.Replace('HKEY_USERS\', '')
+::        foreach ($User in (Get-UsersRegistryKeys)) {
 ::            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
 ::            $ConfigLines.Add("`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n")
 ::
@@ -5058,18 +4899,13 @@ if "%~1"=="Debug" (
 ::    param(
 ::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Base,
 ::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$PowerScheme,
-::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$FileAssociations,
-::        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$Personalisation
+::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$Personalisation
 ::    )
 ::
 ::    New-Activity 'Configuring Windows'
 ::
 ::    if ($PowerScheme.Checked) {
 ::        Set-PowerSchemeConfiguration
-::    }
-::
-::    if ($FileAssociations.Checked) {
-::        Set-FileAssociations
 ::    }
 ::
 ::    if ($Base.Checked) {
