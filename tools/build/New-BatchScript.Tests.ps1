@@ -3,6 +3,7 @@ BeforeAll {
 
     . '.\tools\common\logger.ps1'
     . '.\tools\common\Progressbar.ps1'
+    . '.\tools\common\Write-File.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -21,7 +22,7 @@ Describe 'New-BatchScript' {
         Mock New-Activity {}
         Mock Write-LogInfo {}
         Mock Get-Content { return $TestPs1FileContent }
-        Mock Set-Content {}
+        Mock Write-File {}
         Mock Copy-Item {}
         Mock Write-ActivityCompleted {}
     }
@@ -36,14 +37,14 @@ Describe 'New-BatchScript' {
             $Raw -eq $True -and
             $Encoding -eq 'UTF8'
         }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
             $Path -eq $TestBatchFilePath -and
-            $Value -match "@echo off`n" -and
-            $Value -match "%temp%\\$TestProjectName\.ps1" -and
-            $Value -match '  powershell -ExecutionPolicy Bypass -Command ' -and
-            $Value -match '::TEST_PS1_FILE_CONTENT_1' -and
-            $Value -match '::TEST_PS1_FILE_CONTENT_2'
+            $Content -match "@echo off`n" -and
+            $Content -match "%temp%\\$TestProjectName\.ps1" -and
+            $Content -match '  powershell -ExecutionPolicy Bypass -Command ' -and
+            $Content -match '::TEST_PS1_FILE_CONTENT_1' -and
+            $Content -match '::TEST_PS1_FILE_CONTENT_2'
         }
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Copy-Item -Exactly 1 -ParameterFilter {
@@ -60,19 +61,19 @@ Describe 'New-BatchScript' {
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-File -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-Content failure' {
-        Mock Set-Content { throw $TestException }
+    It 'Should handle Write-File failure' {
+        Mock Write-File { throw $TestException }
 
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-File -Exactly 1
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -84,7 +85,7 @@ Describe 'New-BatchScript' {
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-File -Exactly 1
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
