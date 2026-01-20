@@ -64,7 +64,7 @@ function New-UnattendedFile {
         $Percentage += 2
         Write-ActivityProgress $Percentage
 
-        $UpdatedTemplateContent = Set-InlineFiles $Locale $ConfigsPath $UpdatedTemplateContent
+        $UpdatedTemplateContent = Set-InlineFiles $Locale $ConfigsPath $UnattendedPath $UpdatedTemplateContent
         $Percentage += 2
         Write-ActivityProgress $Percentage
 
