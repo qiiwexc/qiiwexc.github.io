@@ -1,11 +1,11 @@
 function Merge-JsonObject {
     param(
-        [Parameter(Position = 0, Mandatory)]$Source,
-        [Parameter(Position = 1, Mandatory)]$Extend
+        [Parameter(Position = 0, Mandatory)][AllowNull()]$Source,
+        [Parameter(Position = 1, Mandatory)][AllowNull()]$Extend
     )
 
     if ($Source -is [PSCustomObject] -and $Extend -is [PSCustomObject]) {
-        [PSCustomObject]$Merged = [Ordered] @{}
+        $Merged = [Ordered]@{}
 
         foreach ($Property in $Source.PSObject.Properties) {
             if ($Null -eq $Extend.$($Property.Name)) {
@@ -21,7 +21,7 @@ function Merge-JsonObject {
             }
         }
 
-        $Merged
+        return $Merged
     } elseif ($Source -is [Collections.IList] -and $Extend -is [Collections.IList]) {
         Set-Variable -Option Constant MaxCount ([Math]::Max($Source.Count, $Extend.Count))
 
@@ -35,8 +35,8 @@ function Merge-JsonObject {
             }
         }
 
-        , $Merged
+        return , $Merged
     } else {
-        $Extend
+        return $Extend
     }
 }

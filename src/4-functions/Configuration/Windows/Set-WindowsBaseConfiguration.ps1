@@ -34,8 +34,7 @@ function Set-WindowsBaseConfiguration {
     Write-ActivityProgress 70
 
     try {
-        foreach ($Registry in (Get-UsersRegistryKeys)) {
-            [String]$User = $Registry.Replace('HKEY_USERS\', '')
+        foreach ($User in (Get-UsersRegistryKeys)) {
             $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
             $ConfigLines.Add("`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n")
 

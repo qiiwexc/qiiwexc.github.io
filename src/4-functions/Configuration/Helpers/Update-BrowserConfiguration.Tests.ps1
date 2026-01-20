@@ -73,19 +73,19 @@ Describe 'Update-BrowserConfiguration' {
     }
 
     It 'Should update browser configuration file if profile does not exist' {
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$TestPathSuccessIteration = 3
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
         Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestProcessName }
-        Should -Invoke Test-Path -Exactly 2
-        Should -Invoke Test-Path -Exactly 2 -ParameterFilter { $Path -eq $TestPath }
+        Should -Invoke Test-Path -Exactly 3
+        Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestPath }
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestProcessName }
         Should -Invoke Write-LogError -Exactly 0
-        Should -Invoke Start-Sleep -Exactly 1
+        Should -Invoke Start-Sleep -Exactly 2
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestPath -and
