@@ -35,7 +35,7 @@ if `"%~1`"==`"Debug`" (
     )
 
     Write-LogInfo "Writing batch file $BatchFile"
-    Set-Content $BatchFile $BatchLines
+    Write-File $BatchFile $BatchLines
     Copy-Item $BatchFile "$VmPath\$ProjectName.bat"
 
     Write-ActivityCompleted
