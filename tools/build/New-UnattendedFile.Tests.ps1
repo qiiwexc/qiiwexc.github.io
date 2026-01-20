@@ -28,6 +28,7 @@ BeforeAll {
     Set-Variable -Option Constant TestFileNameEnglish ([String]'autounattend-English.xml')
 
     Set-Variable -Option Constant TestConfigsPath ([String]"$TestSourcePath\3-configs")
+    Set-Variable -Option Constant TestUnattendedPath ([String]"$BuilderPath\unattended")
     Set-Variable -Option Constant TestBaseFilePath ([String]"$TestBuildPath\$NonLocalisedFileName")
     Set-Variable -Option Constant TestVmFilePath ([String]"$TestVmPath\unattend\$NonLocalisedFileName")
     Set-Variable -Option Constant TestBuildFileNameRussian ([String]"$TestBuildPath\$TestFileNameRussian")
@@ -135,11 +136,13 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 1 -ParameterFilter {
             $Locale -eq $LocaleEnglish -and
             $ConfigsPath -eq $TestConfigsPath -and
+            $UnattendedPath -eq $TestUnattendedPath -and
             $TemplateContent -eq $TestSetPowerSchemeConfigurationResult
         }
         Should -Invoke Set-InlineFiles -Exactly 1 -ParameterFilter {
             $Locale -eq $LocaleRussian -and
             $ConfigsPath -eq $TestConfigsPath -and
+            $UnattendedPath -eq $TestUnattendedPath -and
             $TemplateContent -eq $TestSetPowerSchemeConfigurationResult
         }
         Should -Invoke Set-Content -Exactly 4

@@ -9,7 +9,6 @@
 "fExclude"=dword:00000000
 "fTaskEnabled"=dword:00000001
 "TaskFrequency"=dword:00000002
-"Volumes"=" "
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
 "PreventNetworkTrafficPreUserSignIn"=dword:00000001
@@ -29,9 +28,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
 "AllowAutoConnectToWiFiSenseHotspots"=dword:00000000
 "AllowWiFiHotSpotReporting"=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Preferences]
-"ModelDownloadAllowed"=dword:00000000
 
 ; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
@@ -291,9 +287,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main]
 "AllowPrelaunch"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT]
-"DontReportInfectionInformation"=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Speech]
 "AllowSpeechModelUpdate"=dword:00000000
 
@@ -383,9 +376,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
 "EnableCertPaddingCheck"="1"
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10}]
-"allowautoupdatesmetered"=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}]
 "allowautoupdatesmetered"=dword:00000001
 
@@ -459,9 +449,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MicrosoftEdge\Main]
 "AllowPrelaunch"=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MRT]
-"DontReportInfectionInformation"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Speech]
 "AllowSpeechModelUpdate"=dword:00000000

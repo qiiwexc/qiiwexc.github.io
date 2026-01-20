@@ -2,13 +2,32 @@ function Set-InlineFiles {
     param(
         [String][Parameter(Position = 0, Mandatory)][ValidateSet('English', 'Russian')]$Locale,
         [String][Parameter(Position = 1, Mandatory)]$ConfigsPath,
-        [Collections.Generic.List[String]][Parameter(Position = 2, Mandatory)]$TemplateContent
+        [String][Parameter(Position = 2, Mandatory)]$UnattendedPath,
+        [Collections.Generic.List[String]][Parameter(Position = 3, Mandatory)]$TemplateContent
+    )
+
+    Set-Variable -Option Constant KEY_FILE_MAP (
+        [Hashtable]@{
+            'CONFIG_APP_ASSOCIATIONS'                           = "$UnattendedPath\App associations.xml"
+            'CONFIG_7ZIP'                                       = "$ConfigsPath\Apps\7zip.reg"
+            'CONFIG_ANYDESK'                                    = "$ConfigsPath\Apps\AnyDesk.conf"
+            'CONFIG_MICROSOFT_OFFICE'                           = "$ConfigsPath\Apps\Microsoft Office.reg"
+            'CONFIG_QBITTORRENT_LOCALIZED'                      = "$ConfigsPath\Apps\qBittorrent {LOCALE}.ini"
+            'CONFIG_QBITTORRENT'                                = "$ConfigsPath\Apps\qBittorrent base.ini"
+            'CONFIG_VLC'                                        = "$ConfigsPath\Apps\VLC.ini"
+            'CONFIG_WINDOWS_HKEY_CURRENT_USER'                  = "$ConfigsPath\Windows\Base\Windows HKEY_CURRENT_USER.reg"
+            'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'                 = "$ConfigsPath\Windows\Base\Windows HKEY_LOCAL_MACHINE.reg"
+            'CONFIG_WINDOWS_HKEY_USERS'                         = "$ConfigsPath\Windows\Base\Windows HKEY_USERS.reg"
+            'CONFIG_WINDOWS_LOCALISED'                          = "$ConfigsPath\Windows\Base\Windows {LOCALE}.reg"
+            'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'  = "$ConfigsPath\Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg"
+            'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE' = "$ConfigsPath\Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg"
+        }
     )
 
     $KEY_FILE_MAP.GetEnumerator() | ForEach-Object {
         [String]$FileName = $_.Value.Replace('{LOCALE}', $Locale)
 
-        [String]$FileContent = (Get-Content "$ConfigsPath\$FileName" -Raw -Encoding UTF8).Trim()
+        [String]$FileContent = (Get-Content $FileName -Raw -Encoding UTF8).Trim()
 
         [Collections.Generic.List[String]]$FullContent = @()
 
@@ -30,21 +49,3 @@ function Set-InlineFiles {
 
     return $TemplateContent
 }
-
-Set-Variable -Option Constant KEY_FILE_MAP (
-    [Hashtable]@{
-        'CONFIG_7ZIP'                                       = 'Apps\7zip.reg'
-        'CONFIG_APP_ASSOCIATIONS'                           = 'Windows\App associations.xml'
-        'CONFIG_ANYDESK'                                    = 'Apps\AnyDesk.conf'
-        'CONFIG_MICROSOFT_OFFICE'                           = 'Apps\Microsoft Office.reg'
-        'CONFIG_QBITTORRENT_LOCALIZED'                      = 'Apps\qBittorrent {LOCALE}.ini'
-        'CONFIG_QBITTORRENT'                                = 'Apps\qBittorrent base.ini'
-        'CONFIG_VLC'                                        = 'Apps\VLC.ini'
-        'CONFIG_WINDOWS_HKEY_CURRENT_USER'                  = 'Windows\Base\Windows HKEY_CURRENT_USER.reg'
-        'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'                 = 'Windows\Base\Windows HKEY_LOCAL_MACHINE.reg'
-        'CONFIG_WINDOWS_HKEY_USERS'                         = 'Windows\Base\Windows HKEY_USERS.reg'
-        'CONFIG_WINDOWS_LOCALISED'                          = 'Windows\Base\Windows {LOCALE}.reg'
-        'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'  = 'Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg'
-        'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE' = 'Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg'
-    }
-)

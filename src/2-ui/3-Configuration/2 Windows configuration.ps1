@@ -7,17 +7,14 @@ New-GroupBox 'Windows configuration'
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_PowerScheme = New-CheckBox 'Set power scheme' -Checked
 
-[Windows.Forms.CheckBox]$CHECKBOX_Config_FileAssociations = New-CheckBox 'Set file associations'
-
 [Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 
 
 Set-Variable -Option Constant WindowsConfigurationParameters (
     [Hashtable]@{
-        Base             = $CHECKBOX_Config_WindowsBase
-        PowerScheme      = $CHECKBOX_Config_PowerScheme
-        FileAssociations = $CHECKBOX_Config_FileAssociations
-        Personalisation  = $CHECKBOX_Config_WindowsPersonalisation
+        Base            = $CHECKBOX_Config_WindowsBase
+        PowerScheme     = $CHECKBOX_Config_PowerScheme
+        Personalisation = $CHECKBOX_Config_WindowsPersonalisation
     }
 )
 [ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration @WindowsConfigurationParameters }
