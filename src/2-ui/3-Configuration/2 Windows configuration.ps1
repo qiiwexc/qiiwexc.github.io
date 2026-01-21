@@ -5,17 +5,8 @@ New-GroupBox 'Windows configuration'
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBase = New-CheckBox 'Base config and privacy' -Checked
 
-[Windows.Forms.CheckBox]$CHECKBOX_Config_PowerScheme = New-CheckBox 'Set power scheme' -Checked
-
 [Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 
 
-Set-Variable -Option Constant WindowsConfigurationParameters (
-    [Hashtable]@{
-        Base            = $CHECKBOX_Config_WindowsBase
-        PowerScheme     = $CHECKBOX_Config_PowerScheme
-        Personalisation = $CHECKBOX_Config_WindowsPersonalisation
-    }
-)
-[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration @WindowsConfigurationParameters }
+[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration $CHECKBOX_Config_WindowsBase $CHECKBOX_Config_WindowsPersonalisation }
 New-Button 'Apply configuration' $BUTTON_FUNCTION

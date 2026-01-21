@@ -1,8 +1,4 @@
 function Set-WindowsPersonalisationConfig {
-    param(
-        [String][Parameter(Position = 0, Mandatory)]$FileName
-    )
-
     Write-ActivityProgress 80 'Applying Windows personalisation configuration...'
 
     Set-WinHomeLocation -GeoId 140
@@ -35,8 +31,8 @@ function Set-WindowsPersonalisationConfig {
             $ConfigLines.Add("`"RotatingLockScreenEnabled`"=dword:00000001`n")
         }
     } catch {
-        Write-LogError "Failed to read the registry: $_"
+        Out-Failure "Failed to read the registry: $_"
     }
 
-    Import-RegistryConfiguration $FileName $ConfigLines
+    Import-RegistryConfiguration 'Windows Personalisation Config' $ConfigLines
 }
