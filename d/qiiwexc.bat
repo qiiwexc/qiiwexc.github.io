@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.21')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.22')
 ::
 ::#endregion init > Version
 ::
@@ -713,19 +713,10 @@ if "%~1"=="Debug" (
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBase = New-CheckBox 'Base config and privacy' -Checked
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_PowerScheme = New-CheckBox 'Set power scheme' -Checked
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 ::
 ::
-::Set-Variable -Option Constant WindowsConfigurationParameters (
-::    [Hashtable]@{
-::        Base            = $CHECKBOX_Config_WindowsBase
-::        PowerScheme     = $CHECKBOX_Config_PowerScheme
-::        Personalisation = $CHECKBOX_Config_WindowsPersonalisation
-::    }
-::)
-::[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration @WindowsConfigurationParameters }
+::[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration $CHECKBOX_Config_WindowsBase $CHECKBOX_Config_WindowsPersonalisation }
 ::New-Button 'Apply configuration' $BUTTON_FUNCTION
 ::
 ::#endregion ui > Configuration > Windows configuration
@@ -1336,17 +1327,6 @@ if "%~1"=="Debug" (
 ::#endregion configs > Installs > Office Installer
 ::
 ::
-::#region configs > Windows > Capabilities to remove
-::
-::Set-Variable -Option Constant CONFIG_CAPABILITIES_TO_REMOVE (
-::    [String[]]@(
-::        'App.Support.QuickAssist'
-::    )
-::)
-::
-::#endregion configs > Windows > Capabilities to remove
-::
-::
 ::#region configs > Windows > Features to remove
 ::
 ::Set-Variable -Option Constant CONFIG_FEATURES_TO_REMOVE (
@@ -1366,9 +1346,9 @@ if "%~1"=="Debug" (
 ::        @{SubGroup = '0d7dbae2-4294-402a-ba8e-26777e8488cd'; Setting = '309dce9b-bef4-4119-9921-a851fb12f0f4'; Value = 0 },
 ::        @{SubGroup = '02f815b5-a5cf-4c84-bf20-649d1f75d3d8'; Setting = '4c793e7d-a264-42e1-87d3-7a0d2f523ccd'; Value = 1 },
 ::        @{SubGroup = '19cbb8fa-5279-450e-9fac-8a3d5fedd0c1'; Setting = '12bbebe6-58d6-4636-95bb-3217ef867c1a'; Value = 0 },
-::        @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4'; Value = 0 },
 ::        @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '03680956-93bc-4294-bba6-4e0f09bb717f'; Value = 1 },
 ::        @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '10778347-1370-4ee0-8bbd-33bdacaade49'; Value = 1 },
+::        @{SubGroup = '9596fb26-9850-41fd-ac3e-f7c3c00afd4b'; Setting = '34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4'; Value = 0 },
 ::        @{SubGroup = 'de830923-a562-41af-a086-e3a2c6bad2da'; Setting = 'e69653ca-cf7f-4f05-aa73-cb833fa90ad4'; Value = 0 },
 ::        @{SubGroup = 'SUB_PCIEXPRESS'; Setting = 'ASPM'; Value = 0 },
 ::        @{SubGroup = 'SUB_PROCESSOR'; Setting = 'SYSCOOLPOL'; Value = 1 },
@@ -1784,9 +1764,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
 ::"SecureProtocols"=dword:00002820
 ::"SyncMode5"=dword:00000003
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache]
-::"ContentLimit"=dword:00000008
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
 ::"CacheLimit"=dword:00002000
@@ -2293,9 +2270,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
 ::"EnableCertPaddingCheck"="1"
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}]
-::"allowautoupdatesmetered"=dword:00000001
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}]
 ::"allowautoupdatesmetered"=dword:00000001
 ::
@@ -2552,7 +2526,6 @@ if "%~1"=="Debug" (
 ::"TCPTimedWaitDelay"=dword:00000030
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\Maps]
-::"AutoUpdateEnabled"=dword:00000000
 ::"UpdateOnlyOnWifi"=dword:00000000
 ::'
 ::
@@ -3529,7 +3502,7 @@ if "%~1"=="Debug" (
 ::            }
 ::        }
 ::    } catch {
-::        Write-LogError "Failed to extract '$ZipPath': $_"
+::        Out-Failure "Failed to extract '$ZipPath': $_"
 ::        return
 ::    }
 ::
@@ -3785,10 +3758,11 @@ if "%~1"=="Debug" (
 ::
 ::function Out-Failure {
 ::    param(
-::        [Int][Parameter(Position = 0)]$Level = 0
+::        [String][Parameter(Position = 0, Mandatory)]$Message,
+::        [Int][Parameter(Position = 1)]$Level = 0
 ::    )
 ::
-::    Out-Status "Failed $(Get-Emoji '274C')" $Level
+::    Out-Status "$(Get-Emoji '274C') $Message" $Level
 ::}
 ::
 ::
@@ -3876,7 +3850,7 @@ if "%~1"=="Debug" (
 ::    Set-Variable -Option Constant IsConnected ([Boolean](Get-NetworkAdapter))
 ::
 ::    if (-not $IsConnected) {
-::        Write-LogError 'Computer is not connected to the Internet'
+::        Out-Failure 'Computer is not connected to the Internet'
 ::    }
 ::
 ::    return $IsConnected
@@ -3913,7 +3887,7 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Start-Process $Url -ErrorAction Stop
 ::    } catch {
-::        Write-LogError "Could not open the URL: $_"
+::        Out-Failure "Could not open the URL: $_"
 ::    }
 ::}
 ::
@@ -3986,7 +3960,7 @@ if "%~1"=="Debug" (
 ::    if ($Success) {
 ::        Out-Success
 ::    } else {
-::        Out-Failure
+::        Out-Failure "$CURRENT_TASK failed"
 ::    }
 ::
 ::    Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
@@ -4119,7 +4093,7 @@ if "%~1"=="Debug" (
 ::            throw 'Possibly computer is offline or disk is full'
 ::        }
 ::    } catch {
-::        Write-LogError "Download failed: $_"
+::        Out-Failure "Download failed: $_"
 ::        return
 ::    }
 ::
@@ -4199,7 +4173,7 @@ if "%~1"=="Debug" (
 ::        try {
 ::            Start-Process -Wait $Executable $Switches -ErrorAction Stop
 ::        } catch {
-::            Write-LogError "Failed to run '$Executable': $_"
+::            Out-Failure "Failed to run '$Executable': $_"
 ::            return
 ::        }
 ::
@@ -4218,7 +4192,7 @@ if "%~1"=="Debug" (
 ::                Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
 ::            }
 ::        } catch {
-::            Write-LogError "Failed to execute '$Executable': $_"
+::            Out-Failure "Failed to execute '$Executable': $_"
 ::            return
 ::        }
 ::    }
@@ -4261,7 +4235,7 @@ if "%~1"=="Debug" (
 ::        try {
 ::            Invoke-CustomCommand $AppBatFile
 ::        } catch {
-::            Write-LogError "Failed to start new version: $_"
+::            Out-Failure "Failed to start new version: $_"
 ::            return
 ::        }
 ::
@@ -4288,7 +4262,7 @@ if "%~1"=="Debug" (
 ::        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version'))
 ::        Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
 ::    } catch {
-::        Write-LogError "Failed to check for updates: $_"
+::        Out-Failure "Failed to check for updates: $_"
 ::        return
 ::    }
 ::
@@ -4316,7 +4290,7 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_bat' -OutFile $AppBatFile
 ::    } catch {
-::        Write-LogError "Failed to download update: $_"
+::        Out-Failure "Failed to download update: $_"
 ::        return
 ::    }
 ::
@@ -4341,8 +4315,10 @@ if "%~1"=="Debug" (
 ::        $ConfigLines.Add($CONFIG_7ZIP)
 ::
 ::        Import-RegistryConfiguration $AppName $ConfigLines
+::
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to configure '$AppName': $_"
+::        Out-Failure "Failed to configure '$AppName': $_"
 ::    }
 ::}
 ::
@@ -4368,8 +4344,10 @@ if "%~1"=="Debug" (
 ::        }
 ::
 ::        Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) $ConfigPath
+::
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to configure '$AppName': $_"
+::        Out-Failure "Failed to configure '$AppName': $_"
 ::    }
 ::}
 ::
@@ -4434,8 +4412,10 @@ if "%~1"=="Debug" (
 ::
 ::        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"
 ::        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_PREFERENCES "$env:LocalAppData\Google\Chrome\User Data\Default\Preferences"
+::
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to configure '$AppName': $_"
+::        Out-Failure "Failed to configure '$AppName': $_"
 ::    }
 ::}
 ::
@@ -4456,8 +4436,10 @@ if "%~1"=="Debug" (
 ::
 ::        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
 ::        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
+::
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to configure '$AppName': $_"
+::        Out-Failure "Failed to configure '$AppName': $_"
 ::    }
 ::}
 ::
@@ -4482,8 +4464,10 @@ if "%~1"=="Debug" (
 ::        }
 ::
 ::        Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
+::
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to configure '$AppName': $_"
+::        Out-Failure "Failed to configure '$AppName': $_"
 ::    }
 ::}
 ::
@@ -4499,10 +4483,10 @@ if "%~1"=="Debug" (
 ::
 ::    try {
 ::        Write-ActivityProgress 24 "Configuring $AppName..."
-::
 ::        Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to configure '$AppName': $_"
+::        Out-Failure "Failed to configure '$AppName': $_"
 ::    }
 ::}
 ::
@@ -4626,8 +4610,8 @@ if "%~1"=="Debug" (
 ::            try {
 ::                Start-Process $ProcessName -ErrorAction Stop
 ::            } catch {
-::                Write-LogError "Couldn't start '$AppName': $_" $LogIndentLevel
-::                return
+::                Out-Failure "Couldn't start '$AppName': $_" $LogIndentLevel
+::                throw $_
 ::            }
 ::
 ::            for ([Int]$i = 0; $i -lt 5; $i++) {
@@ -4647,7 +4631,7 @@ if "%~1"=="Debug" (
 ::
 ::        Out-Success $LogIndentLevel
 ::    } catch {
-::        Write-LogError "Failed to update '$AppName' configuration: $_" $LogIndentLevel
+::        Out-Failure "Failed to update '$AppName' configuration: $_" $LogIndentLevel
 ::    }
 ::}
 ::
@@ -4691,57 +4675,29 @@ if "%~1"=="Debug" (
 ::    New-Activity 'Removing miscellaneous Windows features'
 ::
 ::    try {
-::        Write-ActivityProgress 5 'Collecting capabilities to remove...'
-::        Set-Variable -Option Constant InstalledCapabilities ([PSCustomObject](Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' }))
-::        Set-Variable -Option Constant CapabilitiesToRemove ([PSCustomObject]($InstalledCapabilities | Where-Object { $_.Name.Split('~')[0] -in $CONFIG_CAPABILITIES_TO_REMOVE }))
-::        Set-Variable -Option Constant CapabilityCount ([Int]($CapabilitiesToRemove.Count))
-::        Out-Success
-::    } catch {
-::        Write-LogError "Failed to collect capabilities to remove: $_"
-::    }
-::
-::    try {
 ::        Write-ActivityProgress 10 'Collecting features to remove...'
 ::        Set-Variable -Option Constant InstalledFeatures ([PSCustomObject](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
 ::        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
 ::        Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
 ::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to collect features to remove: $_"
-::    }
-::
-::    if ($CapabilityCount) {
-::        Set-Variable -Option Constant CapabilityStep ([Math]::Floor(40 / $CapabilityCount))
-::
-::        [Int]$Iteration = 1
-::        foreach ($Capability in $CapabilitiesToRemove) {
-::            [String]$Name = $Capability.Name
-::            try {
-::                [Int]$Percentage = 20 + $Iteration * $CapabilityStep
-::                Write-ActivityProgress $Percentage "Removing '$Name'..."
-::                $Iteration++
-::                Remove-WindowsCapability -Online -Name "$Name"
-::                Out-Success
-::            } catch {
-::                Write-LogError "Failed to remove '$Name': $_"
-::            }
-::        }
+::        Out-Failure "Failed to collect features to remove: $_"
 ::    }
 ::
 ::    if ($FeatureCount) {
-::        Set-Variable -Option Constant FeatureStep ([Math]::Floor(40 / $FeatureCount))
+::        Set-Variable -Option Constant FeatureStep ([Math]::Floor(80 / $FeatureCount))
 ::
 ::        [Int]$Iteration = 1
 ::        foreach ($Feature in $FeaturesToRemove) {
 ::            [String]$Name = $Feature.FeatureName
 ::            try {
-::                [Int]$Percentage = 60 + $Iteration * $FeatureStep
+::                [Int]$Percentage = 20 + $Iteration * $FeatureStep
 ::                Write-ActivityProgress $Percentage "Removing '$Name'..."
 ::                $Iteration++
 ::                Disable-WindowsOptionalFeature -Online -Remove -NoRestart -FeatureName "$Name"
 ::                Out-Success
 ::            } catch {
-::                Write-LogError "Failed to remove '$Name': $_"
+::                Out-Failure "Failed to remove '$Name': $_"
 ::            }
 ::        }
 ::    }
@@ -4760,43 +4716,41 @@ if "%~1"=="Debug" (
 ::        [Switch][Parameter(Position = 1, Mandatory)]$FamilyFriendly
 ::    )
 ::
-::    if ($FamilyFriendly) {
-::        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.3')
-::    } elseif ($MalwareProtection) {
-::        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.2')
-::    } else {
-::        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.1')
-::    }
-::
-::    if ($FamilyFriendly) {
-::        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.3')
-::    } elseif ($MalwareProtection) {
-::        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.2')
-::    } else {
-::        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.1')
-::    }
-::
-::    Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
-::    Write-LogWarning 'Internet connection may get interrupted briefly'
-::
-::    if (-not (Get-NetworkAdapter)) {
-::        Write-LogError 'Could not determine network adapter used to connect to the Internet'
-::        Write-LogError 'This could mean that computer is not connected'
-::        return
-::    }
-::
 ::    try {
+::        if ($FamilyFriendly) {
+::            Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.3')
+::        } elseif ($MalwareProtection) {
+::            Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.2')
+::        } else {
+::            Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.1')
+::        }
+::
+::        if ($FamilyFriendly) {
+::            Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.3')
+::        } elseif ($MalwareProtection) {
+::            Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.2')
+::        } else {
+::            Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.1')
+::        }
+::
+::        Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+::        Write-LogWarning 'Internet connection may get interrupted briefly'
+::
+::        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::        if (-not $IsConnected) {
+::            return
+::        }
+::
 ::        Set-Variable -Option Constant Status ([Int[]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) } -ErrorAction Stop).ReturnValue)
 ::
 ::        if ($Status | Where-Object { $_ -ne 0 }) {
-::            Write-LogError 'Failed to change DNS server'
+::            throw "Error code(s) returned: $($Status -join ', ')"
 ::        }
-::    } catch {
-::        Write-LogError "Failed to change DNS server: $_"
-::        return
-::    }
 ::
-::    Out-Success
+::        Out-Success
+::    } catch {
+::        Out-Failure "Failed to change DNS server: $_"
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-CloudFlareDNS
@@ -4807,20 +4761,24 @@ if "%~1"=="Debug" (
 ::function Set-PowerSchemeConfiguration {
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
-::    Write-ActivityProgress 10 'Setting power scheme overlay...'
+::    try {
+::        Write-ActivityProgress 10 'Setting power scheme overlay...'
 ::
-::    powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
+::        powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 ::
-::    Out-Success $LogIndentLevel
+::        Out-Success $LogIndentLevel
 ::
-::    Write-ActivityProgress 20 'Applying Windows power scheme settings...'
+::        Write-ActivityProgress 15 'Applying Windows power scheme settings...'
 ::
-::    foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
-::        powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
-::        powercfg /SetDcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+::        foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
+::            powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+::            powercfg /SetDcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+::        }
+::
+::        Out-Success $LogIndentLevel
+::    } catch {
+::        Out-Failure "Failed to apply power settings configuration: $_" $LogIndentLevel
 ::    }
-::
-::    Out-Success $LogIndentLevel
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-PowerSchemeConfiguration
@@ -4829,20 +4787,36 @@ if "%~1"=="Debug" (
 ::#region functions > Configuration > Windows > Set-WindowsBaseConfiguration
 ::
 ::function Set-WindowsBaseConfiguration {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$FileName
-::    )
-::
-::    Write-ActivityProgress 60 'Applying Windows configuration...'
-::
 ::    Set-WindowsSecurityConfiguration
 ::
-::    Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
-::    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
+::    Set-PowerSchemeConfiguration
 ::
-::    Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
-::    if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
-::        Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
+::    try {
+::        Write-ActivityProgress 20 'Applying currency symbol configuration...'
+::        Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC) -ErrorAction Stop
+::        Out-Success
+::    } catch {
+::        Out-Failure "Failed to set currency symbol: $_"
+::    }
+::
+::    try {
+::        Write-ActivityProgress 25 'Applying time zone auto update configuration...'
+::        Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3 -ErrorAction Stop
+::        Out-Success
+::    } catch {
+::        Out-Failure "Failed to enable time zone auto update: $_"
+::    }
+::
+::    Write-ActivityProgress 30 'Building configuration to apply...'
+::
+::    try {
+::        Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
+::        if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
+::            Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False -ErrorAction Stop
+::            Out-Success
+::        }
+::    } catch {
+::        Out-Failure "Failed to remove unelevated Explorer scheduled task: $_"
 ::    }
 ::
 ::    if ($SYSTEM_LANGUAGE -match 'ru') {
@@ -4861,7 +4835,7 @@ if "%~1"=="Debug" (
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($LocalisedConfig)
 ::
-::    Write-ActivityProgress 70
+::    Write-ActivityProgress 40
 ::
 ::    try {
 ::        foreach ($User in (Get-UsersRegistryKeys)) {
@@ -4878,16 +4852,24 @@ if "%~1"=="Debug" (
 ::            $ConfigLines.Add("`"EnableCortana`"=dword:00000000`n")
 ::        }
 ::
-::        Set-Variable -Option Constant VolumeRegistries ([String[]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
+::        Set-Variable -Option Constant VolumeRegistries ([String[]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*' -ErrorAction Stop).Name)
 ::        foreach ($Registry in $VolumeRegistries) {
 ::            $ConfigLines.Add("`n[$Registry]`n")
 ::            $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
 ::        }
+::
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to read the registry: $_"
+::        Out-Failure "Failed to read the registry: $_"
 ::    }
 ::
-::    Import-RegistryConfiguration $FileName $ConfigLines
+::    try {
+::        Write-ActivityProgress 50 'Importing base configuration...'
+::        Import-RegistryConfiguration 'Windows Base Config' $ConfigLines -ErrorAction Stop
+::        Out-Success
+::    } catch {
+::        Out-Failure "Failed to apply Windows base configuration: $_"
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-WindowsBaseConfiguration
@@ -4898,22 +4880,17 @@ if "%~1"=="Debug" (
 ::function Set-WindowsConfiguration {
 ::    param(
 ::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Base,
-::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$PowerScheme,
-::        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$Personalisation
+::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$Personalisation
 ::    )
 ::
 ::    New-Activity 'Configuring Windows'
 ::
-::    if ($PowerScheme.Checked) {
-::        Set-PowerSchemeConfiguration
-::    }
-::
 ::    if ($Base.Checked) {
-::        Set-WindowsBaseConfiguration $Base.Text
+::        Set-WindowsBaseConfiguration
 ::    }
 ::
 ::    if ($Personalisation.Checked) {
-::        Set-WindowsPersonalisationConfig $Personalisation.Text
+::        Set-WindowsPersonalisationConfig
 ::    }
 ::
 ::    Write-ActivityCompleted
@@ -4925,19 +4902,27 @@ if "%~1"=="Debug" (
 ::#region functions > Configuration > Windows > Set-WindowsPersonalisationConfig
 ::
 ::function Set-WindowsPersonalisationConfig {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$FileName
-::    )
-::
-::    Write-ActivityProgress 80 'Applying Windows personalisation configuration...'
-::
-::    Set-WinHomeLocation -GeoId 140
-::
-::    Set-Variable -Option Constant LanguageList ([Collections.Generic.List[PSCustomObject]](Get-WinUserLanguageList))
-::    if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
-::        $LanguageList.Add('lv')
-::        Set-WinUserLanguageList $LanguageList -Force
+::    try {
+::        Write-ActivityProgress 60 'Setting home location to Latvia...'
+::        Set-WinHomeLocation -GeoId 140 -ErrorAction Stop
+::        Out-Success
+::    } catch {
+::        Out-Failure "Failed to set home location to Latvia: $_"
 ::    }
+::
+::    try {
+::        Write-ActivityProgress 70 'Adding Latvian language to user language list...'
+::        Set-Variable -Option Constant LanguageList ([Collections.Generic.List[PSCustomObject]](Get-WinUserLanguageList -ErrorAction Stop))
+::        if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
+::            $LanguageList.Add('lv')
+::            Set-WinUserLanguageList $LanguageList -Force -ErrorAction Stop
+::            Out-Success
+::        }
+::    } catch {
+::        Out-Failure "Failed to add Latvian language to user language list: $_"
+::    }
+::
+::    Write-ActivityProgress 80 'Building Windows personalisation configuration...'
 ::
 ::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
 ::    $ConfigLines.Add("`n")
@@ -4945,11 +4930,9 @@ if "%~1"=="Debug" (
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE)
 ::
-::    Write-ActivityProgress 90
-::
 ::    try {
 ::        if ($OS_VERSION -gt 10) {
-::            Set-Variable -Option Constant NotificationRegistries ([String[]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*').Name)
+::            Set-Variable -Option Constant NotificationRegistries ([String[]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*' -ErrorAction Stop).Name)
 ::            foreach ($Registry in $NotificationRegistries) {
 ::                $ConfigLines.Add("`n[$Registry]`n")
 ::                $ConfigLines.Add("`"IsPromoted`"=dword:00000001`n")
@@ -4960,11 +4943,19 @@ if "%~1"=="Debug" (
 ::            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
 ::            $ConfigLines.Add("`"RotatingLockScreenEnabled`"=dword:00000001`n")
 ::        }
+::
+::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to read the registry: $_"
+::        Out-Failure "Failed to read the registry: $_"
 ::    }
 ::
-::    Import-RegistryConfiguration $FileName $ConfigLines
+::    try {
+::        Write-ActivityProgress 90 'Applying Windows personalisation configuration...'
+::        Import-RegistryConfiguration 'Windows Personalisation Config' $ConfigLines -ErrorAction Stop
+::        Out-Success
+::    } catch {
+::        Out-Failure "Failed to apply Windows personalisation configuration: $_"
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-WindowsPersonalisationConfig
@@ -4973,21 +4964,31 @@ if "%~1"=="Debug" (
 ::#region functions > Configuration > Windows > Set-WindowsSecurityConfiguration
 ::
 ::function Set-WindowsSecurityConfiguration {
-::    Set-MpPreference -CheckForSignaturesBefore $True
-::    Set-MpPreference -DisableBlockAtFirstSeen $False
-::    Set-MpPreference -DisableCatchupQuickScan $False
-::    Set-MpPreference -DisableEmailScanning $False
-::    Set-MpPreference -DisableRemovableDriveScanning $False
-::    Set-MpPreference -DisableRestorePoint $False
-::    Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan $False
-::    Set-MpPreference -DisableScanningNetworkFiles $False
-::    Set-MpPreference -EnableFileHashComputation $True
-::    Set-MpPreference -EnableNetworkProtection Enabled
-::    Set-MpPreference -PUAProtection Enabled
-::    Set-MpPreference -AllowSwitchToAsyncInspection $True
-::    Set-MpPreference -MeteredConnectionUpdates $True
-::    Set-MpPreference -IntelTDTEnabled $True
-::    Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
+::
+::    try {
+::        Write-ActivityProgress 5 'Applying Windows security configuration...'
+::
+::        Set-MpPreference -CheckForSignaturesBefore $True
+::        Set-MpPreference -DisableBlockAtFirstSeen $False
+::        Set-MpPreference -DisableCatchupQuickScan $False
+::        Set-MpPreference -DisableEmailScanning $False
+::        Set-MpPreference -DisableRemovableDriveScanning $False
+::        Set-MpPreference -DisableRestorePoint $False
+::        Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan $False
+::        Set-MpPreference -DisableScanningNetworkFiles $False
+::        Set-MpPreference -EnableFileHashComputation $True
+::        Set-MpPreference -EnableNetworkProtection Enabled
+::        Set-MpPreference -PUAProtection Enabled
+::        Set-MpPreference -AllowSwitchToAsyncInspection $True
+::        Set-MpPreference -MeteredConnectionUpdates $True
+::        Set-MpPreference -IntelTDTEnabled $True
+::        Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
+::
+::        Out-Success $LogIndentLevel
+::    } catch {
+::        Out-Failure "Failed to apply Windows Security configuration: $_" $LogIndentLevel
+::    }
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Set-WindowsSecurityConfiguration
@@ -5095,7 +5096,7 @@ if "%~1"=="Debug" (
 ::
 ::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to start Windows debloat utility: $_"
+::        Out-Failure "Failed to start Windows debloat utility: $_"
 ::    }
 ::}
 ::
@@ -5145,7 +5146,7 @@ if "%~1"=="Debug" (
 ::
 ::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to start WinUtil utility: $_"
+::        Out-Failure "Failed to start WinUtil utility: $_"
 ::    }
 ::}
 ::
@@ -5168,7 +5169,7 @@ if "%~1"=="Debug" (
 ::
 ::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to export battery report: $_"
+::        Out-Failure "Failed to export battery report: $_"
 ::    }
 ::}
 ::
@@ -5209,7 +5210,7 @@ if "%~1"=="Debug" (
 ::
 ::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to start MAS activator: $_"
+::        Out-Failure "Failed to start MAS activator: $_"
 ::    }
 ::}
 ::
@@ -5305,7 +5306,7 @@ if "%~1"=="Debug" (
 ::        Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user' -ErrorAction Stop
 ::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to update Microsoft Office: $_"
+::        Out-Failure "Failed to update Microsoft Office: $_"
 ::    }
 ::}
 ::
@@ -5318,10 +5319,10 @@ if "%~1"=="Debug" (
 ::    Write-LogInfo 'Starting Microsoft Store apps update...'
 ::
 ::    try {
-::        Invoke-CustomCommand -Elevated -HideWindow "Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'"
+::        Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'
 ::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to update Microsoft Store apps: $_"
+::        Out-Failure "Failed to update Microsoft Store apps: $_"
 ::    }
 ::}
 ::
@@ -5342,7 +5343,7 @@ if "%~1"=="Debug" (
 ::
 ::        Out-Success
 ::    } catch {
-::        Write-LogError "Failed to update Windows: $_"
+::        Out-Failure "Failed to update Windows: $_"
 ::    }
 ::}
 ::
@@ -5412,18 +5413,18 @@ if "%~1"=="Debug" (
 ::        return
 ::    }
 ::
-::    try {
-::        if ($Execute) {
+::    if ($Execute) {
+::        try {
 ::            Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
 ::            New-RegistryKeyIfMissing $RegistryKey
 ::            Set-ItemProperty -Path $RegistryKey -Name 'HideTrayIcon' -Value 1 -ErrorAction Stop
+::        } catch {
+::            Write-LogWarning "Failed to configure Unchecky parameters: $_"
 ::        }
 ::
-::        if ($Execute -and $Silent) {
+::        if ($Silent) {
 ::            Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
 ::        }
-::    } catch {
-::        Write-LogWarning "Failed to configure Unchecky parameters: $_"
 ::    }
 ::
 ::    Start-DownloadUnzipAndRun 'https://fi.softradar.com/static/products/unchecky/distr/1.2/unchecky_softradar-com.exe' -Execute:$Execute -Params $Params -Silent:$Silent
