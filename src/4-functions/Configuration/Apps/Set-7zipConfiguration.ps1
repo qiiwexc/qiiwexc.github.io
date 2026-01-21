@@ -11,6 +11,8 @@ function Set-7zipConfiguration {
         $ConfigLines.Add($CONFIG_7ZIP)
 
         Import-RegistryConfiguration $AppName $ConfigLines
+
+        Out-Success
     } catch {
         Out-Failure "Failed to configure '$AppName': $_"
     }

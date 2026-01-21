@@ -18,6 +18,7 @@ Describe 'Set-GoogleChromeConfiguration' {
     BeforeEach {
         Mock Write-ActivityProgress {}
         Mock Update-BrowserConfiguration {}
+        Mock Out-Success {}
         Mock Out-Failure {}
     }
 
@@ -38,6 +39,7 @@ Describe 'Set-GoogleChromeConfiguration' {
             $Content -eq $CONFIG_CHROME_PREFERENCES -and
             $Path -match '\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Preferences$'
         }
+        Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
@@ -48,6 +50,7 @@ Describe 'Set-GoogleChromeConfiguration' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Update-BrowserConfiguration -Exactly 1
+        Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 }

@@ -1,21 +1,23 @@
 function Set-WindowsBaseConfiguration {
-    Write-ActivityProgress 60 'Applying Windows configuration...'
-
     Set-WindowsSecurityConfiguration
 
     Set-PowerSchemeConfiguration
 
     try {
+        Write-ActivityProgress 20 'Applying currency symbol configuration...'
         Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC) -ErrorAction Stop
     } catch {
         Out-Failure "Failed to set currency symbol: $_"
     }
 
     try {
+        Write-ActivityProgress 25 'Applying time zone auto update configuration...'
         Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3 -ErrorAction Stop
     } catch {
         Out-Failure "Failed to enable time zone auto update: $_"
     }
+
+    Write-ActivityProgress 30 'Building configuration to apply...'
 
     try {
         Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
@@ -42,7 +44,7 @@ function Set-WindowsBaseConfiguration {
     $ConfigLines.Add("`n")
     $ConfigLines.Add($LocalisedConfig)
 
-    Write-ActivityProgress 70
+    Write-ActivityProgress 40
 
     try {
         foreach ($User in (Get-UsersRegistryKeys)) {
@@ -69,6 +71,7 @@ function Set-WindowsBaseConfiguration {
     }
 
     try {
+        Write-ActivityProgress 50 'Importing base configuration...'
         Import-RegistryConfiguration 'Windows Base Config' $ConfigLines -ErrorAction Stop
         Out-Success
     } catch {
