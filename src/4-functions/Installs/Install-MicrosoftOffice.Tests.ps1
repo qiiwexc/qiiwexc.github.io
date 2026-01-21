@@ -130,7 +130,7 @@ Describe 'Install-MicrosoftOffice' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Not -Throw
+        Install-MicrosoftOffice -Execute:$TestExecute
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -146,7 +146,7 @@ Describe 'Install-MicrosoftOffice' {
 
         Mock Import-RegistryConfiguration { throw $TestException }
 
-        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Not -Throw
+        Install-MicrosoftOffice -Execute:$TestExecute
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1

@@ -35,7 +35,7 @@ Describe 'Set-VlcConfiguration' {
     It 'Should handle Write-ConfigurationFile failure' {
         Mock Write-ConfigurationFile { throw $TestException }
 
-        { Set-VlcConfiguration $TestAppName } | Should -Not -Throw
+        Set-VlcConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1

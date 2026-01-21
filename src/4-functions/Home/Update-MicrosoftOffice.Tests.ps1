@@ -32,7 +32,7 @@ Describe 'Update-MicrosoftOffice' {
     It 'Should handle Start-Process failure' {
         Mock Start-Process { throw $TestException }
 
-        { Update-MicrosoftOffice } | Should -Not -Throw
+        Update-MicrosoftOffice
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1

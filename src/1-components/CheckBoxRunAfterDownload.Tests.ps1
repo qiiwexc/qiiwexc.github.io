@@ -3,6 +3,8 @@ BeforeAll {
 
     . "$(Split-Path $PSCommandPath -Parent)\CheckBox.ps1"
 
+    Add-Type -AssemblyName System.Windows.Forms
+
     Set-Variable -Option Constant TestCheckBox ([Windows.Forms.CheckBox]@{ Name = 'TEST_CHECKBOX' })
 }
 

@@ -110,7 +110,7 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Stop-ProcessIfRunning failure' {
         Mock Stop-ProcessIfRunning { throw $TestException }
 
-        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Not -Throw
+        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
@@ -127,7 +127,7 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Test-Path failure' {
         Mock Test-Path { throw $TestException }
 
-        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Not -Throw
+        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
@@ -146,7 +146,7 @@ Describe 'Update-BrowserConfiguration' {
 
         Mock Start-Process { throw $TestException }
 
-        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Not -Throw
+        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
         Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
@@ -163,7 +163,7 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Not -Throw
+        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
@@ -180,7 +180,7 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Merge-JsonObject failure' {
         Mock Merge-JsonObject { throw $TestException }
 
-        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Not -Throw
+        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
@@ -197,7 +197,7 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Not -Throw
+        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1

@@ -116,7 +116,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle New-RegistryKeyIfMissing failure' {
         Mock New-RegistryKeyIfMissing { throw $TestException }
 
-        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Not -Throw
+        Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -129,7 +129,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle Set-ItemProperty failure' {
         Mock Set-ItemProperty { throw $TestException }
 
-        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Not -Throw
+        Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1

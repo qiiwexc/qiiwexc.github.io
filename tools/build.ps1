@@ -3,7 +3,7 @@
 param(
     [Switch]$Dev,
     [Switch]$Full,
-    [Switch]$Start,
+    [Switch]$Run,
     [Switch]$Tests,
     [Switch]$Update,
     [Switch]$Html,
@@ -23,7 +23,7 @@ if ($Full) {
 
 if ($Dev) {
     $Bat = $True
-    $Start = $True
+    $Run = $True
 }
 
 if ($Bat) {
@@ -67,7 +67,7 @@ Write-LogInfo "Build HTML page          : $Html"
 Write-LogInfo "Build autounattend files : $Autounattend"
 Write-LogInfo "Build PowerShell script  : $Ps1"
 Write-LogInfo "Build batch script       : $Bat"
-Write-LogInfo "Run in dev mode          : $Dev"
+Write-LogInfo "Run in dev mode          : $Run"
 
 New-Activity 'Building'
 
@@ -126,7 +126,7 @@ if ($Bat) {
 Write-ActivityCompleted
 Write-LogInfo 'Build finished'
 
-if ($Start) {
+if ($Run) {
     Write-LogInfo "Running $BatchFile"
     Start-Process 'PowerShell' ".\$BatchFile Debug"
 }

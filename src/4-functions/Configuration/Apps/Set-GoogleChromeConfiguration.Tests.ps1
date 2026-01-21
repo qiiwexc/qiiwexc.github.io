@@ -44,7 +44,7 @@ Describe 'Set-GoogleChromeConfiguration' {
     It 'Should handle Update-BrowserConfiguration failure' {
         Mock Update-BrowserConfiguration { throw $TestException }
 
-        { Set-GoogleChromeConfiguration $TestAppName } | Should -Not -Throw
+        Set-GoogleChromeConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Update-BrowserConfiguration -Exactly 1

@@ -136,7 +136,7 @@ Describe 'Start-OoShutUp10' {
     It 'Should handle New-Item failure' {
         Mock New-Item { throw $TestException }
 
-        { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Not -Throw
+        Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -150,7 +150,7 @@ Describe 'Start-OoShutUp10' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Not -Throw
+        Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1

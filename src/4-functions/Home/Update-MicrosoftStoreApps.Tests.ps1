@@ -41,7 +41,7 @@ Describe 'Update-MicrosoftStoreApps' {
     It 'Should handle Get-CimInstance failure' {
         Mock Get-CimInstance { throw $TestException }
 
-        { Update-MicrosoftStoreApps } | Should -Not -Throw
+        Update-MicrosoftStoreApps
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1
@@ -53,7 +53,7 @@ Describe 'Update-MicrosoftStoreApps' {
     It 'Should handle Invoke-CimMethod failure' {
         Mock Invoke-CimMethod { throw $TestException }
 
-        { Update-MicrosoftStoreApps } | Should -Not -Throw
+        Update-MicrosoftStoreApps
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1

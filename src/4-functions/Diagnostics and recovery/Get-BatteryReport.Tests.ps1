@@ -41,7 +41,7 @@ Describe 'Get-BatteryReport' {
     It 'Should handle Initialize-AppDirectory failure' {
         Mock Initialize-AppDirectory { throw $TestException }
 
-        { Get-BatteryReport } | Should -Not -Throw
+        Get-BatteryReport
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke powercfg -Exactly 0
@@ -53,7 +53,7 @@ Describe 'Get-BatteryReport' {
     It 'Should handle powercfg failure' {
         Mock powercfg { throw $TestException }
 
-        { Get-BatteryReport } | Should -Not -Throw
+        Get-BatteryReport
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke powercfg -Exactly 1
@@ -65,7 +65,7 @@ Describe 'Get-BatteryReport' {
     It 'Should handle Open-InBrowser failure' {
         Mock Open-InBrowser { throw $TestException }
 
-        { Get-BatteryReport } | Should -Not -Throw
+        Get-BatteryReport
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke powercfg -Exactly 1
