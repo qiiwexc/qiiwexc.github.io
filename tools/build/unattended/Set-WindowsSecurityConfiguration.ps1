@@ -6,11 +6,8 @@ function Set-WindowsSecurityConfiguration {
 
     [Collections.Generic.List[String]]$Configuration = Get-Content -Encoding UTF8 "$SourcePath\4-functions\Configuration\Windows\Set-WindowsSecurityConfiguration.ps1"
 
-    $Configuration.RemoveAt(0)
-    $Configuration.RemoveAt($Configuration.Count - 1)
-
     [Collections.Generic.List[String]]$FormattedConfiguration = ''
-    $Configuration | ForEach-Object {
+    $Configuration | Where-Object { $_ -match 'Set-MpPreference' } | ForEach-Object {
         [String]$Line = $_.trim()
         $FormattedConfiguration.Add("$Line`n")
     }

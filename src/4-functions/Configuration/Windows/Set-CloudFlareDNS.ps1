@@ -4,41 +4,39 @@ function Set-CloudFlareDNS {
         [Switch][Parameter(Position = 1, Mandatory)]$FamilyFriendly
     )
 
-    if ($FamilyFriendly) {
-        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.3')
-    } elseif ($MalwareProtection) {
-        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.2')
-    } else {
-        Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.1')
-    }
-
-    if ($FamilyFriendly) {
-        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.3')
-    } elseif ($MalwareProtection) {
-        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.2')
-    } else {
-        Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.1')
-    }
-
-    Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
-    Write-LogWarning 'Internet connection may get interrupted briefly'
-
-    if (-not (Get-NetworkAdapter)) {
-        Write-LogError 'Could not determine network adapter used to connect to the Internet'
-        Write-LogError 'This could mean that computer is not connected'
-        return
-    }
-
     try {
+        if ($FamilyFriendly) {
+            Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.3')
+        } elseif ($MalwareProtection) {
+            Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.2')
+        } else {
+            Set-Variable -Option Constant PreferredDnsServer ([String]'1.1.1.1')
+        }
+
+        if ($FamilyFriendly) {
+            Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.3')
+        } elseif ($MalwareProtection) {
+            Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.2')
+        } else {
+            Set-Variable -Option Constant AlternateDnsServer ([String]'1.0.0.1')
+        }
+
+        Write-LogInfo "Changing DNS server to CloudFlare DNS ($PreferredDnsServer / $AlternateDnsServer)..."
+        Write-LogWarning 'Internet connection may get interrupted briefly'
+
+        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+        if (-not $IsConnected) {
+            return
+        }
+
         Set-Variable -Option Constant Status ([Int[]](Get-NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @($PreferredDnsServer, $AlternateDnsServer) } -ErrorAction Stop).ReturnValue)
 
         if ($Status | Where-Object { $_ -ne 0 }) {
-            Write-LogError 'Failed to change DNS server'
+            throw "Error code(s) returned: $($Status -join ', ')"
         }
-    } catch {
-        Write-LogError "Failed to change DNS server: $_"
-        return
-    }
 
-    Out-Success
+        Out-Success
+    } catch {
+        Out-Failure "Failed to change DNS server: $_"
+    }
 }

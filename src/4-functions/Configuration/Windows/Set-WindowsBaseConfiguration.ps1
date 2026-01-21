@@ -1,11 +1,9 @@
 function Set-WindowsBaseConfiguration {
-    param(
-        [String][Parameter(Position = 0, Mandatory)]$FileName
-    )
-
     Write-ActivityProgress 60 'Applying Windows configuration...'
 
     Set-WindowsSecurityConfiguration
+
+    Set-PowerSchemeConfiguration
 
     Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
@@ -54,8 +52,8 @@ function Set-WindowsBaseConfiguration {
             $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
         }
     } catch {
-        Write-LogError "Failed to read the registry: $_"
+        Out-Failure "Failed to read the registry: $_"
     }
 
-    Import-RegistryConfiguration $FileName $ConfigLines
+    Import-RegistryConfiguration 'Windows Base Config' $ConfigLines
 }
