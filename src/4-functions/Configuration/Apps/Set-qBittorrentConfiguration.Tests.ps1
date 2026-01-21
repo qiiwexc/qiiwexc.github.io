@@ -21,7 +21,7 @@ Describe 'Set-qBittorrentConfiguration' {
 
         Mock Write-ActivityProgress {}
         Mock Write-ConfigurationFile {}
-        Mock Write-LogError {}
+        Mock Out-Failure {}
     }
 
     It 'Should configure qBittorrent (English)' {
@@ -34,7 +34,7 @@ Describe 'Set-qBittorrentConfiguration' {
             $Content -eq ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH) -and
             $Path -match $TestConfigPath
         }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should configure qBittorrent (Russian)' {
@@ -49,7 +49,7 @@ Describe 'Set-qBittorrentConfiguration' {
             $Content -eq ($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN) -and
             $Path -match $TestConfigPath
         }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle Write-ConfigurationFile failure' {
@@ -59,6 +59,6 @@ Describe 'Set-qBittorrentConfiguration' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 }

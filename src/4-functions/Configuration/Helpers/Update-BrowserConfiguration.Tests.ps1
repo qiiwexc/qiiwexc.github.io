@@ -32,7 +32,7 @@ Describe 'Update-BrowserConfiguration' {
             return $script:TestPathCounter -ge $TestPathSuccessIteration
         }
         Mock Start-Process {}
-        Mock Write-LogError {}
+        Mock Out-Failure {}
         Mock Start-Sleep {}
         Mock Get-Content { return $TestExistingConfig }
         Mock Merge-JsonObject { return $TestUpdatedConfigObject }
@@ -49,7 +49,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Test-Path -Exactly 1 -ParameterFilter { $Path -eq $TestPath }
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
@@ -84,7 +84,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestPath }
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestProcessName }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Start-Sleep -Exactly 2
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
@@ -116,7 +116,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 0
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Merge-JsonObject -Exactly 0
@@ -133,7 +133,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Merge-JsonObject -Exactly 0
@@ -152,7 +152,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 2
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Merge-JsonObject -Exactly 0
@@ -169,7 +169,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Merge-JsonObject -Exactly 0
@@ -186,7 +186,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Merge-JsonObject -Exactly 1
@@ -203,7 +203,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Merge-JsonObject -Exactly 1

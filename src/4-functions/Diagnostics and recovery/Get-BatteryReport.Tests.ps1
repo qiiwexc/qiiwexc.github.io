@@ -19,7 +19,7 @@ Describe 'Get-BatteryReport' {
         Mock powercfg {}
         Mock Open-InBrowser {}
         Mock Out-Success {}
-        Mock Write-LogError {}
+        Mock Out-Failure {}
     }
 
     It 'Should export and open battery report' {
@@ -35,7 +35,7 @@ Describe 'Get-BatteryReport' {
         Should -Invoke Open-InBrowser -Exactly 1
         Should -Invoke Open-InBrowser -Exactly 1 -ParameterFilter { $URL -eq $TestReportPath }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle Initialize-AppDirectory failure' {
@@ -47,7 +47,7 @@ Describe 'Get-BatteryReport' {
         Should -Invoke powercfg -Exactly 0
         Should -Invoke Open-InBrowser -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 
     It 'Should handle powercfg failure' {
@@ -59,7 +59,7 @@ Describe 'Get-BatteryReport' {
         Should -Invoke powercfg -Exactly 1
         Should -Invoke Open-InBrowser -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 
     It 'Should handle Open-InBrowser failure' {
@@ -71,6 +71,6 @@ Describe 'Get-BatteryReport' {
         Should -Invoke powercfg -Exactly 1
         Should -Invoke Open-InBrowser -Exactly 1
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 }

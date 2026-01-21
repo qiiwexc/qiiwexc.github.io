@@ -11,7 +11,7 @@ function Update-App {
         try {
             Invoke-CustomCommand $AppBatFile
         } catch {
-            Write-LogError "Failed to start new version: $_"
+            Out-Failure "Failed to start new version: $_"
             return
         }
 
@@ -38,7 +38,7 @@ function Get-UpdateAvailability {
         Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}'))
         Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
     } catch {
-        Write-LogError "Failed to check for updates: $_"
+        Out-Failure "Failed to check for updates: $_"
         return
     }
 
@@ -66,7 +66,7 @@ function Get-NewVersion {
     try {
         Invoke-WebRequest -Uri '{URL_BAT_FILE}' -OutFile $AppBatFile
     } catch {
-        Write-LogError "Failed to download update: $_"
+        Out-Failure "Failed to download update: $_"
         return
     }
 

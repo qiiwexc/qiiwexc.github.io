@@ -308,7 +308,10 @@ Describe 'Out-Success' {
         Out-Success $Level
 
         Should -Invoke Out-Status -Exactly 1
-        Should -Invoke Out-Status -Exactly 1 -ParameterFilter { $Level -eq $Expected }
+        Should -Invoke Out-Status -Exactly 1 -ParameterFilter {
+            $Level -eq $Expected -and
+            $Status -eq "Done $TestEmoji"
+        }
     }
 }
 
@@ -322,9 +325,12 @@ Describe 'Out-Failure' {
         @{ Level = 1; Expected = 1 }
         @{ Level = $Null; Expected = 0 }
     ) {
-        Out-Failure $Level
+        Out-Failure $TestMessage $Level
 
         Should -Invoke Out-Status -Exactly 1
-        Should -Invoke Out-Status -Exactly 1 -ParameterFilter { $Level -eq $Expected }
+        Should -Invoke Out-Status -Exactly 1 -ParameterFilter {
+            $Level -eq $Expected -and
+            $Status -eq "$TestEmoji $TestMessage"
+        }
     }
 }

@@ -12,7 +12,7 @@ BeforeAll {
 Describe 'Invoke-GitAPI' {
     BeforeEach {
         Mock Write-LogInfo {}
-        Mock Write-LogError {}
+        Mock Out-Failure {}
         Mock Invoke-WebRequest { return @{Content = '{"key1": "value1", "key2": "value2"}' } }
     }
 
@@ -28,7 +28,7 @@ Describe 'Invoke-GitAPI' {
             $Method -eq 'Get' -and
             $UseBasicParsing -eq $True
         }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should invoke GitHub API with GitHub token' {
@@ -44,7 +44,7 @@ Describe 'Invoke-GitAPI' {
             $UseBasicParsing -eq $True -and
             $Headers.Authorization -eq "token $TestGitHubToken"
         }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle Invoke-WebRequest failure' {
@@ -53,6 +53,6 @@ Describe 'Invoke-GitAPI' {
         Invoke-GitAPI $TestUrl | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 }

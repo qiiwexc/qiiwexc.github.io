@@ -12,6 +12,6 @@ function Set-7zipConfiguration {
 
         Import-RegistryConfiguration $AppName $ConfigLines
     } catch {
-        Write-LogError "Failed to configure '$AppName': $_"
+        Out-Failure "Failed to configure '$AppName': $_"
     }
 }

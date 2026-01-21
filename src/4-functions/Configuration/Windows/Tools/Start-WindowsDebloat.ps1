@@ -55,6 +55,6 @@ function Start-WindowsDebloat {
 
         Out-Success
     } catch {
-        Write-LogError "Failed to start Windows debloat utility: $_"
+        Out-Failure "Failed to start Windows debloat utility: $_"
     }
 }

@@ -10,6 +10,6 @@ function Update-Windows {
 
         Out-Success
     } catch {
-        Write-LogError "Failed to update Windows: $_"
+        Out-Failure "Failed to update Windows: $_"
     }
 }

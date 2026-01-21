@@ -27,7 +27,7 @@ Describe 'Start-WindowsDebloat' {
         Mock Invoke-CustomCommand {}
         Mock Write-LogWarning {}
         Mock Out-Success {}
-        Mock Write-LogError {}
+        Mock Out-Failure {}
 
         [Int]$OS_VERSION = 11
 
@@ -65,7 +65,7 @@ Describe 'Start-WindowsDebloat' {
             $Command -eq "$TestCommand -Sysprep"
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should start debloat tool with configuration on Windows versions older than 11' {
@@ -84,7 +84,7 @@ Describe 'Start-WindowsDebloat' {
             $Command -eq $TestCommand
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should start debloat tool with custom preset' {
@@ -103,7 +103,7 @@ Describe 'Start-WindowsDebloat' {
             $Command -eq "$TestCommand -Sysprep -RunSavedSettings"
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should start debloat tool with personalisation configuration' {
@@ -133,7 +133,7 @@ Describe 'Start-WindowsDebloat' {
             $Command -eq "$TestCommand -Sysprep -RunSavedSettings"
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should start debloat tool and automatically apply' {
@@ -152,7 +152,7 @@ Describe 'Start-WindowsDebloat' {
             $Command -eq "$TestCommand -Sysprep -Silent"
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should exit if no network connection' {
@@ -167,7 +167,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle Test-NetworkConnection failure' {
@@ -182,7 +182,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle New-Item failure' {
@@ -197,7 +197,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle Set-Content failure' {
@@ -211,7 +211,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle Invoke-CustomCommand failure' {
@@ -225,6 +225,6 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 }

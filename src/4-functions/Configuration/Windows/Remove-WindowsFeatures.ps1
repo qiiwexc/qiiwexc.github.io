@@ -8,7 +8,7 @@ function Remove-WindowsFeatures {
         Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
         Out-Success
     } catch {
-        Write-LogError "Failed to collect features to remove: $_"
+        Out-Failure "Failed to collect features to remove: $_"
     }
 
     if ($FeatureCount) {
@@ -24,7 +24,7 @@ function Remove-WindowsFeatures {
                 Disable-WindowsOptionalFeature -Online -Remove -NoRestart -FeatureName "$Name"
                 Out-Success
             } catch {
-                Write-LogError "Failed to remove '$Name': $_"
+                Out-Failure "Failed to remove '$Name': $_"
             }
         }
     }

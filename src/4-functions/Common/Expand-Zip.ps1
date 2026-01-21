@@ -73,7 +73,7 @@ function Expand-Zip {
             }
         }
     } catch {
-        Write-LogError "Failed to extract '$ZipPath': $_"
+        Out-Failure "Failed to extract '$ZipPath': $_"
         return
     }
 

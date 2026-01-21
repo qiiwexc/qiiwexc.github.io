@@ -16,6 +16,6 @@ function Set-AnyDeskConfiguration {
 
         Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) $ConfigPath
     } catch {
-        Write-LogError "Failed to configure '$AppName': $_"
+        Out-Failure "Failed to configure '$AppName': $_"
     }
 }
