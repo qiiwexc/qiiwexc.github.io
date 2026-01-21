@@ -64,7 +64,7 @@ Describe 'Set-AnyDeskConfiguration' {
     It 'Should handle Test-Path failure' {
         Mock Test-Path { throw $TestException }
 
-        { Set-AnyDeskConfiguration $TestAppName } | Should -Not -Throw
+        Set-AnyDeskConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
@@ -77,7 +77,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Mock Test-Path { return $True }
         Mock Get-Content { throw $TestException }
 
-        { Set-AnyDeskConfiguration $TestAppName } | Should -Not -Throw
+        Set-AnyDeskConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
@@ -89,7 +89,7 @@ Describe 'Set-AnyDeskConfiguration' {
     It 'Should handle Write-ConfigurationFile failure' {
         Mock Write-ConfigurationFile { throw $TestException }
 
-        { Set-AnyDeskConfiguration $TestAppName } | Should -Not -Throw
+        Set-AnyDeskConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1

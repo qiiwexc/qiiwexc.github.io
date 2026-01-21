@@ -126,7 +126,7 @@ Describe 'Start-WinUtil' {
     It 'Should handle New-Item failure' {
         Mock New-Item { throw $TestException }
 
-        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Not -Throw
+        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -141,7 +141,7 @@ Describe 'Start-WinUtil' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Not -Throw
+        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -156,7 +156,7 @@ Describe 'Start-WinUtil' {
     It 'Should handle Invoke-CustomCommand failure' {
         Mock Invoke-CustomCommand { throw $TestException }
 
-        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Not -Throw
+        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1

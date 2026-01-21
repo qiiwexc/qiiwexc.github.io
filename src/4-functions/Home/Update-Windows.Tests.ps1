@@ -50,7 +50,7 @@ Describe 'Update-Windows' {
     It 'Should handle Start-Process failure' {
         Mock Start-Process { throw $TestException }
 
-        { Update-Windows } | Should -Not -Throw
+        Update-Windows
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1

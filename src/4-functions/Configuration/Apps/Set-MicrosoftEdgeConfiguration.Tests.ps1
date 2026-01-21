@@ -44,7 +44,7 @@ Describe 'Set-MicrosoftEdgeConfiguration' {
     It 'Should handle Update-BrowserConfiguration failure' {
         Mock Update-BrowserConfiguration { throw $TestException }
 
-        { Set-MicrosoftEdgeConfiguration $TestAppName } | Should -Not -Throw
+        Set-MicrosoftEdgeConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Out-Failure -Exactly 1

@@ -55,7 +55,7 @@ Describe 'Set-qBittorrentConfiguration' {
     It 'Should handle Write-ConfigurationFile failure' {
         Mock Write-ConfigurationFile { throw $TestException }
 
-        { Set-qBittorrentConfiguration $TestAppName } | Should -Not -Throw
+        Set-qBittorrentConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1

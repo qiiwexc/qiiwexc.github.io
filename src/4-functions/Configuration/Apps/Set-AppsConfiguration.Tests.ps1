@@ -9,6 +9,8 @@ BeforeAll {
     . '.\src\4-functions\Configuration\Apps\Set-qBittorrentConfiguration.ps1'
     . '.\src\4-functions\Configuration\Apps\Set-VlcConfiguration.ps1'
 
+    Add-Type -AssemblyName System.Windows.Forms
+
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestCheckbox7zipChecked (

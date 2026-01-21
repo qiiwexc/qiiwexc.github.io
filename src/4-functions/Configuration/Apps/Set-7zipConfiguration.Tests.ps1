@@ -36,7 +36,7 @@ Describe 'Set-7zipConfiguration' {
     It 'Should handle Import-RegistryConfiguration failure' {
         Mock Import-RegistryConfiguration { throw $TestException }
 
-        { Set-7zipConfiguration $TestAppName } | Should -Not -Throw
+        Set-7zipConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
