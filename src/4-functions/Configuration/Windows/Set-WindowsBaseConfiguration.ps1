@@ -6,6 +6,7 @@ function Set-WindowsBaseConfiguration {
     try {
         Write-ActivityProgress 20 'Applying currency symbol configuration...'
         Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC) -ErrorAction Stop
+        Out-Success
     } catch {
         Out-Failure "Failed to set currency symbol: $_"
     }
@@ -13,6 +14,7 @@ function Set-WindowsBaseConfiguration {
     try {
         Write-ActivityProgress 25 'Applying time zone auto update configuration...'
         Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3 -ErrorAction Stop
+        Out-Success
     } catch {
         Out-Failure "Failed to enable time zone auto update: $_"
     }
@@ -23,6 +25,7 @@ function Set-WindowsBaseConfiguration {
         Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
         if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
             Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False -ErrorAction Stop
+            Out-Success
         }
     } catch {
         Out-Failure "Failed to remove unelevated Explorer scheduled task: $_"
@@ -66,6 +69,8 @@ function Set-WindowsBaseConfiguration {
             $ConfigLines.Add("`n[$Registry]`n")
             $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
         }
+
+        Out-Success
     } catch {
         Out-Failure "Failed to read the registry: $_"
     }
