@@ -2,6 +2,7 @@ function Set-WindowsPersonalisationConfig {
     try {
         Write-ActivityProgress 60 'Setting home location to Latvia...'
         Set-WinHomeLocation -GeoId 140 -ErrorAction Stop
+        Out-Success
     } catch {
         Out-Failure "Failed to set home location to Latvia: $_"
     }
@@ -12,6 +13,7 @@ function Set-WindowsPersonalisationConfig {
         if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
             $LanguageList.Add('lv')
             Set-WinUserLanguageList $LanguageList -Force -ErrorAction Stop
+            Out-Success
         }
     } catch {
         Out-Failure "Failed to add Latvian language to user language list: $_"
@@ -38,6 +40,8 @@ function Set-WindowsPersonalisationConfig {
             $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
             $ConfigLines.Add("`"RotatingLockScreenEnabled`"=dword:00000001`n")
         }
+
+        Out-Success
     } catch {
         Out-Failure "Failed to read the registry: $_"
     }
