@@ -11,18 +11,18 @@ function Install-Unchecky {
         return
     }
 
-    try {
-        if ($Execute) {
+    if ($Execute) {
+        try {
             Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
             New-RegistryKeyIfMissing $RegistryKey
             Set-ItemProperty -Path $RegistryKey -Name 'HideTrayIcon' -Value 1 -ErrorAction Stop
+        } catch {
+            Write-LogWarning "Failed to configure Unchecky parameters: $_"
         }
 
-        if ($Execute -and $Silent) {
+        if ($Silent) {
             Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
         }
-    } catch {
-        Write-LogWarning "Failed to configure Unchecky parameters: $_"
     }
 
     Start-DownloadUnzipAndRun '{URL_UNCHECKY}' -Execute:$Execute -Params $Params -Silent:$Silent

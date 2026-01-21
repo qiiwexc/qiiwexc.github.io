@@ -12,6 +12,6 @@ function Get-BatteryReport {
 
         Out-Success
     } catch {
-        Write-LogError "Failed to export battery report: $_"
+        Out-Failure "Failed to export battery report: $_"
     }
 }

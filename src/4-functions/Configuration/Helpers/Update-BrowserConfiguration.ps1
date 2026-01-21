@@ -19,8 +19,8 @@ function Update-BrowserConfiguration {
             try {
                 Start-Process $ProcessName -ErrorAction Stop
             } catch {
-                Write-LogError "Couldn't start '$AppName': $_" $LogIndentLevel
-                return
+                Out-Failure "Couldn't start '$AppName': $_" $LogIndentLevel
+                throw $_
             }
 
             for ([Int]$i = 0; $i -lt 5; $i++) {
@@ -40,6 +40,6 @@ function Update-BrowserConfiguration {
 
         Out-Success $LogIndentLevel
     } catch {
-        Write-LogError "Failed to update '$AppName' configuration: $_" $LogIndentLevel
+        Out-Failure "Failed to update '$AppName' configuration: $_" $LogIndentLevel
     }
 }

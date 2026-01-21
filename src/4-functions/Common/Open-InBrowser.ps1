@@ -8,6 +8,6 @@ function Open-InBrowser {
     try {
         Start-Process $Url -ErrorAction Stop
     } catch {
-        Write-LogError "Could not open the URL: $_"
+        Out-Failure "Could not open the URL: $_"
     }
 }

@@ -8,6 +8,6 @@ function Set-VlcConfiguration {
 
         Write-ConfigurationFile $AppName $CONFIG_VLC "$env:AppData\vlc\vlcrc"
     } catch {
-        Write-LogError "Failed to configure '$AppName': $_"
+        Out-Failure "Failed to configure '$AppName': $_"
     }
 }

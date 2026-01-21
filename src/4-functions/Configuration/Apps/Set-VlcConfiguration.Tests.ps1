@@ -16,7 +16,7 @@ Describe 'Set-VlcConfiguration' {
     BeforeEach {
         Mock Write-ActivityProgress {}
         Mock Write-ConfigurationFile {}
-        Mock Write-LogError {}
+        Mock Out-Failure {}
     }
 
     It 'Should configure VLC' {
@@ -29,7 +29,7 @@ Describe 'Set-VlcConfiguration' {
             $Content -eq $CONFIG_VLC -and
             $Path -match '\\AppData\\Roaming\\vlc\\vlcrc$'
         }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle Write-ConfigurationFile failure' {
@@ -39,6 +39,6 @@ Describe 'Set-VlcConfiguration' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 }

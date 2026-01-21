@@ -62,7 +62,7 @@ function Write-ActivityCompleted {
     if ($Success) {
         Out-Success
     } else {
-        Out-Failure
+        Out-Failure "$CURRENT_TASK failed"
     }
 
     Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)

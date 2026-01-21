@@ -39,6 +39,6 @@ function Start-WinUtil {
 
         Out-Success
     } catch {
-        Write-LogError "Failed to start WinUtil utility: $_"
+        Out-Failure "Failed to start WinUtil utility: $_"
     }
 }

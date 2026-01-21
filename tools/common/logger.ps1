@@ -56,10 +56,11 @@ function Out-Success {
 
 function Out-Failure {
     param(
-        [Int][Parameter(Position = 0)]$Level = 0
+        [String][Parameter(Position = 0, Mandatory)]$Message,
+        [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Out-Status "Failed $(Get-Emoji '274C')" $Level
+    Out-Status "$(Get-Emoji '274C') $Message" $Level
 }
 
 

@@ -19,7 +19,7 @@ BeforeAll {
 Describe 'Update-WebDependency' {
     BeforeEach {
         Mock Write-LogInfo {}
-        Mock Write-LogError {}
+        Mock Out-Failure {}
         Mock Set-NewVersion {}
         Mock Invoke-WebRequest {
             return @{
@@ -36,7 +36,7 @@ Describe 'Update-WebDependency' {
             $Uri -eq $TestDependency.url -and
             $UseBasicParsing -eq $True
         }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
             $Dependency -eq $TestDependency -and
@@ -54,7 +54,7 @@ Describe 'Update-WebDependency' {
         Update-WebDependency $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -64,7 +64,7 @@ Describe 'Update-WebDependency' {
         Update-WebDependency $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -74,7 +74,7 @@ Describe 'Update-WebDependency' {
         Update-WebDependency $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
     It 'Should handle Invoke-WebRequest failure' {
@@ -83,7 +83,7 @@ Describe 'Update-WebDependency' {
         Update-WebDependency $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 }

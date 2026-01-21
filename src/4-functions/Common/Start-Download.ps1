@@ -46,7 +46,7 @@ function Start-Download {
             throw 'Possibly computer is offline or disk is full'
         }
     } catch {
-        Write-LogError "Download failed: $_"
+        Out-Failure "Download failed: $_"
         return
     }
 

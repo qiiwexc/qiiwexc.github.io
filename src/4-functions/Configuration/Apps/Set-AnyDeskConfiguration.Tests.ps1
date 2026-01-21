@@ -20,7 +20,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Mock Test-Path { return $False }
         Mock Get-Content { return $TestExistingConfig }
         Mock Write-ConfigurationFile {}
-        Mock Write-LogError {}
+        Mock Out-Failure {}
     }
 
     It 'Should configure AnyDesk with no existing config' {
@@ -36,7 +36,7 @@ Describe 'Set-AnyDeskConfiguration' {
             $Content -eq $CONFIG_ANYDESK -and
             $Path -match $TestConfigPath
         }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should configure AnyDesk with existing config' {
@@ -58,7 +58,7 @@ Describe 'Set-AnyDeskConfiguration' {
             $Content -eq ($TestExistingConfig + $CONFIG_ANYDESK) -and
             $Path -match $TestConfigPath
         }
-        Should -Invoke Write-LogError -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should handle Test-Path failure' {
@@ -70,7 +70,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Write-ConfigurationFile -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 
     It 'Should handle Get-Content failure' {
@@ -83,7 +83,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 0
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 
     It 'Should handle Write-ConfigurationFile failure' {
@@ -95,6 +95,6 @@ Describe 'Set-AnyDeskConfiguration' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Write-ConfigurationFile -Exactly 1
-        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
     }
 }

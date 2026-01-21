@@ -11,7 +11,7 @@ function Start-Executable {
         try {
             Start-Process -Wait $Executable $Switches -ErrorAction Stop
         } catch {
-            Write-LogError "Failed to run '$Executable': $_"
+            Out-Failure "Failed to run '$Executable': $_"
             return
         }
 
@@ -30,7 +30,7 @@ function Start-Executable {
                 Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
             }
         } catch {
-            Write-LogError "Failed to execute '$Executable': $_"
+            Out-Failure "Failed to execute '$Executable': $_"
             return
         }
     }
