@@ -1,13 +1,13 @@
 function Set-WindowsPersonalisationConfig {
-    Write-ActivityProgress 80 'Applying Windows personalisation configuration...'
-
     try {
+        Write-ActivityProgress 60 'Setting home location to Latvia...'
         Set-WinHomeLocation -GeoId 140 -ErrorAction Stop
     } catch {
         Out-Failure "Failed to set home location to Latvia: $_"
     }
 
     try {
+        Write-ActivityProgress 70 'Adding Latvian language to user language list...'
         Set-Variable -Option Constant LanguageList ([Collections.Generic.List[PSCustomObject]](Get-WinUserLanguageList -ErrorAction Stop))
         if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
             $LanguageList.Add('lv')
@@ -17,13 +17,13 @@ function Set-WindowsPersonalisationConfig {
         Out-Failure "Failed to add Latvian language to user language list: $_"
     }
 
+    Write-ActivityProgress 80 'Building Windows personalisation configuration...'
+
     [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
     $ConfigLines.Add("`n")
     $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER)
     $ConfigLines.Add("`n")
     $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE)
-
-    Write-ActivityProgress 90
 
     try {
         if ($OS_VERSION -gt 10) {
@@ -43,6 +43,7 @@ function Set-WindowsPersonalisationConfig {
     }
 
     try {
+        Write-ActivityProgress 90 'Applying Windows personalisation configuration...'
         Import-RegistryConfiguration 'Windows Personalisation Config' $ConfigLines -ErrorAction Stop
         Out-Success
     } catch {

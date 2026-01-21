@@ -17,6 +17,7 @@ Describe 'Set-7zipConfiguration' {
     BeforeEach {
         Mock Write-ActivityProgress {}
         Mock Import-RegistryConfiguration {}
+        Mock Out-Success {}
         Mock Out-Failure {}
     }
 
@@ -30,6 +31,7 @@ Describe 'Set-7zipConfiguration' {
             $Content -match 'TEST_CONFIG_7ZIP1\n\[HKEY_USERS\\\.DEFAULT\\Test\]\nTEST_CONFIG_7ZIP2' -and
             $Content -match 'TEST_CONFIG_7ZIP1\n\[HKEY_CURRENT_USER\\Test\]\nTEST_CONFIG_7ZIP2'
         }
+        Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
@@ -40,6 +42,7 @@ Describe 'Set-7zipConfiguration' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
+        Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 }

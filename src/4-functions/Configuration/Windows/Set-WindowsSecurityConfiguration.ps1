@@ -1,5 +1,9 @@
 function Set-WindowsSecurityConfiguration {
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
+
     try {
+        Write-ActivityProgress 5 'Applying Windows security configuration...'
+
         Set-MpPreference -CheckForSignaturesBefore $True
         Set-MpPreference -DisableBlockAtFirstSeen $False
         Set-MpPreference -DisableCatchupQuickScan $False
@@ -15,7 +19,9 @@ function Set-WindowsSecurityConfiguration {
         Set-MpPreference -MeteredConnectionUpdates $True
         Set-MpPreference -IntelTDTEnabled $True
         Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
+
+        Out-Success $LogIndentLevel
     } catch {
-        Out-Failure "Failed to apply Windows Security configuration: $_"
+        Out-Failure "Failed to apply Windows Security configuration: $_" $LogIndentLevel
     }
 }

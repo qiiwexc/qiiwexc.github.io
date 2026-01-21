@@ -20,6 +20,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Mock Test-Path { return $False }
         Mock Get-Content { return $TestExistingConfig }
         Mock Write-ConfigurationFile {}
+        Mock Out-Success {}
         Mock Out-Failure {}
     }
 
@@ -36,6 +37,7 @@ Describe 'Set-AnyDeskConfiguration' {
             $Content -eq $CONFIG_ANYDESK -and
             $Path -match $TestConfigPath
         }
+        Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
@@ -58,6 +60,7 @@ Describe 'Set-AnyDeskConfiguration' {
             $Content -eq ($TestExistingConfig + $CONFIG_ANYDESK) -and
             $Path -match $TestConfigPath
         }
+        Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
@@ -70,6 +73,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Write-ConfigurationFile -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 
@@ -83,6 +87,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 
@@ -95,6 +100,7 @@ Describe 'Set-AnyDeskConfiguration' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Write-ConfigurationFile -Exactly 1
+        Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 }

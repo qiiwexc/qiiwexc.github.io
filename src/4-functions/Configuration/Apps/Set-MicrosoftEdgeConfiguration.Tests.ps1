@@ -18,6 +18,7 @@ Describe 'Set-MicrosoftEdgeConfiguration' {
     BeforeEach {
         Mock Write-ActivityProgress {}
         Mock Update-BrowserConfiguration {}
+        Mock Out-Success {}
         Mock Out-Failure {}
     }
 
@@ -38,6 +39,7 @@ Describe 'Set-MicrosoftEdgeConfiguration' {
             $Content -eq $CONFIG_EDGE_PREFERENCES -and
             $Path -match '\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Preferences$'
         }
+        Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
@@ -47,6 +49,7 @@ Describe 'Set-MicrosoftEdgeConfiguration' {
         Set-MicrosoftEdgeConfiguration $TestAppName
 
         Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 }

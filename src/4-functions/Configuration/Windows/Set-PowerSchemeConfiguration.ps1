@@ -8,7 +8,7 @@ function Set-PowerSchemeConfiguration {
 
         Out-Success $LogIndentLevel
 
-        Write-ActivityProgress 20 'Applying Windows power scheme settings...'
+        Write-ActivityProgress 15 'Applying Windows power scheme settings...'
 
         foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
             powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
