@@ -43,9 +43,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\InputPersonalization\TrainedDataStore]
 "HarvestContacts"=dword:00000000
 
-[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\ContinuousBrowsing]
-"Enabled"=dword:00000000
-
 [HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
 "DoNotTrack"=dword:00000001
 "Isolation"="PMEM"
@@ -141,9 +138,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
 "TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization]
-"SystemSettingsDownloadMode"=dword:00000000
-
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
 "ShowedToastAtLevel"=dword:00000001
 
@@ -201,9 +195,6 @@
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
 "CacheLimit"=dword:00002000
-
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Cache]
-"Persistent"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
 "RotatingLockScreenOverlayEnabled"=dword:00000000
