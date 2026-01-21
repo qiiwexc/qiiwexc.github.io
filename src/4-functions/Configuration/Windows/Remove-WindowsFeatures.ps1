@@ -4,7 +4,7 @@ function Remove-WindowsFeatures {
     try {
         Write-ActivityProgress 10 'Collecting features to remove...'
         Set-Variable -Option Constant InstalledFeatures ([PSCustomObject](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
-        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
+        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in @('Recall') }))
         Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
         Out-Success
     } catch {

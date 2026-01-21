@@ -47,9 +47,6 @@
 "AllowTelemetry"=dword:00000000
 "TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config]
-"DODownloadMode"=dword:00000000
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
 "CostedNetworkPolicy"=dword:00000001
 
@@ -287,9 +284,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main]
 "AllowPrelaunch"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Speech]
-"AllowSpeechModelUpdate"=dword:00000000
-
 ; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
 "DisabledByGroupPolicy"=dword:00000001
@@ -308,9 +302,6 @@
 "DisableOneSettingsDownloads"=dword:00000001
 "DoNotShowFeedbackNotifications"=dword:00000001
 "LimitDiagnosticLogCollection"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization]
-"DODownloadMode"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
 "HideRecommendedSection"=dword:00000001
@@ -368,16 +359,12 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet]
 "SpyNetReporting"=dword:00000000
-"SubmitSamplesConsent"=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
 "fAllowToGetHelp"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
 "EnableCertPaddingCheck"="1"
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}]
-"allowautoupdatesmetered"=dword:00000001
 
 ; Send only Required Diagnostic and Usage Data
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
@@ -447,9 +434,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MicrosoftEdge\Main]
 "AllowPrelaunch"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Speech]
-"AllowSpeechModelUpdate"=dword:00000000
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
 "AITEnable"=dword:00000000
 "DisableInventory"=dword:00000001
@@ -464,9 +448,6 @@
 "DisableOneSettingsDownloads"=dword:00000001
 "DoNotShowFeedbackNotifications"=dword:00000001
 "LimitDiagnosticLogCollection"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DeliveryOptimization]
-"DODownloadMode"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Explorer]
 "HideRecommendedSection"=dword:00000001
@@ -514,7 +495,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender\Spynet]
 "SpyNetReporting"=dword:00000000
-"SubmitSamplesConsent"=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows NT\Terminal Services]
 "fAllowToGetHelp"=dword:00000000

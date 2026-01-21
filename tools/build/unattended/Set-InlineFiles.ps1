@@ -17,7 +17,6 @@ function Set-InlineFiles {
             'CONFIG_VLC'                                        = "$ConfigsPath\Apps\VLC.ini"
             'CONFIG_WINDOWS_HKEY_CURRENT_USER'                  = "$ConfigsPath\Windows\Base\Windows HKEY_CURRENT_USER.reg"
             'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'                 = "$ConfigsPath\Windows\Base\Windows HKEY_LOCAL_MACHINE.reg"
-            'CONFIG_WINDOWS_HKEY_USERS'                         = "$ConfigsPath\Windows\Base\Windows HKEY_USERS.reg"
             'CONFIG_WINDOWS_LOCALISED'                          = "$ConfigsPath\Windows\Base\Windows {LOCALE}.reg"
             'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'  = "$ConfigsPath\Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg"
             'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE' = "$ConfigsPath\Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg"
