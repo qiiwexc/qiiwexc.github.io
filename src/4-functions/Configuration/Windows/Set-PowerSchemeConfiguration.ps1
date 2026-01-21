@@ -1,18 +1,22 @@
 function Set-PowerSchemeConfiguration {
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    Write-ActivityProgress 10 'Setting power scheme overlay...'
+    try {
+        Write-ActivityProgress 10 'Setting power scheme overlay...'
 
-    powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
+        powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 
-    Out-Success $LogIndentLevel
+        Out-Success $LogIndentLevel
 
-    Write-ActivityProgress 20 'Applying Windows power scheme settings...'
+        Write-ActivityProgress 20 'Applying Windows power scheme settings...'
 
-    foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
-        powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
-        powercfg /SetDcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+        foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
+            powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+            powercfg /SetDcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
+        }
+
+        Out-Success $LogIndentLevel
+    } catch {
+        Out-Failure "Failed to apply power settings configuration: $_" $LogIndentLevel
     }
-
-    Out-Success $LogIndentLevel
 }
