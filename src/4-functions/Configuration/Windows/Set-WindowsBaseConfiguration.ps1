@@ -5,12 +5,25 @@ function Set-WindowsBaseConfiguration {
 
     Set-PowerSchemeConfiguration
 
-    Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC)
-    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3
+    try {
+        Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC) -ErrorAction Stop
+    } catch {
+        Out-Failure "Failed to set currency symbol: $_"
+    }
 
-    Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
-    if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
-        Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False
+    try {
+        Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate' -Name 'Start' -Value 3 -ErrorAction Stop
+    } catch {
+        Out-Failure "Failed to enable time zone auto update: $_"
+    }
+
+    try {
+        Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
+        if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
+            Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False -ErrorAction Stop
+        }
+    } catch {
+        Out-Failure "Failed to remove unelevated Explorer scheduled task: $_"
     }
 
     if ($SYSTEM_LANGUAGE -match 'ru') {
@@ -46,7 +59,7 @@ function Set-WindowsBaseConfiguration {
             $ConfigLines.Add("`"EnableCortana`"=dword:00000000`n")
         }
 
-        Set-Variable -Option Constant VolumeRegistries ([String[]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*').Name)
+        Set-Variable -Option Constant VolumeRegistries ([String[]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*' -ErrorAction Stop).Name)
         foreach ($Registry in $VolumeRegistries) {
             $ConfigLines.Add("`n[$Registry]`n")
             $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
@@ -55,5 +68,10 @@ function Set-WindowsBaseConfiguration {
         Out-Failure "Failed to read the registry: $_"
     }
 
-    Import-RegistryConfiguration 'Windows Base Config' $ConfigLines
+    try {
+        Import-RegistryConfiguration 'Windows Base Config' $ConfigLines -ErrorAction Stop
+        Out-Success
+    } catch {
+        Out-Failure "Failed to apply Windows base configuration: $_"
+    }
 }
