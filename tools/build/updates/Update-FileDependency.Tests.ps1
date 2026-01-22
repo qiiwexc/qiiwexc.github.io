@@ -23,11 +23,11 @@ BeforeAll {
         }
     )
 
-    Set-Variable -Option Constant TypeDate (Get-TypeData -TypeName System.IO.FileInfo)
-    Remove-TypeData -TypeData $TypeDate
-    Set-Variable -Option Constant TypeBackup $TypeDate.Copy()
-    $Null = $TypeDate.members.Remove('VersionInfo')
-    Update-TypeData -TypeData $TypeDate
+    Set-Variable -Option Constant TypeData (Get-TypeData -TypeName System.IO.FileInfo)
+    Remove-TypeData -TypeData $TypeData
+    Set-Variable -Option Constant TypeBackup $TypeData.Copy()
+    $Null = $TypeData.members.Remove('VersionInfo')
+    Update-TypeData -TypeData $TypeData
 
     Set-Variable -Option Constant TestCurrentFile32bit (
         New-MockObject -Type System.IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestCurrentVersion } }

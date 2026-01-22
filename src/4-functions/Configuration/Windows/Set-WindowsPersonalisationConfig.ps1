@@ -8,9 +8,9 @@ function Set-WindowsPersonalisationConfig {
     }
 
     try {
-        Write-ActivityProgress 70 'Adding Latvian language to user language list...'
         Set-Variable -Option Constant LanguageList ([Collections.Generic.List[PSCustomObject]](Get-WinUserLanguageList -ErrorAction Stop))
-        if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
+        if (-not ($LanguageList | Where-Object { $_.LanguageTag -like 'lv' })) {
+            Write-ActivityProgress 70 'Adding Latvian language to user language list...'
             $LanguageList.Add('lv')
             Set-WinUserLanguageList $LanguageList -Force -ErrorAction Stop
             Out-Success
