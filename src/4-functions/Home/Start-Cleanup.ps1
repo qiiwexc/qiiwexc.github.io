@@ -36,9 +36,12 @@ function Start-Cleanup {
             'Delivery Optimization Files',
             'Device Driver Packages',
             'Diagnostic Data Viewer database files',
+            'DirectX Shader cache',
             'Downloaded Program Files',
             'Internet Cache Files',
             'Language Pack',
+            'Language resources Files',
+            'Offline Files',
             'Old ChkDsk Files',
             'Previous Installations',
             'Recycle Bin',
@@ -47,14 +50,22 @@ function Start-Cleanup {
             'System error memory dump files',
             'System error minidump files',
             'Temporary Files',
+            'Temporary Internet Files',
+            'Temporary Offline Files',
             'Temporary Setup Files',
             'Thumbnail Cache',
+            'Thumbnails',
             'Update Cleanup',
+            'Update package Backup Files',
+            'User file history',
             'User file versions',
-            'Windows Error Reporting Files',
-            'Windows ESD installation files',
+            'Windows Defender Antivirus',
             'Windows Defender',
-            'Windows Upgrade Log Files'
+            'Windows Error Reporting Files',
+            'Windows error reports and feedback diagnostics',
+            'Windows ESD installation files',
+            'Windows Update Cleanup',
+            'Windows Upgrade log files'
         )
     )
 
@@ -63,7 +74,8 @@ function Start-Cleanup {
     }
     Write-ActivityProgress 80
 
-    Start-Process 'cleanmgr.exe' '/sagerun:3224'
+    Start-Process 'cleanmgr.exe' '/d C: /sagerun:3224'
+    # Start-Process 'cleanmgr.exe' '/d C: /VERYLOWDISK'
 
     Write-ActivityProgress 90
     Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {

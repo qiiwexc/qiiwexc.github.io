@@ -41,6 +41,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Mock Out-Failure {}
         Mock Get-ScheduledTask { return $TestScheduledTask }
         Mock Unregister-ScheduledTask {}
+        Mock Disable-ScheduledTask {}
         Mock Get-UsersRegistryKeys { return $TestUsers }
         Mock Get-Item { return $TestVolumes }
         Mock Import-RegistryConfiguration {}
@@ -72,6 +73,23 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Unregister-ScheduledTask -Exactly 1 -ParameterFilter {
             $TaskName -eq $TestUnelevatedExplorerTaskName -and
             $Confirm -eq $False
+        }
+        Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
+            $TaskName -eq 'Consolidator' -and
+            $TaskPath -eq 'Microsoft\Windows\Customer Experience Improvement Program'
+        }
+        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
+            $TaskName -eq 'DmClient' -and
+            $TaskPath -eq 'Microsoft\Windows\Feedback\Siuf'
+        }
+        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
+            $TaskName -eq 'StartupAppTask' -and
+            $TaskPath -eq 'Microsoft\Windows\Application Experience'
+        }
+        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
+            $TaskName -eq 'Microsoft-Windows-DiskDiagnosticDataCollector' -and
+            $TaskPath -eq 'Microsoft\Windows\DiskDiagnostic'
         }
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
@@ -115,6 +133,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -133,10 +152,11 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Set-ItemProperty -Exactly 2
-        Should -Invoke Out-Success -Exactly 4
+        Should -Invoke Out-Success -Exactly 5
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 0
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -155,6 +175,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -188,6 +209,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -212,6 +234,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 0
         Should -Invoke Unregister-ScheduledTask -Exactly 0
+        Should -Invoke Disable-ScheduledTask -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 0
         Should -Invoke Get-Item -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 0
@@ -230,6 +253,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 0
         Should -Invoke Unregister-ScheduledTask -Exactly 0
+        Should -Invoke Disable-ScheduledTask -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 0
         Should -Invoke Get-Item -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 0
@@ -248,6 +272,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -266,6 +291,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -280,10 +306,11 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Set-ItemProperty -Exactly 2
-        Should -Invoke Out-Success -Exactly 4
+        Should -Invoke Out-Success -Exactly 5
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 0
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -298,10 +325,30 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Set-ItemProperty -Exactly 2
+        Should -Invoke Out-Success -Exactly 5
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Get-ScheduledTask -Exactly 1
+        Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-UsersRegistryKeys -Exactly 1
+        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Import-RegistryConfiguration -Exactly 1
+    }
+
+    It 'Should handle Disable-ScheduledTask failure' {
+        Mock Disable-ScheduledTask { throw $TestException }
+
+        Set-WindowsBaseConfiguration
+
+        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 5
+        Should -Invoke Set-ItemProperty -Exactly 2
         Should -Invoke Out-Success -Exactly 4
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -320,6 +367,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -338,6 +386,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -356,6 +405,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 10
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
