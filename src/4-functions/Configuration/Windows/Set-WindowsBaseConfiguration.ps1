@@ -19,17 +19,43 @@ function Set-WindowsBaseConfiguration {
         Out-Failure "Failed to enable time zone auto update: $_"
     }
 
-    Write-ActivityProgress 30 'Building configuration to apply...'
+    Write-ActivityProgress 40 'Disabling telemetry tasks...'
 
     try {
         Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
         if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName }) {
             Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False -ErrorAction Stop
-            Out-Success
         }
     } catch {
         Out-Failure "Failed to remove unelevated Explorer scheduled task: $_"
     }
+
+    try {
+        Set-Variable -Option Constant TelemetryTaskList (
+            [hashtable[]]@(
+                @{Name = 'Consolidator'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' },
+                @{Name = 'DmClient'; Path = 'Microsoft\Windows\Feedback\Siuf' },
+                @{Name = 'DmClientOnScenarioDownload'; Path = 'Microsoft\Windows\Feedback\Siuf' },
+                @{Name = 'MareBackup'; Path = 'Microsoft\Windows\Application Experience' },
+                @{Name = 'Microsoft-Windows-DiskDiagnosticDataCollector'; Path = 'Microsoft\Windows\DiskDiagnostic' },
+                @{Name = 'PcaPatchDbTask'; Path = 'Microsoft\Windows\Application Experience' },
+                @{Name = 'Proxy'; Path = 'Microsoft\Windows\Autochk' },
+                @{Name = 'QueueReporting'; Path = 'Microsoft\Windows\Windows Error Reporting' },
+                @{Name = 'StartupAppTask'; Path = 'Microsoft\Windows\Application Experience' },
+                @{Name = 'UsbCeip'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' }
+            )
+        )
+
+        foreach ($Task in $TelemetryTaskList) {
+            Disable-ScheduledTask -TaskName $Task.Name -TaskPath $Task.Path -ErrorAction Stop
+        }
+
+        Out-Success
+    } catch {
+        Out-Failure "Failed to disable telemetry tasks: $_"
+    }
+
+    Write-ActivityProgress 40 'Building configuration to apply...'
 
     if ($SYSTEM_LANGUAGE -match 'ru') {
         Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_RUSSIAN)
@@ -46,8 +72,6 @@ function Set-WindowsBaseConfiguration {
     $ConfigLines.Add($LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT'))
     $ConfigLines.Add("`n")
     $ConfigLines.Add($LocalisedConfig)
-
-    Write-ActivityProgress 40
 
     try {
         foreach ($User in (Get-UsersRegistryKeys)) {
