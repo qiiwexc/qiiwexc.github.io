@@ -1,4 +1,4 @@
-New-GroupBox 'Alternative DNS'
+New-GroupBox 'Alternative DNS' 4
 
 
 [ScriptBlock]$BUTTON_FUNCTION = { Set-CloudFlareDNS -MalwareProtection:$CHECKBOX_CloudFlareAntiMalware.Checked -FamilyFriendly:$CHECKBOX_CloudFlareFamilyFriendly.Checked }

@@ -54,7 +54,7 @@ function Start-Cleanup {
             'Windows Defender',
             'Windows Error Reporting Files',
             'Windows ESD installation files',
-            'Windows Upgrade log files'
+            'Windows Upgrade Log Files'
         )
     )
 

@@ -132,13 +132,13 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\User file versions]
 "StateFlags"=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
+"StateFlags"=dword:00000001
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting Files]
 "StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files]
-"StateFlags"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
 "StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
@@ -211,7 +211,6 @@
 "EnableFindMyFiles"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
-"AllowAutoWindowsUpdateDownloadOverMeteredNetwork"=dword:00000001
 "AllowMUUpdateService"=dword:00000001
 "IsContinuousInnovationOptedIn"=dword:00000001
 
@@ -318,9 +317,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors]
 "DisableLocationScripting"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Messaging]
-"AllowMessageSync"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive]
 "DisableFileSyncNGSC"=dword:00000001
@@ -460,9 +456,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\LocationAndSensors]
 "DisableLocationScripting"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Messaging]
-"AllowMessageSync"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Personalization]
 "NoLockScreenCamera"=dword:00000001
@@ -616,6 +609,3 @@
 "Tcp1323Opts"=dword:00000001
 "TcpMaxDupAcks"=dword:00000002
 "TCPTimedWaitDelay"=dword:00000030
-
-[HKEY_LOCAL_MACHINE\SYSTEM\Maps]
-"UpdateOnlyOnWifi"=dword:00000000
