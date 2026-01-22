@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.22')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.23')
 ::
 ::#endregion init > Version
 ::
@@ -44,7 +44,7 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"$($MyInvocation.Line)`""
 ::    } catch {
-::        Write-Error $_
+::        Write-Error "Failed to restart elevated: $_"
 ::        Start-Sleep -Seconds 5
 ::    }
 ::
@@ -64,7 +64,7 @@ if "%~1"=="Debug" (
 ::try {
 ::    Add-Type -AssemblyName System.Windows.Forms
 ::} catch {
-::    throw 'System not supported'
+::    throw "System not supported: Failed to load 'System.Windows.Forms' module: $_"
 ::}
 ::
 ::if (-not $DevMode) {
@@ -1327,18 +1327,6 @@ if "%~1"=="Debug" (
 ::#endregion configs > Installs > Office Installer
 ::
 ::
-::#region configs > Windows > Features to remove
-::
-::Set-Variable -Option Constant CONFIG_FEATURES_TO_REMOVE (
-::    [String[]]@(
-::        'MicrosoftWindowsPowerShellV2Root'
-::        'Recall'
-::    )
-::)
-::
-::#endregion configs > Windows > Features to remove
-::
-::
 ::#region configs > Windows > Power settings
 ::
 ::Set-Variable -Option Constant CONFIG_POWER_SETTINGS (
@@ -1609,9 +1597,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\InputPersonalization\TrainedDataStore]
 ::"HarvestContacts"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\ContinuousBrowsing]
-::"Enabled"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
 ::"DoNotTrack"=dword:00000001
 ::"Isolation"="PMEM"
@@ -1707,9 +1692,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization]
-::"SystemSettingsDownloadMode"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
 ::"ShowedToastAtLevel"=dword:00000001
 ::
@@ -1758,6 +1740,9 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
 ::"VisualFXSetting"=dword:00000001
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Feeds]
+::"EnableFeeds"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR]
 ::"AppCaptureEnabled"=dword:00000000
 ::
@@ -1767,9 +1752,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
 ::"CacheLimit"=dword:00002000
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Cache]
-::"Persistent"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
 ::"RotatingLockScreenOverlayEnabled"=dword:00000000
@@ -1807,19 +1789,17 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 ::"IsEnabled"=dword:00000000
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications]
-::"EnableAccountNotifications"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
 ::"01"=dword:00000001
+::"256"=dword:0000003C
 ::"2048"=dword:0000001E
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications]
+::"EnableAccountNotifications"=dword:00000000
 ::
 ::; Suggest ways I can finish setting up my device to get the most out of Windows
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
 ::"ScoobeSystemSettingEnabled"=dword:00000000
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
-::"256"=dword:0000003C
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
 ::"VideoQualityOnBattery"=dword:00000001
@@ -1941,9 +1921,6 @@ if "%~1"=="Debug" (
 ::"AllowTelemetry"=dword:00000000
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config]
-::"DODownloadMode"=dword:00000000
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
 ::"CostedNetworkPolicy"=dword:00000001
 ::
@@ -2054,6 +2031,9 @@ if "%~1"=="Debug" (
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
+::"{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}"=""
 ::
 ::; Disable Windows Backup reminder notifications
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
@@ -2181,9 +2161,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main]
 ::"AllowPrelaunch"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Speech]
-::"AllowSpeechModelUpdate"=dword:00000000
-::
 ::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
 ::"DisabledByGroupPolicy"=dword:00000001
@@ -2202,9 +2179,6 @@ if "%~1"=="Debug" (
 ::"DisableOneSettingsDownloads"=dword:00000001
 ::"DoNotShowFeedbackNotifications"=dword:00000001
 ::"LimitDiagnosticLogCollection"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization]
-::"DODownloadMode"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
 ::"HideRecommendedSection"=dword:00000001
@@ -2262,16 +2236,12 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet]
 ::"SpyNetReporting"=dword:00000000
-::"SubmitSamplesConsent"=dword:00000002
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
 ::"fAllowToGetHelp"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
 ::"EnableCertPaddingCheck"="1"
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}]
-::"allowautoupdatesmetered"=dword:00000001
 ::
 ::; Send only Required Diagnostic and Usage Data
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
@@ -2341,9 +2311,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MicrosoftEdge\Main]
 ::"AllowPrelaunch"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Speech]
-::"AllowSpeechModelUpdate"=dword:00000000
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
 ::"AITEnable"=dword:00000000
 ::"DisableInventory"=dword:00000001
@@ -2358,9 +2325,6 @@ if "%~1"=="Debug" (
 ::"DisableOneSettingsDownloads"=dword:00000001
 ::"DoNotShowFeedbackNotifications"=dword:00000001
 ::"LimitDiagnosticLogCollection"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DeliveryOptimization]
-::"DODownloadMode"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Explorer]
 ::"HideRecommendedSection"=dword:00000001
@@ -2408,10 +2372,12 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender\Spynet]
 ::"SpyNetReporting"=dword:00000000
-::"SubmitSamplesConsent"=dword:00000002
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows NT\Terminal Services]
 ::"fAllowToGetHelp"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Ndu]
+::"Start"=dword:00000002
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control]
 ::"SvcHostSplitThresholdInKB"=dword:00000000
@@ -2530,19 +2496,6 @@ if "%~1"=="Debug" (
 ::'
 ::
 ::#endregion configs > Windows > Base > Windows HKEY_LOCAL_MACHINE
-::
-::
-::#region configs > Windows > Base > Windows HKEY_USERS
-::
-::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_USERS '[HKEY_USERS\S-1-5-20\Software\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Usage]
-::"CacheServerConnectionCount"=dword:00000000
-::"DownlinkUsageBps"=dword:00000000
-::"SwarmCount"=dword:00000000
-::"UploadCount"=dword:00000000
-::"CacheSizeBytes"=hex:00,00,00,00,00,00,00,00
-::'
-::
-::#endregion configs > Windows > Base > Windows HKEY_USERS
 ::
 ::
 ::#region configs > Windows > Base > Windows Russian
@@ -3186,7 +3139,7 @@ if "%~1"=="Debug" (
 ::E207	-	# Disable automatic completion of web addresses in address bar (Category: Microsoft Edge (new version based on Chromium))
 ::E111	+	# Disable user feedback in toolbar (Category: Microsoft Edge (new version based on Chromium))
 ::E211	+	# Disable user feedback in toolbar (Category: Microsoft Edge (new version based on Chromium))
-::E112	+	# Disable storing and autocompleting of credit card data on websites (Category: Microsoft Edge (new version based on Chromium))
+::E112	-	# Disable storing and autocompleting of credit card data on websites (Category: Microsoft Edge (new version based on Chromium))
 ::E212	-	# Disable storing and autocompleting of credit card data on websites (Category: Microsoft Edge (new version based on Chromium))
 ::E109	-	# Disable form suggestions (Category: Microsoft Edge (new version based on Chromium))
 ::E209	-	# Disable form suggestions (Category: Microsoft Edge (new version based on Chromium))
@@ -3223,7 +3176,7 @@ if "%~1"=="Debug" (
 ::E002	-	# Disable page prediction (Category: Microsoft Edge (legacy version))
 ::E003	-	# Disable search and website suggestions (Category: Microsoft Edge (legacy version))
 ::E008	+	# Disable Cortana in Microsoft Edge (Category: Microsoft Edge (legacy version))
-::E007	+	# Disable automatic completion of web addresses in address bar (Category: Microsoft Edge (legacy version))
+::E007	-	# Disable automatic completion of web addresses in address bar (Category: Microsoft Edge (legacy version))
 ::E010	-	# Disable showing search history (Category: Microsoft Edge (legacy version))
 ::E011	+	# Disable user feedback in toolbar (Category: Microsoft Edge (legacy version))
 ::E012	-	# Disable storing and autocompleting of credit card data on websites (Category: Microsoft Edge (legacy version))
@@ -3258,12 +3211,12 @@ if "%~1"=="Debug" (
 ::Y006	-	# Disable synchronization of accessibility settings (Category: Synchronization of Windows Settings)
 ::Y007	-	# Disable synchronization of advanced Windows settings (Category: Synchronization of Windows Settings)
 ::C012	+	# Disable and reset Cortana (Category: Cortana (Personal Assistant))
-::C002	+	# Disable Input Personalization (Category: Cortana (Personal Assistant))
+::C002	-	# Disable Input Personalization (Category: Cortana (Personal Assistant))
 ::C013	+	# Disable online speech recognition (Category: Cortana (Personal Assistant))
 ::C007	+	# Cortana and search are disallowed to use location (Category: Cortana (Personal Assistant))
 ::C008	+	# Disable web search from Windows Desktop Search (Category: Cortana (Personal Assistant))
 ::C009	+	# Disable display web results in Search (Category: Cortana (Personal Assistant))
-::C010	+	# Disable download and updates of speech recognition and speech synthesis models (Category: Cortana (Personal Assistant))
+::C010	-	# Disable download and updates of speech recognition and speech synthesis models (Category: Cortana (Personal Assistant))
 ::C011	+	# Disable cloud search (Category: Cortana (Personal Assistant))
 ::C014	+	# Disable Cortana above lock screen (Category: Cortana (Personal Assistant))
 ::C015	+	# Disable the search highlights in the taskbar (Category: Cortana (Personal Assistant))
@@ -3285,8 +3238,8 @@ if "%~1"=="Debug" (
 ::U005	+	# Disable the use of diagnostic data for a tailor-made user experience for current user (Category: User Behavior)
 ::U006	+	# Disable diagnostic log collection (Category: User Behavior)
 ::U007	+	# Disable downloading of OneSettings configuration settings (Category: User Behavior)
-::W001	+	# Disable Windows Update via peer-to-peer (Category: Windows Update)
-::W011	+	# Disable updates to the speech recognition and speech synthesis modules. (Category: Windows Update)
+::W001	-	# Disable Windows Update via peer-to-peer (Category: Windows Update)
+::W011	-	# Disable updates to the speech recognition and speech synthesis modules. (Category: Windows Update)
 ::W004	-	# Activate deferring of upgrades (Category: Windows Update)
 ::W005	-	# Disable automatic downloading manufacturers" apps and icons for devices (Category: Windows Update)
 ::W010	-	# Disable automatic driver updates through Windows Update (Category: Windows Update)
@@ -3300,15 +3253,15 @@ if "%~1"=="Debug" (
 ::O003	+	# Disable OneDrive access to network before login (Category: Windows Explorer)
 ::O001	+	# Disable Microsoft OneDrive (Category: Windows Explorer)
 ::S012	+	# Disable Microsoft SpyNet membership (Category: Microsoft Defender and Microsoft SpyNet)
-::S013	+	# Disable submitting data samples to Microsoft (Category: Microsoft Defender and Microsoft SpyNet)
-::S014	+	# Disable reporting of malware infection information (Category: Microsoft Defender and Microsoft SpyNet)
+::S013	-	# Disable submitting data samples to Microsoft (Category: Microsoft Defender and Microsoft SpyNet)
+::S014	-	# Disable reporting of malware infection information (Category: Microsoft Defender and Microsoft SpyNet)
 ::K001	-	# Disable Windows Spotlight (Category: Lock Screen)
 ::K002	+	# Disable fun facts, tips, tricks, and more on your lock screen (Category: Lock Screen)
 ::K005	+	# Disable notifications on lock screen (Category: Lock Screen)
-::D001	+	# Disable access to mobile devices (Category: Mobile Devices)
+::D001	-	# Disable access to mobile devices (Category: Mobile Devices)
 ::D002	+	# Disable Phone Link app (Category: Mobile Devices)
 ::D003	+	# Disable showing suggestions for using mobile devices with Windows (Category: Mobile Devices)
-::D104	+	# Disable connecting the PC to mobile devices (Category: Mobile Devices)
+::D104	-	# Disable connecting the PC to mobile devices (Category: Mobile Devices)
 ::M025	+	# Disable search with AI in search box (Category: Search)
 ::M003	+	# Disable extension of Windows search with Bing (Category: Search)
 ::M015	+	# Disable People icon in the taskbar (Category: Taskbar)
@@ -3325,7 +3278,7 @@ if "%~1"=="Debug" (
 ::M012	-	# Disable Key Management Service Online Activation (Category: Miscellaneous)
 ::M013	-	# Disable automatic download and update of map data (Category: Miscellaneous)
 ::M014	-	# Disable unsolicited network traffic on the offline maps settings page (Category: Miscellaneous)
-::M026	+	# Disable remote assistance connections to this computer (Category: Miscellaneous)
+::M026	-	# Disable remote assistance connections to this computer (Category: Miscellaneous)
 ::M027	+	# Disable remote connections to this computer (Category: Miscellaneous)
 ::M028	+	# Disable the desktop icon for information on "Windows Spotlight" (Category: Miscellaneous)
 ::N001	-	# Disable Network Connectivity Status Indicator (Category: Miscellaneous)
@@ -3350,15 +3303,6 @@ if "%~1"=="Debug" (
 ::#endregion configs > Windows > Tools > sdi
 ::
 ::
-::#region configs > Windows > Tools > WinUtil Personalisation
-::
-::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION '                      "WPFTweaksRightClickMenu",
-::                      "WPFTweaksRemoveOnedrive",
-::'
-::
-::#endregion configs > Windows > Tools > WinUtil Personalisation
-::
-::
 ::#region configs > Windows > Tools > WinUtil
 ::
 ::Set-Variable -Option Constant CONFIG_WINUTIL '{
@@ -3370,11 +3314,9 @@ if "%~1"=="Debug" (
 ::                      "WPFTweaksEndTaskOnTaskbar",
 ::                      "WPFTweaksLoc",
 ::                      "WPFTweaksPowershell7Tele",
-::                      "WPFTweaksRecallOff",
 ::                      "WPFTweaksRemoveCopilot",
 ::                      "WPFTweaksRestorePoint",
 ::                      "WPFTweaksTele",
-::                      "WPFTweaksWifi",
 ::                      "WPFTweaksDeleteTempFiles",
 ::                      "WPFTweaksDiskCleanup"
 ::                  ],
@@ -3417,8 +3359,12 @@ if "%~1"=="Debug" (
 ::}
 ::
 ::function Exit-App {
+::    param(
+::        [Switch][Parameter(Position = 0)]$Update
+::    )
+::
 ::    Write-LogInfo 'Exiting the app...'
-::    Reset-State
+::    Reset-State -Update $Update
 ::    $FORM.Close()
 ::}
 ::
@@ -3882,9 +3828,8 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 0, Mandatory)]$Url
 ::    )
 ::
-::    Write-LogInfo "Opening URL in the default browser: $Url"
-::
 ::    try {
+::        Write-LogInfo "Opening URL in the default browser: $Url"
 ::        Start-Process $Url -ErrorAction Stop
 ::    } catch {
 ::        Out-Failure "Could not open the URL: $_"
@@ -4223,54 +4168,50 @@ if "%~1"=="Debug" (
 ::#region functions > Common > Updater
 ::
 ::function Update-App {
-::    Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
+::    try {
+::        Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
 ::
-::    Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
+::        Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
 ::
-::    if ($IsUpdateAvailable) {
-::        Get-NewVersion $AppBatFile
+::        if ($IsUpdateAvailable) {
+::            Get-NewVersion $AppBatFile
 ::
-::        Write-LogWarning 'Restarting...'
+::            Write-LogWarning 'Restarting...'
 ::
-::        try {
 ::            Invoke-CustomCommand $AppBatFile
-::        } catch {
-::            Out-Failure "Failed to start new version: $_"
-::            return
-::        }
 ::
-::        Exit-App -Update
+::            Exit-App -Update
+::        }
+::    } catch {
+::        Out-Failure "Failed to start new version: $_"
 ::    }
 ::}
 ::
 ::
 ::function Get-UpdateAvailability {
-::    Write-LogInfo 'Checking for updates...'
-::
-::    if ($DevMode) {
-::        Out-Status 'Skipping in dev mode'
-::        return
-::    }
-::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
-::        return
-::    }
-::
 ::    try {
-::        Set-Variable -Option Constant VersionFile ([String]"$PATH_APP_DIR\version")
-::        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version'))
-::        Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
+::        Write-LogInfo 'Checking for updates...'
+::
+::        if ($DevMode) {
+::            Out-Status 'Skipping in dev mode'
+::            return
+::        }
+::
+::        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::        if (-not $IsConnected) {
+::            return
+::        }
+::
+::        Set-Variable -Option Constant AvailableVersion ([Version](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version'))
+::
+::        if ($AvailableVersion -gt $VERSION) {
+::            Write-LogWarning "Newer version available: v$AvailableVersion"
+::            return $True
+::        } else {
+::            Out-Status 'No updates available'
+::        }
 ::    } catch {
 ::        Out-Failure "Failed to check for updates: $_"
-::        return
-::    }
-::
-::    if ($AvailableVersion -gt $VERSION) {
-::        Write-LogWarning "Newer version available: v$AvailableVersion"
-::        return $True
-::    } else {
-::        Out-Status 'No updates available'
 ::    }
 ::}
 ::
@@ -4280,21 +4221,20 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 0, Mandatory)]$AppBatFile
 ::    )
 ::
-::    Write-LogWarning 'Downloading new version...'
-::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
-::        return
-::    }
-::
 ::    try {
+::        Write-LogWarning 'Downloading new version...'
+::
+::        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+::        if (-not $IsConnected) {
+::            return
+::        }
+::
 ::        Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_bat' -OutFile $AppBatFile
+::
+::        Out-Success
 ::    } catch {
 ::        Out-Failure "Failed to download update: $_"
-::        return
 ::    }
-::
-::    Out-Success
 ::}
 ::
 ::#endregion functions > Common > Updater
@@ -4456,7 +4396,6 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Write-ActivityProgress 48 "Configuring $AppName..."
 ::
-::
 ::        if ($SYSTEM_LANGUAGE -match 'ru') {
 ::            Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN))
 ::        } else {
@@ -4498,11 +4437,11 @@ if "%~1"=="Debug" (
 ::function Get-UsersRegistryKeys {
 ::    try {
 ::        Set-Variable -Option Constant Users ([String[]](Get-Item 'Registry::HKEY_USERS\*' -ErrorAction Stop).Name)
+::        return $Users | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' } | ForEach-Object { Split-Path $_ -Leaf }
 ::    } catch {
 ::        Write-LogWarning "Failed to retrieve users registry keys: $_"
 ::        return $()
 ::    }
-::    return $Users | Where-Object { $_ -match 'S-1-5-21' -and $_ -notmatch '_Classes$' } | ForEach-Object { Split-Path $_ -Leaf }
 ::}
 ::
 ::#endregion functions > Configuration > Helpers > Get-UsersRegistryKeys
@@ -4518,9 +4457,9 @@ if "%~1"=="Debug" (
 ::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
-::    Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
-::
 ::    try {
+::        Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
+::
 ::        Set-Variable -Option Constant RegFilePath ([String]"$PATH_APP_DIR\$AppName.reg")
 ::
 ::        Initialize-AppDirectory
@@ -4597,9 +4536,9 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 3, Mandatory)]$Path
 ::    )
 ::
-::    try {
-::        Set-Variable -Option Constant LogIndentLevel ([Int]1)
+::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
+::    try {
 ::        Write-LogInfo "Writing '$AppName' configuration to '$Path'..." $LogIndentLevel
 ::
 ::        Stop-ProcessIfRunning $ProcessName
@@ -4677,7 +4616,7 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Write-ActivityProgress 10 'Collecting features to remove...'
 ::        Set-Variable -Option Constant InstalledFeatures ([PSCustomObject](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
-::        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in $CONFIG_FEATURES_TO_REMOVE }))
+::        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in @('Recall') }))
 ::        Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
 ::        Out-Success
 ::    } catch {
@@ -4807,17 +4746,43 @@ if "%~1"=="Debug" (
 ::        Out-Failure "Failed to enable time zone auto update: $_"
 ::    }
 ::
-::    Write-ActivityProgress 30 'Building configuration to apply...'
+::    Write-ActivityProgress 40 'Disabling telemetry tasks...'
 ::
 ::    try {
 ::        Set-Variable -Option Constant UnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
-::        if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName } ) {
+::        if (Get-ScheduledTask | Where-Object { $_.TaskName -eq $UnelevatedExplorerTaskName }) {
 ::            Unregister-ScheduledTask -TaskName $UnelevatedExplorerTaskName -Confirm:$False -ErrorAction Stop
-::            Out-Success
 ::        }
 ::    } catch {
 ::        Out-Failure "Failed to remove unelevated Explorer scheduled task: $_"
 ::    }
+::
+::    try {
+::        Set-Variable -Option Constant TelemetryTaskList (
+::            [hashtable[]]@(
+::                @{Name = 'Consolidator'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' },
+::                @{Name = 'DmClient'; Path = 'Microsoft\Windows\Feedback\Siuf' },
+::                @{Name = 'DmClientOnScenarioDownload'; Path = 'Microsoft\Windows\Feedback\Siuf' },
+::                @{Name = 'MareBackup'; Path = 'Microsoft\Windows\Application Experience' },
+::                @{Name = 'Microsoft-Windows-DiskDiagnosticDataCollector'; Path = 'Microsoft\Windows\DiskDiagnostic' },
+::                @{Name = 'PcaPatchDbTask'; Path = 'Microsoft\Windows\Application Experience' },
+::                @{Name = 'Proxy'; Path = 'Microsoft\Windows\Autochk' },
+::                @{Name = 'QueueReporting'; Path = 'Microsoft\Windows\Windows Error Reporting' },
+::                @{Name = 'StartupAppTask'; Path = 'Microsoft\Windows\Application Experience' },
+::                @{Name = 'UsbCeip'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' }
+::            )
+::        )
+::
+::        foreach ($Task in $TelemetryTaskList) {
+::            Disable-ScheduledTask -TaskName $Task.Name -TaskPath $Task.Path -ErrorAction Stop
+::        }
+::
+::        Out-Success
+::    } catch {
+::        Out-Failure "Failed to disable telemetry tasks: $_"
+::    }
+::
+::    Write-ActivityProgress 40 'Building configuration to apply...'
 ::
 ::    if ($SYSTEM_LANGUAGE -match 'ru') {
 ::        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_RUSSIAN)
@@ -4834,8 +4799,6 @@ if "%~1"=="Debug" (
 ::    $ConfigLines.Add($LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT'))
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($LocalisedConfig)
-::
-::    Write-ActivityProgress 40
 ::
 ::    try {
 ::        foreach ($User in (Get-UsersRegistryKeys)) {
@@ -4911,9 +4874,9 @@ if "%~1"=="Debug" (
 ::    }
 ::
 ::    try {
-::        Write-ActivityProgress 70 'Adding Latvian language to user language list...'
 ::        Set-Variable -Option Constant LanguageList ([Collections.Generic.List[PSCustomObject]](Get-WinUserLanguageList -ErrorAction Stop))
-::        if (-not ($LanguageList | Where-Object LanguageTag -Like 'lv')) {
+::        if (-not ($LanguageList | Where-Object { $_.LanguageTag -like 'lv' })) {
+::            Write-ActivityProgress 70 'Adding Latvian language to user language list...'
 ::            $LanguageList.Add('lv')
 ::            Set-WinUserLanguageList $LanguageList -Force -ErrorAction Stop
 ::            Out-Success
@@ -5123,11 +5086,13 @@ if "%~1"=="Debug" (
 ::
 ::        Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 ::
-::        [String]$Configuration = $CONFIG_WINUTIL
 ::        if ($Personalisation) {
-::            $Configuration = $CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
+::            Set-Variable -Option Constant Configuration ([String]$CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
 ::', '    "WPFTweaks":  [
-::' + $CONFIG_WINUTIL_PERSONALISATION)
+::    "WPFTweaksRightClickMenu",
+::'))
+::        } else {
+::            Set-Variable -Option Constant Configuration ([String]$CONFIG_WINUTIL)
 ::        }
 ::
 ::        $Configuration | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
@@ -5156,9 +5121,9 @@ if "%~1"=="Debug" (
 ::#region functions > Diagnostics and recovery > Get-BatteryReport
 ::
 ::function Get-BatteryReport {
-::    Write-LogInfo 'Exporting battery report...'
-::
 ::    try {
+::        Write-LogInfo 'Exporting battery report...'
+::
 ::        Set-Variable -Option Constant ReportPath ([String]"$PATH_APP_DIR\battery_report.html")
 ::
 ::        Initialize-AppDirectory
@@ -5184,9 +5149,9 @@ if "%~1"=="Debug" (
 ::        [Switch][Parameter(Position = 1, Mandatory)]$ActivateOffice
 ::    )
 ::
-::    Write-LogInfo 'Starting MAS activator...'
-::
 ::    try {
+::        Write-LogInfo 'Starting MAS activator...'
+::
 ::        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
 ::        if (-not $IsConnected) {
 ::            return
@@ -5272,10 +5237,10 @@ if "%~1"=="Debug" (
 ::            'Thumbnail Cache',
 ::            'Update Cleanup',
 ::            'User file versions',
+::            'Windows Defender',
 ::            'Windows Error Reporting Files',
 ::            'Windows ESD installation files',
-::            'Windows Defender',
-::            'Windows Upgrade Log Files'
+::            'Windows Upgrade log files'
 ::        )
 ::    )
 ::
@@ -5284,7 +5249,8 @@ if "%~1"=="Debug" (
 ::    }
 ::    Write-ActivityProgress 80
 ::
-::    Start-Process 'cleanmgr.exe' '/sagerun:3224'
+::    Start-Process 'cleanmgr.exe' '/d C: /sagerun:3224'
+::    # Start-Process 'cleanmgr.exe' '/d C: /VERYLOWDISK'
 ::
 ::    Write-ActivityProgress 90
 ::    Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
@@ -5300,10 +5266,11 @@ if "%~1"=="Debug" (
 ::#region functions > Home > Update-MicrosoftOffice
 ::
 ::function Update-MicrosoftOffice {
-::    Write-LogInfo 'Starting Microsoft Office update...'
-::
 ::    try {
+::        Write-LogInfo 'Starting Microsoft Office update...'
+::
 ::        Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user' -ErrorAction Stop
+::
 ::        Out-Success
 ::    } catch {
 ::        Out-Failure "Failed to update Microsoft Office: $_"
@@ -5316,10 +5283,11 @@ if "%~1"=="Debug" (
 ::#region functions > Home > Update-MicrosoftStoreApps
 ::
 ::function Update-MicrosoftStoreApps {
-::    Write-LogInfo 'Starting Microsoft Store apps update...'
-::
 ::    try {
+::        Write-LogInfo 'Starting Microsoft Store apps update...'
+::
 ::        Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'
+::
 ::        Out-Success
 ::    } catch {
 ::        Out-Failure "Failed to update Microsoft Store apps: $_"
@@ -5332,9 +5300,9 @@ if "%~1"=="Debug" (
 ::#region functions > Home > Update-Windows
 ::
 ::function Update-Windows {
-::    Write-LogInfo 'Starting Windows Update...'
-::
 ::    try {
+::        Write-LogInfo 'Starting Windows Update...'
+::
 ::        if ($OS_VERSION -gt 7) {
 ::            Start-Process 'UsoClient' 'StartInteractiveScan' -ErrorAction Stop
 ::        } else {
