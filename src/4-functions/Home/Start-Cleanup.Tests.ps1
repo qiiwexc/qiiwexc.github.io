@@ -70,7 +70,7 @@ Describe 'Start-Cleanup' {
             $Force -eq $True -and
             $ErrorAction -eq 'Ignore'
         }
-        Should -Invoke New-ItemProperty -Exactly 36
+        Should -Invoke New-ItemProperty -Exactly 25
         Should -Invoke New-ItemProperty -Exactly 1 -ParameterFilter {
             $Path -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Files' -and
             $Name -eq 'StateFlags3224' -and
@@ -197,7 +197,7 @@ Describe 'Start-Cleanup' {
         Should -Invoke Remove-Item -Exactly 3
         Should -Invoke Get-ChildItem -Exactly 1
         Should -Invoke Remove-ItemProperty -Exactly 2
-        Should -Invoke New-ItemProperty -Exactly 36
+        Should -Invoke New-ItemProperty -Exactly 25
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
