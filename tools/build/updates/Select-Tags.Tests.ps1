@@ -69,6 +69,15 @@ Describe 'Select-Tags' {
         }
     }
 
+    It 'Should skip beta versions' {
+        Mock Invoke-GitAPI { return @( @{ Name = "$TestNewVersion-beta" }, @{ Name = $TestCurrentVersion } ) }
+
+        Select-Tags $TestDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-GitAPI -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
     It 'Should not update if version is the same' {
         Mock Invoke-GitAPI { return @( @{ Name = $TestCurrentVersion }, @{ Name = $TestCurrentVersion } ) }
 

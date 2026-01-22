@@ -60,7 +60,7 @@
         "name":  "OOShutUp10",
         "version":  "2.1",
         "source":  "URL",
-        "url":  "https://www.oo-software.com/en/shutup10/changelog",
+        "url":  "https://www.oo-software.com/en/shutup10/whats-new",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
     },
     {

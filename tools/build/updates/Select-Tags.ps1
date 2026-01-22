@@ -9,8 +9,10 @@ function Select-Tags {
 
     Set-Variable -Option Constant Tags ([PSCustomObject[]](Invoke-GitAPI "https://api.github.com/repos/$Repository/tags" $GitHubToken))
 
-    if ($Tags -and $Tags.Count -gt 0) {
-        Set-Variable -Option Constant LatestVersion ([String]($Tags[0].Name))
+    Set-Variable -Option Constant FilteredTags ([PSCustomObject[]]($Tags | Where-Object { $_.Name -inotmatch 'beta' }))
+
+    if ($FilteredTags -and $FilteredTags.Count -gt 0) {
+        Set-Variable -Option Constant LatestVersion ([String]($FilteredTags[0].Name))
 
         if ($LatestVersion -ne '' -and $LatestVersion -ne $CurrentVersion) {
             Set-NewVersion $Dependency $LatestVersion
