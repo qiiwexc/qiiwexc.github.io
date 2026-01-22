@@ -20,7 +20,11 @@ function Reset-State {
 }
 
 function Exit-App {
+    param(
+        [Switch][Parameter(Position = 0)]$Update
+    )
+
     Write-LogInfo 'Exiting the app...'
-    Reset-State
+    Reset-State -Update $Update
     $FORM.Close()
 }

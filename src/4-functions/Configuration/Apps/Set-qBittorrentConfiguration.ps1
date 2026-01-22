@@ -6,7 +6,6 @@ function Set-qBittorrentConfiguration {
     try {
         Write-ActivityProgress 48 "Configuring $AppName..."
 
-
         if ($SYSTEM_LANGUAGE -match 'ru') {
             Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN))
         } else {

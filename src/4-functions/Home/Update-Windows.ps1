@@ -1,7 +1,7 @@
 function Update-Windows {
-    Write-LogInfo 'Starting Windows Update...'
-
     try {
+        Write-LogInfo 'Starting Windows Update...'
+
         if ($OS_VERSION -gt 7) {
             Start-Process 'UsoClient' 'StartInteractiveScan' -ErrorAction Stop
         } else {
