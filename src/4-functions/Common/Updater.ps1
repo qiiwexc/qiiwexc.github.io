@@ -1,52 +1,48 @@
 function Update-App {
-    Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
+    try {
+        Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
 
-    Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
+        Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
 
-    if ($IsUpdateAvailable) {
-        Get-NewVersion $AppBatFile
+        if ($IsUpdateAvailable) {
+            Get-NewVersion $AppBatFile
 
-        Write-LogWarning 'Restarting...'
+            Write-LogWarning 'Restarting...'
 
-        try {
             Invoke-CustomCommand $AppBatFile
-        } catch {
-            Out-Failure "Failed to start new version: $_"
-            return
-        }
 
-        Exit-App -Update
+            Exit-App -Update
+        }
+    } catch {
+        Out-Failure "Failed to start new version: $_"
     }
 }
 
 
 function Get-UpdateAvailability {
-    Write-LogInfo 'Checking for updates...'
-
-    if ($DevMode) {
-        Out-Status 'Skipping in dev mode'
-        return
-    }
-
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
-        return
-    }
-
     try {
-        Set-Variable -Option Constant VersionFile ([String]"$PATH_APP_DIR\version")
-        Set-Variable -Option Constant LatestVersion ([String](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}'))
-        Set-Variable -Option Constant AvailableVersion ([Version]$LatestVersion)
+        Write-LogInfo 'Checking for updates...'
+
+        if ($DevMode) {
+            Out-Status 'Skipping in dev mode'
+            return
+        }
+
+        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+        if (-not $IsConnected) {
+            return
+        }
+
+        Set-Variable -Option Constant AvailableVersion ([Version](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}'))
+
+        if ($AvailableVersion -gt $VERSION) {
+            Write-LogWarning "Newer version available: v$AvailableVersion"
+            return $True
+        } else {
+            Out-Status 'No updates available'
+        }
     } catch {
         Out-Failure "Failed to check for updates: $_"
-        return
-    }
-
-    if ($AvailableVersion -gt $VERSION) {
-        Write-LogWarning "Newer version available: v$AvailableVersion"
-        return $True
-    } else {
-        Out-Status 'No updates available'
     }
 }
 
@@ -56,19 +52,18 @@ function Get-NewVersion {
         [String][Parameter(Position = 0, Mandatory)]$AppBatFile
     )
 
-    Write-LogWarning 'Downloading new version...'
-
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
-        return
-    }
-
     try {
+        Write-LogWarning 'Downloading new version...'
+
+        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
+        if (-not $IsConnected) {
+            return
+        }
+
         Invoke-WebRequest -Uri '{URL_BAT_FILE}' -OutFile $AppBatFile
+
+        Out-Success
     } catch {
         Out-Failure "Failed to download update: $_"
-        return
     }
-
-    Out-Success
 }

@@ -4,9 +4,9 @@ function Start-Activator {
         [Switch][Parameter(Position = 1, Mandatory)]$ActivateOffice
     )
 
-    Write-LogInfo 'Starting MAS activator...'
-
     try {
+        Write-LogInfo 'Starting MAS activator...'
+
         Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
         if (-not $IsConnected) {
             return

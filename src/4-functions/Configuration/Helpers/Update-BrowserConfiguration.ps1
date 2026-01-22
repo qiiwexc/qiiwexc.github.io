@@ -6,9 +6,9 @@ function Update-BrowserConfiguration {
         [String][Parameter(Position = 3, Mandatory)]$Path
     )
 
-    try {
-        Set-Variable -Option Constant LogIndentLevel ([Int]1)
+    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
+    try {
         Write-LogInfo "Writing '$AppName' configuration to '$Path'..." $LogIndentLevel
 
         Stop-ProcessIfRunning $ProcessName
