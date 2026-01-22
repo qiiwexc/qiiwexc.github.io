@@ -6,7 +6,7 @@ $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION"
 try {
     Add-Type -AssemblyName System.Windows.Forms
 } catch {
-    throw 'System not supported'
+    throw "System not supported: Failed to load 'System.Windows.Forms' module: $_"
 }
 
 if (-not $DevMode) {

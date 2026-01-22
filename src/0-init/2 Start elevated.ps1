@@ -4,7 +4,7 @@ if (-not (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
     try {
         Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -Command `"$($MyInvocation.Line)`""
     } catch {
-        Write-Error $_
+        Write-Error "Failed to restart elevated: $_"
         Start-Sleep -Seconds 5
     }
 
