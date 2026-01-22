@@ -23,29 +23,29 @@ BeforeAll {
         }
     )
 
-    Set-Variable -Option Constant TypeData (Get-TypeData -TypeName System.IO.FileInfo)
+    Set-Variable -Option Constant TypeData (Get-TypeData -TypeName IO.FileInfo)
     Remove-TypeData -TypeData $TypeData
     Set-Variable -Option Constant TypeBackup $TypeData.Copy()
     $Null = $TypeData.members.Remove('VersionInfo')
     Update-TypeData -TypeData $TypeData
 
     Set-Variable -Option Constant TestCurrentFile32bit (
-        New-MockObject -Type System.IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestCurrentVersion } }
+        New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestCurrentVersion } }
     )
     Set-Variable -Option Constant TestCurrentFile64bit (
-        New-MockObject -Type System.IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestCurrentVersion } }
+        New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestCurrentVersion } }
     )
     Set-Variable -Option Constant TestNewFile32bit (
-        New-MockObject -Type System.IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestNewVersion } }
+        New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestNewVersion } }
     )
     Set-Variable -Option Constant TestNewFile64bit (
-        New-MockObject -Type System.IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestNewVersion } }
+        New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestNewVersion } }
     )
     Set-Variable -Option Constant TestLatestFile32bit (
-        New-MockObject -Type System.IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestLatestVersion } }
+        New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestLatestVersion } }
     )
     Set-Variable -Option Constant TestLatestFile64bit (
-        New-MockObject -Type System.IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestLatestVersion } }
+        New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $TestLatestVersion } }
     )
 }
 
@@ -116,8 +116,8 @@ Describe 'Update-FileDependency' {
     }
 
     It 'Should not update if new version is empty' {
-        Mock Get-Item { return (New-MockObject -Type System.IO.FileInfo) } -ParameterFilter { $Path -match ' x86.exe' }
-        Mock Get-Item { return (New-MockObject -Type System.IO.FileInfo) } -ParameterFilter { $Path -notmatch ' x86.exe' }
+        Mock Get-Item { return (New-MockObject -Type IO.FileInfo) } -ParameterFilter { $Path -match ' x86.exe' }
+        Mock Get-Item { return (New-MockObject -Type IO.FileInfo) } -ParameterFilter { $Path -notmatch ' x86.exe' }
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
