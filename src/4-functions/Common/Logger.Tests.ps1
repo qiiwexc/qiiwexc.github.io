@@ -100,10 +100,12 @@ Describe 'Format-Message' {
 }
 
 Describe 'Write-FormLog' {
-    BeforeEach {
+    BeforeAll {
         function AppendText {}
         function ScrollToCaret {}
+    }
 
+    BeforeEach {
         $LOG = New-MockObject -Type Windows.Forms.RichTextBox -Properties @{
             TextLength     = 123
             SelectionStart = 0
