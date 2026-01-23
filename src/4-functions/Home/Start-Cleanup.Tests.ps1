@@ -24,6 +24,7 @@ Describe 'Start-Cleanup' {
         Mock Remove-ItemProperty {}
         Mock New-ItemProperty {}
         Mock Start-Process {}
+        Mock Start-Sleep {}
         Mock Write-ActivityCompleted {}
     }
 
@@ -97,6 +98,8 @@ Describe 'Start-Cleanup' {
             $FilePath -eq 'cleanmgr.exe' -and
             $ArgumentList -eq '/d C: /sagerun:3224'
         }
+        Should -Invoke Start-Sleep -Exactly 1
+        Should -Invoke Start-Sleep -Exactly 1 -ParameterFilter { $Seconds -eq 1 }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
@@ -114,6 +117,7 @@ Describe 'Start-Cleanup' {
         Should -Invoke Remove-ItemProperty -Exactly 0
         Should -Invoke New-ItemProperty -Exactly 0
         Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -131,6 +135,7 @@ Describe 'Start-Cleanup' {
         Should -Invoke Remove-ItemProperty -Exactly 0
         Should -Invoke New-ItemProperty -Exactly 0
         Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -148,6 +153,7 @@ Describe 'Start-Cleanup' {
         Should -Invoke Remove-ItemProperty -Exactly 0
         Should -Invoke New-ItemProperty -Exactly 0
         Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -165,6 +171,7 @@ Describe 'Start-Cleanup' {
         Should -Invoke Remove-ItemProperty -Exactly 1
         Should -Invoke New-ItemProperty -Exactly 0
         Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -182,6 +189,7 @@ Describe 'Start-Cleanup' {
         Should -Invoke Remove-ItemProperty -Exactly 2
         Should -Invoke New-ItemProperty -Exactly 1
         Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -199,6 +207,7 @@ Describe 'Start-Cleanup' {
         Should -Invoke Remove-ItemProperty -Exactly 2
         Should -Invoke New-ItemProperty -Exactly 25
         Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }
