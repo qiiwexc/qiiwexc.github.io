@@ -21,34 +21,30 @@ function Start-Download {
         Set-Variable -Option Constant SavePath ([String]"$PATH_WORKING_DIR\$FileName")
     }
 
+    if (Test-Path $SavePath) {
+        Write-LogWarning 'Previous download found, returning it'
+        return $SavePath
+    }
+
     Initialize-AppDirectory
 
     Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
     if (-not $IsConnected) {
-        if (Test-Path $SavePath) {
-            Write-LogWarning 'Previous download found, returning it'
-            return $SavePath
-        } else {
-            return
-        }
+        throw 'No network connection detected'
     }
 
-    try {
-        Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
+    Write-ActivityProgress 20
 
-        if (-not $Temp) {
-            Move-Item -Force $TempPath $SavePath -ErrorAction Stop
-        }
+    Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
 
-        if (Test-Path $SavePath) {
-            Out-Success
-        } else {
-            throw 'Possibly computer is offline or disk is full'
-        }
-    } catch {
-        Out-Failure "Download failed: $_"
-        return
+    if (-not $Temp) {
+        Move-Item -Force $TempPath $SavePath -ErrorAction Stop
     }
 
-    return $SavePath
+    if (Test-Path $SavePath) {
+        Out-Success
+        return $SavePath
+    } else {
+        throw 'Possibly computer is offline or disk is full'
+    }
 }

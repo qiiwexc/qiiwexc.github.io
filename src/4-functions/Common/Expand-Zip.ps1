@@ -60,21 +60,16 @@ function Expand-Zip {
 
     $Null = New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop
 
-    try {
-        if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
-            [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
-        } else {
-            if (-not $SHELL) {
-                Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
-            }
-
-            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
-                $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
-            }
+    if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
+        [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
+    } else {
+        if (-not $SHELL) {
+            Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
         }
-    } catch {
-        Out-Failure "Failed to extract '$ZipPath': $_"
-        return
+
+        foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
+            $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
+        }
     }
 
     Remove-File $ZipPath

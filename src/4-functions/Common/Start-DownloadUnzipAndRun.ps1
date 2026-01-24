@@ -11,13 +11,25 @@ function Start-DownloadUnzipAndRun {
 
     New-Activity 'Download and run'
 
-    Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
-    Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
-    Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
+    try {
+        Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
+        Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
+        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
+    } catch {
+        Out-Failure "Download failed: $_"
+        Write-ActivityCompleted $False
+        return
+    }
 
     if ($DownloadedFile) {
         if ($IsZip) {
-            Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
+            try {
+                Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
+            } catch {
+                Out-Failure "Failed to extract '$DownloadedFile': $_"
+                Write-ActivityCompleted $False
+                return
+            }
         } else {
             Set-Variable -Option Constant Executable ([String]$DownloadedFile)
         }
@@ -28,7 +40,13 @@ function Start-DownloadUnzipAndRun {
         }
 
         if ($Execute) {
-            Start-Executable $Executable $Params -Silent:$Silent
+            try {
+                Start-Executable $Executable $Params -Silent:$Silent
+            } catch {
+                Out-Failure "Failed to run '$Executable': $_"
+                Write-ActivityCompleted $False
+                return
+            }
         }
     }
 
