@@ -5,22 +5,9 @@ function Start-DownloadUnzipAndRun {
         [String][Parameter(Position = 2)]$Params,
         [String]$ConfigFile,
         [String]$Configuration,
-        [Switch]$AVWarning,
         [Switch]$Execute,
         [Switch]$Silent
     )
-
-    if ($AVWarning -and (Get-MicrosoftSecurityStatus)) {
-        Write-LogWarning 'Microsoft Security is enabled'
-    }
-
-    if ($AVWarning -and -not $AV_WARNING_SHOWN) {
-        Write-LogWarning 'This file may trigger anti-virus false positive!'
-        Write-LogWarning 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
-        Write-LogWarning 'Click the button again to continue'
-        Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN ([Bool]$True)
-        return
-    }
 
     New-Activity 'Download and run'
 
