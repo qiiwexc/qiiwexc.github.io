@@ -26,7 +26,6 @@
 "HideRecommendedSection"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
-"AllowAutoConnectToWiFiSenseHotspots"=dword:00000000
 "AllowWiFiHotSpotReporting"=dword:00000000
 
 ; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
@@ -46,9 +45,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CPSS\Store]
 "AllowTelemetry"=dword:00000000
 "TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
-"CostedNetworkPolicy"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
 "DiagTrackStatus"=dword:00000002
@@ -213,9 +209,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
 "AllowMUUpdateService"=dword:00000001
 "IsContinuousInnovationOptedIn"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\StateVariables]
-"AlwaysAllowMeteredNetwork"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
 "BraveAIChatEnabled"=dword:00000000
