@@ -9,7 +9,13 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_TEMP_DIR')
-    Set-Variable -Option Constant OLD_WINDOW_TITLE ([String]'TEST_OLD_WINDOW_TITLE')
+    Set-Variable -Option Constant ORIGINAL_WINDOW_TITLE ([String]'TEST_ORIGINAL_WINDOW_TITLE')
+
+    Set-Variable -Option Constant WindowTitle ([String]$HOST.UI.RawUI.WindowTitle)
+}
+
+AfterAll {
+    $HOST.UI.RawUI.WindowTitle = $WindowTitle
 }
 
 Describe 'Reset-State' {

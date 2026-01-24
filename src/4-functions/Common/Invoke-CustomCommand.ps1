@@ -3,8 +3,7 @@ function Invoke-CustomCommand {
         [String][Parameter(Position = 0, Mandatory)]$Command,
         [String]$WorkingDirectory,
         [Switch]$Elevated,
-        [Switch]$HideWindow,
-        [Switch]$Wait
+        [Switch]$HideWindow
     )
 
     if ($WorkingDirectory) {
@@ -24,5 +23,5 @@ function Invoke-CustomCommand {
     }
 
     Set-Variable -Option Constant FullCommand ([String]"$Command $WorkingDir")
-    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle -ErrorAction Stop
+    Start-Process PowerShell $FullCommand -Verb $Verb -WindowStyle $WindowStyle -ErrorAction Stop
 }
