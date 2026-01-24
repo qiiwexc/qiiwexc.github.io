@@ -58,7 +58,6 @@
 "FirstRun"=dword:00000000
 "MetadataRetrieval"=dword:00000003
 "SilentAcquisition"=dword:00000001
-"UsageTracking"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 "iWindowPosX"=dword:FFFFFFF8
@@ -176,7 +175,6 @@
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
 "ArchivedFiles"=dword:00000001
-"SystemFolders"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
 "VisualFXSetting"=dword:00000001
