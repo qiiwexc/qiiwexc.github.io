@@ -53,16 +53,12 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\PhishingFilter]
 "EnabledV9"=dword:00000001
 
-[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
-"CleanDownloadHistory"=dword:00000001
-
 [HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 "AcceptedPrivacyStatement"=dword:00000001
 "FirstRun"=dword:00000000
 "MetadataRetrieval"=dword:00000003
 "SilentAcquisition"=dword:00000001
 "UsageTracking"=dword:00000000
-"Volume"=dword:00000064
 
 [HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 "iWindowPosX"=dword:FFFFFFF8
@@ -142,7 +138,6 @@
 "ShowedToastAtLevel"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer]
-"MaximizeApps"=dword:00000001
 "ShowRecommendations"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
