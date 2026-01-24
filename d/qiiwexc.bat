@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.24')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.25')
 ::
 ::#endregion init > Version
 ::
@@ -1596,16 +1596,12 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\PhishingFilter]
 ::"EnabledV9"=dword:00000001
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Privacy]
-::"CleanDownloadHistory"=dword:00000001
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 ::"AcceptedPrivacyStatement"=dword:00000001
 ::"FirstRun"=dword:00000000
 ::"MetadataRetrieval"=dword:00000003
 ::"SilentAcquisition"=dword:00000001
 ::"UsageTracking"=dword:00000000
-::"Volume"=dword:00000064
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 ::"iWindowPosX"=dword:FFFFFFF8
@@ -1685,7 +1681,6 @@ if "%~1"=="Debug" (
 ::"ShowedToastAtLevel"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer]
-::"MaximizeApps"=dword:00000001
 ::"ShowRecommendations"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
@@ -1885,7 +1880,6 @@ if "%~1"=="Debug" (
 ::"HideRecommendedSection"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
-::"AllowAutoConnectToWiFiSenseHotspots"=dword:00000000
 ::"AllowWiFiHotSpotReporting"=dword:00000000
 ::
 ::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
@@ -1905,9 +1899,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CPSS\Store]
 ::"AllowTelemetry"=dword:00000000
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceSetup]
-::"CostedNetworkPolicy"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
 ::"DiagTrackStatus"=dword:00000002
@@ -2072,9 +2063,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
 ::"AllowMUUpdateService"=dword:00000001
 ::"IsContinuousInnovationOptedIn"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\StateVariables]
-::"AlwaysAllowMeteredNetwork"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
 ::"BraveAIChatEnabled"=dword:00000000
@@ -3023,7 +3011,7 @@ if "%~1"=="Debug" (
 ::P008	+	# Disable transmission of typing information (Category: Privacy)
 ::P026	+	# Disable advertisements via Bluetooth (Category: Privacy)
 ::P027	+	# Disable the Windows Customer Experience Improvement Program (Category: Privacy)
-::P028	+	# Disable backup of text messages into the cloud (Category: Privacy)
+::P028	-	# Disable backup of text messages into the cloud (Category: Privacy)
 ::P064	+	# Disable suggestions in the timeline (Category: Privacy)
 ::P065	+	# Disable suggestions in Start (Category: Privacy)
 ::P066	+	# Disable tips, tricks, and suggestions when using Windows (Category: Privacy)
@@ -3254,7 +3242,7 @@ if "%~1"=="Debug" (
 ::M013	-	# Disable automatic download and update of map data (Category: Miscellaneous)
 ::M014	-	# Disable unsolicited network traffic on the offline maps settings page (Category: Miscellaneous)
 ::M026	-	# Disable remote assistance connections to this computer (Category: Miscellaneous)
-::M027	+	# Disable remote connections to this computer (Category: Miscellaneous)
+::M027	+-	# Disable remote connections to this computer (Category: Miscellaneous)
 ::M028	+	# Disable the desktop icon for information on "Windows Spotlight" (Category: Miscellaneous)
 ::N001	-	# Disable Network Connectivity Status Indicator (Category: Miscellaneous)
 ::'
@@ -3316,12 +3304,6 @@ if "%~1"=="Debug" (
 ::    param(
 ::        [Switch][Parameter(Position = 0)]$Update
 ::    )
-::
-::    Write-LogInfo 'Cleaning up files on exit...'
-::
-::    Remove-Directory $PATH_WINUTIL -Silent
-::    Remove-Directory $PATH_OOSHUTUP10 -Silent
-::    Remove-Directory $PATH_APP_DIR -Silent
 ::
 ::    if (-not $Update) {
 ::        Remove-File "$PATH_TEMP_DIR\qiiwexc.ps1" -Silent
@@ -3408,21 +3390,16 @@ if "%~1"=="Debug" (
 ::
 ::    $Null = New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop
 ::
-::    try {
-::        if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
-::            [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
-::        } else {
-::            if (-not $SHELL) {
-::                Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
-::            }
-::
-::            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
-::                $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
-::            }
+::    if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
+::        [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
+::    } else {
+::        if (-not $SHELL) {
+::            Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
 ::        }
-::    } catch {
-::        Out-Failure "Failed to extract '$ZipPath': $_"
-::        return
+::
+::        foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
+::            $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
+::        }
 ::    }
 ::
 ::    Remove-File $ZipPath
@@ -3444,29 +3421,6 @@ if "%~1"=="Debug" (
 ::}
 ::
 ::#endregion functions > Common > Expand-Zip
-::
-::
-::#region functions > Common > Get-MicrosoftSecurityStatus
-::
-::function Get-MicrosoftSecurityStatus {
-::    Set-Variable -Option Constant Status ([Microsoft.Management.Infrastructure.CimInstance](Get-MpComputerStatus))
-::
-::    Set-Variable -Option Constant Properties ([String[]](($Status | Get-Member -MemberType Property).Name))
-::
-::    Set-Variable -Option Constant Filtered ([String[]]($Properties | Where-Object { $_ -eq 'BehaviorMonitorEnabled' -or $_ -eq 'IoavProtectionEnabled' -or $_ -eq 'NISEnabled' -or $_ -eq 'OnAccessProtectionEnabled' -or $_ -eq 'RealTimeProtectionEnabled' }))
-::
-::    [Bool]$IsEnabled = $False
-::    foreach ($Property in $Filtered) {
-::        if ($Status.$Property) {
-::            $IsEnabled = $True
-::        }
-::        break
-::    }
-::
-::    return $IsEnabled
-::}
-::
-::#endregion functions > Common > Get-MicrosoftSecurityStatus
 ::
 ::
 ::#region functions > Common > Get-SystemInformation
@@ -3547,6 +3501,10 @@ if "%~1"=="Debug" (
 ::
 ::    Get-SystemInformation
 ::
+::    Remove-Directory $PATH_WINUTIL -Silent
+::    Remove-Directory $PATH_OOSHUTUP10 -Silent
+::    Remove-Directory $PATH_APP_DIR -Silent
+::
 ::    Initialize-AppDirectory
 ::
 ::    Update-App
@@ -3570,15 +3528,10 @@ if "%~1"=="Debug" (
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory)]$Command,
 ::        [String]$WorkingDirectory,
-::        [Switch]$BypassExecutionPolicy,
 ::        [Switch]$Elevated,
 ::        [Switch]$HideWindow,
 ::        [Switch]$Wait
 ::    )
-::
-::    if ($BypassExecutionPolicy) {
-::        Set-Variable -Option Constant ExecutionPolicy ([String]'-ExecutionPolicy Bypass')
-::    }
 ::
 ::    if ($WorkingDirectory) {
 ::        Set-Variable -Option Constant WorkingDir ([String]"-WorkingDirectory $WorkingDirectory")
@@ -3596,7 +3549,7 @@ if "%~1"=="Debug" (
 ::        Set-Variable -Option Constant WindowStyle ([String]'Normal')
 ::    }
 ::
-::    Set-Variable -Option Constant FullCommand ([String]"$ExecutionPolicy $Command $WorkingDir")
+::    Set-Variable -Option Constant FullCommand ([String]"$Command $WorkingDir")
 ::    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle -ErrorAction Stop
 ::}
 ::
@@ -3986,36 +3939,32 @@ if "%~1"=="Debug" (
 ::        Set-Variable -Option Constant SavePath ([String]"$PATH_WORKING_DIR\$FileName")
 ::    }
 ::
+::    if (Test-Path $SavePath) {
+::        Write-LogWarning 'Previous download found, returning it'
+::        return $SavePath
+::    }
+::
 ::    Initialize-AppDirectory
 ::
 ::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
 ::    if (-not $IsConnected) {
-::        if (Test-Path $SavePath) {
-::            Write-LogWarning 'Previous download found, returning it'
-::            return $SavePath
-::        } else {
-::            return
-::        }
+::        throw 'No network connection detected'
 ::    }
 ::
-::    try {
-::        Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
+::    Write-ActivityProgress 20
 ::
-::        if (-not $Temp) {
-::            Move-Item -Force $TempPath $SavePath -ErrorAction Stop
-::        }
+::    Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
 ::
-::        if (Test-Path $SavePath) {
-::            Out-Success
-::        } else {
-::            throw 'Possibly computer is offline or disk is full'
-::        }
-::    } catch {
-::        Out-Failure "Download failed: $_"
-::        return
+::    if (-not $Temp) {
+::        Move-Item -Force $TempPath $SavePath -ErrorAction Stop
 ::    }
 ::
-::    return $SavePath
+::    if (Test-Path $SavePath) {
+::        Out-Success
+::        return $SavePath
+::    } else {
+::        throw 'Possibly computer is offline or disk is full'
+::    }
 ::}
 ::
 ::#endregion functions > Common > Start-Download
@@ -4030,32 +3979,31 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 2)]$Params,
 ::        [String]$ConfigFile,
 ::        [String]$Configuration,
-::        [Switch]$AVWarning,
 ::        [Switch]$Execute,
 ::        [Switch]$Silent
 ::    )
 ::
-::    if ($AVWarning -and (Get-MicrosoftSecurityStatus)) {
-::        Write-LogWarning 'Microsoft Security is enabled'
-::    }
+::    New-Activity 'Download and run'
 ::
-::    if ($AVWarning -and -not $AV_WARNING_SHOWN) {
-::        Write-LogWarning 'This file may trigger anti-virus false positive!'
-::        Write-LogWarning 'It is recommended to disable anti-virus software for download and subsequent use of this file!'
-::        Write-LogWarning 'Click the button again to continue'
-::        Set-Variable -Option Constant -Scope Script AV_WARNING_SHOWN ([Bool]$True)
+::    try {
+::        Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
+::        Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
+::        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
+::    } catch {
+::        Out-Failure "Download failed: $_"
+::        Write-ActivityCompleted $False
 ::        return
 ::    }
 ::
-::    New-Activity 'Download and run'
-::
-::    Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
-::    Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
-::    Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
-::
 ::    if ($DownloadedFile) {
 ::        if ($IsZip) {
-::            Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
+::            try {
+::                Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
+::            } catch {
+::                Out-Failure "Failed to extract '$DownloadedFile': $_"
+::                Write-ActivityCompleted $False
+::                return
+::            }
 ::        } else {
 ::            Set-Variable -Option Constant Executable ([String]$DownloadedFile)
 ::        }
@@ -4066,7 +4014,13 @@ if "%~1"=="Debug" (
 ::        }
 ::
 ::        if ($Execute) {
-::            Start-Executable $Executable $Params -Silent:$Silent
+::            try {
+::                Start-Executable $Executable $Params -Silent:$Silent
+::            } catch {
+::                Out-Failure "Failed to run '$Executable': $_"
+::                Write-ActivityCompleted $False
+::                return
+::            }
 ::        }
 ::    }
 ::
@@ -4087,14 +4041,7 @@ if "%~1"=="Debug" (
 ::
 ::    if ($Switches -and $Silent) {
 ::        Write-ActivityProgress 90 "Running '$Executable' silently..."
-::
-::        try {
-::            Start-Process -Wait $Executable $Switches -ErrorAction Stop
-::        } catch {
-::            Out-Failure "Failed to run '$Executable': $_"
-::            return
-::        }
-::
+::        Start-Process -Wait $Executable $Switches -ErrorAction Stop
 ::        Out-Success
 ::
 ::        Write-LogDebug "Removing '$Executable'..."
@@ -4103,15 +4050,10 @@ if "%~1"=="Debug" (
 ::    } else {
 ::        Write-ActivityProgress 90 "Running '$Executable'..."
 ::
-::        try {
-::            if ($Switches) {
-::                Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
-::            } else {
-::                Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
-::            }
-::        } catch {
-::            Out-Failure "Failed to execute '$Executable': $_"
-::            return
+::        if ($Switches) {
+::            Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
+::        } else {
+::            Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
 ::        }
 ::    }
 ::}
