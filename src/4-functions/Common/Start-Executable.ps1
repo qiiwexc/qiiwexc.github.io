@@ -7,14 +7,7 @@ function Start-Executable {
 
     if ($Switches -and $Silent) {
         Write-ActivityProgress 90 "Running '$Executable' silently..."
-
-        try {
-            Start-Process -Wait $Executable $Switches -ErrorAction Stop
-        } catch {
-            Out-Failure "Failed to run '$Executable': $_"
-            return
-        }
-
+        Start-Process -Wait $Executable $Switches -ErrorAction Stop
         Out-Success
 
         Write-LogDebug "Removing '$Executable'..."
@@ -23,15 +16,10 @@ function Start-Executable {
     } else {
         Write-ActivityProgress 90 "Running '$Executable'..."
 
-        try {
-            if ($Switches) {
-                Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
-            } else {
-                Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
-            }
-        } catch {
-            Out-Failure "Failed to execute '$Executable': $_"
-            return
+        if ($Switches) {
+            Start-Process $Executable $Switches -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
+        } else {
+            Start-Process $Executable -WorkingDirectory (Split-Path $Executable) -ErrorAction Stop
         }
     }
 }
