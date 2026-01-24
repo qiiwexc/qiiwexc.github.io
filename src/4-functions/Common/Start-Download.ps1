@@ -26,12 +26,12 @@ function Start-Download {
         return $SavePath
     }
 
-    Initialize-AppDirectory
-
     Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
     if (-not $IsConnected) {
         throw 'No network connection detected'
     }
+
+    Initialize-AppDirectory
 
     Write-ActivityProgress 20
 
