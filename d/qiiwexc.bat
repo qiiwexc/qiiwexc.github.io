@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.23')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.24')
 ::
 ::#endregion init > Version
 ::
@@ -762,20 +762,9 @@ if "%~1"=="Debug" (
 ::#endregion ui > Configuration > Configure and debloat Windows
 ::
 ::
-::#region ui > Configuration > Remove Windows components
-::
-::New-GroupBox 'Remove Windows components'
-::
-::
-::[ScriptBlock]$BUTTON_FUNCTION = { Remove-WindowsFeatures }
-::New-Button 'Feature cleanup' $BUTTON_FUNCTION
-::
-::#endregion ui > Configuration > Remove Windows components
-::
-::
 ::#region ui > Configuration > Alternative DNS
 ::
-::New-GroupBox 'Alternative DNS'
+::New-GroupBox 'Alternative DNS' 4
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Set-CloudFlareDNS -MalwareProtection:$CHECKBOX_CloudFlareAntiMalware.Checked -FamilyFriendly:$CHECKBOX_CloudFlareFamilyFriendly.Checked }
@@ -1750,15 +1739,11 @@ if "%~1"=="Debug" (
 ::"SecureProtocols"=dword:00002820
 ::"SyncMode5"=dword:00000003
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\5.0\Cache\Content]
-::"CacheLimit"=dword:00002000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
 ::"RotatingLockScreenOverlayEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Mobility]
 ::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
-::"PhoneLinkEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
 ::"NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK"=dword:00000000
@@ -2006,13 +1991,13 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\User file versions]
 ::"StateFlags"=dword:00000001
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
+::"StateFlags"=dword:00000001
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting Files]
 ::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files]
-::"StateFlags"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
 ::"StateFlags"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
@@ -2085,7 +2070,6 @@ if "%~1"=="Debug" (
 ::"EnableFindMyFiles"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
-::"AllowAutoWindowsUpdateDownloadOverMeteredNetwork"=dword:00000001
 ::"AllowMUUpdateService"=dword:00000001
 ::"IsContinuousInnovationOptedIn"=dword:00000001
 ::
@@ -2192,9 +2176,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors]
 ::"DisableLocationScripting"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Messaging]
-::"AllowMessageSync"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive]
 ::"DisableFileSyncNGSC"=dword:00000001
@@ -2334,9 +2315,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\LocationAndSensors]
 ::"DisableLocationScripting"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Messaging]
-::"AllowMessageSync"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Personalization]
 ::"NoLockScreenCamera"=dword:00000001
@@ -2490,9 +2468,6 @@ if "%~1"=="Debug" (
 ::"Tcp1323Opts"=dword:00000001
 ::"TcpMaxDupAcks"=dword:00000002
 ::"TCPTimedWaitDelay"=dword:00000030
-::
-::[HKEY_LOCAL_MACHINE\SYSTEM\Maps]
-::"UpdateOnlyOnWifi"=dword:00000000
 ::'
 ::
 ::#endregion configs > Windows > Base > Windows HKEY_LOCAL_MACHINE
@@ -3344,14 +3319,12 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Cleaning up files on exit...'
 ::
-::    Set-Variable -Option Constant PowerShellScript ([String]"$PATH_TEMP_DIR\qiiwexc.ps1")
-::
 ::    Remove-Directory $PATH_WINUTIL -Silent
 ::    Remove-Directory $PATH_OOSHUTUP10 -Silent
 ::    Remove-Directory $PATH_APP_DIR -Silent
 ::
 ::    if (-not $Update) {
-::        Remove-File $PowerShellScript -Silent
+::        Remove-File "$PATH_TEMP_DIR\qiiwexc.ps1" -Silent
 ::    }
 ::
 ::    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
@@ -3364,7 +3337,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    Write-LogInfo 'Exiting the app...'
-::    Reset-State -Update $Update
+::    Reset-State -Update:$Update
 ::    $FORM.Close()
 ::}
 ::
@@ -4608,45 +4581,6 @@ if "%~1"=="Debug" (
 ::#endregion functions > Configuration > Helpers > Write-ConfigurationFile
 ::
 ::
-::#region functions > Configuration > Windows > Remove-WindowsFeatures
-::
-::function Remove-WindowsFeatures {
-::    New-Activity 'Removing miscellaneous Windows features'
-::
-::    try {
-::        Write-ActivityProgress 10 'Collecting features to remove...'
-::        Set-Variable -Option Constant InstalledFeatures ([PSCustomObject](Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq 'Enabled' }))
-::        Set-Variable -Option Constant FeaturesToRemove ([PSCustomObject]($InstalledFeatures | Where-Object { $_.FeatureName -in @('Recall') }))
-::        Set-Variable -Option Constant FeatureCount ([Int]($FeaturesToRemove.Count))
-::        Out-Success
-::    } catch {
-::        Out-Failure "Failed to collect features to remove: $_"
-::    }
-::
-::    if ($FeatureCount) {
-::        Set-Variable -Option Constant FeatureStep ([Math]::Floor(80 / $FeatureCount))
-::
-::        [Int]$Iteration = 1
-::        foreach ($Feature in $FeaturesToRemove) {
-::            [String]$Name = $Feature.FeatureName
-::            try {
-::                [Int]$Percentage = 20 + $Iteration * $FeatureStep
-::                Write-ActivityProgress $Percentage "Removing '$Name'..."
-::                $Iteration++
-::                Disable-WindowsOptionalFeature -Online -Remove -NoRestart -FeatureName "$Name"
-::                Out-Success
-::            } catch {
-::                Out-Failure "Failed to remove '$Name': $_"
-::            }
-::        }
-::    }
-::
-::    Write-ActivityCompleted
-::}
-::
-::#endregion functions > Configuration > Windows > Remove-WindowsFeatures
-::
-::
 ::#region functions > Configuration > Windows > Set-CloudFlareDNS
 ::
 ::function Set-CloudFlareDNS {
@@ -5240,7 +5174,7 @@ if "%~1"=="Debug" (
 ::            'Windows Defender',
 ::            'Windows Error Reporting Files',
 ::            'Windows ESD installation files',
-::            'Windows Upgrade log files'
+::            'Windows Upgrade Log Files'
 ::        )
 ::    )
 ::
@@ -5251,6 +5185,8 @@ if "%~1"=="Debug" (
 ::
 ::    Start-Process 'cleanmgr.exe' '/d C: /sagerun:3224'
 ::    # Start-Process 'cleanmgr.exe' '/d C: /VERYLOWDISK'
+::
+::    Start-Sleep -Seconds 1
 ::
 ::    Write-ActivityProgress 90
 ::    Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
