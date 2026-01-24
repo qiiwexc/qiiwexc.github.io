@@ -25,9 +25,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Start]
 "HideRecommendedSection"=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
-"AllowWiFiHotSpotReporting"=dword:00000000
-
 ; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 "Enabled"=dword:00000000

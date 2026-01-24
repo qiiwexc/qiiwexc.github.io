@@ -45,7 +45,6 @@ Microsoft.Microsoft3DViewer                    # Viewer for 3D models
 Microsoft.MicrosoftJournal                     # Digital note-taking app optimized for pen input
 Microsoft.MicrosoftOfficeHub                   # Hub to access Microsoft Office apps and documents (Precursor to Microsoft 365 app)
 Microsoft.MicrosoftPowerBIForWindows           # Business analytics service client
-Microsoft.MicrosoftStickyNotes                 # Digital sticky notes app (Deprecated & replaced by OneNote)
 Microsoft.MixedReality.Portal                  # Portal for Windows Mixed Reality headsets
 Microsoft.NetworkSpeedTest                     # Internet connection speed test utility
 Microsoft.News                                 # News aggregator (Replaced Bing News, now part of Microsoft Start)
@@ -75,7 +74,6 @@ Microsoft.ZuneMusic                            # Modern Media Player (Replaced G
 Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
 MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings
 MicrosoftCorporationII.QuickAssist             # Remote assistance tool
-MicrosoftTeams                                 # Old MS Teams personal (MS Store version)
 MicrosoftWindows.CrossDevice                   # Phone integration within File Explorer, Camera and more (Part of Phone Link features)
 Netflix                                        # Netflix streaming service app
 NYTCrossword                                   # New York Times crossword puzzle app
