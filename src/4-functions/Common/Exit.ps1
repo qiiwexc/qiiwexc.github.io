@@ -7,7 +7,7 @@ function Reset-State {
         Remove-File "$PATH_TEMP_DIR\qiiwexc.ps1" -Silent
     }
 
-    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
+    $HOST.UI.RawUI.WindowTitle = $ORIGINAL_WINDOW_TITLE
     Write-Host ''
 }
 
