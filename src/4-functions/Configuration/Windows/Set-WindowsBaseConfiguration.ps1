@@ -63,13 +63,13 @@ function Set-WindowsBaseConfiguration {
         Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_WINDOWS_ENGLISH)
     }
 
-    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+    [Collections.Generic.List[String]]$ConfigLines = Get-SysPrepConfig $CONFIG_WINDOWS_HKEY_CURRENT_USER
     $ConfigLines.Add("`n")
     $ConfigLines.Add($CONFIG_WINDOWS_HKEY_CURRENT_USER)
     $ConfigLines.Add("`n")
     $ConfigLines.Add($CONFIG_WINDOWS_HKEY_LOCAL_MACHINE)
     $ConfigLines.Add("`n")
-    $ConfigLines.Add($LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT'))
+    $ConfigLines.Add((Get-SysPrepConfig $LocalisedConfig))
     $ConfigLines.Add("`n")
     $ConfigLines.Add($LocalisedConfig)
 

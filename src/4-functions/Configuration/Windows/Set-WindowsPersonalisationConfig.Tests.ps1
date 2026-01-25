@@ -3,14 +3,16 @@ BeforeAll {
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'
     . '.\src\4-functions\App lifecycle\Progressbar.ps1'
+    . '.\src\4-functions\Configuration\Helpers\Get-SysPrepConfig.ps1'
     . '.\src\4-functions\Configuration\Helpers\Get-UsersRegistryKeys.ps1'
     . '.\src\4-functions\Configuration\Helpers\Import-RegistryConfiguration.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER ([String]"[HKEY_CURRENT_USER\Test]`nTEST_CONFIG_WINDOWS_PERSONALISATION")
+    Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER ([String]'TEST_CONFIG_WINDOWS_PERSONALISATION')
     Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE ([String]'TEST_CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE')
 
+    Set-Variable -Option Constant TestSysPrepConfig ([String]'TEST_SYSPREP_CONFIG')
     Set-Variable -Option Constant TestUsers ([String[]]@('TEST_USER_1', 'TEST_USER_2'))
     Set-Variable -Option Constant TestNotificationRegistries (
         [PSCustomObject[]]@(
@@ -36,6 +38,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Mock Get-WinUserLanguageList { return $TestLanguageList }
         Mock Set-WinUserLanguageList {}
         Mock Get-Item { return $TestNotificationRegistries }
+        Mock Get-SysPrepConfig { return $TestSysPrepConfig }
         Mock Get-UsersRegistryKeys { return $TestUsers }
         Mock Import-RegistryConfiguration {}
 
@@ -55,15 +58,17 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
+        Should -Invoke Get-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER }
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq 'HKCU:\Control Panel\NotifyIconSettings\*' }
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
             $AppName -eq 'Windows Personalisation Config' -and
-            $Content -match "\[HKEY_USERS\\\.DEFAULT\\Test\]`nTEST_CONFIG_WINDOWS_PERSONALISATION" -and
-            $Content -match "\[HKEY_CURRENT_USER\\Test\]`nTEST_CONFIG_WINDOWS_PERSONALISATION" -and
             $Content -match $CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE -and
+            $Content -match $nTEST_CONFIG_WINDOWS_PERSONALISATION -and
+            $Content -match $TestSysPrepConfig -and
             $Content -match "`n\[$($TestNotificationRegistries[0].Name)\]`n" -and
             $Content -match "`n\[$($TestNotificationRegistries[1].Name)\]`n" -and
             $Content -match "`"IsPromoted`"=dword:00000001`n" -and
@@ -87,6 +92,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -111,6 +117,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -130,6 +137,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -149,6 +157,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -168,6 +177,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -184,6 +194,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -201,6 +212,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -220,6 +232,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -239,6 +252,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -258,6 +272,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
         Should -Invoke Get-WinUserLanguageList -Exactly 1
         # Should -Invoke Set-WinUserLanguageList -Exactly 1
         Should -Invoke Set-WinUserLanguageList -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1

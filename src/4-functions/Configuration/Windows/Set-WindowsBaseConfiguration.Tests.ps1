@@ -3,6 +3,7 @@ BeforeAll {
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'
     . '.\src\4-functions\App lifecycle\Progressbar.ps1'
+    . '.\src\4-functions\Configuration\Helpers\Get-SysPrepConfig.ps1'
     . '.\src\4-functions\Configuration\Helpers\Get-UsersRegistryKeys.ps1'
     . '.\src\4-functions\Configuration\Helpers\Import-RegistryConfiguration.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-WindowsSecurityConfiguration.ps1'
@@ -10,9 +11,9 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant CONFIG_WINDOWS_RUSSIAN ([String]"[HKEY_CURRENT_USER\Test]`nTEST_CONFIG_WINDOWS_RUSSIAN")
-    Set-Variable -Option Constant CONFIG_WINDOWS_ENGLISH ([String]"[HKEY_CURRENT_USER\Test]`nTEST_CONFIG_WINDOWS_ENGLISH")
-    Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CURRENT_USER ([String]"[HKEY_CURRENT_USER\Test]`nTEST_CONFIG_WINDOWS_HKEY_CURRENT")
+    Set-Variable -Option Constant CONFIG_WINDOWS_RUSSIAN ([String]'TEST_CONFIG_WINDOWS_RUSSIAN')
+    Set-Variable -Option Constant CONFIG_WINDOWS_ENGLISH ([String]'TEST_CONFIG_WINDOWS_ENGLISH')
+    Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CURRENT_USER ([String]'TEST_CONFIG_WINDOWS_HKEY_CURRENT')
     Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_LOCAL_MACHINE ([String]'TEST_CONFIG_WINDOWS_HKEY_LOCAL_MACHINE')
 
     Set-Variable -Option Constant TestInternationalKey ([String]'HKCU:\Control Panel\International')
@@ -21,6 +22,7 @@ BeforeAll {
     Set-Variable -Option Constant TestUnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
     Set-Variable -Option Constant TestScheduledTask ([PSCustomObject[]]@(@{ TaskName = $TestUnelevatedExplorerTaskName }))
 
+    Set-Variable -Option Constant TestSysPrepConfig ([String]'TEST_SYSPREP_CONFIG')
     Set-Variable -Option Constant TestUsers ([String[]]@('TEST_USER_1', 'TEST_USER_2'))
     Set-Variable -Option Constant TestVolumes (
         [PSCustomObject[]]@(
@@ -42,6 +44,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Mock Get-ScheduledTask { return $TestScheduledTask }
         Mock Unregister-ScheduledTask {}
         Mock Disable-ScheduledTask {}
+        Mock Get-SysPrepConfig { return $TestSysPrepConfig }
         Mock Get-UsersRegistryKeys { return $TestUsers }
         Mock Get-Item { return $TestVolumes }
         Mock Import-RegistryConfiguration {}
@@ -91,23 +94,22 @@ Describe 'Set-WindowsBaseConfiguration' {
             $TaskName -eq 'Microsoft-Windows-DiskDiagnosticDataCollector' -and
             $TaskPath -eq 'Microsoft\Windows\DiskDiagnostic'
         }
+        Should -Invoke Get-SysPrepConfig -Exactly 2
+        Should -Invoke Get-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_WINDOWS_HKEY_CURRENT_USER }
+        Should -Invoke Get-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_WINDOWS_ENGLISH }
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*' }
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
             $AppName -eq 'Windows Base Config' -and
-            $Content -match "\[HKEY_USERS\\\.DEFAULT\\Test\]`nTEST_CONFIG_WINDOWS_HKEY_CURRENT" -and
-            $Content -match "\[HKEY_CURRENT_USER\\Test\]`nTEST_CONFIG_WINDOWS_HKEY_CURRENT" -and
+            $Content -match $CONFIG_WINDOWS_ENGLISH -and
+            $Content -match $CONFIG_WINDOWS_HKEY_CURRENT_USER -and
             $Content -match $CONFIG_WINDOWS_HKEY_LOCAL_MACHINE -and
-            $Content -match "\[HKEY_USERS\\\.DEFAULT\\Test\]`nTEST_CONFIG_WINDOWS_ENGLISH" -and
-            $Content -match "\[HKEY_CURRENT_USER\\Test\]`nTEST_CONFIG_WINDOWS_ENGLISH" -and
+            $Content -match $TestSysPrepConfig -and
             $Content -match "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\LogonUI\\Creative\\$($TestUsers[0])\]`n" -and
             $Content -match "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\LogonUI\\Creative\\$($TestUsers[1])\]`n" -and
             $Content -match "`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n" -and
-            $Content -match "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\InstallService\\Stubification\\$($TestUsers[0])\]`n" -and
-            $Content -match "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\InstallService\\Stubification\\$($TestUsers[1])\]`n" -and
-            $Content -match "`"EnableAppOffloading`"=dword:00000000`n" -and
             $Content -match "`n\[HKEY_USERS\\$($TestUsers[0])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
             $Content -match "`n\[HKEY_USERS\\$($TestUsers[1])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
             $Content -match "`"DoNotTrack`"=dword:00000001`n" -and
@@ -134,13 +136,12 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
+        Should -Invoke Get-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_WINDOWS_RUSSIAN }
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
-        Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
-            $Content -match "\[HKEY_USERS\\\.DEFAULT\\Test\]`nTEST_CONFIG_WINDOWS_RUSSIAN" -and
-            $Content -match "\[HKEY_CURRENT_USER\\Test\]`nTEST_CONFIG_WINDOWS_RUSSIAN"
-        }
+        Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter { $Content -match $CONFIG_WINDOWS_RUSSIAN }
     }
 
     It 'Should skip removing unelevated Explorer scheduled task if not present' {
@@ -157,6 +158,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 0
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -176,6 +178,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -184,9 +187,6 @@ Describe 'Set-WindowsBaseConfiguration' {
             $Content -notmatch "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\LogonUI\\Creative\\$($TestUsers[0])\]`n" -and
             $Content -notmatch "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\LogonUI\\Creative\\$($TestUsers[1])\]`n" -and
             $Content -notmatch "`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n" -and
-            $Content -notmatch "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\InstallService\\Stubification\\$($TestUsers[0])\]`n" -and
-            $Content -notmatch "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\InstallService\\Stubification\\$($TestUsers[1])\]`n" -and
-            $Content -notmatch "`"EnableAppOffloading`"=dword:00000000`n" -and
             $Content -notmatch "`n\[HKEY_USERS\\$($TestUsers[0])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
             $Content -notmatch "`n\[HKEY_USERS\\$($TestUsers[1])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
             $Content -notmatch "`"DoNotTrack`"=dword:00000001`n" -and
@@ -210,6 +210,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -235,6 +236,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 0
         Should -Invoke Unregister-ScheduledTask -Exactly 0
         Should -Invoke Disable-ScheduledTask -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 0
         Should -Invoke Get-Item -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 0
@@ -254,6 +256,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 0
         Should -Invoke Unregister-ScheduledTask -Exactly 0
         Should -Invoke Disable-ScheduledTask -Exactly 0
+        Should -Invoke Get-SysPrepConfig -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 0
         Should -Invoke Get-Item -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 0
@@ -273,6 +276,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -292,6 +296,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -311,6 +316,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 0
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -330,6 +336,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -349,6 +356,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 1
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -368,6 +376,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -387,6 +396,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -406,6 +416,7 @@ Describe 'Set-WindowsBaseConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Get-SysPrepConfig -Exactly 2
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
