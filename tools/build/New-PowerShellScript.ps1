@@ -37,9 +37,9 @@ function New-PowerShellScript {
             [String]$NormalizedFileName = $FileName.Replace(' ', '_') -replace '\..{1,}$', ''
             [String]$VariableName = "CONFIG_$($NormalizedFileName.ToUpper())"
             [String[]]$EscapedContent = $Content.Replace("'", '"')
-            $EscapedContent[0] = "Set-Variable -Option Constant $VariableName '$($EscapedContent[0])"
+            $EscapedContent[0] = "Set-Variable -Option Constant $VariableName ([String]('$($EscapedContent[0])"
             $OutputLines.Add($EscapedContent)
-            $OutputLines.Add("'")
+            $OutputLines.Add("'))")
         } else {
             $OutputLines.Add($Content)
         }

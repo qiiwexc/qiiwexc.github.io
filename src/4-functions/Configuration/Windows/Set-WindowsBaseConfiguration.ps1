@@ -58,9 +58,9 @@ function Set-WindowsBaseConfiguration {
     Write-ActivityProgress 40 'Building configuration to apply...'
 
     if ($SYSTEM_LANGUAGE -match 'ru') {
-        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_RUSSIAN)
+        Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_WINDOWS_RUSSIAN)
     } else {
-        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_ENGLISH)
+        Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_WINDOWS_ENGLISH)
     }
 
     [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
@@ -77,9 +77,6 @@ function Set-WindowsBaseConfiguration {
         foreach ($User in (Get-UsersRegistryKeys)) {
             $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
             $ConfigLines.Add("`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n")
-
-            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n")
-            $ConfigLines.Add("`"EnableAppOffloading`"=dword:00000000`n")
 
             $ConfigLines.Add("`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]`n")
             $ConfigLines.Add("`"DoNotTrack`"=dword:00000001`n")

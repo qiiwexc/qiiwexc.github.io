@@ -54,8 +54,7 @@ function Get-NewVersion {
     try {
         Write-LogWarning 'Downloading new version...'
 
-        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-        if (-not $IsConnected) {
+        if (-not (Test-NetworkConnection)) {
             return
         }
 
