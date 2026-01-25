@@ -3,6 +3,7 @@ BeforeAll {
 
     . '.\src\4-functions\Common\Logger.ps1'
     . '.\src\4-functions\Common\Network.ps1'
+    . '.\src\4-functions\Common\New-Directory.ps1'
     . '.\src\4-functions\Common\Start-DownloadUnzipAndRun.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -18,8 +19,7 @@ BeforeAll {
 Describe 'Start-OoShutUp10' {
     BeforeEach {
         Mock Write-LogInfo {}
-        Mock Test-NetworkConnection { return $True }
-        Mock New-Item {}
+        Mock New-Directory {}
         Mock Set-Content {}
         Mock Start-DownloadUnzipAndRun {}
         Mock Write-LogWarning {}
@@ -33,13 +33,8 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
-        Should -Invoke New-Item -Exactly 1 -ParameterFilter {
-            $Path -eq $PATH_WORKING_DIR -and
-            $ItemType -eq 'Directory' -and
-            $Force -eq $True
-        }
+        Should -Invoke New-Directory -Exactly 1
+        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_WORKING_DIR }
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq "$PATH_WORKING_DIR\$TestConfigFileName" -and
@@ -62,13 +57,8 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
-        Should -Invoke New-Item -Exactly 1 -ParameterFilter {
-            $Path -eq $PATH_OOSHUTUP10 -and
-            $ItemType -eq 'Directory' -and
-            $Force -eq $True
-        }
+        Should -Invoke New-Directory -Exactly 1
+        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_OOSHUTUP10 }
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq "$PATH_OOSHUTUP10\$TestConfigFileName" -and
@@ -92,8 +82,7 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
@@ -105,42 +94,13 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Out-Success -Exactly 1
     }
 
-    It 'Should exit if no network connection' {
-        Mock Test-NetworkConnection { return $False }
+    It 'Should handle New-Directory failure' {
+        Mock New-Directory { throw $TestException }
 
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-    }
-
-    It 'Should handle Test-NetworkConnection failure' {
-        Mock Test-NetworkConnection { throw $TestException }
-
-        { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
-
-        Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-    }
-
-    It 'Should handle New-Item failure' {
-        Mock New-Item { throw $TestException }
-
-        Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
-
-        Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
@@ -153,8 +113,7 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
@@ -167,8 +126,7 @@ Describe 'Start-OoShutUp10' {
         { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1

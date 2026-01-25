@@ -2,7 +2,6 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\Logger.ps1'
-    . '.\src\4-functions\Common\Network.ps1'
     . '.\src\4-functions\Common\Initialize-AppDirectory.ps1'
     . '.\src\4-functions\Common\Start-DownloadUnzipAndRun.ps1'
     . '.\src\4-functions\Configuration\Helpers\Import-RegistryConfiguration.ps1'
@@ -22,7 +21,6 @@ BeforeAll {
 Describe 'Install-MicrosoftOffice' {
     BeforeEach {
         Mock Write-LogInfo {}
-        Mock Test-NetworkConnection { return $True }
         Mock Initialize-AppDirectory {}
         Mock Set-Content {}
         Mock Import-RegistryConfiguration {}
@@ -39,7 +37,6 @@ Describe 'Install-MicrosoftOffice' {
         Install-MicrosoftOffice -Execute:$TestExecute
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
@@ -59,7 +56,6 @@ Describe 'Install-MicrosoftOffice' {
         Install-MicrosoftOffice -Execute:$TestExecute
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
@@ -86,7 +82,6 @@ Describe 'Install-MicrosoftOffice' {
         Install-MicrosoftOffice -Execute:$TestExecute
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
@@ -99,41 +94,12 @@ Describe 'Install-MicrosoftOffice' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
     }
 
-    It 'Should exit if no network connection' {
-        Mock Test-NetworkConnection { return $False }
-
-        Install-MicrosoftOffice -Execute:$TestExecute
-
-        Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke Initialize-AppDirectory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Import-RegistryConfiguration -Exactly 0
-        Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-    }
-
-    It 'Should handle Test-NetworkConnection failure' {
-        Mock Test-NetworkConnection { throw $TestException }
-
-        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw $TestException
-
-        Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke Initialize-AppDirectory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Import-RegistryConfiguration -Exactly 0
-        Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-    }
-
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
         Install-MicrosoftOffice -Execute:$TestExecute
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -149,7 +115,6 @@ Describe 'Install-MicrosoftOffice' {
         Install-MicrosoftOffice -Execute:$TestExecute
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -163,7 +128,6 @@ Describe 'Install-MicrosoftOffice' {
         { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw $TestException
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0

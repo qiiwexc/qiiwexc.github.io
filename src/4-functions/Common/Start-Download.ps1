@@ -26,8 +26,7 @@ function Start-Download {
         return $SavePath
     }
 
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
+    if (-not (Test-NetworkConnection)) {
         throw 'No network connection detected'
     }
 

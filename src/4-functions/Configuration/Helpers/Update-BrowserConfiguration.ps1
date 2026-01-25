@@ -36,7 +36,7 @@ function Update-BrowserConfiguration {
 
         Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $ExtendConfig -ErrorAction Stop | ConvertTo-Json -Depth 100 -Compress -ErrorAction Stop))
 
-        $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline -ErrorAction Stop
+        Set-Content $Path $UpdatedConfig -Encoding UTF8 -NoNewline -ErrorAction Stop
 
         Out-Success $LogIndentLevel
     } catch {
