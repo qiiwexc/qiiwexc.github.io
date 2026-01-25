@@ -13,8 +13,8 @@ function Start-DownloadUnzipAndRun {
 
     try {
         Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
-        Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
-        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
+        Set-Variable -Option Constant IsArchive ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
+        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsArchive)))
     } catch {
         Out-Failure "Download failed: $_"
         Write-ActivityCompleted $False
@@ -22,7 +22,7 @@ function Start-DownloadUnzipAndRun {
     }
 
     if ($DownloadedFile) {
-        if ($IsZip) {
+        if ($IsArchive) {
             try {
                 Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
             } catch {

@@ -25,7 +25,7 @@ BeforeAll {
 Describe 'Set-WindowsPersonalisationConfig' {
     BeforeEach {
         Set-Variable -Option Constant TestLanguageList (
-            [Collections.Generic.List[PSCustomObject]]@(
+            [PSCustomObject]@(
                 @{LanguageTag = 'en' },
                 @{LanguageTag = 'ru' }
             )

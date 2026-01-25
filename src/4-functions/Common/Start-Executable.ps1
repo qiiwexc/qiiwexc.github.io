@@ -11,7 +11,7 @@ function Start-Executable {
         Out-Success
 
         Write-LogDebug "Removing '$Executable'..."
-        Remove-File $Executable
+        Remove-File $Executable -Silent
         Out-Success
     } else {
         Write-ActivityProgress 90 "Running '$Executable'..."
