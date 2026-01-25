@@ -35,8 +35,8 @@ function Start-DownloadUnzipAndRun {
         }
 
         if ($Configuration) {
-            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable -ErrorAction Stop))
-            $Configuration | Set-Content "$ParentPath\$ConfigFile" -NoNewline -ErrorAction Stop
+            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
+            $Configuration | Set-Content "$ParentPath\$ConfigFile" -NoNewline
         }
 
         if ($Execute) {
