@@ -30,8 +30,6 @@ Describe 'Initialize-App' {
         Mock Get-Date { return ToString }
         Mock Write-FormLog {}
         Mock Write-LogWarning {}
-        Mock Add-Type {}
-        Mock Set-Variable {}
         Mock Get-SystemInformation {}
         Mock Remove-Directory {}
         Mock Initialize-AppDirectory {}
@@ -49,15 +47,6 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Add-Type -Exactly 1
-        Should -Invoke Add-Type -Exactly 1 -ParameterFilter { $AssemblyName -eq 'System.IO.Compression.FileSystem' }
-        Should -Invoke Set-Variable -Exactly 1
-        Should -Invoke Set-Variable -Exactly 1 -ParameterFilter {
-            $Option -eq 'Constant' -and
-            $Scope -eq 'Script' -and
-            $Name -eq 'ZIP_SUPPORTED' -and
-            $Value -eq $True
-        }
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 3
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter {
@@ -86,26 +75,6 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Add-Type -Exactly 1
-        Should -Invoke Set-Variable -Exactly 1
-        Should -Invoke Get-SystemInformation -Exactly 1
-        Should -Invoke Remove-Directory -Exactly 3
-        Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Update-App -Exactly 1
-    }
-
-    It 'Should handle Add-Type failure' {
-        Mock Add-Type { throw $TestException }
-
-        Initialize-App
-
-        Should -Invoke Activate -Exactly 1
-        Should -Invoke Get-Date -Exactly 1
-        Should -Invoke ToString -Exactly 1
-        Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Add-Type -Exactly 1
-        Should -Invoke Set-Variable -Exactly 0
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 3
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -122,8 +91,6 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Add-Type -Exactly 1
-        Should -Invoke Set-Variable -Exactly 1
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 0
         Should -Invoke Initialize-AppDirectory -Exactly 0
@@ -140,8 +107,6 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Add-Type -Exactly 1
-        Should -Invoke Set-Variable -Exactly 1
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 0
@@ -158,8 +123,6 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Add-Type -Exactly 1
-        Should -Invoke Set-Variable -Exactly 1
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 3
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -176,8 +139,6 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Add-Type -Exactly 1
-        Should -Invoke Set-Variable -Exactly 1
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 3
         Should -Invoke Initialize-AppDirectory -Exactly 1

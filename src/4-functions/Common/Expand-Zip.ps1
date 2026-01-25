@@ -60,11 +60,11 @@ function Expand-Zip {
 
     $Null = New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop
 
-    if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
-        [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
+    if ($ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
+        Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
     } else {
         if (-not $SHELL) {
-            Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
+            Set-Variable -Option Constant -Scope Script SHELL (New-Object -ComObject Shell.Application)
         }
 
         foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
