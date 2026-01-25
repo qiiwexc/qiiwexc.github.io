@@ -3,11 +3,11 @@ BeforeAll {
 
     Add-Type -AssemblyName System.Windows.Forms
 
-    . '.\src\4-functions\Common\Get-SystemInformation.ps1'
-    . '.\src\4-functions\Common\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\Common\Logger.ps1'
     . '.\src\4-functions\Common\Remove-Directory.ps1'
-    . '.\src\4-functions\Common\Updater.ps1'
+    . '.\src\4-functions\App lifecycle\Get-SystemInformation.ps1'
+    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
+    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . '.\src\4-functions\App lifecycle\Updater.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 

@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Progressbar.ps1'
+    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-WindowsBaseConfiguration.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-WindowsPersonalisationConfig.ps1'
 
