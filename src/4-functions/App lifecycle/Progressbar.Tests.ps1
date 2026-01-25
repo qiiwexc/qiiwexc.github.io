@@ -93,7 +93,7 @@ Describe 'Write-ActivityProgress' {
     It 'Should update existing activity with a task when no parent activity exists' {
         Write-ActivityProgress $TestPercentComplete $TestTask
 
-        $script:CURRENT_TASK | Should -Be $TestTask
+        $script:CURRENT_TASK | Should -BeExactly $TestTask
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq $TestTask }
@@ -128,7 +128,7 @@ Describe 'Write-ActivityProgress' {
     It 'Should update existing activity with a task when a parent activity exists' {
         Write-ActivityProgress $TestPercentComplete $TestTask
 
-        $script:CURRENT_TASK | Should -Be $TestTask
+        $script:CURRENT_TASK | Should -BeExactly $TestTask
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-Progress -Exactly 1

@@ -16,7 +16,7 @@ Describe 'Get-NetworkAdapter' {
     }
 
     It 'Should return network adapter when connected' {
-        Get-NetworkAdapter | Should -Be $TestNetworkAdapter
+        Get-NetworkAdapter | Should -BeExactly $TestNetworkAdapter
 
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter {

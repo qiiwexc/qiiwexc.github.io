@@ -22,7 +22,7 @@ Describe 'Get-UsersRegistryKeys' {
     }
 
     It 'Should get users registry keys' {
-        Get-UsersRegistryKeys | Should -Be @('S-1-5-21-1000', 'S-1-5-21-1100')
+        Get-UsersRegistryKeys | Should -BeExactly @('S-1-5-21-1000', 'S-1-5-21-1100')
 
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq 'Registry::HKEY_USERS\*' }
@@ -32,7 +32,7 @@ Describe 'Get-UsersRegistryKeys' {
     It 'Should handle Get-Item failure' {
         Mock Get-Item { throw $TestException }
 
-        Get-UsersRegistryKeys | Should -Be @()
+        Get-UsersRegistryKeys | Should -BeExactly @()
 
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1

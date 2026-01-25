@@ -24,7 +24,7 @@ Describe 'Set-AppRemovalList' {
     It 'Should inline app removal list correctly' {
         Set-Variable -Option Constant Result (Set-AppRemovalList $ConfigsPath $TestTemplateContent)
 
-        $Result | Should -Be "TEST_TEMPLATE_CONTENT_1
+        $Result | Should -BeExactly "TEST_TEMPLATE_CONTENT_1
 
   'Microsoft.People';
   'Microsoft.Print3D';

@@ -21,7 +21,7 @@ function Set-WindowsPersonalisationConfig {
 
     Write-ActivityProgress 80 'Building Windows personalisation configuration...'
 
-    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+    [Collections.Generic.List[String]]$ConfigLines = Get-SysPrepConfig $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER
     $ConfigLines.Add("`n")
     $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER)
     $ConfigLines.Add("`n")
