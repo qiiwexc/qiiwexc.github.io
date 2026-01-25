@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Progressbar.ps1'
+    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
     . '.\src\4-functions\Configuration\Apps\Set-7zipConfiguration.ps1'
     . '.\src\4-functions\Configuration\Apps\Set-AnyDeskConfiguration.ps1'
     . '.\src\4-functions\Configuration\Apps\Set-GoogleChromeConfiguration.ps1'

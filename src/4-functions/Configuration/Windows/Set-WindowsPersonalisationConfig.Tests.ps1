@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\logger.ps1'
-    . '.\src\4-functions\Common\Progressbar.ps1'
+    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
     . '.\src\4-functions\Configuration\Helpers\Get-UsersRegistryKeys.ps1'
     . '.\src\4-functions\Configuration\Helpers\Import-RegistryConfiguration.ps1'
 

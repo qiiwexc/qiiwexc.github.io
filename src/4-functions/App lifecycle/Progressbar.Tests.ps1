@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Logger.ps1'
+    . '.\src\4-functions\App lifecycle\Logger.ps1'
 
     Set-Variable -Option Constant TestActivity1 ([String]'TEST_ACTIVITY_1')
     Set-Variable -Option Constant TestActivity2 ([String]'TEST_ACTIVITY_2')

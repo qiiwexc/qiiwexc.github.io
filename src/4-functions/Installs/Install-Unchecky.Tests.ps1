@@ -1,9 +1,9 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Logger.ps1'
     . '.\src\4-functions\Common\New-RegistryKeyIfMissing.ps1'
     . '.\src\4-functions\Common\Start-DownloadUnzipAndRun.ps1'
+    . '.\src\4-functions\App lifecycle\Logger.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
