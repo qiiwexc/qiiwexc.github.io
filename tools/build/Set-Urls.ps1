@@ -11,8 +11,8 @@ function Set-Urls {
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\urls.json")
     Set-Variable -Option Constant OutputFile ([String]"$BuildPath\urls.json")
 
-    [PSCustomObject[]]$Dependencies = Get-Content $DependenciesFile -Raw -Encoding UTF8 | ConvertFrom-Json
-    [PSCustomObject[]]$TemplateContent = Get-Content $TemplateFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    [PSCustomObject[]]$Dependencies = Read-JsonFile $DependenciesFile
+    [PSCustomObject[]]$TemplateContent = Read-JsonFile $TemplateFile
 
     foreach ($Dependency in $Dependencies) {
         [String]$Name = $Dependency.name.ToUpper().Replace(' ', '_').Replace('-', '_')
@@ -25,7 +25,7 @@ function Set-Urls {
         }
     }
 
-    Write-File $OutputFile ($TemplateContent | ConvertTo-Json)
+    Write-JsonFile $OutputFile $TemplateContent
 
     Write-ActivityCompleted
 }

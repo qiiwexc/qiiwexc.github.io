@@ -3,6 +3,8 @@ BeforeAll {
 
     . '.\tools\common\logger.ps1'
     . '.\tools\common\Progressbar.ps1'
+    . '.\tools\common\Read-TextFile.ps1'
+    . '.\tools\common\Write-TextFile.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -29,10 +31,10 @@ Describe 'New-PowerShellScript' {
     BeforeEach {
         Mock New-Activity {}
         Mock Get-ChildItem { return $TestSourceFileList }
-        Mock Get-Content { return $TestPs1FileContent } -ParameterFilter { $Path -eq $TestPs1FilePath }
-        Mock Get-Content { return $TestConfigFileContent } -ParameterFilter { $Path -eq $TestConfigFilePath }
+        Mock Read-TextFile { return $TestPs1FileContent } -ParameterFilter { $Path -eq $TestPs1FilePath }
+        Mock Read-TextFile { return $TestConfigFileContent } -ParameterFilter { $Path -eq $TestConfigFilePath }
         Mock Write-LogInfo {}
-        Mock Set-Content {}
+        Mock Write-TextFile {}
         Mock Write-ActivityCompleted {}
     }
 
@@ -46,27 +48,19 @@ Describe 'New-PowerShellScript' {
             $Recurse -eq $True -and
             $File -eq $True
         }
-        Should -Invoke Get-Content -Exactly 2
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestPs1FilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestConfigFilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Read-TextFile -Exactly 2
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestPs1FilePath }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestConfigFilePath }
+        Should -Invoke Write-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildPs1FilePath -and
-            $Value -match "^#region code > Test-File`n" -and
-            $Value -match "TEST_PS1_FILE_CONTENT_1 VALUE_1`nVALUE_2 TEST_PS1_FILE_CONTENT_2" -and
-            $Value -match "`n#endregion code > Test-File`n" -and
-            $Value -match "`n#region configs > ConfigFile`n" -and
-            $Value -match "Set-Variable -Option Constant CONFIG_CONFIGFILE 'TEST_CONFIG_KEY_1=`"TEST_CONFIG_VALUE_1`"`nTEST_CONFIG_KEY_2=TEST_CONFIG_VALUE_2" -and
-            $Value -match "'" -and
-            $Value -match "`n#endregion configs > ConfigFile"
+            $Content -match "^#region code > Test-File`n" -and
+            $Content -match "TEST_PS1_FILE_CONTENT_1 VALUE_1`nVALUE_2 TEST_PS1_FILE_CONTENT_2" -and
+            $Content -match "`n#endregion code > Test-File`n" -and
+            $Content -match "`n#region configs > ConfigFile`n" -and
+            $Content -match "Set-Variable -Option Constant CONFIG_CONFIGFILE 'TEST_CONFIG_KEY_1=`"TEST_CONFIG_VALUE_1`"`nTEST_CONFIG_KEY_2=TEST_CONFIG_VALUE_2" -and
+            $Content -match "'" -and
+            $Content -match "`n#endregion configs > ConfigFile"
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
@@ -78,32 +72,32 @@ Describe 'New-PowerShellScript' {
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-ChildItem -Exactly 1
-        Should -Invoke Get-Content -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Read-TextFile -Exactly 0
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Get-Content failure' {
-        Mock Get-Content { throw $TestException } -ParameterFilter { $Path -match '.+' }
+    It 'Should handle Read-TextFile failure' {
+        Mock Read-TextFile { throw $TestException } -ParameterFilter { $Path -match '.+' }
 
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-ChildItem -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-Content failure' {
-        Mock Set-Content { throw $TestException }
+    It 'Should handle Write-TextFile failure' {
+        Mock Write-TextFile { throw $TestException }
 
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Get-ChildItem -Exactly 1
-        Should -Invoke Get-Content -Exactly 2
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 2
+        Should -Invoke Write-TextFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

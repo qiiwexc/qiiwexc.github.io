@@ -1,7 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\Write-File.ps1'
+    . '.\tools\common\Read-TextFile.ps1'
+    . '.\tools\common\Write-TextFile.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -15,21 +16,17 @@ BeforeAll {
 
 Describe 'New-UnattendedBase' {
     BeforeEach {
-        Mock Write-File {}
-        Mock Get-Content { return $TestTemplateFileContent }
+        Mock Read-TextFile { return $TestTemplateFileContent }
+        Mock Write-TextFile {}
     }
 
     It 'Should create unattended base file' {
         Set-Variable -Option Constant Result (New-UnattendedBase $TestTemplatesPath $TestBaseFilePath)
 
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestTemplateFileFilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Write-File -Exactly 1
-        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestTemplateFileFilePath }
+        Should -Invoke Write-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBaseFilePath -and
             $Content -match "^<!-- Version: {VERSION} -->`n" -and
             $Content -notmatch "`t" -and
@@ -45,21 +42,21 @@ Describe 'New-UnattendedBase' {
         }
     }
 
-    It 'Should handle Get-Content failure' {
-        Mock Get-Content { throw $TestException }
+    It 'Should handle Read-TextFile failure' {
+        Mock Read-TextFile { throw $TestException }
 
         { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw $TestException
 
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Write-File -Exactly 0
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 0
     }
 
-    It 'Should handle Write-File failure' {
-        Mock Write-File { throw $TestException }
+    It 'Should handle Write-TextFile failure' {
+        Mock Write-TextFile { throw $TestException }
 
         { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw $TestException
 
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1
     }
 }

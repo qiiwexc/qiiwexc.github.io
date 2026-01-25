@@ -1,6 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\tools\common\Read-TextFile.ps1'
+
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant LocaleEnglish ([String]'English')
@@ -16,34 +18,18 @@ BeforeAll {
 
 Describe 'Set-InlineFiles' {
     BeforeEach {
-        Mock Get-Content { return $TestGenericFileContent }
-        Mock Get-Content { return $TestRegFileContent } -ParameterFilter { $Path -match '.reg$' }
+        Mock Read-TextFile { return $TestGenericFileContent }
+        Mock Read-TextFile { return $TestRegFileContent } -ParameterFilter { $Path -match '.reg$' }
     }
 
     It 'Should inline English configuration files correctly' {
         Set-Variable -Option Constant Result (Set-InlineFiles $LocaleEnglish $TestConfigsPath $TestUnattendedPath $TestTemplateContent)
 
-        Should -Invoke Get-Content -Exactly 12
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestUnattendedPath\App associations.xml" -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestConfigsPath\Apps\qBittorrent English.ini" -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestConfigsPath\Windows\Base\Windows HKEY_LOCAL_MACHINE.reg" -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestConfigsPath\Windows\Base\Windows English.reg" -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
+        Should -Invoke Read-TextFile -Exactly 12
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestUnattendedPath\App associations.xml" }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Apps\qBittorrent English.ini" }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Windows\Base\Windows HKEY_LOCAL_MACHINE.reg" }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Windows\Base\Windows English.reg" }
 
         $Result | Should -Match 'TEST_TEMPLATE_CONTENT_1'
         $Result | Should -Match "Windows Registry Editor Version 5\.00`n`nTEST_REG_FILE_CONTENT_1`n\[HKEY_USERS\\DefaultUser\\Test\]`n&quot;TestValue&quot;=1`nTEST_REG_FILE_CONTENT_2"
@@ -54,27 +40,11 @@ Describe 'Set-InlineFiles' {
     It 'Should inline Russian configuration files correctly' {
         Set-Variable -Option Constant Result (Set-InlineFiles $LocaleRussian $TestConfigsPath $TestUnattendedPath $TestTemplateContent)
 
-        Should -Invoke Get-Content -Exactly 12
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestUnattendedPath\App associations.xml" -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestConfigsPath\Apps\qBittorrent Russian.ini" -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestConfigsPath\Windows\Base\Windows HKEY_LOCAL_MACHINE.reg" -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq "$TestConfigsPath\Windows\Base\Windows Russian.reg" -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
+        Should -Invoke Read-TextFile -Exactly 12
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestUnattendedPath\App associations.xml" }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Apps\qBittorrent Russian.ini" }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Windows\Base\Windows HKEY_LOCAL_MACHINE.reg" }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Windows\Base\Windows Russian.reg" }
 
         $Result | Should -Match 'TEST_TEMPLATE_CONTENT_1'
         $Result | Should -Match "Windows Registry Editor Version 5\.00`n`nTEST_REG_FILE_CONTENT_1`n\[HKEY_USERS\\DefaultUser\\Test\]`n&quot;TestValue&quot;=1`nTEST_REG_FILE_CONTENT_2"
@@ -82,11 +52,11 @@ Describe 'Set-InlineFiles' {
         $Result | Should -Match 'TEST_TEMPLATE_CONTENT_2'
     }
 
-    It 'Should handle Get-Content failure' {
-        Mock Get-Content { throw $TestException }
+    It 'Should handle Read-TextFile failure' {
+        Mock Read-TextFile { throw $TestException }
 
         { Set-InlineFiles $LocaleEnglish $TestConfigsPath $TestUnattendedPath $TestTemplateContent } | Should -Throw $TestException
 
-        Should -Invoke Get-Content -Exactly 2
+        Should -Invoke Read-TextFile -Exactly 2
     }
 }

@@ -31,7 +31,7 @@ function New-PowerShellScript {
 
         $PreviousRegion = $CurrentRegion
 
-        [String]$Content = (Get-Content $FilePath -Raw -Encoding UTF8).TrimEnd()
+        [String]$Content = (Read-TextFile $FilePath).TrimEnd()
 
         if ($IsConfigFile) {
             [String]$NormalizedFileName = $FileName.Replace(' ', '_') -replace '\..{1,}$', ''
@@ -57,7 +57,7 @@ function New-PowerShellScript {
     }
 
     Write-LogInfo "Writing output file $Ps1File"
-    Set-Content $Ps1File $OutputLines
+    Write-TextFile $Ps1File $OutputLines
 
     Write-ActivityCompleted
 }

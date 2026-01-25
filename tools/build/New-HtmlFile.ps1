@@ -9,7 +9,7 @@ function New-HtmlFile {
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\home.html")
     Set-Variable -Option Constant OutputFile ([String]'.\index.html')
 
-    [String]$TemplateContent = Get-Content $TemplateFile -Raw -Encoding UTF8
+    [String]$TemplateContent = Read-TextFile $TemplateFile
 
     $Config | ForEach-Object {
         [String]$Placeholder = "{$($_.key)}"
@@ -18,7 +18,7 @@ function New-HtmlFile {
 
     $TemplateContent = $TemplateContent.Replace('../d/stylesheet.css', 'https://bit.ly/stylesheet_web')
 
-    Set-Content $OutputFile $TemplateContent -NoNewline
+    Write-TextFile $OutputFile $TemplateContent -NoNewline
 
     Write-ActivityCompleted
 }

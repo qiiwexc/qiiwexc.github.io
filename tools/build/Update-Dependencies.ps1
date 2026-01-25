@@ -39,7 +39,7 @@ function Update-Dependencies {
     }
 
     Write-ActivityProgress 10
-    Set-Variable -Option Constant Dependencies ([PSCustomObject[]](Get-Content $DependenciesFile -Raw -Encoding UTF8 | ConvertFrom-Json))
+    Set-Variable -Option Constant Dependencies ([PSCustomObject[]](Read-JsonFile $DependenciesFile))
 
     [Collections.Generic.List[Collections.Generic.List[String]]]$ChangeLogs = @()
 
@@ -91,8 +91,7 @@ function Update-Dependencies {
     Write-ActivityProgress 95
 
     Write-LogInfo "Saving updated dependencies to $DependenciesFile"
-    Set-Variable -Option Constant UpdatedDependencies ([String]($Dependencies | ConvertTo-Json -Depth 10))
-    Write-File $DependenciesFile $UpdatedDependencies
+    Write-JsonFile $DependenciesFile $Dependencies
 
     Write-ActivityCompleted
 }

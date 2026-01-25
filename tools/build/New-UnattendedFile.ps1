@@ -38,7 +38,7 @@ function New-UnattendedFile {
 
     Write-ActivityProgress 15
 
-    Set-Variable -Option Constant TemplateContent ([String](Get-Content $BaseFile -Raw -Encoding UTF8))
+    Set-Variable -Option Constant TemplateContent ([String](Read-TextFile $BaseFile))
 
     Write-ActivityProgress 20
 
@@ -70,7 +70,7 @@ function New-UnattendedFile {
 
         $UpdatedTemplateContent = $UpdatedTemplateContent.Replace('{VERSION}', $Version)
 
-        Set-Content $OutputFileName $UpdatedTemplateContent -NoNewline
+        Write-TextFile $OutputFileName $UpdatedTemplateContent -NoNewline
         $Percentage += 2
         Write-ActivityProgress $Percentage
 
@@ -101,13 +101,13 @@ function New-UnattendedFile {
         [String]$BuildFileName = "$BuildPath\$LocalisedFileName"
         [String]$OutputFileName = "$DistPath\$LocalisedFileName"
 
-        [String]$FileContent = Get-Content $BuildFileName -Raw -Encoding UTF8
+        [String]$FileContent = Read-TextFile $BuildFileName
 
         foreach ($Regex in $DevRegexRemovals) {
             $FileContent = $FileContent -replace $Regex, ''
         }
 
-        Set-Content $OutputFileName $FileContent -NoNewline
+        Write-TextFile $OutputFileName $FileContent -NoNewline
     }
 
     Write-ActivityCompleted

@@ -1,8 +1,0 @@
-function Write-File {
-    param(
-        [String][Parameter(Position = 0, Mandatory)]$Path,
-        [String][Parameter(Position = 1, Mandatory)]$Content
-    )
-
-    $Null = New-Item $Path -Value (($Content.TrimEnd() -replace "`r`n", "`n") + "`n") -Force
-}

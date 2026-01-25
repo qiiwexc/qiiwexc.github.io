@@ -4,7 +4,7 @@ function Set-AppRemovalList {
         [String][Parameter(Position = 1, Mandatory)]$TemplateContent
     )
 
-    [Collections.Generic.List[String]]$AppList = Get-Content -Encoding UTF8 "$ConfigsPath\Windows\Tools\Debloat app list.txt"
+    [Collections.Generic.List[String]]$AppList = Read-TextFile -AsList "$ConfigsPath\Windows\Tools\Debloat app list.txt"
     $AppList.Add('Microsoft.OneDrive')
 
     [Collections.Generic.List[String]]$FormattedAppList = @("`n")

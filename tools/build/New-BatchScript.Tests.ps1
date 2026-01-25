@@ -3,7 +3,8 @@ BeforeAll {
 
     . '.\tools\common\logger.ps1'
     . '.\tools\common\Progressbar.ps1'
-    . '.\tools\common\Write-File.ps1'
+    . '.\tools\common\Read-TextFile.ps1'
+    . '.\tools\common\Write-TextFile.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -21,8 +22,8 @@ Describe 'New-BatchScript' {
     BeforeEach {
         Mock New-Activity {}
         Mock Write-LogInfo {}
-        Mock Get-Content { return $TestPs1FileContent }
-        Mock Write-File {}
+        Mock Read-TextFile { return $TestPs1FileContent }
+        Mock Write-TextFile {}
         Mock Copy-Item {}
         Mock Write-ActivityCompleted {}
     }
@@ -31,14 +32,10 @@ Describe 'New-BatchScript' {
         New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestPs1FilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Write-File -Exactly 1
-        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestPs1FilePath }
+        Should -Invoke Write-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBatchFilePath -and
             $Content -match "@echo off`n" -and
             $Content -match "%temp%\\$TestProjectName\.ps1" -and
@@ -54,26 +51,26 @@ Describe 'New-BatchScript' {
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
-    It 'Should handle Get-Content failure' {
-        Mock Get-Content { throw $TestException }
+    It 'Should handle Read-TextFile failure' {
+        Mock Read-TextFile { throw $TestException }
 
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Write-File -Exactly 0
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Write-File failure' {
-        Mock Write-File { throw $TestException }
+    It 'Should handle Write-TextFile failure' {
+        Mock Write-TextFile { throw $TestException }
 
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -84,8 +81,8 @@ Describe 'New-BatchScript' {
         { New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }

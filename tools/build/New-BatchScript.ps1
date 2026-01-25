@@ -8,7 +8,7 @@ function New-BatchScript {
 
     New-Activity 'Building batch script'
 
-    Set-Variable -Option Constant PowerShellLines ([String](Get-Content $Ps1File -Raw -Encoding UTF8))
+    Set-Variable -Option Constant PowerShellLines ([String](Read-TextFile $Ps1File))
 
     Set-Variable -Option Constant BatchLines (
         [String]("@echo off
@@ -35,7 +35,7 @@ if `"%~1`"==`"Debug`" (
     )
 
     Write-LogInfo "Writing batch file $BatchFile"
-    Write-File $BatchFile $BatchLines
+    Write-TextFile $BatchFile $BatchLines -Normalize
     Copy-Item $BatchFile "$VmPath\$ProjectName.bat"
 
     Write-ActivityCompleted
