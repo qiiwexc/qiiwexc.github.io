@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\Read-TextFile.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -14,75 +15,74 @@ Describe 'Read-GitHubToken' {
     }
 
     It 'Should read GitHub token from env file with no quotes' {
-        Mock Get-Content {
-            return 'GITHUB_TOKEN=TEST_GITHUB_TOKEN_CONTENT '
+        Mock Read-TextFile {
+            return @('GITHUB_TOKEN=TEST_GITHUB_TOKEN_CONTENT ')
         }
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestEnvPath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
+            $AsList -eq $True
         }
     }
 
     It 'Should read GitHub token from env file with single quotes' {
-        Mock Get-Content {
-            return "GITHUB_TOKEN= 'TEST_GITHUB_TOKEN_CONTENT' "
+        Mock Read-TextFile {
+            return @("GITHUB_TOKEN= 'TEST_GITHUB_TOKEN_CONTENT' ")
         }
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
     }
 
     It 'Should read GitHub token from env file with double quotes' {
-        Mock Get-Content {
-            return 'GITHUB_TOKEN= "TEST_GITHUB_TOKEN_CONTENT" '
+        Mock Read-TextFile {
+            return @('GITHUB_TOKEN= "TEST_GITHUB_TOKEN_CONTENT" ')
         }
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
     }
 
     It 'Should handle missing GitHub token in env file' {
-        Mock Get-Content {
-            return 'NOT_A_GITHUB_TOKEN=SOME_CONTENT'
+        Mock Read-TextFile {
+            return @('NOT_A_GITHUB_TOKEN=SOME_CONTENT')
         }
 
         Read-GitHubToken $TestEnvPath | Should -BeNullOrEmpty
 
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
     }
 
     It 'Should read GitHub token from env file at beginning' {
-        Mock Get-Content {
-            return "GITHUB_TOKEN=TEST_GITHUB_TOKEN_CONTENT`nNOT_A_GITHUB_TOKEN=SOME_CONTENT"
+        Mock Read-TextFile {
+            return @('GITHUB_TOKEN=TEST_GITHUB_TOKEN_CONTENT', 'NOT_A_GITHUB_TOKEN=SOME_CONTENT')
         }
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
     }
 
     It 'Should read GitHub token from env file not at beginning' {
-        Mock Get-Content {
-            return "NOT_A_GITHUB_TOKEN=SOME_CONTENT`nGITHUB_TOKEN=TEST_GITHUB_TOKEN_CONTENT"
+        Mock Read-TextFile {
+            return @('NOT_A_GITHUB_TOKEN=SOME_CONTENT', 'GITHUB_TOKEN=TEST_GITHUB_TOKEN_CONTENT')
         }
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
     }
 
-    It 'Should handle Get-Content failure' {
-        Mock Get-Content { throw $TestException }
+    It 'Should handle Read-TextFile failure' {
+        Mock Read-TextFile { throw $TestException }
 
         { Read-GitHubToken $TestEnvPath } | Should -Throw $TestException
 
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
     }
 }

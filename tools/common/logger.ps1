@@ -12,8 +12,7 @@ function Write-LogInfo {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([DevLogLevel]::INFO) $Message -IndentLevel $Level))
-    Write-Host $FormattedMessage
+    Write-Host ([String](Format-Message ([DevLogLevel]::INFO) $Message -IndentLevel $Level))
 }
 
 function Write-LogWarning {
@@ -22,8 +21,7 @@ function Write-LogWarning {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([DevLogLevel]::WARN) $Message -IndentLevel $Level))
-    Write-Warning $FormattedMessage
+    Write-Warning ([String](Format-Message ([DevLogLevel]::WARN) $Message -IndentLevel $Level))
 }
 
 function Write-LogError {
@@ -32,8 +30,7 @@ function Write-LogError {
         [Int][Parameter(Position = 1)]$Level = 0
     )
 
-    Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([DevLogLevel]::ERROR) $Message -IndentLevel $Level))
-    Write-Error $FormattedMessage
+    Write-Error ([String](Format-Message ([DevLogLevel]::ERROR) $Message -IndentLevel $Level))
 }
 
 function Out-Status {
@@ -69,9 +66,7 @@ function Get-Emoji {
         [String][Parameter(Position = 0, Mandatory)]$Code
     )
 
-    Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))
-
-    return [Char]::ConvertFromUtf32($Emoji)
+    return [Char]::ConvertFromUtf32(([Convert]::toInt32($Code, 16)))
 }
 
 

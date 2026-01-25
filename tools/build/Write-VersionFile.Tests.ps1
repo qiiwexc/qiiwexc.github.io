@@ -2,7 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\Progressbar.ps1'
-    . '.\tools\common\Write-File.ps1'
+    . '.\tools\common\Write-TextFile.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -13,7 +13,7 @@ BeforeAll {
 Describe 'Write-VersionFile' {
     BeforeEach {
         Mock New-Activity {}
-        Mock Write-File {}
+        Mock Write-TextFile {}
         Mock Write-ActivityCompleted {}
     }
 
@@ -21,21 +21,22 @@ Describe 'Write-VersionFile' {
         Write-VersionFile $TestVersion $TestFilePath
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-File -Exactly 1
-        Should -Invoke Write-File -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestFilePath -and
-            $Content -eq $TestVersion
+            $Content -eq $TestVersion -and
+            $Normalize -eq $True
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should handle Set-Content failure' {
-        Mock Write-File { throw $TestException }
+        Mock Write-TextFile { throw $TestException }
 
         { Write-VersionFile $TestVersion $TestFilePath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-File -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

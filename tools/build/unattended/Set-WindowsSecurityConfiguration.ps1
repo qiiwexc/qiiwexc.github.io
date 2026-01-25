@@ -4,7 +4,7 @@ function Set-WindowsSecurityConfiguration {
         [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)]$TemplateContent
     )
 
-    [Collections.Generic.List[String]]$Configuration = Get-Content -Encoding UTF8 "$SourcePath\4-functions\Configuration\Windows\Set-WindowsSecurityConfiguration.ps1"
+    [Collections.Generic.List[String]]$Configuration = Read-TextFile -AsList "$SourcePath\4-functions\Configuration\Windows\Set-WindowsSecurityConfiguration.ps1"
 
     [Collections.Generic.List[String]]$FormattedConfiguration = ''
     $Configuration | Where-Object { $_ -match 'Set-MpPreference' } | ForEach-Object {

@@ -2,6 +2,8 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\Progressbar.ps1'
+    . '.\tools\common\Read-TextFile.ps1'
+    . '.\tools\common\Write-TextFile.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -18,8 +20,8 @@ BeforeAll {
 Describe 'New-HtmlFile' {
     BeforeEach {
         Mock New-Activity {}
-        Mock Get-Content { return $TestTemplateContent }
-        Mock Set-Content {}
+        Mock Read-TextFile { return $TestTemplateContent }
+        Mock Write-TextFile {}
         Mock Write-ActivityCompleted {}
     }
 
@@ -27,40 +29,36 @@ Describe 'New-HtmlFile' {
         New-HtmlFile $TestTemplatesPath $TestConfig
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestTemplateFilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestTemplateFilePath }
+        Should -Invoke Write-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestOutFilePath -and
-            $Value -eq $TestHtmlContent -and
+            $Content -eq $TestHtmlContent -and
             $NoNewline -eq $True
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
-    It 'Should handle Get-Content failure' {
-        Mock Get-Content { throw $TestException }
+    It 'Should handle Read-TextFile failure' {
+        Mock Read-TextFile { throw $TestException }
 
         { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-Content failure' {
-        Mock Set-Content { throw $TestException }
+    It 'Should handle Write-TextFile failure' {
+        Mock Write-TextFile { throw $TestException }
 
         { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

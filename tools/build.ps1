@@ -56,7 +56,10 @@ Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
 
 . "$CommonPath\logger.ps1"
 . "$CommonPath\Progressbar.ps1"
-. "$CommonPath\Write-File.ps1"
+. "$CommonPath\Read-JsonFile.ps1"
+. "$CommonPath\Read-TextFile.ps1"
+. "$CommonPath\Write-JsonFile.ps1"
+. "$CommonPath\Write-TextFile.ps1"
 
 Write-LogInfo 'Build task started'
 Write-LogInfo "Version                  : $Version"

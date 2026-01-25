@@ -6,7 +6,7 @@ function Write-VersionFile {
 
     New-Activity 'Writing version file'
 
-    Write-File $VersionFile $Version
+    Write-TextFile $VersionFile $Version -Normalize
 
     Write-ActivityCompleted
 }

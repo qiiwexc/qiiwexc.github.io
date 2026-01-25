@@ -26,7 +26,7 @@ function Set-InlineFiles {
     $KEY_FILE_MAP.GetEnumerator() | ForEach-Object {
         [String]$FileName = $_.Value.Replace('{LOCALE}', $Locale)
 
-        [String]$FileContent = (Get-Content $FileName -Raw -Encoding UTF8).Trim()
+        [String]$FileContent = (Read-TextFile $FileName).Trim()
 
         [Collections.Generic.List[String]]$FullContent = @()
 

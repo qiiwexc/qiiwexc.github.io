@@ -4,6 +4,8 @@ BeforeAll {
     Set-Variable -Option Constant BuilderPath ([String]'.\tools\build')
 
     . '.\tools\common\Progressbar.ps1'
+    . '.\tools\common\Read-TextFile.ps1'
+    . '.\tools\common\Write-TextFile.ps1'
     . "$BuilderPath\unattended\New-UnattendedBase.ps1"
     . "$BuilderPath\unattended\Set-AppRemovalList.ps1"
     . "$BuilderPath\unattended\Set-InlineFiles.ps1"
@@ -76,19 +78,19 @@ Describe 'New-UnattendedFile' {
         Mock New-Activity {}
         Mock Write-ActivityProgress {}
         Mock New-UnattendedBase {}
-        Mock Get-Content { return $TestTemplateContent } -ParameterFilter { $Path -eq $TestBaseFilePath }
+        Mock Read-TextFile { return $TestTemplateContent } -ParameterFilter { $Path -eq $TestBaseFilePath }
         Mock Set-LocaleSettings { return $TestSetLocaleSettingsResult }
         Mock Set-AppRemovalList { return $TestSetAppRemovalListResult }
         Mock Set-WindowsSecurityConfiguration { return $TestSetWindowsSecurityConfigurationResult }
         Mock Set-PowerSchemeConfiguration { return $TestSetPowerSchemeConfigurationResult }
         Mock Set-InlineFiles { return $TestSetInlineFilesResult }
-        Mock Set-Content {} -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
-        Mock Set-Content {} -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+        Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
+        Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
         Mock Copy-Item {}
-        Mock Get-Content { return $TestBuildFileContent } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
-        Mock Get-Content { return $TestBuildFileContent } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
-        Mock Set-Content {} -ParameterFilter { $Path -eq $TestDistFileNameRussian }
-        Mock Set-Content {} -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
+        Mock Read-TextFile { return $TestBuildFileContent } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
+        Mock Read-TextFile { return $TestBuildFileContent } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+        Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestDistFileNameRussian }
+        Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
         Mock Write-ActivityCompleted {}
     }
 
@@ -102,12 +104,8 @@ Describe 'New-UnattendedFile' {
             $TemplatesPath -eq $TestTemplatesPath -and
             $BaseFile -eq $TestBaseFilePath
         }
-        Should -Invoke Get-Content -Exactly 3
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestBaseFilePath -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
+        Should -Invoke Read-TextFile -Exactly 3
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBaseFilePath }
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 1 -ParameterFilter {
             $Locale -eq $LocaleEnglish -and
@@ -145,15 +143,15 @@ Describe 'New-UnattendedFile' {
             $UnattendedPath -eq $TestUnattendedPath -and
             $TemplateContent -eq $TestSetPowerSchemeConfigurationResult
         }
-        Should -Invoke Set-Content -Exactly 4
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-TextFile -Exactly 4
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildFileNameRussian -and
-            $Value -eq $TestSetInlineFilesResult -and
+            $Content -eq $TestSetInlineFilesResult -and
             $NoNewline -eq $True
         }
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildFileNameEnglish -and
-            $Value -eq $TestSetInlineFilesResult -and
+            $Content -eq $TestSetInlineFilesResult -and
             $NoNewline -eq $True
         }
         Should -Invoke Copy-Item -Exactly 1
@@ -161,24 +159,16 @@ Describe 'New-UnattendedFile' {
             $Path -eq $TestBuildFileNameEnglish -and
             $Destination -eq $TestVmFilePath
         }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestBuildFileNameEnglish -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestBuildFileNameRussian -and
-            $Raw -eq $True -and
-            $Encoding -eq 'UTF8'
-        }
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestDistFileNameEnglish -and
-            $Value -eq $TestDistFileContent -and
+            $Content -eq $TestDistFileContent -and
             $NoNewline -eq $True
         }
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestDistFileNameRussian -and
-            $Value -eq $TestDistFileContent -and
+            $Content -eq $TestDistFileContent -and
             $NoNewline -eq $True
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
@@ -192,33 +182,33 @@ Describe 'New-UnattendedFile' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 0
+        Should -Invoke Read-TextFile -Exactly 0
         Should -Invoke Set-LocaleSettings -Exactly 0
         Should -Invoke Set-AppRemovalList -Exactly 0
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Get-Content failure when reading base file' {
-        Mock Get-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBaseFilePath }
+    It 'Should handle Read-TextFile failure when reading base file' {
+        Mock Read-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBaseFilePath }
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBaseFilePath }
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBaseFilePath }
         Should -Invoke Set-LocaleSettings -Exactly 0
         Should -Invoke Set-AppRemovalList -Exactly 0
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -231,13 +221,13 @@ Describe 'New-UnattendedFile' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 0
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -250,13 +240,13 @@ Describe 'New-UnattendedFile' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -269,13 +259,13 @@ Describe 'New-UnattendedFile' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -288,13 +278,13 @@ Describe 'New-UnattendedFile' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 7
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -307,53 +297,53 @@ Describe 'New-UnattendedFile' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-Content failure when writing English build file' {
-        Mock Set-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+    It 'Should handle Write-TextFile failure when writing English build file' {
+        Mock Write-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 9
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+        Should -Invoke Write-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-Content failure when writing Russian build file' {
-        Mock Set-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
+    It 'Should handle Write-TextFile failure when writing Russian build file' {
+        Mock Write-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 15
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
-        Should -Invoke Set-Content -Exactly 2
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
+        Should -Invoke Write-TextFile -Exactly 2
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -366,96 +356,96 @@ Describe 'New-UnattendedFile' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 17
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
-        Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Write-TextFile -Exactly 2
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Get-Content failure when reading English build file' {
-        Mock Get-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+    It 'Should handle Read-TextFile failure when reading English build file' {
+        Mock Read-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 2
+        Should -Invoke Read-TextFile -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
-        Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Write-TextFile -Exactly 2
         Should -Invoke Copy-Item -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Get-Content failure when reading Russian build file' {
-        Mock Get-Content { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
+    It 'Should handle Read-TextFile failure when reading Russian build file' {
+        Mock Read-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 3
+        Should -Invoke Read-TextFile -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
-        Should -Invoke Set-Content -Exactly 3
+        Should -Invoke Write-TextFile -Exactly 3
         Should -Invoke Copy-Item -Exactly 1
-        Should -Invoke Get-Content -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
-        Should -Invoke Set-Content -Exactly 0 -ParameterFilter { $Path -eq $TestDistFileNameRussian }
+        Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
+        Should -Invoke Write-TextFile -Exactly 0 -ParameterFilter { $Path -eq $TestDistFileNameRussian }
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-Content failure when writing English dist file' {
-        Mock Set-Content { throw $TestException } -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
+    It 'Should handle Write-TextFile failure when writing English dist file' {
+        Mock Write-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 2
+        Should -Invoke Read-TextFile -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
-        Should -Invoke Set-Content -Exactly 3
+        Should -Invoke Write-TextFile -Exactly 3
         Should -Invoke Copy-Item -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameEnglish }
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-Content failure when writing Russian dist file' {
-        Mock Set-Content { throw $TestException } -ParameterFilter { $Path -eq $TestDistFileNameRussian }
+    It 'Should handle Write-TextFile failure when writing Russian dist file' {
+        Mock Write-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestDistFileNameRussian }
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
-        Should -Invoke Get-Content -Exactly 3
+        Should -Invoke Read-TextFile -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
         Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
-        Should -Invoke Set-Content -Exactly 4
+        Should -Invoke Write-TextFile -Exactly 4
         Should -Invoke Copy-Item -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameRussian }
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestDistFileNameRussian }
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

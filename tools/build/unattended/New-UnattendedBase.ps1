@@ -36,7 +36,7 @@ function New-UnattendedBase {
         }
     )
 
-    [String]$Content = Get-Content $TemplateFile -Raw -Encoding UTF8
+    [String]$Content = Read-TextFile $TemplateFile
 
     $StringReplacementMap.GetEnumerator() | ForEach-Object {
         $Content = $Content.Replace($_.Key, $_.Value)
@@ -48,5 +48,5 @@ function New-UnattendedBase {
 
     $Content = "<!-- Version: {VERSION} -->`n" + $Content
 
-    Write-File $BaseFile $Content
+    Write-TextFile $BaseFile $Content -Normalize
 }
