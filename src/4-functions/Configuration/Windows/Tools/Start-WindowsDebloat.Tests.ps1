@@ -3,6 +3,7 @@ BeforeAll {
 
     . '.\src\4-functions\Common\Logger.ps1'
     . '.\src\4-functions\Common\Network.ps1'
+    . '.\src\4-functions\Common\New-Directory.ps1'
     . '.\src\4-functions\Common\Invoke-CustomCommand.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -22,7 +23,7 @@ Describe 'Start-WindowsDebloat' {
     BeforeEach {
         Mock Write-LogInfo {}
         Mock Test-NetworkConnection { return $True }
-        Mock New-Item {}
+        Mock New-Directory {}
         Mock Set-Content {}
         Mock Invoke-CustomCommand {}
         Mock Write-LogWarning {}
@@ -41,12 +42,8 @@ Describe 'Start-WindowsDebloat' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
-        Should -Invoke New-Item -Exactly 1 -ParameterFilter {
-            $Path -eq $TestTargetPath -and
-            $ItemType -eq 'Directory' -and
-            $Force -eq $True
-        }
+        Should -Invoke New-Directory -Exactly 1
+        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestTargetPath }
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestAppsListPath -and
@@ -75,7 +72,7 @@ Describe 'Start-WindowsDebloat' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
@@ -94,7 +91,7 @@ Describe 'Start-WindowsDebloat' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
@@ -114,7 +111,7 @@ Describe 'Start-WindowsDebloat' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestAppsListPath -and
@@ -143,7 +140,7 @@ Describe 'Start-WindowsDebloat' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
@@ -162,7 +159,7 @@ Describe 'Start-WindowsDebloat' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 0
+        Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
@@ -177,7 +174,7 @@ Describe 'Start-WindowsDebloat' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 0
+        Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
@@ -185,14 +182,14 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should handle New-Item failure' {
-        Mock New-Item { throw $TestException }
+    It 'Should handle New-Directory failure' {
+        Mock New-Directory { throw $TestException }
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
@@ -206,7 +203,7 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
@@ -220,7 +217,7 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1

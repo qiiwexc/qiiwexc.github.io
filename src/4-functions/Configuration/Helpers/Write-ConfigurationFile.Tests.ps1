@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\Logger.ps1'
+    . '.\src\4-functions\Common\New-Directory.ps1'
     . '.\src\4-functions\Common\Stop-ProcessIfRunning.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -19,7 +20,7 @@ Describe 'Write-ConfigurationFile' {
         Mock Stop-ProcessIfRunning {}
         Mock Write-LogInfo {}
         Mock Split-Path { return $TestParentPath }
-        Mock New-Item {}
+        Mock New-Directory {}
         Mock Set-Content {}
         Mock Out-Success {}
         Mock Write-LogWarning {}
@@ -36,11 +37,9 @@ Describe 'Write-ConfigurationFile' {
             $Path -eq $TestPath -and
             $Parent -eq $True
         }
-        Should -Invoke New-Item -Exactly 1
-        Should -Invoke New-Item -Exactly 1 -ParameterFilter {
-            $Path -eq $TestParentPath -and
-            $ItemType -eq 'Directory' -and
-            $Force -eq $True
+        Should -Invoke New-Directory -Exactly 1
+        Should -Invoke New-Directory -Exactly 1 -ParameterFilter {
+            $Path -eq $TestParentPath
         }
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
@@ -59,7 +58,7 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestAppName }
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -73,7 +72,7 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 0
         Should -Invoke Split-Path -Exactly 0
-        Should -Invoke New-Item -Exactly 0
+        Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
@@ -87,21 +86,21 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
-        Should -Invoke New-Item -Exactly 0
+        Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
     }
 
-    It 'Should handle New-Item failure' {
-        Mock New-Item { throw $TestException }
+    It 'Should handle New-Directory failure' {
+        Mock New-Directory { throw $TestException }
 
         { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
@@ -115,7 +114,7 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
-        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1

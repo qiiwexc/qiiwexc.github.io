@@ -5,11 +5,6 @@ function Install-MicrosoftOffice {
 
     Write-LogInfo 'Starting Microsoft Office installation...'
 
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
-        return
-    }
-
     try {
         if ($Execute) {
             Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
@@ -25,7 +20,7 @@ function Install-MicrosoftOffice {
 
         Initialize-AppDirectory
 
-        $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline -ErrorAction Stop
+        Set-Content "$TargetPath\Office Installer.ini" $Config -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize Microsoft Office installer configuration: $_"
     }

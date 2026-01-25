@@ -6,11 +6,6 @@ function Start-OoShutUp10 {
 
     Write-LogInfo 'Starting OOShutUp10++ utility...'
 
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
-        return
-    }
-
     try {
         if ($Execute) {
             Set-Variable -Option Constant TargetPath ([String]$PATH_OOSHUTUP10)
@@ -20,9 +15,9 @@ function Start-OoShutUp10 {
 
         Set-Variable -Option Constant ConfigFile ([String]"$TargetPath\ooshutup10.cfg")
 
-        $Null = New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop
+        New-Directory $TargetPath
 
-        $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
+        Set-Content $ConfigFile $CONFIG_OOSHUTUP10 -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize OOShutUp10++ configuration: $_"
     }

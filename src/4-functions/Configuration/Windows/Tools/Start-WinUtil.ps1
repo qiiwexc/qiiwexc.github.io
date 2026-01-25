@@ -6,13 +6,12 @@ function Start-WinUtil {
 
     Write-LogInfo 'Starting WinUtil utility...'
 
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
+    if (-not (Test-NetworkConnection)) {
         return
     }
 
     try {
-        $Null = New-Item -Force -ItemType Directory $PATH_WINUTIL -ErrorAction Stop
+        New-Directory $PATH_WINUTIL
 
         Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 
@@ -25,7 +24,7 @@ function Start-WinUtil {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_WINUTIL)
         }
 
-        $Configuration | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
+        Set-Content $ConfigFile $Configuration -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize WinUtil configuration: $_"
     }

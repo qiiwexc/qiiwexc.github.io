@@ -7,15 +7,14 @@ function Start-WindowsDebloat {
 
     Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
+    if (-not (Test-NetworkConnection)) {
         return
     }
 
     try {
         Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 
-        $Null = New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop
+        New-Directory $TargetPath
 
         if ($UsePreset -and $Personalisation) {
             Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
@@ -23,7 +22,7 @@ function Start-WindowsDebloat {
             Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
         }
 
-        $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline -ErrorAction Stop
+        Set-Content "$TargetPath\CustomAppsList" $AppsList -NoNewline -ErrorAction Stop
 
         if ($UsePreset -and $Personalisation) {
             Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
@@ -31,7 +30,7 @@ function Start-WindowsDebloat {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
         }
 
-        $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline -ErrorAction Stop
+        Set-Content "$TargetPath\LastUsedSettings.json" $Configuration -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize Windows debloat utility configuration: $_"
     }

@@ -58,7 +58,7 @@ function Expand-Zip {
 
     Remove-Directory $ExtractionPath
 
-    $Null = New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop
+    New-Directory $ExtractionPath
 
     if ($ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
         Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop

@@ -6,11 +6,6 @@ function Install-Unchecky {
 
     Write-LogInfo 'Starting Unchecky installation...'
 
-    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-    if (-not $IsConnected) {
-        return
-    }
-
     if ($Execute) {
         try {
             Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')

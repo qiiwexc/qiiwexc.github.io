@@ -7,8 +7,7 @@ function Start-Activator {
     try {
         Write-LogInfo 'Starting MAS activator...'
 
-        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-        if (-not $IsConnected) {
+        if (-not (Test-NetworkConnection)) {
             return
         }
 

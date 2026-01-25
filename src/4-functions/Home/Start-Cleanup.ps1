@@ -64,7 +64,6 @@ function Start-Cleanup {
     Write-ActivityProgress 80
 
     Start-Process 'cleanmgr.exe' '/d C: /sagerun:3224'
-    # Start-Process 'cleanmgr.exe' '/d C: /VERYLOWDISK'
 
     Start-Sleep -Seconds 1
 
