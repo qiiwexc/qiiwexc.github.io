@@ -9,7 +9,12 @@ function Install-Unchecky {
     if ($Execute) {
         try {
             Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
-            New-RegistryKeyIfMissing $RegistryKey
+
+            if (-not (Test-Path $RegistryKey)) {
+                Write-LogDebug "Creating registry key '$RegistryKey'"
+                New-Item $RegistryKey -ErrorAction Stop
+            }
+
             Set-ItemProperty -Path $RegistryKey -Name 'HideTrayIcon' -Value 1 -ErrorAction Stop
         } catch {
             Write-LogWarning "Failed to configure Unchecky parameters: $_"
