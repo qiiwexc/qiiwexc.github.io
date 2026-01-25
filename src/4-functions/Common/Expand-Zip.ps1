@@ -21,7 +21,7 @@ function Expand-Zip {
     switch -Wildcard ($ZipName) {
         'Office_Installer.zip' {
             if (-not $OS_64_BIT) {
-                Set-Variable -Option Constant Suffix ([String]' x86.exe')
+                Set-Variable -Option Constant Suffix ([String]' x86')
             }
             Set-Variable -Option Constant Executable ([String]"Office Installer$Suffix.exe")
         }
@@ -68,7 +68,7 @@ function Expand-Zip {
         }
 
         foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
-            $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
+            $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
         }
     }
 
@@ -77,9 +77,7 @@ function Expand-Zip {
     if (-not $IsDirectory) {
         Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop
         Remove-Directory $ExtractionPath
-    }
-
-    if (-not $Temp -and $IsDirectory) {
+    } elseif (-not $Temp) {
         Remove-Directory "$TargetPath\$ExtractionDir"
         Move-Item -Force $ExtractionPath $TargetPath -ErrorAction Stop
     }
