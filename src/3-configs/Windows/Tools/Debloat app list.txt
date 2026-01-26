@@ -68,7 +68,6 @@ Microsoft.WindowsMaps                          # Mapping and navigation app
 Microsoft.WindowsSoundRecorder                 # Basic audio recording app
 Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
 Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
-Microsoft.XboxSpeechToTextOverlay              # Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)
 Microsoft.YourPhone                            # Phone link (Connects Android/iOS phone to PC)
 Microsoft.ZuneMusic                            # Modern Media Player (Replaced Groove Music, plays local audio/video)
 Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
