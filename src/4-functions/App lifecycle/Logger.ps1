@@ -1,11 +1,9 @@
-Add-Type -TypeDefinition @'
-    public enum LogLevel {
-        DEBUG,
-        INFO,
-        WARN,
-        ERROR
-    }
-'@
+enum LogLevel {
+    DEBUG
+    INFO
+    WARN
+    ERROR
+}
 
 function Write-LogDebug {
     param(

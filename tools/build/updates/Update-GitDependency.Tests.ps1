@@ -2,6 +2,8 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\types.ps1'
+
     . "$(Split-Path $PSCommandPath -Parent)\Compare-Tags.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Select-Tags.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Compare-Commits.ps1"

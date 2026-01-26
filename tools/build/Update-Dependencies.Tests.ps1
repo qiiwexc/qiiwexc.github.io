@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\types.ps1'
     . '.\tools\common\Progressbar.ps1'
     . '.\tools\common\Read-JsonFile.ps1'
     . '.\tools\common\Write-JsonFile.ps1'
