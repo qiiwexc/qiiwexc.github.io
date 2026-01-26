@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.25')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.26')
 ::
 ::#endregion init > Version
 ::
@@ -58,7 +58,7 @@ if "%~1"=="Debug" (
 ::
 ::Write-Host 'Initializing...'
 ::
-::Set-Variable -Option Constant OLD_WINDOW_TITLE ([String]$HOST.UI.RawUI.WindowTitle)
+::Set-Variable -Option Constant ORIGINAL_WINDOW_TITLE ([String]$HOST.UI.RawUI.WindowTitle)
 ::$HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION"
 ::
 ::try {
@@ -837,7 +837,7 @@ if "%~1"=="Debug" (
 ::
 ::#region configs > Apps > 7zip
 ::
-::Set-Variable -Option Constant CONFIG_7ZIP '[HKEY_CURRENT_USER\Software\7-Zip\FM]
+::Set-Variable -Option Constant CONFIG_7ZIP ([String]('[HKEY_CURRENT_USER\Software\7-Zip\FM]
 ::"AlternativeSelection"=dword:00000001
 ::"Columns\RootFolder"=hex:01,00,00,00,00,00,00,00,01,00,00,00,04,00,00,00,01,00,00,00,A0,00,00,00
 ::"FlatViewArc0"=dword:00000000
@@ -859,14 +859,14 @@ if "%~1"=="Debug" (
 ::"ContextMenu"=dword:00001367
 ::"MenuIcons"=dword:00000001
 ::"WriteZoneIdExtract"=dword:00000001
-::'
+::'))
 ::
 ::#endregion configs > Apps > 7zip
 ::
 ::
 ::#region configs > Apps > AnyDesk
 ::
-::Set-Variable -Option Constant CONFIG_ANYDESK 'ad.discovery.show_tile=0
+::Set-Variable -Option Constant CONFIG_ANYDESK ([String]('ad.discovery.show_tile=0
 ::ad.image.show_remote_cursor_option=1
 ::ad.telemetry.consent=0,29497,0,0
 ::ad.ui.main_win.height=0
@@ -875,14 +875,14 @@ if "%~1"=="Debug" (
 ::ad.ui.main_win.x=-8
 ::ad.ui.main_win.y=-8
 ::ad.ui.show_tile.telemetry=false
-::'
+::'))
 ::
 ::#endregion configs > Apps > AnyDesk
 ::
 ::
 ::#region configs > Apps > Chrome local state
 ::
-::Set-Variable -Option Constant CONFIG_CHROME_LOCAL_STATE '{
+::Set-Variable -Option Constant CONFIG_CHROME_LOCAL_STATE ([String]('{
 ::  "background_mode": {
 ::    "enabled": false
 ::  },
@@ -901,14 +901,14 @@ if "%~1"=="Debug" (
 ::    }
 ::  }
 ::}
-::'
+::'))
 ::
 ::#endregion configs > Apps > Chrome local state
 ::
 ::
 ::#region configs > Apps > Chrome preferences
 ::
-::Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES '{
+::Set-Variable -Option Constant CONFIG_CHROME_PREFERENCES ([String]('{
 ::  "browser": {
 ::    "enable_spellchecking": true,
 ::    "window_placement": {
@@ -952,14 +952,14 @@ if "%~1"=="Debug" (
 ::    "use_spelling_service": true
 ::  }
 ::}
-::'
+::'))
 ::
 ::#endregion configs > Apps > Chrome preferences
 ::
 ::
 ::#region configs > Apps > Edge local state
 ::
-::Set-Variable -Option Constant CONFIG_EDGE_LOCAL_STATE '{
+::Set-Variable -Option Constant CONFIG_EDGE_LOCAL_STATE ([String]('{
 ::  "background_mode": {
 ::    "enabled": false
 ::  },
@@ -994,14 +994,14 @@ if "%~1"=="Debug" (
 ::    "reporting_enabled": false
 ::  }
 ::}
-::'
+::'))
 ::
 ::#endregion configs > Apps > Edge local state
 ::
 ::
 ::#region configs > Apps > Edge preferences
 ::
-::Set-Variable -Option Constant CONFIG_EDGE_PREFERENCES '{
+::Set-Variable -Option Constant CONFIG_EDGE_PREFERENCES ([String]('{
 ::  "browser": {
 ::    "editor_proofing_languages": {
 ::      "en-GB": {
@@ -1115,14 +1115,14 @@ if "%~1"=="Debug" (
 ::    "enabled": true
 ::  }
 ::}
-::'
+::'))
 ::
 ::#endregion configs > Apps > Edge preferences
 ::
 ::
 ::#region configs > Apps > Microsoft Office
 ::
-::Set-Variable -Option Constant CONFIG_MICROSOFT_OFFICE '[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\General]
+::Set-Variable -Option Constant CONFIG_MICROSOFT_OFFICE ([String]('[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\General]
 ::"ShownFirstRunOptin"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Licensing]
@@ -1151,14 +1151,14 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
 ::"DisableTelemetry"=dword:00000001
 ::"SendTelemetry"=dword:00000003
-::'
+::'))
 ::
 ::#endregion configs > Apps > Microsoft Office
 ::
 ::
 ::#region configs > Apps > qBittorrent base
 ::
-::Set-Variable -Option Constant CONFIG_QBITTORRENT_BASE '[Appearance]
+::Set-Variable -Option Constant CONFIG_QBITTORRENT_BASE ([String]('[Appearance]
 ::Style=Fusion
 ::
 ::[Application]
@@ -1230,14 +1230,14 @@ if "%~1"=="Debug" (
 ::General\SpeedInTitleBar=true
 ::General\StatusbarExternalIPDisplayed=true
 ::General\SystrayEnabled=false
-::'
+::'))
 ::
 ::#endregion configs > Apps > qBittorrent base
 ::
 ::
 ::#region configs > Apps > qBittorrent English
 ::
-::Set-Variable -Option Constant CONFIG_QBITTORRENT_ENGLISH 'General\Locale=en_GB
+::Set-Variable -Option Constant CONFIG_QBITTORRENT_ENGLISH ([String]('General\Locale=en_GB
 ::
 ::[GUI]
 ::DownloadTrackerFavicon=true
@@ -1247,14 +1247,14 @@ if "%~1"=="Debug" (
 ::Qt6\TorrentProperties\TrackerListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x3\xce\0\0\0\v\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\v\0\0\0\xa2\0\0\0\x1\0\0\0\0\0\0\0\x30\0\0\0\x1\0\0\0\0\0\0\0[\0\0\0\x1\0\0\0\0\0\0\0=\0\0\0\x1\0\0\0\0\0\0\0\x39\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0G\0\0\0\x1\0\0\0\0\0\0\0\x84\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0q\0\0\0\x1\0\0\0\0\0\0\0j\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 ::Qt6\TransferList\HeaderState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0%\0\xf8\x8f\x66\x1f\0\0\0\x13\0\0\0!\0\0\0\x64\0\0\0\x10\0\0\0\x64\0\0\0\v\0\0\0\x64\0\0\0$\0\0\0\x64\0\0\0\x11\0\0\0\x64\0\0\0\x1e\0\0\0\x64\0\0\0\x13\0\0\0\x64\0\0\0\"\0\0\0\x64\0\0\0\x19\0\0\0\x64\0\0\0\r\0\0\0\x64\0\0\0\x1d\0\0\0\x64\0\0\0\x1a\0\0\0\x64\0\0\0\xe\0\0\0\x64\0\0\0\x12\0\0\0\x64\0\0\0\x17\0\0\0\x64\0\0\0\f\0\0\0\x64\0\0\0\xf\0\0\0\x64\0\0\0#\0\0\0\x64\0\0\0 \0\0\0\x64\0\0\x5<\0\0\0%\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0%\0\0\0!\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0\x31\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0J\0\0\0\x1\0\0\0\0\0\0\0=\0\0\0\x1\0\0\0\0\0\0\0;\0\0\0\x1\0\0\0\0\0\0\0\x39\0\0\0\x1\0\0\0\0\0\0\0\x61\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0.\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0`\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0~\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0U\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0V\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 ::StartUpWindowState=Normal
-::'
+::'))
 ::
 ::#endregion configs > Apps > qBittorrent English
 ::
 ::
 ::#region configs > Apps > qBittorrent Russian
 ::
-::Set-Variable -Option Constant CONFIG_QBITTORRENT_RUSSIAN 'General\Locale=ru
+::Set-Variable -Option Constant CONFIG_QBITTORRENT_RUSSIAN ([String]('General\Locale=ru
 ::
 ::[GUI]
 ::DownloadTrackerFavicon=true
@@ -1264,28 +1264,28 @@ if "%~1"=="Debug" (
 ::Qt6\TorrentProperties\TrackerListState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x4\x19\0\0\0\v\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\v\0\0\0\xb9\0\0\0\x1\0\0\0\0\0\0\0K\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0<\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0q\0\0\0\x1\0\0\0\0\0\0\0^\0\0\0\x1\0\0\0\0\0\0\0]\0\0\0\x1\0\0\0\0\0\0\0~\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 ::Qt6\TransferList\HeaderState="@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0%\0\xf8\x8f\x66\x1f\0\0\0\x13\0\0\0\x11\0\0\0\x64\0\0\0\x12\0\0\0\x64\0\0\0\x10\0\0\0\x64\0\0\0\x1a\0\0\0\x64\0\0\0\x17\0\0\0\x64\0\0\0\v\0\0\0\x64\0\0\0\x1e\0\0\0\x64\0\0\0\x13\0\0\0\x64\0\0\0!\0\0\0\x64\0\0\0\x1d\0\0\0\x64\0\0\0 \0\0\0\x64\0\0\0\xf\0\0\0\x64\0\0\0$\0\0\0\x64\0\0\0\x19\0\0\0\x64\0\0\0\f\0\0\0\x64\0\0\0\"\0\0\0\x64\0\0\0\r\0\0\0\x64\0\0\0\xe\0\0\0\x64\0\0\0#\0\0\0\x64\0\0\x5\xfb\0\0\0%\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0%\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x33\0\0\0\x1\0\0\0\0\0\0\0\x44\0\0\0\x1\0\0\0\0\0\0\0\x65\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0W\0\0\0\x1\0\0\0\0\0\0\0:\0\0\0\x1\0\0\0\0\0\0\0<\0\0\0\x1\0\0\0\0\0\0\0L\0\0\0\x1\0\0\0\0\0\0\0\x42\0\0\0\x1\0\0\0\0\0\0\0_\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0X\0\0\0\x1\0\0\0\0\0\0\0\x43\0\0\0\x1\0\0\0\0\0\0\0\x8a\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0O\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0x\0\0\0\x1\0\0\0\0\0\0\0u\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0P\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)"
 ::StartUpWindowState=Normal
-::'
+::'))
 ::
 ::#endregion configs > Apps > qBittorrent Russian
 ::
 ::
 ::#region configs > Apps > VLC
 ::
-::Set-Variable -Option Constant CONFIG_VLC '[qt]
+::Set-Variable -Option Constant CONFIG_VLC ([String]('[qt]
 ::qt-system-tray=0
 ::qt-privacy-ask=0
 ::
 ::[core]
 ::video-title-show=0
 ::metadata-network-access=1
-::'
+::'))
 ::
 ::#endregion configs > Apps > VLC
 ::
 ::
 ::#region configs > Installs > Office Installer
 ::
-::Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER '[Configurations]
+::Set-Variable -Option Constant CONFIG_OFFICE_INSTALLER ([String]('[Configurations]
 ::ArchR = 1
 ::CBBranch = 1
 ::DlndArch = 1
@@ -1311,7 +1311,7 @@ if "%~1"=="Debug" (
 ::VisioMondo = 0
 ::VisioPro = 0
 ::Word = 1
-::'
+::'))
 ::
 ::#endregion configs > Installs > Office Installer
 ::
@@ -1339,7 +1339,7 @@ if "%~1"=="Debug" (
 ::
 ::#region configs > Windows > Base > Windows English
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_ENGLISH '[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+::Set-Variable -Option Constant CONFIG_WINDOWS_ENGLISH ([String]('[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
 ::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
 ::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
 ::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
@@ -1534,14 +1534,14 @@ if "%~1"=="Debug" (
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
-::'
+::'))
 ::
 ::#endregion configs > Windows > Base > Windows English
 ::
 ::
 ::#region configs > Windows > Base > Windows HKEY_CURRENT_USER
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CURRENT_USER '[HKEY_CURRENT_USER\Control Panel\Desktop]
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_CURRENT_USER ([String]('[HKEY_CURRENT_USER\Control Panel\Desktop]
 ::"JPEGImportQuality"=dword:00000064
 ::
 ::[HKEY_CURRENT_USER\Control Panel\International\User Profile]
@@ -1601,7 +1601,6 @@ if "%~1"=="Debug" (
 ::"FirstRun"=dword:00000000
 ::"MetadataRetrieval"=dword:00000003
 ::"SilentAcquisition"=dword:00000001
-::"UsageTracking"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 ::"iWindowPosX"=dword:FFFFFFF8
@@ -1719,7 +1718,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
 ::"ArchivedFiles"=dword:00000001
-::"SystemFolders"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
 ::"VisualFXSetting"=dword:00000001
@@ -1845,14 +1843,14 @@ if "%~1"=="Debug" (
 ::"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
 ::"GameDVR_FSEBehavior"=dword:00000002
 ::"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
-::'
+::'))
 ::
 ::#endregion configs > Windows > Base > Windows HKEY_CURRENT_USER
 ::
 ::
 ::#region configs > Windows > Base > Windows HKEY_LOCAL_MACHINE
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_LOCAL_MACHINE '[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
+::Set-Variable -Option Constant CONFIG_WINDOWS_HKEY_LOCAL_MACHINE ([String]('[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\Wintrust\Config]
 ::"EnableCertPaddingCheck"="1"
@@ -1878,9 +1876,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Start]
 ::"HideRecommendedSection"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Wifi]
-::"AllowWiFiHotSpotReporting"=dword:00000000
 ::
 ::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
@@ -2456,14 +2451,14 @@ if "%~1"=="Debug" (
 ::"Tcp1323Opts"=dword:00000001
 ::"TcpMaxDupAcks"=dword:00000002
 ::"TCPTimedWaitDelay"=dword:00000030
-::'
+::'))
 ::
 ::#endregion configs > Windows > Base > Windows HKEY_LOCAL_MACHINE
 ::
 ::
 ::#region configs > Windows > Base > Windows Russian
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_RUSSIAN '[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+::Set-Variable -Option Constant CONFIG_WINDOWS_RUSSIAN ([String]('[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
 ::"Preferences"=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
 ::  17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
 ::  01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
@@ -2658,14 +2653,14 @@ if "%~1"=="Debug" (
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
 ::  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
-::'
+::'))
 ::
 ::#endregion configs > Windows > Base > Windows Russian
 ::
 ::
 ::#region configs > Windows > Personalisation > Windows personalisation HKEY_CURRENT_USER
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER '; Enable classic context menu
+::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER ([String]('; Enable classic context menu
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 ::@=""
 ::
@@ -2712,14 +2707,14 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
 ::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
 ::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
-::'
+::'))
 ::
 ::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_CURRENT_USER
 ::
 ::
 ::#region configs > Windows > Personalisation > Windows personalisation HKEY_LOCAL_MACHINE
 ::
-::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE '; Disable widgets service
+::Set-Variable -Option Constant CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE ([String]('; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
 ::
@@ -2737,14 +2732,14 @@ if "%~1"=="Debug" (
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
-::'
+::'))
 ::
 ::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_LOCAL_MACHINE
 ::
 ::
 ::#region configs > Windows > Tools > Debloat app list
 ::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST 'ACGMediaPlayer                                 # Media player app
+::Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST ([String]('ACGMediaPlayer                                 # Media player app
 ::ActiproSoftwareLLC                             # Potentially UI controls or software components, often bundled by OEMs
 ::AdobeSystemsIncorporated.AdobePhotoshopExpress # Basic photo editing app from Adobe
 ::Amazon.com.Amazon                              # Amazon shopping app
@@ -2791,7 +2786,6 @@ if "%~1"=="Debug" (
 ::Microsoft.MicrosoftJournal                     # Digital note-taking app optimized for pen input
 ::Microsoft.MicrosoftOfficeHub                   # Hub to access Microsoft Office apps and documents (Precursor to Microsoft 365 app)
 ::Microsoft.MicrosoftPowerBIForWindows           # Business analytics service client
-::Microsoft.MicrosoftStickyNotes                 # Digital sticky notes app (Deprecated & replaced by OneNote)
 ::Microsoft.MixedReality.Portal                  # Portal for Windows Mixed Reality headsets
 ::Microsoft.NetworkSpeedTest                     # Internet connection speed test utility
 ::Microsoft.News                                 # News aggregator (Replaced Bing News, now part of Microsoft Start)
@@ -2821,7 +2815,6 @@ if "%~1"=="Debug" (
 ::Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
 ::MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings
 ::MicrosoftCorporationII.QuickAssist             # Remote assistance tool
-::MicrosoftTeams                                 # Old MS Teams personal (MS Store version)
 ::MicrosoftWindows.CrossDevice                   # Phone integration within File Explorer, Camera and more (Part of Phone Link features)
 ::Netflix                                        # Netflix streaming service app
 ::NYTCrossword                                   # New York Times crossword puzzle app
@@ -2843,14 +2836,14 @@ if "%~1"=="Debug" (
 ::WinZipUniversal                                # File compression and extraction utility (Universal Windows Platform version)
 ::Wunderlist                                     # To-do list app (Acquired by Microsoft, functionality moved to Microsoft To Do)
 ::XING                                           # Professional networking platform popular in German-speaking countries
-::'
+::'))
 ::
 ::#endregion configs > Windows > Tools > Debloat app list
 ::
 ::
 ::#region configs > Windows > Tools > Debloat preset base
 ::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE '{
+::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE ([String]('{
 ::  "Version": "1.0",
 ::  "Settings": [
 ::    { "Name": "AddFoldersToThisPC", "Value": false },
@@ -2919,14 +2912,14 @@ if "%~1"=="Debug" (
 ::    { "Name": "TaskbarAlignLeft", "Value": false }
 ::  ]
 ::}
-::'
+::'))
 ::
 ::#endregion configs > Windows > Tools > Debloat preset base
 ::
 ::
 ::#region configs > Windows > Tools > Debloat preset personalisation
 ::
-::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALISATION '{
+::Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALISATION ([String]('{
 ::  "Version": "1.0",
 ::  "Settings": [
 ::    { "Name": "AddFoldersToThisPC", "Value": false },
@@ -2995,14 +2988,14 @@ if "%~1"=="Debug" (
 ::    { "Name": "TaskbarAlignLeft", "Value": true }
 ::  ]
 ::}
-::'
+::'))
 ::
 ::#endregion configs > Windows > Tools > Debloat preset personalisation
 ::
 ::
 ::#region configs > Windows > Tools > OOShutUp10
 ::
-::Set-Variable -Option Constant CONFIG_OOSHUTUP10 'P001	+	# Disable sharing of handwriting data (Category: Privacy)
+::Set-Variable -Option Constant CONFIG_OOSHUTUP10 ([String]('P001	+	# Disable sharing of handwriting data (Category: Privacy)
 ::P002	+	# Disable sharing of handwriting error reports (Category: Privacy)
 ::P003	+	# Disable Inventory Collector (Category: Privacy)
 ::P004	+	# Disable camera in logon screen (Category: Privacy)
@@ -3028,7 +3021,7 @@ if "%~1"=="Debug" (
 ::A003	+	# Disable the submission of user activities to Microsoft (Category: Activity History and Clipboard)
 ::A004	+	# Disable storage of clipboard history for whole machine (Category: Activity History and Clipboard)
 ::A006	+	# Disable storage of clipboard history for current user (Category: Activity History and Clipboard)
-::A005	+	# Disable the transfer of the clipboard to other devices via the cloud (Category: Activity History and Clipboard)
+::A005	-	# Disable the transfer of the clipboard to other devices via the cloud (Category: Activity History and Clipboard)
 ::P007	+	# Disable app access to user account information on this device (Category: App Privacy)
 ::P036	+	# Disable app access to user account information for current user (Category: App Privacy)
 ::P025	+	# Disable Windows tracking of app starts (Category: App Privacy)
@@ -3094,7 +3087,7 @@ if "%~1"=="Debug" (
 ::S008	-	# Disable Internet access of Windows Media Digital Rights Management (DRM) (Category: Security)
 ::E101	+	# Disable tracking in the web (Category: Microsoft Edge (new version based on Chromium))
 ::E201	+	# Disable tracking in the web (Category: Microsoft Edge (new version based on Chromium))
-::E115	+	# Disable check for saved payment methods by sites (Category: Microsoft Edge (new version based on Chromium))
+::E115	-	# Disable check for saved payment methods by sites (Category: Microsoft Edge (new version based on Chromium))
 ::E215	-	# Disable check for saved payment methods by sites (Category: Microsoft Edge (new version based on Chromium))
 ::E118	+	# Disable personalizing advertising, search, news and other services (Category: Microsoft Edge (new version based on Chromium))
 ::E218	+	# Disable personalizing advertising, search, news and other services (Category: Microsoft Edge (new version based on Chromium))
@@ -3242,17 +3235,17 @@ if "%~1"=="Debug" (
 ::M013	-	# Disable automatic download and update of map data (Category: Miscellaneous)
 ::M014	-	# Disable unsolicited network traffic on the offline maps settings page (Category: Miscellaneous)
 ::M026	-	# Disable remote assistance connections to this computer (Category: Miscellaneous)
-::M027	+-	# Disable remote connections to this computer (Category: Miscellaneous)
+::M027	-	# Disable remote connections to this computer (Category: Miscellaneous)
 ::M028	+	# Disable the desktop icon for information on "Windows Spotlight" (Category: Miscellaneous)
 ::N001	-	# Disable Network Connectivity Status Indicator (Category: Miscellaneous)
-::'
+::'))
 ::
 ::#endregion configs > Windows > Tools > OOShutUp10
 ::
 ::
 ::#region configs > Windows > Tools > sdi
 ::
-::Set-Variable -Option Constant CONFIG_SDI '-checkupdates
+::Set-Variable -Option Constant CONFIG_SDI ([String]('-checkupdates
 ::-delextrainfs
 ::-expertmode
 ::-filters:166
@@ -3261,14 +3254,14 @@ if "%~1"=="Debug" (
 ::-showdrpnames2
 ::-theme:Metro
 ::-wndsc:3
-::'
+::'))
 ::
 ::#endregion configs > Windows > Tools > sdi
 ::
 ::
 ::#region configs > Windows > Tools > WinUtil
 ::
-::Set-Variable -Option Constant CONFIG_WINUTIL '{
+::Set-Variable -Option Constant CONFIG_WINUTIL ([String]('{
 ::    "WPFTweaks":  [
 ::                      "WPFTweaksBraveDebloat",
 ::                      "WPFTweaksConsumerFeatures",
@@ -3293,12 +3286,12 @@ if "%~1"=="Debug" (
 ::                       "WPFFeatureRegBackup"
 ::                   ]
 ::}
-::'
+::'))
 ::
 ::#endregion configs > Windows > Tools > WinUtil
 ::
 ::
-::#region functions > Common > Exit
+::#region functions > App lifecycle > Exit
 ::
 ::function Reset-State {
 ::    param(
@@ -3309,7 +3302,7 @@ if "%~1"=="Debug" (
 ::        Remove-File "$PATH_TEMP_DIR\qiiwexc.ps1" -Silent
 ::    }
 ::
-::    $HOST.UI.RawUI.WindowTitle = $OLD_WINDOW_TITLE
+::    $HOST.UI.RawUI.WindowTitle = $ORIGINAL_WINDOW_TITLE
 ::    Write-Host ''
 ::}
 ::
@@ -3323,107 +3316,10 @@ if "%~1"=="Debug" (
 ::    $FORM.Close()
 ::}
 ::
-::#endregion functions > Common > Exit
+::#endregion functions > App lifecycle > Exit
 ::
 ::
-::#region functions > Common > Expand-Zip
-::
-::function Expand-Zip {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$ZipPath,
-::        [Switch]$Temp
-::    )
-::
-::    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
-::
-::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
-::    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
-::    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath -ErrorAction Stop))
-::
-::    if ($Temp) {
-::        Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
-::    } else {
-::        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
-::    }
-::
-::    Initialize-AppDirectory
-::
-::    switch -Wildcard ($ZipName) {
-::        'Office_Installer.zip' {
-::            if (-not $OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix ([String]' x86.exe')
-::            }
-::            Set-Variable -Option Constant Executable ([String]"Office Installer$Suffix.exe")
-::        }
-::        'cpu-z_*' {
-::            if ($OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix ([String]'64')
-::            } else {
-::                Set-Variable -Option Constant Suffix ([String]'32')
-::            }
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\cpuz_x$Suffix.exe")
-::        }
-::        'SDI_*' {
-::            if ($OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix ([String]'64')
-::            }
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDI$Suffix-drv.exe")
-::        }
-::        'ventoy*' {
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe")
-::        }
-::        'Victoria*' {
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Victoria.exe")
-::        }
-::        Default {
-::            Set-Variable -Option Constant Executable ([String]($ZipName.TrimEnd('.zip') + '.exe'))
-::        }
-::    }
-::
-::    Set-Variable -Option Constant IsDirectory ([Bool]($ExtractionDir -and $Executable -like "$ExtractionDir\*"))
-::    Set-Variable -Option Constant TemporaryExe ([String]"$ExtractionPath\$Executable")
-::    Set-Variable -Option Constant TargetExe ([String]"$TargetPath\$Executable")
-::
-::    Remove-File $TemporaryExe
-::
-::    Remove-Directory $ExtractionPath
-::
-::    $Null = New-Item -Force -ItemType Directory $ExtractionPath -ErrorAction Stop
-::
-::    if ($ZIP_SUPPORTED -and $ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
-::        [IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractionPath)
-::    } else {
-::        if (-not $SHELL) {
-::            Set-Variable -Option Constant -Scope Script SHELL (New-Object -com Shell.Application)
-::        }
-::
-::        foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
-::            $SHELL.NameSpace($ExtractionPath).CopyHere($Item)
-::        }
-::    }
-::
-::    Remove-File $ZipPath
-::
-::    if (-not $IsDirectory) {
-::        Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop
-::        Remove-Directory $ExtractionPath
-::    }
-::
-::    if (-not $Temp -and $IsDirectory) {
-::        Remove-Directory "$TargetPath\$ExtractionDir"
-::        Move-Item -Force $ExtractionPath $TargetPath -ErrorAction Stop
-::    }
-::
-::    Out-Success
-::    Write-LogInfo "Files extracted to '$TargetPath'"
-::
-::    return $TargetExe
-::}
-::
-::#endregion functions > Common > Expand-Zip
-::
-::
-::#region functions > Common > Get-SystemInformation
+::#region functions > App lifecycle > Get-SystemInformation
 ::
 ::function Get-SystemInformation {
 ::    Write-LogInfo 'Current system information:'
@@ -3478,10 +3374,10 @@ if "%~1"=="Debug" (
 ::    }
 ::}
 ::
-::#endregion functions > Common > Get-SystemInformation
+::#endregion functions > App lifecycle > Get-SystemInformation
 ::
 ::
-::#region functions > Common > Initialize-App
+::#region functions > App lifecycle > Initialize-App
 ::
 ::function Initialize-App {
 ::    $FORM.Activate()
@@ -3490,13 +3386,6 @@ if "%~1"=="Debug" (
 ::
 ::    if ($OS_VERSION -lt 8) {
 ::        Write-LogWarning "Windows $OS_VERSION detected, some features are not supported."
-::    }
-::
-::    try {
-::        Add-Type -AssemblyName System.IO.Compression.FileSystem
-::        Set-Variable -Option Constant -Scope Script ZIP_SUPPORTED ([Bool]$True)
-::    } catch {
-::        Write-LogWarning "Failed to load 'System.IO.Compression.FileSystem' module: $_"
 ::    }
 ::
 ::    Get-SystemInformation
@@ -3510,53 +3399,19 @@ if "%~1"=="Debug" (
 ::    Update-App
 ::}
 ::
-::#endregion functions > Common > Initialize-App
+::#endregion functions > App lifecycle > Initialize-App
 ::
 ::
-::#region functions > Common > Initialize-AppDirectory
+::#region functions > App lifecycle > Initialize-AppDirectory
 ::
 ::function Initialize-AppDirectory {
-::    $Null = New-Item -Force -ItemType Directory $PATH_APP_DIR -ErrorAction Stop
+::    New-Directory $PATH_APP_DIR
 ::}
 ::
-::#endregion functions > Common > Initialize-AppDirectory
+::#endregion functions > App lifecycle > Initialize-AppDirectory
 ::
 ::
-::#region functions > Common > Invoke-CustomCommand
-::
-::function Invoke-CustomCommand {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$Command,
-::        [String]$WorkingDirectory,
-::        [Switch]$Elevated,
-::        [Switch]$HideWindow,
-::        [Switch]$Wait
-::    )
-::
-::    if ($WorkingDirectory) {
-::        Set-Variable -Option Constant WorkingDir ([String]"-WorkingDirectory $WorkingDirectory")
-::    }
-::
-::    if ($Elevated) {
-::        Set-Variable -Option Constant Verb ([String]'RunAs')
-::    } else {
-::        Set-Variable -Option Constant Verb ([String]'Open')
-::    }
-::
-::    if ($HideWindow) {
-::        Set-Variable -Option Constant WindowStyle ([String]'Hidden')
-::    } else {
-::        Set-Variable -Option Constant WindowStyle ([String]'Normal')
-::    }
-::
-::    Set-Variable -Option Constant FullCommand ([String]"$Command $WorkingDir")
-::    Start-Process PowerShell $FullCommand -Wait:$Wait -Verb $Verb -WindowStyle $WindowStyle -ErrorAction Stop
-::}
-::
-::#endregion functions > Common > Invoke-CustomCommand
-::
-::
-::#region functions > Common > Logger
+::#region functions > App lifecycle > Logger
 ::
 ::Add-Type -TypeDefinition @'
 ::    public enum LogLevel {
@@ -3709,63 +3564,10 @@ if "%~1"=="Debug" (
 ::    $LOG.ScrollToCaret()
 ::}
 ::
-::#endregion functions > Common > Logger
+::#endregion functions > App lifecycle > Logger
 ::
 ::
-::#region functions > Common > Network
-::
-::function Get-NetworkAdapter {
-::    return (Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
-::}
-::
-::function Test-NetworkConnection {
-::    Set-Variable -Option Constant IsConnected ([Boolean](Get-NetworkAdapter))
-::
-::    if (-not $IsConnected) {
-::        Out-Failure 'Computer is not connected to the Internet'
-::    }
-::
-::    return $IsConnected
-::}
-::
-::#endregion functions > Common > Network
-::
-::
-::#region functions > Common > New-RegistryKeyIfMissing
-::
-::function New-RegistryKeyIfMissing {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$RegistryPath
-::    )
-::
-::    if (-not (Test-Path $RegistryPath)) {
-::        Write-LogDebug "Creating registry key '$RegistryPath'"
-::        New-Item $RegistryPath -ErrorAction Stop
-::    }
-::}
-::
-::#endregion functions > Common > New-RegistryKeyIfMissing
-::
-::
-::#region functions > Common > Open-InBrowser
-::
-::function Open-InBrowser {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$Url
-::    )
-::
-::    try {
-::        Write-LogInfo "Opening URL in the default browser: $Url"
-::        Start-Process $Url -ErrorAction Stop
-::    } catch {
-::        Out-Failure "Could not open the URL: $_"
-::    }
-::}
-::
-::#endregion functions > Common > Open-InBrowser
-::
-::
-::#region functions > Common > Progressbar
+::#region functions > App lifecycle > Progressbar
 ::
 ::function New-Activity {
 ::    param(
@@ -3853,7 +3655,270 @@ if "%~1"=="Debug" (
 ::    Set-Variable -Scope Script CURRENT_TASK $Null
 ::}
 ::
-::#endregion functions > Common > Progressbar
+::#endregion functions > App lifecycle > Progressbar
+::
+::
+::#region functions > App lifecycle > Set-CheckboxState
+::
+::function Set-CheckboxState {
+::    param(
+::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Control,
+::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$Dependant
+::    )
+::
+::    $Dependant.Enabled = $Control.Checked
+::
+::    if (-not $Dependant.Enabled) {
+::        $Dependant.Checked = $False
+::    }
+::}
+::
+::#endregion functions > App lifecycle > Set-CheckboxState
+::
+::
+::#region functions > App lifecycle > Updater
+::
+::function Update-App {
+::    try {
+::        Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
+::
+::        Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
+::
+::        if ($IsUpdateAvailable) {
+::            Get-NewVersion $AppBatFile
+::
+::            Write-LogWarning 'Restarting...'
+::
+::            Invoke-CustomCommand $AppBatFile
+::
+::            Exit-App -Update
+::        }
+::    } catch {
+::        Out-Failure "Failed to start new version: $_"
+::    }
+::}
+::
+::
+::function Get-UpdateAvailability {
+::    try {
+::        Write-LogInfo 'Checking for updates...'
+::
+::        if ($DevMode) {
+::            Out-Status 'Skipping in dev mode'
+::            return
+::        }
+::
+::        if (-not (Test-NetworkConnection)) {
+::            return
+::        }
+::
+::        Set-Variable -Option Constant AvailableVersion ([Version](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version'))
+::
+::        if ($AvailableVersion -gt $VERSION) {
+::            Write-LogWarning "Newer version available: v$AvailableVersion"
+::            return $True
+::        } else {
+::            Out-Status 'No updates available'
+::        }
+::    } catch {
+::        Out-Failure "Failed to check for updates: $_"
+::    }
+::}
+::
+::
+::function Get-NewVersion {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$AppBatFile
+::    )
+::
+::    try {
+::        Write-LogWarning 'Downloading new version...'
+::
+::        if (-not (Test-NetworkConnection)) {
+::            return
+::        }
+::
+::        Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_bat' -OutFile $AppBatFile
+::
+::        Out-Success
+::    } catch {
+::        Out-Failure "Failed to download update: $_"
+::    }
+::}
+::
+::#endregion functions > App lifecycle > Updater
+::
+::
+::#region functions > Common > Expand-Zip
+::
+::function Expand-Zip {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$ZipPath,
+::        [Switch]$Temp
+::    )
+::
+::    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
+::
+::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
+::    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
+::    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath -ErrorAction Stop))
+::
+::    if ($Temp) {
+::        Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
+::    } else {
+::        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
+::    }
+::
+::    Initialize-AppDirectory
+::
+::    switch -Wildcard ($ZipName) {
+::        'Office_Installer.zip' {
+::            if (-not $OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix ([String]' x86')
+::            }
+::            Set-Variable -Option Constant Executable ([String]"Office Installer$Suffix.exe")
+::        }
+::        'cpu-z_*' {
+::            if ($OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix ([String]'64')
+::            } else {
+::                Set-Variable -Option Constant Suffix ([String]'32')
+::            }
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\cpuz_x$Suffix.exe")
+::        }
+::        'SDI_*' {
+::            if ($OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix ([String]'64')
+::            }
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDI$Suffix-drv.exe")
+::        }
+::        'ventoy*' {
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe")
+::        }
+::        'Victoria*' {
+::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Victoria.exe")
+::        }
+::        Default {
+::            Set-Variable -Option Constant Executable ([String]($ZipName.TrimEnd('.zip') + '.exe'))
+::        }
+::    }
+::
+::    Set-Variable -Option Constant IsDirectory ([Bool]($ExtractionDir -and $Executable -like "$ExtractionDir\*"))
+::    Set-Variable -Option Constant TemporaryExe ([String]"$ExtractionPath\$Executable")
+::    Set-Variable -Option Constant TargetExe ([String]"$TargetPath\$Executable")
+::
+::    Remove-File $TemporaryExe
+::
+::    Remove-Directory $ExtractionPath
+::
+::    New-Directory $ExtractionPath
+::
+::    if ($ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
+::        Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
+::    } else {
+::        if (-not $SHELL) {
+::            Set-Variable -Option Constant -Scope Script SHELL (New-Object -ComObject Shell.Application)
+::        }
+::
+::        foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
+::            $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
+::        }
+::    }
+::
+::    Remove-File $ZipPath
+::
+::    if (-not $IsDirectory) {
+::        Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop
+::        Remove-Directory $ExtractionPath
+::    } elseif (-not $Temp) {
+::        Remove-Directory "$TargetPath\$ExtractionDir"
+::        Move-Item -Force $ExtractionPath $TargetPath -ErrorAction Stop
+::    }
+::
+::    Out-Success
+::    Write-LogInfo "Files extracted to '$TargetPath'"
+::
+::    return $TargetExe
+::}
+::
+::#endregion functions > Common > Expand-Zip
+::
+::
+::#region functions > Common > Invoke-CustomCommand
+::
+::function Invoke-CustomCommand {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$Command,
+::        [Switch]$Elevated,
+::        [Switch]$HideWindow
+::    )
+::
+::    if ($Elevated) {
+::        Set-Variable -Option Constant Verb ([String]'RunAs')
+::    } else {
+::        Set-Variable -Option Constant Verb ([String]'Open')
+::    }
+::
+::    if ($HideWindow) {
+::        Set-Variable -Option Constant WindowStyle ([String]'Hidden')
+::    } else {
+::        Set-Variable -Option Constant WindowStyle ([String]'Normal')
+::    }
+::
+::    Start-Process PowerShell $Command -Verb $Verb -WindowStyle $WindowStyle -ErrorAction Stop
+::}
+::
+::#endregion functions > Common > Invoke-CustomCommand
+::
+::
+::#region functions > Common > Network
+::
+::function Get-NetworkAdapter {
+::    return (Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
+::}
+::
+::function Test-NetworkConnection {
+::    Set-Variable -Option Constant IsConnected ([Boolean](Get-NetworkAdapter))
+::
+::    if (-not $IsConnected) {
+::        Out-Failure 'Computer is not connected to the Internet'
+::    }
+::
+::    return $IsConnected
+::}
+::
+::#endregion functions > Common > Network
+::
+::
+::#region functions > Common > New-Directory
+::
+::function New-Directory {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$Path
+::    )
+::
+::    $Null = New-Item -Force -ItemType Directory $Path -ErrorAction Stop
+::}
+::
+::#endregion functions > Common > New-Directory
+::
+::
+::#region functions > Common > Open-InBrowser
+::
+::function Open-InBrowser {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$Url
+::    )
+::
+::    try {
+::        Write-LogInfo "Opening URL in the default browser: $Url"
+::        Start-Process $Url -ErrorAction Stop
+::    } catch {
+::        Out-Failure "Could not open the URL: $_"
+::    }
+::}
+::
+::#endregion functions > Common > Open-InBrowser
 ::
 ::
 ::#region functions > Common > Remove-Directory
@@ -3896,24 +3961,6 @@ if "%~1"=="Debug" (
 ::#endregion functions > Common > Remove-File
 ::
 ::
-::#region functions > Common > Set-CheckboxState
-::
-::function Set-CheckboxState {
-::    param(
-::        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Control,
-::        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$Dependant
-::    )
-::
-::    $Dependant.Enabled = $Control.Checked
-::
-::    if (-not $Dependant.Enabled) {
-::        $Dependant.Checked = $False
-::    }
-::}
-::
-::#endregion functions > Common > Set-CheckboxState
-::
-::
 ::#region functions > Common > Start-Download
 ::
 ::function Start-Download {
@@ -3944,12 +3991,11 @@ if "%~1"=="Debug" (
 ::        return $SavePath
 ::    }
 ::
-::    Initialize-AppDirectory
-::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
+::    if (-not (Test-NetworkConnection)) {
 ::        throw 'No network connection detected'
 ::    }
+::
+::    Initialize-AppDirectory
 ::
 ::    Write-ActivityProgress 20
 ::
@@ -3987,8 +4033,8 @@ if "%~1"=="Debug" (
 ::
 ::    try {
 ::        Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
-::        Set-Variable -Option Constant IsZip ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
-::        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsZip)))
+::        Set-Variable -Option Constant IsArchive ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
+::        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsArchive)))
 ::    } catch {
 ::        Out-Failure "Download failed: $_"
 ::        Write-ActivityCompleted $False
@@ -3996,7 +4042,7 @@ if "%~1"=="Debug" (
 ::    }
 ::
 ::    if ($DownloadedFile) {
-::        if ($IsZip) {
+::        if ($IsArchive) {
 ::            try {
 ::                Set-Variable -Option Constant Executable ([String](Expand-Zip $DownloadedFile -Temp:$Execute))
 ::            } catch {
@@ -4009,8 +4055,8 @@ if "%~1"=="Debug" (
 ::        }
 ::
 ::        if ($Configuration) {
-::            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable -ErrorAction Stop))
-::            $Configuration | Set-Content "$ParentPath\$ConfigFile" -NoNewline -ErrorAction Stop
+::            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
+::            Set-Content "$ParentPath\$ConfigFile" $Configuration -NoNewline
 ::        }
 ::
 ::        if ($Execute) {
@@ -4045,7 +4091,7 @@ if "%~1"=="Debug" (
 ::        Out-Success
 ::
 ::        Write-LogDebug "Removing '$Executable'..."
-::        Remove-File $Executable
+::        Remove-File $Executable -Silent
 ::        Out-Success
 ::    } else {
 ::        Write-ActivityProgress 90 "Running '$Executable'..."
@@ -4059,100 +4105,6 @@ if "%~1"=="Debug" (
 ::}
 ::
 ::#endregion functions > Common > Start-Executable
-::
-::
-::#region functions > Common > Stop-ProcessIfRunning
-::
-::function Stop-ProcessIfRunning {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$ProcessName
-::    )
-::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
-::
-::    if (Get-Process -ErrorAction Stop | Where-Object { $_.ProcessName -eq $ProcessName } ) {
-::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
-::        Stop-Process -Name $ProcessName -Force -ErrorAction Stop
-::        Out-Success $LogIndentLevel
-::    }
-::}
-::
-::#endregion functions > Common > Stop-ProcessIfRunning
-::
-::
-::#region functions > Common > Updater
-::
-::function Update-App {
-::    try {
-::        Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
-::
-::        Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
-::
-::        if ($IsUpdateAvailable) {
-::            Get-NewVersion $AppBatFile
-::
-::            Write-LogWarning 'Restarting...'
-::
-::            Invoke-CustomCommand $AppBatFile
-::
-::            Exit-App -Update
-::        }
-::    } catch {
-::        Out-Failure "Failed to start new version: $_"
-::    }
-::}
-::
-::
-::function Get-UpdateAvailability {
-::    try {
-::        Write-LogInfo 'Checking for updates...'
-::
-::        if ($DevMode) {
-::            Out-Status 'Skipping in dev mode'
-::            return
-::        }
-::
-::        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::        if (-not $IsConnected) {
-::            return
-::        }
-::
-::        Set-Variable -Option Constant AvailableVersion ([Version](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version'))
-::
-::        if ($AvailableVersion -gt $VERSION) {
-::            Write-LogWarning "Newer version available: v$AvailableVersion"
-::            return $True
-::        } else {
-::            Out-Status 'No updates available'
-::        }
-::    } catch {
-::        Out-Failure "Failed to check for updates: $_"
-::    }
-::}
-::
-::
-::function Get-NewVersion {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$AppBatFile
-::    )
-::
-::    try {
-::        Write-LogWarning 'Downloading new version...'
-::
-::        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::        if (-not $IsConnected) {
-::            return
-::        }
-::
-::        Invoke-WebRequest -Uri 'https://bit.ly/qiiwexc_bat' -OutFile $AppBatFile
-::
-::        Out-Success
-::    } catch {
-::        Out-Failure "Failed to download update: $_"
-::    }
-::}
-::
-::#endregion functions > Common > Updater
 ::
 ::
 ::#region functions > Configuration > Apps > Set-7zipConfiguration
@@ -4347,6 +4299,19 @@ if "%~1"=="Debug" (
 ::#endregion functions > Configuration > Apps > Set-VlcConfiguration
 ::
 ::
+::#region functions > Configuration > Helpers > Get-SysPrepConfig
+::
+::function Get-SysPrepConfig {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$Config
+::    )
+::
+::    return $Config.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::}
+::
+::#endregion functions > Configuration > Helpers > Get-SysPrepConfig
+::
+::
 ::#region functions > Configuration > Helpers > Get-UsersRegistryKeys
 ::
 ::function Get-UsersRegistryKeys {
@@ -4441,6 +4406,25 @@ if "%~1"=="Debug" (
 ::#endregion functions > Configuration > Helpers > Merge-JsonObject
 ::
 ::
+::#region functions > Configuration > Helpers > Stop-ProcessIfRunning
+::
+::function Stop-ProcessIfRunning {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$ProcessName
+::    )
+::
+::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
+::
+::    if (Get-Process -ErrorAction Stop | Where-Object { $_.ProcessName -eq $ProcessName } ) {
+::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
+::        Stop-Process -Name $ProcessName -Force -ErrorAction Stop
+::        Out-Success $LogIndentLevel
+::    }
+::}
+::
+::#endregion functions > Configuration > Helpers > Stop-ProcessIfRunning
+::
+::
 ::#region functions > Configuration > Helpers > Update-BrowserConfiguration
 ::
 ::function Update-BrowserConfiguration {
@@ -4481,7 +4465,7 @@ if "%~1"=="Debug" (
 ::
 ::        Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $ExtendConfig -ErrorAction Stop | ConvertTo-Json -Depth 100 -Compress -ErrorAction Stop))
 ::
-::        $UpdatedConfig | Set-Content $Path -Encoding UTF8 -NoNewline -ErrorAction Stop
+::        Set-Content $Path $UpdatedConfig -Encoding UTF8 -NoNewline -ErrorAction Stop
 ::
 ::        Out-Success $LogIndentLevel
 ::    } catch {
@@ -4509,9 +4493,9 @@ if "%~1"=="Debug" (
 ::
 ::        Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 ::
-::        $Null = New-Item -Force -ItemType Directory -ErrorAction Stop (Split-Path -Parent $Path -ErrorAction Stop)
+::        New-Directory (Split-Path -Parent $Path -ErrorAction Stop)
 ::
-::        $Content | Set-Content $Path -NoNewline -ErrorAction Stop
+::        Set-Content $Path $Content -NoNewline -ErrorAction Stop
 ::
 ::        Out-Success $LogIndentLevel
 ::    } catch {
@@ -4661,18 +4645,18 @@ if "%~1"=="Debug" (
 ::    Write-ActivityProgress 40 'Building configuration to apply...'
 ::
 ::    if ($SYSTEM_LANGUAGE -match 'ru') {
-::        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_RUSSIAN)
+::        Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_WINDOWS_RUSSIAN)
 ::    } else {
-::        Set-Variable -Option Constant LocalisedConfig ([String[]]$CONFIG_WINDOWS_ENGLISH)
+::        Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_WINDOWS_ENGLISH)
 ::    }
 ::
-::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    [Collections.Generic.List[String]]$ConfigLines = Get-SysPrepConfig $CONFIG_WINDOWS_HKEY_CURRENT_USER
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($CONFIG_WINDOWS_HKEY_CURRENT_USER)
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($CONFIG_WINDOWS_HKEY_LOCAL_MACHINE)
 ::    $ConfigLines.Add("`n")
-::    $ConfigLines.Add($LocalisedConfig.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT'))
+::    $ConfigLines.Add((Get-SysPrepConfig $LocalisedConfig))
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($LocalisedConfig)
 ::
@@ -4680,9 +4664,6 @@ if "%~1"=="Debug" (
 ::        foreach ($User in (Get-UsersRegistryKeys)) {
 ::            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Creative\$User]`n")
 ::            $ConfigLines.Add("`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n")
-::
-::            $ConfigLines.Add("`n[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\InstallService\Stubification\$User]`n")
-::            $ConfigLines.Add("`"EnableAppOffloading`"=dword:00000000`n")
 ::
 ::            $ConfigLines.Add("`n[HKEY_USERS\$($User)_Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]`n")
 ::            $ConfigLines.Add("`"DoNotTrack`"=dword:00000001`n")
@@ -4750,7 +4731,7 @@ if "%~1"=="Debug" (
 ::    }
 ::
 ::    try {
-::        Set-Variable -Option Constant LanguageList ([Collections.Generic.List[PSCustomObject]](Get-WinUserLanguageList -ErrorAction Stop))
+::        Set-Variable -Option Constant LanguageList ([PSCustomObject](Get-WinUserLanguageList -ErrorAction Stop))
 ::        if (-not ($LanguageList | Where-Object { $_.LanguageTag -like 'lv' })) {
 ::            Write-ActivityProgress 70 'Adding Latvian language to user language list...'
 ::            $LanguageList.Add('lv')
@@ -4763,7 +4744,7 @@ if "%~1"=="Debug" (
 ::
 ::    Write-ActivityProgress 80 'Building Windows personalisation configuration...'
 ::
-::    [Collections.Generic.List[String]]$ConfigLines = $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
+::    [Collections.Generic.List[String]]$ConfigLines = Get-SysPrepConfig $CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER
 ::    $ConfigLines.Add("`n")
 ::    $ConfigLines.Add($CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER)
 ::    $ConfigLines.Add("`n")
@@ -4843,11 +4824,6 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Starting OOShutUp10++ utility...'
 ::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
-::        return
-::    }
-::
 ::    try {
 ::        if ($Execute) {
 ::            Set-Variable -Option Constant TargetPath ([String]$PATH_OOSHUTUP10)
@@ -4857,9 +4833,9 @@ if "%~1"=="Debug" (
 ::
 ::        Set-Variable -Option Constant ConfigFile ([String]"$TargetPath\ooshutup10.cfg")
 ::
-::        $Null = New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop
+::        New-Directory $TargetPath
 ::
-::        $CONFIG_OOSHUTUP10 | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
+::        Set-Content $ConfigFile $CONFIG_OOSHUTUP10 -NoNewline -ErrorAction Stop
 ::    } catch {
 ::        Write-LogWarning "Failed to initialize OOShutUp10++ configuration: $_"
 ::    }
@@ -4887,15 +4863,14 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 ::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
+::    if (-not (Test-NetworkConnection)) {
 ::        return
 ::    }
 ::
 ::    try {
 ::        Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
 ::
-::        $Null = New-Item -Force -ItemType Directory $TargetPath -ErrorAction Stop
+::        New-Directory $TargetPath
 ::
 ::        if ($UsePreset -and $Personalisation) {
 ::            Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
@@ -4903,7 +4878,7 @@ if "%~1"=="Debug" (
 ::            Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
 ::        }
 ::
-::        $AppsList | Set-Content "$TargetPath\CustomAppsList" -NoNewline -ErrorAction Stop
+::        Set-Content "$TargetPath\CustomAppsList" $AppsList -NoNewline -ErrorAction Stop
 ::
 ::        if ($UsePreset -and $Personalisation) {
 ::            Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
@@ -4911,7 +4886,7 @@ if "%~1"=="Debug" (
 ::            Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
 ::        }
 ::
-::        $Configuration | Set-Content "$TargetPath\LastUsedSettings.json" -NoNewline -ErrorAction Stop
+::        Set-Content "$TargetPath\LastUsedSettings.json" $Configuration -NoNewline -ErrorAction Stop
 ::    } catch {
 ::        Write-LogWarning "Failed to initialize Windows debloat utility configuration: $_"
 ::    }
@@ -4952,13 +4927,12 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Starting WinUtil utility...'
 ::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
+::    if (-not (Test-NetworkConnection)) {
 ::        return
 ::    }
 ::
 ::    try {
-::        $Null = New-Item -Force -ItemType Directory $PATH_WINUTIL -ErrorAction Stop
+::        New-Directory $PATH_WINUTIL
 ::
 ::        Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 ::
@@ -4971,7 +4945,7 @@ if "%~1"=="Debug" (
 ::            Set-Variable -Option Constant Configuration ([String]$CONFIG_WINUTIL)
 ::        }
 ::
-::        $Configuration | Set-Content $ConfigFile -NoNewline -ErrorAction Stop
+::        Set-Content $ConfigFile $Configuration -NoNewline -ErrorAction Stop
 ::    } catch {
 ::        Write-LogWarning "Failed to initialize WinUtil configuration: $_"
 ::    }
@@ -5028,8 +5002,7 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Write-LogInfo 'Starting MAS activator...'
 ::
-::        Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::        if (-not $IsConnected) {
+::        if (-not (Test-NetworkConnection)) {
 ::            return
 ::        }
 ::
@@ -5126,7 +5099,6 @@ if "%~1"=="Debug" (
 ::    Write-ActivityProgress 80
 ::
 ::    Start-Process 'cleanmgr.exe' '/d C: /sagerun:3224'
-::    # Start-Process 'cleanmgr.exe' '/d C: /VERYLOWDISK'
 ::
 ::    Start-Sleep -Seconds 1
 ::
@@ -5205,11 +5177,6 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Starting Microsoft Office installation...'
 ::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
-::        return
-::    }
-::
 ::    try {
 ::        if ($Execute) {
 ::            Set-Variable -Option Constant TargetPath ([String]$PATH_APP_DIR)
@@ -5225,7 +5192,7 @@ if "%~1"=="Debug" (
 ::
 ::        Initialize-AppDirectory
 ::
-::        $Config | Set-Content "$TargetPath\Office Installer.ini" -NoNewline -ErrorAction Stop
+::        Set-Content "$TargetPath\Office Installer.ini" $Config -NoNewline -ErrorAction Stop
 ::    } catch {
 ::        Write-LogWarning "Failed to initialize Microsoft Office installer configuration: $_"
 ::    }
@@ -5254,15 +5221,15 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Starting Unchecky installation...'
 ::
-::    Set-Variable -Option Constant IsConnected ([Boolean](Test-NetworkConnection))
-::    if (-not $IsConnected) {
-::        return
-::    }
-::
 ::    if ($Execute) {
 ::        try {
 ::            Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
-::            New-RegistryKeyIfMissing $RegistryKey
+::
+::            if (-not (Test-Path $RegistryKey)) {
+::                Write-LogDebug "Creating registry key '$RegistryKey'"
+::                New-Item $RegistryKey -ErrorAction Stop
+::            }
+::
 ::            Set-ItemProperty -Path $RegistryKey -Name 'HideTrayIcon' -Value 1 -ErrorAction Stop
 ::        } catch {
 ::            Write-LogWarning "Failed to configure Unchecky parameters: $_"
