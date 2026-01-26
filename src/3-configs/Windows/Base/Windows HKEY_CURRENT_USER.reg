@@ -56,7 +56,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 "AcceptedPrivacyStatement"=dword:00000001
 "FirstRun"=dword:00000000
-"MetadataRetrieval"=dword:00000003
 
 [HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 "iWindowPosX"=dword:FFFFFFF8
