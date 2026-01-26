@@ -205,7 +205,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
 "AllowMUUpdateService"=dword:00000001
-"IsContinuousInnovationOptedIn"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
 "BraveAIChatEnabled"=dword:00000000
