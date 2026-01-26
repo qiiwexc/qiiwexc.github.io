@@ -54,6 +54,7 @@ Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
 
 Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
 
+. "$CommonPath\types.ps1"
 . "$CommonPath\logger.ps1"
 . "$CommonPath\Progressbar.ps1"
 . "$CommonPath\Read-JsonFile.ps1"

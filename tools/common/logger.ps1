@@ -1,11 +1,3 @@
-Add-Type -TypeDefinition @'
-    public enum DevLogLevel {
-        INFO,
-        WARN,
-        ERROR
-    }
-'@
-
 function Write-LogInfo {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Message,

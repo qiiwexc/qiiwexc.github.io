@@ -1,6 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\tools\common\types.ps1'
+
     . "$(Split-Path $PSCommandPath -Parent)\Invoke-GitAPI.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
 

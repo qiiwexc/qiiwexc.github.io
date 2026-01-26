@@ -1,12 +1,3 @@
-Add-Type -TypeDefinition @'
-    public enum Source {
-        File,
-        GitHub,
-        GitLab,
-        URL
-    }
-'@
-
 function Update-Dependencies {
     param(
         [String][Parameter(Position = 0, Mandatory)]$ConfigPath,
@@ -58,16 +49,16 @@ function Update-Dependencies {
         Write-LogInfo "Checking for updates for '$Name' (current version: $($Dependency.version))"
 
         switch ($Source) {
-            ([Source]::GitHub) {
+            ([DependencySource]::GitHub) {
                 $ChangeLogs.Add((Update-GitDependency $Dependency $GitHubToken))
             }
-            ([Source]::GitLab) {
+            ([DependencySource]::GitLab) {
                 $ChangeLogs.Add((Update-GitDependency $Dependency))
             }
-            ([Source]::URL) {
+            ([DependencySource]::URL) {
                 $ChangeLogs.Add((Update-WebDependency $Dependency))
             }
-            ([Source]::File) {
+            ([DependencySource]::File) {
                 $ChangeLogs.Add((Update-FileDependency $Dependency $WipPath))
             }
         }

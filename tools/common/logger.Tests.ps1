@@ -1,6 +1,8 @@
 ﻿BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\tools\common\types.ps1'
+
     Set-Variable -Option Constant EmojiCodeDone ([String]'2705')
     Set-Variable -Option Constant EmojiCodeWarning ([String]'26A0')
     Set-Variable -Option Constant EmojiCodeError ([String]'274C')
