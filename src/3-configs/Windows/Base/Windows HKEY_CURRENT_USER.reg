@@ -57,7 +57,6 @@
 "AcceptedPrivacyStatement"=dword:00000001
 "FirstRun"=dword:00000000
 "MetadataRetrieval"=dword:00000003
-"SilentAcquisition"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 "iWindowPosX"=dword:FFFFFFF8
