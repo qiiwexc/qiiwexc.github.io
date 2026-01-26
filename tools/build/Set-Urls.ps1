@@ -11,8 +11,8 @@ function Set-Urls {
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\urls.json")
     Set-Variable -Option Constant OutputFile ([String]"$BuildPath\urls.json")
 
-    [PSCustomObject[]]$Dependencies = Read-JsonFile $DependenciesFile
-    [PSCustomObject[]]$TemplateContent = Read-JsonFile $TemplateFile
+    [Dependency[]]$Dependencies = Read-JsonFile $DependenciesFile
+    [Config[]]$TemplateContent = Read-JsonFile $TemplateFile
 
     foreach ($Dependency in $Dependencies) {
         [String]$Name = $Dependency.name.ToUpper().Replace(' ', '_').Replace('-', '_')

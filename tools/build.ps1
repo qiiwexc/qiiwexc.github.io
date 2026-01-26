@@ -52,7 +52,7 @@ Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
 
-Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
+Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
 
 . "$CommonPath\types.ps1"
 . "$CommonPath\logger.ps1"

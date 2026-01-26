@@ -10,7 +10,7 @@ BeforeAll {
     Set-Variable -Option Constant BUTTON_WIDTH ([Int]170)
     Set-Variable -Option Constant INTERVAL_BUTTON ([Int]45)
     Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
-    Set-Variable -Option Constant BUTTON_FONT ([System.Drawing.Font]'Microsoft Sans Serif, 10')
+    Set-Variable -Option Constant BUTTON_FONT ([Drawing.Font]'Microsoft Sans Serif, 10')
 
     function Add {}
 }

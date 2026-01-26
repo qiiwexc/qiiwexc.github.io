@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\tools\common\types.ps1'
     . '.\tools\common\Progressbar.ps1'
     . '.\tools\common\Read-JsonFile.ps1'
     . '.\tools\common\Write-JsonFile.ps1'
@@ -12,13 +13,13 @@ BeforeAll {
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
 
     Set-Variable -Option Constant TestDependenciesContent (
-        [Collections.Generic.List[PSCustomObject]]@(
+        [Dependency[]]@(
             @{name = 'test dependency-name 1'; version = 'TEST_VERSION_1' },
             @{name = 'test dependency-name 2'; version = 'TEST_VERSION_2' }
         )
     )
     Set-Variable -Option Constant TestTemplateContent (
-        [Collections.Generic.List[PSCustomObject]]@(
+        [Config[]]@(
             @{key = 'URL_TEST_DEPENDENCY_NAME_1'; value = 'TEST_VALUE_1_{VERSION}' },
             @{key = 'URL_TEST_DEPENDENCY_NAME_2'; value = '{VERSION}_TEST_VALUE_2' }
         )
@@ -29,7 +30,7 @@ BeforeAll {
     Set-Variable -Option Constant TestKey2 ([String]'URL_TEST_DEPENDENCY_NAME_2')
     Set-Variable -Option Constant TestValue2 ([String]'{VERSION}_TEST_VALUE_2')
     Set-Variable -Option Constant TestUrlsTemplate (
-        [PSCustomObject[]]@(
+        [Config[]]@(
             @{key = $TestKey1; value = $TestValue1 }
             @{key = $TestKey2; value = $TestValue2 }
         )

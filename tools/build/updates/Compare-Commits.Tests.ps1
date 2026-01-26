@@ -1,6 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\tools\common\types.ps1'
+
     . "$(Split-Path $PSCommandPath -Parent)\Invoke-GitAPI.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
 
@@ -14,7 +16,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestCommitsUrl ([String]"https://api.github.com/repos/$TestRepositoryName/commits")
     Set-Variable -Option Constant TestDependency (
-        [PSCustomObject]@{
+        [GitHubDependency]@{
             repository = $TestRepositoryName
             version    = $TestCurrentVersion
         }

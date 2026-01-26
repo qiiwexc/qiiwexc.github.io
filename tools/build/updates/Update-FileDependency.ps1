@@ -1,6 +1,6 @@
 function Update-FileDependency {
     param(
-        [PSCustomObject][Parameter(Position = 0, Mandatory)]$Dependency,
+        [FileDependency][Parameter(Position = 0, Mandatory)]$Dependency,
         [String][Parameter(Position = 1, Mandatory)]$WipPath
     )
 
@@ -17,7 +17,7 @@ function Update-FileDependency {
         Write-LogInfo "Checking file: $FileName" $LogIndentLevel
 
         try {
-            [System.IO.FileInfo]$File = Get-Item "$WipPath\$FileName" -ErrorAction Stop
+            [IO.FileInfo]$File = Get-Item "$WipPath\$FileName" -ErrorAction Stop
 
             [Version]$FileVersion = $File.VersionInfo.FileVersionRaw
             if ($FileVersion) {

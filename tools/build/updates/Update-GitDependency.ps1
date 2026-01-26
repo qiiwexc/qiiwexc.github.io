@@ -1,19 +1,19 @@
 function Update-GitDependency {
     param(
-        [PSCustomObject][Parameter(Position = 0, Mandatory)]$Dependency,
+        [GitDependency][Parameter(Position = 0, Mandatory)]$Dependency,
         [String][Parameter(Position = 1)]$GitHubToken
     )
 
-    Set-Variable -Option Constant Mode ([GitDependencyMode]$Dependency.mode)
+    Set-Variable -Option Constant Mode ([String]$Dependency.mode)
 
     switch ($Mode) {
-        ([GitDependencyMode]::compare) {
+        ('compare') {
             return Compare-Tags $Dependency $GitHubToken
         }
-        ([GitDependencyMode]::tags) {
+        ('tags') {
             return Select-Tags $Dependency $GitHubToken
         }
-        ([GitDependencyMode]::commits) {
+        ('commits') {
             return Compare-Commits $Dependency $GitHubToken
         }
     }

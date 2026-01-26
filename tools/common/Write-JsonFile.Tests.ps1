@@ -6,7 +6,7 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestPath ([String]'TEST_PATH')
-    Set-Variable -Option Constant TestContent ([PSCustomObject]@{TEST_KEY = 'TEST_VALUE' })
+    Set-Variable -Option Constant TestContent ([PSObject]@{TEST_KEY = 'TEST_VALUE' })
     Set-Variable -Option Constant TestContentString ([String]"{`r`n    `"TEST_KEY`":  `"TEST_VALUE`"`r`n}")
 }
 

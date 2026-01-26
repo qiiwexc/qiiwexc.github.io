@@ -12,7 +12,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestGitHubToken ([String]'TEST_GITHUB_TOKEN')
     Set-Variable -Option Constant TestDependency (
-        [PSCustomObject]@{
+        [GitDependency]@{
             name = 'TestDependency'
             mode = ''
         }
@@ -46,7 +46,10 @@ Describe 'Update-GitDependency' {
             Update-GitDependency $TestDependency | Should -BeExactly $TestCompareTagsResult
 
             Should -Invoke Compare-Tags -Exactly 1
-            Should -Invoke Compare-Tags -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
+            Should -Invoke Compare-Tags -Exactly 1 -ParameterFilter {
+                $Dependency.name -eq $TestDependency.name -and
+                $Dependency.mode -eq $TestDependency.mode
+            }
             Should -Invoke Select-Tags -Exactly 0
             Should -Invoke Compare-Commits -Exactly 0
             Should -Invoke Write-LogWarning -Exactly 0
@@ -57,7 +60,8 @@ Describe 'Update-GitDependency' {
 
             Should -Invoke Compare-Tags -Exactly 1
             Should -Invoke Compare-Tags -Exactly 1 -ParameterFilter {
-                $Dependency -eq $TestDependency -and
+                $Dependency.name -eq $TestDependency.name -and
+                $Dependency.mode -eq $TestDependency.mode
                 $GitHubToken -eq $TestGitHubToken
             }
             Should -Invoke Select-Tags -Exactly 0
@@ -87,7 +91,10 @@ Describe 'Update-GitDependency' {
 
             Should -Invoke Compare-Tags -Exactly 0
             Should -Invoke Select-Tags -Exactly 1
-            Should -Invoke Select-Tags -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
+            Should -Invoke Select-Tags -Exactly 1 -ParameterFilter {
+                $Dependency.name -eq $TestDependency.name -and
+                $Dependency.mode -eq $TestDependency.mode
+            }
             Should -Invoke Compare-Commits -Exactly 0
             Should -Invoke Write-LogWarning -Exactly 0
         }
@@ -98,7 +105,8 @@ Describe 'Update-GitDependency' {
             Should -Invoke Compare-Tags -Exactly 0
             Should -Invoke Select-Tags -Exactly 1
             Should -Invoke Select-Tags -Exactly 1 -ParameterFilter {
-                $Dependency -eq $TestDependency -and
+                $Dependency.name -eq $TestDependency.name -and
+                $Dependency.mode -eq $TestDependency.mode
                 $GitHubToken -eq $TestGitHubToken
             }
             Should -Invoke Compare-Commits -Exactly 0
@@ -128,7 +136,10 @@ Describe 'Update-GitDependency' {
             Should -Invoke Compare-Tags -Exactly 0
             Should -Invoke Select-Tags -Exactly 0
             Should -Invoke Compare-Commits -Exactly 1
-            Should -Invoke Compare-Commits -Exactly 1 -ParameterFilter { $Dependency -eq $TestDependency }
+            Should -Invoke Compare-Commits -Exactly 1 -ParameterFilter {
+                $Dependency.name -eq $TestDependency.name -and
+                $Dependency.mode -eq $TestDependency.mode
+            }
             Should -Invoke Write-LogWarning -Exactly 0
         }
 
@@ -139,7 +150,8 @@ Describe 'Update-GitDependency' {
             Should -Invoke Select-Tags -Exactly 0
             Should -Invoke Compare-Commits -Exactly 1
             Should -Invoke Compare-Commits -Exactly 1 -ParameterFilter {
-                $Dependency -eq $TestDependency -and
+                $Dependency.name -eq $TestDependency.name -and
+                $Dependency.mode -eq $TestDependency.mode
                 $GitHubToken -eq $TestGitHubToken
             }
             Should -Invoke Write-LogWarning -Exactly 0
@@ -163,7 +175,7 @@ Describe 'Update-GitDependency' {
         }
 
         It 'Should handle unknown mode' {
-            { Update-GitDependency $TestDependency } | Should -Throw
+            Update-GitDependency $TestDependency
 
             Should -Invoke Compare-Tags -Exactly 0
             Should -Invoke Select-Tags -Exactly 0

@@ -15,7 +15,7 @@ Describe 'Read-JsonFile' {
     }
 
     It 'Should read and parse JSON file' {
-        Set-Variable -Option Constant Result ([PSCustomObject](Read-JsonFile $TestPath))
+        Set-Variable -Option Constant Result ([PSObject](Read-JsonFile $TestPath))
 
         $Result.TEST_KEY | Should -BeExactly 'TEST_VALUE'
 

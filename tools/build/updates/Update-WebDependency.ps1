@@ -1,6 +1,6 @@
 function Update-WebDependency {
     param(
-        [PSCustomObject][Parameter(Position = 0, Mandatory)]$Dependency
+        [WebDependency][Parameter(Position = 0, Mandatory)]$Dependency
     )
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
@@ -10,7 +10,7 @@ function Update-WebDependency {
     Write-LogInfo "Fetching URL: $Uri" $LogIndentLevel
 
     try {
-        Set-Variable -Option Constant Response ([PSCustomObject](Invoke-WebRequest $Uri -UseBasicParsing))
+        Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest $Uri -UseBasicParsing))
     } catch {
         Out-Failure "Failed to fetch URL '$Uri': $_" $LogIndentLevel
         return

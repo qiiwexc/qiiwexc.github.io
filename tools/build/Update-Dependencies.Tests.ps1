@@ -29,22 +29,22 @@ BeforeAll {
 
     Set-Variable -Option Constant TestDependencyVersion ([String]'1.0.0')
     Set-Variable -Option Constant TestGitHubDependency (
-        [PSCustomObject[]]@(
+        [Dependency[]]@(
             @{source = $SourceGitHub; name = $TestDependencyName; version = $TestDependencyVersion }
         )
     )
     Set-Variable -Option Constant TestGitLabDependency (
-        [PSCustomObject[]]@(
+        [Dependency[]]@(
             @{source = $SourceGitLab; name = $TestDependencyName; version = $TestDependencyVersion }
         )
     )
     Set-Variable -Option Constant TestWebDependency (
-        [PSCustomObject[]]@(
+        [Dependency[]]@(
             @{source = $SourceURL; name = $TestDependencyName; version = $TestDependencyVersion }
         )
     )
     Set-Variable -Option Constant TestFileDependency (
-        [PSCustomObject[]]@(
+        [Dependency[]]@(
             @{source = $SourceFile; name = $TestDependencyName; version = $TestDependencyVersion }
         )
     )

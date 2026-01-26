@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\types.ps1'
     . '.\tools\common\Progressbar.ps1'
     . '.\tools\common\Read-TextFile.ps1'
     . '.\tools\common\Write-TextFile.ps1'
@@ -10,16 +11,16 @@ BeforeAll {
 
     Set-Variable -Option Constant TestSourcePathPath ([String]'TEST_BATCH_FILE_PATH')
     Set-Variable -Option Constant TestBuildPs1FilePath ([String]'TEST_BUILD_PS1_FILE_PATH')
-    Set-Variable -Option Constant TestConfig ([PSCustomObject[]]@(@{key = 'KEY_1'; value = 'VALUE_1' }, @{key = 'KEY_2'; value = 'VALUE_2' }))
+    Set-Variable -Option Constant TestConfig ([Config[]]@(@{key = 'KEY_1'; value = 'VALUE_1' }, @{key = 'KEY_2'; value = 'VALUE_2' }))
 
     Set-Variable -Option Constant TestPs1FilePath ([String]'\src\code\Test-File.ps1')
     Set-Variable -Option Constant TestConfigFilePath ([String]'\src\configs\ConfigFile.ini')
 
     Set-Variable -Option Constant TestSourceFileList (
-        [PSCustomObject[]]@(
-            @{Name = 'Test-File.ps1'; FullName = $TestPs1FilePath },
-            @{Name = 'Test-File.Tests.ps1'; FullName = '\src\code\Test-File.Tests.ps1' },
-            @{Name = 'ConfigFile.ini'; FullName = $TestConfigFilePath }
+        [IO.FileInfo[]]@(
+            New-MockObject -Type IO.FileInfo -Properties @{ Name = 'Test-File.ps1'; FullName = $TestPs1FilePath }
+            New-MockObject -Type IO.FileInfo -Properties @{ Name = 'Test-File.Tests.ps1'; FullName = '\src\code\Test-File.Tests.ps1' }
+            New-MockObject -Type IO.FileInfo -Properties @{ Name = 'ConfigFile.ini'; FullName = $TestConfigFilePath }
         )
     )
 
