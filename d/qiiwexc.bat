@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.26')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.27')
 ::
 ::#endregion init > Version
 ::
@@ -75,7 +75,7 @@ if "%~1"=="Debug" (
 ::
 ::[Windows.Forms.Application]::EnableVisualStyles()
 ::
-::Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
+::Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
 ::
 ::Set-Variable -Option Constant PATH_WORKING_DIR ([String]$WorkingDirectory)
 ::Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
@@ -89,7 +89,7 @@ if "%~1"=="Debug" (
 ::
 ::Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
 ::
-::Set-Variable -Option Constant OPERATING_SYSTEM ([PSCustomObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
+::Set-Variable -Option Constant OPERATING_SYSTEM ([PSObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
 ::Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
 ::Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
 ::
@@ -119,7 +119,7 @@ if "%~1"=="Debug" (
 ::
 ::Set-Variable -Option Constant WordRegPath ([String]'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer')
 ::if (Test-Path $WordRegPath) {
-::    Set-Variable -Option Constant WordPath ([PSCustomObject](Get-ItemProperty $WordRegPath))
+::    Set-Variable -Option Constant WordPath ([PSObject](Get-ItemProperty $WordRegPath))
 ::    Set-Variable -Option Constant OFFICE_VERSION ([String]($WordPath.'(default)' -replace '\D+', ''))
 ::
 ::    if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {
@@ -156,7 +156,7 @@ if "%~1"=="Debug" (
 ::
 ::
 ::Set-Variable -Option Constant FONT_NAME ([String]'Microsoft Sans Serif')
-::Set-Variable -Option Constant BUTTON_FONT ([System.Drawing.Font]"$FONT_NAME, 10")
+::Set-Variable -Option Constant BUTTON_FONT ([Drawing.Font]"$FONT_NAME, 10")
 ::
 ::#endregion init > UI constants
 ::
@@ -1600,7 +1600,6 @@ if "%~1"=="Debug" (
 ::"AcceptedPrivacyStatement"=dword:00000001
 ::"FirstRun"=dword:00000000
 ::"MetadataRetrieval"=dword:00000003
-::"SilentAcquisition"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 ::"iWindowPosX"=dword:FFFFFFF8
@@ -2057,7 +2056,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
 ::"AllowMUUpdateService"=dword:00000001
-::"IsContinuousInnovationOptedIn"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
 ::"BraveAIChatEnabled"=dword:00000000
@@ -3326,10 +3324,10 @@ if "%~1"=="Debug" (
 ::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
-::    Set-Variable -Option Constant Motherboard ([PSCustomObject](Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product))
+::    Set-Variable -Option Constant Motherboard ([PSObject](Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property Manufacturer, Product))
 ::    Write-LogInfo "Motherboard: $($Motherboard.Manufacturer) $($Motherboard.Product)" $LogIndentLevel
 ::
-::    Set-Variable -Option Constant BIOS ([PSCustomObject](Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate))
+::    Set-Variable -Option Constant BIOS ([PSObject](Get-CimInstance -ClassName CIM_BIOSElement | Select-Object -Property Manufacturer, Name, ReleaseDate))
 ::    Write-LogInfo "BIOS: $($BIOS.Manufacturer) $($BIOS.Name) (release date: $($BIOS.ReleaseDate))" $LogIndentLevel
 ::
 ::    Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
@@ -3412,15 +3410,6 @@ if "%~1"=="Debug" (
 ::
 ::
 ::#region functions > App lifecycle > Logger
-::
-::Add-Type -TypeDefinition @'
-::    public enum LogLevel {
-::        DEBUG,
-::        INFO,
-::        WARN,
-::        ERROR
-::    }
-::'@
 ::
 ::function Write-LogDebug {
 ::    param(
@@ -4107,6 +4096,18 @@ if "%~1"=="Debug" (
 ::#endregion functions > Common > Start-Executable
 ::
 ::
+::#region functions > Common > types
+::
+::enum LogLevel {
+::    ERROR
+::    WARN
+::    INFO
+::    DEBUG
+::}
+::
+::#endregion functions > Common > types
+::
+::
 ::#region functions > Configuration > Apps > Set-7zipConfiguration
 ::
 ::function Set-7zipConfiguration {
@@ -4731,7 +4732,7 @@ if "%~1"=="Debug" (
 ::    }
 ::
 ::    try {
-::        Set-Variable -Option Constant LanguageList ([PSCustomObject](Get-WinUserLanguageList -ErrorAction Stop))
+::        Set-Variable -Option Constant LanguageList ([PSObject](Get-WinUserLanguageList -ErrorAction Stop))
 ::        if (-not ($LanguageList | Where-Object { $_.LanguageTag -like 'lv' })) {
 ::            Write-ActivityProgress 70 'Adding Latvian language to user language list...'
 ::            $LanguageList.Add('lv')
