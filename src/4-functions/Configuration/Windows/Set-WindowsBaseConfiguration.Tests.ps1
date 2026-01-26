@@ -20,12 +20,12 @@ BeforeAll {
     Set-Variable -Option Constant TestTimeZoneKey ([String]'HKLM:\SYSTEM\CurrentControlSet\Services\tzautoupdate')
 
     Set-Variable -Option Constant TestUnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
-    Set-Variable -Option Constant TestScheduledTask ([PSCustomObject[]]@(@{ TaskName = $TestUnelevatedExplorerTaskName }))
+    Set-Variable -Option Constant TestScheduledTask ([PSObject[]]@(@{ TaskName = $TestUnelevatedExplorerTaskName }))
 
     Set-Variable -Option Constant TestSysPrepConfig ([String]'TEST_SYSPREP_CONFIG')
     Set-Variable -Option Constant TestUsers ([String[]]@('TEST_USER_1', 'TEST_USER_2'))
     Set-Variable -Option Constant TestVolumes (
-        [PSCustomObject[]]@(
+        [PSObject[]]@(
             @{Name = 'TEST_VOLUME_1' },
             @{Name = 'TEST_VOLUME_2' }
         )

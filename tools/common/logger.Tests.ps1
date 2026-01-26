@@ -32,7 +32,7 @@ Describe 'Format-Message' {
     BeforeAll {
         function ToString {}
 
-        Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
+        Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
     }
 
     BeforeEach {

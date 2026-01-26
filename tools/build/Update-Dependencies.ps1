@@ -30,7 +30,7 @@ function Update-Dependencies {
     }
 
     Write-ActivityProgress 10
-    Set-Variable -Option Constant Dependencies ([PSCustomObject[]](Read-JsonFile $DependenciesFile))
+    Set-Variable -Option Constant Dependencies ([Dependency[]](Read-JsonFile $DependenciesFile))
 
     [Collections.Generic.List[Collections.Generic.List[String]]]$ChangeLogs = @()
 
@@ -49,16 +49,16 @@ function Update-Dependencies {
         Write-LogInfo "Checking for updates for '$Name' (current version: $($Dependency.version))"
 
         switch ($Source) {
-            ([DependencySource]::GitHub) {
+            ('GitHub') {
                 $ChangeLogs.Add((Update-GitDependency $Dependency $GitHubToken))
             }
-            ([DependencySource]::GitLab) {
+            ('GitLab') {
                 $ChangeLogs.Add((Update-GitDependency $Dependency))
             }
-            ([DependencySource]::URL) {
+            ('URL') {
                 $ChangeLogs.Add((Update-WebDependency $Dependency))
             }
-            ([DependencySource]::File) {
+            ('File') {
                 $ChangeLogs.Add((Update-FileDependency $Dependency $WipPath))
             }
         }

@@ -13,14 +13,14 @@ Describe 'Invoke-GitAPI' {
     BeforeEach {
         Mock Write-LogInfo {}
         Mock Out-Failure {}
-        Mock Invoke-WebRequest { return @{Content = '{"key1": "value1", "key2": "value2"}' } }
+        Mock Invoke-WebRequest { return @{Content = '[{"key1": "value1", "key2": "value2"}]' } }
     }
 
     It 'Should invoke GitHub API without GitHub token' {
         Set-Variable -Option Constant Result (Invoke-GitAPI $TestUrl)
 
-        $Result.key1 | Should -BeExactly 'value1'
-        $Result.key2 | Should -BeExactly 'value2'
+        $Result[0].key1 | Should -BeExactly 'value1'
+        $Result[0].key2 | Should -BeExactly 'value2'
 
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
@@ -34,8 +34,8 @@ Describe 'Invoke-GitAPI' {
     It 'Should invoke GitHub API with GitHub token' {
         Set-Variable -Option Constant Result (Invoke-GitAPI $TestUrl $TestGitHubToken)
 
-        $Result.key1 | Should -BeExactly 'value1'
-        $Result.key2 | Should -BeExactly 'value2'
+        $Result[0].key1 | Should -BeExactly 'value1'
+        $Result[0].key2 | Should -BeExactly 'value2'
 
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {

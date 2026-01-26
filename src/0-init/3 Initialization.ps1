@@ -17,7 +17,7 @@ if (-not $DevMode) {
 
 [Windows.Forms.Application]::EnableVisualStyles()
 
-Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
+Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
 
 Set-Variable -Option Constant PATH_WORKING_DIR ([String]$WorkingDirectory)
 Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
@@ -31,7 +31,7 @@ Set-Variable -Option Constant IS_LAPTOP ([Bool]((Get-CimInstance -Class Win32_Co
 
 Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
 
-Set-Variable -Option Constant OPERATING_SYSTEM ([PSCustomObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
+Set-Variable -Option Constant OPERATING_SYSTEM ([PSObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
 Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
 Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
 
@@ -61,7 +61,7 @@ if ($IsWindows11) {
 
 Set-Variable -Option Constant WordRegPath ([String]'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer')
 if (Test-Path $WordRegPath) {
-    Set-Variable -Option Constant WordPath ([PSCustomObject](Get-ItemProperty $WordRegPath))
+    Set-Variable -Option Constant WordPath ([PSObject](Get-ItemProperty $WordRegPath))
     Set-Variable -Option Constant OFFICE_VERSION ([String]($WordPath.'(default)' -replace '\D+', ''))
 
     if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {

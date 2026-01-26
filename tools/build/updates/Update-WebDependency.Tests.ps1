@@ -2,12 +2,14 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\types.ps1'
+
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestDependency (
-        [PSCustomObject]@{
+        [WebDependency]@{
             name    = 'TestDependency'
             url     = 'https://example.com/test-dependency'
             regex   = 'Latest Version:\s*(\d+\.\d+\.\d+)'

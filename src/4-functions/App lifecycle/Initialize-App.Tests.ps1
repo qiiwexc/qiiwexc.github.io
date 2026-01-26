@@ -3,6 +3,7 @@ BeforeAll {
 
     Add-Type -AssemblyName System.Windows.Forms
 
+    . '.\src\4-functions\Common\types.ps1'
     . '.\src\4-functions\Common\Remove-Directory.ps1'
     . '.\src\4-functions\App lifecycle\Get-SystemInformation.ps1'
     . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'

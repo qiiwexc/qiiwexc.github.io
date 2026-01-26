@@ -2,6 +2,8 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\tools\common\logger.ps1'
+    . '.\tools\common\types.ps1'
+
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -17,7 +19,7 @@ BeforeAll {
     Set-Variable -Option Constant TestLatestVersion ([String]'3.0.0')
 
     Set-Variable -Option Constant TestDependency (
-        [PSCustomObject]@{
+        [FileDependency]@{
             name    = $TestFileName
             version = $TestCurrentVersion
         }

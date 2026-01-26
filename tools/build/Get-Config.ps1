@@ -8,7 +8,7 @@ function Get-Config {
 
     Set-Variable -Option Constant UrlsFile ([String]"$BuildPath\urls.json")
 
-    [Collections.Generic.List[PSCustomObject]]$Config = Read-JsonFile $UrlsFile
+    [Collections.Generic.List[Config]]$Config = Read-JsonFile $UrlsFile
 
     $Config.Add(@{key = 'PROJECT_VERSION'; value = $Version })
 

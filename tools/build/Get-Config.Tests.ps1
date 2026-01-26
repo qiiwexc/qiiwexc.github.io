@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\tools\common\types.ps1'
     . '.\tools\common\Progressbar.ps1'
     . '.\tools\common\Read-JsonFile.ps1'
 
@@ -9,7 +10,7 @@ BeforeAll {
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
     Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
     Set-Variable -Option Constant TestContent (
-        [Collections.Generic.List[PSCustomObject]]@(
+        [Collections.Generic.List[Config]]@(
             @{key = 'TEST_KEY_1'; value = 'TEST_VALUE_1' },
             @{key = 'TEST_KEY_2'; value = 'TEST_VALUE_2' }
         )

@@ -1,6 +1,8 @@
 ﻿BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\src\4-functions\Common\types.ps1'
+
     Add-Type -AssemblyName System.Windows.Forms
 
     Set-Variable -Option Constant EmojiCodeDone ([String]'2705')
@@ -33,7 +35,7 @@ Describe 'Format-Message' {
     BeforeAll {
         function ToString {}
 
-        Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
+        Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
     }
 
     BeforeEach {

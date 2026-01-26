@@ -1,10 +1,3 @@
-enum LogLevel {
-    DEBUG
-    INFO
-    WARN
-    ERROR
-}
-
 function Write-LogDebug {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Message,

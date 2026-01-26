@@ -16,7 +16,7 @@ Describe 'New-Activity' {
     }
 
     It 'Should start new activity correctly when no parent activity exists' {
-        Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
+        Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
 
         New-Activity $TestActivity1
 
@@ -34,7 +34,7 @@ Describe 'New-Activity' {
     }
 
     It 'Should start new activity correctly when parent activity exists' {
-        Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@($TestActivity1))
+        Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@($TestActivity1))
 
         New-Activity $TestActivity2
 
@@ -53,7 +53,7 @@ Describe 'New-Activity' {
 
 Describe 'Write-ActivityProgress' {
     BeforeAll {
-        Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
+        Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
     }
 
     BeforeEach {
@@ -144,7 +144,7 @@ Describe 'Write-ActivityProgress' {
 
 Describe 'Write-ActivityCompleted' {
     BeforeAll {
-        Set-Variable -Option Constant ACTIVITIES ([System.Collections.Stack]@())
+        Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
     }
 
     BeforeEach {

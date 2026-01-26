@@ -15,7 +15,7 @@ BeforeAll {
     Set-Variable -Option Constant TestSysPrepConfig ([String]'TEST_SYSPREP_CONFIG')
     Set-Variable -Option Constant TestUsers ([String[]]@('TEST_USER_1', 'TEST_USER_2'))
     Set-Variable -Option Constant TestNotificationRegistries (
-        [PSCustomObject[]]@(
+        [PSObject[]]@(
             @{Name = 'TEST_NOTIFICATION_REGISTRY_1' },
             @{Name = 'TEST_NOTIFICATION_REGISTRY_2' }
         )
@@ -25,7 +25,7 @@ BeforeAll {
 Describe 'Set-WindowsPersonalisationConfig' {
     BeforeEach {
         Set-Variable -Option Constant TestLanguageList (
-            [PSCustomObject]@(
+            [PSObject]@(
                 @{LanguageTag = 'en' },
                 @{LanguageTag = 'ru' }
             )
@@ -105,7 +105,7 @@ Describe 'Set-WindowsPersonalisationConfig' {
     }
 
     It 'Should skip setting Latvian language if already present' {
-        Mock Get-WinUserLanguageList { return ([Collections.Generic.List[PSCustomObject]](@(@{LanguageTag = 'lv' }))) }
+        Mock Get-WinUserLanguageList { return ([Collections.Generic.List[PSObject]](@(@{LanguageTag = 'lv' }))) }
 
         Mock Get-ScheduledTask { return @() }
 
