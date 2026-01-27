@@ -24,17 +24,15 @@ Describe 'Set-AppRemovalList' {
     It 'Should inline app removal list correctly' {
         Set-Variable -Option Constant Result (Set-AppRemovalList $ConfigsPath $TestTemplateContent)
 
-        $Result | Should -BeExactly "TEST_TEMPLATE_CONTENT_1
-
-  'Microsoft.People';
-  'Microsoft.Print3D';
-  'Microsoft.windowscommunicationsapps';
-  'Microsoft.WindowsMaps';
-  'Microsoft.ZuneMusic';
-  'Microsoft.ZuneVideo';
-  'Microsoft.OneDrive';
-
-TEST_TEMPLATE_CONTENT_2"
+        $Result | Should -MatchExactly 'TEST_TEMPLATE_CONTENT_1'
+        $Result | Should -MatchExactly "  'Microsoft.People';"
+        $Result | Should -MatchExactly "  'Microsoft.Print3D';"
+        $Result | Should -MatchExactly "  'Microsoft.windowscommunicationsapps';"
+        $Result | Should -MatchExactly "  'Microsoft.WindowsMaps';"
+        $Result | Should -MatchExactly "  'Microsoft.ZuneMusic';"
+        $Result | Should -MatchExactly "  'Microsoft.ZuneVideo';"
+        $Result | Should -MatchExactly "  'Microsoft.OneDrive';"
+        $Result | Should -MatchExactly 'TEST_TEMPLATE_CONTENT_2'
 
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter {

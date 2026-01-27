@@ -26,14 +26,13 @@ Describe 'Set-WindowsSecurityConfiguration' {
     It 'Should inline Windows security configuration correctly' {
         Set-Variable -Option Constant Result (Set-WindowsSecurityConfiguration $SourcePath $TestTemplateContent)
 
-        $Result | Should -BeExactly 'TEST_TEMPLATE_CONTENT_1
-Set-MpPreference -CheckForSignaturesBefore $True
-Set-MpPreference -DisableBlockAtFirstSeen $False
-Set-MpPreference -DisableCatchupQuickScan $False
-Set-MpPreference -DisableEmailScanning $False
-Set-MpPreference -DisableRemovableDriveScanning $False
-
-TEST_TEMPLATE_CONTENT_2'
+        $Result | Should -MatchExactly 'TEST_TEMPLATE_CONTENT_1'
+        $Result | Should -MatchExactly "Set-MpPreference -CheckForSignaturesBefore \$True"
+        $Result | Should -MatchExactly "Set-MpPreference -DisableBlockAtFirstSeen \$False"
+        $Result | Should -MatchExactly "Set-MpPreference -DisableCatchupQuickScan \$False"
+        $Result | Should -MatchExactly "Set-MpPreference -DisableEmailScanning \$False"
+        $Result | Should -MatchExactly "Set-MpPreference -DisableRemovableDriveScanning \$False"
+        $Result | Should -MatchExactly 'TEST_TEMPLATE_CONTENT_2'
 
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter {
