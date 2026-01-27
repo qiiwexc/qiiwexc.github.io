@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.27')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.28')
 ::
 ::#endregion init > Version
 ::
@@ -1599,7 +1599,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 ::"AcceptedPrivacyStatement"=dword:00000001
 ::"FirstRun"=dword:00000000
-::"MetadataRetrieval"=dword:00000003
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 ::"iWindowPosX"=dword:FFFFFFF8
@@ -2807,7 +2806,6 @@ if "%~1"=="Debug" (
 ::Microsoft.WindowsSoundRecorder                 # Basic audio recording app
 ::Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
 ::Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
-::Microsoft.XboxSpeechToTextOverlay              # Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)
 ::Microsoft.YourPhone                            # Phone link (Connects Android/iOS phone to PC)
 ::Microsoft.ZuneMusic                            # Modern Media Player (Replaced Groove Music, plays local audio/video)
 ::Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
@@ -4894,7 +4892,7 @@ if "%~1"=="Debug" (
 ::
 ::    try {
 ::        if ($UsePreset -or $Personalisation) {
-::            Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings')
+::            Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings -RemoveAppsCustom')
 ::        }
 ::
 ::        if ($Silent) {
