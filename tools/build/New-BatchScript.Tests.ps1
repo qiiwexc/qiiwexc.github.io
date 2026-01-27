@@ -18,7 +18,7 @@ BeforeAll {
     Set-Variable -Option Constant TestVmBatchFilePath ([String]"$TestVmPath\$TestProjectName.bat")
 }
 
-Describe 'New-BatchScript' -Tag 'WIP' {
+Describe 'New-BatchScript' {
     BeforeEach {
         Mock New-Activity {}
         Mock Write-LogInfo {}
@@ -38,9 +38,9 @@ Describe 'New-BatchScript' -Tag 'WIP' {
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBatchFilePath -and
             # $Content -match "@echo off`n" -and
-            # $Content -match "%temp%\\$TestProjectName\.ps1" -and
-            # $Content -match '  powershell -ExecutionPolicy Bypass -Command ' -and
-            # $Content -match '::TEST_PS1_FILE_CONTENT_1' -and
+            $Content -match "%temp%\\$TestProjectName\.ps1" -and
+            $Content -match '  powershell -ExecutionPolicy Bypass -Command ' -and
+            $Content -match '::TEST_PS1_FILE_CONTENT_1' -and
             $Content -match '::TEST_PS1_FILE_CONTENT_2'
         }
         Should -Invoke Copy-Item -Exactly 1
