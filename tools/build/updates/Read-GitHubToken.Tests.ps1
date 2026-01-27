@@ -12,6 +12,9 @@ BeforeAll {
 Describe 'Read-GitHubToken' {
     BeforeEach {
         Mock Write-LogInfo {}
+        Mock Test-Path { return $True }
+        Mock Write-LogWarning {}
+        Mock Read-TextFile { return @() }
     }
 
     It 'Should read GitHub token from env file with no quotes' {
@@ -21,6 +24,8 @@ Describe 'Read-GitHubToken' {
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestEnvPath -and
@@ -35,6 +40,8 @@ Describe 'Read-GitHubToken' {
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
     }
 
@@ -45,6 +52,8 @@ Describe 'Read-GitHubToken' {
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
     }
 
@@ -55,6 +64,8 @@ Describe 'Read-GitHubToken' {
 
         Read-GitHubToken $TestEnvPath | Should -BeNullOrEmpty
 
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
     }
 
@@ -65,6 +76,8 @@ Describe 'Read-GitHubToken' {
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
     }
 
@@ -75,7 +88,29 @@ Describe 'Read-GitHubToken' {
 
         Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
 
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
+    }
+
+    It 'Should handle missing env file' {
+        Mock Test-Path { return $False }
+
+        Read-GitHubToken $TestEnvPath | Should -BeNullOrEmpty
+
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 0
+    }
+
+    It 'Should handle Test-Path failure' {
+        Mock Test-Path { throw $TestException }
+
+        { Read-GitHubToken $TestEnvPath } | Should -Throw $TestException
+
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Read-TextFile -Exactly 0
     }
 
     It 'Should handle Read-TextFile failure' {
@@ -83,6 +118,8 @@ Describe 'Read-GitHubToken' {
 
         { Read-GitHubToken $TestEnvPath } | Should -Throw $TestException
 
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
     }
 }
