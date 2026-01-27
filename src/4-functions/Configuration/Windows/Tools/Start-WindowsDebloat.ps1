@@ -37,7 +37,7 @@ function Start-WindowsDebloat {
 
     try {
         if ($UsePreset -or $Personalisation) {
-            Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings')
+            Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings -RemoveAppsCustom')
         }
 
         if ($Silent) {
