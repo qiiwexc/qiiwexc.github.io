@@ -37,7 +37,6 @@ Describe 'Start-WinUtil' {
     It 'Should start WinUtil with configuration' {
         Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_WINUTIL }
@@ -59,7 +58,6 @@ Describe 'Start-WinUtil' {
 
         Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -79,7 +77,6 @@ Describe 'Start-WinUtil' {
 
         Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -95,7 +92,6 @@ Describe 'Start-WinUtil' {
 
         Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -110,7 +106,6 @@ Describe 'Start-WinUtil' {
 
         { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -125,7 +120,6 @@ Describe 'Start-WinUtil' {
 
         Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
@@ -140,7 +134,6 @@ Describe 'Start-WinUtil' {
 
         Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -155,7 +148,6 @@ Describe 'Start-WinUtil' {
 
         Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1

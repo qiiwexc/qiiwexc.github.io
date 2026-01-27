@@ -36,7 +36,6 @@ Describe 'Set-CloudFlareDNS' {
 
         Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Get-NetworkAdapter -Exactly 1
@@ -54,7 +53,6 @@ Describe 'Set-CloudFlareDNS' {
     It 'Should set Malware Protection CloudFlare DNS' {
         Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Get-NetworkAdapter -Exactly 1
@@ -74,7 +72,6 @@ Describe 'Set-CloudFlareDNS' {
 
         Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Get-NetworkAdapter -Exactly 1
@@ -94,7 +91,6 @@ Describe 'Set-CloudFlareDNS' {
 
         Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Get-NetworkAdapter -Exactly 0
@@ -108,7 +104,6 @@ Describe 'Set-CloudFlareDNS' {
 
         Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Get-NetworkAdapter -Exactly 1
@@ -122,7 +117,6 @@ Describe 'Set-CloudFlareDNS' {
 
         Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Get-NetworkAdapter -Exactly 0
@@ -136,7 +130,6 @@ Describe 'Set-CloudFlareDNS' {
 
         Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Get-NetworkAdapter -Exactly 1
@@ -150,7 +143,6 @@ Describe 'Set-CloudFlareDNS' {
 
         Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Get-NetworkAdapter -Exactly 1

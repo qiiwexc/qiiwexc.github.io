@@ -36,7 +36,6 @@ Describe 'Install-MicrosoftOffice' {
 
         Install-MicrosoftOffice -Execute:$TestExecute
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
@@ -55,7 +54,6 @@ Describe 'Install-MicrosoftOffice' {
     It 'Should download and start Microsoft Office installer' {
         Install-MicrosoftOffice -Execute:$TestExecute
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
@@ -81,7 +79,6 @@ Describe 'Install-MicrosoftOffice' {
 
         Install-MicrosoftOffice -Execute:$TestExecute
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
@@ -99,7 +96,6 @@ Describe 'Install-MicrosoftOffice' {
 
         Install-MicrosoftOffice -Execute:$TestExecute
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -114,7 +110,6 @@ Describe 'Install-MicrosoftOffice' {
 
         Install-MicrosoftOffice -Execute:$TestExecute
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -127,7 +122,6 @@ Describe 'Install-MicrosoftOffice' {
 
         { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0

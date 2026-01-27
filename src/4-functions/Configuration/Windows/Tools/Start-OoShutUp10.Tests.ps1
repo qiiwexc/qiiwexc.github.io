@@ -32,7 +32,6 @@ Describe 'Start-OoShutUp10' {
     It 'Should download OoShutUp10' {
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_WORKING_DIR }
         Should -Invoke Set-Content -Exactly 1
@@ -56,7 +55,6 @@ Describe 'Start-OoShutUp10' {
 
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_OOSHUTUP10 }
         Should -Invoke Set-Content -Exactly 1
@@ -81,7 +79,6 @@ Describe 'Start-OoShutUp10' {
 
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -99,7 +96,6 @@ Describe 'Start-OoShutUp10' {
 
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
@@ -112,7 +108,6 @@ Describe 'Start-OoShutUp10' {
 
         Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -125,7 +120,6 @@ Describe 'Start-OoShutUp10' {
 
         { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0

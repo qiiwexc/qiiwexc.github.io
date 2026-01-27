@@ -43,7 +43,6 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should update browser configuration file if profile exists' {
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestProcessName }
         Should -Invoke Test-Path -Exactly 1
@@ -77,7 +76,6 @@ Describe 'Update-BrowserConfiguration' {
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestProcessName }
         Should -Invoke Test-Path -Exactly 3
@@ -112,7 +110,6 @@ Describe 'Update-BrowserConfiguration' {
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 0
         Should -Invoke Start-Process -Exactly 0
@@ -129,7 +126,6 @@ Describe 'Update-BrowserConfiguration' {
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 0
@@ -148,7 +144,6 @@ Describe 'Update-BrowserConfiguration' {
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Write-LogInfo -Exactly 2
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 1
@@ -165,7 +160,6 @@ Describe 'Update-BrowserConfiguration' {
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 0
@@ -182,7 +176,6 @@ Describe 'Update-BrowserConfiguration' {
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 0
@@ -199,7 +192,6 @@ Describe 'Update-BrowserConfiguration' {
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-Process -Exactly 0

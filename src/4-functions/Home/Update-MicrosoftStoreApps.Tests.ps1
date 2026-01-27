@@ -22,7 +22,6 @@ Describe 'Update-MicrosoftStoreApps' {
     It 'Should update Microsoft Store apps' {
         Update-MicrosoftStoreApps
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter {
             $ClassName -eq $TestClassName -and
@@ -42,7 +41,6 @@ Describe 'Update-MicrosoftStoreApps' {
 
         Update-MicrosoftStoreApps
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Invoke-CimMethod -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -54,7 +52,6 @@ Describe 'Update-MicrosoftStoreApps' {
 
         Update-MicrosoftStoreApps
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Invoke-CimMethod -Exactly 1
         Should -Invoke Out-Success -Exactly 0

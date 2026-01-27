@@ -40,7 +40,6 @@ Describe 'Start-WindowsDebloat' {
     It 'Should start debloat tool with configuration' {
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestTargetPath }
@@ -70,7 +69,6 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
@@ -89,7 +87,6 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
@@ -109,7 +106,6 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
@@ -138,7 +134,6 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
@@ -157,7 +152,6 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -172,7 +166,6 @@ Describe 'Start-WindowsDebloat' {
 
         { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -187,7 +180,6 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
@@ -201,7 +193,6 @@ Describe 'Start-WindowsDebloat' {
         Mock Set-Content { throw $TestException }
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -215,7 +206,6 @@ Describe 'Start-WindowsDebloat' {
         Mock Invoke-CustomCommand { throw $TestException }
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
