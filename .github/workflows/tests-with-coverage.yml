@@ -1,0 +1,16 @@
+name: Tests with coverage
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run tests with coverage
+        run: .\test-with-coverage.bat
