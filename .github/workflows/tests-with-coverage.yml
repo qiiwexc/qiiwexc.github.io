@@ -1,4 +1,5 @@
-name: Tests with coverage
+name: Test
+run-name: Test
 
 on:
   push:

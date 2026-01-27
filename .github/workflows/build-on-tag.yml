@@ -1,4 +1,5 @@
-name: Build on tag
+name: Build
+run-name: Build
 
 on:
   push:

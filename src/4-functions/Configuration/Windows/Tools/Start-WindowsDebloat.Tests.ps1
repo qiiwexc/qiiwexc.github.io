@@ -97,7 +97,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep -RunSavedSettings"
+            $Command -eq "$TestCommand -Sysprep -RunSavedSettings -RemoveAppsCustom"
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -127,7 +127,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep -RunSavedSettings"
+            $Command -eq "$TestCommand -Sysprep -RunSavedSettings -RemoveAppsCustom"
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
