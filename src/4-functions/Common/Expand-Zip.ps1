@@ -72,8 +72,6 @@ function Expand-Zip {
         }
     }
 
-    Remove-File $ZipPath
-
     if (-not $IsDirectory) {
         Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop
         Remove-Directory $ExtractionPath
