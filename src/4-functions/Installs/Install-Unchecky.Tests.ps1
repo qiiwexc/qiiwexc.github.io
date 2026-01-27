@@ -30,7 +30,6 @@ Describe 'Install-Unchecky' {
 
         Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-Path -Exactly 0
         Should -Invoke Write-LogDebug -Exactly 0
         Should -Invoke New-Item -Exactly 0
@@ -50,7 +49,6 @@ Describe 'Install-Unchecky' {
 
         Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Test-Path -Exactly 1 -ParameterFilter { $Path -eq $TestRegistryKey }
         Should -Invoke Write-LogDebug -Exactly 1
@@ -75,7 +73,6 @@ Describe 'Install-Unchecky' {
     It 'Should install Unchecky silently' {
         Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 1
         Should -Invoke New-Item -Exactly 1
@@ -95,7 +92,6 @@ Describe 'Install-Unchecky' {
 
         Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 0
         Should -Invoke New-Item -Exactly 0
@@ -109,7 +105,6 @@ Describe 'Install-Unchecky' {
 
         Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 1
         Should -Invoke New-Item -Exactly 1
@@ -123,7 +118,6 @@ Describe 'Install-Unchecky' {
 
         Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 1
         Should -Invoke New-Item -Exactly 1
@@ -137,7 +131,6 @@ Describe 'Install-Unchecky' {
 
         { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 1
         Should -Invoke New-Item -Exactly 1

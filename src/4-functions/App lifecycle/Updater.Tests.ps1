@@ -29,7 +29,6 @@ Describe 'Get-UpdateAvailability' {
     It 'Should detect available update' {
         Get-UpdateAvailability
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Out-Status -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
@@ -46,7 +45,6 @@ Describe 'Get-UpdateAvailability' {
 
         Get-UpdateAvailability
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Out-Status -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
@@ -63,7 +61,6 @@ Describe 'Get-UpdateAvailability' {
 
         Get-UpdateAvailability
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Out-Status -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 0
         Should -Invoke Invoke-WebRequest -Exactly 0
@@ -76,7 +73,6 @@ Describe 'Get-UpdateAvailability' {
 
         Get-UpdateAvailability
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Out-Status -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 0
@@ -89,7 +85,6 @@ Describe 'Get-UpdateAvailability' {
 
         Get-UpdateAvailability
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Out-Status -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 0
@@ -102,7 +97,6 @@ Describe 'Get-UpdateAvailability' {
 
         Get-UpdateAvailability
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Out-Status -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1

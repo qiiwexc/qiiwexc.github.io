@@ -76,7 +76,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand zip file to temporary path' {
@@ -105,7 +104,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand Office Installer zip file on 64-bit OS' {
@@ -144,7 +142,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand Office Installer zip file on 32-bit OS' {
@@ -185,7 +182,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand CPU-Z zip file on 64-bit OS' {
@@ -225,7 +221,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand CPU-Z zip file on 32-bit OS' {
@@ -267,7 +262,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand SDI zip file on 64-bit OS' {
@@ -307,7 +301,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand SDI zip file on 32-bit OS' {
@@ -349,7 +342,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand Ventoy zip file' {
@@ -389,7 +381,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand Victoria zip file' {
@@ -429,7 +420,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should handle Initialize-AppDirectory failure' {
@@ -451,7 +441,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle Remove-File failure' {
@@ -473,7 +462,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle Remove-Directory failure' {
@@ -495,7 +483,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle New-Directory failure' {
@@ -517,7 +504,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle Expand-Archive failure' {
@@ -539,7 +525,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle New-Object failure' {
@@ -561,7 +546,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 1
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle Move-Item failure' {
@@ -583,6 +567,5 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 }

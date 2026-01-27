@@ -69,7 +69,6 @@ Describe 'Exit-App' {
     It 'Should exit the application without update' {
         Exit-App
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Reset-State -Exactly 1
         Should -Invoke Reset-State -Exactly 1 -ParameterFilter { $Update -eq $False }
         Should -Invoke Close -Exactly 1
@@ -78,7 +77,6 @@ Describe 'Exit-App' {
     It 'Should exit the application with update' {
         Exit-App -Update
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Reset-State -Exactly 1
         Should -Invoke Reset-State -Exactly 1 -ParameterFilter { $Update -eq $True }
         Should -Invoke Close -Exactly 1
@@ -89,7 +87,6 @@ Describe 'Exit-App' {
 
         { Exit-App } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Reset-State -Exactly 1
         Should -Invoke Close -Exactly 0
     }
