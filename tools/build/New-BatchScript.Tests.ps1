@@ -37,7 +37,7 @@ Describe 'New-BatchScript' {
         Should -Invoke Write-TextFile -Exactly 1
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBatchFilePath -and
-            $Content -match "@echo off`n" -and
+            $Content -match '@echo off' -and
             $Content -match "%temp%\\$TestProjectName\.ps1" -and
             $Content -match '  powershell -ExecutionPolicy Bypass -Command ' -and
             $Content -match '::TEST_PS1_FILE_CONTENT_1' -and

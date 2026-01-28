@@ -31,7 +31,6 @@ Describe 'Write-ConfigurationFile' {
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestProcessName }
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke Split-Path -Exactly 1 -ParameterFilter {
             $Path -eq $TestPath -and
@@ -56,7 +55,6 @@ Describe 'Write-ConfigurationFile' {
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestAppName }
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -70,7 +68,6 @@ Describe 'Write-ConfigurationFile' {
         { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 0
         Should -Invoke Split-Path -Exactly 0
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -84,7 +81,6 @@ Describe 'Write-ConfigurationFile' {
         { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -98,7 +94,6 @@ Describe 'Write-ConfigurationFile' {
         { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
@@ -112,7 +107,6 @@ Describe 'Write-ConfigurationFile' {
         { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1

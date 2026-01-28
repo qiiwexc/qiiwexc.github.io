@@ -1,5 +1,6 @@
 function Start-Cleanup {
     New-Activity 'Cleaning up the system'
+    Set-Icon ([IconName]::Cleanup)
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
@@ -73,4 +74,5 @@ function Start-Cleanup {
     }
 
     Write-ActivityCompleted
+    Set-Icon (([IconName]::Default))
 }

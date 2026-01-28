@@ -4,3 +4,9 @@ enum LogLevel {
     INFO
     DEBUG
 }
+
+enum IconName {
+    Default
+    Cleanup
+    Download
+}

@@ -1,6 +1,6 @@
 function Select-Tags {
     param(
-        [GitHubDependency][Parameter(Position = 0, Mandatory)]$Dependency,
+        [PSObject][Parameter(Position = 0, Mandatory)]$Dependency,
         [String][Parameter(Position = 1)]$GitHubToken
     )
 

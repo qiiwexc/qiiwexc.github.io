@@ -16,7 +16,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestCommitsUrl ([String]"https://api.github.com/repos/$TestRepositoryName/commits")
     Set-Variable -Option Constant TestDependency (
-        [GitHubDependency]@{
+        [PSObject]@{
             repository = $TestRepositoryName
             version    = $TestCurrentVersion
         }
@@ -38,7 +38,8 @@ Describe 'Compare-Commits' {
         Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestCommitsUrl }
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
+            $Dependency.repository -eq $TestRepositoryName -and
+            $Dependency.version -eq $TestCurrentVersion -and
             $LatestVersion -eq $TestLatestVersion
         }
     }

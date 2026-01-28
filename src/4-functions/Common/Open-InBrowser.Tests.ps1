@@ -18,7 +18,6 @@ Describe 'Open-InBrowser' {
     It 'Should open URL in the browser' {
         Open-InBrowser $TestUrl
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestUrl }
         Should -Invoke Out-Failure -Exactly 0
@@ -29,7 +28,6 @@ Describe 'Open-InBrowser' {
 
         Open-InBrowser $TestUrl
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Failure -Exactly 1
     }

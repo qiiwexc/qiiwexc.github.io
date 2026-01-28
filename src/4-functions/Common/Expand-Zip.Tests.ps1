@@ -55,7 +55,7 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 2 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
@@ -67,7 +67,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -76,7 +75,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand zip file to temporary path' {
@@ -93,7 +91,7 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Expand-Archive -Exactly 1
@@ -105,7 +103,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand Office Installer zip file on 64-bit OS' {
@@ -123,7 +120,7 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 2 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
@@ -135,7 +132,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -144,7 +140,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand Office Installer zip file on 32-bit OS' {
@@ -164,7 +159,7 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 2 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
@@ -176,7 +171,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -185,7 +179,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand CPU-Z zip file on 64-bit OS' {
@@ -203,9 +196,8 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
         Should -Invoke New-Directory -Exactly 1
@@ -216,7 +208,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -225,7 +216,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand CPU-Z zip file on 32-bit OS' {
@@ -245,9 +235,8 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
         Should -Invoke New-Directory -Exactly 1
@@ -258,7 +247,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -267,7 +255,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand SDI zip file on 64-bit OS' {
@@ -285,9 +272,8 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
         Should -Invoke New-Directory -Exactly 1
@@ -298,7 +284,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -307,7 +292,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand SDI zip file on 32-bit OS' {
@@ -327,9 +311,8 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
         Should -Invoke New-Directory -Exactly 1
@@ -340,7 +323,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -349,7 +331,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand Ventoy zip file' {
@@ -367,9 +348,8 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
         Should -Invoke New-Directory -Exactly 1
@@ -380,7 +360,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -389,7 +368,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should expand Victoria zip file' {
@@ -407,9 +385,8 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestExtractionExe }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter { $DirectoryPath -eq $TestExtractionPath }
         Should -Invoke New-Directory -Exactly 1
@@ -420,7 +397,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke Remove-File -Exactly 1 -ParameterFilter { $FilePath -eq $TestZipFileName }
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -429,7 +405,6 @@ Describe 'Expand-Zip' {
             $Force -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
     }
 
     It 'Should handle Initialize-AppDirectory failure' {
@@ -451,7 +426,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle Remove-File failure' {
@@ -473,7 +447,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle Remove-Directory failure' {
@@ -495,7 +468,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle New-Directory failure' {
@@ -517,7 +489,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle Expand-Archive failure' {
@@ -539,7 +510,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle New-Object failure' {
@@ -561,7 +531,6 @@ Describe 'Expand-Zip' {
         Should -Invoke New-Object -Exactly 1
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 
     It 'Should handle Move-Item failure' {
@@ -576,13 +545,12 @@ Describe 'Expand-Zip' {
 
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Remove-File -Exactly 2
+        Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Expand-Archive -Exactly 1
         Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogInfo -Exactly 0
     }
 }

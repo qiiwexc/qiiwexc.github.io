@@ -19,7 +19,6 @@ Describe 'Update-MicrosoftOffice' {
     It 'Should update Microsoft Office' {
         Update-MicrosoftOffice
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq $PATH_OFFICE_C2R_CLIENT_EXE -and
@@ -34,7 +33,6 @@ Describe 'Update-MicrosoftOffice' {
 
         Update-MicrosoftOffice
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1

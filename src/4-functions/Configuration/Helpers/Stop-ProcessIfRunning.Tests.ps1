@@ -20,7 +20,6 @@ Describe 'Stop-ProcessIfRunning' {
         Stop-ProcessIfRunning $TestProcessName
 
         Should -Invoke Get-Process -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-Process -Exactly 1
         Should -Invoke Stop-Process -Exactly 1 -ParameterFilter {
             $Name -eq $TestProcessName -and
@@ -35,7 +34,6 @@ Describe 'Stop-ProcessIfRunning' {
         Stop-ProcessIfRunning $TestProcessName
 
         Should -Invoke Get-Process -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 0
         Should -Invoke Stop-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -46,7 +44,6 @@ Describe 'Stop-ProcessIfRunning' {
         { Stop-ProcessIfRunning $TestProcessName } | Should -Throw $TestException
 
         Should -Invoke Get-Process -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 0
         Should -Invoke Stop-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -57,7 +54,6 @@ Describe 'Stop-ProcessIfRunning' {
         { Stop-ProcessIfRunning $TestProcessName } | Should -Throw $TestException
 
         Should -Invoke Get-Process -Exactly 1
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Stop-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 0
     }

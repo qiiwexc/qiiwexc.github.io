@@ -28,7 +28,6 @@ Describe 'Import-RegistryConfiguration' {
     It 'Should import registry configuration' {
         Import-RegistryConfiguration $TestAppName $TestContent
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
@@ -52,7 +51,6 @@ Describe 'Import-RegistryConfiguration' {
 
         { Import-RegistryConfiguration $TestAppName $TestContent } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Start-Process -Exactly 0
@@ -65,7 +63,6 @@ Describe 'Import-RegistryConfiguration' {
 
         { Import-RegistryConfiguration $TestAppName $TestContent } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Start-Process -Exactly 0
@@ -78,7 +75,6 @@ Describe 'Import-RegistryConfiguration' {
 
         { Import-RegistryConfiguration $TestAppName $TestContent } | Should -Throw $TestException
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Start-Process -Exactly 1

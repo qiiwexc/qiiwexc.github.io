@@ -19,7 +19,7 @@ BeforeAll {
     Set-Variable -Option Constant TestLatestVersion ([String]'3.0.0')
 
     Set-Variable -Option Constant TestDependency (
-        [FileDependency]@{
+        [PSObject]@{
             name    = $TestFileName
             version = $TestCurrentVersion
         }
@@ -73,7 +73,8 @@ Describe 'Update-FileDependency' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
+            $Dependency.name -eq $TestFileName -and
+            $Dependency.version -eq $TestCurrentVersion -and
             $LatestVersion -eq $TestNewVersion
         }
     }
@@ -87,7 +88,8 @@ Describe 'Update-FileDependency' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
+            $Dependency.name -eq $TestFileName -and
+            $Dependency.version -eq $TestCurrentVersion -and
             $LatestVersion -eq $TestLatestVersion
         }
     }
@@ -101,7 +103,8 @@ Describe 'Update-FileDependency' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
+            $Dependency.name -eq $TestFileName -and
+            $Dependency.version -eq $TestCurrentVersion -and
             $LatestVersion -eq $TestLatestVersion
         }
     }
@@ -137,7 +140,8 @@ Describe 'Update-FileDependency' {
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
+            $Dependency.name -eq $TestFileName -and
+            $Dependency.version -eq $TestCurrentVersion -and
             $LatestVersion -eq $TestNewVersion
         }
     }
@@ -151,7 +155,8 @@ Describe 'Update-FileDependency' {
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
+            $Dependency.name -eq $TestFileName -and
+            $Dependency.version -eq $TestCurrentVersion -and
             $LatestVersion -eq $TestNewVersion
         }
     }

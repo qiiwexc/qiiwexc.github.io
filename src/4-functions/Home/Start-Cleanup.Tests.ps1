@@ -1,8 +1,10 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\src\4-functions\Common\types.ps1'
     . '.\src\4-functions\App lifecycle\Logger.ps1'
     . '.\src\4-functions\App lifecycle\Progressbar.ps1'
+    . '.\src\4-functions\App lifecycle\Set-Icon.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -15,6 +17,7 @@ BeforeAll {
 Describe 'Start-Cleanup' {
     BeforeEach {
         Mock New-Activity {}
+        Mock Set-Icon {}
         Mock Write-ActivityProgress {}
         Mock Delete-DeliveryOptimizationCache {}
         Mock Out-Success {}
@@ -32,6 +35,8 @@ Describe 'Start-Cleanup' {
         Start-Cleanup
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Set-Icon -Exactly 2
+        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Cleanup) }
         Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1 -ParameterFilter { $Force -eq $True }
@@ -101,6 +106,7 @@ Describe 'Start-Cleanup' {
         Should -Invoke Start-Sleep -Exactly 1
         Should -Invoke Start-Sleep -Exactly 1 -ParameterFilter { $Seconds -eq 1 }
         Should -Invoke Write-ActivityCompleted -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq (([IconName]::Default)) }
     }
 
     It 'Should handle Delete-DeliveryOptimizationCache failure' {
@@ -109,6 +115,7 @@ Describe 'Start-Cleanup' {
         { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 0
@@ -127,6 +134,7 @@ Describe 'Start-Cleanup' {
         { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -145,6 +153,7 @@ Describe 'Start-Cleanup' {
         { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
@@ -163,6 +172,7 @@ Describe 'Start-Cleanup' {
         { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
@@ -181,6 +191,7 @@ Describe 'Start-Cleanup' {
         { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
@@ -199,6 +210,7 @@ Describe 'Start-Cleanup' {
         { Start-Cleanup } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 7
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4

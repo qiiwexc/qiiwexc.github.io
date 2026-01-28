@@ -12,7 +12,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestGitHubToken ([String]'TEST_GITHUB_TOKEN')
     Set-Variable -Option Constant TestDependency (
-        [GitDependency]@{
+        [PSObject]@{
             name = 'TestDependency'
             mode = ''
         }

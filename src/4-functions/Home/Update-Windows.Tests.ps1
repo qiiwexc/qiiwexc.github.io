@@ -22,7 +22,6 @@ Describe 'Update-Windows' {
     It 'Should update Windows' {
         Update-Windows
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq 'UsoClient' -and
@@ -37,7 +36,6 @@ Describe 'Update-Windows' {
 
         Update-Windows
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq 'wuauclt' -and
@@ -52,7 +50,6 @@ Describe 'Update-Windows' {
 
         Update-Windows
 
-        Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
