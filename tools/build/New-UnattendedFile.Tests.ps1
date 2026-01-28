@@ -174,6 +174,23 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
+    It 'Should skip copying to VM path in CI mode' {
+        New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath -CI
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 18
+        Should -Invoke New-UnattendedBase -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 3
+        Should -Invoke Set-LocaleSettings -Exactly 2
+        Should -Invoke Set-AppRemovalList -Exactly 2
+        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
+        Should -Invoke Set-InlineFiles -Exactly 2
+        Should -Invoke Write-TextFile -Exactly 4
+        Should -Invoke Copy-Item -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
     It 'Should handle New-UnattendedBase failure' {
         Mock New-UnattendedBase { throw $TestException }
 
