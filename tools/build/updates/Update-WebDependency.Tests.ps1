@@ -8,12 +8,16 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
+    Set-Variable -Option Constant TestDependencyName ([String]'TestDependency')
+    Set-Variable -Option Constant TestDependencyUrl ([String]'https://example.com/test-dependency')
+    Set-Variable -Option Constant TestDependencyRegex ([String]'Latest Version:\s*(\d+\.\d+\.\d+)')
+    Set-Variable -Option Constant TestDependencyVersion ([String]'1.0.0')
     Set-Variable -Option Constant TestDependency (
         [PSObject]@{
-            name    = 'TestDependency'
-            url     = 'https://example.com/test-dependency'
-            regex   = 'Latest Version:\s*(\d+\.\d+\.\d+)'
-            version = '1.0.0'
+            name    = $TestDependencyName
+            url     = $TestDependencyUrl
+            regex   = $TestDependencyRegex
+            version = $TestDependencyVersion
         }
     )
 }
@@ -41,7 +45,10 @@ Describe 'Update-WebDependency' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
-            $Dependency -eq $TestDependency -and
+            $Dependency.name -eq $TestDependencyName -and
+            $Dependency.version -eq $TestDependencyVersion -and
+            $Dependency.url -eq $TestDependencyUrl -and
+            $Dependency.regex -eq $TestDependencyRegex -and
             $LatestVersion -eq '2.0.0'
         }
     }
