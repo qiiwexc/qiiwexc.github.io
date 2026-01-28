@@ -21,3 +21,8 @@ Set-Variable -Option Constant SHIFT_CHECKBOX ([Drawing.Point]"0, $INTERVAL_CHECK
 
 Set-Variable -Option Constant FONT_NAME ([String]'Microsoft Sans Serif')
 Set-Variable -Option Constant BUTTON_FONT ([Drawing.Font]"$FONT_NAME, 10")
+
+
+Set-Variable -Option Constant ICON_DEFAULT ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\cliconfg.exe"))
+Set-Variable -Option Constant ICON_CLEANUP ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\cleanmgr.exe"))
+Set-Variable -Option Constant ICON_DOWNLOAD ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\Dxpserver.exe"))
