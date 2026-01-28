@@ -11,11 +11,11 @@ BeforeAll {
     Set-Variable -Option Constant PATH_WINUTIL ([String]'TEST_PATH_WINUTIL')
     Set-Variable -Option Constant CONFIG_WINUTIL ([String]"TEST_CONFIG_WINUTIL_1    `"WPFTweaks`":  [
  TEST_CONFIG_WINUTIL_2")
+    Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]'TEST_CONFIG_WINUTIL_PERSONALISATION')
 
     Set-Variable -Option Constant TestConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
     Set-Variable -Option Constant TestConfigWithPersonalization ([String]"TEST_CONFIG_WINUTIL_1    `"WPFTweaks`":  [
-    `"WPFTweaksRightClickMenu`",
- TEST_CONFIG_WINUTIL_2")
+TEST_CONFIG_WINUTIL_PERSONALISATION TEST_CONFIG_WINUTIL_2")
     Set-Variable -Option Constant TestCommand ([String]"& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) -Config $TestConfigFile")
 }
 
