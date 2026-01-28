@@ -73,7 +73,6 @@ Microsoft.ZuneMusic                            # Modern Media Player (Replaced G
 Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
 MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings
 MicrosoftCorporationII.QuickAssist             # Remote assistance tool
-MicrosoftWindows.CrossDevice                   # Phone integration within File Explorer, Camera and more (Part of Phone Link features)
 Netflix                                        # Netflix streaming service app
 NYTCrossword                                   # New York Times crossword puzzle app
 OneCalendar                                    # Calendar aggregation app

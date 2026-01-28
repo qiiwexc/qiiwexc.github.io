@@ -6,7 +6,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
 "fAllVolumes"=dword:00000001
 "fDeadlineEnabled"=dword:00000001
-"fExclude"=dword:00000000
 "fTaskEnabled"=dword:00000001
 "TaskFrequency"=dword:00000002
 
@@ -55,9 +54,6 @@
 "miniTraceSessionStartTime"=hex:00,00,00,00,00,00,00,00
 "miniTraceSlotEnabled"=dword:00000000
 "miniTraceStopTime"=hex:00,00,00,00,00,00,00,00
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag]
-"ThisPCPolicy"="Hide"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
 "SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
@@ -297,10 +293,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
 "HideRecommendedSection"=dword:00000001
 
-; Disable game DVR
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
-"AllowGameDVR"=dword:00000000
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports]
 "PreventHandwritingErrorReports"=dword:00000001
 
@@ -340,10 +332,6 @@
 "DisableAIDataAnalysis"=dword:00000001 ; Disable AI recall
 "DisableClickToDo"=dword:00000001 ; Disable click to do
 "TurnOffSavingSnapshots"=dword:00000001 ; Disable AI recall
-
-; Disable Copilot service
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
-"TurnOffWindowsCopilot"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet]
 "SpyNetReporting"=dword:00000000
@@ -473,10 +461,6 @@
 "DisableAIDataAnalysis"=dword:00000001
 "DisableClickToDo"=dword:00000001 ; Disable click to do
 "TurnOffSavingSnapshots"=dword:00000001
-
-; Disable Copilot service
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
-"TurnOffWindowsCopilot"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender\Spynet]
 "SpyNetReporting"=dword:00000000

@@ -21,9 +21,6 @@
 "ShowCmd"=dword:00000003
 "WFlags"=dword:00000002
 
-[HKEY_CURRENT_USER\Software\Microsoft\Clipboard]
-"EnableClipboardHistory"=dword:00000000
-
 [HKEY_CURRENT_USER\Software\Microsoft\Edge\SmartScreenPuaEnabled]
 @=dword:00000001
 
@@ -55,7 +52,6 @@
 
 [HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 "AcceptedPrivacyStatement"=dword:00000001
-"FirstRun"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 "iWindowPosX"=dword:FFFFFFF8
@@ -140,16 +136,11 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 "NavPaneShowAllCloudStates"=dword:00000001
 "SeparateProcess"=dword:00000001
-"ShowClockInNotificationCenter"=dword:00000001
 "ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
 "ShowSyncProviderNotifications"=dword:00000000 ; Sync provider ads
 "Start_AccountNotifications"=dword:00000000 ; Disable Show account-related notifications
 "Start_IrisRecommendations"=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
 "Start_TrackProgs"=dword:00000000 ; Disable "Let Windows improve Start and search results by tracking app launches"
-
-; Enable "End task" in the taskbar
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
-"TaskbarEndTask"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
 "AllItemsIconView"=dword:00000000
@@ -237,9 +228,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
 "VideoQualityOnBattery"=dword:00000001
 
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\WindowsCopilot]
-"AllowCopilotRuntime"=dword:00000000
-
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Windows Search]
 "CortanaConsent"=dword:00000000
 
@@ -288,10 +276,6 @@
 ; Disable AI recall
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
 "DisableAIDataAnalysis"=dword:00000001
-
-; Disable Copilot service
-[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsCopilot]
-"TurnOffWindowsCopilot"=dword:00000001
 
 [HKEY_CURRENT_USER\System\GameConfigStore]
 "GameDVR_EFSEFeatureFlags"=dword:00000000

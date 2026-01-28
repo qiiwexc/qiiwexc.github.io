@@ -3,8 +3,6 @@ run-name: Test
 
 on:
   push:
-    branches:
-      - master
 
 jobs:
   test:
