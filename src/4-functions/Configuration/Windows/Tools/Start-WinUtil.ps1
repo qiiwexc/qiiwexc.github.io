@@ -15,13 +15,11 @@ function Start-WinUtil {
 
         Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 
+        [String]$Configuration = $CONFIG_WINUTIL
         if ($Personalisation) {
-            Set-Variable -Option Constant Configuration ([String]$CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
+            $Configuration = $CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
 ', '    "WPFTweaks":  [
-    "WPFTweaksRightClickMenu",
-'))
-        } else {
-            Set-Variable -Option Constant Configuration ([String]$CONFIG_WINUTIL)
+' + $CONFIG_WINUTIL_PERSONALISATION)
         }
 
         Set-Content $ConfigFile $Configuration -NoNewline -ErrorAction Stop
