@@ -9,7 +9,7 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestDependency (
-        [WebDependency]@{
+        [PSObject]@{
             name    = 'TestDependency'
             url     = 'https://example.com/test-dependency'
             regex   = 'Latest Version:\s*(\d+\.\d+\.\d+)'
