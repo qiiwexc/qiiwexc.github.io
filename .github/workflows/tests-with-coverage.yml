@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run tests with coverage
         run: .\test-with-coverage.bat
