@@ -3,6 +3,7 @@
 param(
     [Switch]$Dev,
     [Switch]$Full,
+    [Switch]$CI,
     [Switch]$Run,
     [Switch]$Tests,
     [Switch]$Update,
@@ -65,6 +66,7 @@ Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
 Write-LogInfo 'Build task started'
 Write-LogInfo "Version                  : $Version"
 Write-LogInfo "Full build               : $Full"
+Write-LogInfo "CI build                 : $CI"
 Write-LogInfo "Run tests                : $Tests"
 Write-LogInfo "Check for updates        : $Update"
 Write-LogInfo "Build HTML page          : $Html"
@@ -112,7 +114,7 @@ if ($Html) {
 if ($Autounattend) {
     Write-ActivityProgress 70
     . "$BuilderPath\New-UnattendedFile.ps1"
-    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath
+    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath $CI
 }
 
 if ($Ps1) {

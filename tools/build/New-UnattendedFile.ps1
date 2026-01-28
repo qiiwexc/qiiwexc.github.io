@@ -6,7 +6,8 @@ function New-UnattendedFile {
         [String][Parameter(Position = 3, Mandatory)]$TemplatesPath,
         [String][Parameter(Position = 4, Mandatory)]$BuildPath,
         [String][Parameter(Position = 5, Mandatory)]$DistPath,
-        [String][Parameter(Position = 6, Mandatory)]$VmPath
+        [String][Parameter(Position = 6, Mandatory)]$VmPath,
+        [Switch][Parameter(Position = 7)]$CI
     )
 
     New-Activity 'Building unattended files'
@@ -79,9 +80,11 @@ function New-UnattendedFile {
 
     Write-ActivityProgress 80
 
-    Set-Variable -Option Constant BuildFile ([String]("$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
-    Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalisedFileName"))
-    Copy-Item $BuildFile $VmFile
+    if (-not $CI) {
+        Set-Variable -Option Constant BuildFile ([String]("$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
+        Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalisedFileName"))
+        Copy-Item $BuildFile $VmFile
+    }
 
     Set-Variable -Option Constant DevRegexRemovals ([String[]]@(
             '\s*<File path="C:\\Windows\\Setup\\VBoxGuestAdditions\.ps1">([\s\S]*?)<\/File>'
