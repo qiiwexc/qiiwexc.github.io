@@ -1,5 +1,7 @@
 name: Test
 run-name: Test
+permissions:
+  contents: read
 
 on:
   push:
