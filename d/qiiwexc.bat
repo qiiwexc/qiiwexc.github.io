@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.28')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.29')
 ::
 ::#endregion init > Version
 ::
@@ -79,6 +79,7 @@ if "%~1"=="Debug" (
 ::
 ::Set-Variable -Option Constant PATH_WORKING_DIR ([String]$WorkingDirectory)
 ::Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
+::Set-Variable -Option Constant PATH_SYSTEM_32 ("$env:SystemRoot\System32")
 ::Set-Variable -Option Constant PATH_APP_DIR ([String]"$($PATH_TEMP_DIR)qiiwexc")
 ::Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE ([String]"$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe")
 ::Set-Variable -Option Constant PATH_WINUTIL ([String]"$env:ProgramData\WinUtil")
@@ -157,6 +158,11 @@ if "%~1"=="Debug" (
 ::
 ::Set-Variable -Option Constant FONT_NAME ([String]'Microsoft Sans Serif')
 ::Set-Variable -Option Constant BUTTON_FONT ([Drawing.Font]"$FONT_NAME, 10")
+::
+::
+::Set-Variable -Option Constant ICON_DEFAULT ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\cliconfg.exe"))
+::Set-Variable -Option Constant ICON_CLEANUP ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\cleanmgr.exe"))
+::Set-Variable -Option Constant ICON_DOWNLOAD ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\Dxpserver.exe"))
 ::
 ::#endregion init > UI constants
 ::
@@ -449,7 +455,7 @@ if "%~1"=="Debug" (
 ::Set-Variable -Option Constant FORM ([Windows.Forms.Form](New-Object Windows.Forms.Form))
 ::$FORM.Text = $HOST.UI.RawUI.WindowTitle
 ::$FORM.ClientSize = "$FORM_WIDTH, $FORM_HEIGHT"
-::$FORM.Icon = [Drawing.Icon]::ExtractAssociatedIcon("$env:SystemRoot\System32\cliconfg.exe")
+::$FORM.Icon = $ICON_DEFAULT
 ::$FORM.FormBorderStyle = 'Fixed3D'
 ::$FORM.StartPosition = 'CenterScreen'
 ::$FORM.MaximizeBox = $False
@@ -1564,9 +1570,6 @@ if "%~1"=="Debug" (
 ::"ShowCmd"=dword:00000003
 ::"WFlags"=dword:00000002
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Clipboard]
-::"EnableClipboardHistory"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Edge\SmartScreenPuaEnabled]
 ::@=dword:00000001
 ::
@@ -1598,7 +1601,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
 ::"AcceptedPrivacyStatement"=dword:00000001
-::"FirstRun"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
 ::"iWindowPosX"=dword:FFFFFFF8
@@ -1683,16 +1685,11 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 ::"NavPaneShowAllCloudStates"=dword:00000001
 ::"SeparateProcess"=dword:00000001
-::"ShowClockInNotificationCenter"=dword:00000001
 ::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
 ::"ShowSyncProviderNotifications"=dword:00000000 ; Sync provider ads
 ::"Start_AccountNotifications"=dword:00000000 ; Disable Show account-related notifications
 ::"Start_IrisRecommendations"=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
 ::"Start_TrackProgs"=dword:00000000 ; Disable "Let Windows improve Start and search results by tracking app launches"
-::
-::; Enable "End task" in the taskbar
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
-::"TaskbarEndTask"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
 ::"AllItemsIconView"=dword:00000000
@@ -1780,9 +1777,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
 ::"VideoQualityOnBattery"=dword:00000001
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\WindowsCopilot]
-::"AllowCopilotRuntime"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Windows Search]
 ::"CortanaConsent"=dword:00000000
 ::
@@ -1832,10 +1826,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
 ::"DisableAIDataAnalysis"=dword:00000001
 ::
-::; Disable Copilot service
-::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsCopilot]
-::"TurnOffWindowsCopilot"=dword:00000001
-::
 ::[HKEY_CURRENT_USER\System\GameConfigStore]
 ::"GameDVR_EFSEFeatureFlags"=dword:00000000
 ::"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
@@ -1856,7 +1846,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
 ::"fAllVolumes"=dword:00000001
 ::"fDeadlineEnabled"=dword:00000001
-::"fExclude"=dword:00000000
 ::"fTaskEnabled"=dword:00000001
 ::"TaskFrequency"=dword:00000002
 ::
@@ -1905,9 +1894,6 @@ if "%~1"=="Debug" (
 ::"miniTraceSessionStartTime"=hex:00,00,00,00,00,00,00,00
 ::"miniTraceSlotEnabled"=dword:00000000
 ::"miniTraceStopTime"=hex:00,00,00,00,00,00,00,00
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag]
-::"ThisPCPolicy"="Hide"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
 ::"SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
@@ -2147,10 +2133,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
 ::"HideRecommendedSection"=dword:00000001
 ::
-::; Disable game DVR
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
-::"AllowGameDVR"=dword:00000000
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports]
 ::"PreventHandwritingErrorReports"=dword:00000001
 ::
@@ -2190,10 +2172,6 @@ if "%~1"=="Debug" (
 ::"DisableAIDataAnalysis"=dword:00000001 ; Disable AI recall
 ::"DisableClickToDo"=dword:00000001 ; Disable click to do
 ::"TurnOffSavingSnapshots"=dword:00000001 ; Disable AI recall
-::
-::; Disable Copilot service
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
-::"TurnOffWindowsCopilot"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet]
 ::"SpyNetReporting"=dword:00000000
@@ -2323,10 +2301,6 @@ if "%~1"=="Debug" (
 ::"DisableAIDataAnalysis"=dword:00000001
 ::"DisableClickToDo"=dword:00000001 ; Disable click to do
 ::"TurnOffSavingSnapshots"=dword:00000001
-::
-::; Disable Copilot service
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
-::"TurnOffWindowsCopilot"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender\Spynet]
 ::"SpyNetReporting"=dword:00000000
@@ -2661,6 +2635,9 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 ::@=""
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Clipboard]
+::"EnableClipboardHistory"=dword:00000000
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
 ::"ContentDeliveryAllowed"=dword:00000001
 ::"RotatingLockScreenEnabled"=dword:00000001
@@ -2678,6 +2655,7 @@ if "%~1"=="Debug" (
 ::"MMTaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
 ::"NavPaneExpandToCurrentFolder"=dword:00000001
 ::"NavPaneShowAllFolders"=dword:00000001
+::"ShowClockInNotificationCenter"=dword:00000001
 ::"Start_Layout"=dword:00000001
 ::"TaskbarAl"=dword:00000000 ; Align taskbar left
 ::"TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
@@ -2685,6 +2663,10 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People]
 ::"PeopleBand"=dword:00000000
+::
+::; Enable "End task" in the taskbar
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
+::"TaskbarEndTask"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
 ::"{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"=dword:00000001
@@ -2704,6 +2686,10 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
 ::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
 ::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
+::
+::; Disable Copilot service
+::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsCopilot]
+::"TurnOffWindowsCopilot"=dword:00000001
 ::'))
 ::
 ::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_CURRENT_USER
@@ -2715,12 +2701,23 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag]
+::"ThisPCPolicy"="Hide"
+::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
 ::
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
+::
+::; Disable game DVR
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
+::"AllowGameDVR"=dword:00000000
+::
+::; Disable Copilot service
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
+::"TurnOffWindowsCopilot"=dword:00000001
 ::
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
@@ -2729,6 +2726,10 @@ if "%~1"=="Debug" (
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
+::
+::; Disable Copilot service
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
+::"TurnOffWindowsCopilot"=dword:00000001
 ::'))
 ::
 ::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_LOCAL_MACHINE
@@ -2811,7 +2812,6 @@ if "%~1"=="Debug" (
 ::Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
 ::MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings
 ::MicrosoftCorporationII.QuickAssist             # Remote assistance tool
-::MicrosoftWindows.CrossDevice                   # Phone integration within File Explorer, Camera and more (Part of Phone Link features)
 ::Netflix                                        # Netflix streaming service app
 ::NYTCrossword                                   # New York Times crossword puzzle app
 ::OneCalendar                                    # Calendar aggregation app
@@ -3211,7 +3211,7 @@ if "%~1"=="Debug" (
 ::K002	+	# Disable fun facts, tips, tricks, and more on your lock screen (Category: Lock Screen)
 ::K005	+	# Disable notifications on lock screen (Category: Lock Screen)
 ::D001	-	# Disable access to mobile devices (Category: Mobile Devices)
-::D002	+	# Disable Phone Link app (Category: Mobile Devices)
+::D002	-	# Disable Phone Link app (Category: Mobile Devices)
 ::D003	+	# Disable showing suggestions for using mobile devices with Windows (Category: Mobile Devices)
 ::D104	-	# Disable connecting the PC to mobile devices (Category: Mobile Devices)
 ::M025	+	# Disable search with AI in search box (Category: Search)
@@ -3255,6 +3255,16 @@ if "%~1"=="Debug" (
 ::#endregion configs > Windows > Tools > sdi
 ::
 ::
+::#region configs > Windows > Tools > WinUtil Personalisation
+::
+::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]('                      "WPFTweaksRightClickMenu",
+::                      "WPFTweaksRemoveCopilot",
+::                      "WPFTweaksRemoveOnedrive",
+::'))
+::
+::#endregion configs > Windows > Tools > WinUtil Personalisation
+::
+::
 ::#region configs > Windows > Tools > WinUtil
 ::
 ::Set-Variable -Option Constant CONFIG_WINUTIL ([String]('{
@@ -3266,7 +3276,6 @@ if "%~1"=="Debug" (
 ::                      "WPFTweaksEndTaskOnTaskbar",
 ::                      "WPFTweaksLoc",
 ::                      "WPFTweaksPowershell7Tele",
-::                      "WPFTweaksRemoveCopilot",
 ::                      "WPFTweaksRestorePoint",
 ::                      "WPFTweaksTele",
 ::                      "WPFTweaksDeleteTempFiles",
@@ -3663,6 +3672,29 @@ if "%~1"=="Debug" (
 ::#endregion functions > App lifecycle > Set-CheckboxState
 ::
 ::
+::#region functions > App lifecycle > Set-Icon
+::
+::function Set-Icon {
+::    param(
+::        [IconName][Parameter(Position = 0)]$Name
+::    )
+::
+::    switch ($Name) {
+::        ([IconName]::Cleanup) {
+::            $FORM.Icon = $ICON_CLEANUP
+::        }
+::        ([IconName]::Download) {
+::            $FORM.Icon = $ICON_DOWNLOAD
+::        }
+::        Default {
+::            $FORM.Icon = $ICON_DEFAULT
+::        }
+::    }
+::}
+::
+::#endregion functions > App lifecycle > Set-Icon
+::
+::
 ::#region functions > App lifecycle > Updater
 ::
 ::function Update-App {
@@ -3811,8 +3843,6 @@ if "%~1"=="Debug" (
 ::            $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
 ::        }
 ::    }
-::
-::    Remove-File $ZipPath
 ::
 ::    if (-not $IsDirectory) {
 ::        Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop
@@ -4017,6 +4047,7 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    New-Activity 'Download and run'
+::    Set-Icon ([IconName]::Download)
 ::
 ::    try {
 ::        Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
@@ -4025,6 +4056,7 @@ if "%~1"=="Debug" (
 ::    } catch {
 ::        Out-Failure "Download failed: $_"
 ::        Write-ActivityCompleted $False
+::        Set-Icon (([IconName]::Default))
 ::        return
 ::    }
 ::
@@ -4035,6 +4067,7 @@ if "%~1"=="Debug" (
 ::            } catch {
 ::                Out-Failure "Failed to extract '$DownloadedFile': $_"
 ::                Write-ActivityCompleted $False
+::                Set-Icon (([IconName]::Default))
 ::                return
 ::            }
 ::        } else {
@@ -4052,12 +4085,14 @@ if "%~1"=="Debug" (
 ::            } catch {
 ::                Out-Failure "Failed to run '$Executable': $_"
 ::                Write-ActivityCompleted $False
+::                Set-Icon (([IconName]::Default))
 ::                return
 ::            }
 ::        }
 ::    }
 ::
 ::    Write-ActivityCompleted
+::    Set-Icon (([IconName]::Default))
 ::}
 ::
 ::#endregion functions > Common > Start-DownloadUnzipAndRun
@@ -4101,6 +4136,12 @@ if "%~1"=="Debug" (
 ::    WARN
 ::    INFO
 ::    DEBUG
+::}
+::
+::enum IconName {
+::    Default
+::    Cleanup
+::    Download
 ::}
 ::
 ::#endregion functions > Common > types
@@ -4935,13 +4976,11 @@ if "%~1"=="Debug" (
 ::
 ::        Set-Variable -Option Constant ConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
 ::
+::        [String]$Configuration = $CONFIG_WINUTIL
 ::        if ($Personalisation) {
-::            Set-Variable -Option Constant Configuration ([String]$CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
+::            $Configuration = $CONFIG_WINUTIL.Replace('    "WPFTweaks":  [
 ::', '    "WPFTweaks":  [
-::    "WPFTweaksRightClickMenu",
-::'))
-::        } else {
-::            Set-Variable -Option Constant Configuration ([String]$CONFIG_WINUTIL)
+::' + $CONFIG_WINUTIL_PERSONALISATION)
 ::        }
 ::
 ::        Set-Content $ConfigFile $Configuration -NoNewline -ErrorAction Stop
@@ -5034,6 +5073,7 @@ if "%~1"=="Debug" (
 ::
 ::function Start-Cleanup {
 ::    New-Activity 'Cleaning up the system'
+::    Set-Icon ([IconName]::Cleanup)
 ::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
 ::
@@ -5107,6 +5147,7 @@ if "%~1"=="Debug" (
 ::    }
 ::
 ::    Write-ActivityCompleted
+::    Set-Icon (([IconName]::Default))
 ::}
 ::
 ::#endregion functions > Home > Start-Cleanup
