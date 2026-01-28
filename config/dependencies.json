@@ -16,7 +16,7 @@
     },
     {
         "name":  "Microsoft Activation Scripts",
-        "version":  "3.9",
+        "version":  "3.10",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "massgravel/Microsoft-Activation-Scripts"
@@ -30,7 +30,7 @@
     },
     {
         "name":  "WinUtil",
-        "version":  "26.01.15",
+        "version":  "26.01.27",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "ChrisTitusTech/winutil"

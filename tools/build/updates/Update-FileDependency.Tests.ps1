@@ -19,7 +19,7 @@ BeforeAll {
     Set-Variable -Option Constant TestLatestVersion ([String]'3.0.0')
 
     Set-Variable -Option Constant TestDependency (
-        [FileDependency]@{
+        [PSObject]@{
             name    = $TestFileName
             version = $TestCurrentVersion
         }
