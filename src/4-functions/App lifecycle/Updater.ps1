@@ -32,7 +32,7 @@ function Get-UpdateAvailability {
             return
         }
 
-        Set-Variable -Option Constant AvailableVersion ([Version](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}'))
+        Set-Variable -Option Constant AvailableVersion ([Version](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}').ToString().Trim())
 
         if ($AvailableVersion -gt $VERSION) {
             Write-LogWarning "Newer version available: v$AvailableVersion"
