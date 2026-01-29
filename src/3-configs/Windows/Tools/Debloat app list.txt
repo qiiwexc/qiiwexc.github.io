@@ -55,7 +55,6 @@ Microsoft.OutlookForWindows                    # New mail app: Outlook for Windo
 Microsoft.People                               # Required for & included with Mail & Calendar (Contacts management)
 Microsoft.PowerAutomateDesktop                 # Desktop automation tool (RPA)
 Microsoft.Print3D                              # 3D printing preparation software
-Microsoft.RemoteDesktop                        # Remote Desktop client app
 Microsoft.SkypeApp                             # Skype communication app (Universal Windows Platform version)
 Microsoft.StartExperiencesApp                  # This app powers Windows Widgets My Feed
 Microsoft.Todos                                # To-do list and task management app

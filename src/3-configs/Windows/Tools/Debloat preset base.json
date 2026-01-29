@@ -16,7 +16,7 @@
     { "Name": "DisableClickToDo", "Value": true },
     { "Name": "DisableCopilot", "Value": true },
     { "Name": "DisableDesktopSpotlight", "Value": false },
-    { "Name": "DisableDVR", "Value": true },
+    { "Name": "DisableDVR", "Value": false },
     { "Name": "DisableEdgeAds", "Value": true },
     { "Name": "DisableEdgeAI", "Value": false },
     { "Name": "DisableFastStartup", "Value": false },

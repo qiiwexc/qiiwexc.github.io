@@ -44,7 +44,6 @@
 "DoNotTrack"=dword:00000001
 "Isolation"="PMEM"
 "Isolation64Bit"=dword:00000001
-"Start Page"="about:blank"
 "Use FormSuggest"="yes"
 
 [HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\PhishingFilter]
@@ -125,7 +124,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 "NavPaneShowAllCloudStates"=dword:00000001
 "SeparateProcess"=dword:00000001
-"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
 "ShowSyncProviderNotifications"=dword:00000000 ; Sync provider ads
 "Start_AccountNotifications"=dword:00000000 ; Disable Show account-related notifications
 "Start_IrisRecommendations"=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
@@ -141,9 +139,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
 "{20D04FE0-3AEA-1069-A2D8-08002B30309D}"=dword:00000000
 "MSEdge"=dword:00000001
-
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
-"EnthusiastMode"=dword:00000001
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
 "ArchivedFiles"=dword:00000001
@@ -252,9 +247,3 @@
 ; Disable AI recall
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
 "DisableAIDataAnalysis"=dword:00000001
-
-[HKEY_CURRENT_USER\System\GameConfigStore]
-"GameDVR_EFSEFeatureFlags"=dword:00000000
-"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
-"GameDVR_FSEBehavior"=dword:00000002
-"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001

@@ -28,7 +28,7 @@
     { "Name": "DisablePaintAI", "Value": false },
     { "Name": "DisableRecall", "Value": true },
     { "Name": "DisableSettings365Ads", "Value": true },
-    { "Name": "DisableStartPhoneLink", "Value": true },
+    { "Name": "DisableStartPhoneLink", "Value": false },
     { "Name": "DisableStartRecommended", "Value": true },
     { "Name": "DisableStickyKeys", "Value": false },
     { "Name": "DisableSuggestions", "Value": true },
