@@ -14,7 +14,15 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4.2.2
 
       - name: Run build
         run: .\build-ci.bat
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: build-output
+          path: |
+            d/
+          retention-days: 90
