@@ -17,8 +17,6 @@ if (-not $DevMode) {
 
 [Windows.Forms.Application]::EnableVisualStyles()
 
-Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
-
 Set-Variable -Option Constant PATH_WORKING_DIR ([String]$WorkingDirectory)
 Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
 Set-Variable -Option Constant PATH_SYSTEM_32 ("$env:SystemRoot\System32")

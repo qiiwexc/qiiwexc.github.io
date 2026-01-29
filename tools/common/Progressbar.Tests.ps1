@@ -9,10 +9,87 @@ BeforeAll {
     Set-Variable -Option Constant TestPercentComplete ([Int]50)
 }
 
+Describe 'Invoke-WriteProgress' {
+    BeforeEach {
+        Mock Write-Progress {}
+    }
+
+    It 'Should call Write-Progress with basic parameters' {
+        Invoke-WriteProgress -Id 1 -Activity $TestActivity1 -PercentComplete $TestPercentComplete
+
+        Should -Invoke Write-Progress -Exactly 1
+        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+            $Id -eq 1 -and
+            $Activity -eq $TestActivity1 -and
+            $PercentComplete -eq $TestPercentComplete -and
+            $ParentId -eq $Null -and
+            $Status -eq $Null -and
+            $Completed -eq $Null
+        }
+    }
+
+    It 'Should include ParentId when greater than 0' {
+        Invoke-WriteProgress -Id 2 -Activity $TestActivity1 -ParentId 1 -PercentComplete $TestPercentComplete
+
+        Should -Invoke Write-Progress -Exactly 1
+        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+            $Id -eq 2 -and
+            $Activity -eq $TestActivity1 -and
+            $PercentComplete -eq $TestPercentComplete -and
+            $ParentId -eq 1
+        }
+    }
+
+    It 'Should not include ParentId when 0' {
+        Invoke-WriteProgress -Id 1 -Activity $TestActivity1 -ParentId 0 -PercentComplete $TestPercentComplete
+
+        Should -Invoke Write-Progress -Exactly 1
+        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+            $Id -eq 1 -and
+            $ParentId -eq $Null
+        }
+    }
+
+    It 'Should include Status when provided' {
+        Invoke-WriteProgress -Id 1 -Activity $TestActivity1 -PercentComplete $TestPercentComplete -Status $TestTask
+
+        Should -Invoke Write-Progress -Exactly 1
+        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+            $Activity -eq $TestActivity1 -and
+            $Status -eq $TestTask
+        }
+    }
+
+    It 'Should use Completed flag instead of PercentComplete' {
+        Invoke-WriteProgress -Id 1 -Activity $TestActivity1 -Completed
+
+        Should -Invoke Write-Progress -Exactly 1
+        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+            $Id -eq 1 -and
+            $Activity -eq $TestActivity1 -and
+            $Completed -eq $True -and
+            $PercentComplete -eq $Null
+        }
+    }
+
+    It 'Should pass all parameters together correctly' {
+        Invoke-WriteProgress -Id 3 -Activity $TestActivity2 -ParentId 2 -PercentComplete 75 -Status $TestTask
+
+        Should -Invoke Write-Progress -Exactly 1
+        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+            $Id -eq 3 -and
+            $Activity -eq $TestActivity2 -and
+            $ParentId -eq 2 -and
+            $PercentComplete -eq 75 -and
+            $Status -eq $TestTask
+        }
+    }
+}
+
 Describe 'New-Activity' {
     BeforeEach {
         Mock Write-LogInfo {}
-        Mock Write-Progress {}
+        Mock Invoke-WriteProgress {}
     }
 
     It 'Should start new activity correctly when no parent activity exists' {
@@ -24,12 +101,12 @@ Describe 'New-Activity' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq "$TestActivity1..." }
-        Should -Invoke Write-Progress -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+        Should -Invoke Invoke-WriteProgress -Exactly 1
+        Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity1 -and
             $Id -eq 1 -and
             $PercentComplete -eq 1 -and
-            $ParentId -eq $Null
+            $ParentId -eq 0
         }
     }
 
@@ -41,8 +118,8 @@ Describe 'New-Activity' {
         $ACTIVITIES.Peek() | Should -BeExactly $TestActivity2
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+        Should -Invoke Invoke-WriteProgress -Exactly 1
+        Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity2 -and
             $Id -eq 2 -and
             $PercentComplete -eq 1 -and
@@ -58,7 +135,7 @@ Describe 'Write-ActivityProgress' {
 
     BeforeEach {
         Mock Write-LogInfo {}
-        Mock Write-Progress {}
+        Mock Invoke-WriteProgress {}
 
         [String]$script:CURRENT_TASK = $Null
     }
@@ -67,7 +144,7 @@ Describe 'Write-ActivityProgress' {
         Write-ActivityProgress $TestPercentComplete $TestTask
 
         Should -Invoke Write-LogInfo -Exactly 0
-        Should -Invoke Write-Progress -Exactly 0
+        Should -Invoke Invoke-WriteProgress -Exactly 0
 
         $script:CURRENT_TASK | Should -BeNullOrEmpty
     }
@@ -80,13 +157,13 @@ Describe 'Write-ActivityProgress' {
         $script:CURRENT_TASK | Should -BeNullOrEmpty
 
         Should -Invoke Write-LogInfo -Exactly 0
-        Should -Invoke Write-Progress -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+        Should -Invoke Invoke-WriteProgress -Exactly 1
+        Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity1 -and
             $Id -eq 1 -and
             $PercentComplete -eq $TestPercentComplete -and
-            $ParentId -eq $Null -and
-            $Status -eq $Null
+            $ParentId -eq 0 -and
+            (-not $Status)
         }
     }
 
@@ -97,12 +174,12 @@ Describe 'Write-ActivityProgress' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq $TestTask }
-        Should -Invoke Write-Progress -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+        Should -Invoke Invoke-WriteProgress -Exactly 1
+        Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity1 -and
             $Id -eq 1 -and
             $PercentComplete -eq $TestPercentComplete -and
-            $ParentId -eq $Null -and
+            $ParentId -eq 0 -and
             $Status -eq $TestTask
         }
     }
@@ -115,13 +192,13 @@ Describe 'Write-ActivityProgress' {
         $script:CURRENT_TASK | Should -BeNullOrEmpty
 
         Should -Invoke Write-LogInfo -Exactly 0
-        Should -Invoke Write-Progress -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+        Should -Invoke Invoke-WriteProgress -Exactly 1
+        Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity2 -and
             $Id -eq 2 -and
             $PercentComplete -eq $TestPercentComplete -and
             $ParentId -eq 1 -and
-            $Status -eq $Null
+            (-not $Status)
         }
     }
 
@@ -131,8 +208,8 @@ Describe 'Write-ActivityProgress' {
         $script:CURRENT_TASK | Should -BeExactly $TestTask
 
         Should -Invoke Write-LogInfo -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+        Should -Invoke Invoke-WriteProgress -Exactly 1
+        Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity2 -and
             $Id -eq 2 -and
             $PercentComplete -eq $TestPercentComplete -and
@@ -150,7 +227,7 @@ Describe 'Write-ActivityCompleted' {
     BeforeEach {
         Mock Out-Success {}
         Mock Out-Failure {}
-        Mock Write-Progress {}
+        Mock Invoke-WriteProgress {}
 
         [String]$script:CURRENT_TASK = $TestTask
     }
@@ -163,7 +240,7 @@ Describe 'Write-ActivityCompleted' {
 
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
-        Should -Invoke Write-Progress -Exactly 0
+        Should -Invoke Invoke-WriteProgress -Exactly 0
     }
 
     It 'Should end existing activity when no parent activity exists' {
@@ -176,12 +253,12 @@ Describe 'Write-ActivityCompleted' {
 
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+        Should -Invoke Invoke-WriteProgress -Exactly 1
+        Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity1 -and
             $Id -eq 1 -and
             $Completed -eq $True -and
-            $ParentId -eq $Null
+            $ParentId -eq 0
         }
     }
 
@@ -196,8 +273,8 @@ Describe 'Write-ActivityCompleted' {
 
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
-        Should -Invoke Write-Progress -Exactly 1
-        Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
+        Should -Invoke Invoke-WriteProgress -Exactly 1
+        Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity2 -and
             $Id -eq 2 -and
             $Completed -eq $True -and
