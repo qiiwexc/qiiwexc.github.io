@@ -4,10 +4,19 @@ function Expand-Zip {
         [Switch]$Temp
     )
 
+    if (-not (Test-Path $ZipPath)) {
+        throw "Archive not found: $ZipPath"
+    }
+
+    $Extension = [IO.Path]::GetExtension($ZipPath).ToLower()
+    if ($Extension -notin @('.zip', '.7z')) {
+        throw "Unsupported archive format: $Extension. Supported formats: .zip, .7z"
+    }
+
     Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 
     Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
-    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
+    Set-Variable -Option Constant ExtractionPath ([String]($ZipPath -replace '\.(zip|7z)$', ''))
     Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath -ErrorAction Stop))
 
     if ($Temp) {
@@ -18,37 +27,7 @@ function Expand-Zip {
 
     Initialize-AppDirectory
 
-    switch -Wildcard ($ZipName) {
-        'Office_Installer.zip' {
-            if (-not $OS_64_BIT) {
-                Set-Variable -Option Constant Suffix ([String]' x86')
-            }
-            Set-Variable -Option Constant Executable ([String]"Office Installer$Suffix.exe")
-        }
-        'cpu-z_*' {
-            if ($OS_64_BIT) {
-                Set-Variable -Option Constant Suffix ([String]'64')
-            } else {
-                Set-Variable -Option Constant Suffix ([String]'32')
-            }
-            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\cpuz_x$Suffix.exe")
-        }
-        'SDI_*' {
-            if ($OS_64_BIT) {
-                Set-Variable -Option Constant Suffix ([String]'64')
-            }
-            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDI$Suffix-drv.exe")
-        }
-        'ventoy*' {
-            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe")
-        }
-        'Victoria*' {
-            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Victoria.exe")
-        }
-        Default {
-            Set-Variable -Option Constant Executable ([String]($ZipName.TrimEnd('.zip') + '.exe'))
-        }
-    }
+    Set-Variable -Option Constant Executable ([String](Get-ExecutableName $ZipName $ExtractionDir))
 
     Set-Variable -Option Constant IsDirectory ([Bool]($ExtractionDir -and $Executable -like "$ExtractionDir\*"))
     Set-Variable -Option Constant TemporaryExe ([String]"$ExtractionPath\$Executable")
