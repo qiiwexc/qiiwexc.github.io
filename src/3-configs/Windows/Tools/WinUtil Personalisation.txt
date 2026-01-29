@@ -1,3 +1,4 @@
+                      "WPFTweaksDVR",
                       "WPFTweaksRightClickMenu",
                       "WPFTweaksRemoveCopilot",
                       "WPFTweaksRemoveOnedrive",
