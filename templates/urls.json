@@ -66,5 +66,9 @@
   {
     "key": "URL_OOSHUTUP10",
     "value": "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe"
+  },
+  {
+    "key": "URL_STYLESHEET_WEB",
+    "value": "https://bit.ly/stylesheet_web"
   }
 ]

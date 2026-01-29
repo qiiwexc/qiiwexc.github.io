@@ -1,6 +1,6 @@
 function Update-WebDependency {
     param(
-        [PSObject][Parameter(Position = 0, Mandatory)]$Dependency
+        [ValidateNotNull()][PSObject][Parameter(Position = 0, Mandatory)]$Dependency
     )
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)

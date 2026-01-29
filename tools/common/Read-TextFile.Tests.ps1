@@ -41,4 +41,20 @@ Describe 'Read-TextFile' {
 
         Should -Invoke Get-Content -Exactly 1
     }
+
+    It 'Should return empty string for empty file' {
+        Mock Get-Content { return '' }
+
+        Read-TextFile $TestPath | Should -BeExactly ''
+
+        Should -Invoke Get-Content -Exactly 1
+    }
+
+    It 'Should handle file with only whitespace' {
+        Mock Get-Content { return "   `r`n  " }
+
+        Read-TextFile $TestPath | Should -BeExactly "   `r`n  "
+
+        Should -Invoke Get-Content -Exactly 1
+    }
 }

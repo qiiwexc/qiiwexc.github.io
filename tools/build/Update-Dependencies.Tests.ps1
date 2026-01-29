@@ -260,6 +260,44 @@ Describe 'Update-Dependencies' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
+    It 'Should return early when dependencies file is empty' {
+        Mock Read-JsonFile { return @() }
+
+        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Read-GitHubToken -Exactly 1
+        Should -Invoke Read-JsonFile -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -ParameterFilter { $Message -eq 'No dependencies found in configuration file.' }
+        Should -Invoke Update-GitDependency -Exactly 0
+        Should -Invoke Update-WebDependency -Exactly 0
+        Should -Invoke Update-FileDependency -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Write-JsonFile -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
+    It 'Should return early when dependencies file returns null' {
+        Mock Read-JsonFile { return $Null }
+
+        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Read-GitHubToken -Exactly 1
+        Should -Invoke Read-JsonFile -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -ParameterFilter { $Message -eq 'No dependencies found in configuration file.' }
+        Should -Invoke Update-GitDependency -Exactly 0
+        Should -Invoke Update-WebDependency -Exactly 0
+        Should -Invoke Update-FileDependency -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Write-JsonFile -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
     It 'Should handle Update-GitDependency failure with a GitHub source' {
         Mock Read-JsonFile { return $TestGitHubDependency }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitHub }

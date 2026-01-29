@@ -30,4 +30,32 @@ Describe 'Read-JsonFile' {
 
         Should -Invoke Read-TextFile -Exactly 1
     }
+
+    It 'Should throw on invalid JSON content' {
+        Mock Read-TextFile { return 'not valid json {' }
+
+        { Read-JsonFile $TestPath } | Should -Throw
+
+        Should -Invoke Read-TextFile -Exactly 1
+    }
+
+    It 'Should handle empty JSON object' {
+        Mock Read-TextFile { return '{}' }
+
+        Read-JsonFile $TestPath | Should -BeNullOrEmpty
+
+        Should -Invoke Read-TextFile -Exactly 1
+    }
+
+    It 'Should handle JSON array' {
+        Mock Read-TextFile { return '[{"key": "value1"}, {"key": "value2"}]' }
+
+        Set-Variable -Option Constant Result ([PSObject[]](Read-JsonFile $TestPath))
+
+        $Result.Count | Should -Be 2
+        $Result[0].key | Should -BeExactly 'value1'
+        $Result[1].key | Should -BeExactly 'value2'
+
+        Should -Invoke Read-TextFile -Exactly 1
+    }
 }

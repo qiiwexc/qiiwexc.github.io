@@ -1,6 +1,6 @@
 function Invoke-GitAPI {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Uri,
+        [ValidateNotNullOrEmpty()][String][Parameter(Position = 0, Mandatory)]$Uri,
         [String][Parameter(Position = 1)]$GitHubToken
     )
 

@@ -32,6 +32,12 @@ function Update-Dependencies {
     Write-ActivityProgress 10
     Set-Variable -Option Constant Dependencies ([Dependency[]](Read-JsonFile $DependenciesFile))
 
+    if (-not $Dependencies -or $Dependencies.Count -eq 0) {
+        Write-LogWarning 'No dependencies found in configuration file.'
+        Write-ActivityCompleted
+        return
+    }
+
     [Collections.Generic.List[Collections.Generic.List[String]]]$ChangeLogs = @()
 
     Set-Variable -Option Constant DependencyStep ([Math]::Floor(75 / $Dependencies.Count))

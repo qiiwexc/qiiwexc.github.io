@@ -86,4 +86,13 @@ Describe 'New-BatchScript' {
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
+
+    It 'Should handle empty PowerShell content' {
+        Mock Read-TextFile { return '' }
+
+        New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath
+
+        Should -Invoke Write-TextFile -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
 }
