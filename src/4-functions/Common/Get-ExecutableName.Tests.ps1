@@ -2,7 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 }
 
-Describe 'Get-ExecutableName' -Tag 'WIP' {
+Describe 'Get-ExecutableName' {
     BeforeEach {
         [Bool]$OS_64_BIT = $True
     }
