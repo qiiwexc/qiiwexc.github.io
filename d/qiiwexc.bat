@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.29')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.30')
 ::
 ::#endregion init > Version
 ::
@@ -74,8 +74,6 @@ if "%~1"=="Debug" (
 ::}
 ::
 ::[Windows.Forms.Application]::EnableVisualStyles()
-::
-::Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
 ::
 ::Set-Variable -Option Constant PATH_WORKING_DIR ([String]$WorkingDirectory)
 ::Set-Variable -Option Constant PATH_TEMP_DIR ([IO.Path]::GetTempPath())
@@ -1599,13 +1597,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\PhishingFilter]
 ::"EnabledV9"=dword:00000001
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\MediaPlayer\Preferences]
-::"AcceptedPrivacyStatement"=dword:00000001
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
-::"iWindowPosX"=dword:FFFFFFF8
-::"iWindowPosY"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\General]
 ::"ShownFirstRunOptin"=dword:00000001
 ::
@@ -1633,10 +1624,6 @@ if "%~1"=="Debug" (
 ::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
 ::"Enabled"=dword:00000000
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
-::"WindowPlacement"=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
-::  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
 ::"Value"="Deny"
@@ -1702,12 +1689,6 @@ if "%~1"=="Debug" (
 ::"{20D04FE0-3AEA-1069-A2D8-08002B30309D}"=dword:00000000
 ::"MSEdge"=dword:00000001
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
-::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
-::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
 ::"EnthusiastMode"=dword:00000001
 ::
@@ -1719,9 +1700,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Feeds]
 ::"EnableFeeds"=dword:00000000
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR]
-::"AppCaptureEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
 ::"SecureProtocols"=dword:00002820
@@ -1757,10 +1735,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
 ::"IsDynamicSearchBoxEnabled"=dword:00000000
-::
-::; Disable Show mobile device in Start
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
-::"IsEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
 ::"01"=dword:00000001
@@ -1847,7 +1821,6 @@ if "%~1"=="Debug" (
 ::"fAllVolumes"=dword:00000001
 ::"fDeadlineEnabled"=dword:00000001
 ::"fTaskEnabled"=dword:00000001
-::"TaskFrequency"=dword:00000002
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
 ::"PreventNetworkTrafficPreUserSignIn"=dword:00000001
@@ -1977,11 +1950,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 ::"AllowTelemetry"=dword:00000000
 ::"MaxTelemetryAllowed"=dword:00000000
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
-::"ConsentPromptBehaviorUser"=dword:00000000
-::"FilterAdministratorToken"=dword:00000001
-::"PromptOnSecureDesktop"=dword:00000000
 ::
 ::; Disable "Tailored experiences with diagnostic data"
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
@@ -2138,9 +2106,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors]
 ::"DisableLocationScripting"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive]
-::"DisableFileSyncNGSC"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization]
 ::"NoLockScreenCamera"=dword:00000001
@@ -2638,6 +2603,14 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Clipboard]
 ::"EnableClipboardHistory"=dword:00000000
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Notepad]
+::"iWindowPosX"=dword:FFFFFFF8
+::"iWindowPosY"=dword:00000000
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
+::"WindowPlacement"=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
+::  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
+::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
 ::"ContentDeliveryAllowed"=dword:00000001
 ::"RotatingLockScreenEnabled"=dword:00000001
@@ -2671,6 +2644,15 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
 ::"{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"=dword:00000001
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
+::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
+::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
+::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR]
+::"AppCaptureEnabled"=dword:00000000
+::
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001
@@ -2687,9 +2669,9 @@ if "%~1"=="Debug" (
 ::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
 ::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
 ::
-::; Disable Copilot service
-::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsCopilot]
-::"TurnOffWindowsCopilot"=dword:00000001
+::; Disable Show mobile device in Start
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
+::"IsEnabled"=dword:00000000
 ::'))
 ::
 ::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_CURRENT_USER
@@ -2701,11 +2683,13 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag]
-::"ThisPCPolicy"="Hide"
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+::"ConsentPromptBehaviorUser"=dword:00000000
+::"FilterAdministratorToken"=dword:00000001
+::"PromptOnSecureDesktop"=dword:00000000
 ::
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
@@ -2714,6 +2698,9 @@ if "%~1"=="Debug" (
 ::; Disable game DVR
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
 ::"AllowGameDVR"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive]
+::"DisableFileSyncNGSC"=dword:00000001
 ::
 ::; Disable Copilot service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
@@ -2807,7 +2794,6 @@ if "%~1"=="Debug" (
 ::Microsoft.WindowsSoundRecorder                 # Basic audio recording app
 ::Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
 ::Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
-::Microsoft.YourPhone                            # Phone link (Connects Android/iOS phone to PC)
 ::Microsoft.ZuneMusic                            # Modern Media Player (Replaced Groove Music, plays local audio/video)
 ::Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
 ::MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings
@@ -2869,7 +2855,7 @@ if "%~1"=="Debug" (
 ::    { "Name": "DisablePaintAI", "Value": false },
 ::    { "Name": "DisableRecall", "Value": true },
 ::    { "Name": "DisableSettings365Ads", "Value": true },
-::    { "Name": "DisableStartPhoneLink", "Value": true },
+::    { "Name": "DisableStartPhoneLink", "Value": false },
 ::    { "Name": "DisableStartRecommended", "Value": false },
 ::    { "Name": "DisableStickyKeys", "Value": false },
 ::    { "Name": "DisableSuggestions", "Value": true },
@@ -3203,7 +3189,7 @@ if "%~1"=="Debug" (
 ::M011	-	# Do not show recently opened items in Jump Lists on "Start" or the taskbar (Category: Windows Explorer)
 ::M010	+	# Disable ads in Windows Explorer/OneDrive (Category: Windows Explorer)
 ::O003	+	# Disable OneDrive access to network before login (Category: Windows Explorer)
-::O001	+	# Disable Microsoft OneDrive (Category: Windows Explorer)
+::O001	-	# Disable Microsoft OneDrive (Category: Windows Explorer)
 ::S012	+	# Disable Microsoft SpyNet membership (Category: Microsoft Defender and Microsoft SpyNet)
 ::S013	-	# Disable submitting data samples to Microsoft (Category: Microsoft Defender and Microsoft SpyNet)
 ::S014	-	# Disable reporting of malware infection information (Category: Microsoft Defender and Microsoft SpyNet)
@@ -3212,7 +3198,7 @@ if "%~1"=="Debug" (
 ::K005	+	# Disable notifications on lock screen (Category: Lock Screen)
 ::D001	-	# Disable access to mobile devices (Category: Mobile Devices)
 ::D002	-	# Disable Phone Link app (Category: Mobile Devices)
-::D003	+	# Disable showing suggestions for using mobile devices with Windows (Category: Mobile Devices)
+::D003	-	# Disable showing suggestions for using mobile devices with Windows (Category: Mobile Devices)
 ::D104	-	# Disable connecting the PC to mobile devices (Category: Mobile Devices)
 ::M025	+	# Disable search with AI in search box (Category: Search)
 ::M003	+	# Disable extension of Windows search with Bing (Category: Search)
@@ -3257,7 +3243,8 @@ if "%~1"=="Debug" (
 ::
 ::#region configs > Windows > Tools > WinUtil Personalisation
 ::
-::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]('                      "WPFTweaksRightClickMenu",
+::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]('                      "WPFTweaksDVR",
+::                      "WPFTweaksRightClickMenu",
 ::                      "WPFTweaksRemoveCopilot",
 ::                      "WPFTweaksRemoveOnedrive",
 ::'))
@@ -3271,7 +3258,6 @@ if "%~1"=="Debug" (
 ::    "WPFTweaks":  [
 ::                      "WPFTweaksBraveDebloat",
 ::                      "WPFTweaksConsumerFeatures",
-::                      "WPFTweaksDVR",
 ::                      "WPFTweaksEdgeDebloat",
 ::                      "WPFTweaksEndTaskOnTaskbar",
 ::                      "WPFTweaksLoc",
@@ -3494,7 +3480,7 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 0, Mandatory)]$Code
 ::    )
 ::
-::    Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))
+::    Set-Variable -Option Constant Emoji ([Convert]::ToInt32($Code, 16))
 ::
 ::    return [Char]::ConvertFromUtf32($Emoji)
 ::}
@@ -3565,6 +3551,36 @@ if "%~1"=="Debug" (
 ::
 ::#region functions > App lifecycle > Progressbar
 ::
+::Set-Variable -Scope Script -Name ACTIVITIES -Value ([Collections.Stack]@())
+::Set-Variable -Scope Script -Name CURRENT_TASK -Value $Null
+::
+::function Invoke-WriteProgress {
+::    param(
+::        [Int][Parameter(Position = 0, Mandatory)]$Id,
+::        [String][Parameter(Position = 1, Mandatory)]$Activity,
+::        [Int][Parameter(Position = 2)]$ParentId,
+::        [Int][Parameter(Position = 3)]$PercentComplete,
+::        [String][Parameter(Position = 4)]$Status,
+::        [Switch]$Completed
+::    )
+::
+::    Set-Variable -Name Params -Value ([Hashtable]@{
+::            Id       = $Id
+::            Activity = $Activity
+::        })
+::
+::    if ($ParentId -gt 0) { $Params.ParentId = $ParentId }
+::    if ($Status) { $Params.Status = $Status }
+::
+::    if ($Completed) {
+::        $Params.Completed = $True
+::    } else {
+::        $Params.PercentComplete = $PercentComplete
+::    }
+::
+::    Write-Progress @Params
+::}
+::
 ::function New-Activity {
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory)]$Activity
@@ -3578,13 +3594,11 @@ if "%~1"=="Debug" (
 ::
 ::    if ($TaskLevel -gt 1) {
 ::        Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+::    } else {
+::        Set-Variable -Option Constant ParentId ([Int]0)
 ::    }
 ::
-::    if ($ParentId) {
-::        Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete 1 -ParentId $ParentId
-::    } else {
-::        Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete 1
-::    }
+::    Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -PercentComplete 1
 ::}
 ::
 ::function Write-ActivityProgress {
@@ -3600,24 +3614,16 @@ if "%~1"=="Debug" (
 ::
 ::        if ($TaskLevel -gt 1) {
 ::            Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+::        } else {
+::            Set-Variable -Option Constant ParentId ([Int]0)
 ::        }
 ::
 ::        if ($Task) {
 ::            Set-Variable -Scope Script CURRENT_TASK ([String]$Task)
 ::            Write-LogInfo $Task
-::
-::            if ($ParentId) {
-::                Write-Progress -Id $TaskLevel -Activity $Activity -Status $Task -PercentComplete $PercentComplete -ParentId $ParentId
-::            } else {
-::                Write-Progress -Id $TaskLevel -Activity $Activity -Status $Task -PercentComplete $PercentComplete
-::            }
-::        } else {
-::            if ($ParentId) {
-::                Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete $PercentComplete -ParentId $ParentId
-::            } else {
-::                Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete $PercentComplete
-::            }
 ::        }
+::
+::        Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -PercentComplete $PercentComplete -Status $Task
 ::    }
 ::}
 ::
@@ -3639,13 +3645,11 @@ if "%~1"=="Debug" (
 ::
 ::        if ($TaskLevel -gt 1) {
 ::            Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+::        } else {
+::            Set-Variable -Option Constant ParentId ([Int]0)
 ::        }
 ::
-::        if ($ParentId) {
-::            Write-Progress -Id $TaskLevel -Activity $Activity -Completed -ParentId $ParentId
-::        } else {
-::            Write-Progress -Id $TaskLevel -Activity $Activity -Completed
-::        }
+::        Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -Completed
 ::    }
 ::
 ::    Set-Variable -Scope Script CURRENT_TASK $Null
@@ -3731,7 +3735,7 @@ if "%~1"=="Debug" (
 ::            return
 ::        }
 ::
-::        Set-Variable -Option Constant AvailableVersion ([Version](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version'))
+::        Set-Variable -Option Constant AvailableVersion ([Version](Invoke-WebRequest -UseBasicParsing -Uri 'https://bit.ly/qiiwexc_version').ToString().Trim())
 ::
 ::        if ($AvailableVersion -gt $VERSION) {
 ::            Write-LogWarning "Newer version available: v$AvailableVersion"
@@ -3776,10 +3780,19 @@ if "%~1"=="Debug" (
 ::        [Switch]$Temp
 ::    )
 ::
+::    if (-not (Test-Path $ZipPath)) {
+::        throw "Archive not found: $ZipPath"
+::    }
+::
+::    $Extension = [IO.Path]::GetExtension($ZipPath).ToLower()
+::    if ($Extension -notin @('.zip', '.7z')) {
+::        throw "Unsupported archive format: $Extension. Supported formats: .zip, .7z"
+::    }
+::
 ::    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 ::
 ::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
-::    Set-Variable -Option Constant ExtractionPath ([String]$ZipPath.TrimEnd('.7z').TrimEnd('.zip'))
+::    Set-Variable -Option Constant ExtractionPath ([String]($ZipPath -replace '\.(zip|7z)$', ''))
 ::    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath -ErrorAction Stop))
 ::
 ::    if ($Temp) {
@@ -3790,37 +3803,7 @@ if "%~1"=="Debug" (
 ::
 ::    Initialize-AppDirectory
 ::
-::    switch -Wildcard ($ZipName) {
-::        'Office_Installer.zip' {
-::            if (-not $OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix ([String]' x86')
-::            }
-::            Set-Variable -Option Constant Executable ([String]"Office Installer$Suffix.exe")
-::        }
-::        'cpu-z_*' {
-::            if ($OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix ([String]'64')
-::            } else {
-::                Set-Variable -Option Constant Suffix ([String]'32')
-::            }
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\cpuz_x$Suffix.exe")
-::        }
-::        'SDI_*' {
-::            if ($OS_64_BIT) {
-::                Set-Variable -Option Constant Suffix ([String]'64')
-::            }
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\SDI$Suffix-drv.exe")
-::        }
-::        'ventoy*' {
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe")
-::        }
-::        'Victoria*' {
-::            Set-Variable -Option Constant Executable ([String]"$ExtractionDir\$ExtractionDir\Victoria.exe")
-::        }
-::        Default {
-::            Set-Variable -Option Constant Executable ([String]($ZipName.TrimEnd('.zip') + '.exe'))
-::        }
-::    }
+::    Set-Variable -Option Constant Executable ([String](Get-ExecutableName $ZipName $ExtractionDir))
 ::
 ::    Set-Variable -Option Constant IsDirectory ([Bool]($ExtractionDir -and $Executable -like "$ExtractionDir\*"))
 ::    Set-Variable -Option Constant TemporaryExe ([String]"$ExtractionPath\$Executable")
@@ -3861,6 +3844,50 @@ if "%~1"=="Debug" (
 ::#endregion functions > Common > Expand-Zip
 ::
 ::
+::#region functions > Common > Get-ExecutableName
+::
+::function Get-ExecutableName {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$ZipName,
+::        [String][Parameter(Position = 1, Mandatory)]$ExtractionDir
+::    )
+::
+::    switch -Wildcard ($ZipName) {
+::        'Office_Installer.zip' {
+::            if (-not $OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix ([String]' x86')
+::            }
+::            return "Office Installer$Suffix.exe"
+::        }
+::        'cpu-z_*' {
+::            if ($OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix ([String]'64')
+::            } else {
+::                Set-Variable -Option Constant Suffix ([String]'32')
+::            }
+::            return "$ExtractionDir\cpuz_x$Suffix.exe"
+::        }
+::        'SDI_*' {
+::            if ($OS_64_BIT) {
+::                Set-Variable -Option Constant Suffix ([String]'64')
+::            }
+::            return "$ExtractionDir\SDI$Suffix-drv.exe"
+::        }
+::        'ventoy*' {
+::            return "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe"
+::        }
+::        'Victoria*' {
+::            return "$ExtractionDir\$ExtractionDir\Victoria.exe"
+::        }
+::        Default {
+::            return ($ZipName -replace '\.zip$', '') + '.exe'
+::        }
+::    }
+::}
+::
+::#endregion functions > Common > Get-ExecutableName
+::
+::
 ::#region functions > Common > Invoke-CustomCommand
 ::
 ::function Invoke-CustomCommand {
@@ -3891,11 +3918,23 @@ if "%~1"=="Debug" (
 ::#region functions > Common > Network
 ::
 ::function Get-NetworkAdapter {
-::    return (Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
+::    return (Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True' -OperationTimeoutSec 15)
 ::}
 ::
 ::function Test-NetworkConnection {
-::    Set-Variable -Option Constant IsConnected ([Boolean](Get-NetworkAdapter))
+::    try {
+::        Set-Variable -Option Constant IsConnected ([Boolean](Get-NetworkAdapter))
+::    } catch [Microsoft.Management.Infrastructure.CimException] {
+::        if ($_.Exception.Message -match 'timeout|timed out') {
+::            Out-Failure 'Network check timed out'
+::        } else {
+::            Out-Failure "Network check failed: $_"
+::        }
+::        return $False
+::    } catch {
+::        Out-Failure "Network check failed: $_"
+::        return $False
+::    }
 ::
 ::    if (-not $IsConnected) {
 ::        Out-Failure 'Computer is not connected to the Internet'
@@ -3989,6 +4028,8 @@ if "%~1"=="Debug" (
 ::
 ::    Write-ActivityProgress 10 "Downloading from $URL"
 ::
+::    Set-Variable -Option Constant MaxRetries ([Int]3)
+::
 ::    if ($SaveAs) {
 ::        Set-Variable -Option Constant FileName ([String]$SaveAs)
 ::    } else {
@@ -4016,7 +4057,26 @@ if "%~1"=="Debug" (
 ::
 ::    Write-ActivityProgress 20
 ::
-::    Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
+::    [Int]$RetryCount = 0
+::    [Bool]$DownloadSuccess = $False
+::
+::    while (-not $DownloadSuccess -and $RetryCount -lt $MaxRetries) {
+::        try {
+::            $RetryCount++
+::            if ($RetryCount -gt 1) {
+::                Write-LogWarning "Download attempt $RetryCount of $MaxRetries"
+::                Start-Sleep -Seconds 2
+::            }
+::
+::            Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
+::            $DownloadSuccess = $True
+::        } catch {
+::            if ($RetryCount -ge $MaxRetries) {
+::                throw "Download failed after $MaxRetries attempts: $_"
+::            }
+::            Write-LogWarning "Download attempt $RetryCount failed: $_"
+::        }
+::    }
 ::
 ::    if (-not $Temp) {
 ::        Move-Item -Force $TempPath $SavePath -ErrorAction Stop
