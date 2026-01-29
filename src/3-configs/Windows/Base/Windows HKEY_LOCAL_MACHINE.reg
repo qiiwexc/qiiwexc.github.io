@@ -7,7 +7,6 @@
 "fAllVolumes"=dword:00000001
 "fDeadlineEnabled"=dword:00000001
 "fTaskEnabled"=dword:00000001
-"TaskFrequency"=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
 "PreventNetworkTrafficPreUserSignIn"=dword:00000001
@@ -137,11 +136,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 "AllowTelemetry"=dword:00000000
 "MaxTelemetryAllowed"=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
-"ConsentPromptBehaviorUser"=dword:00000000
-"FilterAdministratorToken"=dword:00000001
-"PromptOnSecureDesktop"=dword:00000000
 
 ; Disable "Tailored experiences with diagnostic data"
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
@@ -298,9 +292,6 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors]
 "DisableLocationScripting"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive]
-"DisableFileSyncNGSC"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization]
 "NoLockScreenCamera"=dword:00000001
