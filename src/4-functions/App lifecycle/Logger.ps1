@@ -74,7 +74,7 @@ function Get-Emoji {
         [String][Parameter(Position = 0, Mandatory)]$Code
     )
 
-    Set-Variable -Option Constant Emoji ([Convert]::toInt32($Code, 16))
+    Set-Variable -Option Constant Emoji ([Convert]::ToInt32($Code, 16))
 
     return [Char]::ConvertFromUtf32($Emoji)
 }

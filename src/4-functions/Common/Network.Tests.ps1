@@ -4,10 +4,11 @@ BeforeAll {
     . '.\src\4-functions\App lifecycle\Logger.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
+    Set-Variable -Option Constant TestTimeoutException ([Microsoft.Management.Infrastructure.CimException]::new('The operation timed out'))
+    Set-Variable -Option Constant TestGenericException ([Microsoft.Management.Infrastructure.CimException]::new('Generic exception'))
 
     Set-Variable -Option Constant TestClassName ([String]'Win32_NetworkAdapterConfiguration')
     Set-Variable -Option Constant TestNetworkAdapter ([CimInstance]::new($TestClassName))
-
 }
 
 Describe 'Get-NetworkAdapter' {
@@ -21,7 +22,8 @@ Describe 'Get-NetworkAdapter' {
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter {
             $ClassName -eq $TestClassName -and
-            $Filter -eq 'IPEnabled=True'
+            $Filter -eq 'IPEnabled=True' -and
+            $OperationTimeoutSec -eq 15
         }
     }
 
@@ -56,12 +58,30 @@ Describe 'Test-NetworkConnection' {
         Should -Invoke Out-Failure -Exactly 1
     }
 
+    It 'Should return false and report error on timeout exception' {
+        Mock Get-NetworkAdapter { throw $TestTimeoutException }
+
+        Test-NetworkConnection | Should -BeFalse
+
+        Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
+    }
+
+    It 'Should return false and report error on generic exception' {
+        Mock Get-NetworkAdapter { throw $TestGenericException }
+
+        Test-NetworkConnection | Should -BeFalse
+
+        Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
+    }
+
     It 'Should handle Get-NetworkAdapter failure' {
         Mock Get-NetworkAdapter { throw $TestException }
 
-        { Test-NetworkConnection } | Should -Throw $TestException
+        Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1
     }
 }

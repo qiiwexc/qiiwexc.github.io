@@ -58,7 +58,7 @@ function Get-Emoji {
         [String][Parameter(Position = 0, Mandatory)]$Code
     )
 
-    return [Char]::ConvertFromUtf32(([Convert]::toInt32($Code, 16)))
+    return [Char]::ConvertFromUtf32(([Convert]::ToInt32($Code, 16)))
 }
 
 
