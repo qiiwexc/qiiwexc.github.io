@@ -33,17 +33,19 @@ if ($Bat) {
 
 $ErrorActionPreference = 'Stop'
 
+Set-Variable -Option Constant ProjectRoot ([String](Split-Path -Parent $PSScriptRoot))
+
 Set-Variable -Option Constant Version ([String](Get-Date -Format 'y.M.d'))
 Set-Variable -Option Constant ProjectName ([String]'qiiwexc')
 
-Set-Variable -Option Constant BuildPath ([String]'.\build')
-Set-Variable -Option Constant ConfigPath ([String]'.\config')
-Set-Variable -Option Constant DistPath ([String]'.\d')
-Set-Variable -Option Constant SourcePath ([String]'.\src')
-Set-Variable -Option Constant TemplatesPath ([String]'.\templates')
-Set-Variable -Option Constant ToolsPath ([String]'.\tools')
-Set-Variable -Option Constant VmPath ([String]'.\vm')
-Set-Variable -Option Constant WipPath ([String]'.\wip')
+Set-Variable -Option Constant BuildPath ([String]"$ProjectRoot\build")
+Set-Variable -Option Constant ConfigPath ([String]"$ProjectRoot\config")
+Set-Variable -Option Constant DistPath ([String]"$ProjectRoot\d")
+Set-Variable -Option Constant SourcePath ([String]"$ProjectRoot\src")
+Set-Variable -Option Constant TemplatesPath ([String]"$ProjectRoot\templates")
+Set-Variable -Option Constant ToolsPath ([String]"$ProjectRoot\tools")
+Set-Variable -Option Constant VmPath ([String]"$ProjectRoot\vm")
+Set-Variable -Option Constant WipPath ([String]"$ProjectRoot\wip")
 
 Set-Variable -Option Constant BuilderPath ([String]"$ToolsPath\build")
 Set-Variable -Option Constant CommonPath ([String]"$ToolsPath\common")
@@ -52,8 +54,6 @@ Set-Variable -Option Constant TestsFile ([String]"$ToolsPath\test.ps1")
 Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
-
-Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
 
 . "$CommonPath\types.ps1"
 . "$CommonPath\logger.ps1"
@@ -134,5 +134,5 @@ Write-LogInfo 'Build finished'
 
 if ($Run) {
     Write-LogInfo "Running $BatchFile"
-    Start-Process 'PowerShell' ".\$BatchFile Debug"
+    Start-Process 'PowerShell' "$BatchFile Debug"
 }
