@@ -10,13 +10,12 @@ function New-HtmlFile {
     Set-Variable -Option Constant OutputFile ([String]'.\index.html')
 
     [String]$TemplateContent = Read-TextFile $TemplateFile
+    $TemplateContent = $TemplateContent.Replace('../d/stylesheet.css', '{URL_STYLESHEET_WEB}')
 
     $Config | ForEach-Object {
         [String]$Placeholder = "{$($_.key)}"
         $TemplateContent = $TemplateContent.Replace($Placeholder, $_.value)
     }
-
-    $TemplateContent = $TemplateContent.Replace('../d/stylesheet.css', 'https://bit.ly/stylesheet_web')
 
     Write-TextFile $OutputFile $TemplateContent -NoNewline
 

@@ -5,20 +5,20 @@ enum DevLogLevel {
 }
 
 class Config {
-    [String]$key
-    [String]$value
+    [ValidateNotNullOrEmpty()][String]$key
+    [ValidateNotNullOrEmpty()][String]$value
 }
 
 class Dependency: PSObject {
-    [String]$name
-    [String]$version
-    [String][ValidateSet('File', 'GitHub', 'GitLab', 'URL')]$source
+    [ValidateNotNullOrEmpty()][String]$name
+    [ValidateNotNullOrEmpty()][String]$version
+    [ValidateNotNullOrEmpty()][String][ValidateSet('File', 'GitHub', 'GitLab', 'URL')]$source
 }
 
 class GitTag: PSObject {
-    [String]$name
+    [ValidateNotNullOrEmpty()][String]$name
 }
 
 class GitCommit: PSObject {
-    [String]$sha
+    [ValidateNotNullOrEmpty()][String]$sha
 }

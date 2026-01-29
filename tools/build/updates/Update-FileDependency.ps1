@@ -1,7 +1,7 @@
 function Update-FileDependency {
     param(
-        [PSObject][Parameter(Position = 0, Mandatory)]$Dependency,
-        [String][Parameter(Position = 1, Mandatory)]$WipPath
+        [ValidateNotNull()][PSObject][Parameter(Position = 0, Mandatory)]$Dependency,
+        [ValidateNotNullOrEmpty()][String][Parameter(Position = 1, Mandatory)]$WipPath
     )
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)

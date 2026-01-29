@@ -1,6 +1,6 @@
 function Update-GitDependency {
     param(
-        [PSObject][Parameter(Position = 0, Mandatory)]$Dependency,
+        [ValidateNotNull()][PSObject][Parameter(Position = 0, Mandatory)]$Dependency,
         [String][Parameter(Position = 1)]$GitHubToken
     )
 

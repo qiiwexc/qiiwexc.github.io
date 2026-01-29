@@ -1,6 +1,6 @@
 function Read-GitHubToken {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$EnvPath
+        [ValidateNotNullOrEmpty()][String][Parameter(Position = 0, Mandatory)]$EnvPath
     )
 
     Write-LogInfo 'Reading GitHub token'
