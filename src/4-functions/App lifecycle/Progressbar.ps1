@@ -1,3 +1,33 @@
+Set-Variable -Scope Script -Name ACTIVITIES -Value ([Collections.Stack]@())
+Set-Variable -Scope Script -Name CURRENT_TASK -Value $Null
+
+function Invoke-WriteProgress {
+    param(
+        [Int][Parameter(Position = 0, Mandatory)]$Id,
+        [String][Parameter(Position = 1, Mandatory)]$Activity,
+        [Int][Parameter(Position = 2)]$ParentId,
+        [Int][Parameter(Position = 3)]$PercentComplete,
+        [String][Parameter(Position = 4)]$Status,
+        [Switch]$Completed
+    )
+
+    Set-Variable -Name Params -Value ([Hashtable]@{
+            Id       = $Id
+            Activity = $Activity
+        })
+
+    if ($ParentId -gt 0) { $Params.ParentId = $ParentId }
+    if ($Status) { $Params.Status = $Status }
+
+    if ($Completed) {
+        $Params.Completed = $True
+    } else {
+        $Params.PercentComplete = $PercentComplete
+    }
+
+    Write-Progress @Params
+}
+
 function New-Activity {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Activity
@@ -11,13 +41,11 @@ function New-Activity {
 
     if ($TaskLevel -gt 1) {
         Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+    } else {
+        Set-Variable -Option Constant ParentId ([Int]0)
     }
 
-    if ($ParentId) {
-        Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete 1 -ParentId $ParentId
-    } else {
-        Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete 1
-    }
+    Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -PercentComplete 1
 }
 
 function Write-ActivityProgress {
@@ -33,24 +61,16 @@ function Write-ActivityProgress {
 
         if ($TaskLevel -gt 1) {
             Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+        } else {
+            Set-Variable -Option Constant ParentId ([Int]0)
         }
 
         if ($Task) {
             Set-Variable -Scope Script CURRENT_TASK ([String]$Task)
             Write-LogInfo $Task
-
-            if ($ParentId) {
-                Write-Progress -Id $TaskLevel -Activity $Activity -Status $Task -PercentComplete $PercentComplete -ParentId $ParentId
-            } else {
-                Write-Progress -Id $TaskLevel -Activity $Activity -Status $Task -PercentComplete $PercentComplete
-            }
-        } else {
-            if ($ParentId) {
-                Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete $PercentComplete -ParentId $ParentId
-            } else {
-                Write-Progress -Id $TaskLevel -Activity $Activity -PercentComplete $PercentComplete
-            }
         }
+
+        Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -PercentComplete $PercentComplete -Status $Task
     }
 }
 
@@ -72,13 +92,11 @@ function Write-ActivityCompleted {
 
         if ($TaskLevel -gt 1) {
             Set-Variable -Option Constant ParentId ([Int]$TaskLevel - 1)
+        } else {
+            Set-Variable -Option Constant ParentId ([Int]0)
         }
 
-        if ($ParentId) {
-            Write-Progress -Id $TaskLevel -Activity $Activity -Completed -ParentId $ParentId
-        } else {
-            Write-Progress -Id $TaskLevel -Activity $Activity -Completed
-        }
+        Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -Completed
     }
 
     Set-Variable -Scope Script CURRENT_TASK $Null
