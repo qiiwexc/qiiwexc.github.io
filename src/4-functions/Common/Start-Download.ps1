@@ -7,6 +7,8 @@ function Start-Download {
 
     Write-ActivityProgress 10 "Downloading from $URL"
 
+    Set-Variable -Option Constant MaxRetries ([Int]3)
+
     if ($SaveAs) {
         Set-Variable -Option Constant FileName ([String]$SaveAs)
     } else {
@@ -34,7 +36,26 @@ function Start-Download {
 
     Write-ActivityProgress 20
 
-    Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
+    [Int]$RetryCount = 0
+    [Bool]$DownloadSuccess = $False
+
+    while (-not $DownloadSuccess -and $RetryCount -lt $MaxRetries) {
+        try {
+            $RetryCount++
+            if ($RetryCount -gt 1) {
+                Write-LogWarning "Download attempt $RetryCount of $MaxRetries"
+                Start-Sleep -Seconds 2
+            }
+
+            Start-BitsTransfer -Source $URL -Destination $TempPath -Dynamic -ErrorAction Stop
+            $DownloadSuccess = $True
+        } catch {
+            if ($RetryCount -ge $MaxRetries) {
+                throw "Download failed after $MaxRetries attempts: $_"
+            }
+            Write-LogWarning "Download attempt $RetryCount failed: $_"
+        }
+    }
 
     if (-not $Temp) {
         Move-Item -Force $TempPath $SavePath -ErrorAction Stop

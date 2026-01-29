@@ -36,6 +36,7 @@ Describe 'Start-Download' {
         Mock Test-NetworkConnection { return $True }
         Mock Initialize-AppDirectory {}
         Mock Start-BitsTransfer {}
+        Mock Start-Sleep {}
         Mock Move-Item {}
         Mock Out-Success {}
     }
@@ -57,6 +58,7 @@ Describe 'Start-Download' {
             $Destination -eq $TestTempPath -and
             $Dynamic -eq $True
         }
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
             $Path -eq $TestTempPath -and
@@ -83,6 +85,7 @@ Describe 'Start-Download' {
             $Destination -eq $TestSavePathSaveAs -and
             $Dynamic -eq $True
         }
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
             $Path -eq $TestTempPathSaveAs -and
@@ -104,6 +107,7 @@ Describe 'Start-Download' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 1
     }
@@ -118,6 +122,7 @@ Describe 'Start-Download' {
         Should -Invoke Test-NetworkConnection -Exactly 0
         Should -Invoke Initialize-AppDirectory -Exactly 0
         Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -135,6 +140,7 @@ Describe 'Start-Download' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 0
         Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -150,6 +156,7 @@ Describe 'Start-Download' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 0
     }
@@ -165,6 +172,7 @@ Describe 'Start-Download' {
         Should -Invoke Test-NetworkConnection -Exactly 0
         Should -Invoke Initialize-AppDirectory -Exactly 0
         Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -182,6 +190,7 @@ Describe 'Start-Download' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 0
         Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -199,25 +208,33 @@ Describe 'Start-Download' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
-    It 'Should handle Start-BitsTransfer failure' {
-        Mock Start-BitsTransfer { throw $TestException }
+    It 'Should retry download on failure' {
+        $script:BitsTransferAttempts = 0
+        Mock Start-BitsTransfer {
+            $script:BitsTransferAttempts++
+            if ($script:BitsTransferAttempts -lt 2) {
+                throw 'Transient error'
+            }
+        }
 
         [Int]$TestPathSuccessIteration = 2
 
-        { Start-Download $TestUrl } | Should -Throw $TestException
+        Start-Download $TestUrl  | Should -BeExactly $TestSavePath
 
         Should -Invoke Write-ActivityProgress -Exactly 2
-        Should -Invoke Test-Path -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Test-Path -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Start-BitsTransfer -Exactly 1
-        Should -Invoke Move-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Start-BitsTransfer -Exactly 2
+        Should -Invoke Start-Sleep -Exactly 1
+        Should -Invoke Move-Item -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should handle Move-Item failure' {
@@ -233,6 +250,7 @@ Describe 'Start-Download' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 0
     }
