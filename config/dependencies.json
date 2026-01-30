@@ -23,7 +23,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "0b242f3607dc4136fad723480c3b023f2d2bb14d",
+        "version":  "2196b2bfabd9ebc4b26969358369fd6912fe8dc7",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
@@ -51,7 +51,7 @@
     },
     {
         "name":  "Rufus",
-        "version":  "v4.11",
+        "version":  "v4.12",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "pbatard/rufus"
