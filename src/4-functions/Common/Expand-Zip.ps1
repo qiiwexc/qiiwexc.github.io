@@ -4,16 +4,16 @@ function Expand-Zip {
         [Switch]$Temp
     )
 
-    if (-not (Test-Path $ZipPath)) {
-        throw "Archive not found: $ZipPath"
-    }
+    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 
     $Extension = [IO.Path]::GetExtension($ZipPath).ToLower()
     if ($Extension -notin @('.zip', '.7z')) {
         throw "Unsupported archive format: $Extension. Supported formats: .zip, .7z"
     }
 
-    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
+    if (-not (Test-Path $ZipPath)) {
+        throw "Archive not found: $ZipPath"
+    }
 
     Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
     Set-Variable -Option Constant ExtractionPath ([String]($ZipPath -replace '\.(zip|7z)$', ''))
@@ -25,13 +25,18 @@ function Expand-Zip {
         Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
     }
 
-    Initialize-AppDirectory
-
     Set-Variable -Option Constant Executable ([String](Get-ExecutableName $ZipName $ExtractionDir))
 
     Set-Variable -Option Constant IsDirectory ([Bool]($ExtractionDir -and $Executable -like "$ExtractionDir\*"))
     Set-Variable -Option Constant TemporaryExe ([String]"$ExtractionPath\$Executable")
     Set-Variable -Option Constant TargetExe ([String]"$TargetPath\$Executable")
+
+    if (Test-Path $TargetExe) {
+        Write-LogWarning 'Previous extraction found, returning it'
+        return $TargetExe
+    }
+
+    Initialize-AppDirectory
 
     Remove-File $TemporaryExe
 
