@@ -13,6 +13,10 @@ param(
     [Switch]$Bat
 )
 
+if ($CI) {
+    $Full = $True
+}
+
 if ($Full) {
     $Tests = $True
     $Update = $True
