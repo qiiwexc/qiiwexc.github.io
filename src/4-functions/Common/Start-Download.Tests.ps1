@@ -237,6 +237,24 @@ Describe 'Start-Download' {
         Should -Invoke Out-Success -Exactly 1
     }
 
+    It 'Should handle Start-BitsTransfer failure' {
+        Mock Start-BitsTransfer { throw $TestException }
+
+        [Int]$TestPathSuccessIteration = 2
+
+        { Start-Download $TestUrl } | Should -Throw 'Download failed after 3 attempts*'
+
+        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 4
+        Should -Invoke Test-NetworkConnection -Exactly 1
+        Should -Invoke Initialize-AppDirectory -Exactly 1
+        Should -Invoke Start-BitsTransfer -Exactly 3
+        Should -Invoke Start-Sleep -Exactly 2
+        Should -Invoke Move-Item -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+    }
+
     It 'Should handle Move-Item failure' {
         Mock Move-Item { throw $TestException }
 
