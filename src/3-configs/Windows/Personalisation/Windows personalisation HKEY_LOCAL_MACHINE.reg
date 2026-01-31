@@ -21,9 +21,8 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
 "AllowNewsAndInterests"=dword:00000000
 
-; Disable game DVR
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
-"AllowGameDVR"=dword:00000000
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
+"AllowClipboardHistory"=dword:00000000
 
 ; Disable Copilot service
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
@@ -41,6 +40,9 @@
 ; Disable widgets service
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 "AllowNewsAndInterests"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
+"AllowClipboardHistory"=dword:00000000
 
 ; Disable Copilot service
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]

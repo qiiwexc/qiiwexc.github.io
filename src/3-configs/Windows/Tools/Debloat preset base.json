@@ -14,7 +14,7 @@
     { "Name": "DisableAnimations", "Value": false },
     { "Name": "DisableBing", "Value": true },
     { "Name": "DisableClickToDo", "Value": true },
-    { "Name": "DisableCopilot", "Value": true },
+    { "Name": "DisableCopilot", "Value": false },
     { "Name": "DisableDesktopSpotlight", "Value": false },
     { "Name": "DisableDVR", "Value": false },
     { "Name": "DisableEdgeAds", "Value": true },
