@@ -20,7 +20,7 @@ jobs:
         run: .\build-ci.bat
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: build-output
           path: |
