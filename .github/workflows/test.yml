@@ -20,9 +20,10 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
+          $env:PSModulePath = [Environment]::GetEnvironmentVariable('PSModulePath', 'Machine')
           Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-          Import-Module PSScriptAnalyzer -Force
+          Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.22.0 -Force -Scope CurrentUser
+          Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
           $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -ExcludeRule PSAvoidUsingWriteHost
           $results | Format-Table -AutoSize
           if ($results.Count -gt 0) {
