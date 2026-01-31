@@ -4,7 +4,6 @@
 "EnableCertPaddingCheck"="1"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
-"fAllVolumes"=dword:00000001
 "fTaskEnabled"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
@@ -289,7 +288,6 @@
 "NoLockScreenCamera"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
-"AllowClipboardHistory"=dword:00000000
 "EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000
@@ -416,7 +414,6 @@
 "NoLockScreenCamera"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
-"AllowClipboardHistory"=dword:00000000
 "EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000
