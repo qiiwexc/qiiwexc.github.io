@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.31')
+::Set-Variable -Option Constant VERSION ([Version]'26.2.1')
 ::
 ::#endregion init > Version
 ::
@@ -572,25 +572,12 @@ if "%~1"=="Debug" (
 ::
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
-::$CHECKBOX_Ninite_Chrome.Add_CheckStateChanged( { Set-NiniteButtonState } )
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Firefox = New-CheckBox 'Mozilla Firefox' -Name 'firefox' -Checked
-::$CHECKBOX_Ninite_Firefox.Add_CheckStateChanged( { Set-NiniteButtonState } )
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_7zip = New-CheckBox '7-Zip' -Name '7zip' -Checked
-::$CHECKBOX_Ninite_7zip.Add_CheckStateChanged( { Set-NiniteButtonState } )
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_VLC = New-CheckBox 'VLC' -Name 'vlc' -Checked
-::$CHECKBOX_Ninite_VLC.Add_CheckStateChanged( { Set-NiniteButtonState } )
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_AnyDesk = New-CheckBox 'AnyDesk' -Name 'anydesk' -Checked
-::$CHECKBOX_Ninite_AnyDesk.Add_CheckStateChanged( { Set-NiniteButtonState } )
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qbittorrent'
-::$CHECKBOX_Ninite_qBittorrent.Add_CheckStateChanged( { Set-NiniteButtonState } )
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
-::$CHECKBOX_Ninite_Malwarebytes.Add_CheckStateChanged( { Set-NiniteButtonState } )
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser:(-not $CHECKBOX_StartNinite.Enabled) -Execute:$CHECKBOX_StartNinite.Checked }
@@ -614,6 +601,10 @@ if "%~1"=="Debug" (
 ::        $CHECKBOX_Ninite_Malwarebytes
 ::    )
 ::)
+::
+::foreach ($Checkbox in $NINITE_CHECKBOXES) {
+::    $Checkbox.Add_CheckStateChanged( { Set-NiniteButtonState } )
+::}
 ::
 ::#endregion ui > Installs > Ninite
 ::
@@ -1700,9 +1691,6 @@ if "%~1"=="Debug" (
 ::"SecureProtocols"=dword:00002820
 ::"SyncMode5"=dword:00000003
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
-::"RotatingLockScreenOverlayEnabled"=dword:00000000
-::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Mobility]
 ::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 ::
@@ -1807,7 +1795,6 @@ if "%~1"=="Debug" (
 ::"EnableCertPaddingCheck"="1"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
-::"fAllVolumes"=dword:00000001
 ::"fTaskEnabled"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
@@ -2092,7 +2079,6 @@ if "%~1"=="Debug" (
 ::"NoLockScreenCamera"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
-::"AllowClipboardHistory"=dword:00000000
 ::"EnableMmx"=dword:00000000
 ::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 ::"UploadUserActivities"=dword:00000000
@@ -2219,7 +2205,6 @@ if "%~1"=="Debug" (
 ::"NoLockScreenCamera"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
-::"AllowClipboardHistory"=dword:00000000
 ::"EnableMmx"=dword:00000000
 ::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 ::"UploadUserActivities"=dword:00000000
@@ -2630,6 +2615,9 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
 ::"EnthusiastMode"=dword:00000001
 ::
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+::"RotatingLockScreenOverlayEnabled"=dword:00000000
+::
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001
@@ -2645,10 +2633,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
 ::"VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
 ::  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
-::
-::; Disable Show mobile device in Start
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
-::"IsEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\System\GameConfigStore]
 ::"GameDVR_EFSEFeatureFlags"=dword:00000000
@@ -2685,9 +2669,8 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
 ::
-::; Disable game DVR
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
-::"AllowGameDVR"=dword:00000000
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
+::"AllowClipboardHistory"=dword:00000000
 ::
 ::; Disable Copilot service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
@@ -2705,6 +2688,9 @@ if "%~1"=="Debug" (
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
+::"AllowClipboardHistory"=dword:00000000
 ::
 ::; Disable Copilot service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
@@ -2832,7 +2818,7 @@ if "%~1"=="Debug" (
 ::    { "Name": "DisableAnimations", "Value": false },
 ::    { "Name": "DisableBing", "Value": true },
 ::    { "Name": "DisableClickToDo", "Value": true },
-::    { "Name": "DisableCopilot", "Value": true },
+::    { "Name": "DisableCopilot", "Value": false },
 ::    { "Name": "DisableDesktopSpotlight", "Value": false },
 ::    { "Name": "DisableDVR", "Value": false },
 ::    { "Name": "DisableEdgeAds", "Value": true },
@@ -2910,7 +2896,7 @@ if "%~1"=="Debug" (
 ::    { "Name": "DisableClickToDo", "Value": true },
 ::    { "Name": "DisableCopilot", "Value": true },
 ::    { "Name": "DisableDesktopSpotlight", "Value": false },
-::    { "Name": "DisableDVR", "Value": true },
+::    { "Name": "DisableDVR", "Value": false },
 ::    { "Name": "DisableEdgeAds", "Value": true },
 ::    { "Name": "DisableEdgeAI", "Value": false },
 ::    { "Name": "DisableFastStartup", "Value": false },
@@ -3237,7 +3223,6 @@ if "%~1"=="Debug" (
 ::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]('                      "WPFTweaksEndTaskOnTaskbar",
 ::                      "WPFTweaksRightClickMenu",
 ::                      "WPFTweaksRemoveCopilot",
-::                      "WPFTweaksRemoveOnedrive",
 ::'))
 ::
 ::#endregion configs > Windows > Tools > WinUtil Personalisation
