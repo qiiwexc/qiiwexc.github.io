@@ -1,4 +1,3 @@
                       "WPFTweaksEndTaskOnTaskbar",
                       "WPFTweaksRightClickMenu",
                       "WPFTweaksRemoveCopilot",
-                      "WPFTweaksRemoveOnedrive",
