@@ -23,11 +23,11 @@ jobs:
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-          Import-Module PSScriptAnalyzer -Force
 
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
+          Import-Module PSScriptAnalyzer -Force
           $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -ExcludeRule PSAvoidUsingWriteHost
           $results | Format-Table -AutoSize
           if ($results.Count -gt 0) {
