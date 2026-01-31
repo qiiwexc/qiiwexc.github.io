@@ -23,6 +23,7 @@ jobs:
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          Import-Module PSScriptAnalyzer -Force
 
       - name: Run PSScriptAnalyzer
         shell: pwsh
