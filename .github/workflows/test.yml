@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
 
       - name: Install PSScriptAnalyzer
         shell: pwsh
@@ -44,7 +44,7 @@ jobs:
     needs: lint
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
 
       - name: Install Pester
         shell: pwsh
