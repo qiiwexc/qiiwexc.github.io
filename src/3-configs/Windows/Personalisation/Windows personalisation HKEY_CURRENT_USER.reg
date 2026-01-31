@@ -56,6 +56,9 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
 "EnthusiastMode"=dword:00000001
 
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+"RotatingLockScreenOverlayEnabled"=dword:00000000
+
 ; Disable chat taskbar (Windows 10)
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 "HideSCAMeetNow"=dword:00000001
@@ -71,10 +74,6 @@
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start]
 "VisiblePlaces"=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
   52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
-
-; Disable Show mobile device in Start
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
-"IsEnabled"=dword:00000000
 
 [HKEY_CURRENT_USER\System\GameConfigStore]
 "GameDVR_EFSEFeatureFlags"=dword:00000000

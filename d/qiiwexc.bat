@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.1.30')
+::Set-Variable -Option Constant VERSION ([Version]'26.1.31')
 ::
 ::#endregion init > Version
 ::
@@ -538,7 +538,7 @@ if "%~1"=="Debug" (
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Checked
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://github.com/pbatard/rufus/releases/download/v4.11/rufus-4.11p.exe' -Execute:$CHECKBOX_StartRufus.Checked -Params '-g' }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://github.com/pbatard/rufus/releases/download/v4.12/rufus-4.12p.exe' -Execute:$CHECKBOX_StartRufus.Checked -Params '-g' }
 ::New-Button 'Rufus' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Checked
@@ -1591,7 +1591,6 @@ if "%~1"=="Debug" (
 ::"DoNotTrack"=dword:00000001
 ::"Isolation"="PMEM"
 ::"Isolation64Bit"=dword:00000001
-::"Start Page"="about:blank"
 ::"Use FormSuggest"="yes"
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\PhishingFilter]
@@ -1672,7 +1671,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 ::"NavPaneShowAllCloudStates"=dword:00000001
 ::"SeparateProcess"=dword:00000001
-::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
 ::"ShowSyncProviderNotifications"=dword:00000000 ; Sync provider ads
 ::"Start_AccountNotifications"=dword:00000000 ; Disable Show account-related notifications
 ::"Start_IrisRecommendations"=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
@@ -1688,9 +1686,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
 ::"{20D04FE0-3AEA-1069-A2D8-08002B30309D}"=dword:00000000
 ::"MSEdge"=dword:00000001
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
-::"EnthusiastMode"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
 ::"ArchivedFiles"=dword:00000001
@@ -1799,12 +1794,6 @@ if "%~1"=="Debug" (
 ::; Disable AI recall
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
 ::"DisableAIDataAnalysis"=dword:00000001
-::
-::[HKEY_CURRENT_USER\System\GameConfigStore]
-::"GameDVR_EFSEFeatureFlags"=dword:00000000
-::"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
-::"GameDVR_FSEBehavior"=dword:00000002
-::"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
 ::'))
 ::
 ::#endregion configs > Windows > Base > Windows HKEY_CURRENT_USER
@@ -1819,7 +1808,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
 ::"fAllVolumes"=dword:00000001
-::"fDeadlineEnabled"=dword:00000001
 ::"fTaskEnabled"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
@@ -1955,9 +1943,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
-::"{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}"=""
-::
 ::; Disable Windows Backup reminder notifications
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
 ::"DisableMonitoring"=dword:00000001
@@ -1970,10 +1955,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services]
 ::"DefaultService"="7971f918-a847-4430-9279-4a52d1efe18d"
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
-::"CopilotDisabledReason"="IsEnabledForGeographicRegionFailed"
-::"IsCopilotAvailable"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat]
 ::"IsUserEligible"=dword:00000000
@@ -2151,11 +2132,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 ::"AllowTelemetry"=dword:00000000
 ::"MaxTelemetryAllowed"=dword:00000000
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
-::"ConsentPromptBehaviorUser"=dword:00000000
-::"FilterAdministratorToken"=dword:00000001
-::"PromptOnSecureDesktop"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
 ::"EnableFindMyFiles"=dword:00000001
@@ -2629,6 +2605,7 @@ if "%~1"=="Debug" (
 ::"NavPaneExpandToCurrentFolder"=dword:00000001
 ::"NavPaneShowAllFolders"=dword:00000001
 ::"ShowClockInNotificationCenter"=dword:00000001
+::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
 ::"Start_Layout"=dword:00000001
 ::"TaskbarAl"=dword:00000000 ; Align taskbar left
 ::"TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
@@ -2650,8 +2627,8 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
 ::"PreviewPaneSizer"=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
 ::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR]
-::"AppCaptureEnabled"=dword:00000000
+::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
+::"EnthusiastMode"=dword:00000001
 ::
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
@@ -2672,6 +2649,12 @@ if "%~1"=="Debug" (
 ::; Disable Show mobile device in Start
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Start\Companions\Microsoft.YourPhone_8wekyb3d8bbwe]
 ::"IsEnabled"=dword:00000000
+::
+::[HKEY_CURRENT_USER\System\GameConfigStore]
+::"GameDVR_EFSEFeatureFlags"=dword:00000000
+::"GameDVR_Enabled"=dword:00000000 ; Disable game DVR
+::"GameDVR_FSEBehavior"=dword:00000002
+::"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
 ::'))
 ::
 ::#endregion configs > Windows > Personalisation > Windows personalisation HKEY_CURRENT_USER
@@ -2691,6 +2674,13 @@ if "%~1"=="Debug" (
 ::"FilterAdministratorToken"=dword:00000001
 ::"PromptOnSecureDesktop"=dword:00000000
 ::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
+::"{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}"=""
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
+::"CopilotDisabledReason"="IsEnabledForGeographicRegionFailed"
+::"IsCopilotAvailable"=dword:00000000
+::
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
@@ -2699,9 +2689,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
 ::"AllowGameDVR"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive]
-::"DisableFileSyncNGSC"=dword:00000001
-::
 ::; Disable Copilot service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
 ::"TurnOffWindowsCopilot"=dword:00000001
@@ -2709,6 +2696,11 @@ if "%~1"=="Debug" (
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001
+::
+::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
+::"ConsentPromptBehaviorUser"=dword:00000000
+::"FilterAdministratorToken"=dword:00000001
+::"PromptOnSecureDesktop"=dword:00000000
 ::
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
@@ -2781,7 +2773,6 @@ if "%~1"=="Debug" (
 ::Microsoft.People                               # Required for & included with Mail & Calendar (Contacts management)
 ::Microsoft.PowerAutomateDesktop                 # Desktop automation tool (RPA)
 ::Microsoft.Print3D                              # 3D printing preparation software
-::Microsoft.RemoteDesktop                        # Remote Desktop client app
 ::Microsoft.SkypeApp                             # Skype communication app (Universal Windows Platform version)
 ::Microsoft.StartExperiencesApp                  # This app powers Windows Widgets My Feed
 ::Microsoft.Todos                                # To-do list and task management app
@@ -2843,7 +2834,7 @@ if "%~1"=="Debug" (
 ::    { "Name": "DisableClickToDo", "Value": true },
 ::    { "Name": "DisableCopilot", "Value": true },
 ::    { "Name": "DisableDesktopSpotlight", "Value": false },
-::    { "Name": "DisableDVR", "Value": true },
+::    { "Name": "DisableDVR", "Value": false },
 ::    { "Name": "DisableEdgeAds", "Value": true },
 ::    { "Name": "DisableEdgeAI", "Value": false },
 ::    { "Name": "DisableFastStartup", "Value": false },
@@ -2931,7 +2922,7 @@ if "%~1"=="Debug" (
 ::    { "Name": "DisablePaintAI", "Value": false },
 ::    { "Name": "DisableRecall", "Value": true },
 ::    { "Name": "DisableSettings365Ads", "Value": true },
-::    { "Name": "DisableStartPhoneLink", "Value": true },
+::    { "Name": "DisableStartPhoneLink", "Value": false },
 ::    { "Name": "DisableStartRecommended", "Value": true },
 ::    { "Name": "DisableStickyKeys", "Value": false },
 ::    { "Name": "DisableSuggestions", "Value": true },
@@ -3243,7 +3234,7 @@ if "%~1"=="Debug" (
 ::
 ::#region configs > Windows > Tools > WinUtil Personalisation
 ::
-::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]('                      "WPFTweaksDVR",
+::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]('                      "WPFTweaksEndTaskOnTaskbar",
 ::                      "WPFTweaksRightClickMenu",
 ::                      "WPFTweaksRemoveCopilot",
 ::                      "WPFTweaksRemoveOnedrive",
@@ -3259,7 +3250,6 @@ if "%~1"=="Debug" (
 ::                      "WPFTweaksBraveDebloat",
 ::                      "WPFTweaksConsumerFeatures",
 ::                      "WPFTweaksEdgeDebloat",
-::                      "WPFTweaksEndTaskOnTaskbar",
 ::                      "WPFTweaksLoc",
 ::                      "WPFTweaksPowershell7Tele",
 ::                      "WPFTweaksRestorePoint",
@@ -3780,16 +3770,16 @@ if "%~1"=="Debug" (
 ::        [Switch]$Temp
 ::    )
 ::
-::    if (-not (Test-Path $ZipPath)) {
-::        throw "Archive not found: $ZipPath"
-::    }
+::    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 ::
 ::    $Extension = [IO.Path]::GetExtension($ZipPath).ToLower()
 ::    if ($Extension -notin @('.zip', '.7z')) {
 ::        throw "Unsupported archive format: $Extension. Supported formats: .zip, .7z"
 ::    }
 ::
-::    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
+::    if (-not (Test-Path $ZipPath)) {
+::        throw "Archive not found: $ZipPath"
+::    }
 ::
 ::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
 ::    Set-Variable -Option Constant ExtractionPath ([String]($ZipPath -replace '\.(zip|7z)$', ''))
@@ -3801,13 +3791,18 @@ if "%~1"=="Debug" (
 ::        Set-Variable -Option Constant TargetPath ([String]$PATH_WORKING_DIR)
 ::    }
 ::
-::    Initialize-AppDirectory
-::
 ::    Set-Variable -Option Constant Executable ([String](Get-ExecutableName $ZipName $ExtractionDir))
 ::
 ::    Set-Variable -Option Constant IsDirectory ([Bool]($ExtractionDir -and $Executable -like "$ExtractionDir\*"))
 ::    Set-Variable -Option Constant TemporaryExe ([String]"$ExtractionPath\$Executable")
 ::    Set-Variable -Option Constant TargetExe ([String]"$TargetPath\$Executable")
+::
+::    if (Test-Path $TargetExe) {
+::        Write-LogWarning 'Previous extraction found, returning it'
+::        return $TargetExe
+::    }
+::
+::    Initialize-AppDirectory
 ::
 ::    Remove-File $TemporaryExe
 ::
