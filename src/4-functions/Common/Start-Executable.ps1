@@ -5,6 +5,12 @@ function Start-Executable {
         [Switch]$Silent
     )
 
+    Set-Variable -Option Constant ProcessName ([String](Split-Path -Leaf $Executable -ErrorAction Stop) -replace '\.exe$', '')
+    if (Find-RunningProcess $ProcessName) {
+        Write-LogWarning "Process '$ProcessName' is already running"
+        return
+    }
+
     if ($Switches -and $Silent) {
         Write-ActivityProgress 90 "Running '$Executable' silently..."
         Start-Process -Wait $Executable $Switches -ErrorAction Stop
