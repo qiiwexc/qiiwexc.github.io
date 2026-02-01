@@ -18,9 +18,8 @@ jobs:
         uses: actions/checkout@v6.0.2
 
       - name: Run PSScriptAnalyzer
-        shell: pwsh
+        shell: powershell
         run: |
-          $env:PSModulePath = [Environment]::GetEnvironmentVariable('PSModulePath', 'Machine')
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.22.0 -Force -Scope CurrentUser
           Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
