@@ -1,7 +1,7 @@
-<!-- Version: 26.2.1 -->
+<!-- Version: 26.2.2 -->
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
-  <!--https://schneegans.de/windows/unattend-generator/?LanguageMode=Unattended&UILanguage=en-US&Locale=en-GB&Keyboard=00000809&GeoLocation=140&ProcessorArchitecture=amd64&BypassRequirementsCheck=true&ComputerNameMode=Random&CompactOsMode=Default&TimeZoneMode=Implicit&PartitionMode=Unattended&PartitionLayout=GPT&EspSize=300&RecoveryMode=Partition&RecoverySize=1000&DiskAssertionMode=Skip&WindowsEditionMode=Interactive&InstallFromMode=Name&InstallFromName=Windows+11+Home&PEMode=Default&UserAccountMode=Unattended&AccountName0=Test&AccountDisplayName0=&AccountPassword0=&AccountGroup0=Administrators&AutoLogonMode=Own&PasswordExpirationMode=Unlimited&LockoutMode=Default&HideFiles=Hidden&ClassicContextMenu=true&LaunchToThisPC=true&ShowEndTask=true&TaskbarSearch=Icon&TaskbarIconsMode=Default&DisableWidgets=true&LeftTaskbar=true&DisableBingResults=true&StartTilesMode=Custom&StartTilesXml=%3CLayoutModificationTemplate+xmlns%3Adefaultlayout%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FFullDefaultLayout%22+xmlns%3Astart%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FStartLayout%22+Version%3D%221%22+xmlns%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FLayoutModification%22%3E%0D%0A++%3CLayoutOptions+StartTileGroupCellWidth%3D%226%22+%2F%3E%0D%0A++%3CDefaultLayoutOverride%3E%0D%0A++++%3CStartLayoutCollection%3E%0D%0A++++++%3Cdefaultlayout%3AStartLayout+GroupCellWidth%3D%226%22%3E%0D%0A++++++++%3Cstart%3AGroup+Name%3D%22%22%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5Ccomputer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CMicrosoft+Edge.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%220%22+AppUserModelID%3D%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%222%22+AppUserModelID%3D%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CPaint.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CNotepad.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CControl+Panel.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.Windows.SecHealthUI_cw5n1h2txyewy%21SecHealthUI%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CTask+Manager.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CInternet+Explorer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CCommand+Prompt.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%2210%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CWindows+PowerShell%5CWindows+PowerShell.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%2210%22+AppUserModelID%3D%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++%3C%2Fstart%3AGroup%3E%0D%0A++++++%3C%2Fdefaultlayout%3AStartLayout%3E%0D%0A++++%3C%2FStartLayoutCollection%3E%0D%0A++%3C%2FDefaultLayoutOverride%3E%0D%0A%3C%2FLayoutModificationTemplate%3E%0D%0A&StartPinsMode=Custom&StartPinsJson=%7B%0D%0A++%22pinnedList%22%3A+%5B%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CFile+Explorer.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22MSTeams_8wekyb3d8bbwe%21MSTeams%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.Paint_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsNotepad_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CControl+Panel.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CAdministrative+Tools.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25ALLUSERSPROFILE%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CMicrosoft+Edge.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.SecHealthUI_8wekyb3d8bbwe%21SecHealthUI%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.GetHelp_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%7D%0D%0A++%5D%0D%0A%7D&EnableLongPaths=true&HardenSystemDriveAcl=true&DeleteJunctions=true&DisableAppSuggestions=true&HideEdgeFre=true&DisableEdgeStartupBoost=true&DeleteWindowsOld=true&DisableAutomaticRestartSignOn=true&EffectsMode=Appearance&DeleteEdgeDesktopIcon=true&DesktopIconsMode=Custom&IconControlPanel=true&IconDownloads=true&IconRecycleBin=true&IconThisPC=true&IconUserFiles=true&StartFoldersMode=Custom&StartFolderDownloads=true&StartFolderPersonalFolder=true&StartFolderSettings=true&VBoxGuestAdditions=true&WifiMode=Skip&ExpressSettings=DisableAll&LockKeysMode=Skip&StickyKeysMode=Default&ColorMode=Default&WallpaperMode=Default&LockScreenMode=Default&Remove3DViewer=true&RemoveBingSearch=true&RemoveClipchamp=true&RemoveClock=true&RemoveCopilot=true&RemoveCortana=true&RemoveDevHome=true&RemoveFamily=true&RemoveFeedbackHub=true&RemoveGameAssist=true&RemoveMailCalendar=true&RemoveMaps=true&RemoveMixedReality=true&RemoveZuneVideo=true&RemoveNews=true&RemoveOffice365=true&RemoveOneDrive=true&RemoveOneNote=true&RemoveOutlook=true&RemovePaint3D=true&RemovePeople=true&RemovePowerAutomate=true&RemovePowerShell2=true&RemoveQuickAssist=true&RemoveRecall=true&RemoveSkype=true&RemoveStepsRecorder=true&RemoveGetStarted=true&RemoveToDo=true&RemoveVoiceRecorder=true&RemoveWallet=true&RemoveZuneMusic=true&RemoveXboxApps=true&SystemScript0=Set-ItemProperty+-Path+%27HKLM%3A%5CSYSTEM%5CCurrentControlSet%5CServices%5Ctzautoupdate%27+-Name+%27Start%27+-Value+3%0D%0Adism+%2Fonline+%2FImport-DefaultAppAssociations%3A%27C%3A%5CWindows%5CSetup%5CAppAssociations.xml%27&SystemScriptType0=Ps1&SystemScript1=%7BWINDOWS_SECURITY_CONFIGURATION%7D&SystemScriptType1=Ps1&SystemScript2=%7BPOWER_SCHEME_CONFIGURATION%7D&SystemScriptType2=Cmd&SystemScript3=%7BCONFIG_WINDOWS_HKEY_LOCAL_MACHINE%7D&SystemScriptType3=Reg&SystemScript4=%7BCONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE%7D&SystemScriptType4=Reg&DefaultUserScript0=Set-Variable+-Option+Constant+NetworkAdapter+%28Get-CimInstance+Win32_NetworkAdapterConfiguration+-Filter+%27IPEnabled%3DTrue%27%29%0D%0Aif+%28%24NetworkAdapter%29+%7B%0D%0A++++%24NetworkAdapter+%7C+Invoke-CimMethod+-MethodName+%27SetDNSServerSearchOrder%27+-Arguments+%40%7B+DNSServerSearchOrder+%3D+%40%28%271.1.1.2%27%2C+%271.0.0.2%27%29+%7D%0D%0A%7D&DefaultUserScriptType0=Ps1&DefaultUserScript1=%7BCONFIG_7ZIP%7D&DefaultUserScriptType1=Reg&DefaultUserScript2=%7BCONFIG_MICROSOFT_OFFICE%7D&DefaultUserScriptType2=Reg&DefaultUserScript3=%7BCONFIG_WINDOWS_HKEY_CURRENT_USER%7D&DefaultUserScriptType3=Reg&DefaultUserScript4=%7BCONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER%7D&DefaultUserScriptType4=Reg&DefaultUserScript5=%7BCONFIG_WINDOWS_LOCALISED%7D&DefaultUserScriptType5=Reg&FirstLogonScript0=Set-ItemProperty+-LiteralPath+%27Registry%3A%3AHKLM%5CSOFTWARE%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0ASet-ItemProperty+-LiteralPath+%27Registry%3A%3AHKEY_CURRENT_USER%5CSoftware%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0A%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.xml%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.reg%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.cmd%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.ps1%22+-Exclude+*UserOnce*%0D%0A%0D%0ASet-Variable+-Option+Constant+BatchFileUrl+%28%5BString%5D%27https%3A%2F%2Fbit.ly%2Fqiiwexc_bat%27%29%0D%0ASet-Variable+-Option+Constant+BatchFilePath+%28%5BString%5D%22%24env%3AUSERPROFILE%5CDesktop%5Cqiiwexc.bat%22%29%0D%0A%0D%0AInvoke-WebRequest+-Uri+%24BatchFileUrl+-OutFile+%24BatchFilePath%0D%0Aif+%28Test-Path+%24BatchFilePath%29+%7B%0D%0A++++Start-Process+PowerShell+%22%26+%24BatchFilePath%22%0D%0A%7D+else+%7B%0D%0A++++%5BDiagnostics.Process%5D%3A%3AStart%28%24BatchFileUrl+%29%0D%0A%7D%0D%0A&FirstLogonScriptType0=Ps1&WdacMode=Skip&AppLockerMode=Skip&ComponentContent0=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSetupUILanguage%3E%0D%0A++%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3C%2FSetupUILanguage%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component0=Microsoft-Windows-International-Core-WinPE-windowsPE&ComponentContent1=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUILanguageFallback%3E%7BUI_LANGUAGE_FALLBACK%7D%3C%2FUILanguageFallback%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component1=Microsoft-Windows-International-Core-oobeSystem&ComponentContent2=%3CDisableWER%3E1%3C%2FDisableWER%3E&Component2=Microsoft-Windows-ErrorReportingCore-specialize&ComponentContent3=%3CDisableFirstRunWizard%3Etrue%3C%2FDisableFirstRunWizard%3E%0D%0A%3CDisableOOBAccelerators%3Etrue%3C%2FDisableOOBAccelerators%3E%0D%0A%3CFavoritesDelete%3Etrue%3C%2FFavoritesDelete%3E%0D%0A%3CHome_Page%3Eabout%3Ablank%3C%2FHome_Page%3E%0D%0A%3CSearchScopes%3E%0D%0A++%3CScope+wcm%3Aaction%3D%22add%22%3E%0D%0A++++%3CScopeDefault%3Etrue%3C%2FScopeDefault%3E%0D%0A++++%3CScopeDisplayName%3EGoogle%3C%2FScopeDisplayName%3E%0D%0A++++%3CScopeKey%3EGoogle%3C%2FScopeKey%3E%0D%0A++++%3CScopeUrl%3Ehttp%3A%2F%2Fwww.google.lv%2Fsearch%3Fq%3D%7BsearchTerms%7D%3C%2FScopeUrl%3E%0D%0A++%3C%2FScope%3E%0D%0A%3C%2FSearchScopes%3E%0D%0A%3CSuggestedSitesEnabled%3Efalse%3C%2FSuggestedSitesEnabled%3E&Component3=Microsoft-Windows-IE-InternetExplorer-specialize&ComponentContent4=%3CPreferredPlan%3E8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c%3C%2FPreferredPlan%3E&Component4=Microsoft-Windows-PowerCPL-generalize-->
+  <!--https://schneegans.de/windows/unattend-generator/?LanguageMode=Unattended&UILanguage=en-US&Locale=en-GB&Keyboard=00000809&GeoLocation=140&ProcessorArchitecture=amd64&BypassRequirementsCheck=true&ComputerNameMode=Random&CompactOsMode=Default&TimeZoneMode=Implicit&PartitionMode=Unattended&PartitionLayout=GPT&EspSize=300&RecoveryMode=Partition&RecoverySize=1000&DiskAssertionMode=Skip&WindowsEditionMode=Interactive&InstallFromMode=Name&InstallFromName=Windows+11+Home&PEMode=Default&UserAccountMode=Unattended&AccountName0=Test&AccountDisplayName0=&AccountPassword0=&AccountGroup0=Administrators&AutoLogonMode=Own&PasswordExpirationMode=Unlimited&LockoutMode=Default&HideFiles=Hidden&ClassicContextMenu=true&LaunchToThisPC=true&ShowEndTask=true&TaskbarSearch=Icon&TaskbarIconsMode=Default&DisableWidgets=true&LeftTaskbar=true&DisableBingResults=true&StartTilesMode=Custom&StartTilesXml=%3CLayoutModificationTemplate+xmlns%3Adefaultlayout%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FFullDefaultLayout%22+xmlns%3Astart%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FStartLayout%22+Version%3D%221%22+xmlns%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FLayoutModification%22%3E%0D%0A++%3CLayoutOptions+StartTileGroupCellWidth%3D%226%22+%2F%3E%0D%0A++%3CDefaultLayoutOverride%3E%0D%0A++++%3CStartLayoutCollection%3E%0D%0A++++++%3Cdefaultlayout%3AStartLayout+GroupCellWidth%3D%226%22%3E%0D%0A++++++++%3Cstart%3AGroup+Name%3D%22%22%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5Ccomputer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CMicrosoft+Edge.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%220%22+AppUserModelID%3D%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%222%22+AppUserModelID%3D%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CPaint.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CNotepad.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CControl+Panel.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.Windows.SecHealthUI_cw5n1h2txyewy%21SecHealthUI%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CTask+Manager.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CInternet+Explorer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CCommand+Prompt.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%2210%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CWindows+PowerShell%5CWindows+PowerShell.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%2210%22+AppUserModelID%3D%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++%3C%2Fstart%3AGroup%3E%0D%0A++++++%3C%2Fdefaultlayout%3AStartLayout%3E%0D%0A++++%3C%2FStartLayoutCollection%3E%0D%0A++%3C%2FDefaultLayoutOverride%3E%0D%0A%3C%2FLayoutModificationTemplate%3E%0D%0A&StartPinsMode=Custom&StartPinsJson=%7B%0D%0A++%22pinnedList%22%3A+%5B%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CFile+Explorer.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22MSTeams_8wekyb3d8bbwe%21MSTeams%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.Paint_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsNotepad_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CControl+Panel.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CAdministrative+Tools.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25ALLUSERSPROFILE%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CMicrosoft+Edge.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.SecHealthUI_8wekyb3d8bbwe%21SecHealthUI%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.GetHelp_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%7D%0D%0A++%5D%0D%0A%7D&EnableLongPaths=true&HardenSystemDriveAcl=true&DeleteJunctions=true&DisableAppSuggestions=true&HideEdgeFre=true&DisableEdgeStartupBoost=true&DeleteWindowsOld=true&DisableAutomaticRestartSignOn=true&EffectsMode=Appearance&DeleteEdgeDesktopIcon=true&DesktopIconsMode=Custom&IconControlPanel=true&IconDownloads=true&IconRecycleBin=true&IconThisPC=true&IconUserFiles=true&StartFoldersMode=Custom&StartFolderDownloads=true&StartFolderPersonalFolder=true&StartFolderSettings=true&VBoxGuestAdditions=true&WifiMode=Skip&ExpressSettings=DisableAll&LockKeysMode=Skip&StickyKeysMode=Default&ColorMode=Default&WallpaperMode=Default&LockScreenMode=Default&Remove3DViewer=true&RemoveBingSearch=true&RemoveClipchamp=true&RemoveClock=true&RemoveCopilot=true&RemoveCortana=true&RemoveDevHome=true&RemoveFamily=true&RemoveFeedbackHub=true&RemoveGameAssist=true&RemoveMailCalendar=true&RemoveMaps=true&RemoveMixedReality=true&RemoveZuneVideo=true&RemoveNews=true&RemoveOffice365=true&RemoveOneDrive=true&RemoveOneNote=true&RemoveOutlook=true&RemovePaint3D=true&RemovePeople=true&RemovePowerAutomate=true&RemoveQuickAssist=true&RemoveRecall=true&RemoveSkype=true&RemoveStepsRecorder=true&RemoveGetStarted=true&RemoveToDo=true&RemoveVoiceRecorder=true&RemoveWallet=true&RemoveZuneMusic=true&RemoveXboxApps=true&SystemScript0=Set-ItemProperty+-Path+%27HKLM%3A%5CSYSTEM%5CCurrentControlSet%5CServices%5Ctzautoupdate%27+-Name+%27Start%27+-Value+3%0D%0Adism+%2Fonline+%2FImport-DefaultAppAssociations%3A%27C%3A%5CWindows%5CSetup%5CAppAssociations.xml%27&SystemScriptType0=Ps1&SystemScript1=%7BWINDOWS_MALWARE_PROTECTION_CONFIGURATION%7D&SystemScriptType1=Ps1&SystemScript2=%7BPOWER_SCHEME_CONFIGURATION%7D&SystemScriptType2=Cmd&SystemScript3=%7BCONFIG_SECURITY%7D&SystemScriptType3=Reg&SystemScript4=%7BCONFIG_PERFORMANCE%7D&SystemScriptType4=Reg&SystemScript5=%7BCONFIG_BASELINE%7D&SystemScriptType5=Reg&SystemScript6=%7BCONFIG_ANNOYANCES%7D&SystemScriptType6=Reg&SystemScript7=%7BCONFIG_PRIVACY%7D&SystemScriptType7=Reg&SystemScript8=%7BCONFIG_PERSONALISATION%7D&SystemScriptType8=Reg&DefaultUserScript0=Set-Variable+-Option+Constant+NetworkAdapter+%28Get-CimInstance+Win32_NetworkAdapterConfiguration+-Filter+%27IPEnabled%3DTrue%27%29%0D%0Aif+%28%24NetworkAdapter%29+%7B%0D%0A++++%24NetworkAdapter+%7C+Invoke-CimMethod+-MethodName+%27SetDNSServerSearchOrder%27+-Arguments+%40%7B+DNSServerSearchOrder+%3D+%40%28%271.1.1.2%27%2C+%271.0.0.2%27%29+%7D%0D%0A%7D&DefaultUserScriptType0=Ps1&DefaultUserScript1=%7BCONFIG_SECURITY%7D&DefaultUserScriptType1=Reg&DefaultUserScript2=%7BCONFIG_PERFORMANCE%7D&DefaultUserScriptType2=Reg&DefaultUserScript3=%7BCONFIG_BASELINE%7D&DefaultUserScriptType3=Reg&DefaultUserScript4=%7BCONFIG_ANNOYANCES%7D&DefaultUserScriptType4=Reg&DefaultUserScript5=%7BCONFIG_PRIVACY%7D&DefaultUserScriptType5=Reg&DefaultUserScript6=%7BCONFIG_PERSONALISATION%7D&DefaultUserScriptType6=Reg&DefaultUserScript7=%7BCONFIG_WINDOWS_LOCALISED%7D&DefaultUserScriptType7=Reg&DefaultUserScript8=%7BCONFIG_MICROSOFT_OFFICE%7D&DefaultUserScriptType8=Reg&DefaultUserScript9=%7BCONFIG_7ZIP%7D&DefaultUserScriptType9=Reg&FirstLogonScript0=Set-ItemProperty+-LiteralPath+%27Registry%3A%3AHKLM%5CSOFTWARE%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0ASet-ItemProperty+-LiteralPath+%27Registry%3A%3AHKEY_CURRENT_USER%5CSoftware%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0A%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.xml%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.reg%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.cmd%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.ps1%22+-Exclude+*UserOnce*%0D%0A%0D%0ASet-Variable+-Option+Constant+BatchFileUrl+%28%5BString%5D%27https%3A%2F%2Fbit.ly%2Fqiiwexc_bat%27%29%0D%0ASet-Variable+-Option+Constant+BatchFilePath+%28%5BString%5D%22%24env%3AUSERPROFILE%5CDesktop%5Cqiiwexc.bat%22%29%0D%0A%0D%0AInvoke-WebRequest+-Uri+%24BatchFileUrl+-OutFile+%24BatchFilePath%0D%0Aif+%28Test-Path+%24BatchFilePath%29+%7B%0D%0A++++Start-Process+PowerShell+%22%26+%24BatchFilePath%22%0D%0A%7D+else+%7B%0D%0A++++%5BDiagnostics.Process%5D%3A%3AStart%28%24BatchFileUrl+%29%0D%0A%7D%0D%0A&FirstLogonScriptType0=Ps1&WdacMode=Skip&AppLockerMode=Skip&ComponentContent0=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSetupUILanguage%3E%0D%0A++%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3C%2FSetupUILanguage%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component0=Microsoft-Windows-International-Core-WinPE-windowsPE&ComponentContent1=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUILanguageFallback%3E%7BUI_LANGUAGE_FALLBACK%7D%3C%2FUILanguageFallback%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component1=Microsoft-Windows-International-Core-oobeSystem&ComponentContent2=%3CDisableWER%3E1%3C%2FDisableWER%3E&Component2=Microsoft-Windows-ErrorReportingCore-specialize&ComponentContent3=%3CDisableFirstRunWizard%3Etrue%3C%2FDisableFirstRunWizard%3E%0D%0A%3CDisableOOBAccelerators%3Etrue%3C%2FDisableOOBAccelerators%3E%0D%0A%3CFavoritesDelete%3Etrue%3C%2FFavoritesDelete%3E%0D%0A%3CHome_Page%3Eabout%3Ablank%3C%2FHome_Page%3E%0D%0A%3CSearchScopes%3E%0D%0A++%3CScope+wcm%3Aaction%3D%22add%22%3E%0D%0A++++%3CScopeDefault%3Etrue%3C%2FScopeDefault%3E%0D%0A++++%3CScopeDisplayName%3EGoogle%3C%2FScopeDisplayName%3E%0D%0A++++%3CScopeKey%3EGoogle%3C%2FScopeKey%3E%0D%0A++++%3CScopeUrl%3Ehttp%3A%2F%2Fwww.google.lv%2Fsearch%3Fq%3D%7BsearchTerms%7D%3C%2FScopeUrl%3E%0D%0A++%3C%2FScope%3E%0D%0A%3C%2FSearchScopes%3E%0D%0A%3CSuggestedSitesEnabled%3Efalse%3C%2FSuggestedSitesEnabled%3E&Component3=Microsoft-Windows-IE-InternetExplorer-specialize&ComponentContent4=%3CPreferredPlan%3E8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c%3C%2FPreferredPlan%3E&Component4=Microsoft-Windows-PowerCPL-generalize-->
   <settings pass="offlineServicing"></settings>
   <settings pass="windowsPE">
     <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -327,6 +327,26 @@ StartUpWindowState=Normal
 $selectors = @(
   'ACGMediaPlayer';
   'ActiproSoftwareLLC';
+  'AD2F1837.HPAIExperienceCenter';
+  'AD2F1837.HPConnectedMusic';
+  'AD2F1837.HPConnectedPhotopoweredbySnapfish';
+  'AD2F1837.HPDesktopSupportUtilities';
+  'AD2F1837.HPEasyClean';
+  'AD2F1837.HPFileViewer';
+  'AD2F1837.HPJumpStarts';
+  'AD2F1837.HPPCHardwareDiagnosticsWindows';
+  'AD2F1837.HPPowerManager';
+  'AD2F1837.HPPrinterControl';
+  'AD2F1837.HPPrivacySettings';
+  'AD2F1837.HPQuickDrop';
+  'AD2F1837.HPQuickTouch';
+  'AD2F1837.HPRegistration';
+  'AD2F1837.HPSupportAssistant';
+  'AD2F1837.HPSureShieldAI';
+  'AD2F1837.HPSystemInformation';
+  'AD2F1837.HPWelcome';
+  'AD2F1837.HPWorkWell';
+  'AD2F1837.myHP';
   'AdobeSystemsIncorporated.AdobePhotoshopExpress';
   'Amazon.com.Amazon';
   'AmazonVideo.PrimeVideo';
@@ -365,6 +385,7 @@ $selectors = @(
   'Microsoft.BingTranslator';
   'Microsoft.BingTravel';
   'Microsoft.Copilot';
+  'Microsoft.GamingApp';
   'Microsoft.Getstarted';
   'Microsoft.M365Companions';
   'Microsoft.Messaging';
@@ -373,6 +394,7 @@ $selectors = @(
   'Microsoft.MicrosoftOfficeHub';
   'Microsoft.MicrosoftPowerBIForWindows';
   'Microsoft.MixedReality.Portal';
+  'Microsoft.MSPaint';
   'Microsoft.NetworkSpeedTest';
   'Microsoft.News';
   'Microsoft.Office.OneNote';
@@ -393,7 +415,7 @@ $selectors = @(
   'Microsoft.WindowsMaps';
   'Microsoft.WindowsSoundRecorder';
   'Microsoft.XboxApp';
-  'Microsoft.XboxGameOverlay';
+  'Microsoft.XboxGamingOverlay';
   'Microsoft.ZuneMusic';
   'Microsoft.ZuneVideo';
   'MicrosoftCorporationII.MicrosoftFamily';
@@ -510,7 +532,6 @@ $logfile = 'C:\Windows\Setup\RemoveCapabilities.log';
     </File>
     <File path="C:\Windows\Setup\RemoveFeatures.ps1">
 $selectors = @(
-  'MicrosoftWindowsPowerShellV2Root';
   'Recall';
 );
 $getCommand = {
@@ -632,7 +653,6 @@ Set-MpPreference -EnableNetworkProtection Enabled
 Set-MpPreference -PUAProtection Enabled
 Set-MpPreference -AllowSwitchToAsyncInspection $True
 Set-MpPreference -MeteredConnectionUpdates $True
-Set-MpPreference -IntelTDTEnabled $True
 Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
 
     </File>
@@ -664,62 +684,344 @@ powercfg /SetDcValueIndex SCHEME_ALL SUB_SLEEP RTCWAKE 1
     <File path="C:\Windows\Setup\unattend-04.reg">
 Windows Registry Editor Version 5.00
 
-[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Edge\SmartScreenPuaEnabled]
+@=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Internet Explorer\Main]
+&quot;Isolation&quot;=&quot;PMEM&quot;
+&quot;Isolation64Bit&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Internet Explorer\PhishingFilter]
+&quot;EnabledV9&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;SecureProtocols&quot;=dword:00002820
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\0]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\1]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\2]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\3]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\4]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\0]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\1]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\2]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
+&quot;NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;NoDriveTypeAutoRun&quot;=dword:00000091
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\Wintrust\Config]
 &quot;EnableCertPaddingCheck&quot;=&quot;1&quot;
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
-&quot;fTaskEnabled&quot;=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
 &quot;PreventNetworkTrafficPreUserSignIn&quot;=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Bluetooth]
-&quot;AllowAdvertising&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit]
+&quot;ProcessCreationIncludeCmdLine_Enabled&quot;=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Browser]
-&quot;AllowAddressBarDropdown&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\NoExecuteState]
+&quot;LastNoExecuteRadioButtonState&quot;=dword:000036BD
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Education]
-&quot;IsEducationEnvironment&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
+&quot;scremoveoption&quot;=&quot;1&quot;
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Start]
-&quot;HideRecommendedSection&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Script Host\Settings]
+&quot;Enabled&quot;=dword:00000000
+&quot;IgnoreUserSettings&quot;=dword:00000001
+&quot;Remote&quot;=dword:00000000
+&quot;TrustPolicy&quot;=dword:00000002
+&quot;UseWinSAFER&quot;=dword:00000001
 
-; Disable &quot;Let Apps use Advertising ID for Relevant Ads&quot; (Windows 10)
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography]
+&quot;ForceKeyProtection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+&quot;AudioSandboxEnabled&quot;=dword:00000001
+&quot;BasicAuthOverHttpEnabled&quot;=dword:00000000
+&quot;DefaultWebUsbGuardSetting&quot;=dword:00000002
+&quot;DnsOverHttpsMode&quot;=&quot;automatic&quot;
+&quot;DynamicCodeSettings&quot;=dword:00000001
+&quot;EncryptedClientHelloEnabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
+&quot;1&quot;=&quot;0xc013&quot;
+&quot;2&quot;=&quot;0xc014&quot;
+&quot;3&quot;=&quot;0x0035&quot;
+&quot;4&quot;=&quot;0x002f&quot;
+&quot;5&quot;=&quot;0x009c&quot;
+&quot;6&quot;=&quot;0x009d&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FVE]
+&quot;EnableBDEWithNoTPM&quot;=dword:00000001
+&quot;UseAdvancedStartup&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\HTA]
+&quot;DisableHTMLApplication&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat]
+&quot;VDMDisallowed&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
+&quot;EnableCertPaddingCheck&quot;=&quot;1&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Cryptography]
+&quot;ForceKeyProtection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
+&quot;AudioSandboxEnabled&quot;=dword:00000001
+&quot;BasicAuthOverHttpEnabled&quot;=dword:00000000
+&quot;DefaultWebUsbGuardSetting&quot;=dword:00000002
+&quot;DnsOverHttpsMode&quot;=&quot;automatic&quot;
+&quot;DynamicCodeSettings&quot;=dword:00000001
+&quot;EncryptedClientHelloEnabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
+&quot;1&quot;=&quot;0xc013&quot;
+&quot;2&quot;=&quot;0xc014&quot;
+&quot;3&quot;=&quot;0x0035&quot;
+&quot;4&quot;=&quot;0x002f&quot;
+&quot;5&quot;=&quot;0x009c&quot;
+&quot;6&quot;=&quot;0x009d&quot;
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control]
+&quot;DisableRemoteSCMEndpoints&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy]
+&quot;VerifiedAndReputablePolicyState&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA]
+&quot;LmCompatibilityLevel&quot;=dword:00000005
+&quot;NoLMHash&quot;=dword:00000001
+&quot;restrictanonymous&quot;=dword:00000001
+&quot;RestrictRemoteSAM&quot;=&quot;O:BAG:BAD:(A;;RC;;;BA)&quot;
+&quot;RunAsPPL&quot;=dword:00000001
+&quot;SCENoApplyLegacyAuditPolicy&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA\MSV1_0]
+&quot;allownullsessionfallback&quot;=dword:00000000
+&quot;NtlmMinClientSec&quot;=dword:20080000
+&quot;NtlmMinServerSec&quot;=dword:20080000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56]
 &quot;Enabled&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
-&quot;Value&quot;=&quot;Deny&quot;
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL]
+&quot;Enabled&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client]
+&quot;DisabledByDefault&quot;=dword:00000001
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server]
+&quot;DisabledByDefault&quot;=dword:00000001
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client]
+&quot;DisabledByDefault&quot;=dword:00000001
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server]
+&quot;DisabledByDefault&quot;=dword:00000001
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Client]
+&quot;DisabledByDefault&quot;=dword:00000000
+&quot;Enabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Server]
+&quot;DisabledByDefault&quot;=dword:00000000
+&quot;Enabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager]
+&quot;CWDIllegalInDLLSearch&quot;=dword:ffffffff
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+&quot;MP_FORCE_USE_SANDBOX&quot;=&quot;1&quot;
+&quot;NoDefaultCurrentDirectoryInExePath&quot;=&quot;*&quot;
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WoW]
+&quot;DisallowedPolicyDefault&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
+&quot;IRPStackSize&quot;=dword:0000001E
+&quot;requiresecuritysignature&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters]
+&quot;RequireSecuritySignature&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration]
+&quot;Status&quot;=dword:00000000
+    </File>
+    <File path="C:\Windows\Setup\unattend-05.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
+&quot;VideoQualityOnBattery&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+&quot;NetworkThrottlingIndex&quot;=dword:FFFFFFFF
+&quot;SystemResponsiveness&quot;=dword:00000010
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+&quot;StartupBoostEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main]
+&quot;AllowPrelaunch&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
+&quot;StartupBoostEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MicrosoftEdge\Main]
+&quot;AllowPrelaunch&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control]
+&quot;SvcHostSplitThresholdInKB&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
+&quot;PowerThrottlingOff&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Ndu]
+&quot;Start&quot;=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+&quot;DefaultTTL&quot;=dword:00000064
+&quot;GlobalMaxTcpWindowSize&quot;=dword:00065535
+&quot;MaxUserPort&quot;=dword:00065534
+&quot;Tcp1323Opts&quot;=dword:00000001
+&quot;TcpMaxDupAcks&quot;=dword:00000002
+&quot;TCPTimedWaitDelay&quot;=dword:00000030
+    </File>
+    <File path="C:\Windows\Setup\unattend-06.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Control Panel\Desktop]
+&quot;JPEGImportQuality&quot;=dword:00000064
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\input\Settings]
+&quot;MultilingualEnabled&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Notepad]
+&quot;iWindowPosX&quot;=dword:FFFFFFF8
+&quot;iWindowPosY&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
+&quot;WindowPlacement&quot;=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
+  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
 &quot;Value&quot;=&quot;Allow&quot;
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
-&quot;Value&quot;=&quot;Deny&quot;
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+&quot;NavPaneShowAllCloudStates&quot;=dword:00000001
+&quot;SeparateProcess&quot;=dword:00000001
+&quot;ShowClockInNotificationCenter&quot;=dword:00000001
 
-; Disable &quot;Tailored experiences with diagnostic data&quot;
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CPSS\Store]
-&quot;AllowTelemetry&quot;=dword:00000000
-&quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
+; Enable &quot;End task&quot; in the taskbar
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
+&quot;TaskbarEndTask&quot;=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
-&quot;DiagTrackStatus&quot;=dword:00000002
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
+&quot;AllItemsIconView&quot;=dword:00000000
+&quot;StartupPage&quot;=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack\TraceManager]
-&quot;miniTraceHasStopTime&quot;=dword:00000000
-&quot;miniTraceIsAutoLogger&quot;=dword:00000000
-&quot;miniTraceProfileHash&quot;=hex:00,00,00,00,00,00,00,00
-&quot;miniTraceRequiredBufferSpace&quot;=dword:00000000
-&quot;miniTraceScenarioId&quot;=-
-&quot;miniTraceSessionStartTime&quot;=hex:00,00,00,00,00,00,00,00
-&quot;miniTraceSlotEnabled&quot;=dword:00000000
-&quot;miniTraceStopTime&quot;=hex:00,00,00,00,00,00,00,00
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\ShowJumpView]
+&quot;AllItemsIconView&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
-&quot;SecurityHealth&quot;=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+&quot;{2cc5ca98-6485-489a-920e-b3e88a6ccce3}&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
+&quot;PreviewPaneSizer&quot;=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
+&quot;PreviewPaneSizer&quot;=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
+&quot;EnthusiastMode&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
+&quot;ArchivedFiles&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
+&quot;VisualFXSetting&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+&quot;01&quot;=dword:00000001
+&quot;256&quot;=dword:0000003C
+&quot;2048&quot;=dword:0000001E
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
+&quot;fTaskEnabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SchedulingAgent]
+&quot;LogPath&quot;=hex(2):25,53,79,73,74,65,6d,52,6f,6f,74,25,5c,53,79,73,74,65,6d,33,\
+  32,5c,4c,6f,67,46,69,6c,65,73,5c,53,43,48,45,44,55,4c,45,2e,4c,4f,47,00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders]
 &quot;StateFlags&quot;=dword:00000001
@@ -796,52 +1098,26 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
 &quot;StateFlags&quot;=dword:00000001
 
-; Send only Required Diagnostic and Usage Data
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
-&quot;AllowTelemetry&quot;=dword:00000000
-&quot;MaxTelemetryAllowed&quot;=dword:00000000
-
-; Disable &quot;Tailored experiences with diagnostic data&quot;
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
-&quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
-
-; Disable Windows Backup reminder notifications
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
-&quot;DisableMonitoring&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+&quot;ConsentPromptBehaviorUser&quot;=dword:00000000
+&quot;DisableAutomaticRestartSignOn&quot;=dword:00000001
+&quot;FilterAdministratorToken&quot;=dword:00000001
+&quot;PromptOnSecureDesktop&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update]
 &quot;AUOptions&quot;=dword:00000004
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services\7971F918-A847-4430-9279-4A52D1EFE18D]
-&quot;RegisteredWithAU&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\AU]
+&quot;AUOptions&quot;=dword:00000004
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services]
 &quot;DefaultService&quot;=&quot;7971f918-a847-4430-9279-4a52d1efe18d&quot;
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat]
-&quot;IsUserEligible&quot;=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
-&quot;Disabled&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services\7971F918-A847-4430-9279-4A52D1EFE18D]
+&quot;RegisteredWithAU&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search\Preferences]
 &quot;AllowIndexingEncryptedStoresOrItems&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection]
-&quot;SummaryNotificationDisabled&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\NoExecuteState]
-&quot;LastNoExecuteRadioButtonState&quot;=dword:000036BD
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
-&quot;NetworkThrottlingIndex&quot;=dword:FFFFFFFF
-&quot;SystemResponsiveness&quot;=dword:00000010
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
-&quot;SensorPermissionState&quot;=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
-&quot;scremoveoption&quot;=&quot;1&quot;
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search]
 &quot;EnableFindMyFiles&quot;=dword:00000001
@@ -853,41 +1129,407 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
 &quot;AllowMUUpdateService&quot;=dword:00000001
 
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
+&quot;ConsentPromptBehaviorUser&quot;=dword:00000000
+&quot;FilterAdministratorToken&quot;=dword:00000001
+&quot;PromptOnSecureDesktop&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
+&quot;EnableFindMyFiles&quot;=dword:00000001
+&quot;SystemIndexNormalization&quot;=dword:00000003
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search\Gather\Windows\SystemIndex]
+&quot;EnableFindMyFiles&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
+&quot;DisableEmoticon&quot;=dword:00000001
+&quot;DisplayParameters&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
+&quot;LongPathsEnabled&quot;=dword:00000001
+&quot;NTFSDisable8dot3NameCreation&quot;=dword:00000001
+&quot;Win95TruncatedExtensions&quot;=dword:00000000
+    </File>
+    <File path="C:\Windows\Setup\unattend-07.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
+@=&quot;&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\GameBar]
+&quot;ShowStartupPanel&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\General]
+&quot;ShownFirstRunOptin&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\Licensing]
+&quot;EulasSetAccepted&quot;=&quot;0,49,&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\LinkedIn]
+&quot;OfficeLinkedIn&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+&quot;ContentDeliveryAllowed&quot;=dword:00000000
+&quot;FeatureManagementEnabled&quot;=dword:00000000
+&quot;OemPreInstalledAppsEnabled&quot;=dword:00000000
+&quot;PreInstalledAppsEnabled&quot;=dword:00000000
+&quot;PreInstalledAppsEverEnabled&quot;=dword:00000000
+&quot;RotatingLockScreenEnabled&quot;=dword:00000000
+&quot;RotatingLockScreenOverlayEnabled&quot;=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
+&quot;RotatingLockScreenOverlayVisible&quot;=dword:00000000
+&quot;SilentInstalledAppsEnabled&quot;=dword:00000000 ; Automatic Installation of Suggested Apps
+&quot;SoftLandingEnabled&quot;=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+&quot;SubscribedContent-202914Enabled&quot;=dword:00000000
+&quot;SubscribedContent-280815Enabled&quot;=dword:00000000
+&quot;SubscribedContent-310093Enabled&quot;=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what&apos;s new and suggested
+&quot;SubscribedContent-338387Enabled&quot;=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
+&quot;SubscribedContent-338388Enabled&quot;=dword:00000000 ; Occasionally show suggestions in Start
+&quot;SubscribedContent-338389Enabled&quot;=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+&quot;SubscribedContent-338393Enabled&quot;=dword:00000000
+&quot;SubscribedContent-353694Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
+&quot;SubscribedContent-353696Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
+&quot;SubscribedContent-353698Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
+&quot;SubscribedContent-88000045Enabled&quot;=dword:00000000
+&quot;SubscribedContent-88000161Enabled&quot;=dword:00000000
+&quot;SubscribedContent-88000163Enabled&quot;=dword:00000000
+&quot;SubscribedContent-88000165Enabled&quot;=dword:00000000
+&quot;SubscribedContentEnabled&quot;=dword:00000000
+&quot;SystemPaneSuggestionsEnabled&quot;=dword:00000000 ; Occasionally show suggestions in Start
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
+&quot;ShowedToastAtLevel&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer]
+&quot;ShowRecommendations&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+&quot;ShowSyncProviderNotifications&quot;=dword:00000000 ; Sync provider ads
+&quot;Start_AccountNotifications&quot;=dword:00000000 ; Disable Show account-related notifications
+&quot;Start_IrisRecommendations&quot;=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+&quot;{20D04FE0-3AEA-1069-A2D8-08002B30309D}&quot;=dword:00000000
+&quot;MSEdge&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Mobility]
+&quot;OptedIn&quot;=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
+
+; Disable Windows Backup reminder notifications
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
+&quot;Enabled&quot;=dword:00000000
+
+; Disable &quot;Suggested&quot; app notifications (Ads for MS services)
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\PenWorkspace]
+&quot;PenWorkspaceAppSuggestionsEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Search]
+&quot;BingSearchEnabled&quot;=dword:00000000 ; Disable Bing search
+&quot;ConnectedSearchUseWeb&quot;=dword:00000000
+&quot;ConnectedSearchUseWebOverMeteredConnections&quot;=dword:00000000
+&quot;DisableWebSearch&quot;=dword:00000001
+&quot;SearchboxTaskbarMode&quot;=dword:00000003 ; Show search icon and label
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
+&quot;IsDynamicSearchBoxEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications]
+&quot;EnableAccountNotifications&quot;=dword:00000000
+
+; Suggest ways I can finish setting up my device to get the most out of Windows
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
+&quot;ScOoBESystemSettingEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows Security Health\State]
+&quot;AccountProtection_MicrosoftAccount_Disconnected&quot;=dword:00000001
+&quot;Hardware_DataEncryption_AddMsa&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common]
+&quot;LinkedIn&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
+&quot;SurveyEnabled&quot;=dword:00000000
+
+; Disable Bing in search
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\Explorer]
+&quot;DisableSearchBoxSuggestions&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Start]
+&quot;HideRecommendedSection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
+&quot;SecurityHealth&quot;=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;AllowOnlineTips&quot;=dword:00000000
+
+; Disable Windows Backup reminder notifications
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
+&quot;DisableMonitoring&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\AU]
+&quot;NoAutoRebootWithLoggedOnUsers&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection]
+&quot;SummaryNotificationDisabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+&quot;AutoImportAtFirstRun&quot;=dword:00000004
+&quot;DefaultBrowserSettingEnabled&quot;=dword:00000000
+&quot;DefaultBrowserSettingsCampaignEnabled&quot;=dword:00000000
+&quot;HideFirstRunExperience&quot;=dword:00000001
+&quot;ShowPDFDefaultRecommendationsEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EdgeUpdate]
+&quot;CreateDesktopShortcutDefault&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent]
+&quot;DisableConsumerAccountStateContent&quot;=dword:00000001 ; Disable MS 365 Ads in Settings Home
+&quot;DisableWindowsConsumerFeatures&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection]
+&quot;DisableOneSettingsDownloads&quot;=dword:00000001
+&quot;DoNotShowFeedbackNotifications&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
+&quot;HideRecommendedSection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
+&quot;SetActiveHours&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
+&quot;fAllowToGetHelp&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
+&quot;AutoImportAtFirstRun&quot;=dword:00000004
+&quot;DefaultBrowserSettingEnabled&quot;=dword:00000000
+&quot;DefaultBrowserSettingsCampaignEnabled&quot;=dword:00000000
+&quot;HideFirstRunExperience&quot;=dword:00000001
+&quot;ShowPDFDefaultRecommendationsEnabled&quot;=dword:00000000
+
+; Disable MS 365 Ads in Settings Home
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\CloudContent]
+&quot;DisableConsumerAccountStateContent&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DataCollection]
+&quot;DisableOneSettingsDownloads&quot;=dword:00000001
+&quot;DoNotShowFeedbackNotifications&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Explorer]
+&quot;HideRecommendedSection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows NT\Terminal Services]
+&quot;fAllowToGetHelp&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance]
+&quot;fAllowToGetHelp&quot;=dword:00000000
+    </File>
+    <File path="C:\Windows\Setup\unattend-08.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Control Panel\International\User Profile]
+&quot;HttpAcceptLanguageOptOut&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]
+&quot;DoNotTrack&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
+&quot;EnableCortana&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Clipboard]
+&quot;EnableClipboardHistory&quot;=dword:00000000
+
+; Disable &quot;Improve Inking and Typing Recognition&quot;
+[HKEY_USERS\DefaultUser\Software\Microsoft\Input\TIPC]
+&quot;Enabled&quot;=dword:00000000
+
+; Disable &quot;Inking and Typing Personalization&quot;
+[HKEY_USERS\DefaultUser\Software\Microsoft\InputPersonalization]
+&quot;RestrictImplicitInkCollection&quot;=dword:00000001
+&quot;RestrictImplicitTextCollection&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\InputPersonalization\TrainedDataStore]
+&quot;HarvestContacts&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Internet Explorer\Main]
+&quot;DoNotTrack&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
+&quot;OptionalConnectedExperiencesNoticeVersion&quot;=dword:00000002
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Personalization\Settings]
+&quot;AcceptedPrivacyPolicy&quot;=dword:00000000
+
+; Set Feedback Frequency to Never
+[HKEY_USERS\DefaultUser\Software\Microsoft\Siuf\Rules]
+&quot;NumberOfSIUFInPeriod&quot;=dword:00000000
+&quot;PeriodInNanoSeconds&quot;=-
+
+; Disable &quot;Online Speech Recognition&quot;
+[HKEY_USERS\DefaultUser\Software\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy]
+&quot;HasAccepted&quot;=dword:00000000
+
+; Disable &quot;Let Apps use Advertising ID for Relevant Ads&quot; (Windows 10)
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
+&quot;Value&quot;=&quot;Deny&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
+&quot;Value&quot;=&quot;Deny&quot;
+
+; Disable &quot;Tailored experiences with diagnostic data&quot;
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
+&quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+&quot;Start_TrackProgs&quot;=dword:00000000 ; Disable &quot;Let Windows improve Start and search results by tracking app launches&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Feeds]
+&quot;EnableFeeds&quot;=dword:00000000
+
+; Disable &quot;Tailored experiences with diagnostic data&quot;
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Privacy]
+&quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Search]
+&quot;AllowCortana&quot;=dword:00000000
+&quot;AllowSearchToUseLocation&quot;=dword:00000000
+&quot;ConnectedSearchPrivacy&quot;=dword:00000003
+&quot;CortanaConsent&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Windows Search]
+&quot;CortanaConsent&quot;=dword:00000000
+
+; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
+; Disable required and optional diagnostic data about browser usage
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Edge]
+&quot;ConfigureDoNotTrack&quot;=dword:00000001
+&quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
+&quot;PaymentMethodQueryEnabled&quot;=dword:00000000
+&quot;PersonalizationReportingEnabled&quot;=dword:00000000
+&quot;UserFeedbackAllowed&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common]
+&quot;QMEnable&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
+&quot;Enabled&quot;=dword:00000000
+&quot;IncludeEmail&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\osm]
+&quot;EnableFileObfuscation&quot;=dword:00000001
+&quot;Enablelogging&quot;=dword:00000000
+&quot;EnableUpload&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
+&quot;DisableTelemetry&quot;=dword:00000001
+&quot;SendTelemetry&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\CloudContent]
+&quot;DisableTailoredExperiencesWithDiagnosticData&quot;=dword:00000001
+&quot;DisableWindowsSpotlightOnLockScreen&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\Windows Feeds]
+&quot;EnableFeeds&quot;=dword:00000000
+
+; Disable AI recall
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\WindowsAI]
+&quot;DisableAIDataAnalysis&quot;=dword:00000001
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Bluetooth]
+&quot;AllowAdvertising&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Education]
+&quot;IsEducationEnvironment&quot;=dword:00000001
+
+; Disable &quot;Let Apps use Advertising ID for Relevant Ads&quot; (Windows 10)
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
+&quot;Value&quot;=&quot;Deny&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
+&quot;Value&quot;=&quot;Allow&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
+&quot;Value&quot;=&quot;Deny&quot;
+
+; Disable &quot;Tailored experiences with diagnostic data&quot;
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CPSS\Store]
+&quot;AllowTelemetry&quot;=dword:00000000
+&quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
+&quot;DiagTrackStatus&quot;=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack\TraceManager]
+&quot;miniTraceHasStopTime&quot;=dword:00000000
+&quot;miniTraceIsAutoLogger&quot;=dword:00000000
+&quot;miniTraceProfileHash&quot;=hex:00,00,00,00,00,00,00,00
+&quot;miniTraceRequiredBufferSpace&quot;=dword:00000000
+&quot;miniTraceScenarioId&quot;=-
+&quot;miniTraceSessionStartTime&quot;=hex:00,00,00,00,00,00,00,00
+&quot;miniTraceSlotEnabled&quot;=dword:00000000
+&quot;miniTraceStopTime&quot;=hex:00,00,00,00,00,00,00,00
+
+; Send only Required Diagnostic and Usage Data
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
+&quot;AllowTelemetry&quot;=dword:00000000
+&quot;MaxTelemetryAllowed&quot;=dword:00000000
+
+; Disable &quot;Tailored experiences with diagnostic data&quot;
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
+&quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat]
+&quot;IsUserEligible&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
+&quot;Disabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
+&quot;SensorPermissionState&quot;=dword:00000000
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
 &quot;BraveAIChatEnabled&quot;=dword:00000000
+&quot;BraveNewsDisabled&quot;=dword:00000001
 &quot;BraveRewardsDisabled&quot;=dword:00000001
+&quot;BraveTalkDisabled&quot;=dword:00000001
 &quot;BraveVPNDisabled&quot;=dword:00000001
 &quot;BraveWalletDisabled&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography]
-&quot;ForceKeyProtection&quot;=dword:00000001
 
 ; Disable Microsoft Edge MSN news feed, sponsored links, shopping assistant and more.
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-&quot;AudioSandboxEnabled&quot;=dword:00000001
-&quot;BasicAuthOverHttpEnabled&quot;=dword:00000000
+&quot;AllowGamesMenu&quot;=dword:00000000
+&quot;BuiltInDNSClientEnabled&quot;=dword:00000000
 &quot;ComposeInlineEnabled&quot;=dword:00000000
 &quot;ConfigureDoNotTrack&quot;=dword:00000001
 &quot;CopilotCDPPageContext&quot;=dword:00000000
 &quot;CopilotPageContext&quot;=dword:00000000
 &quot;CryptoWalletEnabled&quot;=dword:00000000
-&quot;DefaultWebUsbGuardSetting&quot;=dword:00000002
-&quot;DefaultWindowManagementSetting&quot;=dword:00000002
 &quot;DiagnosticData&quot;=dword:00000000
-&quot;DnsOverHttpsMode&quot;=&quot;automatic&quot;
-&quot;DynamicCodeSettings&quot;=dword:00000001
 &quot;EdgeAssetDeliveryServiceEnabled&quot;=dword:00000000
 &quot;EdgeCollectionsEnabled&quot;=dword:00000000
 &quot;EdgeEntraCopilotPageContext&quot;=dword:00000000
 &quot;EdgeHistoryAISearchEnabled&quot;=dword:00000000
 &quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
-&quot;EncryptedClientHelloEnabled&quot;=dword:00000001
 &quot;ExperimentationAndConfigurationServiceControl&quot;=dword:00000002
 &quot;GenAILocalFoundationalModelSettings&quot;=dword:00000001
-&quot;HideFirstRunExperience&quot;=dword:00000001
 &quot;HubsSidebarEnabled&quot;=dword:00000000
+&quot;Microsoft365CopilotChatIconEnabled&quot;=dword:00000000
 &quot;MicrosoftEdgeInsiderPromotionEnabled&quot;=dword:00000000
 &quot;NewTabPageBingChatEnabled&quot;=dword:00000000
 &quot;NewTabPageContentEnabled&quot;=dword:00000000
@@ -895,32 +1537,20 @@ Windows Registry Editor Version 5.00
 &quot;PersonalizationReportingEnabled&quot;=dword:00000000
 &quot;ShowMicrosoftRewards&quot;=dword:00000000
 &quot;ShowRecommendationsEnabled&quot;=dword:00000000
+&quot;SpotlightExperiencesAndRecommendationsEnabled&quot;=dword:00000000
 &quot;TabServicesEnabled&quot;=dword:00000000
 &quot;UserFeedbackAllowed&quot;=dword:00000000
 &quot;WalletDonationEnabled&quot;=dword:00000000
+&quot;WebToBrowserSignInEnabled&quot;=dword:00000000
 &quot;WebWidgetAllowed&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
 &quot;BlockThirdPartyCookies&quot;=dword:00000001
 &quot;DefaultShareAdditionalOSRegionSetting&quot;=dword:00000002
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
-&quot;1&quot;=&quot;0xc013&quot;
-&quot;2&quot;=&quot;0xc014&quot;
-&quot;3&quot;=&quot;0x0035&quot;
-&quot;4&quot;=&quot;0x002f&quot;
-&quot;5&quot;=&quot;0x009c&quot;
-&quot;6&quot;=&quot;0x009d&quot;
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EdgeUpdate]
-&quot;CreateDesktopShortcutDefault&quot;=dword:00000000
-
 ; Disable &quot;Inking and Typing Personalization&quot;
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization]
 &quot;AllowInputPersonalization&quot;=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main]
-&quot;AllowPrelaunch&quot;=dword:00000000
 
 ; Disable &quot;Let Apps use Advertising ID for Relevant Ads&quot; (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
@@ -932,17 +1562,20 @@ Windows Registry Editor Version 5.00
 &quot;DisableUAR&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent]
-&quot;DisableConsumerAccountStateContent&quot;=dword:00000001 ; Disable MS 365 Ads in Settings Home
-&quot;DisableWindowsConsumerFeatures&quot;=dword:00000001
+&quot;ConfigureWindowsSpotlight&quot;=dword:00000002
+&quot;DisableSoftLanding&quot;=dword:00000001
+&quot;DisableSpotlightCollectionOnDesktop&quot;=dword:00000001
+&quot;DisableTailoredExperiencesWithDiagnosticData&quot;=dword:00000001
+&quot;DisableThirdPartySuggestions&quot;=dword:00000001
+&quot;DisableWindowsSpotlightFeatures&quot;=dword:00000001
+&quot;DisableWindowsSpotlightOnActionCenter&quot;=dword:00000001
+&quot;DisableWindowsSpotlightOnSettings&quot;=dword:00000001
+&quot;DisableWindowsSpotlightWindowsWelcomeExperience&quot;=dword:00000001
+&quot;IncludeEnterpriseSpotlight&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection]
 &quot;AllowTelemetry&quot;=dword:00000000 ; Send only Required Diagnostic and Usage Data
-&quot;DisableOneSettingsDownloads&quot;=dword:00000001
-&quot;DoNotShowFeedbackNotifications&quot;=dword:00000001
 &quot;LimitDiagnosticLogCollection&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
-&quot;HideRecommendedSection&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports]
 &quot;PreventHandwritingErrorReports&quot;=dword:00000001
@@ -954,6 +1587,7 @@ Windows Registry Editor Version 5.00
 &quot;NoLockScreenCamera&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
+&quot;AllowClipboardHistory&quot;=dword:00000000
 &quot;EnableMmx&quot;=dword:00000000
 &quot;PublishUserActivities&quot;=dword:00000000 ; Disable &quot;Activity History&quot;
 &quot;UploadUserActivities&quot;=dword:00000000
@@ -965,11 +1599,11 @@ Windows Registry Editor Version 5.00
 &quot;EnableFeeds&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
-&quot;AllowCloudSearch&quot;=dword:00000000
 &quot;AllowCortana&quot;=dword:00000000 ; Disable Cortana in search
 &quot;AllowCortanaAboveLock&quot;=dword:00000000 ; Disable Cortana in search
 &quot;AllowSearchToUseLocation&quot;=dword:00000000
 &quot;ConnectedSearchUseWeb&quot;=dword:00000000
+&quot;ConnectedSearchUseWebOverMeteredConnections&quot;=dword:00000000
 &quot;CortanaConsent&quot;=dword:00000000
 &quot;DisableWebSearch&quot;=dword:00000001
 &quot;EnableDynamicContentInWSB&quot;=dword:00000000
@@ -983,92 +1617,61 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet]
 &quot;SpyNetReporting&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
-&quot;fAllowToGetHelp&quot;=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
-&quot;EnableCertPaddingCheck&quot;=&quot;1&quot;
-
 ; Send only Required Diagnostic and Usage Data
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
 &quot;AllowTelemetry&quot;=dword:00000000
 &quot;MaxTelemetryAllowed&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
-&quot;EnableFindMyFiles&quot;=dword:00000001
-&quot;SystemIndexNormalization&quot;=dword:00000003
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search\Gather\Windows\SystemIndex]
-&quot;EnableFindMyFiles&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Cryptography]
-&quot;ForceKeyProtection&quot;=dword:00000001
-
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
-&quot;AudioSandboxEnabled&quot;=dword:00000001
-&quot;BasicAuthOverHttpEnabled&quot;=dword:00000000
+&quot;AllowGamesMenu&quot;=dword:00000000
+&quot;BuiltInDNSClientEnabled&quot;=dword:00000000
 &quot;ComposeInlineEnabled&quot;=dword:00000000
 &quot;ConfigureDoNotTrack&quot;=dword:00000001
 &quot;CopilotCDPPageContext&quot;=dword:00000000
 &quot;CopilotPageContext&quot;=dword:00000000
-&quot;DefaultWebUsbGuardSetting&quot;=dword:00000002
-&quot;DefaultWindowManagementSetting&quot;=dword:00000002
+&quot;CryptoWalletEnabled&quot;=dword:00000000
 &quot;DiagnosticData&quot;=dword:00000000
-&quot;DnsOverHttpsMode&quot;=&quot;automatic&quot;
-&quot;DynamicCodeSettings&quot;=dword:00000001
+&quot;EdgeAssetDeliveryServiceEnabled&quot;=dword:00000000
+&quot;EdgeCollectionsEnabled&quot;=dword:00000000
 &quot;EdgeEntraCopilotPageContext&quot;=dword:00000000
 &quot;EdgeHistoryAISearchEnabled&quot;=dword:00000000
 &quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
-&quot;EncryptedClientHelloEnabled&quot;=dword:00000001
 &quot;ExperimentationAndConfigurationServiceControl&quot;=dword:00000002
 &quot;GenAILocalFoundationalModelSettings&quot;=dword:00000001
 &quot;HubsSidebarEnabled&quot;=dword:00000000
+&quot;Microsoft365CopilotChatIconEnabled&quot;=dword:00000000
+&quot;MicrosoftEdgeInsiderPromotionEnabled&quot;=dword:00000000
 &quot;NewTabPageBingChatEnabled&quot;=dword:00000000
 &quot;NewTabPageContentEnabled&quot;=dword:00000000
 &quot;NewTabPageHideDefaultTopSites&quot;=dword:00000001
 &quot;PersonalizationReportingEnabled&quot;=dword:00000000
+&quot;ShowMicrosoftRewards&quot;=dword:00000000
+&quot;ShowRecommendationsEnabled&quot;=dword:00000000
+&quot;SpotlightExperiencesAndRecommendationsEnabled&quot;=dword:00000000
 &quot;TabServicesEnabled&quot;=dword:00000000
 &quot;UserFeedbackAllowed&quot;=dword:00000000
+&quot;WalletDonationEnabled&quot;=dword:00000000
+&quot;WebToBrowserSignInEnabled&quot;=dword:00000000
 &quot;WebWidgetAllowed&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
 &quot;BlockThirdPartyCookies&quot;=dword:00000001
 &quot;DefaultShareAdditionalOSRegionSetting&quot;=dword:00000002
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
-&quot;1&quot;=&quot;0xc013&quot;
-&quot;2&quot;=&quot;0xc014&quot;
-&quot;3&quot;=&quot;0x0035&quot;
-&quot;4&quot;=&quot;0x002f&quot;
-&quot;5&quot;=&quot;0x009c&quot;
-&quot;6&quot;=&quot;0x009d&quot;
-
 ; Disable &quot;Inking and Typing Personalization&quot;
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\InputPersonalization]
 &quot;AllowInputPersonalization&quot;=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MicrosoftEdge\Main]
-&quot;AllowPrelaunch&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
 &quot;AITEnable&quot;=dword:00000000
 &quot;DisableInventory&quot;=dword:00000001
 &quot;DisableUAR&quot;=dword:00000001
 
-; Disable MS 365 Ads in Settings Home
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\CloudContent]
-&quot;DisableConsumerAccountStateContent&quot;=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DataCollection]
 &quot;AllowTelemetry&quot;=dword:00000000 ; Send only Required Diagnostic and Usage Data
-&quot;DisableOneSettingsDownloads&quot;=dword:00000001
-&quot;DoNotShowFeedbackNotifications&quot;=dword:00000001
 &quot;LimitDiagnosticLogCollection&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Explorer]
-&quot;HideRecommendedSection&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\HandwritingErrorReports]
 &quot;PreventHandwritingErrorReports&quot;=dword:00000001
@@ -1093,6 +1696,7 @@ Windows Registry Editor Version 5.00
 &quot;AllowCortanaAboveLock&quot;=dword:00000000 ; Disable Cortana in search
 &quot;AllowSearchToUseLocation&quot;=dword:00000000
 &quot;ConnectedSearchUseWeb&quot;=dword:00000000
+&quot;ConnectedSearchUseWebOverMeteredConnections&quot;=dword:00000000
 &quot;CortanaConsent&quot;=dword:00000000
 &quot;DisableWebSearch&quot;=dword:00000001
 &quot;EnableDynamicContentInWSB&quot;=dword:00000000
@@ -1106,47 +1710,295 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender\Spynet]
 &quot;SpyNetReporting&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows NT\Terminal Services]
-&quot;fAllowToGetHelp&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager]
+&quot;EnablePeriodicBackup&quot;=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Ndu]
-&quot;Start&quot;=dword:00000002
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\AutoLogger-Diagtrack-Listener]
+&quot;Start&quot;=dword:00000000
+    </File>
+    <File path="C:\Windows\Setup\unattend-09.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+; Enable classic context menu
+[HKEY_USERS\DefaultUser\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
+@=&quot;&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+&quot;ContentDeliveryAllowed&quot;=dword:00000001
+&quot;RotatingLockScreenEnabled&quot;=dword:00000001
+&quot;SubscribedContent-338387Enabled&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\DesktopSpotlight\Settings]
+&quot;EnabledState&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer]
+&quot;EnableAutoTray&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+&quot;Hidden&quot;=dword:00000001 ; Show hidden files
+&quot;LaunchTo&quot;=dword:00000001 ; Launch File Explorer to &quot;This PC&quot;
+&quot;MMTaskbarGlomLevel&quot;=dword:00000001 ; Combine taskbar when full
+&quot;NavPaneExpandToCurrentFolder&quot;=dword:00000001
+&quot;NavPaneShowAllFolders&quot;=dword:00000001
+&quot;ShowCopilotButton&quot;=dword:00000000 ; Disable Copilot button on the taskbar
+&quot;ShowCortanaButton&quot;=dword:00000000
+&quot;Start_Layout&quot;=dword:00000001
+&quot;TaskbarAl&quot;=dword:00000000 ; Align taskbar left
+&quot;TaskbarGlomLevel&quot;=dword:00000001 ; Combine taskbar when full
+&quot;TaskbarMn&quot;=dword:00000000 ; Disable chat taskbar (Windows 11)
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People]
+&quot;PeopleBand&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Feeds]
+&quot;ShellFeedsTaskbarViewMode&quot;=dword:00000002
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
+&quot;RotatingLockScreenOverlayEnabled&quot;=dword:00000000
+
+; Disable chat taskbar (Windows 10)
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;HideSCAMeetNow&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Search]
+&quot;SearchboxTaskbarMode&quot;=dword:00000001 ; Show search icon
+&quot;WebViewBundleType&quot;=dword:00000002
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\SearchSettings\Appearance\Current]
+&quot;baseline&quot;=&quot;{00000000-0000-0000-0000-000000000000}&quot;
+&quot;current&quot;=&quot;{00000000-0000-0000-0000-000000000000}&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Start]
+&quot;VisiblePlaces&quot;=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
+  52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
+
+[HKEY_LOCAL_MACHINE\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+&quot;ShowCmd&quot;=dword:00000003
+&quot;WFlags&quot;=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+&quot;ShowCmd&quot;=dword:00000003
+&quot;WFlags&quot;=dword:00000002
+
+; Disable widgets service
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
+&quot;value&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;HideSCAMeetNow&quot;=dword:00000001 ; Disable chat taskbar (Windows 10)
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
+&quot;{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}&quot;=&quot;&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
+&quot;CopilotDisabledReason&quot;=&quot;IsEnabledForGeographicRegionFailed&quot;
+&quot;IsCopilotAvailable&quot;=dword:00000000
+
+; Disable widgets service
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
+&quot;AllowNewsAndInterests&quot;=dword:00000000
+
+; Disable Copilot service
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
+&quot;TurnOffWindowsCopilot&quot;=dword:00000001
+
+; Disable chat taskbar (Windows 10)
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;HideSCAMeetNow&quot;=dword:00000001
+
+; Disable widgets service
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
+&quot;AllowNewsAndInterests&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
+&quot;AllowClipboardHistory&quot;=dword:00000000
+
+; Disable Copilot service
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
+&quot;TurnOffWindowsCopilot&quot;=dword:00000001
+    </File>
+    <File path="C:\Windows\Setup\unattend-0a.ps1">
+Set-ItemProperty -LiteralPath 'Registry::HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location' -Name 'Value' -Force -Value "Allow"
+Set-ItemProperty -LiteralPath 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location' -Name 'Value' -Force -Value "Allow"
+
+Remove-Item "C:\Windows\Setup\*.xml"
+Remove-Item "C:\Windows\Setup\*.reg"
+Remove-Item "C:\Windows\Setup\*.cmd"
+Remove-Item "C:\Windows\Setup\*.ps1" -Exclude *UserOnce*
+
+Set-Variable -Option Constant BatchFileUrl ([String]'https://bit.ly/qiiwexc_bat')
+Set-Variable -Option Constant BatchFilePath ([String]"$env:USERPROFILE\Desktop\qiiwexc.bat")
+
+Invoke-WebRequest -Uri $BatchFileUrl -OutFile $BatchFilePath
+if (Test-Path $BatchFilePath) {
+    Start-Process PowerShell "&amp; $BatchFilePath"
+} else {
+    [Diagnostics.Process]::Start($BatchFileUrl )
+}
+    </File>
+    <File path="C:\Windows\Setup\unattend-0b.ps1">
+Set-Variable -Option Constant NetworkAdapter (Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
+if ($NetworkAdapter) {
+    $NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @('1.1.1.2', '1.0.0.2') }
+}
+    </File>
+    <File path="C:\Windows\Setup\unattend-0c.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Edge\SmartScreenPuaEnabled]
+@=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Internet Explorer\Main]
+&quot;Isolation&quot;=&quot;PMEM&quot;
+&quot;Isolation64Bit&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Internet Explorer\PhishingFilter]
+&quot;EnabledV9&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;SecureProtocols&quot;=dword:00002820
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\0]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\1]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\2]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\3]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\LockDown_Zones\4]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\0]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\1]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\2]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4]
+&quot;140C&quot;=dword:00000003
+&quot;140D&quot;=dword:00000003
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
+&quot;NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;NoDriveTypeAutoRun&quot;=dword:00000091
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\Wintrust\Config]
+&quot;EnableCertPaddingCheck&quot;=&quot;1&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive]
+&quot;PreventNetworkTrafficPreUserSignIn&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit]
+&quot;ProcessCreationIncludeCmdLine_Enabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\NoExecuteState]
+&quot;LastNoExecuteRadioButtonState&quot;=dword:000036BD
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon]
+&quot;scremoveoption&quot;=&quot;1&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Script Host\Settings]
+&quot;Enabled&quot;=dword:00000000
+&quot;IgnoreUserSettings&quot;=dword:00000001
+&quot;Remote&quot;=dword:00000000
+&quot;TrustPolicy&quot;=dword:00000002
+&quot;UseWinSAFER&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography]
+&quot;ForceKeyProtection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+&quot;AudioSandboxEnabled&quot;=dword:00000001
+&quot;BasicAuthOverHttpEnabled&quot;=dword:00000000
+&quot;DefaultWebUsbGuardSetting&quot;=dword:00000002
+&quot;DnsOverHttpsMode&quot;=&quot;automatic&quot;
+&quot;DynamicCodeSettings&quot;=dword:00000001
+&quot;EncryptedClientHelloEnabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
+&quot;1&quot;=&quot;0xc013&quot;
+&quot;2&quot;=&quot;0xc014&quot;
+&quot;3&quot;=&quot;0x0035&quot;
+&quot;4&quot;=&quot;0x002f&quot;
+&quot;5&quot;=&quot;0x009c&quot;
+&quot;6&quot;=&quot;0x009d&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FVE]
+&quot;EnableBDEWithNoTPM&quot;=dword:00000001
+&quot;UseAdvancedStartup&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\HTA]
+&quot;DisableHTMLApplication&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat]
+&quot;VDMDisallowed&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Cryptography\Wintrust\Config]
+&quot;EnableCertPaddingCheck&quot;=&quot;1&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Cryptography]
+&quot;ForceKeyProtection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
+&quot;AudioSandboxEnabled&quot;=dword:00000001
+&quot;BasicAuthOverHttpEnabled&quot;=dword:00000000
+&quot;DefaultWebUsbGuardSetting&quot;=dword:00000002
+&quot;DnsOverHttpsMode&quot;=&quot;automatic&quot;
+&quot;DynamicCodeSettings&quot;=dword:00000001
+&quot;EncryptedClientHelloEnabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\TLSCipherSuiteDenyList]
+&quot;1&quot;=&quot;0xc013&quot;
+&quot;2&quot;=&quot;0xc014&quot;
+&quot;3&quot;=&quot;0x0035&quot;
+&quot;4&quot;=&quot;0x002f&quot;
+&quot;5&quot;=&quot;0x009c&quot;
+&quot;6&quot;=&quot;0x009d&quot;
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control]
-&quot;SvcHostSplitThresholdInKB&quot;=dword:00000000
+&quot;DisableRemoteSCMEndpoints&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy]
-&quot;VerifiedAndReputablePolicyState&quot;=dword:00000000
+&quot;VerifiedAndReputablePolicyState&quot;=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
-&quot;DisableEmoticon&quot;=dword:00000001
-&quot;DisplayParameters&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
-&quot;LongPathsEnabled&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa]
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA]
 &quot;LmCompatibilityLevel&quot;=dword:00000005
+&quot;NoLMHash&quot;=dword:00000001
 &quot;restrictanonymous&quot;=dword:00000001
 &quot;RestrictRemoteSAM&quot;=&quot;O:BAG:BAD:(A;;RC;;;BA)&quot;
+&quot;RunAsPPL&quot;=dword:00000001
 &quot;SCENoApplyLegacyAuditPolicy&quot;=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0]
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA\MSV1_0]
 &quot;allownullsessionfallback&quot;=dword:00000000
 &quot;NtlmMinClientSec&quot;=dword:20080000
 &quot;NtlmMinServerSec&quot;=dword:20080000
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Language]
-&quot;Default&quot;=&quot;0419&quot;
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Locale]
-&quot;(Default)&quot;=&quot;00000419&quot;
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
-&quot;PowerThrottlingOff&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance]
-&quot;fAllowToGetHelp&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56]
 &quot;Enabled&quot;=dword:00000000
@@ -1197,14 +2049,23 @@ Windows Registry Editor Version 5.00
 &quot;DisabledByDefault&quot;=dword:00000001
 &quot;Enabled&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager]
-&quot;EnablePeriodicBackup&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Client]
+&quot;DisabledByDefault&quot;=dword:00000000
+&quot;Enabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Server]
+&quot;DisabledByDefault&quot;=dword:00000000
+&quot;Enabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager]
+&quot;CWDIllegalInDLLSearch&quot;=dword:ffffffff
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
 &quot;MP_FORCE_USE_SANDBOX&quot;=&quot;1&quot;
+&quot;NoDefaultCurrentDirectoryInExePath&quot;=&quot;*&quot;
 
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\AutoLogger-Diagtrack-Listener]
-&quot;Start&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WoW]
+&quot;DisallowedPolicyDefault&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
 &quot;IRPStackSize&quot;=dword:0000001E
@@ -1215,6 +2076,39 @@ Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration]
 &quot;Status&quot;=dword:00000000
+    </File>
+    <File path="C:\Windows\Setup\unattend-0d.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
+&quot;VideoQualityOnBattery&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+&quot;NetworkThrottlingIndex&quot;=dword:FFFFFFFF
+&quot;SystemResponsiveness&quot;=dword:00000010
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+&quot;StartupBoostEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main]
+&quot;AllowPrelaunch&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
+&quot;StartupBoostEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\MicrosoftEdge\Main]
+&quot;AllowPrelaunch&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control]
+&quot;SvcHostSplitThresholdInKB&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
+&quot;PowerThrottlingOff&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Ndu]
+&quot;Start&quot;=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
 &quot;DefaultTTL&quot;=dword:00000064
@@ -1224,112 +2118,211 @@ Windows Registry Editor Version 5.00
 &quot;TcpMaxDupAcks&quot;=dword:00000002
 &quot;TCPTimedWaitDelay&quot;=dword:00000030
     </File>
-    <File path="C:\Windows\Setup\unattend-05.reg">
+    <File path="C:\Windows\Setup\unattend-0e.reg">
 Windows Registry Editor Version 5.00
 
-; Disable widgets service
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
-&quot;value&quot;=dword:00000000
+Windows Registry Editor Version 5.00
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-&quot;HideSCAMeetNow&quot;=dword:00000001 ; Disable chat taskbar (Windows 10)
+[HKEY_USERS\DefaultUser\Control Panel\Desktop]
+&quot;JPEGImportQuality&quot;=dword:00000064
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\input\Settings]
+&quot;MultilingualEnabled&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Notepad]
+&quot;iWindowPosX&quot;=dword:FFFFFFF8
+&quot;iWindowPosY&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
+&quot;WindowPlacement&quot;=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
+  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
+&quot;Value&quot;=&quot;Allow&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+&quot;NavPaneShowAllCloudStates&quot;=dword:00000001
+&quot;SeparateProcess&quot;=dword:00000001
+&quot;ShowClockInNotificationCenter&quot;=dword:00000001
+
+; Enable &quot;End task&quot; in the taskbar
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
+&quot;TaskbarEndTask&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
+&quot;AllItemsIconView&quot;=dword:00000000
+&quot;StartupPage&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\ShowJumpView]
+&quot;AllItemsIconView&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+&quot;{2cc5ca98-6485-489a-920e-b3e88a6ccce3}&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
+&quot;PreviewPaneSizer&quot;=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
+&quot;PreviewPaneSizer&quot;=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
+&quot;EnthusiastMode&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
+&quot;ArchivedFiles&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
+&quot;VisualFXSetting&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
+&quot;01&quot;=dword:00000001
+&quot;256&quot;=dword:0000003C
+&quot;2048&quot;=dword:0000001E
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
+&quot;fTaskEnabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SchedulingAgent]
+&quot;LogPath&quot;=hex(2):25,53,79,73,74,65,6d,52,6f,6f,74,25,5c,53,79,73,74,65,6d,33,\
+  32,5c,4c,6f,67,46,69,6c,65,73,5c,53,43,48,45,44,55,4c,45,2e,4c,4f,47,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\BranchCache]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\D3D Shader Cache]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Delivery Optimization Files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Device Driver Packages]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Diagnostic Data Viewer database files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Downloaded Program Files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Internet Cache Files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Language Pack]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Old ChkDsk Files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Previous Installations]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Recycle Bin]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\RetailDemo Offline Content]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Setup Log Files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error memory dump files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error minidump files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Setup Files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Thumbnail Cache]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\User file versions]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting Files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files]
+&quot;StateFlags&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files]
+&quot;StateFlags&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
 &quot;ConsentPromptBehaviorUser&quot;=dword:00000000
+&quot;DisableAutomaticRestartSignOn&quot;=dword:00000001
 &quot;FilterAdministratorToken&quot;=dword:00000001
 &quot;PromptOnSecureDesktop&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
-&quot;{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}&quot;=&quot;&quot;
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update]
+&quot;AUOptions&quot;=dword:00000004
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
-&quot;CopilotDisabledReason&quot;=&quot;IsEnabledForGeographicRegionFailed&quot;
-&quot;IsCopilotAvailable&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\AU]
+&quot;AUOptions&quot;=dword:00000004
 
-; Disable widgets service
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
-&quot;AllowNewsAndInterests&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services]
+&quot;DefaultService&quot;=&quot;7971f918-a847-4430-9279-4a52d1efe18d&quot;
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
-&quot;AllowClipboardHistory&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services\7971F918-A847-4430-9279-4A52D1EFE18D]
+&quot;RegisteredWithAU&quot;=dword:00000001
 
-; Disable Copilot service
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
-&quot;TurnOffWindowsCopilot&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search\Preferences]
+&quot;AllowIndexingEncryptedStoresOrItems&quot;=dword:00000001
 
-; Disable chat taskbar (Windows 10)
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-&quot;HideSCAMeetNow&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search]
+&quot;EnableFindMyFiles&quot;=dword:00000001
+&quot;SystemIndexNormalization&quot;=dword:00000003
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex]
+&quot;EnableFindMyFiles&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings]
+&quot;AllowMUUpdateService&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
 &quot;ConsentPromptBehaviorUser&quot;=dword:00000000
 &quot;FilterAdministratorToken&quot;=dword:00000001
 &quot;PromptOnSecureDesktop&quot;=dword:00000000
 
-; Disable widgets service
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
-&quot;AllowNewsAndInterests&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search]
+&quot;EnableFindMyFiles&quot;=dword:00000001
+&quot;SystemIndexNormalization&quot;=dword:00000003
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
-&quot;AllowClipboardHistory&quot;=dword:00000000
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Search\Gather\Windows\SystemIndex]
+&quot;EnableFindMyFiles&quot;=dword:00000001
 
-; Disable Copilot service
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
-&quot;TurnOffWindowsCopilot&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
+&quot;DisableEmoticon&quot;=dword:00000001
+&quot;DisplayParameters&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
+&quot;LongPathsEnabled&quot;=dword:00000001
+&quot;NTFSDisable8dot3NameCreation&quot;=dword:00000001
+&quot;Win95TruncatedExtensions&quot;=dword:00000000
     </File>
-    <File path="C:\Windows\Setup\unattend-06.ps1">
-Set-ItemProperty -LiteralPath 'Registry::HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location' -Name 'Value' -Force -Value "Allow"
-Set-ItemProperty -LiteralPath 'Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location' -Name 'Value' -Force -Value "Allow"
-
-Remove-Item "C:\Windows\Setup\*.xml"
-Remove-Item "C:\Windows\Setup\*.reg"
-Remove-Item "C:\Windows\Setup\*.cmd"
-Remove-Item "C:\Windows\Setup\*.ps1" -Exclude *UserOnce*
-
-Set-Variable -Option Constant BatchFileUrl ([String]'https://bit.ly/qiiwexc_bat')
-Set-Variable -Option Constant BatchFilePath ([String]"$env:USERPROFILE\Desktop\qiiwexc.bat")
-
-Invoke-WebRequest -Uri $BatchFileUrl -OutFile $BatchFilePath
-if (Test-Path $BatchFilePath) {
-    Start-Process PowerShell "&amp; $BatchFilePath"
-} else {
-    [Diagnostics.Process]::Start($BatchFileUrl )
-}
-    </File>
-    <File path="C:\Windows\Setup\unattend-07.ps1">
-Set-Variable -Option Constant NetworkAdapter (Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True')
-if ($NetworkAdapter) {
-    $NetworkAdapter | Invoke-CimMethod -MethodName 'SetDNSServerSearchOrder' -Arguments @{ DNSServerSearchOrder = @('1.1.1.2', '1.0.0.2') }
-}
-    </File>
-    <File path="C:\Windows\Setup\unattend-08.reg">
+    <File path="C:\Windows\Setup\unattend-0f.reg">
 Windows Registry Editor Version 5.00
 
-[HKEY_USERS\DefaultUser\Software\7-Zip\FM]
-&quot;AlternativeSelection&quot;=dword:00000001
-&quot;Columns\RootFolder&quot;=hex:01,00,00,00,00,00,00,00,01,00,00,00,04,00,00,00,01,00,00,00,A0,00,00,00
-&quot;FlatViewArc0&quot;=dword:00000000
-&quot;FlatViewArc1&quot;=dword:00000000
-&quot;FolderShortcuts&quot;=&quot;&quot;
-&quot;FullRow&quot;=dword:00000001
-&quot;ListMode&quot;=dword:00000303
-&quot;PanelPath0&quot;=&quot;&quot;
-&quot;PanelPath1&quot;=&quot;&quot;
-&quot;Panels&quot;=hex:02,00,00,00,00,00,00,00,BE,03,00,00
-&quot;Position&quot;=hex:B6,00,00,00,B6,00,00,00,56,06,00,00,49,03,00,00,01,00,00,00
-&quot;ShowDots&quot;=dword:00000001
-&quot;ShowGrid&quot;=dword:00000001
-&quot;ShowRealFileIcons&quot;=dword:00000001
-&quot;ShowSystemMenu&quot;=dword:00000001
-&quot;SingleClick&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\7-Zip\Options]
-&quot;ContextMenu&quot;=dword:00001367
-&quot;MenuIcons&quot;=dword:00000001
-&quot;WriteZoneIdExtract&quot;=dword:00000001
-    </File>
-    <File path="C:\Windows\Setup\unattend-09.reg">
 Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
+@=&quot;&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\GameBar]
+&quot;ShowStartupPanel&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\General]
 &quot;ShownFirstRunOptin&quot;=dword:00000001
@@ -1340,42 +2333,171 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\LinkedIn]
 &quot;OfficeLinkedIn&quot;=dword:00000000
 
-[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
-&quot;OptionalConnectedExperiencesNoticeVersion&quot;=dword:00000002
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+&quot;ContentDeliveryAllowed&quot;=dword:00000000
+&quot;FeatureManagementEnabled&quot;=dword:00000000
+&quot;OemPreInstalledAppsEnabled&quot;=dword:00000000
+&quot;PreInstalledAppsEnabled&quot;=dword:00000000
+&quot;PreInstalledAppsEverEnabled&quot;=dword:00000000
+&quot;RotatingLockScreenEnabled&quot;=dword:00000000
+&quot;RotatingLockScreenOverlayEnabled&quot;=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
+&quot;RotatingLockScreenOverlayVisible&quot;=dword:00000000
+&quot;SilentInstalledAppsEnabled&quot;=dword:00000000 ; Automatic Installation of Suggested Apps
+&quot;SoftLandingEnabled&quot;=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+&quot;SubscribedContent-202914Enabled&quot;=dword:00000000
+&quot;SubscribedContent-280815Enabled&quot;=dword:00000000
+&quot;SubscribedContent-310093Enabled&quot;=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what&apos;s new and suggested
+&quot;SubscribedContent-338387Enabled&quot;=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
+&quot;SubscribedContent-338388Enabled&quot;=dword:00000000 ; Occasionally show suggestions in Start
+&quot;SubscribedContent-338389Enabled&quot;=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
+&quot;SubscribedContent-338393Enabled&quot;=dword:00000000
+&quot;SubscribedContent-353694Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
+&quot;SubscribedContent-353696Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
+&quot;SubscribedContent-353698Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
+&quot;SubscribedContent-88000045Enabled&quot;=dword:00000000
+&quot;SubscribedContent-88000161Enabled&quot;=dword:00000000
+&quot;SubscribedContent-88000163Enabled&quot;=dword:00000000
+&quot;SubscribedContent-88000165Enabled&quot;=dword:00000000
+&quot;SubscribedContentEnabled&quot;=dword:00000000
+&quot;SystemPaneSuggestionsEnabled&quot;=dword:00000000 ; Occasionally show suggestions in Start
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
+&quot;ShowedToastAtLevel&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer]
+&quot;ShowRecommendations&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+&quot;ShowSyncProviderNotifications&quot;=dword:00000000 ; Sync provider ads
+&quot;Start_AccountNotifications&quot;=dword:00000000 ; Disable Show account-related notifications
+&quot;Start_IrisRecommendations&quot;=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
+&quot;{20D04FE0-3AEA-1069-A2D8-08002B30309D}&quot;=dword:00000000
+&quot;MSEdge&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Mobility]
+&quot;OptedIn&quot;=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
+
+; Disable Windows Backup reminder notifications
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
+&quot;Enabled&quot;=dword:00000000
+
+; Disable &quot;Suggested&quot; app notifications (Ads for MS services)
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\PenWorkspace]
+&quot;PenWorkspaceAppSuggestionsEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Search]
+&quot;BingSearchEnabled&quot;=dword:00000000 ; Disable Bing search
+&quot;ConnectedSearchUseWeb&quot;=dword:00000000
+&quot;ConnectedSearchUseWebOverMeteredConnections&quot;=dword:00000000
+&quot;DisableWebSearch&quot;=dword:00000001
+&quot;SearchboxTaskbarMode&quot;=dword:00000003 ; Show search icon and label
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
+&quot;IsDynamicSearchBoxEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications]
+&quot;EnableAccountNotifications&quot;=dword:00000000
+
+; Suggest ways I can finish setting up my device to get the most out of Windows
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
+&quot;ScOoBESystemSettingEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows Security Health\State]
+&quot;AccountProtection_MicrosoftAccount_Disconnected&quot;=dword:00000001
+&quot;Hardware_DataEncryption_AddMsa&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common]
 &quot;LinkedIn&quot;=dword:00000000
-&quot;QMEnable&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
-&quot;Enabled&quot;=dword:00000000
-&quot;IncludeEmail&quot;=dword:00000000
 &quot;SurveyEnabled&quot;=dword:00000000
 
-[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\osm]
-&quot;EnableFileObfuscation&quot;=dword:00000001
-&quot;Enablelogging&quot;=dword:00000000
-&quot;EnableUpload&quot;=dword:00000000
+; Disable Bing in search
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\Explorer]
+&quot;DisableSearchBoxSuggestions&quot;=dword:00000001
 
-[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
-&quot;DisableTelemetry&quot;=dword:00000001
-&quot;SendTelemetry&quot;=dword:00000003
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Start]
+&quot;HideRecommendedSection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
+&quot;SecurityHealth&quot;=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;AllowOnlineTips&quot;=dword:00000000
+
+; Disable Windows Backup reminder notifications
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
+&quot;DisableMonitoring&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\AU]
+&quot;NoAutoRebootWithLoggedOnUsers&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection]
+&quot;SummaryNotificationDisabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+&quot;AutoImportAtFirstRun&quot;=dword:00000004
+&quot;DefaultBrowserSettingEnabled&quot;=dword:00000000
+&quot;DefaultBrowserSettingsCampaignEnabled&quot;=dword:00000000
+&quot;HideFirstRunExperience&quot;=dword:00000001
+&quot;ShowPDFDefaultRecommendationsEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EdgeUpdate]
+&quot;CreateDesktopShortcutDefault&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent]
+&quot;DisableConsumerAccountStateContent&quot;=dword:00000001 ; Disable MS 365 Ads in Settings Home
+&quot;DisableWindowsConsumerFeatures&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection]
+&quot;DisableOneSettingsDownloads&quot;=dword:00000001
+&quot;DoNotShowFeedbackNotifications&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
+&quot;HideRecommendedSection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
+&quot;SetActiveHours&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
+&quot;fAllowToGetHelp&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
+&quot;AutoImportAtFirstRun&quot;=dword:00000004
+&quot;DefaultBrowserSettingEnabled&quot;=dword:00000000
+&quot;DefaultBrowserSettingsCampaignEnabled&quot;=dword:00000000
+&quot;HideFirstRunExperience&quot;=dword:00000001
+&quot;ShowPDFDefaultRecommendationsEnabled&quot;=dword:00000000
+
+; Disable MS 365 Ads in Settings Home
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\CloudContent]
+&quot;DisableConsumerAccountStateContent&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DataCollection]
+&quot;DisableOneSettingsDownloads&quot;=dword:00000001
+&quot;DoNotShowFeedbackNotifications&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Explorer]
+&quot;HideRecommendedSection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows NT\Terminal Services]
+&quot;fAllowToGetHelp&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance]
+&quot;fAllowToGetHelp&quot;=dword:00000000
     </File>
-    <File path="C:\Windows\Setup\unattend-0a.reg">
+    <File path="C:\Windows\Setup\unattend-10.reg">
 Windows Registry Editor Version 5.00
 
-[HKEY_USERS\DefaultUser\Control Panel\Desktop]
-&quot;JPEGImportQuality&quot;=dword:00000064
+Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Control Panel\International\User Profile]
 &quot;HttpAcceptLanguageOptOut&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
-&quot;ShowCmd&quot;=dword:00000003
-&quot;WFlags&quot;=dword:00000002
-
-[HKEY_USERS\DefaultUser\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
-@=&quot;&quot;
 
 [HKEY_USERS\DefaultUser\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]
 &quot;DoNotTrack&quot;=dword:00000001
@@ -1383,16 +2505,8 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\DefaultUser\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
 &quot;EnableCortana&quot;=dword:00000000
 
-[HKEY_USERS\DefaultUser\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
-&quot;ShowCmd&quot;=dword:00000003
-&quot;WFlags&quot;=dword:00000002
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Edge\SmartScreenPuaEnabled]
-@=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\input\Settings]
-&quot;EnableHwkbTextPrediction&quot;=dword:00000001
-&quot;MultilingualEnabled&quot;=dword:00000001
+[HKEY_USERS\DefaultUser\Software\Microsoft\Clipboard]
+&quot;EnableClipboardHistory&quot;=dword:00000000
 
 ; Disable &quot;Improve Inking and Typing Recognition&quot;
 [HKEY_USERS\DefaultUser\Software\Microsoft\Input\TIPC]
@@ -1408,21 +2522,6 @@ Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Internet Explorer\Main]
 &quot;DoNotTrack&quot;=dword:00000001
-&quot;Isolation&quot;=&quot;PMEM&quot;
-&quot;Isolation64Bit&quot;=dword:00000001
-&quot;Use FormSuggest&quot;=&quot;yes&quot;
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Internet Explorer\PhishingFilter]
-&quot;EnabledV9&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\General]
-&quot;ShownFirstRunOptin&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\Licensing]
-&quot;EulasSetAccepted&quot;=&quot;0,49,&quot;
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\LinkedIn]
-&quot;OfficeLinkedIn&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
 &quot;OptionalConnectedExperiencesNoticeVersion&quot;=dword:00000002
@@ -1446,128 +2545,31 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
 &quot;Value&quot;=&quot;Deny&quot;
 
-[HKEY_USERS\DefaultUser\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
-&quot;Value&quot;=&quot;Allow&quot;
-
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
 &quot;Value&quot;=&quot;Deny&quot;
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
-&quot;ContentDeliveryAllowed&quot;=dword:00000000
-&quot;OemPreInstalledAppsEnabled&quot;=dword:00000000
-&quot;PreInstalledAppsEnabled&quot;=dword:00000000
-&quot;PreInstalledAppsEverEnabled&quot;=dword:00000000
-&quot;RotatingLockScreenEnabled&quot;=dword:00000000
-&quot;RotatingLockScreenOverlayEnabled&quot;=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
-&quot;RotatingLockScreenOverlayVisible&quot;=dword:00000000
-&quot;SilentInstalledAppsEnabled&quot;=dword:00000000 ; Automatic Installation of Suggested Apps
-&quot;SoftLandingEnabled&quot;=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
-&quot;SubscribedContent-202914Enabled&quot;=dword:00000000
-&quot;SubscribedContent-280815Enabled&quot;=dword:00000000
-&quot;SubscribedContent-310093Enabled&quot;=dword:00000000 ; Show me the Windows welcome experience after updates and occasionally when I sign in to highlight what&apos;s new and suggested
-&quot;SubscribedContent-338387Enabled&quot;=dword:00000000 ; Get fun facts, tips and more from Windows and Cortana on your lock screen
-&quot;SubscribedContent-338388Enabled&quot;=dword:00000000 ; Occasionally show suggestions in Start
-&quot;SubscribedContent-338389Enabled&quot;=dword:00000000 ; Get tips, tricks, and suggestions as you use Windows
-&quot;SubscribedContent-353694Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
-&quot;SubscribedContent-353696Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
-&quot;SubscribedContent-353698Enabled&quot;=dword:00000000 ; Show me suggested content in the Settings app
-&quot;SubscribedContent-88000045Enabled&quot;=dword:00000000
-&quot;SubscribedContent-88000161Enabled&quot;=dword:00000000
-&quot;SubscribedContent-88000163Enabled&quot;=dword:00000000
-&quot;SubscribedContent-88000165Enabled&quot;=dword:00000000
-&quot;SystemPaneSuggestionsEnabled&quot;=dword:00000000 ; Occasionally show suggestions in Start
 
 ; Disable &quot;Tailored experiences with diagnostic data&quot;
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
 &quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
 
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
-&quot;ShowedToastAtLevel&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer]
-&quot;ShowRecommendations&quot;=dword:00000000
-
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-&quot;NavPaneShowAllCloudStates&quot;=dword:00000001
-&quot;SeparateProcess&quot;=dword:00000001
-&quot;ShowSyncProviderNotifications&quot;=dword:00000000 ; Sync provider ads
-&quot;Start_AccountNotifications&quot;=dword:00000000 ; Disable Show account-related notifications
-&quot;Start_IrisRecommendations&quot;=dword:00000000 ; Show recommendations for tips, shortcuts, new apps, and more in start
 &quot;Start_TrackProgs&quot;=dword:00000000 ; Disable &quot;Let Windows improve Start and search results by tracking app launches&quot;
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel]
-&quot;AllItemsIconView&quot;=dword:00000000
-&quot;StartupPage&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\ShowJumpView]
-&quot;AllItemsIconView&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
-&quot;{20D04FE0-3AEA-1069-A2D8-08002B30309D}&quot;=dword:00000000
-&quot;MSEdge&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences]
-&quot;ArchivedFiles&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects]
-&quot;VisualFXSetting&quot;=dword:00000001
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Feeds]
 &quot;EnableFeeds&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
-&quot;SecureProtocols&quot;=dword:00002820
-&quot;SyncMode5&quot;=dword:00000003
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Mobility]
-&quot;OptedIn&quot;=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
-&quot;NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK&quot;=dword:00000000
-
-; Disable Windows Backup reminder notifications
-[HKEY_USERS\DefaultUser\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
-&quot;Enabled&quot;=dword:00000000
-
-; Disable &quot;Suggested&quot; app notifications (Ads for MS services)
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
-&quot;Enabled&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-&quot;NoDriveTypeAutoRun&quot;=dword:00000091
 
 ; Disable &quot;Tailored experiences with diagnostic data&quot;
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Privacy]
 &quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Search]
-&quot;BingSearchEnabled&quot;=dword:00000000 ; Disable Bing search
-&quot;SearchboxTaskbarMode&quot;=dword:00000003 ; Show search icon and label
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
-&quot;IsDynamicSearchBoxEnabled&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy]
-&quot;01&quot;=dword:00000001
-&quot;256&quot;=dword:0000003C
-&quot;2048&quot;=dword:0000001E
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications]
-&quot;EnableAccountNotifications&quot;=dword:00000000
-
-; Suggest ways I can finish setting up my device to get the most out of Windows
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
-&quot;ScoobeSystemSettingEnabled&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
-&quot;VideoQualityOnBattery&quot;=dword:00000001
+&quot;AllowCortana&quot;=dword:00000000
+&quot;AllowSearchToUseLocation&quot;=dword:00000000
+&quot;ConnectedSearchPrivacy&quot;=dword:00000003
+&quot;CortanaConsent&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Windows Search]
 &quot;CortanaConsent&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows Security Health\State]
-&quot;AccountProtection_MicrosoftAccount_Disconnected&quot;=dword:00000001
-&quot;Hardware_DataEncryption_AddMsa&quot;=dword:00000000
 
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
@@ -1579,13 +2581,11 @@ Windows Registry Editor Version 5.00
 &quot;UserFeedbackAllowed&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common]
-&quot;LinkedIn&quot;=dword:00000000
 &quot;QMEnable&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
 &quot;Enabled&quot;=dword:00000000
 &quot;IncludeEmail&quot;=dword:00000000
-&quot;SurveyEnabled&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\osm]
 &quot;EnableFileObfuscation&quot;=dword:00000001
@@ -1600,34 +2600,293 @@ Windows Registry Editor Version 5.00
 &quot;DisableTailoredExperiencesWithDiagnosticData&quot;=dword:00000001
 &quot;DisableWindowsSpotlightOnLockScreen&quot;=dword:00000001
 
-; Disable Bing in search
-[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\Explorer]
-&quot;DisableSearchBoxSuggestions&quot;=dword:00000001
-
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\Windows Feeds]
 &quot;EnableFeeds&quot;=dword:00000000
 
 ; Disable AI recall
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\WindowsAI]
 &quot;DisableAIDataAnalysis&quot;=dword:00000001
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Performance Toolkit\v5\WPRControl\DiagTrackMiniLogger\Boot\RunningProfile]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Bluetooth]
+&quot;AllowAdvertising&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Education]
+&quot;IsEducationEnvironment&quot;=dword:00000001
+
+; Disable &quot;Let Apps use Advertising ID for Relevant Ads&quot; (Windows 10)
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
+&quot;Enabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics]
+&quot;Value&quot;=&quot;Deny&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location]
+&quot;Value&quot;=&quot;Allow&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation]
+&quot;Value&quot;=&quot;Deny&quot;
+
+; Disable &quot;Tailored experiences with diagnostic data&quot;
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CPSS\Store]
+&quot;AllowTelemetry&quot;=dword:00000000
+&quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack]
+&quot;DiagTrackStatus&quot;=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack\TraceManager]
+&quot;miniTraceHasStopTime&quot;=dword:00000000
+&quot;miniTraceIsAutoLogger&quot;=dword:00000000
+&quot;miniTraceProfileHash&quot;=hex:00,00,00,00,00,00,00,00
+&quot;miniTraceRequiredBufferSpace&quot;=dword:00000000
+&quot;miniTraceScenarioId&quot;=-
+&quot;miniTraceSessionStartTime&quot;=hex:00,00,00,00,00,00,00,00
+&quot;miniTraceSlotEnabled&quot;=dword:00000000
+&quot;miniTraceStopTime&quot;=hex:00,00,00,00,00,00,00,00
+
+; Send only Required Diagnostic and Usage Data
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
+&quot;AllowTelemetry&quot;=dword:00000000
+&quot;MaxTelemetryAllowed&quot;=dword:00000000
+
+; Disable &quot;Tailored experiences with diagnostic data&quot;
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
+&quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat]
+&quot;IsUserEligible&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
+&quot;Disabled&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}]
+&quot;SensorPermissionState&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
+&quot;BraveAIChatEnabled&quot;=dword:00000000
+&quot;BraveNewsDisabled&quot;=dword:00000001
+&quot;BraveRewardsDisabled&quot;=dword:00000001
+&quot;BraveTalkDisabled&quot;=dword:00000001
+&quot;BraveVPNDisabled&quot;=dword:00000001
+&quot;BraveWalletDisabled&quot;=dword:00000001
+
+; Disable Microsoft Edge MSN news feed, sponsored links, shopping assistant and more.
+; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
+; Disable required and optional diagnostic data about browser usage
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
+&quot;AllowGamesMenu&quot;=dword:00000000
+&quot;BuiltInDNSClientEnabled&quot;=dword:00000000
+&quot;ComposeInlineEnabled&quot;=dword:00000000
+&quot;ConfigureDoNotTrack&quot;=dword:00000001
+&quot;CopilotCDPPageContext&quot;=dword:00000000
+&quot;CopilotPageContext&quot;=dword:00000000
+&quot;CryptoWalletEnabled&quot;=dword:00000000
+&quot;DiagnosticData&quot;=dword:00000000
+&quot;EdgeAssetDeliveryServiceEnabled&quot;=dword:00000000
+&quot;EdgeCollectionsEnabled&quot;=dword:00000000
+&quot;EdgeEntraCopilotPageContext&quot;=dword:00000000
+&quot;EdgeHistoryAISearchEnabled&quot;=dword:00000000
+&quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
+&quot;ExperimentationAndConfigurationServiceControl&quot;=dword:00000002
+&quot;GenAILocalFoundationalModelSettings&quot;=dword:00000001
+&quot;HubsSidebarEnabled&quot;=dword:00000000
+&quot;Microsoft365CopilotChatIconEnabled&quot;=dword:00000000
+&quot;MicrosoftEdgeInsiderPromotionEnabled&quot;=dword:00000000
+&quot;NewTabPageBingChatEnabled&quot;=dword:00000000
+&quot;NewTabPageContentEnabled&quot;=dword:00000000
+&quot;NewTabPageHideDefaultTopSites&quot;=dword:00000001
+&quot;PersonalizationReportingEnabled&quot;=dword:00000000
+&quot;ShowMicrosoftRewards&quot;=dword:00000000
+&quot;ShowRecommendationsEnabled&quot;=dword:00000000
+&quot;SpotlightExperiencesAndRecommendationsEnabled&quot;=dword:00000000
+&quot;TabServicesEnabled&quot;=dword:00000000
+&quot;UserFeedbackAllowed&quot;=dword:00000000
+&quot;WalletDonationEnabled&quot;=dword:00000000
+&quot;WebToBrowserSignInEnabled&quot;=dword:00000000
+&quot;WebWidgetAllowed&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
+&quot;BlockThirdPartyCookies&quot;=dword:00000001
+&quot;DefaultShareAdditionalOSRegionSetting&quot;=dword:00000002
+
+; Disable &quot;Inking and Typing Personalization&quot;
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization]
+&quot;AllowInputPersonalization&quot;=dword:00000000
+
+; Disable &quot;Let Apps use Advertising ID for Relevant Ads&quot; (Windows 10)
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
+&quot;DisabledByGroupPolicy&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat]
+&quot;AITEnable&quot;=dword:00000000
+&quot;DisableInventory&quot;=dword:00000001
+&quot;DisableUAR&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent]
+&quot;ConfigureWindowsSpotlight&quot;=dword:00000002
+&quot;DisableSoftLanding&quot;=dword:00000001
+&quot;DisableSpotlightCollectionOnDesktop&quot;=dword:00000001
+&quot;DisableTailoredExperiencesWithDiagnosticData&quot;=dword:00000001
+&quot;DisableThirdPartySuggestions&quot;=dword:00000001
+&quot;DisableWindowsSpotlightFeatures&quot;=dword:00000001
+&quot;DisableWindowsSpotlightOnActionCenter&quot;=dword:00000001
+&quot;DisableWindowsSpotlightOnSettings&quot;=dword:00000001
+&quot;DisableWindowsSpotlightWindowsWelcomeExperience&quot;=dword:00000001
+&quot;IncludeEnterpriseSpotlight&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection]
+&quot;AllowTelemetry&quot;=dword:00000000 ; Send only Required Diagnostic and Usage Data
+&quot;LimitDiagnosticLogCollection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports]
+&quot;PreventHandwritingErrorReports&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors]
+&quot;DisableLocationScripting&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization]
+&quot;NoLockScreenCamera&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
+&quot;AllowClipboardHistory&quot;=dword:00000000
+&quot;EnableMmx&quot;=dword:00000000
+&quot;PublishUserActivities&quot;=dword:00000000 ; Disable &quot;Activity History&quot;
+&quot;UploadUserActivities&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TabletPC]
+&quot;PreventHandwritingDataSharing&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds]
+&quot;EnableFeeds&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
+&quot;AllowCortana&quot;=dword:00000000 ; Disable Cortana in search
+&quot;AllowCortanaAboveLock&quot;=dword:00000000 ; Disable Cortana in search
+&quot;AllowSearchToUseLocation&quot;=dword:00000000
+&quot;ConnectedSearchUseWeb&quot;=dword:00000000
+&quot;ConnectedSearchUseWebOverMeteredConnections&quot;=dword:00000000
+&quot;CortanaConsent&quot;=dword:00000000
+&quot;DisableWebSearch&quot;=dword:00000001
+&quot;EnableDynamicContentInWSB&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsAI]
+&quot;AllowRecallEnablement&quot;=dword:00000000 ; Disable AI recall
+&quot;DisableAIDataAnalysis&quot;=dword:00000001 ; Disable AI recall
+&quot;DisableClickToDo&quot;=dword:00000001 ; Disable click to do
+&quot;TurnOffSavingSnapshots&quot;=dword:00000001 ; Disable AI recall
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet]
+&quot;SpyNetReporting&quot;=dword:00000000
+
+; Send only Required Diagnostic and Usage Data
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
+&quot;AllowTelemetry&quot;=dword:00000000
+&quot;MaxTelemetryAllowed&quot;=dword:00000000
+
+; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
+; Disable required and optional diagnostic data about browser usage
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
+&quot;AllowGamesMenu&quot;=dword:00000000
+&quot;BuiltInDNSClientEnabled&quot;=dword:00000000
+&quot;ComposeInlineEnabled&quot;=dword:00000000
+&quot;ConfigureDoNotTrack&quot;=dword:00000001
+&quot;CopilotCDPPageContext&quot;=dword:00000000
+&quot;CopilotPageContext&quot;=dword:00000000
+&quot;CryptoWalletEnabled&quot;=dword:00000000
+&quot;DiagnosticData&quot;=dword:00000000
+&quot;EdgeAssetDeliveryServiceEnabled&quot;=dword:00000000
+&quot;EdgeCollectionsEnabled&quot;=dword:00000000
+&quot;EdgeEntraCopilotPageContext&quot;=dword:00000000
+&quot;EdgeHistoryAISearchEnabled&quot;=dword:00000000
+&quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
+&quot;ExperimentationAndConfigurationServiceControl&quot;=dword:00000002
+&quot;GenAILocalFoundationalModelSettings&quot;=dword:00000001
+&quot;HubsSidebarEnabled&quot;=dword:00000000
+&quot;Microsoft365CopilotChatIconEnabled&quot;=dword:00000000
+&quot;MicrosoftEdgeInsiderPromotionEnabled&quot;=dword:00000000
+&quot;NewTabPageBingChatEnabled&quot;=dword:00000000
+&quot;NewTabPageContentEnabled&quot;=dword:00000000
+&quot;NewTabPageHideDefaultTopSites&quot;=dword:00000001
+&quot;PersonalizationReportingEnabled&quot;=dword:00000000
+&quot;ShowMicrosoftRewards&quot;=dword:00000000
+&quot;ShowRecommendationsEnabled&quot;=dword:00000000
+&quot;SpotlightExperiencesAndRecommendationsEnabled&quot;=dword:00000000
+&quot;TabServicesEnabled&quot;=dword:00000000
+&quot;UserFeedbackAllowed&quot;=dword:00000000
+&quot;WalletDonationEnabled&quot;=dword:00000000
+&quot;WebToBrowserSignInEnabled&quot;=dword:00000000
+&quot;WebWidgetAllowed&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
+&quot;BlockThirdPartyCookies&quot;=dword:00000001
+&quot;DefaultShareAdditionalOSRegionSetting&quot;=dword:00000002
+
+; Disable &quot;Inking and Typing Personalization&quot;
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\InputPersonalization]
+&quot;AllowInputPersonalization&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
+&quot;AITEnable&quot;=dword:00000000
+&quot;DisableInventory&quot;=dword:00000001
+&quot;DisableUAR&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\DataCollection]
+&quot;AllowTelemetry&quot;=dword:00000000 ; Send only Required Diagnostic and Usage Data
+&quot;LimitDiagnosticLogCollection&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\HandwritingErrorReports]
+&quot;PreventHandwritingErrorReports&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\LocationAndSensors]
+&quot;DisableLocationScripting&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Personalization]
+&quot;NoLockScreenCamera&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
+&quot;EnableMmx&quot;=dword:00000000
+&quot;PublishUserActivities&quot;=dword:00000000 ; Disable &quot;Activity History&quot;
+&quot;UploadUserActivities&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\TabletPC]
+&quot;PreventHandwritingDataSharing&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
+&quot;AllowCloudSearch&quot;=dword:00000000
+&quot;AllowCortana&quot;=dword:00000000 ; Disable Cortana in search
+&quot;AllowCortanaAboveLock&quot;=dword:00000000 ; Disable Cortana in search
+&quot;AllowSearchToUseLocation&quot;=dword:00000000
+&quot;ConnectedSearchUseWeb&quot;=dword:00000000
+&quot;ConnectedSearchUseWebOverMeteredConnections&quot;=dword:00000000
+&quot;CortanaConsent&quot;=dword:00000000
+&quot;DisableWebSearch&quot;=dword:00000001
+&quot;EnableDynamicContentInWSB&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsAI]
+&quot;AllowRecallEnablement&quot;=dword:00000000
+&quot;DisableAIDataAnalysis&quot;=dword:00000001
+&quot;DisableClickToDo&quot;=dword:00000001 ; Disable click to do
+&quot;TurnOffSavingSnapshots&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender\Spynet]
+&quot;SpyNetReporting&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager]
+&quot;EnablePeriodicBackup&quot;=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\AutoLogger-Diagtrack-Listener]
+&quot;Start&quot;=dword:00000000
     </File>
-    <File path="C:\Windows\Setup\unattend-0b.reg">
+    <File path="C:\Windows\Setup\unattend-11.reg">
+Windows Registry Editor Version 5.00
+
 Windows Registry Editor Version 5.00
 
 ; Enable classic context menu
 [HKEY_USERS\DefaultUser\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 @=&quot;&quot;
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Clipboard]
-&quot;EnableClipboardHistory&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Notepad]
-&quot;iWindowPosX&quot;=dword:FFFFFFF8
-&quot;iWindowPosY&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Applets\Paint\View]
-&quot;WindowPlacement&quot;=hex:2C,00,00,00,02,00,00,00,03,00,00,00,00,83,FF,FF,00,83,\
-  FF,FF,FF,FF,FF,FF,FF,FF,FF,FF,00,00,00,00,00,00,00,00,80,07,00,00,93,03,00,00
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
 &quot;ContentDeliveryAllowed&quot;=dword:00000001
@@ -1646,8 +2905,8 @@ Windows Registry Editor Version 5.00
 &quot;MMTaskbarGlomLevel&quot;=dword:00000001 ; Combine taskbar when full
 &quot;NavPaneExpandToCurrentFolder&quot;=dword:00000001
 &quot;NavPaneShowAllFolders&quot;=dword:00000001
-&quot;ShowClockInNotificationCenter&quot;=dword:00000001
 &quot;ShowCopilotButton&quot;=dword:00000000 ; Disable Copilot button on the taskbar
+&quot;ShowCortanaButton&quot;=dword:00000000
 &quot;Start_Layout&quot;=dword:00000001
 &quot;TaskbarAl&quot;=dword:00000000 ; Align taskbar left
 &quot;TaskbarGlomLevel&quot;=dword:00000001 ; Combine taskbar when full
@@ -1656,21 +2915,8 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People]
 &quot;PeopleBand&quot;=dword:00000000
 
-; Enable &quot;End task&quot; in the taskbar
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings]
-&quot;TaskbarEndTask&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel]
-&quot;{2cc5ca98-6485-489a-920e-b3e88a6ccce3}&quot;=dword:00000001
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\GlobalSettings\Sizer]
-&quot;PreviewPaneSizer&quot;=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Modules\PerExplorerSettings\3\Sizer]
-&quot;PreviewPaneSizer&quot;=hex:9E,00,00,00,01,00,00,00,00,00,00,00,59,03,00,00
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager]
-&quot;EnthusiastMode&quot;=dword:00000001
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Feeds]
+&quot;ShellFeedsTaskbarViewMode&quot;=dword:00000002
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Lock Screen]
 &quot;RotatingLockScreenOverlayEnabled&quot;=dword:00000000
@@ -1691,16 +2937,57 @@ Windows Registry Editor Version 5.00
 &quot;VisiblePlaces&quot;=hex:2F,B3,67,E3,DE,89,55,43,BF,CE,61,F3,7B,18,A9,37,86,08,73, \
   52,AA,51,43,42,9F,7B,27,76,58,46,59,D4
 
-[HKEY_USERS\DefaultUser\System\GameConfigStore]
-&quot;GameDVR_EFSEFeatureFlags&quot;=dword:00000000
-&quot;GameDVR_Enabled&quot;=dword:00000000 ; Disable game DVR
-&quot;GameDVR_FSEBehavior&quot;=dword:00000002
-&quot;GameDVR_HonorUserFSEBehaviorMode&quot;=dword:00000001
+[HKEY_LOCAL_MACHINE\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+&quot;ShowCmd&quot;=dword:00000003
+&quot;WFlags&quot;=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+&quot;ShowCmd&quot;=dword:00000003
+&quot;WFlags&quot;=dword:00000002
+
+; Disable widgets service
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
+&quot;value&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;HideSCAMeetNow&quot;=dword:00000001 ; Disable chat taskbar (Windows 10)
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
+&quot;{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}&quot;=&quot;&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
+&quot;CopilotDisabledReason&quot;=&quot;IsEnabledForGeographicRegionFailed&quot;
+&quot;IsCopilotAvailable&quot;=dword:00000000
+
+; Disable widgets service
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
+&quot;AllowNewsAndInterests&quot;=dword:00000000
+
+; Disable Copilot service
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
+&quot;TurnOffWindowsCopilot&quot;=dword:00000001
+
+; Disable chat taskbar (Windows 10)
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+&quot;HideSCAMeetNow&quot;=dword:00000001
+
+; Disable widgets service
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
+&quot;AllowNewsAndInterests&quot;=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
+&quot;AllowClipboardHistory&quot;=dword:00000000
+
+; Disable Copilot service
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
+&quot;TurnOffWindowsCopilot&quot;=dword:00000001
     </File>
-    <File path="C:\Windows\Setup\unattend-0c.reg">
+    <File path="C:\Windows\Setup\unattend-12.reg">
 Windows Registry Editor Version 5.00
 
-[HKEY_USERS\DefaultUser\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager]
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\TaskManager]
 &quot;Preferences&quot;=hex:0d,00,00,00,60,00,00,00,60,00,00,00,9c,00,00,00,9c,00,00,00,\
   17,02,00,00,10,02,00,00,00,00,00,00,00,00,00,80,00,00,00,80,d8,01,00,80,df,\
   01,00,80,00,01,00,01,00,00,00,00,00,00,00,00,94,07,00,00,cf,03,00,00,f4,01,\
@@ -1896,6 +3183,69 @@ Windows Registry Editor Version 5.00
   00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
   00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
     </File>
+    <File path="C:\Windows\Setup\unattend-13.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\General]
+&quot;ShownFirstRunOptin&quot;=dword:00000001
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\Licensing]
+&quot;EulasSetAccepted&quot;=&quot;0,49,&quot;
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\LinkedIn]
+&quot;OfficeLinkedIn&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\Privacy\SettingsStore\Anonymous]
+&quot;OptionalConnectedExperiencesNoticeVersion&quot;=dword:00000002
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common]
+&quot;LinkedIn&quot;=dword:00000000
+&quot;QMEnable&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
+&quot;Enabled&quot;=dword:00000000
+&quot;IncludeEmail&quot;=dword:00000000
+&quot;SurveyEnabled&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\16.0\osm]
+&quot;EnableFileObfuscation&quot;=dword:00000001
+&quot;Enablelogging&quot;=dword:00000000
+&quot;EnableUpload&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Office\Common\ClientTelemetry]
+&quot;DisableTelemetry&quot;=dword:00000001
+&quot;SendTelemetry&quot;=dword:00000003
+    </File>
+    <File path="C:\Windows\Setup\unattend-14.reg">
+Windows Registry Editor Version 5.00
+
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\DefaultUser\Software\7-Zip\FM]
+&quot;AlternativeSelection&quot;=dword:00000001
+&quot;Columns\RootFolder&quot;=hex:01,00,00,00,00,00,00,00,01,00,00,00,04,00,00,00,01,00,00,00,A0,00,00,00
+&quot;FlatViewArc0&quot;=dword:00000000
+&quot;FlatViewArc1&quot;=dword:00000000
+&quot;FolderShortcuts&quot;=&quot;&quot;
+&quot;FullRow&quot;=dword:00000001
+&quot;ListMode&quot;=dword:00000303
+&quot;PanelPath0&quot;=&quot;&quot;
+&quot;PanelPath1&quot;=&quot;&quot;
+&quot;Panels&quot;=hex:02,00,00,00,00,00,00,00,BE,03,00,00
+&quot;Position&quot;=hex:B6,00,00,00,B6,00,00,00,56,06,00,00,49,03,00,00,01,00,00,00
+&quot;ShowDots&quot;=dword:00000001
+&quot;ShowGrid&quot;=dword:00000001
+&quot;ShowRealFileIcons&quot;=dword:00000001
+&quot;ShowSystemMenu&quot;=dword:00000001
+&quot;SingleClick&quot;=dword:00000000
+
+[HKEY_USERS\DefaultUser\Software\7-Zip\Options]
+&quot;ContextMenu&quot;=dword:00001367
+&quot;MenuIcons&quot;=dword:00000001
+&quot;WriteZoneIdExtract&quot;=dword:00000001
+    </File>
     <File path="C:\Windows\Setup\Specialize.ps1">
 $scripts = @(
   {
@@ -1983,6 +3333,18 @@ $scripts = @(
   };
   {
     reg.exe import "C:\Windows\Setup\unattend-05.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-06.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-07.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-08.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-09.reg";
   };
 );
 
@@ -2146,22 +3508,34 @@ $scripts = @(
     reg.exe add "HKU\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings" /v TaskbarEndTask /t REG_DWORD /d 1 /f;
   };
   {
-    &amp; 'C:\Windows\Setup\unattend-07.ps1';
-  };
-  {
-    reg.exe import "C:\Windows\Setup\unattend-08.reg";
-  };
-  {
-    reg.exe import "C:\Windows\Setup\unattend-09.reg";
-  };
-  {
-    reg.exe import "C:\Windows\Setup\unattend-0a.reg";
-  };
-  {
-    reg.exe import "C:\Windows\Setup\unattend-0b.reg";
+    &amp; 'C:\Windows\Setup\unattend-0b.ps1';
   };
   {
     reg.exe import "C:\Windows\Setup\unattend-0c.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-0d.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-0e.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-0f.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-10.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-11.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-12.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-13.reg";
+  };
+  {
+    reg.exe import "C:\Windows\Setup\unattend-14.reg";
   };
   {
     reg.exe add "HKU\DefaultUser\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v "UnattendedSetup" /t REG_SZ /d "powershell.exe -WindowStyle \""Normal\"" -ExecutionPolicy \""Unrestricted\"" -NoProfile -File \""C:\Windows\Setup\UserOnce.ps1\""" /f;
@@ -2207,7 +3581,7 @@ $scripts = @(
     cmd.exe /c "rmdir C:\Windows.old";
   };
   {
-    &amp; 'C:\Windows\Setup\unattend-06.ps1';
+    &amp; 'C:\Windows\Setup\unattend-0a.ps1';
   };
   {
     Remove-Item -LiteralPath @(
