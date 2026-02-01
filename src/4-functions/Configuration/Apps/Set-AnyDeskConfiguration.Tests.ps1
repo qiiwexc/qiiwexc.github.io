@@ -2,7 +2,6 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
     . '.\src\4-functions\Configuration\Helpers\Write-ConfigurationFile.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -16,7 +15,6 @@ BeforeAll {
 
 Describe 'Set-AnyDeskConfiguration' {
     BeforeEach {
-        Mock Write-ActivityProgress {}
         Mock Test-Path { return $False }
         Mock Get-Content { return $TestExistingConfig }
         Mock Write-ConfigurationFile {}
@@ -27,7 +25,6 @@ Describe 'Set-AnyDeskConfiguration' {
     It 'Should configure AnyDesk with no existing config' {
         Set-AnyDeskConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Test-Path -Exactly 1 -ParameterFilter { $Path -match $TestConfigPath }
         Should -Invoke Get-Content -Exactly 0
@@ -46,7 +43,6 @@ Describe 'Set-AnyDeskConfiguration' {
 
         Set-AnyDeskConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
@@ -69,7 +65,6 @@ Describe 'Set-AnyDeskConfiguration' {
 
         Set-AnyDeskConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Write-ConfigurationFile -Exactly 0
@@ -83,7 +78,6 @@ Describe 'Set-AnyDeskConfiguration' {
 
         Set-AnyDeskConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 0
@@ -96,7 +90,6 @@ Describe 'Set-AnyDeskConfiguration' {
 
         Set-AnyDeskConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Write-ConfigurationFile -Exactly 1

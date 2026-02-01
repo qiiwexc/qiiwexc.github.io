@@ -2,7 +2,6 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
     . '.\src\4-functions\Configuration\Helpers\Write-ConfigurationFile.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -19,7 +18,6 @@ Describe 'Set-qBittorrentConfiguration' {
     BeforeEach {
         [String]$SYSTEM_LANGUAGE = 'en-GB'
 
-        Mock Write-ActivityProgress {}
         Mock Write-ConfigurationFile {}
         Mock Out-Success {}
         Mock Out-Failure {}
@@ -28,7 +26,6 @@ Describe 'Set-qBittorrentConfiguration' {
     It 'Should configure qBittorrent (English)' {
         Set-qBittorrentConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1 -ParameterFilter {
             $AppName -eq $TestAppName -and
@@ -44,7 +41,6 @@ Describe 'Set-qBittorrentConfiguration' {
 
         Set-qBittorrentConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1 -ParameterFilter {
             $AppName -eq $TestAppName -and
@@ -60,7 +56,6 @@ Describe 'Set-qBittorrentConfiguration' {
 
         Set-qBittorrentConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Write-ConfigurationFile -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1

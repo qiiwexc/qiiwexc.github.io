@@ -4,8 +4,6 @@ function Set-GoogleChromeConfiguration {
     )
 
     try {
-        Write-ActivityProgress 80 "Configuring $AppName..."
-
         Set-Variable -Option Constant ProcessName ([String]'chrome')
 
         Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"

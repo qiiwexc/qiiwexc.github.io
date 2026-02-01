@@ -4,8 +4,6 @@ function Set-AnyDeskConfiguration {
     )
 
     try {
-        Write-ActivityProgress 36 "Configuring $AppName..."
-
         Set-Variable -Option Constant ConfigPath ([String]"$env:AppData\$AppName\user.conf")
 
         if (Test-Path $ConfigPath) {
