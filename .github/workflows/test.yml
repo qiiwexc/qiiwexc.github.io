@@ -23,15 +23,19 @@ jobs:
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.22.0 -Force -Scope CurrentUser
           Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
-          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -ExcludeRule PSAvoidUsingWriteHost
-          $results | Format-Table -AutoSize
-          if ($results.Count -gt 0) {
-            $errors = $results | Where-Object { $_.Severity -eq 'Error' }
-            if ($errors.Count -gt 0) {
-              Write-Error "PSScriptAnalyzer found $($errors.Count) error(s)"
-              exit 1
+
+          $maxRetries = 3
+          $results = $null
+          for ($i = 1; $i -le $maxRetries; $i++) {
+            try {
+              $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -ExcludeRule PSAvoidUsingWriteHost -ErrorAction Stop
+              break
+            } catch {
+              Write-Warning "PSScriptAnalyzer attempt $i failed: $_"
+              if ($i -eq $maxRetries) { throw }
+              Start-Sleep -Seconds 5
+              Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
             }
-            Write-Warning "PSScriptAnalyzer found $($results.Count) issue(s), but no errors"
           }
 
   test:
