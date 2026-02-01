@@ -26,5 +26,6 @@ Set-Variable -Option Constant AppsConfigurationParameters (
         Chrome      = $CHECKBOX_Config_Chrome
     }
 )
+
 [ScriptBlock]$BUTTON_FUNCTION = { Set-AppsConfiguration @AppsConfigurationParameters }
 New-Button 'Apply configuration' $BUTTON_FUNCTION

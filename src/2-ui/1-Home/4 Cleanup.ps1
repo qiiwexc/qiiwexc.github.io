@@ -1,4 +1,4 @@
-New-GroupBox 'Cleanup' 4
+New-GroupBox 'Cleanup'
 
 
 [ScriptBlock]$BUTTON_FUNCTION = { Start-Cleanup }
