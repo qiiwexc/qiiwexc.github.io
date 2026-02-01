@@ -1,9 +1,8 @@
 New-GroupBox 'Updates'
 
 
-[Switch]$BUTTON_DISABLED = $OS_VERSION -lt 7
 [ScriptBlock]$BUTTON_FUNCTION = { Update-Windows }
-New-Button 'Windows update' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+New-Button 'Windows update' $BUTTON_FUNCTION
 
 
 [Switch]$BUTTON_DISABLED = $OS_VERSION -lt 8
