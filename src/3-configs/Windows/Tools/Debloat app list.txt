@@ -1,5 +1,25 @@
 ACGMediaPlayer                                 # Media player app
 ActiproSoftwareLLC                             # Potentially UI controls or software components, often bundled by OEMs
+AD2F1837.HPAIExperienceCenter                  # HP OEM software, AI-enhanced features and support
+AD2F1837.HPConnectedMusic                      # HP OEM software for music (Potentially discontinued)
+AD2F1837.HPConnectedPhotopoweredbySnapfish     # HP OEM software for photos, integrated with Snapfish (Potentially discontinued)
+AD2F1837.HPDesktopSupportUtilities             # HP OEM software providing desktop support tools
+AD2F1837.HPEasyClean                           # HP OEM software for system cleaning or optimization
+AD2F1837.HPFileViewer                          # HP OEM software for viewing specific file types
+AD2F1837.HPJumpStarts                          # HP OEM software for tutorials, app discovery, or quick access to HP features
+AD2F1837.HPPCHardwareDiagnosticsWindows        # HP OEM software for PC hardware diagnostics
+AD2F1837.HPPowerManager                        # HP OEM software for managing power settings and battery
+AD2F1837.HPPrinterControl                      # HP OEM software for managing HP printers
+AD2F1837.HPPrivacySettings                     # HP OEM software for managing privacy settings
+AD2F1837.HPQuickDrop                           # HP OEM software for quick file transfer between devices
+AD2F1837.HPQuickTouch                          # HP OEM software, possibly for touch-specific shortcuts or controls
+AD2F1837.HPRegistration                        # HP OEM software for product registration
+AD2F1837.HPSupportAssistant                    # HP OEM software for support, updates, and troubleshooting
+AD2F1837.HPSureShieldAI                        # HP OEM security software, likely AI-based threat protection
+AD2F1837.HPSystemInformation                   # HP OEM software for displaying system information
+AD2F1837.HPWelcome                             # HP OEM software providing a welcome experience or initial setup help
+AD2F1837.HPWorkWell                            # HP OEM software focused on well-being, possibly with break reminders or ergonomic tips
+AD2F1837.myHP                                  # HP OEM central hub app for device info, support, and services
 AdobeSystemsIncorporated.AdobePhotoshopExpress # Basic photo editing app from Adobe
 Amazon.com.Amazon                              # Amazon shopping app
 AmazonVideo.PrimeVideo                         # Amazon Prime Video streaming service app
@@ -28,7 +48,7 @@ king.com.CandyCrushSodaSaga                    # Puzzle game from King
 LinkedInforWindows                             # LinkedIn professional networking app
 MarchofEmpires                                 # Strategy game
 Microsoft.3DBuilder                            # Basic 3D modeling software
-Microsoft.549981C3F5F10                        # Cortana app (Voice assistant)
+Microsoft.549981C3F5F10                        # Microsoft Cortana voice assistant (Discontinued)
 Microsoft.BingFinance                          # Finance news and tracking via Bing (Discontinued)
 Microsoft.BingFoodAndDrink                     # Recipes and food news via Bing (Discontinued)
 Microsoft.BingHealthAndFitness                 # Health and fitness tracking/news via Bing (Discontinued)
@@ -38,6 +58,7 @@ Microsoft.BingSports                           # Sports news and scores via Bing
 Microsoft.BingTranslator                       # Translation service via Bing
 Microsoft.BingTravel                           # Travel planning and news via Bing (Discontinued)
 Microsoft.Copilot                              # AI assistant integrated into Windows
+Microsoft.GamingApp                            # Modern Xbox Gaming App, required for installing some PC games
 Microsoft.Getstarted                           # Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)
 Microsoft.M365Companions                       # Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin
 Microsoft.Messaging                            # Messaging app, often integrates with Skype (Largely deprecated)
@@ -46,27 +67,28 @@ Microsoft.MicrosoftJournal                     # Digital note-taking app optimiz
 Microsoft.MicrosoftOfficeHub                   # Hub to access Microsoft Office apps and documents (Precursor to Microsoft 365 app)
 Microsoft.MicrosoftPowerBIForWindows           # Business analytics service client
 Microsoft.MixedReality.Portal                  # Portal for Windows Mixed Reality headsets
+Microsoft.MSPaint                              # Paint 3D (Modern paint application with 3D features)
 Microsoft.NetworkSpeedTest                     # Internet connection speed test utility
 Microsoft.News                                 # News aggregator (Replaced Bing News, now part of Microsoft Start)
 Microsoft.Office.OneNote                       # Digital note-taking app (Universal Windows Platform version)
 Microsoft.Office.Sway                          # Presentation and storytelling app
 Microsoft.OneConnect                           # Mobile Operator management app (Replaced by Mobile Plans)
-Microsoft.OutlookForWindows                    # New mail app: Outlook for Windows
+Microsoft.OutlookForWindows                    # New Outlook for Windows mail client
 Microsoft.People                               # Required for & included with Mail & Calendar (Contacts management)
 Microsoft.PowerAutomateDesktop                 # Desktop automation tool (RPA)
 Microsoft.Print3D                              # 3D printing preparation software
-Microsoft.SkypeApp                             # Skype communication app (Universal Windows Platform version)
+Microsoft.SkypeApp                             # Skype communication app, Universal Windows Platform version (Discontinued)
 Microsoft.StartExperiencesApp                  # This app powers Windows Widgets My Feed
 Microsoft.Todos                                # To-do list and task management app
 Microsoft.Whiteboard                           # Digital collaborative whiteboard app
-Microsoft.Windows.DevHome                      # Developer dashboard and tool configuration utility
+Microsoft.Windows.DevHome                      # Developer dashboard and tool configuration utility (Discontinued)
 Microsoft.WindowsAlarms                        # Alarms & Clock app
-Microsoft.windowscommunicationsapps            # Mail & Calendar app suite
+Microsoft.windowscommunicationsapps            # Mail & Calendar app suite (Discontinued)
 Microsoft.WindowsFeedbackHub                   # App for providing feedback to Microsoft on Windows
 Microsoft.WindowsMaps                          # Mapping and navigation app
 Microsoft.WindowsSoundRecorder                 # Basic audio recording app
-Microsoft.XboxApp                              # Old Xbox Console Companion App, no longer supported
-Microsoft.XboxGameOverlay                      # Game overlay, required/useful for some games (Part of Xbox Game Bar)
+Microsoft.XboxApp                              # Old Xbox Console Companion App (Discontinued)
+Microsoft.XboxGamingOverlay                    # Game overlay, required/useful for some games (Part of Xbox Game Bar)
 Microsoft.ZuneMusic                            # Modern Media Player (Replaced Groove Music, plays local audio/video)
 Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
 MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings

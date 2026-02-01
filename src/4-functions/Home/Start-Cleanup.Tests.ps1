@@ -40,8 +40,8 @@ Describe 'Start-Cleanup' {
         Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1 -ParameterFilter { $Force -eq $True }
-        Should -Invoke Out-Success -Exactly 4
-        Should -Invoke Out-Success -Exactly 4 -ParameterFilter { $Level -eq 1 }
+        Should -Invoke Out-Success -Exactly 5
+        Should -Invoke Out-Success -Exactly 5 -ParameterFilter { $Level -eq 1 }
         Should -Invoke Remove-Item -Exactly 3
         Should -Invoke Remove-Item -Exactly 1 -ParameterFilter {
             $Path -eq 'C:\Windows\Temp\*' -and
