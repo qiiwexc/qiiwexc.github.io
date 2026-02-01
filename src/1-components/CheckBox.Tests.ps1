@@ -48,7 +48,7 @@ Describe 'New-CheckBox' {
         $Result.Name | Should -BeExactly $TestName
         $Result.Checked | Should -BeFalse
         $Result.Enabled | Should -BeTrue
-        $Result.Size.Width | Should -BeExactly 160
+        $Result.Size.Width | Should -BeExactly 175
         $Result.Size.Height | Should -BeExactly $CHECKBOX_HEIGHT
         $Result.Location | Should -BeExactly $INITIAL_LOCATION_BUTTON
 
