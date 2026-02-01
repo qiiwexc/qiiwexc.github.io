@@ -8,18 +8,20 @@ function Set-InlineFiles {
 
     Set-Variable -Option Constant KEY_FILE_MAP (
         [Hashtable]@{
-            'CONFIG_APP_ASSOCIATIONS'                           = "$UnattendedPath\App associations.xml"
-            'CONFIG_7ZIP'                                       = "$ConfigsPath\Apps\7zip.reg"
-            'CONFIG_ANYDESK'                                    = "$ConfigsPath\Apps\AnyDesk.conf"
-            'CONFIG_MICROSOFT_OFFICE'                           = "$ConfigsPath\Apps\Microsoft Office.reg"
-            'CONFIG_QBITTORRENT_LOCALIZED'                      = "$ConfigsPath\Apps\qBittorrent {LOCALE}.ini"
-            'CONFIG_QBITTORRENT'                                = "$ConfigsPath\Apps\qBittorrent base.ini"
-            'CONFIG_VLC'                                        = "$ConfigsPath\Apps\VLC.ini"
-            'CONFIG_WINDOWS_HKEY_CURRENT_USER'                  = "$ConfigsPath\Windows\Base\Windows HKEY_CURRENT_USER.reg"
-            'CONFIG_WINDOWS_HKEY_LOCAL_MACHINE'                 = "$ConfigsPath\Windows\Base\Windows HKEY_LOCAL_MACHINE.reg"
-            'CONFIG_WINDOWS_LOCALISED'                          = "$ConfigsPath\Windows\Base\Windows {LOCALE}.reg"
-            'CONFIG_WINDOWS_PERSONALISATION_HKEY_CURRENT_USER'  = "$ConfigsPath\Windows\Personalisation\Windows personalisation HKEY_CURRENT_USER.reg"
-            'CONFIG_WINDOWS_PERSONALISATION_HKEY_LOCAL_MACHINE' = "$ConfigsPath\Windows\Personalisation\Windows personalisation HKEY_LOCAL_MACHINE.reg"
+            'CONFIG_APP_ASSOCIATIONS'      = "$UnattendedPath\App associations.xml"
+            'CONFIG_7ZIP'                  = "$ConfigsPath\Apps\7zip.reg"
+            'CONFIG_ANYDESK'               = "$ConfigsPath\Apps\AnyDesk.conf"
+            'CONFIG_MICROSOFT_OFFICE'      = "$ConfigsPath\Apps\Microsoft Office.reg"
+            'CONFIG_QBITTORRENT_LOCALIZED' = "$ConfigsPath\Apps\qBittorrent {LOCALE}.ini"
+            'CONFIG_QBITTORRENT'           = "$ConfigsPath\Apps\qBittorrent base.ini"
+            'CONFIG_VLC'                   = "$ConfigsPath\Apps\VLC.ini"
+            'CONFIG_SECURITY'              = "$ConfigsPath\Windows\Security.reg"
+            'CONFIG_PERFORMANCE'           = "$ConfigsPath\Windows\Performance.reg"
+            'CONFIG_BASELINE'              = "$ConfigsPath\Windows\Baseline.reg"
+            'CONFIG_WINDOWS_LOCALISED'     = "$ConfigsPath\Windows\Baseline {LOCALE}.reg"
+            'CONFIG_ANNOYANCES'            = "$ConfigsPath\Windows\Annoyances.reg"
+            'CONFIG_PRIVACY'               = "$ConfigsPath\Windows\Privacy.reg"
+            'CONFIG_PERSONALISATION'       = "$ConfigsPath\Windows\Personalisation.reg"
         }
     )
 

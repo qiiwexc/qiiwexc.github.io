@@ -2,63 +2,330 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\App lifecycle\Progressbar.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-WindowsBaseConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-WindowsPersonalisationConfig.ps1'
+    . '.\src\4-functions\Configuration\Windows\Remove-Annoyances.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-MalwareProtectionConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-PowerSchemeConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-BaselineConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-LocalisationConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-PerformanceConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-PersonalisationConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-PrivacyConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-SecurityConfiguration.ps1'
 
     Add-Type -AssemblyName System.Windows.Forms
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant TestCheckboxBaseChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
+    Set-Variable -Option Constant TestCheckboxSecurityChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
+    Set-Variable -Option Constant TestCheckboxPerformanceChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
+    Set-Variable -Option Constant TestCheckboxBaselineChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
+    Set-Variable -Option Constant TestCheckboxAnnoyancesChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
+    Set-Variable -Option Constant TestCheckboxPrivacyChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
+    Set-Variable -Option Constant TestCheckboxLocalisationChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
     Set-Variable -Option Constant TestCheckboxPersonalisationChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
-    Set-Variable -Option Constant TestCheckboxBaseUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
+
+    Set-Variable -Option Constant TestCheckboxSecurityUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
+    Set-Variable -Option Constant TestCheckboxPerformanceUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
+    Set-Variable -Option Constant TestCheckboxBaselineUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
+    Set-Variable -Option Constant TestCheckboxAnnoyancesUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
+    Set-Variable -Option Constant TestCheckboxPrivacyUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
+    Set-Variable -Option Constant TestCheckboxLocalisationUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
     Set-Variable -Option Constant TestCheckboxPersonalisationUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
 }
 
 Describe 'Set-WindowsConfiguration' {
     BeforeEach {
         Mock New-Activity {}
-        Mock Set-WindowsBaseConfiguration {}
-        Mock Set-WindowsPersonalisationConfig {}
+        Mock Write-ActivityProgress {}
+        Mock Remove-Annoyances {}
+        Mock Set-MalwareProtectionConfiguration {}
+        Mock Set-PowerSchemeConfiguration {}
+        Mock Set-BaselineConfiguration {}
+        Mock Set-LocalisationConfiguration {}
+        Mock Set-PerformanceConfiguration {}
+        Mock Set-PersonalisationConfiguration {}
+        Mock Set-PrivacyConfiguration {}
+        Mock Set-SecurityConfiguration {}
         Mock Write-ActivityCompleted {}
     }
 
     It 'Should apply checked configurations' {
-        Set-WindowsConfiguration $TestCheckboxBaseChecked $TestCheckboxPersonalisationChecked
+        Set-WindowsConfiguration $TestCheckboxSecurityChecked `
+            $TestCheckboxPerformanceChecked `
+            $TestCheckboxBaselineChecked `
+            $TestCheckboxAnnoyancesChecked `
+            $TestCheckboxPrivacyChecked `
+            $TestCheckboxLocalisationChecked `
+            $TestCheckboxPersonalisationChecked
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-WindowsBaseConfiguration -Exactly 1
-        Should -Invoke Set-WindowsPersonalisationConfig -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 9
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
+        Should -Invoke Set-SecurityConfiguration -Exactly 1
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
+        Should -Invoke Set-PerformanceConfiguration -Exactly 1
+        Should -Invoke Set-BaselineConfiguration -Exactly 1
+        Should -Invoke Remove-Annoyances -Exactly 1
+        Should -Invoke Set-PrivacyConfiguration -Exactly 1
+        Should -Invoke Set-LocalisationConfiguration -Exactly 1
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should not apply unchecked configurations' {
-        Set-WindowsConfiguration $TestCheckboxBaseUnchecked $TestCheckboxPersonalisationUnchecked
+        Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
+            $TestCheckboxPerformanceUnchecked `
+            $TestCheckboxBaselineUnchecked `
+            $TestCheckboxAnnoyancesUnchecked `
+            $TestCheckboxPrivacyUnchecked `
+            $TestCheckboxLocalisationUnchecked `
+            $TestCheckboxPersonalisationUnchecked
+
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-WindowsBaseConfiguration -Exactly 0
-        Should -Invoke Set-WindowsPersonalisationConfig -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
-    It 'Should handle Set-WindowsBaseConfiguration failure' {
-        Mock Set-WindowsBaseConfiguration { throw $TestException }
+    It 'Should handle Set-MalwareProtectionConfiguration failure' {
+        Mock Set-MalwareProtectionConfiguration { throw $TestException }
 
-        { Set-WindowsConfiguration $TestCheckboxBaseChecked $TestCheckboxPersonalisationUnchecked } | Should -Throw $TestException
+        { Set-WindowsConfiguration $TestCheckboxSecurityChecked `
+                $TestCheckboxPerformanceUnchecked `
+                $TestCheckboxBaselineUnchecked `
+                $TestCheckboxAnnoyancesUnchecked `
+                $TestCheckboxPrivacyUnchecked `
+                $TestCheckboxLocalisationUnchecked `
+                $TestCheckboxPersonalisationUnchecked
+        } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-WindowsBaseConfiguration -Exactly 1
-        Should -Invoke Set-WindowsPersonalisationConfig -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-WindowsPersonalisationConfig failure' {
-        Mock Set-WindowsPersonalisationConfig { throw $TestException }
+    It 'Should handle Set-SecurityConfiguration failure' {
+        Mock Set-SecurityConfiguration { throw $TestException }
 
-        { Set-WindowsConfiguration $TestCheckboxBaseUnchecked $TestCheckboxPersonalisationChecked } | Should -Throw $TestException
+        { Set-WindowsConfiguration $TestCheckboxSecurityChecked `
+                $TestCheckboxPerformanceUnchecked `
+                $TestCheckboxBaselineUnchecked `
+                $TestCheckboxAnnoyancesUnchecked `
+                $TestCheckboxPrivacyUnchecked `
+                $TestCheckboxLocalisationUnchecked `
+                $TestCheckboxPersonalisationUnchecked
+        } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-WindowsBaseConfiguration -Exactly 0
-        Should -Invoke Set-WindowsPersonalisationConfig -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
+        Should -Invoke Set-SecurityConfiguration -Exactly 1
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Set-PowerSchemeConfiguration failure' {
+        Mock Set-PowerSchemeConfiguration { throw $TestException }
+
+        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
+                $TestCheckboxPerformanceChecked `
+                $TestCheckboxBaselineUnchecked `
+                $TestCheckboxAnnoyancesUnchecked `
+                $TestCheckboxPrivacyUnchecked `
+                $TestCheckboxLocalisationUnchecked `
+                $TestCheckboxPersonalisationUnchecked
+        } | Should -Throw $TestException
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Set-PerformanceConfiguration failure' {
+        Mock Set-PerformanceConfiguration { throw $TestException }
+
+        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
+                $TestCheckboxPerformanceChecked `
+                $TestCheckboxBaselineUnchecked `
+                $TestCheckboxAnnoyancesUnchecked `
+                $TestCheckboxPrivacyUnchecked `
+                $TestCheckboxLocalisationUnchecked `
+                $TestCheckboxPersonalisationUnchecked
+        } | Should -Throw $TestException
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
+        Should -Invoke Set-PerformanceConfiguration -Exactly 1
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Set-BaselineConfiguration failure' {
+        Mock Set-BaselineConfiguration { throw $TestException }
+
+        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
+                $TestCheckboxPerformanceUnchecked `
+                $TestCheckboxBaselineChecked `
+                $TestCheckboxAnnoyancesUnchecked `
+                $TestCheckboxPrivacyUnchecked `
+                $TestCheckboxLocalisationUnchecked `
+                $TestCheckboxPersonalisationUnchecked
+        } | Should -Throw $TestException
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 1
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Remove-Annoyances failure' {
+        Mock Remove-Annoyances { throw $TestException }
+
+        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
+                $TestCheckboxPerformanceUnchecked `
+                $TestCheckboxBaselineUnchecked `
+                $TestCheckboxAnnoyancesChecked `
+                $TestCheckboxPrivacyUnchecked `
+                $TestCheckboxLocalisationUnchecked `
+                $TestCheckboxPersonalisationUnchecked
+        } | Should -Throw $TestException
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 1
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Set-PrivacyConfiguration failure' {
+        Mock Set-PrivacyConfiguration { throw $TestException }
+
+        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
+                $TestCheckboxPerformanceUnchecked `
+                $TestCheckboxBaselineUnchecked `
+                $TestCheckboxAnnoyancesUnchecked `
+                $TestCheckboxPrivacyChecked `
+                $TestCheckboxLocalisationUnchecked `
+                $TestCheckboxPersonalisationUnchecked
+        } | Should -Throw $TestException
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 1
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Set-LocalisationConfiguration failure' {
+        Mock Set-LocalisationConfiguration { throw $TestException }
+
+        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
+                $TestCheckboxPerformanceUnchecked `
+                $TestCheckboxBaselineUnchecked `
+                $TestCheckboxAnnoyancesUnchecked `
+                $TestCheckboxPrivacyUnchecked `
+                $TestCheckboxLocalisationChecked `
+                $TestCheckboxPersonalisationUnchecked
+        } | Should -Throw $TestException
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 1
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Set-PersonalisationConfiguration failure' {
+        Mock Set-PersonalisationConfiguration { throw $TestException }
+
+        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
+                $TestCheckboxPerformanceUnchecked `
+                $TestCheckboxBaselineUnchecked `
+                $TestCheckboxAnnoyancesUnchecked `
+                $TestCheckboxPrivacyUnchecked `
+                $TestCheckboxLocalisationUnchecked `
+                $TestCheckboxPersonalisationChecked
+        } | Should -Throw $TestException
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalisationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalisationConfiguration -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

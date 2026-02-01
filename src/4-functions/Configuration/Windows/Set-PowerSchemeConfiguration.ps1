@@ -2,13 +2,7 @@ function Set-PowerSchemeConfiguration {
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
     try {
-        Write-ActivityProgress 10 'Setting power scheme overlay...'
-
         powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
-
-        Out-Success $LogIndentLevel
-
-        Write-ActivityProgress 15 'Applying Windows power scheme settings...'
 
         foreach ($PowerSetting in $CONFIG_POWER_SETTINGS) {
             powercfg /SetAcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
