@@ -4,8 +4,6 @@ function Set-MicrosoftEdgeConfiguration {
     )
 
     try {
-        Write-ActivityProgress 60 "Configuring $AppName..."
-
         Set-Variable -Option Constant ProcessName ([String]'msedge')
 
         Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"

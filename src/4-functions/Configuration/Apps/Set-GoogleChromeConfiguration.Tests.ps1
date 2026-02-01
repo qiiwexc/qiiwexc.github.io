@@ -2,7 +2,6 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
     . '.\src\4-functions\Configuration\Helpers\Update-BrowserConfiguration.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -16,7 +15,6 @@ BeforeAll {
 
 Describe 'Set-GoogleChromeConfiguration' {
     BeforeEach {
-        Mock Write-ActivityProgress {}
         Mock Update-BrowserConfiguration {}
         Mock Out-Success {}
         Mock Out-Failure {}
@@ -25,7 +23,6 @@ Describe 'Set-GoogleChromeConfiguration' {
     It 'Should configure Google Chrome' {
         Set-GoogleChromeConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Update-BrowserConfiguration -Exactly 2
         Should -Invoke Update-BrowserConfiguration -Exactly 1 -ParameterFilter {
             $AppName -eq $TestAppName -and
@@ -48,7 +45,6 @@ Describe 'Set-GoogleChromeConfiguration' {
 
         Set-GoogleChromeConfiguration $TestAppName
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Update-BrowserConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1

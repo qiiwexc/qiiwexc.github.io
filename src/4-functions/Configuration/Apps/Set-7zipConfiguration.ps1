@@ -4,14 +4,7 @@ function Set-7zipConfiguration {
     )
 
     try {
-        Write-ActivityProgress 12 "Configuring $AppName..."
-
-        [Collections.Generic.List[String]]$ConfigLines = $CONFIG_7ZIP.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\.DEFAULT')
-        $ConfigLines.Add("`n")
-        $ConfigLines.Add($CONFIG_7ZIP)
-
-        Import-RegistryConfiguration $AppName $ConfigLines
-
+        Import-RegistryConfiguration $AppName (Add-SysPrepConfig $CONFIG_7ZIP)
         Out-Success
     } catch {
         Out-Failure "Failed to configure '$AppName': $_"

@@ -90,6 +90,7 @@ BeforeAll {
 Describe 'Set-AppsConfiguration' {
     BeforeEach {
         Mock New-Activity {}
+        Mock Write-ActivityProgress {}
         Mock Set-7zipConfiguration {}
         Mock Set-AnyDeskConfiguration {}
         Mock Set-GoogleChromeConfiguration {}
@@ -108,6 +109,7 @@ Describe 'Set-AppsConfiguration' {
             $TestCheckboxChromeChecked
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Set-7zipConfiguration -Exactly 1
         Should -Invoke Set-7zipConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckbox7zipChecked.Text }
         Should -Invoke Set-VlcConfiguration -Exactly 1
@@ -132,6 +134,7 @@ Describe 'Set-AppsConfiguration' {
             $TestCheckboxChromeUnchecked
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Set-7zipConfiguration -Exactly 0
         Should -Invoke Set-VlcConfiguration -Exactly 0
         Should -Invoke Set-AnyDeskConfiguration -Exactly 0
@@ -153,6 +156,7 @@ Describe 'Set-AppsConfiguration' {
         } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-7zipConfiguration -Exactly 1
         Should -Invoke Set-VlcConfiguration -Exactly 0
         Should -Invoke Set-AnyDeskConfiguration -Exactly 0
@@ -174,6 +178,7 @@ Describe 'Set-AppsConfiguration' {
         } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-7zipConfiguration -Exactly 0
         Should -Invoke Set-VlcConfiguration -Exactly 1
         Should -Invoke Set-AnyDeskConfiguration -Exactly 0
@@ -195,6 +200,7 @@ Describe 'Set-AppsConfiguration' {
         } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-7zipConfiguration -Exactly 0
         Should -Invoke Set-VlcConfiguration -Exactly 0
         Should -Invoke Set-AnyDeskConfiguration -Exactly 1
@@ -216,6 +222,7 @@ Describe 'Set-AppsConfiguration' {
         } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-7zipConfiguration -Exactly 0
         Should -Invoke Set-VlcConfiguration -Exactly 0
         Should -Invoke Set-AnyDeskConfiguration -Exactly 0
@@ -237,6 +244,7 @@ Describe 'Set-AppsConfiguration' {
         } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-7zipConfiguration -Exactly 0
         Should -Invoke Set-VlcConfiguration -Exactly 0
         Should -Invoke Set-AnyDeskConfiguration -Exactly 0
@@ -258,6 +266,7 @@ Describe 'Set-AppsConfiguration' {
         } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-7zipConfiguration -Exactly 0
         Should -Invoke Set-VlcConfiguration -Exactly 0
         Should -Invoke Set-AnyDeskConfiguration -Exactly 0
