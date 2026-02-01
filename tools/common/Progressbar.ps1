@@ -79,12 +79,6 @@ function Write-ActivityCompleted {
         [Bool][Parameter(Position = 0)]$Success = $True
     )
 
-    if ($Success) {
-        Out-Success
-    } else {
-        Out-Failure "$CURRENT_TASK failed"
-    }
-
     Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
 
     if ($TaskLevel -gt 0) {
@@ -97,6 +91,12 @@ function Write-ActivityCompleted {
         }
 
         Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -Completed
+    }
+
+    if ($Success) {
+        Out-Success
+    } else {
+        Out-Failure "$CURRENT_TASK failed"
     }
 
     Set-Variable -Scope Script CURRENT_TASK $Null
