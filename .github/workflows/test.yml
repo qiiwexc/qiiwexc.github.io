@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v6.0.2
 
       - name: Run PSScriptAnalyzer
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v3.0.2
         with:
           timeout_minutes: 10
           max_attempts: 3
