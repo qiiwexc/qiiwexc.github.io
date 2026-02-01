@@ -7,13 +7,13 @@ New-GroupBox 'Windows configuration'
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPerformance = New-CheckBox 'Improve performance' -Checked
 
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBaseline = New-CheckBox 'Baseline config' -Checked
+[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBaseline = New-CheckBox 'Baseline configuration' -Checked
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsAnnoyances = New-CheckBox 'Remove ads and annoyances' -Checked
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPrivacy = New-CheckBox 'Telemetry and privacy' -Checked
 
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsLocalisation = New-CheckBox 'Localisation'
+[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsLocalisation = New-CheckBox 'Keyboard layout; location'
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 
