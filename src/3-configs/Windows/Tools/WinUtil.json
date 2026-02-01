@@ -1,11 +1,11 @@
 {
     "WPFTweaks":  [
+                      "WPFTweaksRestorePoint",
                       "WPFTweaksBraveDebloat",
                       "WPFTweaksConsumerFeatures",
                       "WPFTweaksEdgeDebloat",
                       "WPFTweaksLoc",
                       "WPFTweaksPowershell7Tele",
-                      "WPFTweaksRestorePoint",
                       "WPFTweaksTele",
                       "WPFTweaksDeleteTempFiles",
                       "WPFTweaksDiskCleanup"
