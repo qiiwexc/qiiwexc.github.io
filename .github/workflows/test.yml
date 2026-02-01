@@ -24,7 +24,7 @@ jobs:
           Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.22.0 -Force -Scope CurrentUser
           Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
 
-          $maxRetries = 3
+          $maxRetries = 5
           $results = $null
           for ($i = 1; $i -le $maxRetries; $i++) {
             try {
