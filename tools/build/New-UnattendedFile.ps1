@@ -30,8 +30,8 @@ function New-UnattendedFile {
     . "$UnattendedPath\Set-AppRemovalList.ps1"
     . "$UnattendedPath\Set-InlineFiles.ps1"
     . "$UnattendedPath\Set-LocaleSettings.ps1"
+    . "$UnattendedPath\Set-MalwareProtectionConfiguration.ps1"
     . "$UnattendedPath\Set-PowerSchemeConfiguration.ps1"
-    . "$UnattendedPath\Set-WindowsSecurityConfiguration.ps1"
 
     Write-ActivityProgress 10
 
@@ -57,7 +57,7 @@ function New-UnattendedFile {
         $Percentage += 2
         Write-ActivityProgress $Percentage
 
-        $UpdatedTemplateContent = Set-WindowsSecurityConfiguration $SourcePath $UpdatedTemplateContent
+        $UpdatedTemplateContent = Set-MalwareProtectionConfiguration $SourcePath $UpdatedTemplateContent
         $Percentage += 2
         Write-ActivityProgress $Percentage
 

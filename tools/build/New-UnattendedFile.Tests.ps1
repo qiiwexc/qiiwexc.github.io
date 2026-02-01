@@ -10,8 +10,8 @@ BeforeAll {
     . "$BuilderPath\unattended\Set-AppRemovalList.ps1"
     . "$BuilderPath\unattended\Set-InlineFiles.ps1"
     . "$BuilderPath\unattended\Set-LocaleSettings.ps1"
+    . "$BuilderPath\unattended\Set-MalwareProtectionConfiguration.ps1"
     . "$BuilderPath\unattended\Set-PowerSchemeConfiguration.ps1"
-    . "$BuilderPath\unattended\Set-WindowsSecurityConfiguration.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -81,7 +81,7 @@ Describe 'New-UnattendedFile' {
         Mock Read-TextFile { return $TestTemplateContent } -ParameterFilter { $Path -eq $TestBaseFilePath }
         Mock Set-LocaleSettings { return $TestSetLocaleSettingsResult }
         Mock Set-AppRemovalList { return $TestSetAppRemovalListResult }
-        Mock Set-WindowsSecurityConfiguration { return $TestSetWindowsSecurityConfigurationResult }
+        Mock Set-MalwareProtectionConfiguration { return $TestSetWindowsSecurityConfigurationResult }
         Mock Set-PowerSchemeConfiguration { return $TestSetPowerSchemeConfigurationResult }
         Mock Set-InlineFiles { return $TestSetInlineFilesResult }
         Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
@@ -120,8 +120,8 @@ Describe 'New-UnattendedFile' {
             $ConfigsPath -eq $TestConfigsPath -and
             $TemplateContent -eq $TestSetLocaleSettingsResult
         }
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2 -ParameterFilter {
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2 -ParameterFilter {
             $SourcePath -eq $TestSourcePath -and
             $TemplateContent -eq $TestSetAppRemovalListResult
         }
@@ -183,7 +183,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Write-TextFile -Exactly 4
@@ -202,7 +202,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 0
         Should -Invoke Set-LocaleSettings -Exactly 0
         Should -Invoke Set-AppRemovalList -Exactly 0
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Write-TextFile -Exactly 0
@@ -222,7 +222,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBaseFilePath }
         Should -Invoke Set-LocaleSettings -Exactly 0
         Should -Invoke Set-AppRemovalList -Exactly 0
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Write-TextFile -Exactly 0
@@ -241,7 +241,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 0
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Write-TextFile -Exactly 0
@@ -260,7 +260,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 0
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Write-TextFile -Exactly 0
@@ -268,8 +268,8 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-WindowsSecurityConfiguration failure' {
-        Mock Set-WindowsSecurityConfiguration { throw $TestException }
+    It 'Should handle Set-MalwareProtectionConfiguration failure' {
+        Mock Set-MalwareProtectionConfiguration { throw $TestException }
 
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestDistPath $TestVmPath } | Should -Throw $TestException
 
@@ -279,7 +279,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Write-TextFile -Exactly 0
@@ -298,7 +298,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 0
         Should -Invoke Write-TextFile -Exactly 0
@@ -317,7 +317,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 1
         Should -Invoke Write-TextFile -Exactly 0
@@ -336,7 +336,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
         Should -Invoke Set-AppRemovalList -Exactly 1
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 1
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
         Should -Invoke Set-InlineFiles -Exactly 1
         Should -Invoke Write-TextFile -Exactly 1
@@ -356,7 +356,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Write-TextFile -Exactly 2
@@ -376,7 +376,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Write-TextFile -Exactly 2
@@ -395,7 +395,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Write-TextFile -Exactly 2
@@ -415,7 +415,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Write-TextFile -Exactly 3
@@ -437,7 +437,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Write-TextFile -Exactly 3
@@ -457,7 +457,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Read-TextFile -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
         Should -Invoke Set-AppRemovalList -Exactly 2
-        Should -Invoke Set-WindowsSecurityConfiguration -Exactly 2
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 2
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Write-TextFile -Exactly 4
