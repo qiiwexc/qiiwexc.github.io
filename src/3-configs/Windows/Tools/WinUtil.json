@@ -4,9 +4,9 @@
                       "WPFTweaksBraveDebloat",
                       "WPFTweaksConsumerFeatures",
                       "WPFTweaksEdgeDebloat",
-                      "WPFTweaksLoc",
+                      "WPFTweaksLocation",
                       "WPFTweaksPowershell7Tele",
-                      "WPFTweaksTele",
+                      "WPFTweaksTelemetry",
                       "WPFTweaksDeleteTempFiles",
                       "WPFTweaksDiskCleanup"
                   ],

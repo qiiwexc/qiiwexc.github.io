@@ -73,6 +73,7 @@ function Start-Cleanup {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
     }
 
+    Out-Success $LogIndentLevel
     Write-ActivityCompleted
     Set-Icon (([IconName]::Default))
 }
