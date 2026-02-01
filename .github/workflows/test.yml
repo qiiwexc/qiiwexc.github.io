@@ -12,31 +12,31 @@ on:
 
 jobs:
   lint:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
 
       - name: Run PSScriptAnalyzer
-        shell: powershell
-        run: |
-          Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.22.0 -Force -Scope CurrentUser
-          Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
-
-          $maxRetries = 5
-          $results = $null
-          for ($i = 1; $i -le $maxRetries; $i++) {
-            try {
-              $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -ExcludeRule PSAvoidUsingWriteHost -ErrorAction Stop
-              break
-            } catch {
-              Write-Warning "PSScriptAnalyzer attempt $i failed: $_"
-              if ($i -eq $maxRetries) { throw }
-              Start-Sleep -Seconds 5
-              Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          shell: powershell
+          command: |
+            Set-PSRepository PSGallery -InstallationPolicy Trusted
+            Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.22.0 -Force -Scope CurrentUser
+            Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
+            $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -ExcludeRule PSAvoidUsingWriteHost
+            $results | Format-Table -AutoSize
+            if ($results.Count -gt 0) {
+              $errors = $results | Where-Object { $_.Severity -eq 'Error' }
+              if ($errors.Count -gt 0) {
+                Write-Error "PSScriptAnalyzer found $($errors.Count) error(s)"
+                exit 1
+              }
+              Write-Warning "PSScriptAnalyzer found $($results.Count) issue(s), but no errors"
             }
-          }
 
   test:
     runs-on: windows-latest
