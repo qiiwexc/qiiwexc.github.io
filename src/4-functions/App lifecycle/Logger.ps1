@@ -97,7 +97,7 @@ function Format-Message {
         Default {}
     }
 
-    if ($ACTIVITIES.Count -le 0) {
+    if (-not $ACTIVITIES -or $ACTIVITIES.Count -le 0) {
         Set-Variable -Option Constant Indent ([Int]$IndentLevel)
     } else {
         Set-Variable -Option Constant Indent ([Int]($ACTIVITIES.Count + $IndentLevel))
