@@ -29,7 +29,6 @@ Describe 'Get-SystemInformation' {
         Mock Get-CimInstance { return $TestBiosElement } -ParameterFilter { $ClassName -eq $TestBiosElementClassName }
         Mock Get-ItemProperty { return $TestDisplayVersion }
 
-        [Int]$OS_VERSION = 11
         [Int]$OFFICE_VERSION = 16
         [String]$OFFICE_INSTALL_TYPE = 'C2R'
     }
@@ -41,16 +40,6 @@ Describe 'Get-SystemInformation' {
         Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter { $ClassName -eq $TestBaseBoardClassName }
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter { $ClassName -eq $TestBiosElementClassName }
-        Should -Invoke Get-ItemProperty -Exactly 1
-    }
-
-    It 'Should get system information for OS version less than 10' {
-        [Int]$OS_VERSION = 8
-
-        Get-SystemInformation
-
-        Should -Invoke Write-LogInfo -Exactly 9
-        Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-ItemProperty -Exactly 1
     }
 

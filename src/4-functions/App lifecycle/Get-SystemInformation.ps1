@@ -12,10 +12,8 @@ function Get-SystemInformation {
     Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
 
     Set-Variable -Option Constant WindowsRelease ([String](Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion)
-    if ($OS_VERSION -ge 10) {
-        Write-LogInfo "OS release: v$WindowsRelease" $LogIndentLevel
-    }
 
+    Write-LogInfo "OS release: v$WindowsRelease" $LogIndentLevel
     Write-LogInfo "Build number: $($OPERATING_SYSTEM.Version)" $LogIndentLevel
     Write-LogInfo "OS architecture: $($OPERATING_SYSTEM.OSArchitecture)" $LogIndentLevel
     Write-LogInfo "OS language: $SYSTEM_LANGUAGE" $LogIndentLevel
