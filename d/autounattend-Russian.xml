@@ -1,4 +1,4 @@
-<!-- Version: 26.2.2 -->
+<!-- Version: 26.2.3 -->
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
   <!--https://schneegans.de/windows/unattend-generator/?LanguageMode=Unattended&UILanguage=en-US&Locale=en-GB&Keyboard=00000809&GeoLocation=140&ProcessorArchitecture=amd64&BypassRequirementsCheck=true&ComputerNameMode=Random&CompactOsMode=Default&TimeZoneMode=Implicit&PartitionMode=Unattended&PartitionLayout=GPT&EspSize=300&RecoveryMode=Partition&RecoverySize=1000&DiskAssertionMode=Skip&WindowsEditionMode=Interactive&InstallFromMode=Name&InstallFromName=Windows+11+Home&PEMode=Default&UserAccountMode=Unattended&AccountName0=Test&AccountDisplayName0=&AccountPassword0=&AccountGroup0=Administrators&AutoLogonMode=Own&PasswordExpirationMode=Unlimited&LockoutMode=Default&HideFiles=Hidden&ClassicContextMenu=true&LaunchToThisPC=true&ShowEndTask=true&TaskbarSearch=Icon&TaskbarIconsMode=Default&DisableWidgets=true&LeftTaskbar=true&DisableBingResults=true&StartTilesMode=Custom&StartTilesXml=%3CLayoutModificationTemplate+xmlns%3Adefaultlayout%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FFullDefaultLayout%22+xmlns%3Astart%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FStartLayout%22+Version%3D%221%22+xmlns%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FLayoutModification%22%3E%0D%0A++%3CLayoutOptions+StartTileGroupCellWidth%3D%226%22+%2F%3E%0D%0A++%3CDefaultLayoutOverride%3E%0D%0A++++%3CStartLayoutCollection%3E%0D%0A++++++%3Cdefaultlayout%3AStartLayout+GroupCellWidth%3D%226%22%3E%0D%0A++++++++%3Cstart%3AGroup+Name%3D%22%22%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5Ccomputer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CMicrosoft+Edge.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%220%22+AppUserModelID%3D%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%222%22+AppUserModelID%3D%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CPaint.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CNotepad.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CControl+Panel.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.Windows.SecHealthUI_cw5n1h2txyewy%21SecHealthUI%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CTask+Manager.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CInternet+Explorer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CCommand+Prompt.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%2210%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CWindows+PowerShell%5CWindows+PowerShell.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%2210%22+AppUserModelID%3D%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++%3C%2Fstart%3AGroup%3E%0D%0A++++++%3C%2Fdefaultlayout%3AStartLayout%3E%0D%0A++++%3C%2FStartLayoutCollection%3E%0D%0A++%3C%2FDefaultLayoutOverride%3E%0D%0A%3C%2FLayoutModificationTemplate%3E%0D%0A&StartPinsMode=Custom&StartPinsJson=%7B%0D%0A++%22pinnedList%22%3A+%5B%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CFile+Explorer.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22MSTeams_8wekyb3d8bbwe%21MSTeams%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.Paint_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsNotepad_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CControl+Panel.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CAdministrative+Tools.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25ALLUSERSPROFILE%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CMicrosoft+Edge.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.SecHealthUI_8wekyb3d8bbwe%21SecHealthUI%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.GetHelp_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%7D%0D%0A++%5D%0D%0A%7D&EnableLongPaths=true&HardenSystemDriveAcl=true&DeleteJunctions=true&DisableAppSuggestions=true&HideEdgeFre=true&DisableEdgeStartupBoost=true&DeleteWindowsOld=true&DisableAutomaticRestartSignOn=true&EffectsMode=Appearance&DeleteEdgeDesktopIcon=true&DesktopIconsMode=Custom&IconControlPanel=true&IconDownloads=true&IconRecycleBin=true&IconThisPC=true&IconUserFiles=true&StartFoldersMode=Custom&StartFolderDownloads=true&StartFolderPersonalFolder=true&StartFolderSettings=true&VBoxGuestAdditions=true&WifiMode=Skip&ExpressSettings=DisableAll&LockKeysMode=Skip&StickyKeysMode=Default&ColorMode=Default&WallpaperMode=Default&LockScreenMode=Default&Remove3DViewer=true&RemoveBingSearch=true&RemoveClipchamp=true&RemoveClock=true&RemoveCopilot=true&RemoveCortana=true&RemoveDevHome=true&RemoveFamily=true&RemoveFeedbackHub=true&RemoveGameAssist=true&RemoveMailCalendar=true&RemoveMaps=true&RemoveMixedReality=true&RemoveZuneVideo=true&RemoveNews=true&RemoveOffice365=true&RemoveOneDrive=true&RemoveOneNote=true&RemoveOutlook=true&RemovePaint3D=true&RemovePeople=true&RemovePowerAutomate=true&RemoveQuickAssist=true&RemoveRecall=true&RemoveSkype=true&RemoveStepsRecorder=true&RemoveGetStarted=true&RemoveToDo=true&RemoveVoiceRecorder=true&RemoveWallet=true&RemoveZuneMusic=true&RemoveXboxApps=true&SystemScript0=Set-ItemProperty+-Path+%27HKLM%3A%5CSYSTEM%5CCurrentControlSet%5CServices%5Ctzautoupdate%27+-Name+%27Start%27+-Value+3%0D%0Adism+%2Fonline+%2FImport-DefaultAppAssociations%3A%27C%3A%5CWindows%5CSetup%5CAppAssociations.xml%27&SystemScriptType0=Ps1&SystemScript1=%7BWINDOWS_MALWARE_PROTECTION_CONFIGURATION%7D&SystemScriptType1=Ps1&SystemScript2=%7BPOWER_SCHEME_CONFIGURATION%7D&SystemScriptType2=Cmd&SystemScript3=%7BCONFIG_SECURITY%7D&SystemScriptType3=Reg&SystemScript4=%7BCONFIG_PERFORMANCE%7D&SystemScriptType4=Reg&SystemScript5=%7BCONFIG_BASELINE%7D&SystemScriptType5=Reg&SystemScript6=%7BCONFIG_ANNOYANCES%7D&SystemScriptType6=Reg&SystemScript7=%7BCONFIG_PRIVACY%7D&SystemScriptType7=Reg&SystemScript8=%7BCONFIG_PERSONALISATION%7D&SystemScriptType8=Reg&DefaultUserScript0=Set-Variable+-Option+Constant+NetworkAdapter+%28Get-CimInstance+Win32_NetworkAdapterConfiguration+-Filter+%27IPEnabled%3DTrue%27%29%0D%0Aif+%28%24NetworkAdapter%29+%7B%0D%0A++++%24NetworkAdapter+%7C+Invoke-CimMethod+-MethodName+%27SetDNSServerSearchOrder%27+-Arguments+%40%7B+DNSServerSearchOrder+%3D+%40%28%271.1.1.2%27%2C+%271.0.0.2%27%29+%7D%0D%0A%7D&DefaultUserScriptType0=Ps1&DefaultUserScript1=%7BCONFIG_SECURITY%7D&DefaultUserScriptType1=Reg&DefaultUserScript2=%7BCONFIG_PERFORMANCE%7D&DefaultUserScriptType2=Reg&DefaultUserScript3=%7BCONFIG_BASELINE%7D&DefaultUserScriptType3=Reg&DefaultUserScript4=%7BCONFIG_ANNOYANCES%7D&DefaultUserScriptType4=Reg&DefaultUserScript5=%7BCONFIG_PRIVACY%7D&DefaultUserScriptType5=Reg&DefaultUserScript6=%7BCONFIG_PERSONALISATION%7D&DefaultUserScriptType6=Reg&DefaultUserScript7=%7BCONFIG_WINDOWS_LOCALISED%7D&DefaultUserScriptType7=Reg&DefaultUserScript8=%7BCONFIG_MICROSOFT_OFFICE%7D&DefaultUserScriptType8=Reg&DefaultUserScript9=%7BCONFIG_7ZIP%7D&DefaultUserScriptType9=Reg&FirstLogonScript0=Set-ItemProperty+-LiteralPath+%27Registry%3A%3AHKLM%5CSOFTWARE%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0ASet-ItemProperty+-LiteralPath+%27Registry%3A%3AHKEY_CURRENT_USER%5CSoftware%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0A%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.xml%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.reg%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.cmd%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.ps1%22+-Exclude+*UserOnce*%0D%0A%0D%0ASet-Variable+-Option+Constant+BatchFileUrl+%28%5BString%5D%27https%3A%2F%2Fbit.ly%2Fqiiwexc_bat%27%29%0D%0ASet-Variable+-Option+Constant+BatchFilePath+%28%5BString%5D%22%24env%3AUSERPROFILE%5CDesktop%5Cqiiwexc.bat%22%29%0D%0A%0D%0AInvoke-WebRequest+-Uri+%24BatchFileUrl+-OutFile+%24BatchFilePath%0D%0Aif+%28Test-Path+%24BatchFilePath%29+%7B%0D%0A++++Start-Process+PowerShell+%22%26+%24BatchFilePath%22%0D%0A%7D+else+%7B%0D%0A++++%5BDiagnostics.Process%5D%3A%3AStart%28%24BatchFileUrl+%29%0D%0A%7D%0D%0A&FirstLogonScriptType0=Ps1&WdacMode=Skip&AppLockerMode=Skip&ComponentContent0=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSetupUILanguage%3E%0D%0A++%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3C%2FSetupUILanguage%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component0=Microsoft-Windows-International-Core-WinPE-windowsPE&ComponentContent1=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUILanguageFallback%3E%7BUI_LANGUAGE_FALLBACK%7D%3C%2FUILanguageFallback%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component1=Microsoft-Windows-International-Core-oobeSystem&ComponentContent2=%3CDisableWER%3E1%3C%2FDisableWER%3E&Component2=Microsoft-Windows-ErrorReportingCore-specialize&ComponentContent3=%3CDisableFirstRunWizard%3Etrue%3C%2FDisableFirstRunWizard%3E%0D%0A%3CDisableOOBAccelerators%3Etrue%3C%2FDisableOOBAccelerators%3E%0D%0A%3CFavoritesDelete%3Etrue%3C%2FFavoritesDelete%3E%0D%0A%3CHome_Page%3Eabout%3Ablank%3C%2FHome_Page%3E%0D%0A%3CSearchScopes%3E%0D%0A++%3CScope+wcm%3Aaction%3D%22add%22%3E%0D%0A++++%3CScopeDefault%3Etrue%3C%2FScopeDefault%3E%0D%0A++++%3CScopeDisplayName%3EGoogle%3C%2FScopeDisplayName%3E%0D%0A++++%3CScopeKey%3EGoogle%3C%2FScopeKey%3E%0D%0A++++%3CScopeUrl%3Ehttp%3A%2F%2Fwww.google.lv%2Fsearch%3Fq%3D%7BsearchTerms%7D%3C%2FScopeUrl%3E%0D%0A++%3C%2FScope%3E%0D%0A%3C%2FSearchScopes%3E%0D%0A%3CSuggestedSitesEnabled%3Efalse%3C%2FSuggestedSitesEnabled%3E&Component3=Microsoft-Windows-IE-InternetExplorer-specialize&ComponentContent4=%3CPreferredPlan%3E8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c%3C%2FPreferredPlan%3E&Component4=Microsoft-Windows-PowerCPL-generalize-->
@@ -415,7 +415,6 @@ $selectors = @(
   'Microsoft.WindowsMaps';
   'Microsoft.WindowsSoundRecorder';
   'Microsoft.XboxApp';
-  'Microsoft.XboxGamingOverlay';
   'Microsoft.ZuneMusic';
   'Microsoft.ZuneVideo';
   'MicrosoftCorporationII.MicrosoftFamily';
@@ -684,8 +683,6 @@ powercfg /SetDcValueIndex SCHEME_ALL SUB_SLEEP RTCWAKE 1
     <File path="C:\Windows\Setup\unattend-04.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\DefaultUser\Software\Microsoft\Edge\SmartScreenPuaEnabled]
 @=dword:00000001
 
@@ -886,14 +883,6 @@ Windows Registry Editor Version 5.00
 &quot;DisabledByDefault&quot;=dword:00000001
 &quot;Enabled&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Client]
-&quot;DisabledByDefault&quot;=dword:00000000
-&quot;Enabled&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Server]
-&quot;DisabledByDefault&quot;=dword:00000000
-&quot;Enabled&quot;=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager]
 &quot;CWDIllegalInDLLSearch&quot;=dword:ffffffff
 
@@ -915,8 +904,6 @@ Windows Registry Editor Version 5.00
 &quot;Status&quot;=dword:00000000
     </File>
     <File path="C:\Windows\Setup\unattend-05.reg">
-Windows Registry Editor Version 5.00
-
 Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
@@ -958,8 +945,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-06.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\DefaultUser\Control Panel\Desktop]
 &quot;JPEGImportQuality&quot;=dword:00000064
 
@@ -978,6 +963,7 @@ Windows Registry Editor Version 5.00
 &quot;Value&quot;=&quot;Allow&quot;
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+&quot;Hidden&quot;=dword:00000001 ; Show hidden files
 &quot;NavPaneShowAllCloudStates&quot;=dword:00000001
 &quot;SeparateProcess&quot;=dword:00000001
 &quot;ShowClockInNotificationCenter&quot;=dword:00000001
@@ -1015,13 +1001,6 @@ Windows Registry Editor Version 5.00
 &quot;01&quot;=dword:00000001
 &quot;256&quot;=dword:0000003C
 &quot;2048&quot;=dword:0000001E
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
-&quot;fTaskEnabled&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SchedulingAgent]
-&quot;LogPath&quot;=hex(2):25,53,79,73,74,65,6d,52,6f,6f,74,25,5c,53,79,73,74,65,6d,33,\
-  32,5c,4c,6f,67,46,69,6c,65,73,5c,53,43,48,45,44,55,4c,45,2e,4c,4f,47,00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders]
 &quot;StateFlags&quot;=dword:00000001
@@ -1153,8 +1132,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-07.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\DefaultUser\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
 @=&quot;&quot;
 
@@ -1213,8 +1190,9 @@ Windows Registry Editor Version 5.00
 &quot;{20D04FE0-3AEA-1069-A2D8-08002B30309D}&quot;=dword:00000000
 &quot;MSEdge&quot;=dword:00000001
 
+; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Mobility]
-&quot;OptedIn&quot;=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
+&quot;OptedIn&quot;=dword:00000000
 
 ; Disable Windows Backup reminder notifications
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
@@ -1230,7 +1208,6 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Search]
 &quot;BingSearchEnabled&quot;=dword:00000000 ; Disable Bing search
 &quot;ConnectedSearchUseWeb&quot;=dword:00000000
-&quot;ConnectedSearchUseWebOverMeteredConnections&quot;=dword:00000000
 &quot;DisableWebSearch&quot;=dword:00000001
 &quot;SearchboxTaskbarMode&quot;=dword:00000003 ; Show search icon and label
 
@@ -1331,8 +1308,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-08.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\DefaultUser\Control Panel\International\User Profile]
 &quot;HttpAcceptLanguageOptOut&quot;=dword:00000001
 
@@ -1341,9 +1316,6 @@ Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
 &quot;EnableCortana&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Clipboard]
-&quot;EnableClipboardHistory&quot;=dword:00000000
 
 ; Disable &quot;Improve Inking and Typing Recognition&quot;
 [HKEY_USERS\DefaultUser\Software\Microsoft\Input\TIPC]
@@ -1389,8 +1361,9 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
 &quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
 
+; Disable &quot;Let Windows improve Start and search results by tracking app launches&quot;
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-&quot;Start_TrackProgs&quot;=dword:00000000 ; Disable &quot;Let Windows improve Start and search results by tracking app launches&quot;
+&quot;Start_TrackProgs&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Feeds]
 &quot;EnableFeeds&quot;=dword:00000000
@@ -1719,8 +1692,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-09.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 ; Enable classic context menu
 [HKEY_USERS\DefaultUser\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 @=&quot;&quot;
@@ -1737,7 +1708,6 @@ Windows Registry Editor Version 5.00
 &quot;EnableAutoTray&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-&quot;Hidden&quot;=dword:00000001 ; Show hidden files
 &quot;LaunchTo&quot;=dword:00000001 ; Launch File Explorer to &quot;This PC&quot;
 &quot;MMTaskbarGlomLevel&quot;=dword:00000001 ; Combine taskbar when full
 &quot;NavPaneExpandToCurrentFolder&quot;=dword:00000001
@@ -1786,8 +1756,9 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 &quot;value&quot;=dword:00000000
 
+; Disable chat taskbar (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-&quot;HideSCAMeetNow&quot;=dword:00000001 ; Disable chat taskbar (Windows 10)
+&quot;HideSCAMeetNow&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
 &quot;{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}&quot;=&quot;&quot;
@@ -1811,9 +1782,6 @@ Windows Registry Editor Version 5.00
 ; Disable widgets service
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 &quot;AllowNewsAndInterests&quot;=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
-&quot;AllowClipboardHistory&quot;=dword:00000000
 
 ; Disable Copilot service
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
@@ -1845,8 +1813,6 @@ if ($NetworkAdapter) {
 }
     </File>
     <File path="C:\Windows\Setup\unattend-0c.reg">
-Windows Registry Editor Version 5.00
-
 Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Edge\SmartScreenPuaEnabled]
@@ -2049,14 +2015,6 @@ Windows Registry Editor Version 5.00
 &quot;DisabledByDefault&quot;=dword:00000001
 &quot;Enabled&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Client]
-&quot;DisabledByDefault&quot;=dword:00000000
-&quot;Enabled&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Server]
-&quot;DisabledByDefault&quot;=dword:00000000
-&quot;Enabled&quot;=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager]
 &quot;CWDIllegalInDLLSearch&quot;=dword:ffffffff
 
@@ -2078,8 +2036,6 @@ Windows Registry Editor Version 5.00
 &quot;Status&quot;=dword:00000000
     </File>
     <File path="C:\Windows\Setup\unattend-0d.reg">
-Windows Registry Editor Version 5.00
-
 Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\VideoSettings]
@@ -2121,8 +2077,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-0e.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\DefaultUser\Control Panel\Desktop]
 &quot;JPEGImportQuality&quot;=dword:00000064
 
@@ -2141,6 +2095,7 @@ Windows Registry Editor Version 5.00
 &quot;Value&quot;=&quot;Allow&quot;
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+&quot;Hidden&quot;=dword:00000001 ; Show hidden files
 &quot;NavPaneShowAllCloudStates&quot;=dword:00000001
 &quot;SeparateProcess&quot;=dword:00000001
 &quot;ShowClockInNotificationCenter&quot;=dword:00000001
@@ -2178,13 +2133,6 @@ Windows Registry Editor Version 5.00
 &quot;01&quot;=dword:00000001
 &quot;256&quot;=dword:0000003C
 &quot;2048&quot;=dword:0000001E
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
-&quot;fTaskEnabled&quot;=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SchedulingAgent]
-&quot;LogPath&quot;=hex(2):25,53,79,73,74,65,6d,52,6f,6f,74,25,5c,53,79,73,74,65,6d,33,\
-  32,5c,4c,6f,67,46,69,6c,65,73,5c,53,43,48,45,44,55,4c,45,2e,4c,4f,47,00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders]
 &quot;StateFlags&quot;=dword:00000001
@@ -2316,8 +2264,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-0f.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\DefaultUser\Software\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64]
 @=&quot;&quot;
 
@@ -2376,8 +2322,9 @@ Windows Registry Editor Version 5.00
 &quot;{20D04FE0-3AEA-1069-A2D8-08002B30309D}&quot;=dword:00000000
 &quot;MSEdge&quot;=dword:00000001
 
+; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Mobility]
-&quot;OptedIn&quot;=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
+&quot;OptedIn&quot;=dword:00000000
 
 ; Disable Windows Backup reminder notifications
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
@@ -2393,7 +2340,6 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Search]
 &quot;BingSearchEnabled&quot;=dword:00000000 ; Disable Bing search
 &quot;ConnectedSearchUseWeb&quot;=dword:00000000
-&quot;ConnectedSearchUseWebOverMeteredConnections&quot;=dword:00000000
 &quot;DisableWebSearch&quot;=dword:00000001
 &quot;SearchboxTaskbarMode&quot;=dword:00000003 ; Show search icon and label
 
@@ -2494,8 +2440,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-10.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\DefaultUser\Control Panel\International\User Profile]
 &quot;HttpAcceptLanguageOptOut&quot;=dword:00000001
 
@@ -2504,9 +2448,6 @@ Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
 &quot;EnableCortana&quot;=dword:00000000
-
-[HKEY_USERS\DefaultUser\Software\Microsoft\Clipboard]
-&quot;EnableClipboardHistory&quot;=dword:00000000
 
 ; Disable &quot;Improve Inking and Typing Recognition&quot;
 [HKEY_USERS\DefaultUser\Software\Microsoft\Input\TIPC]
@@ -2552,8 +2493,9 @@ Windows Registry Editor Version 5.00
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
 &quot;TailoredExperiencesWithDiagnosticDataEnabled&quot;=dword:00000000
 
+; Disable &quot;Let Windows improve Start and search results by tracking app launches&quot;
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-&quot;Start_TrackProgs&quot;=dword:00000000 ; Disable &quot;Let Windows improve Start and search results by tracking app launches&quot;
+&quot;Start_TrackProgs&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Feeds]
 &quot;EnableFeeds&quot;=dword:00000000
@@ -2882,8 +2824,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-11.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 ; Enable classic context menu
 [HKEY_USERS\DefaultUser\Software\Classes\CLSID\{86CA1AA0-34AA-4E8B-A509-50C905BAE2A2}\InprocServer32]
 @=&quot;&quot;
@@ -2900,7 +2840,6 @@ Windows Registry Editor Version 5.00
 &quot;EnableAutoTray&quot;=dword:00000000
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-&quot;Hidden&quot;=dword:00000001 ; Show hidden files
 &quot;LaunchTo&quot;=dword:00000001 ; Launch File Explorer to &quot;This PC&quot;
 &quot;MMTaskbarGlomLevel&quot;=dword:00000001 ; Combine taskbar when full
 &quot;NavPaneExpandToCurrentFolder&quot;=dword:00000001
@@ -2949,8 +2888,9 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 &quot;value&quot;=dword:00000000
 
+; Disable chat taskbar (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-&quot;HideSCAMeetNow&quot;=dword:00000001 ; Disable chat taskbar (Windows 10)
+&quot;HideSCAMeetNow&quot;=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
 &quot;{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}&quot;=&quot;&quot;
@@ -2975,16 +2915,11 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 &quot;AllowNewsAndInterests&quot;=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
-&quot;AllowClipboardHistory&quot;=dword:00000000
-
 ; Disable Copilot service
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
 &quot;TurnOffWindowsCopilot&quot;=dword:00000001
     </File>
     <File path="C:\Windows\Setup\unattend-12.reg">
-Windows Registry Editor Version 5.00
-
 Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Microsoft\Windows\CurrentVersion\TaskManager]
@@ -3186,8 +3121,6 @@ Windows Registry Editor Version 5.00
     <File path="C:\Windows\Setup\unattend-13.reg">
 Windows Registry Editor Version 5.00
 
-Windows Registry Editor Version 5.00
-
 [HKEY_USERS\DefaultUser\Software\Microsoft\Office\16.0\Common\General]
 &quot;ShownFirstRunOptin&quot;=dword:00000001
 
@@ -3219,8 +3152,6 @@ Windows Registry Editor Version 5.00
 &quot;SendTelemetry&quot;=dword:00000003
     </File>
     <File path="C:\Windows\Setup\unattend-14.reg">
-Windows Registry Editor Version 5.00
-
 Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\7-Zip\FM]
