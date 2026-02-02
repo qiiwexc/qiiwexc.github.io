@@ -5,9 +5,8 @@ New-GroupBox 'Updates'
 New-Button 'Windows update' $BUTTON_FUNCTION
 
 
-[Switch]$BUTTON_DISABLED = $OS_VERSION -lt 8
 [ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftStoreApps }
-New-Button 'Microsoft Store updates' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+New-Button 'Microsoft Store updates' $BUTTON_FUNCTION
 
 
 [Switch]$BUTTON_DISABLED = $OFFICE_INSTALL_TYPE -ne 'C2R'

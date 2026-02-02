@@ -30,14 +30,12 @@ Describe 'Initialize-App' {
         Mock ToString { return $TestDate }
         Mock Get-Date { return ToString }
         Mock Write-FormLog {}
-        Mock Write-LogWarning {}
         Mock Get-SystemInformation {}
         Mock Remove-Directory {}
         Mock Initialize-AppDirectory {}
         Mock Update-App {}
 
         [Windows.Forms.Form]$FORM = New-MockObject -Type Windows.Forms.Form -Methods @{ Activate = { Activate } }
-        [Int]$OS_VERSION = 11
     }
 
     It 'Should initialize the application' {
@@ -47,7 +45,6 @@ Describe 'Initialize-App' {
         Should -Invoke Get-Date -Exactly 1
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 3
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter {
@@ -66,22 +63,6 @@ Describe 'Initialize-App' {
         Should -Invoke Update-App -Exactly 1
     }
 
-    It 'Should initialize the application with unsupported OS version' {
-        [Int]$OS_VERSION = 7
-
-        Initialize-App
-
-        Should -Invoke Activate -Exactly 1
-        Should -Invoke Get-Date -Exactly 1
-        Should -Invoke ToString -Exactly 1
-        Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Get-SystemInformation -Exactly 1
-        Should -Invoke Remove-Directory -Exactly 3
-        Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Update-App -Exactly 1
-    }
-
     It 'Should handle Get-SystemInformation failure' {
         Mock Get-SystemInformation { throw $TestException }
 
@@ -91,7 +72,6 @@ Describe 'Initialize-App' {
         Should -Invoke Get-Date -Exactly 1
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 0
         Should -Invoke Initialize-AppDirectory -Exactly 0
@@ -107,7 +87,6 @@ Describe 'Initialize-App' {
         Should -Invoke Get-Date -Exactly 1
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 0
@@ -123,7 +102,6 @@ Describe 'Initialize-App' {
         Should -Invoke Get-Date -Exactly 1
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 3
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -139,7 +117,6 @@ Describe 'Initialize-App' {
         Should -Invoke Get-Date -Exactly 1
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 3
         Should -Invoke Initialize-AppDirectory -Exactly 1

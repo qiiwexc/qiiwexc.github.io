@@ -15,8 +15,6 @@ Describe 'Update-Windows' {
         Mock Start-Process {}
         Mock Out-Success {}
         Mock Out-Failure {}
-
-        [Int]$OS_VERSION = 11
     }
 
     It 'Should update Windows' {
@@ -26,20 +24,6 @@ Describe 'Update-Windows' {
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq 'UsoClient' -and
             $ArgumentList -eq 'StartInteractiveScan'
-        }
-        Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Out-Failure -Exactly 0
-    }
-
-    It 'Should update Windows successfully on Windows 7' {
-        $OS_VERSION = 7
-
-        Update-Windows
-
-        Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
-            $FilePath -eq 'wuauclt' -and
-            $ArgumentList -eq '/detectnow /updatenow'
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0

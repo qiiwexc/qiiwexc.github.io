@@ -37,7 +37,7 @@ if ($IsWindows11) {
     }
 }
 
-if ($OS_VERSION -lt 7) {
+if ($OS_VERSION -lt 8) {
     Write-Error "Unsupported Operating System: $($OPERATING_SYSTEM.Caption) (Build $WindowsBuild)"
     Start-Sleep -Seconds 5
     break

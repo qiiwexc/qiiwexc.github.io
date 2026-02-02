@@ -21,8 +21,6 @@ Describe 'Start-Activator' {
 
         [Switch]$TestActivateWindowsArg = $False
         [Switch]$TestActivateOfficeArg = $False
-
-        [Int]$OS_VERSION = 11
     }
 
     It 'Should start MAS activator' {
@@ -35,22 +33,6 @@ Describe 'Start-Activator' {
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $Command -eq '& ([ScriptBlock]::Create((irm https://get.activated.win)))' -and
-            $HideWindow -eq $True
-        }
-        Should -Invoke Out-Failure -Exactly 0
-    }
-
-    It 'Should start MAS activator successfully on Windows 7' {
-        $OS_VERSION = 7
-
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
-
-        Should -Invoke Find-RunningScript -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $Command -eq "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))" -and
             $HideWindow -eq $True
         }
         Should -Invoke Out-Failure -Exactly 0
