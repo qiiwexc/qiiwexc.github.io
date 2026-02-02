@@ -19,7 +19,7 @@ Describe 'Find-RunningProcess' {
         Should -Invoke Get-Process -Exactly 1
     }
 
-    It 'Should skip if process is not running' {
+    It 'Should not find non-running process' {
         Mock Get-Process { return @() }
 
         Find-RunningProcess $TestProcessName | Should -BeNullOrEmpty

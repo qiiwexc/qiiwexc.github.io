@@ -7,6 +7,11 @@ function Start-Activator {
     try {
         Write-LogInfo 'Starting MAS activator...'
 
+        if (Find-RunningScript 'get.activated.win') {
+            Write-LogWarning 'MAS activator is already running'
+            return
+        }
+
         if (-not (Test-NetworkConnection)) {
             return
         }

@@ -7,6 +7,11 @@ function Start-WindowsDebloat {
 
     Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 
+    if (Find-RunningScript 'debloat.raphi.re') {
+        Write-LogWarning 'Windows debloat utility is already running'
+        return
+    }
+
     if (-not (Test-NetworkConnection)) {
         return
     }
