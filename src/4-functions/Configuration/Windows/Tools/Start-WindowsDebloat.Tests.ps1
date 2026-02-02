@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\src\4-functions\Common\Find-RunningScript.ps1'
     . '.\src\4-functions\Common\Invoke-CustomCommand.ps1'
     . '.\src\4-functions\Common\Network.ps1'
     . '.\src\4-functions\Common\New-Directory.ps1'
@@ -22,11 +23,12 @@ BeforeAll {
 Describe 'Start-WindowsDebloat' {
     BeforeEach {
         Mock Write-LogInfo {}
+        Mock Find-RunningScript {}
+        Mock Write-LogWarning {}
         Mock Test-NetworkConnection { return $True }
         Mock New-Directory {}
         Mock Set-Content {}
         Mock Invoke-CustomCommand {}
-        Mock Write-LogWarning {}
         Mock Out-Success {}
         Mock Out-Failure {}
 
@@ -40,6 +42,9 @@ Describe 'Start-WindowsDebloat' {
     It 'Should start debloat tool with configuration' {
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Find-RunningScript -Exactly 1 -ParameterFilter { $CommandLinePart -eq 'debloat.raphi.re' }
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestTargetPath }
@@ -69,6 +74,8 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
@@ -87,6 +94,8 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
@@ -106,6 +115,8 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
@@ -134,10 +145,11 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
@@ -147,15 +159,46 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
+    It 'Should exit if already running' {
+        Mock Find-RunningScript { return @(@{ ProcessName = 'powershell' }) }
+
+        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Test-NetworkConnection -Exactly 0
+        Should -Invoke New-Directory -Exactly 0
+        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Invoke-CustomCommand -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
     It 'Should exit if no network connection' {
         Mock Test-NetworkConnection { return $False }
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Invoke-CustomCommand -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
+    It 'Should handle Find-RunningScript failure' {
+        Mock Find-RunningScript { throw $TestException }
+
+        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Throw $TestException
+
+        Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Test-NetworkConnection -Exactly 0
+        Should -Invoke New-Directory -Exactly 0
+        Should -Invoke Set-Content -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
@@ -166,10 +209,11 @@ Describe 'Start-WindowsDebloat' {
 
         { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Throw $TestException
 
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
@@ -180,10 +224,11 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
 
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -193,10 +238,12 @@ Describe 'Start-WindowsDebloat' {
         Mock Set-Content { throw $TestException }
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -206,10 +253,12 @@ Describe 'Start-WindowsDebloat' {
         Mock Invoke-CustomCommand { throw $TestException }
 
         Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 2
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1

@@ -6,6 +6,11 @@ function Start-WinUtil {
 
     Write-LogInfo 'Starting WinUtil utility...'
 
+    if (Find-RunningScript 'christitus.com') {
+        Write-LogWarning 'WinUtil utility is already running'
+        return
+    }
+
     if (-not (Test-NetworkConnection)) {
         return
     }
