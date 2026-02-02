@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.2.2')
+::Set-Variable -Option Constant VERSION ([Version]'26.2.3')
 ::
 ::#endregion init > Version
 ::
@@ -67,6 +67,37 @@ if "%~1"=="Debug" (
 ::    throw "System not supported: Failed to load 'System.Windows.Forms' module: $_"
 ::}
 ::
+::Set-Variable -Option Constant OPERATING_SYSTEM ([PSObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
+::Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
+::Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
+::
+::Set-Variable -Option Constant OS_64_BIT ([Bool]($env:PROCESSOR_ARCHITECTURE -like '*64'))
+::
+::if ($IsWindows11) {
+::    Set-Variable -Option Constant OS_VERSION ([Int]11)
+::} else {
+::    switch -Wildcard ($WindowsBuild) {
+::        '10.0.*' {
+::            Set-Variable -Option Constant OS_VERSION ([Int]10)
+::        }
+::        '6.3.*' {
+::            Set-Variable -Option Constant OS_VERSION ([Int]8)
+::        }
+::        '6.2.*' {
+::            Set-Variable -Option Constant OS_VERSION ([Int]8)
+::        }
+::        Default {
+::            Set-Variable -Option Constant OS_VERSION ([Int]0)
+::        }
+::    }
+::}
+::
+::if ($OS_VERSION -lt 10) {
+::    Write-Error "Unsupported Operating System: $($OPERATING_SYSTEM.Caption) (Build $WindowsBuild)"
+::    Start-Sleep -Seconds 5
+::    break
+::}
+::
 ::if (-not $DevMode) {
 ::    Add-Type -Namespace Console -Name Window -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
 ::                                                                [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
@@ -85,36 +116,8 @@ if "%~1"=="Debug" (
 ::
 ::
 ::Set-Variable -Option Constant IS_LAPTOP ([Bool]((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2))
-::
 ::Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
 ::
-::Set-Variable -Option Constant OPERATING_SYSTEM ([PSObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
-::Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
-::Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
-::
-::Set-Variable -Option Constant OS_64_BIT ([Bool]($env:PROCESSOR_ARCHITECTURE -like '*64'))
-::
-::if ($IsWindows11) {
-::    Set-Variable -Option Constant OS_VERSION ([Int]11)
-::} else {
-::    switch -Wildcard ($WindowsBuild) {
-::        '10.0.*' {
-::            Set-Variable -Option Constant OS_VERSION ([Int]10)
-::        }
-::        '6.3.*' {
-::            Set-Variable -Option Constant OS_VERSION ([Double]8.1)
-::        }
-::        '6.2.*' {
-::            Set-Variable -Option Constant OS_VERSION ([Int]8)
-::        }
-::        '6.1.*' {
-::            Set-Variable -Option Constant OS_VERSION ([Int]7)
-::        }
-::        Default {
-::            Set-Variable -Option Constant OS_VERSION ([String]'Vista or less / Unknown')
-::        }
-::    }
-::}
 ::
 ::Set-Variable -Option Constant WordRegPath ([String]'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer')
 ::if (Test-Path $WordRegPath) {
@@ -491,14 +494,12 @@ if "%~1"=="Debug" (
 ::New-GroupBox 'Updates'
 ::
 ::
-::[Switch]$BUTTON_DISABLED = $OS_VERSION -lt 7
 ::[ScriptBlock]$BUTTON_FUNCTION = { Update-Windows }
-::New-Button 'Windows update' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+::New-Button 'Windows update' $BUTTON_FUNCTION
 ::
 ::
-::[Switch]$BUTTON_DISABLED = $OS_VERSION -lt 8
 ::[ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftStoreApps }
-::New-Button 'Microsoft Store updates' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+::New-Button 'Microsoft Store updates' $BUTTON_FUNCTION
 ::
 ::
 ::[Switch]$BUTTON_DISABLED = $OFFICE_INSTALL_TYPE -ne 'C2R'
@@ -513,9 +514,8 @@ if "%~1"=="Debug" (
 ::New-GroupBox 'Activation'
 ::
 ::
-::[Switch]$BUTTON_DISABLED = $OS_VERSION -lt 7
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-Activator -ActivateWindows:$CHECKBOX_ActivateWindows.Checked -ActivateOffice:$CHECKBOX_ActivateOffice.Checked }
-::New-Button 'MAS Activator' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+::New-Button 'MAS Activator' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_ActivateWindows = New-CheckBox 'Activate Windows'
 ::
@@ -724,13 +724,13 @@ if "%~1"=="Debug" (
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPerformance = New-CheckBox 'Improve performance' -Checked
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBaseline = New-CheckBox 'Baseline config' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBaseline = New-CheckBox 'Baseline configuration' -Checked
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsAnnoyances = New-CheckBox 'Remove ads and annoyances' -Checked
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPrivacy = New-CheckBox 'Telemetry and privacy' -Checked
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsLocalisation = New-CheckBox 'Localisation'
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsLocalisation = New-CheckBox 'Keyboard layout; location'
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 ::
@@ -1394,8 +1394,9 @@ if "%~1"=="Debug" (
 ::"{20D04FE0-3AEA-1069-A2D8-08002B30309D}"=dword:00000000
 ::"MSEdge"=dword:00000001
 ::
+::; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Mobility]
-::"OptedIn"=dword:00000000 ; Disable Show me suggestions for using my mobile device with Windows (Phone Link suggestions)
+::"OptedIn"=dword:00000000
 ::
 ::; Disable Windows Backup reminder notifications
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.BackupReminder]
@@ -1411,7 +1412,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search]
 ::"BingSearchEnabled"=dword:00000000 ; Disable Bing search
 ::"ConnectedSearchUseWeb"=dword:00000000
-::"ConnectedSearchUseWebOverMeteredConnections"=dword:00000000
 ::"DisableWebSearch"=dword:00000001
 ::"SearchboxTaskbarMode"=dword:00000003 ; Show search icon and label
 ::
@@ -1937,6 +1937,7 @@ if "%~1"=="Debug" (
 ::"Value"="Allow"
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+::"Hidden"=dword:00000001 ; Show hidden files
 ::"NavPaneShowAllCloudStates"=dword:00000001
 ::"SeparateProcess"=dword:00000001
 ::"ShowClockInNotificationCenter"=dword:00000001
@@ -1974,13 +1975,6 @@ if "%~1"=="Debug" (
 ::"01"=dword:00000001
 ::"256"=dword:0000003C
 ::"2048"=dword:0000001E
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Dfrg\TaskSettings]
-::"fTaskEnabled"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SchedulingAgent]
-::"LogPath"=hex(2):25,53,79,73,74,65,6d,52,6f,6f,74,25,5c,53,79,73,74,65,6d,33,\
-::  32,5c,4c,6f,67,46,69,6c,65,73,5c,53,43,48,45,44,55,4c,45,2e,4c,4f,47,00
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders]
 ::"StateFlags"=dword:00000001
@@ -2173,7 +2167,6 @@ if "%~1"=="Debug" (
 ::"EnableAutoTray"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-::"Hidden"=dword:00000001 ; Show hidden files
 ::"LaunchTo"=dword:00000001 ; Launch File Explorer to "This PC"
 ::"MMTaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
 ::"NavPaneExpandToCurrentFolder"=dword:00000001
@@ -2222,8 +2215,9 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
 ::"value"=dword:00000000
 ::
+::; Disable chat taskbar (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-::"HideSCAMeetNow"=dword:00000001 ; Disable chat taskbar (Windows 10)
+::"HideSCAMeetNow"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
 ::"{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}"=""
@@ -2247,9 +2241,6 @@ if "%~1"=="Debug" (
 ::; Disable widgets service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
 ::"AllowNewsAndInterests"=dword:00000000
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
-::"AllowClipboardHistory"=dword:00000000
 ::
 ::; Disable Copilot service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
@@ -2290,9 +2281,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
 ::"EnableCortana"=dword:00000000
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Clipboard]
-::"EnableClipboardHistory"=dword:00000000
 ::
 ::; Disable "Improve Inking and Typing Recognition"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Input\TIPC]
@@ -2338,8 +2326,9 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CPSS\Store]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
+::; Disable "Let Windows improve Start and search results by tracking app launches"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
-::"Start_TrackProgs"=dword:00000000 ; Disable "Let Windows improve Start and search results by tracking app launches"
+::"Start_TrackProgs"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Feeds]
 ::"EnableFeeds"=dword:00000000
@@ -2871,14 +2860,6 @@ if "%~1"=="Debug" (
 ::"DisabledByDefault"=dword:00000001
 ::"Enabled"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Client]
-::"DisabledByDefault"=dword:00000000
-::"Enabled"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SChannel\Protocols\TLS 1.3\Server]
-::"DisabledByDefault"=dword:00000000
-::"Enabled"=dword:00000001
-::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager]
 ::"CWDIllegalInDLLSearch"=dword:ffffffff
 ::
@@ -2995,7 +2976,6 @@ if "%~1"=="Debug" (
 ::Microsoft.WindowsMaps                          # Mapping and navigation app
 ::Microsoft.WindowsSoundRecorder                 # Basic audio recording app
 ::Microsoft.XboxApp                              # Old Xbox Console Companion App (Discontinued)
-::Microsoft.XboxGamingOverlay                    # Game overlay, required/useful for some games (Part of Xbox Game Bar)
 ::Microsoft.ZuneMusic                            # Modern Media Player (Replaced Groove Music, plays local audio/video)
 ::Microsoft.ZuneVideo                            # Movies & TV app for renting/buying/playing video content (Rebranded as "Films & TV")
 ::MicrosoftCorporationII.MicrosoftFamily         # Family Safety App for managing family accounts and settings
@@ -3532,10 +3512,8 @@ if "%~1"=="Debug" (
 ::    Write-LogInfo "Operation system: $($OPERATING_SYSTEM.Caption)" $LogIndentLevel
 ::
 ::    Set-Variable -Option Constant WindowsRelease ([String](Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion)
-::    if ($OS_VERSION -ge 10) {
-::        Write-LogInfo "OS release: v$WindowsRelease" $LogIndentLevel
-::    }
 ::
+::    Write-LogInfo "OS release: v$WindowsRelease" $LogIndentLevel
 ::    Write-LogInfo "Build number: $($OPERATING_SYSTEM.Version)" $LogIndentLevel
 ::    Write-LogInfo "OS architecture: $($OPERATING_SYSTEM.OSArchitecture)" $LogIndentLevel
 ::    Write-LogInfo "OS language: $SYSTEM_LANGUAGE" $LogIndentLevel
@@ -3580,10 +3558,6 @@ if "%~1"=="Debug" (
 ::    $FORM.Activate()
 ::
 ::    Write-FormLog ([LogLevel]::INFO) ([String]"[$((Get-Date).ToString())] Initializing...") -NoNewLine
-::
-::    if ($OS_VERSION -lt 8) {
-::        Write-LogWarning "Windows $OS_VERSION detected, some features are not supported."
-::    }
 ::
 ::    Get-SystemInformation
 ::
@@ -4055,6 +4029,32 @@ if "%~1"=="Debug" (
 ::#endregion functions > Common > Expand-Zip
 ::
 ::
+::#region functions > Common > Find-RunningProcess
+::
+::function Find-RunningProcess {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$ProcessName
+::    )
+::
+::    return Get-Process -ErrorAction Stop | Where-Object { $_.ProcessName -eq $ProcessName }
+::}
+::
+::#endregion functions > Common > Find-RunningProcess
+::
+::
+::#region functions > Common > Find-RunningScript
+::
+::function Find-RunningScript {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$CommandLinePart
+::    )
+::
+::    return Get-CimInstance -ClassName Win32_Process -Filter "name='powershell.exe'" | Where-Object { $_.CommandLine -like "*$CommandLinePart*" }
+::}
+::
+::#endregion functions > Common > Find-RunningScript
+::
+::
 ::#region functions > Common > Get-ExecutableName
 ::
 ::function Get-ExecutableName {
@@ -4377,6 +4377,12 @@ if "%~1"=="Debug" (
 ::        [String][Parameter(Position = 1)]$Switches,
 ::        [Switch]$Silent
 ::    )
+::
+::    Set-Variable -Option Constant ProcessName ([String](Split-Path -Leaf $Executable -ErrorAction Stop) -replace '\.exe$', '')
+::    if (Find-RunningProcess $ProcessName) {
+::        Write-LogWarning "Process '$ProcessName' is already running"
+::        return
+::    }
 ::
 ::    if ($Switches -and $Silent) {
 ::        Write-ActivityProgress 90 "Running '$Executable' silently..."
@@ -4718,7 +4724,7 @@ if "%~1"=="Debug" (
 ::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
 ::
-::    if (Get-Process -ErrorAction Stop | Where-Object { $_.ProcessName -eq $ProcessName } ) {
+::    if (Find-RunningProcess $ProcessName) {
 ::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
 ::        Stop-Process -Name $ProcessName -Force -ErrorAction Stop
 ::        Out-Success $LogIndentLevel
@@ -5229,6 +5235,11 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 ::
+::    if (Find-RunningScript 'debloat.raphi.re') {
+::        Write-LogWarning 'Windows debloat utility is already running'
+::        return
+::    }
+::
 ::    if (-not (Test-NetworkConnection)) {
 ::        return
 ::    }
@@ -5292,6 +5303,11 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    Write-LogInfo 'Starting WinUtil utility...'
+::
+::    if (Find-RunningScript 'christitus.com') {
+::        Write-LogWarning 'WinUtil utility is already running'
+::        return
+::    }
 ::
 ::    if (-not (Test-NetworkConnection)) {
 ::        return
@@ -5366,6 +5382,11 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Write-LogInfo 'Starting MAS activator...'
 ::
+::        if (Find-RunningScript 'get.activated.win') {
+::            Write-LogWarning 'MAS activator is already running'
+::            return
+::        }
+::
 ::        if (-not (Test-NetworkConnection)) {
 ::            return
 ::        }
@@ -5380,11 +5401,7 @@ if "%~1"=="Debug" (
 ::            $Params += ' /Ohook'
 ::        }
 ::
-::        if ($OS_VERSION -le 7) {
-::            Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))$Params"
-::        } else {
-::            Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
-::        }
+::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
 ::
 ::        Out-Success
 ::    } catch {
@@ -5520,11 +5537,7 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Write-LogInfo 'Starting Windows Update...'
 ::
-::        if ($OS_VERSION -gt 7) {
-::            Start-Process 'UsoClient' 'StartInteractiveScan' -ErrorAction Stop
-::        } else {
-::            Start-Process 'wuauclt' '/detectnow /updatenow' -ErrorAction Stop
-::        }
+::        Start-Process 'UsoClient' 'StartInteractiveScan' -ErrorAction Stop
 ::
 ::        Out-Success
 ::    } catch {
