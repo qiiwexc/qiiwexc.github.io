@@ -190,7 +190,6 @@
 "EdgeHistoryAISearchEnabled"=dword:00000000
 "EdgeShoppingAssistantEnabled"=dword:00000000
 "ExperimentationAndConfigurationServiceControl"=dword:00000002
-"GenAILocalFoundationalModelSettings"=dword:00000001
 "HubsSidebarEnabled"=dword:00000000
 "Microsoft365CopilotChatIconEnabled"=dword:00000000
 "MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
@@ -250,7 +249,6 @@
 "NoLockScreenCamera"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
-"AllowClipboardHistory"=dword:00000000
 "EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000
@@ -266,7 +264,6 @@
 "AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 "AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchUseWeb"=dword:00000000
-"ConnectedSearchUseWebOverMeteredConnections"=dword:00000000
 "CortanaConsent"=dword:00000000
 "DisableWebSearch"=dword:00000001
 "EnableDynamicContentInWSB"=dword:00000000
@@ -302,7 +299,6 @@
 "EdgeHistoryAISearchEnabled"=dword:00000000
 "EdgeShoppingAssistantEnabled"=dword:00000000
 "ExperimentationAndConfigurationServiceControl"=dword:00000002
-"GenAILocalFoundationalModelSettings"=dword:00000001
 "HubsSidebarEnabled"=dword:00000000
 "Microsoft365CopilotChatIconEnabled"=dword:00000000
 "MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
@@ -359,7 +355,6 @@
 "AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 "AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchUseWeb"=dword:00000000
-"ConnectedSearchUseWebOverMeteredConnections"=dword:00000000
 "CortanaConsent"=dword:00000000
 "DisableWebSearch"=dword:00000001
 "EnableDynamicContentInWSB"=dword:00000000
