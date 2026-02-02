@@ -3,10 +3,6 @@ function Initialize-App {
 
     Write-FormLog ([LogLevel]::INFO) ([String]"[$((Get-Date).ToString())] Initializing...") -NoNewLine
 
-    if ($OS_VERSION -lt 8) {
-        Write-LogWarning "Windows $OS_VERSION detected, some features are not supported."
-    }
-
     Get-SystemInformation
 
     Remove-Directory $PATH_WINUTIL -Silent

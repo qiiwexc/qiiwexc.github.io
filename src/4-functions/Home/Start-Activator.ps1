@@ -26,11 +26,7 @@ function Start-Activator {
             $Params += ' /Ohook'
         }
 
-        if ($OS_VERSION -le 7) {
-            Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((New-Object Net.WebClient).DownloadString('https://get.activated.win')))$Params"
-        } else {
-            Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
-        }
+        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
 
         Out-Success
     } catch {
