@@ -24,7 +24,7 @@ function New-UnattendedBase {
 
     Set-Variable -Option Constant StringReplacementMap ([Hashtable]@{
             "`t"                                                       = '  '
-            "Windows Registry Editor Version 5.00`r`n`r`n"             = ''
+            "Windows Registry Editor Version 5.00`n`n"                 = ''
             '</ExtractScript>'                                         = $ConfigFiles
             'C:\Windows\Setup\Scripts\'                                = 'C:\Windows\Setup\'
             'HideOnlineAccountScreens>false</HideOnlineAccountScreens' = 'HideOnlineAccountScreens>true</HideOnlineAccountScreens'
