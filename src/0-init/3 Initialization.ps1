@@ -23,13 +23,10 @@ if ($IsWindows11) {
             Set-Variable -Option Constant OS_VERSION ([Int]10)
         }
         '6.3.*' {
-            Set-Variable -Option Constant OS_VERSION ([Double]8.1)
+            Set-Variable -Option Constant OS_VERSION ([Int]8)
         }
         '6.2.*' {
             Set-Variable -Option Constant OS_VERSION ([Int]8)
-        }
-        '6.1.*' {
-            Set-Variable -Option Constant OS_VERSION ([Int]7)
         }
         Default {
             Set-Variable -Option Constant OS_VERSION ([Int]0)
@@ -37,7 +34,7 @@ if ($IsWindows11) {
     }
 }
 
-if ($OS_VERSION -lt 8) {
+if ($OS_VERSION -lt 10) {
     Write-Error "Unsupported Operating System: $($OPERATING_SYSTEM.Caption) (Build $WindowsBuild)"
     Start-Sleep -Seconds 5
     break
