@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.2.3')
+::Set-Variable -Option Constant VERSION ([Version]'26.2.4')
 ::
 ::#endregion init > Version
 ::
@@ -2465,7 +2465,6 @@ if "%~1"=="Debug" (
 ::"EdgeHistoryAISearchEnabled"=dword:00000000
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
 ::"ExperimentationAndConfigurationServiceControl"=dword:00000002
-::"GenAILocalFoundationalModelSettings"=dword:00000001
 ::"HubsSidebarEnabled"=dword:00000000
 ::"Microsoft365CopilotChatIconEnabled"=dword:00000000
 ::"MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
@@ -2525,7 +2524,6 @@ if "%~1"=="Debug" (
 ::"NoLockScreenCamera"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
-::"AllowClipboardHistory"=dword:00000000
 ::"EnableMmx"=dword:00000000
 ::"PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 ::"UploadUserActivities"=dword:00000000
@@ -2541,7 +2539,6 @@ if "%~1"=="Debug" (
 ::"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 ::"AllowSearchToUseLocation"=dword:00000000
 ::"ConnectedSearchUseWeb"=dword:00000000
-::"ConnectedSearchUseWebOverMeteredConnections"=dword:00000000
 ::"CortanaConsent"=dword:00000000
 ::"DisableWebSearch"=dword:00000001
 ::"EnableDynamicContentInWSB"=dword:00000000
@@ -2577,7 +2574,6 @@ if "%~1"=="Debug" (
 ::"EdgeHistoryAISearchEnabled"=dword:00000000
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
 ::"ExperimentationAndConfigurationServiceControl"=dword:00000002
-::"GenAILocalFoundationalModelSettings"=dword:00000001
 ::"HubsSidebarEnabled"=dword:00000000
 ::"Microsoft365CopilotChatIconEnabled"=dword:00000000
 ::"MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
@@ -2634,7 +2630,6 @@ if "%~1"=="Debug" (
 ::"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 ::"AllowSearchToUseLocation"=dword:00000000
 ::"ConnectedSearchUseWeb"=dword:00000000
-::"ConnectedSearchUseWebOverMeteredConnections"=dword:00000000
 ::"CortanaConsent"=dword:00000000
 ::"DisableWebSearch"=dword:00000001
 ::"EnableDynamicContentInWSB"=dword:00000000
@@ -2865,7 +2860,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
 ::"MP_FORCE_USE_SANDBOX"="1"
-::"NoDefaultCurrentDirectoryInExePath"="*"
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WoW]
 ::"DisallowedPolicyDefault"=dword:00000001
@@ -3187,9 +3181,9 @@ if "%~1"=="Debug" (
 ::P068	-	# Disable text suggestions when typing on the software keyboard (Category: Privacy)
 ::P016	-	# Disable sending URLs from apps to Windows Store (Category: Privacy)
 ::A001	+	# Disable recordings of user activity (Category: Activity History and Clipboard)
-::A002	+	# Disable storing users" activity history on this device (Category: Activity History and Clipboard)
+::A002	-	# Disable storing users" activity history on this device (Category: Activity History and Clipboard)
 ::A003	+	# Disable the submission of user activities to Microsoft (Category: Activity History and Clipboard)
-::A004	+	# Disable storage of clipboard history for whole machine (Category: Activity History and Clipboard)
+::A004	-	# Disable storage of clipboard history for whole machine (Category: Activity History and Clipboard)
 ::A006	-	# Disable storage of clipboard history for current user (Category: Activity History and Clipboard)
 ::A005	-	# Disable the transfer of the clipboard to other devices via the cloud (Category: Activity History and Clipboard)
 ::P007	+	# Disable app access to user account information on this device (Category: App Privacy)
@@ -3339,7 +3333,7 @@ if "%~1"=="Debug" (
 ::C012	-	# Disable and reset Cortana (Category: Cortana (Personal Assistant))
 ::C002	-	# Disable Input Personalization (Category: Cortana (Personal Assistant))
 ::C013	-	# Disable online speech recognition (Category: Cortana (Personal Assistant))
-::C007	+	# Cortana and search are disallowed to use location (Category: Cortana (Personal Assistant))
+::C007	-	# Cortana and search are disallowed to use location (Category: Cortana (Personal Assistant))
 ::C008	+	# Disable web search from Windows Desktop Search (Category: Cortana (Personal Assistant))
 ::C009	+	# Disable display web results in Search (Category: Cortana (Personal Assistant))
 ::C010	-	# Disable download and updates of speech recognition and speech synthesis models (Category: Cortana (Personal Assistant))
