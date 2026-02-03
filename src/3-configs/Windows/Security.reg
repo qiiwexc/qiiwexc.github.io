@@ -203,7 +203,6 @@
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
 "MP_FORCE_USE_SANDBOX"="1"
-"NoDefaultCurrentDirectoryInExePath"="*"
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WoW]
 "DisallowedPolicyDefault"=dword:00000001
