@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Run build
         run: .\build-ci.bat
@@ -39,9 +42,24 @@ jobs:
             "is_tag=false" >> $env:GITHUB_OUTPUT
           }
 
+      - name: Check if release exists
+        id: check_release
+        if: steps.check_tag.outputs.is_tag == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${{ steps.check_tag.outputs.tag }}"
+          $release = gh release view $tag 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            "exists=true" >> $env:GITHUB_OUTPUT
+            Write-Host "Release $tag already exists, skipping creation"
+          } else {
+            "exists=false" >> $env:GITHUB_OUTPUT
+          }
+
       - name: Create release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
-        if: steps.check_tag.outputs.is_tag == 'true'
+        if: steps.check_tag.outputs.is_tag == 'true' && steps.check_release.outputs.exists != 'true'
         with:
           tag_name: ${{ steps.check_tag.outputs.tag }}
           name: ${{ steps.check_tag.outputs.tag }}
