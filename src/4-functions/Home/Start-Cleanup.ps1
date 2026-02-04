@@ -2,25 +2,23 @@ function Start-Cleanup {
     New-Activity 'Cleaning up the system'
     Set-Icon ([IconName]::Cleanup)
 
-    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-
     Write-ActivityProgress 10 'Clearing delivery optimization cache...'
     Delete-DeliveryOptimizationCache -Force
-    Out-Success $LogIndentLevel
+    Out-Success
 
     Write-ActivityProgress 20 'Clearing Windows temp folder...'
     Set-Variable -Option Constant WindowsTemp ([String]"$env:SystemRoot\Temp")
     Remove-Item -Path "$WindowsTemp\*" -Recurse -Force -ErrorAction Ignore
-    Out-Success $LogIndentLevel
+    Out-Success
 
     Write-ActivityProgress 30 'Clearing user temp folder...'
     Remove-Item -Path "$PATH_TEMP_DIR\*" -Recurse -Force -ErrorAction Ignore
-    Out-Success $LogIndentLevel
+    Out-Success
 
     Write-ActivityProgress 40 'Clearing software distribution folder...'
     Set-Variable -Option Constant SoftwareDistributionPath ([String]"$env:SystemRoot\SoftwareDistribution\Download")
     Remove-Item -Path "$SoftwareDistributionPath\*" -Recurse -Force -ErrorAction Ignore
-    Out-Success $LogIndentLevel
+    Out-Success
 
     Write-ActivityProgress 60 'Running system cleanup...'
 
@@ -73,7 +71,8 @@ function Start-Cleanup {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
     }
 
-    Out-Success $LogIndentLevel
+    Out-Success
+
     Write-ActivityCompleted
     Set-Icon (([IconName]::Default))
 }
