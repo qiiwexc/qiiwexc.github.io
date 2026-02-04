@@ -35,7 +35,7 @@ Describe 'Start-Cleanup' {
         Start-Cleanup
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 2
+        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Cleanup) }
         Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
@@ -105,7 +105,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Start-Sleep -Exactly 1
         Should -Invoke Start-Sleep -Exactly 1 -ParameterFilter { $Seconds -eq 1 }
         Should -Invoke Write-ActivityCompleted -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq (([IconName]::Default)) }
     }
 
     It 'Should handle Delete-DeliveryOptimizationCache failure' {

@@ -74,5 +74,4 @@ function Start-Cleanup {
     Out-Success
 
     Write-ActivityCompleted
-    Set-Icon (([IconName]::Default))
 }
