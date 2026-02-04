@@ -144,9 +144,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
 "TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat]
-"IsUserEligible"=dword:00000000
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
 "Disabled"=dword:00000001
 
@@ -154,7 +151,6 @@
 "SensorPermissionState"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
-"BraveAIChatEnabled"=dword:00000000
 "BraveNewsDisabled"=dword:00000001
 "BraveRewardsDisabled"=dword:00000001
 "BraveTalkDisabled"=dword:00000001
@@ -166,7 +162,6 @@
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
 "BuiltInDNSClientEnabled"=dword:00000000
-"ComposeInlineEnabled"=dword:00000000
 "ConfigureDoNotTrack"=dword:00000001
 "CopilotCDPPageContext"=dword:00000000
 "CopilotPageContext"=dword:00000000
@@ -191,7 +186,6 @@
 "TabServicesEnabled"=dword:00000000
 "UserFeedbackAllowed"=dword:00000000
 "WalletDonationEnabled"=dword:00000000
-"WebToBrowserSignInEnabled"=dword:00000000
 "WebWidgetAllowed"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
@@ -248,7 +242,6 @@
 "EnableFeeds"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
-"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 "AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchUseWeb"=dword:00000000
 "CortanaConsent"=dword:00000000
@@ -274,7 +267,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
 "AllowGamesMenu"=dword:00000000
 "BuiltInDNSClientEnabled"=dword:00000000
-"ComposeInlineEnabled"=dword:00000000
 "ConfigureDoNotTrack"=dword:00000001
 "CopilotCDPPageContext"=dword:00000000
 "CopilotPageContext"=dword:00000000
@@ -299,7 +291,6 @@
 "TabServicesEnabled"=dword:00000000
 "UserFeedbackAllowed"=dword:00000000
 "WalletDonationEnabled"=dword:00000000
-"WebToBrowserSignInEnabled"=dword:00000000
 "WebWidgetAllowed"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
@@ -337,8 +328,6 @@
 "PreventHandwritingDataSharing"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
-"AllowCortana"=dword:00000000 ; Disable Cortana in search
-"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 "AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchUseWeb"=dword:00000000
 "CortanaConsent"=dword:00000000
