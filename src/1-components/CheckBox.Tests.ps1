@@ -18,7 +18,6 @@ Describe 'New-CheckBox' {
     BeforeEach {
         [Windows.Forms.Button]$script:PREVIOUS_BUTTON = $Null
         [Windows.Forms.CheckBox]$script:PREVIOUS_LABEL_OR_CHECKBOX = $Null
-        [Bool]$script:PAD_CHECKBOXES = $False
 
         [Windows.Forms.GroupBox]$script:CURRENT_GROUP = (
             New-MockObject -Type Windows.Forms.GroupBox -Properties @{
@@ -91,13 +90,12 @@ Describe 'New-CheckBox' {
         $script:CURRENT_GROUP.Height | Should -BeExactly 255
     }
 
-    It 'Should create a checkbox with padding under a checkbox/label' {
+    It 'Should create a checkbox with padding' {
         $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
-        $script:PAD_CHECKBOXES = $True
 
         Set-Variable -Option Constant Result (
             [Windows.Forms.CheckBox](
-                New-CheckBox $TestText $TestName -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
+                New-CheckBox $TestText $TestName -Disabled:$TestDisabledArg -Checked:$TestCheckedArg -Padded
             )
         )
 

@@ -1,18 +1,11 @@
 New-GroupBox 'Apps configuration'
 
-[Switch]$PAD_CHECKBOXES = $False
-
 
 [Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
-
 [Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
-
 [Windows.Forms.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Checked
-
 [Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
-
 [Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
-
 [Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
 
 

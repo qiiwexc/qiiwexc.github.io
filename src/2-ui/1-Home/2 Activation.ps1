@@ -6,4 +6,4 @@ New-Button 'MAS Activator' $BUTTON_FUNCTION
 
 [Windows.Forms.CheckBox]$CHECKBOX_ActivateWindows = New-CheckBox 'Activate Windows'
 
-[Windows.Forms.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office'
+[Windows.Forms.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office' -Padded
