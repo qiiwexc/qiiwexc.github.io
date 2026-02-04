@@ -7,7 +7,6 @@ function New-GroupBox {
     Set-Variable -Option Constant GroupBox ([Windows.Forms.GroupBox](New-Object Windows.Forms.GroupBox))
 
     Set-Variable -Scope Script PREVIOUS_GROUP ([Windows.Forms.GroupBox]$CURRENT_GROUP)
-    Set-Variable -Scope Script PAD_CHECKBOXES ([Bool]$True)
 
     [Int]$GroupIndex = 0
 

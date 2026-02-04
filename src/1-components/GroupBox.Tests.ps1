@@ -15,7 +15,6 @@ Describe 'New-GroupBox' {
     BeforeEach {
         [Windows.Forms.GroupBox]$script:PREVIOUS_GROUP = $Null
         [Windows.Forms.GroupBox]$script:CURRENT_GROUP = $TestPreviousGroup
-        [Bool]$script:PAD_CHECKBOXES = $False
         [Windows.Forms.Button]$script:PREVIOUS_BUTTON = @{}
         [Windows.Forms.RadioButton]$script:PREVIOUS_RADIO = @{}
         [Windows.Forms.CheckBox]$script:PREVIOUS_LABEL_OR_CHECKBOX = @{}
@@ -36,7 +35,6 @@ Describe 'New-GroupBox' {
         Should -Invoke Add -Exactly 1
 
         $script:PREVIOUS_GROUP | Should -BeExactly $TestPreviousGroup
-        $script:PAD_CHECKBOXES | Should -BeTrue
 
         $script:PREVIOUS_BUTTON | Should -BeNullOrEmpty
         $script:PREVIOUS_RADIO | Should -BeNullOrEmpty

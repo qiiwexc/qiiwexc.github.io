@@ -1,7 +1,5 @@
 New-GroupBox 'Ninite'
 
-[Switch]$PAD_CHECKBOXES = $False
-
 
 [Windows.Forms.CheckBox]$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
 [Windows.Forms.CheckBox]$CHECKBOX_Ninite_Firefox = New-CheckBox 'Mozilla Firefox' -Name 'firefox' -Checked

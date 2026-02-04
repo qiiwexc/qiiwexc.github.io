@@ -2,6 +2,7 @@ function New-CheckBox {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Text,
         [String][Parameter(Position = 1)]$Name,
+        [Switch]$Padded,
         [Switch]$Disabled,
         [Switch]$Checked
     )
@@ -19,7 +20,7 @@ function New-CheckBox {
     if ($PREVIOUS_LABEL_OR_CHECKBOX) {
         $InitialLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
 
-        if ($PAD_CHECKBOXES) {
+        if ($Padded) {
             $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
         } else {
             $Shift = "0, $INTERVAL_CHECKBOX"
