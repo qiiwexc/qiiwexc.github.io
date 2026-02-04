@@ -2,7 +2,7 @@ function Set-PersonalisationConfiguration {
     [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_PERSONALISATION
 
     try {
-        if ($OS_VERSION -gt 10) {
+        if ($OS_VERSION -ge 11) {
             Set-Variable -Option Constant NotificationRegistries ([String[]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*' -ErrorAction Stop).Name)
             foreach ($Registry in $NotificationRegistries) {
                 $ConfigLines.Add("`n[$Registry]`n")

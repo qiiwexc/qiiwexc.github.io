@@ -49,7 +49,7 @@ function Start-WindowsDebloat {
             Set-Variable -Option Constant SilentParam ([String]' -Silent')
         }
 
-        if ($OS_VERSION -gt 10) {
+        if ($OS_VERSION -ge 11) {
             Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
         }
 

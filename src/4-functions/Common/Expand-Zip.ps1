@@ -6,17 +6,12 @@ function Expand-Zip {
 
     Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 
-    $Extension = [IO.Path]::GetExtension($ZipPath).ToLower()
-    if ($Extension -notin @('.zip', '.7z')) {
-        throw "Unsupported archive format: $Extension. Supported formats: .zip, .7z"
-    }
-
     if (-not (Test-Path $ZipPath)) {
         throw "Archive not found: $ZipPath"
     }
 
     Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
-    Set-Variable -Option Constant ExtractionPath ([String]($ZipPath -replace '\.(zip|7z)$', ''))
+    Set-Variable -Option Constant ExtractionPath ([String]($ZipPath -replace '\.[^.]+$', ''))
     Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath -ErrorAction Stop))
 
     if ($Temp) {
@@ -44,15 +39,19 @@ function Expand-Zip {
 
     New-Directory $ExtractionPath
 
-    if ($ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
-        Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
+    if (Test-Path $PATH_7ZIP_EXE) {
+        Invoke-7Zip $ExtractionPath $ZipPath
     } else {
-        if (-not $SHELL) {
-            Set-Variable -Option Constant -Scope Script SHELL (New-Object -ComObject Shell.Application)
-        }
+        if ($ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
+            Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
+        } elseif ($OS_VERSION -ge 11) {
+            Set-Variable -Option Constant SHELL (New-Object -ComObject Shell.Application)
 
-        foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
-            $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
+            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
+                $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
+            }
+        } else {
+            throw "7-Zip not found at '$PATH_7ZIP_EXE'"
         }
     }
 
