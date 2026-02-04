@@ -1,17 +1,17 @@
 function Set-PrivacyConfiguration {
     try {
         Set-Variable -Option Constant TelemetryTaskList (
-            [hashtable[]]@(
+            [Hashtable[]]@(
                 @{Name = 'Consolidator'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' },
                 @{Name = 'DmClient'; Path = 'Microsoft\Windows\Feedback\Siuf' },
                 @{Name = 'DmClientOnScenarioDownload'; Path = 'Microsoft\Windows\Feedback\Siuf' },
-                @{Name = 'MareBackup'; Path = 'Microsoft\Windows\Application Experience' },
                 @{Name = 'Microsoft-Windows-DiskDiagnosticDataCollector'; Path = 'Microsoft\Windows\DiskDiagnostic' },
                 @{Name = 'PcaPatchDbTask'; Path = 'Microsoft\Windows\Application Experience' },
                 @{Name = 'Proxy'; Path = 'Microsoft\Windows\Autochk' },
                 @{Name = 'QueueReporting'; Path = 'Microsoft\Windows\Windows Error Reporting' },
                 @{Name = 'StartupAppTask'; Path = 'Microsoft\Windows\Application Experience' },
-                @{Name = 'UsbCeip'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' }
+                @{Name = 'UsbCeip'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' },
+                @{Name = 'MareBackup'; Path = 'Microsoft\Windows\Application Experience' }
             )
         )
 
@@ -19,7 +19,7 @@ function Set-PrivacyConfiguration {
             Disable-ScheduledTask -TaskName $Task.Name -TaskPath $Task.Path -ErrorAction Stop
         }
     } catch {
-        Out-Failure "Failed to disable telemetry tasks: $_"
+        Out-Failure "Failed to disable telemetry task $($Task.Name): $_"
     }
 
     [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_PRIVACY
