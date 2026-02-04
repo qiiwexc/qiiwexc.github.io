@@ -100,4 +100,6 @@ function Write-ActivityCompleted {
     }
 
     Set-Variable -Scope Script CURRENT_TASK $Null
+
+    Set-Icon (([IconName]::Default))
 }

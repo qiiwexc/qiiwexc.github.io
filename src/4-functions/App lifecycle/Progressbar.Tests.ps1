@@ -1,7 +1,9 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . '.\src\4-functions\Common\types.ps1'
     . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . '.\src\4-functions\App lifecycle\Set-Icon.ps1'
 
     Set-Variable -Option Constant TestActivity1 ([String]'TEST_ACTIVITY_1')
     Set-Variable -Option Constant TestActivity2 ([String]'TEST_ACTIVITY_2')
@@ -228,6 +230,7 @@ Describe 'Write-ActivityCompleted' {
         Mock Out-Success {}
         Mock Out-Failure {}
         Mock Invoke-WriteProgress {}
+        Mock Set-Icon {}
 
         [String]$script:CURRENT_TASK = $TestTask
     }
@@ -241,6 +244,8 @@ Describe 'Write-ActivityCompleted' {
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Invoke-WriteProgress -Exactly 0
+        Should -Invoke Set-Icon -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Default) }
     }
 
     It 'Should end existing activity when no parent activity exists' {
@@ -260,6 +265,8 @@ Describe 'Write-ActivityCompleted' {
             $Completed -eq $True -and
             $ParentId -eq 0
         }
+        Should -Invoke Set-Icon -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Default) }
     }
 
     It 'Should end existing activity when a parent activity exists' {
@@ -280,5 +287,7 @@ Describe 'Write-ActivityCompleted' {
             $Completed -eq $True -and
             $ParentId -eq 1
         }
+        Should -Invoke Set-Icon -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Default) }
     }
 }

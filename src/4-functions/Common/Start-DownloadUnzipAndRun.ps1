@@ -19,7 +19,6 @@ function Start-DownloadUnzipAndRun {
     } catch {
         Out-Failure "Download failed: $_"
         Write-ActivityCompleted $False
-        Set-Icon (([IconName]::Default))
         return
     }
 
@@ -30,7 +29,6 @@ function Start-DownloadUnzipAndRun {
             } catch {
                 Out-Failure "Failed to extract '$DownloadedFile': $_"
                 Write-ActivityCompleted $False
-                Set-Icon (([IconName]::Default))
                 return
             }
         } else {
@@ -48,12 +46,10 @@ function Start-DownloadUnzipAndRun {
             } catch {
                 Out-Failure "Failed to run '$Executable': $_"
                 Write-ActivityCompleted $False
-                Set-Icon (([IconName]::Default))
                 return
             }
         }
     }
 
     Write-ActivityCompleted
-    Set-Icon (([IconName]::Default))
 }
