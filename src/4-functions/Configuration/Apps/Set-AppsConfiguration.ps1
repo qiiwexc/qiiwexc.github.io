@@ -11,33 +11,33 @@ function Set-AppsConfiguration {
     New-Activity 'Configuring apps'
 
     if ($7zip.Checked) {
-        Write-ActivityProgress 11 "Applying configuration to $($7zip.Text)..."
-        Set-7zipConfiguration $7zip.Text
+        Write-ActivityProgress 11 "Applying configuration to $($7zip.Name)..."
+        Set-7zipConfiguration $7zip.Name
     }
 
     if ($VLC.Checked) {
-        Write-ActivityProgress 22 "Applying configuration to $($VLC.Text)..."
-        Set-VlcConfiguration $VLC.Text
+        Write-ActivityProgress 22 "Applying configuration to $($VLC.Name)..."
+        Set-VlcConfiguration $VLC.Name
     }
 
     if ($AnyDesk.Checked) {
-        Write-ActivityProgress 33 "Applying configuration to $($AnyDesk.Text)..."
-        Set-AnyDeskConfiguration $AnyDesk.Text
+        Write-ActivityProgress 33 "Applying configuration to $($AnyDesk.Name)..."
+        Set-AnyDeskConfiguration $AnyDesk.Name
     }
 
     if ($qBittorrent.Checked) {
-        Write-ActivityProgress 44 "Applying configuration to $($qBittorrent.Text)..."
-        Set-qBittorrentConfiguration $qBittorrent.Text
+        Write-ActivityProgress 44 "Applying configuration to $($qBittorrent.Name)..."
+        Set-qBittorrentConfiguration $qBittorrent.Name
     }
 
     if ($Edge.Checked) {
-        Write-ActivityProgress 55 "Applying configuration to $($Edge.Text)..."
-        Set-MicrosoftEdgeConfiguration $Edge.Text
+        Write-ActivityProgress 55 "Applying configuration to $($Edge.Name)..."
+        Set-MicrosoftEdgeConfiguration $Edge.Name
     }
 
     if ($Chrome.Checked) {
-        Write-ActivityProgress 77 "Applying configuration to $($Chrome.Text)..."
-        Set-GoogleChromeConfiguration $Chrome.Text
+        Write-ActivityProgress 77 "Applying configuration to $($Chrome.Name)..."
+        Set-GoogleChromeConfiguration $Chrome.Name
     }
 
     Write-ActivityCompleted
