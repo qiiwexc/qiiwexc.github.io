@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.2.4')
+::Set-Variable -Option Constant VERSION ([Version]'26.2.5')
 ::
 ::#endregion init > Version
 ::
@@ -83,9 +83,6 @@ if "%~1"=="Debug" (
 ::        '6.3.*' {
 ::            Set-Variable -Option Constant OS_VERSION ([Int]8)
 ::        }
-::        '6.2.*' {
-::            Set-Variable -Option Constant OS_VERSION ([Int]8)
-::        }
 ::        Default {
 ::            Set-Variable -Option Constant OS_VERSION ([Int]0)
 ::        }
@@ -111,6 +108,7 @@ if "%~1"=="Debug" (
 ::Set-Variable -Option Constant PATH_SYSTEM_32 ("$env:SystemRoot\System32")
 ::Set-Variable -Option Constant PATH_APP_DIR ([String]"$($PATH_TEMP_DIR)qiiwexc")
 ::Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE ([String]"$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe")
+::Set-Variable -Option Constant PATH_7ZIP_EXE ([String]"$env:ProgramFiles\7-Zip\7z.exe")
 ::Set-Variable -Option Constant PATH_WINUTIL ([String]"$env:ProgramData\WinUtil")
 ::Set-Variable -Option Constant PATH_OOSHUTUP10 ([String]"$env:ProgramData\OOShutUp10++")
 ::
@@ -149,7 +147,7 @@ if "%~1"=="Debug" (
 ::
 ::Set-Variable -Option Constant GROUP_WIDTH ([Int](15 + $BUTTON_WIDTH + 15))
 ::
-::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH + 15) * 3 + 30))
+::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH + 15) * 3 + 35))
 ::Set-Variable -Option Constant FORM_HEIGHT ([Int]590)
 ::
 ::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
@@ -255,6 +253,7 @@ if "%~1"=="Debug" (
 ::    param(
 ::        [String][Parameter(Position = 0, Mandatory)]$Text,
 ::        [String][Parameter(Position = 1)]$Name,
+::        [Switch]$Padded,
 ::        [Switch]$Disabled,
 ::        [Switch]$Checked
 ::    )
@@ -272,7 +271,7 @@ if "%~1"=="Debug" (
 ::    if ($PREVIOUS_LABEL_OR_CHECKBOX) {
 ::        $InitialLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
 ::
-::        if ($PAD_CHECKBOXES) {
+::        if ($Padded) {
 ::            $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
 ::        } else {
 ::            $Shift = "0, $INTERVAL_CHECKBOX"
@@ -324,7 +323,6 @@ if "%~1"=="Debug" (
 ::    Set-Variable -Option Constant GroupBox ([Windows.Forms.GroupBox](New-Object Windows.Forms.GroupBox))
 ::
 ::    Set-Variable -Scope Script PREVIOUS_GROUP ([Windows.Forms.GroupBox]$CURRENT_GROUP)
-::    Set-Variable -Scope Script PAD_CHECKBOXES ([Bool]$True)
 ::
 ::    [Int]$GroupIndex = 0
 ::
@@ -519,7 +517,7 @@ if "%~1"=="Debug" (
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_ActivateWindows = New-CheckBox 'Activate Windows'
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office'
+::[Windows.Forms.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office' -Padded
 ::
 ::#endregion ui > Home > Activation
 ::
@@ -580,8 +578,6 @@ if "%~1"=="Debug" (
 ::#region ui > Installs > Ninite
 ::
 ::New-GroupBox 'Ninite'
-::
-::[Switch]$PAD_CHECKBOXES = $False
 ::
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Chrome = New-CheckBox 'Google Chrome' -Name 'chrome' -Checked
@@ -647,7 +643,7 @@ if "%~1"=="Debug" (
 ::        Set-CheckboxState -Control $CHECKBOX_StartUnchecky -Dependant $CHECKBOX_SilentlyInstallUnchecky
 ::    } )
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Padded -Checked
 ::
 ::#endregion ui > Installs > Essentials
 ::
@@ -680,20 +676,13 @@ if "%~1"=="Debug" (
 ::
 ::New-GroupBox 'Apps configuration'
 ::
-::[Switch]$PAD_CHECKBOXES = $False
 ::
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Checked
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
-::
-::[Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Name '7-Zip' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Name 'VLC' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Name 'AnyDesk' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qBittorrent' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Name 'Microsoft Edge' -Checked
+::[Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Name 'Google Chrome' -Checked
 ::
 ::
 ::Set-Variable -Option Constant AppsConfigurationParameters (
@@ -717,21 +706,13 @@ if "%~1"=="Debug" (
 ::
 ::New-GroupBox 'Windows configuration'
 ::
-::[Switch]$PAD_CHECKBOXES = $False
-::
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsSecurity = New-CheckBox 'Improve security' -Checked
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPerformance = New-CheckBox 'Improve performance' -Checked
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBaseline = New-CheckBox 'Baseline configuration' -Checked
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsAnnoyances = New-CheckBox 'Remove ads and annoyances' -Checked
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPrivacy = New-CheckBox 'Telemetry and privacy' -Checked
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsLocalisation = New-CheckBox 'Keyboard layout; location'
-::
 ::[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 ::
 ::
@@ -767,9 +748,9 @@ if "%~1"=="Debug" (
 ::        Set-CheckboxState -Control $CHECKBOX_UseDebloatPreset -Dependant $CHECKBOX_DebloatAndPersonalise
 ::    } )
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings'
+::[Windows.Forms.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings' -Padded
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks'
+::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks' -Padded
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -Personalisation:$CHECKBOX_WinUtilPersonalisation.Checked -AutomaticallyApply:$CHECKBOX_AutomaticallyRunWinUtil.Checked }
@@ -777,7 +758,7 @@ if "%~1"=="Debug" (
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_WinUtilPersonalisation = New-CheckBox '+ Personalisation settings'
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_AutomaticallyRunWinUtil = New-CheckBox 'Auto apply tweaks'
+::[Windows.Forms.CheckBox]$CHECKBOX_AutomaticallyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Padded
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-OoShutUp10 -Execute:$CHECKBOX_StartOoShutUp10.Checked -Silent:($CHECKBOX_StartOoShutUp10.Checked -and $CHECKBOX_SilentlyRunOoShutUp10.Checked) }
@@ -788,7 +769,7 @@ if "%~1"=="Debug" (
 ::        Set-CheckboxState -Control $CHECKBOX_StartOoShutUp10 -Dependant $CHECKBOX_SilentlyRunOoShutUp10
 ::    } )
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks'
+::[Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks' -Padded
 ::
 ::#endregion ui > Configuration > Configure and debloat Windows
 ::
@@ -806,7 +787,7 @@ if "%~1"=="Debug" (
 ::        Set-CheckboxState -Control $CHECKBOX_CloudFlareAntiMalware -Dependant $CHECKBOX_CloudFlareFamilyFriendly
 ::    } )
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'
+::[Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering' -Padded
 ::
 ::#endregion ui > Configuration > Alternative DNS
 ::
@@ -1460,7 +1441,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
 ::"AutoImportAtFirstRun"=dword:00000004
-::"DefaultBrowserSettingEnabled"=dword:00000000
 ::"DefaultBrowserSettingsCampaignEnabled"=dword:00000000
 ::"HideFirstRunExperience"=dword:00000001
 ::"ShowPDFDefaultRecommendationsEnabled"=dword:00000000
@@ -1482,12 +1462,8 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
 ::"SetActiveHours"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
-::"fAllowToGetHelp"=dword:00000000
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
 ::"AutoImportAtFirstRun"=dword:00000004
-::"DefaultBrowserSettingEnabled"=dword:00000000
 ::"DefaultBrowserSettingsCampaignEnabled"=dword:00000000
 ::"HideFirstRunExperience"=dword:00000001
 ::"ShowPDFDefaultRecommendationsEnabled"=dword:00000000
@@ -1502,9 +1478,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Explorer]
 ::"HideRecommendedSection"=dword:00000001
-::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows NT\Terminal Services]
-::"fAllowToGetHelp"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance]
 ::"fAllowToGetHelp"=dword:00000000
@@ -2172,7 +2145,6 @@ if "%~1"=="Debug" (
 ::"NavPaneExpandToCurrentFolder"=dword:00000001
 ::"NavPaneShowAllFolders"=dword:00000001
 ::"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
-::"ShowCortanaButton"=dword:00000000
 ::"Start_Layout"=dword:00000001
 ::"TaskbarAl"=dword:00000000 ; Align taskbar left
 ::"TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
@@ -2226,10 +2198,6 @@ if "%~1"=="Debug" (
 ::"CopilotDisabledReason"="IsEnabledForGeographicRegionFailed"
 ::"IsCopilotAvailable"=dword:00000000
 ::
-::; Disable widgets service
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh]
-::"AllowNewsAndInterests"=dword:00000000
-::
 ::; Disable Copilot service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
 ::"TurnOffWindowsCopilot"=dword:00000001
@@ -2237,10 +2205,6 @@ if "%~1"=="Debug" (
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001
-::
-::; Disable widgets service
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Dsh]
-::"AllowNewsAndInterests"=dword:00000000
 ::
 ::; Disable Copilot service
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
@@ -2273,14 +2237,8 @@ if "%~1"=="Debug" (
 ::
 ::#region configs > Windows > Privacy
 ::
-::Set-Variable -Option Constant CONFIG_PRIVACY ([String]('[HKEY_CURRENT_USER\Control Panel\International\User Profile]
-::"HttpAcceptLanguageOptOut"=dword:00000001
-::
-::[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]
+::Set-Variable -Option Constant CONFIG_PRIVACY ([String]('[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main]
 ::"DoNotTrack"=dword:00000001
-::
-::[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\ServiceUI]
-::"EnableCortana"=dword:00000000
 ::
 ::; Disable "Improve Inking and Typing Recognition"
 ::[HKEY_CURRENT_USER\Software\Microsoft\Input\TIPC]
@@ -2338,13 +2296,8 @@ if "%~1"=="Debug" (
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
 ::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search]
-::"AllowCortana"=dword:00000000
 ::"AllowSearchToUseLocation"=dword:00000000
 ::"ConnectedSearchPrivacy"=dword:00000003
-::"CortanaConsent"=dword:00000000
-::
-::[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Windows Search]
-::"CortanaConsent"=dword:00000000
 ::
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
@@ -2451,7 +2404,6 @@ if "%~1"=="Debug" (
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-::"AllowGamesMenu"=dword:00000000
 ::"BuiltInDNSClientEnabled"=dword:00000000
 ::"ComposeInlineEnabled"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
@@ -2535,7 +2487,6 @@ if "%~1"=="Debug" (
 ::"EnableFeeds"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
-::"AllowCortana"=dword:00000000 ; Disable Cortana in search
 ::"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 ::"AllowSearchToUseLocation"=dword:00000000
 ::"ConnectedSearchUseWeb"=dword:00000000
@@ -2625,7 +2576,6 @@ if "%~1"=="Debug" (
 ::"PreventHandwritingDataSharing"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
-::"AllowCloudSearch"=dword:00000000
 ::"AllowCortana"=dword:00000000 ; Disable Cortana in search
 ::"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 ::"AllowSearchToUseLocation"=dword:00000000
@@ -2930,7 +2880,6 @@ if "%~1"=="Debug" (
 ::LinkedInforWindows                             # LinkedIn professional networking app
 ::MarchofEmpires                                 # Strategy game
 ::Microsoft.3DBuilder                            # Basic 3D modeling software
-::Microsoft.549981C3F5F10                        # Microsoft Cortana voice assistant (Discontinued)
 ::Microsoft.BingFinance                          # Finance news and tracking via Bing (Discontinued)
 ::Microsoft.BingFoodAndDrink                     # Recipes and food news via Bing (Discontinued)
 ::Microsoft.BingHealthAndFitness                 # Health and fitness tracking/news via Bing (Discontinued)
@@ -3097,7 +3046,7 @@ if "%~1"=="Debug" (
 ::    { "Name": "DisableBing", "Value": true },
 ::    { "Name": "DisableBraveBloat", "Value": true },
 ::    { "Name": "DisableClickToDo", "Value": true },
-::    { "Name": "DisableCopilot", "Value": true },
+::    { "Name": "DisableCopilot", "Value": false },
 ::    { "Name": "DisableDesktopSpotlight", "Value": false },
 ::    { "Name": "DisableDVR", "Value": false },
 ::    { "Name": "DisableDragTray", "Value": false },
@@ -3163,8 +3112,8 @@ if "%~1"=="Debug" (
 ::P002	+	# Disable sharing of handwriting error reports (Category: Privacy)
 ::P003	+	# Disable Inventory Collector (Category: Privacy)
 ::P004	+	# Disable camera in logon screen (Category: Privacy)
-::P005	+	# Disable and reset Advertising ID and info for the machine (Category: Privacy)
-::P006	+	# Disable and reset Advertising ID and info for current user (Category: Privacy)
+::P005	+	# Disable and reset Advertising ID and info (Category: Privacy)
+::P006	+	# Disable and reset Advertising ID and info (Category: Privacy)
 ::P008	+	# Disable transmission of typing information (Category: Privacy)
 ::P026	+	# Disable advertisements via Bluetooth (Category: Privacy)
 ::P027	+	# Disable the Windows Customer Experience Improvement Program (Category: Privacy)
@@ -3181,69 +3130,69 @@ if "%~1"=="Debug" (
 ::P068	-	# Disable text suggestions when typing on the software keyboard (Category: Privacy)
 ::P016	-	# Disable sending URLs from apps to Windows Store (Category: Privacy)
 ::A001	+	# Disable recordings of user activity (Category: Activity History and Clipboard)
-::A002	-	# Disable storing users" activity history on this device (Category: Activity History and Clipboard)
+::A002	-	# Disable storing users" activity history (Category: Activity History and Clipboard)
 ::A003	+	# Disable the submission of user activities to Microsoft (Category: Activity History and Clipboard)
-::A004	-	# Disable storage of clipboard history for whole machine (Category: Activity History and Clipboard)
-::A006	-	# Disable storage of clipboard history for current user (Category: Activity History and Clipboard)
+::A004	-	# Disable storage of clipboard history (Category: Activity History and Clipboard)
+::A006	-	# Disable storage of clipboard history (Category: Activity History and Clipboard)
 ::A005	-	# Disable the transfer of the clipboard to other devices via the cloud (Category: Activity History and Clipboard)
-::P007	+	# Disable app access to user account information on this device (Category: App Privacy)
-::P036	+	# Disable app access to user account information for current user (Category: App Privacy)
+::P107	+	# Disable app access to user account information (Category: App Privacy)
+::P036	+	# Disable app access to user account information (Category: App Privacy)
 ::P025	+	# Disable Windows tracking of app starts (Category: App Privacy)
-::P033	+	# Disable app access to diagnostics information on this device (Category: App Privacy)
-::P023	+	# Disable app access to diagnostics information for current user (Category: App Privacy)
-::P056	-	# Disable app access to device location on this device (Category: App Privacy)
-::P057	-	# Disable app access to device location for current user (Category: App Privacy)
-::P012	-	# Disable app access to camera on this device (Category: App Privacy)
-::P034	-	# Disable app access to camera for current user (Category: App Privacy)
-::P013	-	# Disable app access to microphone on this device (Category: App Privacy)
-::P035	-	# Disable app access to microphone for current user (Category: App Privacy)
-::P062	-	# Disable app access to use voice activation for current user (Category: App Privacy)
-::P063	-	# Disable app access to use voice activation when device is locked for current user (Category: App Privacy)
+::P033	+	# Disable app access to diagnostics information (Category: App Privacy)
+::P023	+	# Disable app access to diagnostics information (Category: App Privacy)
+::P056	-	# Disable app access to device location (Category: App Privacy)
+::P057	-	# Disable app access to device location (Category: App Privacy)
+::P112	-	# Disable app access to camera (Category: App Privacy)
+::P034	-	# Disable app access to camera (Category: App Privacy)
+::P113	-	# Disable app access to microphone (Category: App Privacy)
+::P035	-	# Disable app access to microphone (Category: App Privacy)
+::P062	-	# Disable app access to use voice activation (Category: App Privacy)
+::P063	-	# Disable app access to use voice activation when device is locked (Category: App Privacy)
 ::P081	-	# Disable the standard app for the headset button (Category: App Privacy)
-::P047	-	# Disable app access to notifications on this device (Category: App Privacy)
-::P019	-	# Disable app access to notifications for current user (Category: App Privacy)
-::P048	-	# Disable app access to motion on this device (Category: App Privacy)
-::P049	-	# Disable app access to movements for current user (Category: App Privacy)
-::P020	-	# Disable app access to contacts on this device (Category: App Privacy)
-::P037	-	# Disable app access to contacts for current user (Category: App Privacy)
-::P011	-	# Disable app access to calendar on this device (Category: App Privacy)
-::P038	-	# Disable app access to calendar for current user (Category: App Privacy)
-::P050	-	# Disable app access to phone calls on this device (Category: App Privacy)
-::P051	-	# Disable app access to phone calls for current user (Category: App Privacy)
-::P018	-	# Disable app access to call history on this device (Category: App Privacy)
-::P039	-	# Disable app access to call history for current user (Category: App Privacy)
-::P021	-	# Disable app access to email on this device (Category: App Privacy)
-::P040	-	# Disable app access to email for current user (Category: App Privacy)
-::P022	-	# Disable app access to tasks on this device (Category: App Privacy)
-::P041	-	# Disable app access to tasks for current user (Category: App Privacy)
-::P014	-	# Disable app access to messages on this device (Category: App Privacy)
-::P042	-	# Disable app access to messages for current user (Category: App Privacy)
-::P052	-	# Disable app access to radios on this device (Category: App Privacy)
-::P053	-	# Disable app access to radios for current user (Category: App Privacy)
-::P054	-	# Disable app access to unpaired devices on this device (Category: App Privacy)
-::P055	-	# Disable app access to unpaired devices for current user (Category: App Privacy)
-::P029	-	# Disable app access to documents on this device (Category: App Privacy)
-::P043	-	# Disable app access to documents for current user (Category: App Privacy)
-::P030	-	# Disable app access to images on this device (Category: App Privacy)
-::P044	-	# Disable app access to images for current user (Category: App Privacy)
-::P031	-	# Disable app access to videos on this device (Category: App Privacy)
-::P045	-	# Disable app access to videos for current user (Category: App Privacy)
-::P032	-	# Disable app access to the file system on this device (Category: App Privacy)
-::P046	-	# Disable app access to the file system for current user (Category: App Privacy)
-::P058	-	# Disable app access to wireless equipment on this device (Category: App Privacy)
-::P059	-	# Disable app access to wireless technology for current user (Category: App Privacy)
-::P060	-	# Disable app access to eye tracking on this device (Category: App Privacy)
-::P061	-	# Disable app access to eye tracking for current user (Category: App Privacy)
-::P071	-	# Disable the ability for apps to take screenshots on this device (Category: App Privacy)
-::P072	-	# Disable the ability for apps to take screenshots for current user (Category: App Privacy)
-::P073	-	# Disable the ability for desktop apps to take screenshots for current user (Category: App Privacy)
-::P074	-	# Disable the ability for apps to take screenshots without borders on this device (Category: App Privacy)
-::P075	-	# Disable the ability for apps to take screenshots without borders for current user (Category: App Privacy)
-::P076	-	# Disable the ability for desktop apps to take screenshots without margins for current user (Category: App Privacy)
-::P077	-	# Disable app access to music libraries on this device (Category: App Privacy)
-::P078	-	# Disable app access to music libraries for current user (Category: App Privacy)
-::P079	-	# Disable app access to downloads folder on this device (Category: App Privacy)
-::P080	-	# Disable app access to downloads folder for current user (Category: App Privacy)
+::P047	-	# Disable app access to notifications (Category: App Privacy)
+::P019	-	# Disable app access to notifications (Category: App Privacy)
+::P048	-	# Disable app access to movements (Category: App Privacy)
+::P049	-	# Disable app access to movements (Category: App Privacy)
+::P120	-	# Disable app access to contacts (Category: App Privacy)
+::P037	-	# Disable app access to contacts (Category: App Privacy)
+::P111	-	# Disable app access to calendar (Category: App Privacy)
+::P038	-	# Disable app access to calendar (Category: App Privacy)
+::P050	-	# Disable app access to phone calls (Category: App Privacy)
+::P051	-	# Disable app access to phone calls (Category: App Privacy)
+::P118	-	# Disable app access to call history (Category: App Privacy)
+::P039	-	# Disable app access to call history (Category: App Privacy)
+::P021	-	# Disable app access to email (Category: App Privacy)
+::P040	-	# Disable app access to email (Category: App Privacy)
+::P022	-	# Disable app access to tasks (Category: App Privacy)
+::P041	-	# Disable app access to tasks (Category: App Privacy)
+::P114	-	# Disable app access to messages (Category: App Privacy)
+::P042	-	# Disable app access to messages (Category: App Privacy)
+::P052	-	# Disable app access to wireless connections (Category: App Privacy)
+::P053	-	# Disable app access to wireless connections (Category: App Privacy)
+::P054	-	# Disable app access to loosely coupled devices (Category: App Privacy)
+::P055	-	# Disable app access to loosely coupled devices (Category: App Privacy)
+::P029	-	# Disable app access to documents (Category: App Privacy)
+::P043	-	# Disable app access to documents (Category: App Privacy)
+::P030	-	# Disable app access to images (Category: App Privacy)
+::P044	-	# Disable app access to images (Category: App Privacy)
+::P031	-	# Disable app access to videos (Category: App Privacy)
+::P045	-	# Disable app access to videos (Category: App Privacy)
+::P032	-	# Disable app access to the file system (Category: App Privacy)
+::P046	-	# Disable app access to the file system (Category: App Privacy)
+::P058	-	# Disable app access to wireless technology (Category: App Privacy)
+::P059	-	# Disable app access to wireless technology (Category: App Privacy)
+::P060	-	# Disable app access to eye tracking (Category: App Privacy)
+::P061	-	# Disable app access to eye tracking (Category: App Privacy)
+::P071	-	# Disable the ability for apps to take screenshots (Category: App Privacy)
+::P072	-	# Disable the ability for apps to take screenshots (Category: App Privacy)
+::P073	-	# Disable the ability for desktop apps to take screenshots (Category: App Privacy)
+::P074	-	# Disable the ability for apps to take screenshots without borders (Category: App Privacy)
+::P075	-	# Disable the ability for apps to take screenshots without borders (Category: App Privacy)
+::P076	-	# Disable the ability for desktop apps to take screenshots without margins (Category: App Privacy)
+::P077	-	# Disable app access to music libraries (Category: App Privacy)
+::P078	-	# Disable app access to music libraries (Category: App Privacy)
+::P079	-	# Disable app access to downloads folder (Category: App Privacy)
+::P080	-	# Disable app access to downloads folder (Category: App Privacy)
 ::P024	-	# Prohibit apps from running in the background (Category: App Privacy)
 ::S001	-	# Disable password reveal button (Category: Security)
 ::S002	+	# Disable user steps recorder (Category: Security)
@@ -3277,6 +3226,46 @@ if "%~1"=="Debug" (
 ::E229	-	# Disable the Microsoft Account Sign-In Button (Category: Microsoft Edge (new version based on Chromium))
 ::E130	-	# Disable Enhanced Spell Checking (Category: Microsoft Edge (new version based on Chromium))
 ::E230	-	# Disable Enhanced Spell Checking (Category: Microsoft Edge (new version based on Chromium))
+::E132	+	# Hide first run experience and splash screen (Category: Microsoft Edge (new version based on Chromium))
+::E232	+	# Hide first run experience and splash screen (Category: Microsoft Edge (new version based on Chromium))
+::E133	+	# Disable spotlight experiences and recommendations (Category: Microsoft Edge (new version based on Chromium))
+::E233	+	# Disable spotlight experiences and recommendations (Category: Microsoft Edge (new version based on Chromium))
+::E134	-	# Disable automatic sign-in from web to browser (Category: Microsoft Edge (new version based on Chromium))
+::E234	-	# Disable automatic sign-in from web to browser (Category: Microsoft Edge (new version based on Chromium))
+::E135	+	# Disable Bing Chat on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E235	+	# Disable Bing Chat on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E136	+	# Disable content on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E236	+	# Disable content on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E137	+	# Disable AI-generated themes (Category: Microsoft Edge (new version based on Chromium))
+::E237	+	# Disable AI-generated themes (Category: Microsoft Edge (new version based on Chromium))
+::E138	-	# Disable built-in AI APIs for websites (Category: Microsoft Edge (new version based on Chromium))
+::E238	-	# Disable built-in AI APIs for websites (Category: Microsoft Edge (new version based on Chromium))
+::E139	-	# Disable inline Compose feature (Category: Microsoft Edge (new version based on Chromium))
+::E239	-	# Disable inline Compose feature (Category: Microsoft Edge (new version based on Chromium))
+::E140	+	# Disable Copilot access to page context (Category: Microsoft Edge (new version based on Chromium))
+::E240	+	# Disable Copilot access to page context (Category: Microsoft Edge (new version based on Chromium))
+::E141	-	# Disable prompts to make Edge the default browser (Category: Microsoft Edge (new version based on Chromium))
+::E241	-	# Disable prompts to make Edge the default browser (Category: Microsoft Edge (new version based on Chromium))
+::E142	+	# Disable default browser campaigns (Category: Microsoft Edge (new version based on Chromium))
+::E242	+	# Disable default browser campaigns (Category: Microsoft Edge (new version based on Chromium))
+::E143	+	# Disable diagnostic data collection (Category: Microsoft Edge (new version based on Chromium))
+::E243	+	# Disable diagnostic data collection (Category: Microsoft Edge (new version based on Chromium))
+::E144	+	# Disable shopping assistant (Category: Microsoft Edge (new version based on Chromium))
+::E244	+	# Disable shopping assistant (Category: Microsoft Edge (new version based on Chromium))
+::E145	+	# Hide Microsoft 365 Copilot chat icon (Category: Microsoft Edge (new version based on Chromium))
+::E245	+	# Hide Microsoft 365 Copilot chat icon (Category: Microsoft Edge (new version based on Chromium))
+::E146	+	# Hide Microsoft Rewards (Category: Microsoft Edge (new version based on Chromium))
+::E246	+	# Hide Microsoft Rewards (Category: Microsoft Edge (new version based on Chromium))
+::E147	+	# Disable recommendations in settings (Category: Microsoft Edge (new version based on Chromium))
+::E247	+	# Disable recommendations in settings (Category: Microsoft Edge (new version based on Chromium))
+::E148	+	# Disable cloud-based tab services (Category: Microsoft Edge (new version based on Chromium))
+::E248	+	# Disable cloud-based tab services (Category: Microsoft Edge (new version based on Chromium))
+::E149	-	# Disable text prediction in forms (Category: Microsoft Edge (new version based on Chromium))
+::E249	-	# Disable text prediction in forms (Category: Microsoft Edge (new version based on Chromium))
+::E150	-	# Disable visual search (Category: Microsoft Edge (new version based on Chromium))
+::E250	-	# Disable visual search (Category: Microsoft Edge (new version based on Chromium))
+::E151	+	# Disable AI-powered history search (Category: Microsoft Edge (new version based on Chromium))
+::E251	+	# Disable AI-powered history search (Category: Microsoft Edge (new version based on Chromium))
 ::E119	-	# Disable use of web service to resolve navigation errors (Category: Microsoft Edge (new version based on Chromium))
 ::E219	-	# Disable use of web service to resolve navigation errors (Category: Microsoft Edge (new version based on Chromium))
 ::E120	-	# Disable suggestion of similar sites when website cannot be found (Category: Microsoft Edge (new version based on Chromium))
@@ -3288,6 +3277,14 @@ if "%~1"=="Debug" (
 ::E126	-	# Disable site safety services for more information about a visited website (Category: Microsoft Edge (new version based on Chromium))
 ::E226	-	# Disable site safety services for more information about a visited website (Category: Microsoft Edge (new version based on Chromium))
 ::E131	-	# Disable automatic redirection from Internet Explorer to Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
+::E152	-	# Allow user control of local AI features (Category: Microsoft Edge (new version based on Chromium))
+::E252	+	# Allow user control of local AI features (Category: Microsoft Edge (new version based on Chromium))
+::E153	-	# Disable startup boost (Category: Microsoft Edge (new version based on Chromium))
+::E253	+	# Disable startup boost (Category: Microsoft Edge (new version based on Chromium))
+::E154	-	# Hide default top sites on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E254	+	# Hide default top sites on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E155	-	# Hide Adobe Acrobat subscription button (Category: Microsoft Edge (new version based on Chromium))
+::E255	-	# Hide Adobe Acrobat subscription button (Category: Microsoft Edge (new version based on Chromium))
 ::E106	-	# Disable SmartScreen Filter (Category: Microsoft Edge (new version based on Chromium))
 ::E206	-	# Disable SmartScreen Filter (Category: Microsoft Edge (new version based on Chromium))
 ::E127	-	# Disable typosquatting checker for site addresses (Category: Microsoft Edge (new version based on Chromium))
@@ -3317,12 +3314,13 @@ if "%~1"=="Debug" (
 ::F007	+	# Disable Microsoft Office surveys (Category: Microsoft Office)
 ::F008	+	# Disable feedback to Microsoft (Category: Microsoft Office)
 ::F009	+	# Disable Microsoft"s feedback tracking (Category: Microsoft Office)
-::F017	+	# Disable Microsoft"s feedback tracking (Category: Microsoft Office)
+::F018	-	# Set diagnostic data level to minimum (Neither) (Category: Microsoft Office)
 ::F006	-	# Disable automatic receipt of updates (Category: Microsoft Office)
 ::F010	-	# Disable connected experiences in Office (Category: Microsoft Office)
 ::F011	-	# Disable connected experiences with content analytics (Category: Microsoft Office)
 ::F012	-	# Disable online content downloading for connected experiences (Category: Microsoft Office)
 ::F013	-	# Disable optional connected experiences in Office (Category: Microsoft Office)
+::F019	-	# Hide privacy settings notification on first run (Category: Microsoft Office)
 ::Y001	-	# Disable synchronization of all settings (Category: Synchronization of Windows Settings)
 ::Y002	-	# Disable synchronization of design settings (Category: Synchronization of Windows Settings)
 ::Y003	-	# Disable synchronization of browser settings (Category: Synchronization of Windows Settings)
@@ -3340,22 +3338,23 @@ if "%~1"=="Debug" (
 ::C011	-	# Disable cloud search (Category: Cortana (Personal Assistant))
 ::C014	-	# Disable Cortana above lock screen (Category: Cortana (Personal Assistant))
 ::C015	+	# Disable the search highlights in the taskbar (Category: Cortana (Personal Assistant))
-::C101	+	# Disable the Windows Copilot (Category: Windows AI)
-::C201	+	# Disable the Windows Copilot (Category: Windows AI)
-::C204	+	# Disable the provision of recall functionality to all users (Category: Windows AI)
-::C205	-	# Disable the Image Creator in Microsoft Paint (Category: Windows AI)
-::C102	+	# Disable the Copilot button from the taskbar (Category: Windows AI)
-::C103	+	# Disable Windows Copilot+ Recall (Category: Windows AI)
-::C203	+	# Disable Windows Copilot+ Recall (Category: Windows AI)
-::C206	-	# Disable Cocreator in Microsoft Paint (Category: Windows AI)
-::C207	-	# Disable AI-powered image fill in Microsoft Paint (Category: Windows AI)
+::C101	+	# Disable the Windows Copilot (Category: Microsoft Copilot (in Windows))
+::C201	+	# Disable the Windows Copilot (Category: Microsoft Copilot (in Windows))
+::C204	+	# Disable the provision of recall functionality to all users (Category: Microsoft Copilot (in Windows))
+::C205	-	# Disable the Image Creator in Microsoft Paint (Category: Microsoft Copilot (in Windows))
+::C102	+	# Disable the Copilot button from the taskbar (Category: Microsoft Copilot (in Windows))
+::C104	+	# Disable Bing Chat eligibility in Windows Copilot (Category: Microsoft Copilot (in Windows))
+::C103	+	# Disable Windows Copilot+ Recall (Category: Microsoft Copilot (in Windows))
+::C203	+	# Disable Windows Copilot+ Recall (Category: Microsoft Copilot (in Windows))
+::C206	-	# Disable Cocreator in Microsoft Paint (Category: Microsoft Copilot (in Windows))
+::C207	-	# Disable AI-powered image fill in Microsoft Paint (Category: Microsoft Copilot (in Windows))
 ::L001	-	# Disable functionality to locate the system (Category: Location Services)
 ::L003	+	# Disable scripting functionality to locate the system (Category: Location Services)
 ::L004	-	# Disable sensors for locating the system and its orientation (Category: Location Services)
 ::L005	-	# Disable Windows Geolocation Service (Category: Location Services)
 ::U001	+	# Disable application telemetry (Category: User Behavior)
-::U004	+	# Disable diagnostic data from customizing user experiences for whole machine (Category: User Behavior)
-::U005	+	# Disable the use of diagnostic data for a tailor-made user experience for current user (Category: User Behavior)
+::U004	+	# Disable diagnostic data from customizing user experiences (Category: User Behavior)
+::U005	+	# Disable diagnostic data from customizing user experiences (Category: User Behavior)
 ::U006	+	# Disable diagnostic log collection (Category: User Behavior)
 ::U007	+	# Disable downloading of OneSettings configuration settings (Category: User Behavior)
 ::W001	-	# Disable Windows Update via peer-to-peer (Category: Windows Update)
@@ -3386,12 +3385,11 @@ if "%~1"=="Debug" (
 ::M003	+	# Disable extension of Windows search with Bing (Category: Search)
 ::M015	+	# Disable People icon in the taskbar (Category: Taskbar)
 ::M016	-	# Disable search box in task bar (Category: Taskbar)
-::M017	+	# Disable "Meet now" in the task bar on this device (Category: Taskbar)
-::M018	+	# Disable "Meet now" in the task bar for current user (Category: Taskbar)
-::M019	+	# Disable news and interests in the task bar on this device (Category: Taskbar)
-::M021	+	# Disable widgets in Windows Explorer (Category: Taskbar)
-::M022	+	# Disable feedback reminders on this device (Category: Miscellaneous)
-::M001	+	# Disable feedback reminders for current user (Category: Miscellaneous)
+::M017	+	# Disable "Meet now" in the task bar (Category: Taskbar)
+::M018	+	# Disable "Meet now" in the task bar (Category: Taskbar)
+::M019	+	# Disable news and interests in the task bar (Category: Taskbar)
+::M022	+	# Disable feedback reminders (Category: Miscellaneous)
+::M001	+	# Disable feedback reminders (Category: Miscellaneous)
 ::M004	+	# Disable automatic installation of recommended Windows Store Apps (Category: Miscellaneous)
 ::M005	+	# Disable tips, tricks, and suggestions while using Windows (Category: Miscellaneous)
 ::M024	+	# Disable Windows Media Player Diagnostics (Category: Miscellaneous)
@@ -3427,7 +3425,6 @@ if "%~1"=="Debug" (
 ::
 ::Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]('                      "WPFTweaksEndTaskOnTaskbar",
 ::                      "WPFTweaksRightClickMenu",
-::                      "WPFTweaksRemoveCopilot",
 ::'))
 ::
 ::#endregion configs > Windows > Tools > WinUtil Personalisation
@@ -3827,6 +3824,8 @@ if "%~1"=="Debug" (
 ::    }
 ::
 ::    Set-Variable -Scope Script CURRENT_TASK $Null
+::
+::    Set-Icon (([IconName]::Default))
 ::}
 ::
 ::#endregion functions > App lifecycle > Progressbar
@@ -3956,17 +3955,12 @@ if "%~1"=="Debug" (
 ::
 ::    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
 ::
-::    $Extension = [IO.Path]::GetExtension($ZipPath).ToLower()
-::    if ($Extension -notin @('.zip', '.7z')) {
-::        throw "Unsupported archive format: $Extension. Supported formats: .zip, .7z"
-::    }
-::
 ::    if (-not (Test-Path $ZipPath)) {
 ::        throw "Archive not found: $ZipPath"
 ::    }
 ::
 ::    Set-Variable -Option Constant ZipName ([String](Split-Path -Leaf $ZipPath -ErrorAction Stop))
-::    Set-Variable -Option Constant ExtractionPath ([String]($ZipPath -replace '\.(zip|7z)$', ''))
+::    Set-Variable -Option Constant ExtractionPath ([String]($ZipPath -replace '\.[^.]+$', ''))
 ::    Set-Variable -Option Constant ExtractionDir ([String](Split-Path -Leaf $ExtractionPath -ErrorAction Stop))
 ::
 ::    if ($Temp) {
@@ -3994,15 +3988,19 @@ if "%~1"=="Debug" (
 ::
 ::    New-Directory $ExtractionPath
 ::
-::    if ($ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
-::        Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
+::    if (Test-Path $PATH_7ZIP_EXE) {
+::        Invoke-7Zip $ExtractionPath $ZipPath
 ::    } else {
-::        if (-not $SHELL) {
-::            Set-Variable -Option Constant -Scope Script SHELL (New-Object -ComObject Shell.Application)
-::        }
+::        if ($ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
+::            Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
+::        } elseif ($OS_VERSION -ge 11) {
+::            Set-Variable -Option Constant SHELL (New-Object -ComObject Shell.Application)
 ::
-::        foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
-::            $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
+::            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
+::                $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
+::            }
+::        } else {
+::            throw "7-Zip not found at '$PATH_7ZIP_EXE'"
 ::        }
 ::    }
 ::
@@ -4091,6 +4089,20 @@ if "%~1"=="Debug" (
 ::}
 ::
 ::#endregion functions > Common > Get-ExecutableName
+::
+::
+::#region functions > Common > Invoke-7Zip
+::
+::function Invoke-7Zip {
+::    param(
+::        [String][Parameter(Position = 0, Mandatory)]$ExtractionPath,
+::        [String][Parameter(Position = 1, Mandatory)]$ZipPath
+::    )
+::
+::    & $PATH_7ZIP_EXE x -o"$ExtractionPath" -y "$ZipPath" | Out-Null
+::}
+::
+::#endregion functions > Common > Invoke-7Zip
 ::
 ::
 ::#region functions > Common > Invoke-CustomCommand
@@ -4321,7 +4333,6 @@ if "%~1"=="Debug" (
 ::    } catch {
 ::        Out-Failure "Download failed: $_"
 ::        Write-ActivityCompleted $False
-::        Set-Icon (([IconName]::Default))
 ::        return
 ::    }
 ::
@@ -4332,7 +4343,6 @@ if "%~1"=="Debug" (
 ::            } catch {
 ::                Out-Failure "Failed to extract '$DownloadedFile': $_"
 ::                Write-ActivityCompleted $False
-::                Set-Icon (([IconName]::Default))
 ::                return
 ::            }
 ::        } else {
@@ -4350,14 +4360,12 @@ if "%~1"=="Debug" (
 ::            } catch {
 ::                Out-Failure "Failed to run '$Executable': $_"
 ::                Write-ActivityCompleted $False
-::                Set-Icon (([IconName]::Default))
 ::                return
 ::            }
 ::        }
 ::    }
 ::
 ::    Write-ActivityCompleted
-::    Set-Icon (([IconName]::Default))
 ::}
 ::
 ::#endregion functions > Common > Start-DownloadUnzipAndRun
@@ -4381,9 +4389,6 @@ if "%~1"=="Debug" (
 ::    if ($Switches -and $Silent) {
 ::        Write-ActivityProgress 90 "Running '$Executable' silently..."
 ::        Start-Process -Wait $Executable $Switches -ErrorAction Stop
-::        Out-Success
-::
-::        Write-LogDebug "Removing '$Executable'..."
 ::        Remove-File $Executable -Silent
 ::        Out-Success
 ::    } else {
@@ -4478,33 +4483,33 @@ if "%~1"=="Debug" (
 ::    New-Activity 'Configuring apps'
 ::
 ::    if ($7zip.Checked) {
-::        Write-ActivityProgress 11 "Applying configuration to $($7zip.Text)..."
-::        Set-7zipConfiguration $7zip.Text
+::        Write-ActivityProgress 11 "Applying configuration to $($7zip.Name)..."
+::        Set-7zipConfiguration $7zip.Name
 ::    }
 ::
 ::    if ($VLC.Checked) {
-::        Write-ActivityProgress 22 "Applying configuration to $($VLC.Text)..."
-::        Set-VlcConfiguration $VLC.Text
+::        Write-ActivityProgress 22 "Applying configuration to $($VLC.Name)..."
+::        Set-VlcConfiguration $VLC.Name
 ::    }
 ::
 ::    if ($AnyDesk.Checked) {
-::        Write-ActivityProgress 33 "Applying configuration to $($AnyDesk.Text)..."
-::        Set-AnyDeskConfiguration $AnyDesk.Text
+::        Write-ActivityProgress 33 "Applying configuration to $($AnyDesk.Name)..."
+::        Set-AnyDeskConfiguration $AnyDesk.Name
 ::    }
 ::
 ::    if ($qBittorrent.Checked) {
-::        Write-ActivityProgress 44 "Applying configuration to $($qBittorrent.Text)..."
-::        Set-qBittorrentConfiguration $qBittorrent.Text
+::        Write-ActivityProgress 44 "Applying configuration to $($qBittorrent.Name)..."
+::        Set-qBittorrentConfiguration $qBittorrent.Name
 ::    }
 ::
 ::    if ($Edge.Checked) {
-::        Write-ActivityProgress 55 "Applying configuration to $($Edge.Text)..."
-::        Set-MicrosoftEdgeConfiguration $Edge.Text
+::        Write-ActivityProgress 55 "Applying configuration to $($Edge.Name)..."
+::        Set-MicrosoftEdgeConfiguration $Edge.Name
 ::    }
 ::
 ::    if ($Chrome.Checked) {
-::        Write-ActivityProgress 77 "Applying configuration to $($Chrome.Text)..."
-::        Set-GoogleChromeConfiguration $Chrome.Text
+::        Write-ActivityProgress 77 "Applying configuration to $($Chrome.Name)..."
+::        Set-GoogleChromeConfiguration $Chrome.Name
 ::    }
 ::
 ::    Write-ActivityCompleted
@@ -4954,8 +4959,6 @@ if "%~1"=="Debug" (
 ::#region functions > Configuration > Windows > Set-MalwareProtectionConfiguration
 ::
 ::function Set-MalwareProtectionConfiguration {
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
 ::    try {
 ::        Set-MpPreference -CheckForSignaturesBefore $True
 ::        Set-MpPreference -DisableBlockAtFirstSeen $False
@@ -4968,13 +4971,31 @@ if "%~1"=="Debug" (
 ::        Set-MpPreference -EnableFileHashComputation $True
 ::        Set-MpPreference -EnableNetworkProtection Enabled
 ::        Set-MpPreference -PUAProtection Enabled
+::
 ::        Set-MpPreference -AllowSwitchToAsyncInspection $True
+::        Set-MpPreference -DisableArchiveScanning $False
+::        Set-MpPreference -DisableBehaviorMonitoring $False
+::        Set-MpPreference -DisableDnsOverTcpParsing $False
+::        Set-MpPreference -DisableDnsParsing $False
+::        Set-MpPreference -DisableFtpParsing $False
+::        Set-MpPreference -DisableHttpParsing $False
+::        Set-MpPreference -DisableInboundConnectionFiltering $False
+::        Set-MpPreference -DisableIntrusionPreventionSystem $False
+::        Set-MpPreference -DisableIOAVProtection $False
+::        Set-MpPreference -DisableRdpParsing $False
+::        Set-MpPreference -DisableRealtimeMonitoring $False
+::        Set-MpPreference -DisableScriptScanning $False
+::        Set-MpPreference -DisableSmtpParsing $False
+::        Set-MpPreference -DisableSshParsing $False
+::        Set-MpPreference -DisableTlsParsing $False
+::        Set-MpPreference -IntelTDTEnabled 1
 ::        Set-MpPreference -MeteredConnectionUpdates $True
+::
 ::        Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
 ::
-::        Out-Success $LogIndentLevel
+::        Out-Success
 ::    } catch {
-::        Out-Failure "Failed to apply malware protection configuration: $_" $LogIndentLevel
+::        Out-Failure "Failed to apply malware protection configuration: $_"
 ::    }
 ::}
 ::
@@ -5001,7 +5022,7 @@ if "%~1"=="Debug" (
 ::    [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_PERSONALISATION
 ::
 ::    try {
-::        if ($OS_VERSION -gt 10) {
+::        if ($OS_VERSION -ge 11) {
 ::            Set-Variable -Option Constant NotificationRegistries ([String[]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*' -ErrorAction Stop).Name)
 ::            foreach ($Registry in $NotificationRegistries) {
 ::                $ConfigLines.Add("`n[$Registry]`n")
@@ -5031,8 +5052,6 @@ if "%~1"=="Debug" (
 ::#region functions > Configuration > Windows > Set-PowerSchemeConfiguration
 ::
 ::function Set-PowerSchemeConfiguration {
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
 ::    try {
 ::        powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 ::
@@ -5041,9 +5060,9 @@ if "%~1"=="Debug" (
 ::            powercfg /SetDcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
 ::        }
 ::
-::        Out-Success $LogIndentLevel
+::        Out-Success
 ::    } catch {
-::        Out-Failure "Failed to apply power settings configuration: $_" $LogIndentLevel
+::        Out-Failure "Failed to apply power settings configuration: $_"
 ::    }
 ::}
 ::
@@ -5055,17 +5074,17 @@ if "%~1"=="Debug" (
 ::function Set-PrivacyConfiguration {
 ::    try {
 ::        Set-Variable -Option Constant TelemetryTaskList (
-::            [hashtable[]]@(
+::            [Hashtable[]]@(
 ::                @{Name = 'Consolidator'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' },
 ::                @{Name = 'DmClient'; Path = 'Microsoft\Windows\Feedback\Siuf' },
 ::                @{Name = 'DmClientOnScenarioDownload'; Path = 'Microsoft\Windows\Feedback\Siuf' },
-::                @{Name = 'MareBackup'; Path = 'Microsoft\Windows\Application Experience' },
 ::                @{Name = 'Microsoft-Windows-DiskDiagnosticDataCollector'; Path = 'Microsoft\Windows\DiskDiagnostic' },
 ::                @{Name = 'PcaPatchDbTask'; Path = 'Microsoft\Windows\Application Experience' },
 ::                @{Name = 'Proxy'; Path = 'Microsoft\Windows\Autochk' },
 ::                @{Name = 'QueueReporting'; Path = 'Microsoft\Windows\Windows Error Reporting' },
 ::                @{Name = 'StartupAppTask'; Path = 'Microsoft\Windows\Application Experience' },
-::                @{Name = 'UsbCeip'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' }
+::                @{Name = 'UsbCeip'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' },
+::                @{Name = 'MareBackup'; Path = 'Microsoft\Windows\Application Experience' }
 ::            )
 ::        )
 ::
@@ -5073,7 +5092,7 @@ if "%~1"=="Debug" (
 ::            Disable-ScheduledTask -TaskName $Task.Name -TaskPath $Task.Path -ErrorAction Stop
 ::        }
 ::    } catch {
-::        Out-Failure "Failed to disable telemetry tasks: $_"
+::        Out-Failure "Failed to disable telemetry task $($Task.Name): $_"
 ::    }
 ::
 ::    [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_PRIVACY
@@ -5271,7 +5290,7 @@ if "%~1"=="Debug" (
 ::            Set-Variable -Option Constant SilentParam ([String]' -Silent')
 ::        }
 ::
-::        if ($OS_VERSION -gt 10) {
+::        if ($OS_VERSION -ge 11) {
 ::            Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
 ::        }
 ::
@@ -5412,25 +5431,23 @@ if "%~1"=="Debug" (
 ::    New-Activity 'Cleaning up the system'
 ::    Set-Icon ([IconName]::Cleanup)
 ::
-::    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-::
 ::    Write-ActivityProgress 10 'Clearing delivery optimization cache...'
 ::    Delete-DeliveryOptimizationCache -Force
-::    Out-Success $LogIndentLevel
+::    Out-Success
 ::
 ::    Write-ActivityProgress 20 'Clearing Windows temp folder...'
 ::    Set-Variable -Option Constant WindowsTemp ([String]"$env:SystemRoot\Temp")
 ::    Remove-Item -Path "$WindowsTemp\*" -Recurse -Force -ErrorAction Ignore
-::    Out-Success $LogIndentLevel
+::    Out-Success
 ::
 ::    Write-ActivityProgress 30 'Clearing user temp folder...'
 ::    Remove-Item -Path "$PATH_TEMP_DIR\*" -Recurse -Force -ErrorAction Ignore
-::    Out-Success $LogIndentLevel
+::    Out-Success
 ::
 ::    Write-ActivityProgress 40 'Clearing software distribution folder...'
 ::    Set-Variable -Option Constant SoftwareDistributionPath ([String]"$env:SystemRoot\SoftwareDistribution\Download")
 ::    Remove-Item -Path "$SoftwareDistributionPath\*" -Recurse -Force -ErrorAction Ignore
-::    Out-Success $LogIndentLevel
+::    Out-Success
 ::
 ::    Write-ActivityProgress 60 'Running system cleanup...'
 ::
@@ -5483,9 +5500,9 @@ if "%~1"=="Debug" (
 ::        Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
 ::    }
 ::
-::    Out-Success $LogIndentLevel
+::    Out-Success
+::
 ::    Write-ActivityCompleted
-::    Set-Icon (([IconName]::Default))
 ::}
 ::
 ::#endregion functions > Home > Start-Cleanup
