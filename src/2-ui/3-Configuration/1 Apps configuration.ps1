@@ -1,12 +1,12 @@
 New-GroupBox 'Apps configuration'
 
 
-[Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Checked
+[Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Name '7-Zip' -Checked
+[Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Name 'VLC' -Checked
+[Windows.Forms.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Name 'AnyDesk' -Checked
+[Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qBittorrent' -Checked
+[Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Name 'Microsoft Edge' -Checked
+[Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Name 'Google Chrome' -Checked
 
 
 Set-Variable -Option Constant AppsConfigurationParameters (
