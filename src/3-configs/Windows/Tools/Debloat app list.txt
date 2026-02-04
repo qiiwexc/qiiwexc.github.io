@@ -48,7 +48,6 @@ king.com.CandyCrushSodaSaga                    # Puzzle game from King
 LinkedInforWindows                             # LinkedIn professional networking app
 MarchofEmpires                                 # Strategy game
 Microsoft.3DBuilder                            # Basic 3D modeling software
-Microsoft.549981C3F5F10                        # Microsoft Cortana voice assistant (Discontinued)
 Microsoft.BingFinance                          # Finance news and tracking via Bing (Discontinued)
 Microsoft.BingFoodAndDrink                     # Recipes and food news via Bing (Discontinued)
 Microsoft.BingHealthAndFitness                 # Health and fitness tracking/news via Bing (Discontinued)
