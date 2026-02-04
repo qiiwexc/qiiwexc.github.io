@@ -37,7 +37,7 @@
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.02.01",
+        "version":  "2026.02.04",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "Raphire/Win11Debloat"
@@ -58,7 +58,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "2.1",
+        "version":  "2.2",
         "source":  "URL",
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
