@@ -1,6 +1,4 @@
 function Set-PowerSchemeConfiguration {
-    Set-Variable -Option Constant LogIndentLevel ([Int]1)
-
     try {
         powercfg /OverlaySetActive OVERLAY_SCHEME_MAX
 
@@ -9,8 +7,8 @@ function Set-PowerSchemeConfiguration {
             powercfg /SetDcValueIndex SCHEME_ALL $PowerSetting.SubGroup $PowerSetting.Setting $PowerSetting.Value
         }
 
-        Out-Success $LogIndentLevel
+        Out-Success
     } catch {
-        Out-Failure "Failed to apply power settings configuration: $_" $LogIndentLevel
+        Out-Failure "Failed to apply power settings configuration: $_"
     }
 }
