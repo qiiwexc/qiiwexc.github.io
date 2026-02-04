@@ -11,13 +11,13 @@ New-GroupBox 'Ninite'
 
 
 [ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser:(-not $CHECKBOX_StartNinite.Enabled) -Execute:$CHECKBOX_StartNinite.Checked }
-New-Button 'Download selected' $BUTTON_FUNCTION
+New-Button 'Install selected' $BUTTON_FUNCTION
 
 
 [Windows.Forms.CheckBox]$CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 
 [ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser }
-New-ButtonBrowser 'View other' $BUTTON_FUNCTION
+New-ButtonBrowser 'More' $BUTTON_FUNCTION
 
 
 Set-Variable -Option Constant NINITE_CHECKBOXES (
