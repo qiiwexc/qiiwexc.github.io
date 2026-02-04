@@ -72,14 +72,6 @@
 "CopilotDisabledReason"="IsEnabledForGeographicRegionFailed"
 "IsCopilotAvailable"=dword:00000000
 
-; Disable Copilot service
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
-"TurnOffWindowsCopilot"=dword:00000001
-
 ; Disable chat taskbar (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 "HideSCAMeetNow"=dword:00000001
-
-; Disable Copilot service
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
-"TurnOffWindowsCopilot"=dword:00000001
