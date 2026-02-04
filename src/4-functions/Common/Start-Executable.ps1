@@ -14,9 +14,6 @@ function Start-Executable {
     if ($Switches -and $Silent) {
         Write-ActivityProgress 90 "Running '$Executable' silently..."
         Start-Process -Wait $Executable $Switches -ErrorAction Stop
-        Out-Success
-
-        Write-LogDebug "Removing '$Executable'..."
         Remove-File $Executable -Silent
         Out-Success
     } else {

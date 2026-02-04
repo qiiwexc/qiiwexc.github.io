@@ -22,7 +22,6 @@ Describe 'Start-Executable' {
         Mock Write-ActivityProgress {}
         Mock Start-Process {}
         Mock Out-Success {}
-        Mock Write-LogDebug {}
         Mock Remove-File {}
     }
 
@@ -40,7 +39,6 @@ Describe 'Start-Executable' {
             $WorkingDirectory -eq $TestParentPath -and
             $Wait -eq $Null
         }
-        Should -Invoke Write-LogDebug -Exactly 0
         Should -Invoke Remove-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -58,7 +56,6 @@ Describe 'Start-Executable' {
             $WorkingDirectory -eq $TestParentPath -and
             $Wait -eq $Null
         }
-        Should -Invoke Write-LogDebug -Exactly 0
         Should -Invoke Remove-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -76,13 +73,12 @@ Describe 'Start-Executable' {
             $WorkingDirectory -eq $Null -and
             $Wait -eq $True
         }
-        Should -Invoke Write-LogDebug -Exactly 1
         Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter {
             $FilePath -eq $TestExecutable -and
             $Silent -eq $True
         }
-        Should -Invoke Out-Success -Exactly 2
+        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should not execute file if already running' {
@@ -94,7 +90,6 @@ Describe 'Start-Executable' {
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-LogDebug -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -107,7 +102,6 @@ Describe 'Start-Executable' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-LogDebug -Exactly 0
         Should -Invoke Remove-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -121,7 +115,6 @@ Describe 'Start-Executable' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Write-LogDebug -Exactly 0
         Should -Invoke Remove-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -135,8 +128,7 @@ Describe 'Start-Executable' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Write-LogDebug -Exactly 1
         Should -Invoke Remove-File -Exactly 1
-        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Out-Success -Exactly 0
     }
 }
