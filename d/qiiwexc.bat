@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.2.5')
+::Set-Variable -Option Constant VERSION ([Version]'26.2.6')
 ::
 ::#endregion init > Version
 ::
@@ -134,25 +134,27 @@ if "%~1"=="Debug" (
 ::
 ::#region init > UI constants
 ::
+::Set-Variable -Option Constant COMMON_PADDING ([Int]15)
+::
 ::Set-Variable -Option Constant BUTTON_WIDTH ([Int]170)
 ::Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
 ::
 ::Set-Variable -Option Constant CHECKBOX_HEIGHT ([Int]($BUTTON_HEIGHT - 10))
 ::
 ::
-::Set-Variable -Option Constant INTERVAL_BUTTON ([Int]($BUTTON_HEIGHT + 15))
+::Set-Variable -Option Constant INTERVAL_BUTTON ([Int]($BUTTON_HEIGHT + $COMMON_PADDING))
 ::
 ::Set-Variable -Option Constant INTERVAL_CHECKBOX ([Int]($CHECKBOX_HEIGHT + 5))
 ::
 ::
-::Set-Variable -Option Constant GROUP_WIDTH ([Int](15 + $BUTTON_WIDTH + 15))
+::Set-Variable -Option Constant GROUP_WIDTH ([Int]($COMMON_PADDING + $BUTTON_WIDTH + $COMMON_PADDING))
 ::
-::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH + 15) * 3 + 35))
-::Set-Variable -Option Constant FORM_HEIGHT ([Int]590)
+::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH * 3) + ($COMMON_PADDING * 4) + $COMMON_PADDING))
+::Set-Variable -Option Constant FORM_HEIGHT ([Int]605)
 ::
-::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
+::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]"$COMMON_PADDING, $($COMMON_PADDING + 5)")
 ::
-::Set-Variable -Option Constant SHIFT_CHECKBOX ([Drawing.Point]"0, $INTERVAL_CHECKBOX")
+::Set-Variable -Option Constant CHECKBOX_PADDING ([Int]20)
 ::
 ::
 ::Set-Variable -Option Constant FONT_NAME ([String]'Microsoft Sans Serif')
@@ -177,36 +179,18 @@ if "%~1"=="Debug" (
 ::
 ::    Set-Variable -Option Constant Button ([Windows.Forms.Button](New-Object Windows.Forms.Button))
 ::
-::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
+::    [Drawing.Point]$BaseLocation = $INITIAL_LOCATION_BUTTON
 ::    [Drawing.Point]$Shift = '0, 0'
 ::
-::    if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_RADIO) {
-::        if ($PREVIOUS_LABEL_OR_CHECKBOX) {
-::            Set-Variable -Option Constant PreviousLabelOrCheckboxY ([Int]$PREVIOUS_LABEL_OR_CHECKBOX.Location.Y)
-::        } else {
-::            Set-Variable -Option Constant PreviousLabelOrCheckboxY ([Int]0)
-::        }
-::
-::        if ($PREVIOUS_RADIO) {
-::            Set-Variable -Option Constant PreviousRadioY ([Int]$PREVIOUS_RADIO.Location.Y)
-::        } else {
-::            Set-Variable -Option Constant PreviousRadioY ([Int]0)
-::        }
-::
-::        if ($PreviousLabelOrCheckboxY -gt $PreviousRadioY) {
-::            Set-Variable -Option Constant PreviousMiscElement ([Int]$PreviousLabelOrCheckboxY)
-::        } else {
-::            Set-Variable -Option Constant PreviousMiscElement ([Int]$PreviousRadioY)
-::        }
-::
-::        $InitialLocation.Y = $PreviousMiscElement
-::        $Shift = '0, 30'
+::    if ($PREVIOUS_LABEL_OR_CHECKBOX) {
+::        $BaseLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
+::        $Shift = "0, $($COMMON_PADDING * 2)"
 ::    } elseif ($PREVIOUS_BUTTON) {
-::        $InitialLocation = $PREVIOUS_BUTTON.Location
+::        $BaseLocation = $PREVIOUS_BUTTON.Location
 ::        $Shift = "0, $INTERVAL_BUTTON"
 ::    }
 ::
-::    [Drawing.Point]$Location = $InitialLocation + $Shift
+::    Set-Variable -Option Constant Location ([Drawing.Point]($BaseLocation + $Shift))
 ::
 ::    $Button.Font = $BUTTON_FONT
 ::    $Button.Height = $BUTTON_HEIGHT
@@ -224,7 +208,6 @@ if "%~1"=="Debug" (
 ::    $CURRENT_GROUP.Controls.Add($Button)
 ::
 ::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
-::    Set-Variable -Scope Script PREVIOUS_RADIO $Null
 ::    Set-Variable -Scope Script PREVIOUS_BUTTON ([Windows.Forms.Button]$Button)
 ::}
 ::
@@ -260,25 +243,25 @@ if "%~1"=="Debug" (
 ::
 ::    Set-Variable -Option Constant CheckBox ([Windows.Forms.CheckBox](New-Object Windows.Forms.CheckBox))
 ::
-::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
+::    [Drawing.Point]$BaseLocation = $INITIAL_LOCATION_BUTTON
 ::    [Drawing.Point]$Shift = '0, 0'
 ::
 ::    if ($PREVIOUS_BUTTON) {
-::        $InitialLocation = $PREVIOUS_BUTTON.Location
-::        $Shift = "$INTERVAL_CHECKBOX, 30"
+::        $BaseLocation = $PREVIOUS_BUTTON.Location
+::        $Shift = "$CHECKBOX_PADDING, $($COMMON_PADDING * 2)"
 ::    }
 ::
 ::    if ($PREVIOUS_LABEL_OR_CHECKBOX) {
-::        $InitialLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
+::        $BaseLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
 ::
 ::        if ($Padded) {
-::            $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
+::            $Shift = "$CHECKBOX_PADDING, $CHECKBOX_HEIGHT"
 ::        } else {
 ::            $Shift = "0, $INTERVAL_CHECKBOX"
 ::        }
 ::    }
 ::
-::    [Drawing.Point]$Location = $InitialLocation + $Shift
+::    Set-Variable -Option Constant Location ([Drawing.Point]($BaseLocation + $Shift))
 ::
 ::    $CheckBox.Text = $Text
 ::    $CheckBox.Name = $Name
@@ -334,23 +317,25 @@ if "%~1"=="Debug" (
 ::
 ::    if ($GroupIndex -lt 3) {
 ::        if ($GroupIndex -eq 0) {
-::            Set-Variable -Option Constant Location ([Drawing.Point]'15, 15')
+::            Set-Variable -Option Constant BaseLocation ([Drawing.Point]"$COMMON_PADDING, $COMMON_PADDING")
+::            Set-Variable -Option Constant Shift ([Drawing.Point]'0, 0')
 ::        } else {
-::            Set-Variable -Option Constant Location ($PREVIOUS_GROUP.Location + [Drawing.Point]"$($GROUP_WIDTH + 15), 0")
+::            Set-Variable -Option Constant BaseLocation $PREVIOUS_GROUP.Location
+::            Set-Variable -Option Constant Shift ([Drawing.Point]"$($GROUP_WIDTH + $COMMON_PADDING), 0")
 ::        }
 ::    } else {
 ::        Set-Variable -Option Constant PreviousGroup $CURRENT_TAB.Controls[$GroupIndex - 3]
-::        Set-Variable -Option Constant Location ($PreviousGroup.Location + [Drawing.Point]"0, $($PreviousGroup.Height + 15)")
+::        Set-Variable -Option Constant BaseLocation $PreviousGroup.Location
+::        Set-Variable -Option Constant Shift ([Drawing.Point]"0, $($PreviousGroup.Height + $COMMON_PADDING)")
 ::    }
 ::
 ::    $GroupBox.Width = $GROUP_WIDTH
 ::    $GroupBox.Text = $Text
-::    $GroupBox.Location = $Location
+::    $GroupBox.Location = $BaseLocation + $Shift
 ::
 ::    $CURRENT_TAB.Controls.Add($GroupBox)
 ::
 ::    Set-Variable -Scope Script PREVIOUS_BUTTON $Null
-::    Set-Variable -Scope Script PREVIOUS_RADIO $Null
 ::    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
 ::
 ::    Set-Variable -Scope Script CURRENT_GROUP $GroupBox
@@ -381,51 +366,6 @@ if "%~1"=="Debug" (
 ::}
 ::
 ::#endregion components > Label
-::
-::
-::#region components > RadioButton
-::
-::function New-RadioButton {
-::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$Text,
-::        [Switch]$Checked,
-::        [Switch]$Disabled
-::    )
-::
-::    Set-Variable -Option Constant RadioButton ([Windows.Forms.RadioButton](New-Object Windows.Forms.RadioButton))
-::
-::    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
-::    [Drawing.Point]$Shift = '0, 0'
-::
-::    if ($PREVIOUS_RADIO) {
-::        $InitialLocation.X = $PREVIOUS_BUTTON.Location.X
-::        $InitialLocation.Y = $PREVIOUS_RADIO.Location.Y
-::        $Shift = '90, 0'
-::    } elseif ($PREVIOUS_LABEL_OR_CHECKBOX) {
-::        $InitialLocation = $PREVIOUS_LABEL_OR_CHECKBOX.Location
-::        $Shift = '-15, 20'
-::    } elseif ($PREVIOUS_BUTTON) {
-::        $InitialLocation = $PREVIOUS_BUTTON.Location
-::        $Shift = "10, $BUTTON_HEIGHT"
-::    }
-::
-::    [Drawing.Point]$Location = $InitialLocation + $Shift
-::
-::    $RadioButton.Text = $Text
-::    $RadioButton.Checked = $Checked
-::    $RadioButton.Enabled = -not $Disabled
-::    $RadioButton.Size = "80, $CHECKBOX_HEIGHT"
-::    $RadioButton.Location = $Location
-::
-::    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
-::    $CURRENT_GROUP.Controls.Add($RadioButton)
-::
-::    Set-Variable -Scope Script PREVIOUS_RADIO ([Windows.Forms.RadioButton]$RadioButton)
-::
-::    return $RadioButton
-::}
-::
-::#endregion components > RadioButton
 ::
 ::
 ::#region components > TabPage
@@ -493,16 +433,16 @@ if "%~1"=="Debug" (
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Update-Windows }
-::New-Button 'Windows update' $BUTTON_FUNCTION
+::New-Button 'Update Windows' $BUTTON_FUNCTION
 ::
 ::
 ::[ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftStoreApps }
-::New-Button 'Microsoft Store updates' $BUTTON_FUNCTION
+::New-Button 'Update Store apps' $BUTTON_FUNCTION
 ::
 ::
 ::[Switch]$BUTTON_DISABLED = $OFFICE_INSTALL_TYPE -ne 'C2R'
 ::[ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftOffice }
-::New-Button 'Microsoft Office updates' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+::New-Button 'Update Microsoft Office' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
 ::
 ::#endregion ui > Home > Updates
 ::
@@ -515,9 +455,9 @@ if "%~1"=="Debug" (
 ::[ScriptBlock]$BUTTON_FUNCTION = { Start-Activator -ActivateWindows:$CHECKBOX_ActivateWindows.Checked -ActivateOffice:$CHECKBOX_ActivateOffice.Checked }
 ::New-Button 'MAS Activator' $BUTTON_FUNCTION
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_ActivateWindows = New-CheckBox 'Activate Windows'
+::[Windows.Forms.CheckBox]$CHECKBOX_ActivateWindows = New-CheckBox 'Activate Windows silently'
 ::
-::[Windows.Forms.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office' -Padded
+::[Windows.Forms.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office silently' -Padded
 ::
 ::#endregion ui > Home > Activation
 ::
@@ -589,14 +529,14 @@ if "%~1"=="Debug" (
 ::[Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser:(-not $CHECKBOX_StartNinite.Enabled) -Execute:$CHECKBOX_StartNinite.Checked }
-::New-Button 'Download selected' $BUTTON_FUNCTION
+::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller $NINITE_CHECKBOXES -OpenInBrowser:(-not $CHECKBOX_StartNinite.Enabled) -Execute:$CHECKBOX_StartNinite.Checked }
+::New-Button 'Install selected' $BUTTON_FUNCTION
 ::
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser }
-::New-ButtonBrowser 'View other' $BUTTON_FUNCTION
+::[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller $NINITE_CHECKBOXES -OpenInBrowser }
+::New-ButtonBrowser 'More' $BUTTON_FUNCTION
 ::
 ::
 ::Set-Variable -Option Constant NINITE_CHECKBOXES (
@@ -623,7 +563,7 @@ if "%~1"=="Debug" (
 ::New-GroupBox 'Essentials'
 ::
 ::
-::[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun 'https://driveroff.net/drv/SDI_1.26.0.7z' -Execute:$CHECKBOX_StartSDI.Checked -ConfigFile 'sdi.cfg' -Configuration $CONFIG_SDI }
+::[ScriptBlock]$BUTTON_FUNCTION = { Start-SnappyDriverInstaller -Execute:$CHECKBOX_StartSDI.Checked }
 ::New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 ::
 ::[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
@@ -2198,17 +2138,9 @@ if "%~1"=="Debug" (
 ::"CopilotDisabledReason"="IsEnabledForGeographicRegionFailed"
 ::"IsCopilotAvailable"=dword:00000000
 ::
-::; Disable Copilot service
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot]
-::"TurnOffWindowsCopilot"=dword:00000001
-::
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001
-::
-::; Disable Copilot service
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WindowsCopilot]
-::"TurnOffWindowsCopilot"=dword:00000001
 ::'))
 ::
 ::#endregion configs > Windows > Personalisation
@@ -2383,9 +2315,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
 ::"TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat]
-::"IsUserEligible"=dword:00000000
-::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
 ::"Disabled"=dword:00000001
 ::
@@ -2393,7 +2322,6 @@ if "%~1"=="Debug" (
 ::"SensorPermissionState"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\BraveSoftware\Brave]
-::"BraveAIChatEnabled"=dword:00000000
 ::"BraveNewsDisabled"=dword:00000001
 ::"BraveRewardsDisabled"=dword:00000001
 ::"BraveTalkDisabled"=dword:00000001
@@ -2405,7 +2333,6 @@ if "%~1"=="Debug" (
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
 ::"BuiltInDNSClientEnabled"=dword:00000000
-::"ComposeInlineEnabled"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
 ::"CopilotCDPPageContext"=dword:00000000
 ::"CopilotPageContext"=dword:00000000
@@ -2430,7 +2357,6 @@ if "%~1"=="Debug" (
 ::"TabServicesEnabled"=dword:00000000
 ::"UserFeedbackAllowed"=dword:00000000
 ::"WalletDonationEnabled"=dword:00000000
-::"WebToBrowserSignInEnabled"=dword:00000000
 ::"WebWidgetAllowed"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
@@ -2487,7 +2413,6 @@ if "%~1"=="Debug" (
 ::"EnableFeeds"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
-::"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 ::"AllowSearchToUseLocation"=dword:00000000
 ::"ConnectedSearchUseWeb"=dword:00000000
 ::"CortanaConsent"=dword:00000000
@@ -2513,7 +2438,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
 ::"AllowGamesMenu"=dword:00000000
 ::"BuiltInDNSClientEnabled"=dword:00000000
-::"ComposeInlineEnabled"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
 ::"CopilotCDPPageContext"=dword:00000000
 ::"CopilotPageContext"=dword:00000000
@@ -2538,7 +2462,6 @@ if "%~1"=="Debug" (
 ::"TabServicesEnabled"=dword:00000000
 ::"UserFeedbackAllowed"=dword:00000000
 ::"WalletDonationEnabled"=dword:00000000
-::"WebToBrowserSignInEnabled"=dword:00000000
 ::"WebWidgetAllowed"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
@@ -2576,8 +2499,6 @@ if "%~1"=="Debug" (
 ::"PreventHandwritingDataSharing"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
-::"AllowCortana"=dword:00000000 ; Disable Cortana in search
-::"AllowCortanaAboveLock"=dword:00000000 ; Disable Cortana in search
 ::"AllowSearchToUseLocation"=dword:00000000
 ::"ConnectedSearchUseWeb"=dword:00000000
 ::"CortanaConsent"=dword:00000000
@@ -3277,11 +3198,11 @@ if "%~1"=="Debug" (
 ::E126	-	# Disable site safety services for more information about a visited website (Category: Microsoft Edge (new version based on Chromium))
 ::E226	-	# Disable site safety services for more information about a visited website (Category: Microsoft Edge (new version based on Chromium))
 ::E131	-	# Disable automatic redirection from Internet Explorer to Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
-::E152	-	# Allow user control of local AI features (Category: Microsoft Edge (new version based on Chromium))
+::E152	+	# Allow user control of local AI features (Category: Microsoft Edge (new version based on Chromium))
 ::E252	+	# Allow user control of local AI features (Category: Microsoft Edge (new version based on Chromium))
-::E153	-	# Disable startup boost (Category: Microsoft Edge (new version based on Chromium))
+::E153	+	# Disable startup boost (Category: Microsoft Edge (new version based on Chromium))
 ::E253	+	# Disable startup boost (Category: Microsoft Edge (new version based on Chromium))
-::E154	-	# Hide default top sites on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E154	+	# Hide default top sites on new tab page (Category: Microsoft Edge (new version based on Chromium))
 ::E254	+	# Hide default top sites on new tab page (Category: Microsoft Edge (new version based on Chromium))
 ::E155	-	# Hide Adobe Acrobat subscription button (Category: Microsoft Edge (new version based on Chromium))
 ::E255	-	# Hide Adobe Acrobat subscription button (Category: Microsoft Edge (new version based on Chromium))
@@ -3381,7 +3302,7 @@ if "%~1"=="Debug" (
 ::D002	-	# Disable Phone Link app (Category: Mobile Devices)
 ::D003	-	# Disable showing suggestions for using mobile devices with Windows (Category: Mobile Devices)
 ::D104	-	# Disable connecting the PC to mobile devices (Category: Mobile Devices)
-::M025	+	# Disable search with AI in search box (Category: Search)
+::M025	-	# Disable search with AI in search box (Category: Search)
 ::M003	+	# Disable extension of Windows search with Bing (Category: Search)
 ::M015	+	# Disable People icon in the taskbar (Category: Taskbar)
 ::M016	-	# Disable search box in task bar (Category: Taskbar)
@@ -4882,8 +4803,8 @@ if "%~1"=="Debug" (
 ::
 ::function Set-CloudFlareDNS {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory)]$MalwareProtection,
-::        [Switch][Parameter(Position = 1, Mandatory)]$FamilyFriendly
+::        [Switch]$MalwareProtection,
+::        [Switch]$FamilyFriendly
 ::    )
 ::
 ::    try {
@@ -5203,8 +5124,8 @@ if "%~1"=="Debug" (
 ::
 ::function Start-OoShutUp10 {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory)]$Execute,
-::        [Switch][Parameter(Position = 1, Mandatory)]$Silent
+::        [Switch]$Execute,
+::        [Switch]$Silent
 ::    )
 ::
 ::    Write-LogInfo 'Starting OOShutUp10++ utility...'
@@ -5241,9 +5162,9 @@ if "%~1"=="Debug" (
 ::
 ::function Start-WindowsDebloat {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory)]$UsePreset,
-::        [Switch][Parameter(Position = 1, Mandatory)]$Personalisation,
-::        [Switch][Parameter(Position = 2, Mandatory)]$Silent
+::        [Switch]$UsePreset,
+::        [Switch]$Personalisation,
+::        [Switch]$Silent
 ::    )
 ::
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
@@ -5311,8 +5232,8 @@ if "%~1"=="Debug" (
 ::
 ::function Start-WinUtil {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory)]$Personalisation,
-::        [Switch][Parameter(Position = 1, Mandatory)]$AutomaticallyApply
+::        [Switch]$Personalisation,
+::        [Switch]$AutomaticallyApply
 ::    )
 ::
 ::    Write-LogInfo 'Starting WinUtil utility...'
@@ -5388,8 +5309,8 @@ if "%~1"=="Debug" (
 ::
 ::function Start-Activator {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory)]$ActivateWindows,
-::        [Switch][Parameter(Position = 1, Mandatory)]$ActivateOffice
+::        [Switch]$ActivateWindows,
+::        [Switch]$ActivateOffice
 ::    )
 ::
 ::    try {
@@ -5414,7 +5335,7 @@ if "%~1"=="Debug" (
 ::            $Params += ' /Ohook'
 ::        }
 ::
-::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
+::        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://get.activated.win')))$Params"
 ::
 ::        Out-Success
 ::    } catch {
@@ -5563,7 +5484,7 @@ if "%~1"=="Debug" (
 ::
 ::function Install-MicrosoftOffice {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory)]$Execute
+::        [Switch]$Execute
 ::    )
 ::
 ::    Write-LogInfo 'Starting Microsoft Office installation...'
@@ -5606,8 +5527,8 @@ if "%~1"=="Debug" (
 ::
 ::function Install-Unchecky {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory)]$Execute,
-::        [Switch][Parameter(Position = 1, Mandatory)]$Silent
+::        [Switch]$Execute,
+::        [Switch]$Silent
 ::    )
 ::
 ::    Write-LogInfo 'Starting Unchecky installation...'
@@ -5646,13 +5567,14 @@ if "%~1"=="Debug" (
 ::
 ::function Get-NiniteInstaller {
 ::    param(
-::        [Switch][Parameter(Position = 0, Mandatory)]$OpenInBrowser,
-::        [Switch][Parameter(Position = 1)]$Execute
+::        [Windows.Forms.CheckBox[]][Parameter(Position = 0, Mandatory)]$Checkboxes,
+::        [Switch]$OpenInBrowser,
+::        [Switch]$Execute
 ::    )
 ::
 ::    [Collections.Generic.List[String]]$AppIds = @()
 ::
-::    foreach ($Checkbox in $NINITE_CHECKBOXES) {
+::    foreach ($Checkbox in $Checkboxes) {
 ::        if ($Checkbox.Checked) {
 ::            $AppIds.Add($Checkbox.Name)
 ::        }
@@ -5665,9 +5587,9 @@ if "%~1"=="Debug" (
 ::    } else {
 ::        [Collections.Generic.List[String]]$AppNames = @()
 ::
-::        foreach ($Checkbox in $NINITE_CHECKBOXES) {
+::        foreach ($Checkbox in $Checkboxes) {
 ::            if ($Checkbox.Checked) {
-::                $AppNames.Add($Checkbox.Text)
+::                $AppNames.Add($Checkbox.Text.Replace('Install ', ''))
 ::            }
 ::        }
 ::
@@ -5679,6 +5601,21 @@ if "%~1"=="Debug" (
 ::}
 ::
 ::#endregion functions > Installs > Ninite
+::
+::
+::#region functions > Installs > Start-SnappyDriverInstaller
+::
+::function Start-SnappyDriverInstaller {
+::    param(
+::        [Switch]$Execute
+::    )
+::
+::    Write-LogInfo 'Starting Snappy Driver Installer...'
+::
+::    Start-DownloadUnzipAndRun 'https://driveroff.net/drv/SDI_1.26.0.7z' -Execute:$Execute -ConfigFile 'sdi.cfg' -Configuration $CONFIG_SDI
+::}
+::
+::#endregion functions > Installs > Start-SnappyDriverInstaller
 ::
 ::
 ::#region interface > Show window
