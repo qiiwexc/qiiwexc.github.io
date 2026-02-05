@@ -30,6 +30,14 @@ BeforeAll {
         }
     )
 
+    Set-Variable -Option Constant TestCheckboxes (
+        [Windows.Forms.CheckBox[]]@(
+            $TEST_CHECKBOX_1,
+            $TEST_CHECKBOX_2,
+            $TEST_CHECKBOX_3
+        )
+    )
+
     Set-Variable -Option Constant TestQuery ([String]"$($TEST_CHECKBOX_1.Name)-$($TEST_CHECKBOX_3.Name)")
 }
 
@@ -66,16 +74,6 @@ Describe 'Set-NiniteButtonState' {
 
 Describe 'Get-NiniteInstaller' {
     BeforeEach {
-        Set-Variable -Option Constant NINITE_CHECKBOXES (
-            [Windows.Forms.CheckBox[]]@(
-                $TEST_CHECKBOX_1,
-                $TEST_CHECKBOX_2,
-                $TEST_CHECKBOX_3
-            )
-        )
-
-        Set-Variable -Option Constant TestExecute ([Switch]$True)
-
         Mock Open-InBrowser {}
         Mock Start-DownloadUnzipAndRun {}
     }
@@ -83,7 +81,7 @@ Describe 'Get-NiniteInstaller' {
     It 'Should open Ninite URL in browser' {
         Set-Variable -Option Constant TestOpenInBrowser ([Switch]$True)
 
-        Get-NiniteInstaller -OpenInBrowser:$TestOpenInBrowser
+        Get-NiniteInstaller $TestCheckboxes -OpenInBrowser:$TestOpenInBrowser
 
         Should -Invoke Open-InBrowser -Exactly 1
         Should -Invoke Open-InBrowser -Exactly 1 -ParameterFilter { $URL -eq "{URL_NINITE}/?select=$TestQuery" }
@@ -93,14 +91,14 @@ Describe 'Get-NiniteInstaller' {
     It 'Should download and run Ninite installer' {
         Set-Variable -Option Constant TestOpenInBrowser ([Switch]$False)
 
-        Get-NiniteInstaller -OpenInBrowser:$TestOpenInBrowser -Execute:$TestExecute
+        Get-NiniteInstaller $TestCheckboxes -OpenInBrowser:$TestOpenInBrowser -Execute
 
         Should -Invoke Open-InBrowser -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq "{URL_NINITE}/$TestQuery/ninite.exe" -and
             $FileName -eq "Ninite $($TEST_CHECKBOX_1.Text) $($TEST_CHECKBOX_3.Text) Installer.exe" -and
-            $Execute -eq $TestExecute
+            $Execute -eq $True
         }
     }
 }
