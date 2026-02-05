@@ -9,25 +9,25 @@ function New-CheckBox {
 
     Set-Variable -Option Constant CheckBox ([Windows.Forms.CheckBox](New-Object Windows.Forms.CheckBox))
 
-    [Drawing.Point]$InitialLocation = $INITIAL_LOCATION_BUTTON
+    [Drawing.Point]$BaseLocation = $INITIAL_LOCATION_BUTTON
     [Drawing.Point]$Shift = '0, 0'
 
     if ($PREVIOUS_BUTTON) {
-        $InitialLocation = $PREVIOUS_BUTTON.Location
-        $Shift = "$INTERVAL_CHECKBOX, 30"
+        $BaseLocation = $PREVIOUS_BUTTON.Location
+        $Shift = "$CHECKBOX_PADDING, $($COMMON_PADDING * 2)"
     }
 
     if ($PREVIOUS_LABEL_OR_CHECKBOX) {
-        $InitialLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
+        $BaseLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
 
         if ($Padded) {
-            $Shift = "$INTERVAL_CHECKBOX, $CHECKBOX_HEIGHT"
+            $Shift = "$CHECKBOX_PADDING, $CHECKBOX_HEIGHT"
         } else {
             $Shift = "0, $INTERVAL_CHECKBOX"
         }
     }
 
-    [Drawing.Point]$Location = $InitialLocation + $Shift
+    Set-Variable -Option Constant Location ([Drawing.Point]($BaseLocation + $Shift))
 
     $CheckBox.Text = $Text
     $CheckBox.Name = $Name
