@@ -10,13 +10,13 @@ New-GroupBox 'Ninite'
 [Windows.Forms.CheckBox]$CHECKBOX_Ninite_Malwarebytes = New-CheckBox 'Malwarebytes' -Name 'malwarebytes'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser:(-not $CHECKBOX_StartNinite.Enabled) -Execute:$CHECKBOX_StartNinite.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller $NINITE_CHECKBOXES -OpenInBrowser:(-not $CHECKBOX_StartNinite.Enabled) -Execute:$CHECKBOX_StartNinite.Checked }
 New-Button 'Install selected' $BUTTON_FUNCTION
 
 
 [Windows.Forms.CheckBox]$CHECKBOX_StartNinite = New-CheckBoxRunAfterDownload -Checked
 
-[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller -OpenInBrowser }
+[ScriptBlock]$BUTTON_FUNCTION = { Get-NiniteInstaller $NINITE_CHECKBOXES -OpenInBrowser }
 New-ButtonBrowser 'More' $BUTTON_FUNCTION
 
 
