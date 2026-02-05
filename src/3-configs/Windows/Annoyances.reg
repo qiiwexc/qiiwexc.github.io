@@ -107,9 +107,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
 "SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-"AllowOnlineTips"=dword:00000000
-
 ; Disable Windows Backup reminder notifications
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
 "DisableMonitoring"=dword:00000001

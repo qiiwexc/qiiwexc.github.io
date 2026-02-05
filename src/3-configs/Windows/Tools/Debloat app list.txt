@@ -56,7 +56,6 @@ Microsoft.BingSearch                           # Web Search from Microsoft Bing 
 Microsoft.BingSports                           # Sports news and scores via Bing (Discontinued)
 Microsoft.BingTranslator                       # Translation service via Bing
 Microsoft.BingTravel                           # Travel planning and news via Bing (Discontinued)
-Microsoft.Copilot                              # AI assistant integrated into Windows
 Microsoft.GamingApp                            # Modern Xbox Gaming App, required for installing some PC games
 Microsoft.Getstarted                           # Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)
 Microsoft.M365Companions                       # Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin

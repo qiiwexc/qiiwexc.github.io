@@ -73,7 +73,6 @@
 "scremoveoption"="1"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Script Host\Settings]
-"Enabled"=dword:00000000
 "IgnoreUserSettings"=dword:00000001
 "Remote"=dword:00000000
 "TrustPolicy"=dword:00000002
