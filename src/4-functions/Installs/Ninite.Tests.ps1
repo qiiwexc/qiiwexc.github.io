@@ -10,7 +10,7 @@ BeforeAll {
         [Windows.Forms.CheckBox]@{
             Checked = $True
             Name    = 'TEST_CHECKBOX_1_NAME'
-            Text    = 'TEST_CHECKBOX_1_TEXT'
+            Text    = 'APP_NAME_1'
         }
     )
 
@@ -18,7 +18,7 @@ BeforeAll {
         [Windows.Forms.CheckBox]@{
             Checked = $False
             Name    = 'TEST_CHECKBOX_2_NAME'
-            Text    = 'TEST_CHECKBOX_2_TEXT'
+            Text    = 'APP_NAME_2'
         }
     )
 
@@ -26,7 +26,7 @@ BeforeAll {
         [Windows.Forms.CheckBox]@{
             Checked = $True
             Name    = 'TEST_CHECKBOX_3_NAME'
-            Text    = 'TEST_CHECKBOX_3_TEXT'
+            Text    = 'Install APP_NAME_3'
         }
     )
 
@@ -97,7 +97,7 @@ Describe 'Get-NiniteInstaller' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq "{URL_NINITE}/$TestQuery/ninite.exe" -and
-            $FileName -eq "Ninite $($TEST_CHECKBOX_1.Text) $($TEST_CHECKBOX_3.Text) Installer.exe" -and
+            $FileName -eq 'Ninite APP_NAME_1 APP_NAME_3 Installer.exe' -and
             $Execute -eq $True
         }
     }
