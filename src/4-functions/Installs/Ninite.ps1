@@ -27,7 +27,7 @@ function Get-NiniteInstaller {
 
         foreach ($Checkbox in $Checkboxes) {
             if ($Checkbox.Checked) {
-                $AppNames.Add($Checkbox.Text)
+                $AppNames.Add($Checkbox.Text.Replace('Install ', ''))
             }
         }
 
