@@ -155,13 +155,11 @@
 "BraveRewardsDisabled"=dword:00000001
 "BraveTalkDisabled"=dword:00000001
 "BraveVPNDisabled"=dword:00000001
-"BraveWalletDisabled"=dword:00000001
 
 ; Disable Microsoft Edge MSN news feed, sponsored links, shopping assistant and more.
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-"BuiltInDNSClientEnabled"=dword:00000000
 "ConfigureDoNotTrack"=dword:00000001
 "CopilotCDPPageContext"=dword:00000000
 "CopilotPageContext"=dword:00000000
@@ -176,7 +174,6 @@
 "HubsSidebarEnabled"=dword:00000000
 "Microsoft365CopilotChatIconEnabled"=dword:00000000
 "MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
-"NewTabPageBingChatEnabled"=dword:00000000
 "NewTabPageContentEnabled"=dword:00000000
 "NewTabPageHideDefaultTopSites"=dword:00000001
 "PersonalizationReportingEnabled"=dword:00000000
@@ -191,10 +188,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
 "BlockThirdPartyCookies"=dword:00000001
 "DefaultShareAdditionalOSRegionSetting"=dword:00000002
-
-; Disable "Inking and Typing Personalization"
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization]
-"AllowInputPersonalization"=dword:00000000
 
 ; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
@@ -244,7 +237,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
 "AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchUseWeb"=dword:00000000
-"CortanaConsent"=dword:00000000
 "DisableWebSearch"=dword:00000001
 "EnableDynamicContentInWSB"=dword:00000000
 
@@ -266,7 +258,6 @@
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
 "AllowGamesMenu"=dword:00000000
-"BuiltInDNSClientEnabled"=dword:00000000
 "ConfigureDoNotTrack"=dword:00000001
 "CopilotCDPPageContext"=dword:00000000
 "CopilotPageContext"=dword:00000000
@@ -281,7 +272,6 @@
 "HubsSidebarEnabled"=dword:00000000
 "Microsoft365CopilotChatIconEnabled"=dword:00000000
 "MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
-"NewTabPageBingChatEnabled"=dword:00000000
 "NewTabPageContentEnabled"=dword:00000000
 "NewTabPageHideDefaultTopSites"=dword:00000001
 "PersonalizationReportingEnabled"=dword:00000000
@@ -296,10 +286,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
 "BlockThirdPartyCookies"=dword:00000001
 "DefaultShareAdditionalOSRegionSetting"=dword:00000002
-
-; Disable "Inking and Typing Personalization"
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\InputPersonalization]
-"AllowInputPersonalization"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
 "AITEnable"=dword:00000000
@@ -330,7 +316,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
 "AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchUseWeb"=dword:00000000
-"CortanaConsent"=dword:00000000
 "DisableWebSearch"=dword:00000001
 "EnableDynamicContentInWSB"=dword:00000000
 
