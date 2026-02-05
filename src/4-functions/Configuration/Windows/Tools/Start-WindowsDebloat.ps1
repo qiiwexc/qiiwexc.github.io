@@ -1,8 +1,8 @@
 function Start-WindowsDebloat {
     param(
-        [Switch][Parameter(Position = 0, Mandatory)]$UsePreset,
-        [Switch][Parameter(Position = 1, Mandatory)]$Personalisation,
-        [Switch][Parameter(Position = 2, Mandatory)]$Silent
+        [Switch]$UsePreset,
+        [Switch]$Personalisation,
+        [Switch]$Silent
     )
 
     Write-LogInfo 'Starting Windows 10/11 debloat utility...'

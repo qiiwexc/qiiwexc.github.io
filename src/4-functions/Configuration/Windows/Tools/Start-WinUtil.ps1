@@ -1,7 +1,7 @@
 function Start-WinUtil {
     param(
-        [Switch][Parameter(Position = 0, Mandatory)]$Personalisation,
-        [Switch][Parameter(Position = 1, Mandatory)]$AutomaticallyApply
+        [Switch]$Personalisation,
+        [Switch]$AutomaticallyApply
     )
 
     Write-LogInfo 'Starting WinUtil utility...'

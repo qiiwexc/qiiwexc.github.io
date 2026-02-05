@@ -26,15 +26,10 @@ Describe 'Set-CloudFlareDNS' {
         Mock Invoke-CimMethod { return @{ ReturnValue = 0 } }
         Mock Out-Success {}
         Mock Out-Failure {}
-
-        [Switch]$TestMalwareProtection = $True
-        [Switch]$TestFamilyFriendly = $False
     }
 
     It 'Should set base CloudFlare DNS' {
-        [Switch]$TestMalwareProtection = $False
-
-        Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
+        Set-CloudFlareDNS
 
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -51,7 +46,7 @@ Describe 'Set-CloudFlareDNS' {
     }
 
     It 'Should set Malware Protection CloudFlare DNS' {
-        Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
+        Set-CloudFlareDNS -MalwareProtection
 
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -68,9 +63,7 @@ Describe 'Set-CloudFlareDNS' {
     }
 
     It 'Should set family friendly CloudFlare DNS' {
-        [Switch]$TestFamilyFriendly = $True
-
-        Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
+        Set-CloudFlareDNS -FamilyFriendly
 
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -89,7 +82,7 @@ Describe 'Set-CloudFlareDNS' {
     It 'Should exit if no network connection' {
         Mock Test-NetworkConnection { return $False }
 
-        Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
+        Set-CloudFlareDNS
 
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -102,7 +95,7 @@ Describe 'Set-CloudFlareDNS' {
     It 'Should handle Invoke-CimMethod failure with non-zero return value' {
         Mock Invoke-CimMethod { return @{ ReturnValue = 1 } }
 
-        Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
+        Set-CloudFlareDNS
 
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -115,7 +108,7 @@ Describe 'Set-CloudFlareDNS' {
     It 'Should handle Test-NetworkConnection failure' {
         Mock Test-NetworkConnection { throw $TestException }
 
-        Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
+        Set-CloudFlareDNS
 
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -128,7 +121,7 @@ Describe 'Set-CloudFlareDNS' {
     It 'Should handle Get-NetworkAdapter failure' {
         Mock Get-NetworkAdapter { throw $TestException }
 
-        Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
+        Set-CloudFlareDNS
 
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -141,7 +134,7 @@ Describe 'Set-CloudFlareDNS' {
     It 'Should handle Invoke-CimMethod failure' {
         Mock Invoke-CimMethod { throw $TestException }
 
-        Set-CloudFlareDNS $TestMalwareProtection $TestFamilyFriendly
+        Set-CloudFlareDNS
 
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1

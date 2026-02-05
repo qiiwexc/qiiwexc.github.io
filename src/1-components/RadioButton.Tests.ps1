@@ -27,18 +27,11 @@ Describe 'New-RadioButton' {
             }
         )
 
-        [Switch]$TestDisabledArg = $False
-        [Switch]$TestCheckedArg = $False
-
         Mock Add {}
     }
 
     It 'Should create a new radio button' {
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.RadioButton](
-                New-RadioButton $TestText -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.RadioButton](New-RadioButton $TestText))
 
         Should -Invoke Add -Exactly 1
 
@@ -54,16 +47,9 @@ Describe 'New-RadioButton' {
     }
 
     It 'Should create a radio button under a button' {
-        $TestDisabledArg = $True
-        $TestCheckedArg = $True
-
         $script:PREVIOUS_BUTTON = @{ Location = '100, 200' }
 
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.RadioButton](
-                New-RadioButton $TestText -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.RadioButton](New-RadioButton $TestText -Disabled -Checked))
 
         $Result.Checked | Should -BeTrue
         $Result.Enabled | Should -BeFalse
@@ -76,11 +62,7 @@ Describe 'New-RadioButton' {
     It 'Should create a radio button under a checkbox/label' {
         $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
 
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.RadioButton](
-                New-RadioButton $TestText -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.RadioButton](New-RadioButton $TestText))
 
         $Result.Location.X | Should -BeExactly 85
         $Result.Location.Y | Should -BeExactly 220
@@ -91,11 +73,7 @@ Describe 'New-RadioButton' {
     It 'Should create a radio button under a radio button' {
         $script:PREVIOUS_RADIO = @{ Location = '100, 200' }
 
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.RadioButton](
-                New-RadioButton $TestText -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.RadioButton](New-RadioButton $TestText))
 
         $Result.Location.X | Should -BeExactly 90
         $Result.Location.Y | Should -BeExactly 200

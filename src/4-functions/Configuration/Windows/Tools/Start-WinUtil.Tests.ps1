@@ -31,13 +31,10 @@ Describe 'Start-WinUtil' {
         Mock Invoke-CustomCommand {}
         Mock Out-Success {}
         Mock Out-Failure {}
-
-        [Bool]$TestPersonalisation = $False
-        [Bool]$TestAutomaticallyApply = $False
     }
 
     It 'Should start WinUtil with configuration' {
-        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
+        Start-WinUtil
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Find-RunningScript -Exactly 1 -ParameterFilter { $CommandLinePart -eq 'christitus.com' }
@@ -58,9 +55,7 @@ Describe 'Start-WinUtil' {
     }
 
     It 'Should start WinUtil with personalisation configuration' {
-        [Bool]$TestPersonalisation = $True
-
-        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
+        Start-WinUtil -Personalisation
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -78,9 +73,7 @@ Describe 'Start-WinUtil' {
     }
 
     It 'Should start WinUtil and automatically apply' {
-        [Bool]$TestAutomaticallyApply = $True
-
-        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
+        Start-WinUtil -AutomaticallyApply
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -96,7 +89,7 @@ Describe 'Start-WinUtil' {
     It 'Should exit if already running' {
         Mock Find-RunningScript { return @(@{ ProcessName = 'powershell' }) }
 
-        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
+        Start-WinUtil
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -111,7 +104,7 @@ Describe 'Start-WinUtil' {
     It 'Should exit if no network connection' {
         Mock Test-NetworkConnection { return $False }
 
-        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
+        Start-WinUtil
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -126,7 +119,7 @@ Describe 'Start-WinUtil' {
     It 'Should handle Find-RunningScript failure' {
         Mock Find-RunningScript { throw $TestException }
 
-        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Throw $TestException
+        { Start-WinUtil } | Should -Throw $TestException
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -141,7 +134,7 @@ Describe 'Start-WinUtil' {
     It 'Should handle Test-NetworkConnection failure' {
         Mock Test-NetworkConnection { throw $TestException }
 
-        { Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply } | Should -Throw $TestException
+        { Start-WinUtil } | Should -Throw $TestException
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -156,7 +149,7 @@ Describe 'Start-WinUtil' {
     It 'Should handle New-Directory failure' {
         Mock New-Directory { throw $TestException }
 
-        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
+        Start-WinUtil
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -171,7 +164,7 @@ Describe 'Start-WinUtil' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
+        Start-WinUtil
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -186,7 +179,7 @@ Describe 'Start-WinUtil' {
     It 'Should handle Invoke-CustomCommand failure' {
         Mock Invoke-CustomCommand { throw $TestException }
 
-        Start-WinUtil -Personalisation:$TestPersonalisation -AutomaticallyApply:$TestAutomaticallyApply
+        Start-WinUtil
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0

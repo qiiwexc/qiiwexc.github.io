@@ -28,18 +28,11 @@ Describe 'New-CheckBox' {
             }
         )
 
-        [Switch]$TestDisabledArg = $False
-        [Switch]$TestCheckedArg = $False
-
         Mock Add {}
     }
 
     It 'Should create a new checkbox' {
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.CheckBox](
-                New-CheckBox $TestText $TestName -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName))
 
         Should -Invoke Add -Exactly 1
 
@@ -56,16 +49,9 @@ Describe 'New-CheckBox' {
     }
 
     It 'Should create a checkbox under a button' {
-        $TestDisabledArg = $True
-        $TestCheckedArg = $True
-
         $script:PREVIOUS_BUTTON = @{ Location = '100, 200' }
 
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.CheckBox](
-                New-CheckBox $TestText $TestName -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName -Disabled -Checked))
 
         $Result.Checked | Should -BeTrue
         $Result.Enabled | Should -BeFalse
@@ -78,11 +64,7 @@ Describe 'New-CheckBox' {
     It 'Should create a checkbox without padding under a checkbox/label' {
         $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
 
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.CheckBox](
-                New-CheckBox $TestText $TestName -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName))
 
         $Result.Location.X | Should -BeExactly 15
         $Result.Location.Y | Should -BeExactly 225
@@ -93,11 +75,7 @@ Describe 'New-CheckBox' {
     It 'Should create a checkbox with padding' {
         $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
 
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.CheckBox](
-                New-CheckBox $TestText $TestName -Disabled:$TestDisabledArg -Checked:$TestCheckedArg -Padded
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName -Padded))
 
         $Result.Location.X | Should -BeExactly 40
         $Result.Location.Y | Should -BeExactly 220
@@ -109,11 +87,7 @@ Describe 'New-CheckBox' {
         $script:PREVIOUS_BUTTON = @{ Location = '100, 200' }
         $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '200, 300' }
 
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.CheckBox](
-                New-CheckBox $TestText $TestName -Disabled:$TestDisabledArg -Checked:$TestCheckedArg
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName))
 
         $Result.Location.X | Should -BeExactly 100
         $Result.Location.Y | Should -BeExactly 325

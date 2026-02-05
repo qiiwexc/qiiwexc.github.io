@@ -18,13 +18,10 @@ Describe 'Start-Activator' {
         Mock Invoke-CustomCommand {}
         Mock Out-Success {}
         Mock Out-Failure {}
-
-        [Switch]$TestActivateWindowsArg = $False
-        [Switch]$TestActivateOfficeArg = $False
     }
 
     It 'Should start MAS activator' {
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Find-RunningScript -Exactly 1 -ParameterFilter { $CommandLinePart -eq 'get.activated.win' }
@@ -32,16 +29,14 @@ Describe 'Start-Activator' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $Command -eq '& ([ScriptBlock]::Create((irm https://get.activated.win)))' -and
+            $Command -eq "& ([ScriptBlock]::Create((irm 'https://get.activated.win')))" -and
             $HideWindow -eq $True
         }
         Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should automatically activate Windows' {
-        $TestActivateWindowsArg = $True
-
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator -ActivateWindows
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -55,9 +50,7 @@ Describe 'Start-Activator' {
     }
 
     It 'Should automatically activate Office' {
-        $TestActivateOfficeArg = $True
-
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator -ActivateOffice
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -71,10 +64,7 @@ Describe 'Start-Activator' {
     }
 
     It 'Should automatically activate both Windows and Office' {
-        $TestActivateWindowsArg = $True
-        $TestActivateOfficeArg = $True
-
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator -ActivateWindows -ActivateOffice
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -90,7 +80,7 @@ Describe 'Start-Activator' {
     It 'Should exit if already running' {
         Mock Find-RunningScript { return @(@{ ProcessName = 'powershell' }) }
 
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -102,7 +92,7 @@ Describe 'Start-Activator' {
     It 'Should exit if no network connection' {
         Mock Test-NetworkConnection { return $False }
 
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -114,7 +104,7 @@ Describe 'Start-Activator' {
     It 'Should handle Find-RunningScript failure' {
         Mock Find-RunningScript { throw $TestException }
 
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -126,7 +116,7 @@ Describe 'Start-Activator' {
     It 'Should handle Test-NetworkConnection failure' {
         Mock Test-NetworkConnection { throw $TestException }
 
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -138,7 +128,7 @@ Describe 'Start-Activator' {
     It 'Should handle Invoke-CustomCommand failure' {
         Mock Invoke-CustomCommand { throw $TestException }
 
-        Start-Activator -ActivateWindows:$TestActivateWindowsArg -ActivateOffice:$TestActivateOfficeArg
+        Start-Activator
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0

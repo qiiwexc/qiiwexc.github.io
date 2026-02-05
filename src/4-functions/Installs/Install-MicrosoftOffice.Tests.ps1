@@ -27,14 +27,11 @@ Describe 'Install-MicrosoftOffice' {
         Mock Start-DownloadUnzipAndRun {}
         Mock Write-LogWarning {}
 
-        [Switch]$TestExecute = $True
         [String]$SYSTEM_LANGUAGE = 'en-GB'
     }
 
     It 'Should download Microsoft Office installer' {
-        $TestExecute = $False
-
-        Install-MicrosoftOffice -Execute:$TestExecute
+        Install-MicrosoftOffice
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -52,7 +49,7 @@ Describe 'Install-MicrosoftOffice' {
     }
 
     It 'Should download and start Microsoft Office installer' {
-        Install-MicrosoftOffice -Execute:$TestExecute
+        Install-MicrosoftOffice -Execute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -77,7 +74,7 @@ Describe 'Install-MicrosoftOffice' {
     It 'Should set config for Russian language' {
         $SYSTEM_LANGUAGE = 'ru-RU'
 
-        Install-MicrosoftOffice -Execute:$TestExecute
+        Install-MicrosoftOffice -Execute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -94,7 +91,7 @@ Describe 'Install-MicrosoftOffice' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        Install-MicrosoftOffice -Execute:$TestExecute
+        Install-MicrosoftOffice -Execute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -104,11 +101,9 @@ Describe 'Install-MicrosoftOffice' {
     }
 
     It 'Should handle Import-RegistryConfiguration failure' {
-        $TestExecute = $True
-
         Mock Import-RegistryConfiguration { throw $TestException }
 
-        Install-MicrosoftOffice -Execute:$TestExecute
+        Install-MicrosoftOffice -Execute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -120,7 +115,7 @@ Describe 'Install-MicrosoftOffice' {
     It 'Should handle Start-DownloadUnzipAndRun failure' {
         Mock Start-DownloadUnzipAndRun { throw $TestException }
 
-        { Install-MicrosoftOffice -Execute:$TestExecute } | Should -Throw $TestException
+        { Install-MicrosoftOffice -Execute } | Should -Throw $TestException
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1

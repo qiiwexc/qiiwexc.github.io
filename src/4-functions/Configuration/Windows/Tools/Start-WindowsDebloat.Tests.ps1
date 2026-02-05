@@ -33,14 +33,10 @@ Describe 'Start-WindowsDebloat' {
         Mock Out-Failure {}
 
         [Int]$OS_VERSION = 11
-
-        [Bool]$TestUsePreset = $False
-        [Bool]$TestPersonalisation = $False
-        [Bool]$TestSilent = $False
     }
 
     It 'Should start debloat tool with configuration' {
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Find-RunningScript -Exactly 1 -ParameterFilter { $CommandLinePart -eq 'debloat.raphi.re' }
@@ -72,7 +68,7 @@ Describe 'Start-WindowsDebloat' {
     It 'Should start debloat tool with configuration on Windows versions older than 11' {
         [Int]$OS_VERSION = 10
 
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -90,9 +86,7 @@ Describe 'Start-WindowsDebloat' {
     }
 
     It 'Should start debloat tool with custom preset' {
-        [Bool]$TestUsePreset = $True
-
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat -UsePreset
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -110,10 +104,7 @@ Describe 'Start-WindowsDebloat' {
     }
 
     It 'Should start debloat tool with personalisation configuration' {
-        [Bool]$TestUsePreset = $True
-        [Bool]$TestPersonalisation = $True
-
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat -UsePreset -Personalisation
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -141,9 +132,7 @@ Describe 'Start-WindowsDebloat' {
     }
 
     It 'Should start debloat tool and automatically apply' {
-        [Bool]$TestSilent = $True
-
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat -Silent
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -162,7 +151,7 @@ Describe 'Start-WindowsDebloat' {
     It 'Should exit if already running' {
         Mock Find-RunningScript { return @(@{ ProcessName = 'powershell' }) }
 
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -177,7 +166,7 @@ Describe 'Start-WindowsDebloat' {
     It 'Should exit if no network connection' {
         Mock Test-NetworkConnection { return $False }
 
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -192,7 +181,7 @@ Describe 'Start-WindowsDebloat' {
     It 'Should handle Find-RunningScript failure' {
         Mock Find-RunningScript { throw $TestException }
 
-        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Throw $TestException
+        { Start-WindowsDebloat } | Should -Throw $TestException
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -207,7 +196,7 @@ Describe 'Start-WindowsDebloat' {
     It 'Should handle Test-NetworkConnection failure' {
         Mock Test-NetworkConnection { throw $TestException }
 
-        { Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent } | Should -Throw $TestException
+        { Start-WindowsDebloat } | Should -Throw $TestException
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -222,7 +211,7 @@ Describe 'Start-WindowsDebloat' {
     It 'Should handle New-Directory failure' {
         Mock New-Directory { throw $TestException }
 
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -237,7 +226,7 @@ Describe 'Start-WindowsDebloat' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -252,7 +241,7 @@ Describe 'Start-WindowsDebloat' {
     It 'Should handle Invoke-CustomCommand failure' {
         Mock Invoke-CustomCommand { throw $TestException }
 
-        Start-WindowsDebloat -UsePreset:$TestUsePreset -Personalisation:$TestPersonalisation -Silent:$TestSilent
+        Start-WindowsDebloat
 
         Should -Invoke Find-RunningScript -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0

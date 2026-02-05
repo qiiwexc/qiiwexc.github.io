@@ -14,20 +14,13 @@ Describe 'New-CheckBoxRunAfterDownload' {
     }
 
     It 'Should create a checkbox with correct parameters' {
-        Set-Variable -Option Constant TestDisabled ([Switch]($True))
-        Set-Variable -Option Constant TestChecked ([Switch]($False))
-
-        Set-Variable -Option Constant Result (
-            [Windows.Forms.CheckBox](
-                New-CheckBoxRunAfterDownload -Disabled:$TestDisabled -Checked:$TestChecked
-            )
-        )
+        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBoxRunAfterDownload -Disabled))
 
         Should -Invoke New-CheckBox -Exactly 1
         Should -Invoke New-CheckBox -Exactly 1 -ParameterFilter {
             $Text -eq 'Start after download' -and
-            $Disabled -eq $TestDisabled -and
-            $Checked -eq $TestChecked
+            $Disabled -eq $True -and
+            $Checked -eq $False
         }
 
         $Result | Should -BeExactly $TestCheckBox

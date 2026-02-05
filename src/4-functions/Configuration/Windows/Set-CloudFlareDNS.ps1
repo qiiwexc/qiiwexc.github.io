@@ -1,7 +1,7 @@
 function Set-CloudFlareDNS {
     param(
-        [Switch][Parameter(Position = 0, Mandatory)]$MalwareProtection,
-        [Switch][Parameter(Position = 1, Mandatory)]$FamilyFriendly
+        [Switch]$MalwareProtection,
+        [Switch]$FamilyFriendly
     )
 
     try {
