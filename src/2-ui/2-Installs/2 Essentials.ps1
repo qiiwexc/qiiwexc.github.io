@@ -1,7 +1,7 @@
 New-GroupBox 'Essentials'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun '{URL_SDI}' -Execute:$CHECKBOX_StartSDI.Checked -ConfigFile 'sdi.cfg' -Configuration $CONFIG_SDI }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-SnappyDriverInstaller -Execute:$CHECKBOX_StartSDI.Checked }
 New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 
 [Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
