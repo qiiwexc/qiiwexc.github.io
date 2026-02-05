@@ -6,6 +6,7 @@ BeforeAll {
     Set-Variable -Option Constant TestText ([String]'TEST_TEXT')
     Set-Variable -Option Constant TestFunction ([ScriptBlock] { Test = 'Function' })
 
+    Set-Variable -Option Constant COMMON_PADDING ([Int]15)
     Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
     Set-Variable -Option Constant BUTTON_WIDTH ([Int]170)
     Set-Variable -Option Constant INTERVAL_BUTTON ([Int]45)
@@ -18,7 +19,6 @@ BeforeAll {
 Describe 'New-Button' {
     BeforeEach {
         [Windows.Forms.Button]$script:PREVIOUS_BUTTON = $Null
-        [Windows.Forms.RadioButton]$script:PREVIOUS_RADIO = $Null
         [Windows.Forms.Label]$script:PREVIOUS_LABEL_OR_CHECKBOX = $Null
 
         [Windows.Forms.GroupBox]$script:CURRENT_GROUP = (
@@ -69,40 +69,5 @@ Describe 'New-Button' {
         $script:PREVIOUS_BUTTON.Location.Y | Should -BeExactly 230
 
         $script:CURRENT_GROUP.Height | Should -BeExactly 275
-    }
-
-    It 'Should create a button under a radio button' {
-        $script:PREVIOUS_RADIO = @{ Location = '100, 200' }
-
-        New-Button $TestText $TestFunction
-
-        $script:PREVIOUS_BUTTON.Location.X | Should -BeExactly 15
-        $script:PREVIOUS_BUTTON.Location.Y | Should -BeExactly 230
-
-        $script:CURRENT_GROUP.Height | Should -BeExactly 275
-    }
-
-    It 'Should create a button under a checkbox/label and a radio button' {
-        $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
-        $script:PREVIOUS_RADIO = @{ Location = '200, 300' }
-
-        New-Button $TestText $TestFunction
-
-        $script:PREVIOUS_BUTTON.Location.X | Should -BeExactly 15
-        $script:PREVIOUS_BUTTON.Location.Y | Should -BeExactly 330
-
-        $script:CURRENT_GROUP.Height | Should -BeExactly 375
-    }
-
-    It 'Should create a button under a radio button and a checkbox/label' {
-        $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '300, 400' }
-        $script:PREVIOUS_RADIO = @{ Location = '200, 300' }
-
-        New-Button $TestText $TestFunction
-
-        $script:PREVIOUS_BUTTON.Location.X | Should -BeExactly 15
-        $script:PREVIOUS_BUTTON.Location.Y | Should -BeExactly 430
-
-        $script:CURRENT_GROUP.Height | Should -BeExactly 475
     }
 }

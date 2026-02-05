@@ -6,9 +6,11 @@ BeforeAll {
     Set-Variable -Option Constant TestText ([String]'TEST_TEXT')
     Set-Variable -Option Constant TestName ([String]'TEST_NAME')
 
+    Set-Variable -Option Constant COMMON_PADDING ([Int]15)
     Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
     Set-Variable -Option Constant CHECKBOX_HEIGHT ([Int]20)
     Set-Variable -Option Constant INTERVAL_CHECKBOX ([Int]25)
+    Set-Variable -Option Constant CHECKBOX_PADDING ([Int]20)
     Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
 
     function Add {}
@@ -55,7 +57,7 @@ Describe 'New-CheckBox' {
 
         $Result.Checked | Should -BeTrue
         $Result.Enabled | Should -BeFalse
-        $Result.Location.X | Should -BeExactly 125
+        $Result.Location.X | Should -BeExactly 120
         $Result.Location.Y | Should -BeExactly 230
 
         $script:CURRENT_GROUP.Height | Should -BeExactly 260
@@ -77,7 +79,7 @@ Describe 'New-CheckBox' {
 
         Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName -Padded))
 
-        $Result.Location.X | Should -BeExactly 40
+        $Result.Location.X | Should -BeExactly 35
         $Result.Location.Y | Should -BeExactly 220
 
         $script:CURRENT_GROUP.Height | Should -BeExactly 250

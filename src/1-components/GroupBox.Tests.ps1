@@ -6,6 +6,7 @@ BeforeAll {
     Set-Variable -Option Constant TestText ([String]'TEST_TEXT')
     Set-Variable -Option Constant TestPreviousGroup ([Windows.Forms.GroupBox]@{ Location = '100, 200' })
 
+    Set-Variable -Option Constant COMMON_PADDING ([Int]15)
     Set-Variable -Option Constant GROUP_WIDTH ([Int]200)
 
     function Add {}
@@ -16,7 +17,6 @@ Describe 'New-GroupBox' {
         [Windows.Forms.GroupBox]$script:PREVIOUS_GROUP = $Null
         [Windows.Forms.GroupBox]$script:CURRENT_GROUP = $TestPreviousGroup
         [Windows.Forms.Button]$script:PREVIOUS_BUTTON = @{}
-        [Windows.Forms.RadioButton]$script:PREVIOUS_RADIO = @{}
         [Windows.Forms.CheckBox]$script:PREVIOUS_LABEL_OR_CHECKBOX = @{}
         [Windows.Forms.TabPage]$script:CURRENT_TAB = New-MockObject -Type Windows.Forms.TabPage -Properties @{
             Controls = New-MockObject -Type Windows.Forms.Control -Properties @{
@@ -37,7 +37,6 @@ Describe 'New-GroupBox' {
         $script:PREVIOUS_GROUP | Should -BeExactly $TestPreviousGroup
 
         $script:PREVIOUS_BUTTON | Should -BeNullOrEmpty
-        $script:PREVIOUS_RADIO | Should -BeNullOrEmpty
         $script:PREVIOUS_LABEL_OR_CHECKBOX | Should -BeNullOrEmpty
 
         $script:CURRENT_GROUP.Width | Should -BeExactly $GROUP_WIDTH
