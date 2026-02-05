@@ -1,7 +1,7 @@
 function Install-Unchecky {
     param(
-        [Switch][Parameter(Position = 0, Mandatory)]$Execute,
-        [Switch][Parameter(Position = 1, Mandatory)]$Silent
+        [Switch]$Execute,
+        [Switch]$Silent
     )
 
     Write-LogInfo 'Starting Unchecky installation...'

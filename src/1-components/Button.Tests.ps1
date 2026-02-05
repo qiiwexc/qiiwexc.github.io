@@ -30,13 +30,11 @@ Describe 'New-Button' {
             }
         )
 
-        [Switch]$TestDisabledArg = $False
-
         Mock Add {}
     }
 
     It 'Should create a new button' {
-        New-Button $TestText $TestFunction -Disabled:$TestDisabledArg
+        New-Button $TestText $TestFunction
 
         Should -Invoke Add -Exactly 1
 
@@ -51,11 +49,9 @@ Describe 'New-Button' {
     }
 
     It 'Should create a button under a button' {
-        $TestDisabledArg = $True
-
         $script:PREVIOUS_BUTTON = @{ Location = '100, 200' }
 
-        New-Button $TestText $TestFunction -Disabled:$TestDisabledArg
+        New-Button $TestText $TestFunction -Disabled
 
         $script:PREVIOUS_BUTTON.Enabled | Should -BeFalse
         $script:PREVIOUS_BUTTON.Location.X | Should -BeExactly 100
@@ -67,7 +63,7 @@ Describe 'New-Button' {
     It 'Should create a button under a checkbox/label' {
         $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
 
-        New-Button $TestText $TestFunction -Disabled:$TestDisabledArg
+        New-Button $TestText $TestFunction
 
         $script:PREVIOUS_BUTTON.Location.X | Should -BeExactly 15
         $script:PREVIOUS_BUTTON.Location.Y | Should -BeExactly 230
@@ -78,7 +74,7 @@ Describe 'New-Button' {
     It 'Should create a button under a radio button' {
         $script:PREVIOUS_RADIO = @{ Location = '100, 200' }
 
-        New-Button $TestText $TestFunction -Disabled:$TestDisabledArg
+        New-Button $TestText $TestFunction
 
         $script:PREVIOUS_BUTTON.Location.X | Should -BeExactly 15
         $script:PREVIOUS_BUTTON.Location.Y | Should -BeExactly 230
@@ -90,7 +86,7 @@ Describe 'New-Button' {
         $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
         $script:PREVIOUS_RADIO = @{ Location = '200, 300' }
 
-        New-Button $TestText $TestFunction -Disabled:$TestDisabledArg
+        New-Button $TestText $TestFunction
 
         $script:PREVIOUS_BUTTON.Location.X | Should -BeExactly 15
         $script:PREVIOUS_BUTTON.Location.Y | Should -BeExactly 330
@@ -102,7 +98,7 @@ Describe 'New-Button' {
         $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '300, 400' }
         $script:PREVIOUS_RADIO = @{ Location = '200, 300' }
 
-        New-Button $TestText $TestFunction -Disabled:$TestDisabledArg
+        New-Button $TestText $TestFunction
 
         $script:PREVIOUS_BUTTON.Location.X | Should -BeExactly 15
         $script:PREVIOUS_BUTTON.Location.Y | Should -BeExactly 430

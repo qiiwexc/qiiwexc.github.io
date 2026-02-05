@@ -24,13 +24,10 @@ Describe 'Start-OoShutUp10' {
         Mock Start-DownloadUnzipAndRun {}
         Mock Write-LogWarning {}
         Mock Out-Success {}
-
-        [Bool]$TestExecute = $False
-        [Bool]$TestSilent = $False
     }
 
     It 'Should download OoShutUp10' {
-        Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
+        Start-OoShutUp10
 
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_WORKING_DIR }
@@ -44,16 +41,14 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
-            $Execute -eq $TestExecute -and
+            $Execute -eq $False -and
             $Params -eq $Null
         }
         Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should download OoShutUp10 and run' {
-        [Bool]$TestExecute = $True
-
-        Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
+        Start-OoShutUp10 -Execute
 
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_OOSHUTUP10 }
@@ -67,17 +62,14 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
-            $Execute -eq $TestExecute -and
+            $Execute -eq $True -and
             $Params -eq $Null
         }
         Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should download OoShutUp10 and run silently' {
-        [Bool]$TestExecute = $True
-        [Bool]$TestSilent = $True
-
-        Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
+        Start-OoShutUp10 -Execute -Silent
 
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -85,7 +77,7 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
-            $Execute -eq $TestExecute -and
+            $Execute -eq $True -and
             $Params -eq "$PATH_OOSHUTUP10\$TestConfigFileName"
         }
         Should -Invoke Out-Success -Exactly 1
@@ -94,7 +86,7 @@ Describe 'Start-OoShutUp10' {
     It 'Should handle New-Directory failure' {
         Mock New-Directory { throw $TestException }
 
-        Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
+        Start-OoShutUp10
 
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
@@ -106,7 +98,7 @@ Describe 'Start-OoShutUp10' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent
+        Start-OoShutUp10
 
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
@@ -118,7 +110,7 @@ Describe 'Start-OoShutUp10' {
     It 'Should handle Start-DownloadUnzipAndRun failure' {
         Mock Start-DownloadUnzipAndRun { throw $TestException }
 
-        { Start-OoShutUp10 -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
+        { Start-OoShutUp10 } | Should -Throw $TestException
 
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1

@@ -1,7 +1,7 @@
 function Start-Activator {
     param(
-        [Switch][Parameter(Position = 0, Mandatory)]$ActivateWindows,
-        [Switch][Parameter(Position = 1, Mandatory)]$ActivateOffice
+        [Switch]$ActivateWindows,
+        [Switch]$ActivateOffice
     )
 
     try {
@@ -26,7 +26,7 @@ function Start-Activator {
             $Params += ' /Ohook'
         }
 
-        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm https://get.activated.win)))$Params"
+        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://get.activated.win')))$Params"
 
         Out-Success
     } catch {

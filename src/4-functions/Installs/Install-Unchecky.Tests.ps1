@@ -19,16 +19,10 @@ Describe 'Install-Unchecky' {
         Mock Set-ItemProperty {}
         Mock Start-DownloadUnzipAndRun {}
         Mock Write-LogWarning {}
-
-        [Switch]$TestExecute = $True
-        [Switch]$TestSilent = $True
     }
 
     It 'Should download Unchecky' {
-        $TestExecute = $False
-        $TestSilent = $False
-
-        Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
+        Install-Unchecky
 
         Should -Invoke Test-Path -Exactly 0
         Should -Invoke Write-LogDebug -Exactly 0
@@ -45,9 +39,7 @@ Describe 'Install-Unchecky' {
     }
 
     It 'Should install Unchecky' {
-        $TestSilent = $False
-
-        Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
+        Install-Unchecky -Execute
 
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Test-Path -Exactly 1 -ParameterFilter { $Path -eq $TestRegistryKey }
@@ -71,7 +63,7 @@ Describe 'Install-Unchecky' {
     }
 
     It 'Should install Unchecky silently' {
-        Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
+        Install-Unchecky -Execute -Silent
 
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 1
@@ -90,7 +82,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle Test-Path failure' {
         Mock Test-Path { throw $TestException }
 
-        Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
+        Install-Unchecky -Execute -Silent
 
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 0
@@ -103,7 +95,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle New-Item failure' {
         Mock New-Item { throw $TestException }
 
-        Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
+        Install-Unchecky -Execute -Silent
 
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 1
@@ -116,7 +108,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle Set-ItemProperty failure' {
         Mock Set-ItemProperty { throw $TestException }
 
-        Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent
+        Install-Unchecky -Execute -Silent
 
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 1
@@ -129,7 +121,7 @@ Describe 'Install-Unchecky' {
     It 'Should handle Start-DownloadUnzipAndRun failure' {
         Mock Start-DownloadUnzipAndRun { throw $TestException }
 
-        { Install-Unchecky -Execute:$TestExecute -Silent:$TestSilent } | Should -Throw $TestException
+        { Install-Unchecky -Execute -Silent } | Should -Throw $TestException
 
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogDebug -Exactly 1

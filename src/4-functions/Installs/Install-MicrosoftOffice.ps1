@@ -1,6 +1,6 @@
 function Install-MicrosoftOffice {
     param(
-        [Switch][Parameter(Position = 0, Mandatory)]$Execute
+        [Switch]$Execute
     )
 
     Write-LogInfo 'Starting Microsoft Office installation...'
