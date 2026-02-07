@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.2.6')
+::Set-Variable -Option Constant VERSION ([Version]'26.2.7')
 ::
 ::#endregion init > Version
 ::
@@ -1366,9 +1366,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run]
 ::"SecurityHealth"=hex:05,00,00,00,88,26,66,6D,84,2A,DC,01
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
-::"AllowOnlineTips"=dword:00000000
-::
 ::; Disable Windows Backup reminder notifications
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsBackup]
 ::"DisableMonitoring"=dword:00000001
@@ -2135,7 +2132,6 @@ if "%~1"=="Debug" (
 ::"{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}"=""
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
-::"CopilotDisabledReason"="IsEnabledForGeographicRegionFailed"
 ::"IsCopilotAvailable"=dword:00000000
 ::
 ::; Disable chat taskbar (Windows 10)
@@ -2326,13 +2322,11 @@ if "%~1"=="Debug" (
 ::"BraveRewardsDisabled"=dword:00000001
 ::"BraveTalkDisabled"=dword:00000001
 ::"BraveVPNDisabled"=dword:00000001
-::"BraveWalletDisabled"=dword:00000001
 ::
 ::; Disable Microsoft Edge MSN news feed, sponsored links, shopping assistant and more.
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-::"BuiltInDNSClientEnabled"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
 ::"CopilotCDPPageContext"=dword:00000000
 ::"CopilotPageContext"=dword:00000000
@@ -2347,7 +2341,6 @@ if "%~1"=="Debug" (
 ::"HubsSidebarEnabled"=dword:00000000
 ::"Microsoft365CopilotChatIconEnabled"=dword:00000000
 ::"MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
-::"NewTabPageBingChatEnabled"=dword:00000000
 ::"NewTabPageContentEnabled"=dword:00000000
 ::"NewTabPageHideDefaultTopSites"=dword:00000001
 ::"PersonalizationReportingEnabled"=dword:00000000
@@ -2362,10 +2355,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
 ::"BlockThirdPartyCookies"=dword:00000001
 ::"DefaultShareAdditionalOSRegionSetting"=dword:00000002
-::
-::; Disable "Inking and Typing Personalization"
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization]
-::"AllowInputPersonalization"=dword:00000000
 ::
 ::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
@@ -2415,7 +2404,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
 ::"AllowSearchToUseLocation"=dword:00000000
 ::"ConnectedSearchUseWeb"=dword:00000000
-::"CortanaConsent"=dword:00000000
 ::"DisableWebSearch"=dword:00000001
 ::"EnableDynamicContentInWSB"=dword:00000000
 ::
@@ -2437,7 +2425,6 @@ if "%~1"=="Debug" (
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
 ::"AllowGamesMenu"=dword:00000000
-::"BuiltInDNSClientEnabled"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
 ::"CopilotCDPPageContext"=dword:00000000
 ::"CopilotPageContext"=dword:00000000
@@ -2452,7 +2439,6 @@ if "%~1"=="Debug" (
 ::"HubsSidebarEnabled"=dword:00000000
 ::"Microsoft365CopilotChatIconEnabled"=dword:00000000
 ::"MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
-::"NewTabPageBingChatEnabled"=dword:00000000
 ::"NewTabPageContentEnabled"=dword:00000000
 ::"NewTabPageHideDefaultTopSites"=dword:00000001
 ::"PersonalizationReportingEnabled"=dword:00000000
@@ -2467,10 +2453,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
 ::"BlockThirdPartyCookies"=dword:00000001
 ::"DefaultShareAdditionalOSRegionSetting"=dword:00000002
-::
-::; Disable "Inking and Typing Personalization"
-::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\InputPersonalization]
-::"AllowInputPersonalization"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
 ::"AITEnable"=dword:00000000
@@ -2501,7 +2483,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
 ::"AllowSearchToUseLocation"=dword:00000000
 ::"ConnectedSearchUseWeb"=dword:00000000
-::"CortanaConsent"=dword:00000000
 ::"DisableWebSearch"=dword:00000001
 ::"EnableDynamicContentInWSB"=dword:00000000
 ::
@@ -2601,7 +2582,6 @@ if "%~1"=="Debug" (
 ::"scremoveoption"="1"
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Script Host\Settings]
-::"Enabled"=dword:00000000
 ::"IgnoreUserSettings"=dword:00000001
 ::"Remote"=dword:00000000
 ::"TrustPolicy"=dword:00000002
@@ -2662,7 +2642,7 @@ if "%~1"=="Debug" (
 ::"DisableRemoteSCMEndpoints"=dword:00000001
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy]
-::"VerifiedAndReputablePolicyState"=dword:00000001
+::"VerifiedAndReputablePolicyState"=dword:00000002
 ::
 ::[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA]
 ::"LmCompatibilityLevel"=dword:00000005
@@ -2809,7 +2789,6 @@ if "%~1"=="Debug" (
 ::Microsoft.BingSports                           # Sports news and scores via Bing (Discontinued)
 ::Microsoft.BingTranslator                       # Translation service via Bing
 ::Microsoft.BingTravel                           # Travel planning and news via Bing (Discontinued)
-::Microsoft.Copilot                              # AI assistant integrated into Windows
 ::Microsoft.GamingApp                            # Modern Xbox Gaming App, required for installing some PC games
 ::Microsoft.Getstarted                           # Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)
 ::Microsoft.M365Companions                       # Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin
@@ -3139,7 +3118,7 @@ if "%~1"=="Debug" (
 ::E203	-	# Disable search and website suggestions (Category: Microsoft Edge (new version based on Chromium))
 ::E123	+	# Disable shopping assistant in Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
 ::E223	+	# Disable shopping assistant in Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
-::E124	-	# Disable Edge bar (Category: Microsoft Edge (new version based on Chromium))
+::E124	+	# Disable Edge bar (Category: Microsoft Edge (new version based on Chromium))
 ::E224	+	# Disable Edge bar (Category: Microsoft Edge (new version based on Chromium))
 ::E128	-	# Disable Sidebar in Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
 ::E228	-	# Disable Sidebar in Microsoft Edge (Category: Microsoft Edge (new version based on Chromium))
@@ -3153,12 +3132,12 @@ if "%~1"=="Debug" (
 ::E233	+	# Disable spotlight experiences and recommendations (Category: Microsoft Edge (new version based on Chromium))
 ::E134	-	# Disable automatic sign-in from web to browser (Category: Microsoft Edge (new version based on Chromium))
 ::E234	-	# Disable automatic sign-in from web to browser (Category: Microsoft Edge (new version based on Chromium))
-::E135	+	# Disable Bing Chat on new tab page (Category: Microsoft Edge (new version based on Chromium))
-::E235	+	# Disable Bing Chat on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E135	-	# Disable Bing Chat on new tab page (Category: Microsoft Edge (new version based on Chromium))
+::E235	-	# Disable Bing Chat on new tab page (Category: Microsoft Edge (new version based on Chromium))
 ::E136	+	# Disable content on new tab page (Category: Microsoft Edge (new version based on Chromium))
 ::E236	+	# Disable content on new tab page (Category: Microsoft Edge (new version based on Chromium))
-::E137	+	# Disable AI-generated themes (Category: Microsoft Edge (new version based on Chromium))
-::E237	+	# Disable AI-generated themes (Category: Microsoft Edge (new version based on Chromium))
+::E137	-	# Disable AI-generated themes (Category: Microsoft Edge (new version based on Chromium))
+::E237	-	# Disable AI-generated themes (Category: Microsoft Edge (new version based on Chromium))
 ::E138	-	# Disable built-in AI APIs for websites (Category: Microsoft Edge (new version based on Chromium))
 ::E238	-	# Disable built-in AI APIs for websites (Category: Microsoft Edge (new version based on Chromium))
 ::E139	-	# Disable inline Compose feature (Category: Microsoft Edge (new version based on Chromium))
@@ -3259,8 +3238,8 @@ if "%~1"=="Debug" (
 ::C011	-	# Disable cloud search (Category: Cortana (Personal Assistant))
 ::C014	-	# Disable Cortana above lock screen (Category: Cortana (Personal Assistant))
 ::C015	+	# Disable the search highlights in the taskbar (Category: Cortana (Personal Assistant))
-::C101	+	# Disable the Windows Copilot (Category: Microsoft Copilot (in Windows))
-::C201	+	# Disable the Windows Copilot (Category: Microsoft Copilot (in Windows))
+::C101	-	# Disable the Windows Copilot (Category: Microsoft Copilot (in Windows))
+::C201	-	# Disable the Windows Copilot (Category: Microsoft Copilot (in Windows))
 ::C204	+	# Disable the provision of recall functionality to all users (Category: Microsoft Copilot (in Windows))
 ::C205	-	# Disable the Image Creator in Microsoft Paint (Category: Microsoft Copilot (in Windows))
 ::C102	+	# Disable the Copilot button from the taskbar (Category: Microsoft Copilot (in Windows))
