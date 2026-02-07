@@ -114,7 +114,7 @@ function Write-FormLog {
     param(
         [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
         [String][Parameter(Position = 1, Mandatory)]$Message,
-        [Switch][Parameter(Position = 2)]$NoNewLine
+        [Switch]$NoNewLine
     )
 
     $LOG.SelectionStart = $LOG.TextLength

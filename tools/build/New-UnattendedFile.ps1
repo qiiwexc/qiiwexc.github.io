@@ -7,7 +7,7 @@ function New-UnattendedFile {
         [String][Parameter(Position = 4, Mandatory)]$BuildPath,
         [String][Parameter(Position = 5, Mandatory)]$DistPath,
         [String][Parameter(Position = 6, Mandatory)]$VmPath,
-        [Switch][Parameter(Position = 7)]$CI
+        [Switch]$CI
     )
 
     New-Activity 'Building unattended files'

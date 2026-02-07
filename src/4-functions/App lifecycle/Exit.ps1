@@ -1,6 +1,6 @@
 function Reset-State {
     param(
-        [Switch][Parameter(Position = 0)]$Update
+        [Switch]$Update
     )
 
     if (-not $Update) {
@@ -13,7 +13,7 @@ function Reset-State {
 
 function Exit-App {
     param(
-        [Switch][Parameter(Position = 0)]$Update
+        [Switch]$Update
     )
 
     Write-LogInfo 'Exiting the app...'
