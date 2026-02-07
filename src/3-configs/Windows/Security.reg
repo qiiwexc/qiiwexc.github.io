@@ -133,7 +133,7 @@
 "DisableRemoteSCMEndpoints"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy]
-"VerifiedAndReputablePolicyState"=dword:00000001
+"VerifiedAndReputablePolicyState"=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA]
 "LmCompatibilityLevel"=dword:00000005
