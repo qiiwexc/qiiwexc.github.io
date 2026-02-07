@@ -11,10 +11,12 @@ function Invoke-WriteProgress {
         [Switch]$Completed
     )
 
-    Set-Variable -Name Params -Value ([Hashtable]@{
+    Set-Variable -Name Params -Value (
+        [Hashtable]@{
             Id       = $Id
             Activity = $Activity
-        })
+        }
+    )
 
     if ($ParentId -gt 0) { $Params.ParentId = $ParentId }
     if ($Status) { $Params.Status = $Status }
