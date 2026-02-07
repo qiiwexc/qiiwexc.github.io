@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.2.7')
+::Set-Variable -Option Constant VERSION ([Version]'26.2.8')
 ::
 ::#endregion init > Version
 ::
@@ -150,7 +150,7 @@ if "%~1"=="Debug" (
 ::Set-Variable -Option Constant GROUP_WIDTH ([Int]($COMMON_PADDING + $BUTTON_WIDTH + $COMMON_PADDING))
 ::
 ::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH * 3) + ($COMMON_PADDING * 4) + $COMMON_PADDING))
-::Set-Variable -Option Constant FORM_HEIGHT ([Int]605)
+::Set-Variable -Option Constant FORM_HEIGHT ([Int]610)
 ::
 ::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]"$COMMON_PADDING, $($COMMON_PADDING + 5)")
 ::
@@ -2131,9 +2131,6 @@ if "%~1"=="Debug" (
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
 ::"{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}"=""
 ::
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
-::"IsCopilotAvailable"=dword:00000000
-::
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001
@@ -2232,7 +2229,6 @@ if "%~1"=="Debug" (
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Edge]
 ::"ConfigureDoNotTrack"=dword:00000001
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
-::"PaymentMethodQueryEnabled"=dword:00000000
 ::"PersonalizationReportingEnabled"=dword:00000000
 ::"UserFeedbackAllowed"=dword:00000000
 ::
@@ -2328,13 +2324,10 @@ if "%~1"=="Debug" (
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
 ::"ConfigureDoNotTrack"=dword:00000001
-::"CopilotCDPPageContext"=dword:00000000
-::"CopilotPageContext"=dword:00000000
 ::"CryptoWalletEnabled"=dword:00000000
 ::"DiagnosticData"=dword:00000000
 ::"EdgeAssetDeliveryServiceEnabled"=dword:00000000
 ::"EdgeCollectionsEnabled"=dword:00000000
-::"EdgeEntraCopilotPageContext"=dword:00000000
 ::"EdgeHistoryAISearchEnabled"=dword:00000000
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
 ::"ExperimentationAndConfigurationServiceControl"=dword:00000002
@@ -2424,15 +2417,11 @@ if "%~1"=="Debug" (
 ::; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ::; Disable required and optional diagnostic data about browser usage
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
-::"AllowGamesMenu"=dword:00000000
 ::"ConfigureDoNotTrack"=dword:00000001
-::"CopilotCDPPageContext"=dword:00000000
-::"CopilotPageContext"=dword:00000000
 ::"CryptoWalletEnabled"=dword:00000000
 ::"DiagnosticData"=dword:00000000
 ::"EdgeAssetDeliveryServiceEnabled"=dword:00000000
 ::"EdgeCollectionsEnabled"=dword:00000000
-::"EdgeEntraCopilotPageContext"=dword:00000000
 ::"EdgeHistoryAISearchEnabled"=dword:00000000
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
 ::"ExperimentationAndConfigurationServiceControl"=dword:00000002
@@ -3142,8 +3131,8 @@ if "%~1"=="Debug" (
 ::E238	-	# Disable built-in AI APIs for websites (Category: Microsoft Edge (new version based on Chromium))
 ::E139	-	# Disable inline Compose feature (Category: Microsoft Edge (new version based on Chromium))
 ::E239	-	# Disable inline Compose feature (Category: Microsoft Edge (new version based on Chromium))
-::E140	+	# Disable Copilot access to page context (Category: Microsoft Edge (new version based on Chromium))
-::E240	+	# Disable Copilot access to page context (Category: Microsoft Edge (new version based on Chromium))
+::E140	-	# Disable Copilot access to page context (Category: Microsoft Edge (new version based on Chromium))
+::E240	-	# Disable Copilot access to page context (Category: Microsoft Edge (new version based on Chromium))
 ::E141	-	# Disable prompts to make Edge the default browser (Category: Microsoft Edge (new version based on Chromium))
 ::E241	-	# Disable prompts to make Edge the default browser (Category: Microsoft Edge (new version based on Chromium))
 ::E142	+	# Disable default browser campaigns (Category: Microsoft Edge (new version based on Chromium))
@@ -3158,14 +3147,14 @@ if "%~1"=="Debug" (
 ::E246	+	# Hide Microsoft Rewards (Category: Microsoft Edge (new version based on Chromium))
 ::E147	+	# Disable recommendations in settings (Category: Microsoft Edge (new version based on Chromium))
 ::E247	+	# Disable recommendations in settings (Category: Microsoft Edge (new version based on Chromium))
-::E148	+	# Disable cloud-based tab services (Category: Microsoft Edge (new version based on Chromium))
-::E248	+	# Disable cloud-based tab services (Category: Microsoft Edge (new version based on Chromium))
+::E148	-	# Disable cloud-based tab services (Category: Microsoft Edge (new version based on Chromium))
+::E248	-	# Disable cloud-based tab services (Category: Microsoft Edge (new version based on Chromium))
 ::E149	-	# Disable text prediction in forms (Category: Microsoft Edge (new version based on Chromium))
 ::E249	-	# Disable text prediction in forms (Category: Microsoft Edge (new version based on Chromium))
 ::E150	-	# Disable visual search (Category: Microsoft Edge (new version based on Chromium))
 ::E250	-	# Disable visual search (Category: Microsoft Edge (new version based on Chromium))
-::E151	+	# Disable AI-powered history search (Category: Microsoft Edge (new version based on Chromium))
-::E251	+	# Disable AI-powered history search (Category: Microsoft Edge (new version based on Chromium))
+::E151	-	# Disable AI-powered history search (Category: Microsoft Edge (new version based on Chromium))
+::E251	-	# Disable AI-powered history search (Category: Microsoft Edge (new version based on Chromium))
 ::E119	-	# Disable use of web service to resolve navigation errors (Category: Microsoft Edge (new version based on Chromium))
 ::E219	-	# Disable use of web service to resolve navigation errors (Category: Microsoft Edge (new version based on Chromium))
 ::E120	-	# Disable suggestion of similar sites when website cannot be found (Category: Microsoft Edge (new version based on Chromium))
@@ -3243,7 +3232,7 @@ if "%~1"=="Debug" (
 ::C204	+	# Disable the provision of recall functionality to all users (Category: Microsoft Copilot (in Windows))
 ::C205	-	# Disable the Image Creator in Microsoft Paint (Category: Microsoft Copilot (in Windows))
 ::C102	+	# Disable the Copilot button from the taskbar (Category: Microsoft Copilot (in Windows))
-::C104	+	# Disable Bing Chat eligibility in Windows Copilot (Category: Microsoft Copilot (in Windows))
+::C104	-	# Disable Bing Chat eligibility in Windows Copilot (Category: Microsoft Copilot (in Windows))
 ::C103	+	# Disable Windows Copilot+ Recall (Category: Microsoft Copilot (in Windows))
 ::C203	+	# Disable Windows Copilot+ Recall (Category: Microsoft Copilot (in Windows))
 ::C206	-	# Disable Cocreator in Microsoft Paint (Category: Microsoft Copilot (in Windows))
@@ -3363,7 +3352,7 @@ if "%~1"=="Debug" (
 ::
 ::function Reset-State {
 ::    param(
-::        [Switch][Parameter(Position = 0)]$Update
+::        [Switch]$Update
 ::    )
 ::
 ::    if (-not $Update) {
@@ -3376,7 +3365,7 @@ if "%~1"=="Debug" (
 ::
 ::function Exit-App {
 ::    param(
-::        [Switch][Parameter(Position = 0)]$Update
+::        [Switch]$Update
 ::    )
 ::
 ::    Write-LogInfo 'Exiting the app...'
@@ -3591,7 +3580,7 @@ if "%~1"=="Debug" (
 ::    param(
 ::        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
 ::        [String][Parameter(Position = 1, Mandatory)]$Message,
-::        [Switch][Parameter(Position = 2)]$NoNewLine
+::        [Switch]$NoNewLine
 ::    )
 ::
 ::    $LOG.SelectionStart = $LOG.TextLength
@@ -3635,10 +3624,12 @@ if "%~1"=="Debug" (
 ::        [Switch]$Completed
 ::    )
 ::
-::    Set-Variable -Name Params -Value ([Hashtable]@{
+::    Set-Variable -Name Params -Value (
+::        [Hashtable]@{
 ::            Id       = $Id
 ::            Activity = $Activity
-::        })
+::        }
+::    )
 ::
 ::    if ($ParentId -gt 0) { $Params.ParentId = $ParentId }
 ::    if ($Status) { $Params.Status = $Status }
