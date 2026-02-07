@@ -68,9 +68,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked]
 "{CB3B0003-8088-4EDE-8769-8B354AB2FF8C}"=""
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Shell\Copilot]
-"IsCopilotAvailable"=dword:00000000
-
 ; Disable chat taskbar (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 "HideSCAMeetNow"=dword:00000001

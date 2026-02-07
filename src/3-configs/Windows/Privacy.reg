@@ -65,7 +65,6 @@
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Edge]
 "ConfigureDoNotTrack"=dword:00000001
 "EdgeShoppingAssistantEnabled"=dword:00000000
-"PaymentMethodQueryEnabled"=dword:00000000
 "PersonalizationReportingEnabled"=dword:00000000
 "UserFeedbackAllowed"=dword:00000000
 
@@ -161,13 +160,10 @@
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
 "ConfigureDoNotTrack"=dword:00000001
-"CopilotCDPPageContext"=dword:00000000
-"CopilotPageContext"=dword:00000000
 "CryptoWalletEnabled"=dword:00000000
 "DiagnosticData"=dword:00000000
 "EdgeAssetDeliveryServiceEnabled"=dword:00000000
 "EdgeCollectionsEnabled"=dword:00000000
-"EdgeEntraCopilotPageContext"=dword:00000000
 "EdgeHistoryAISearchEnabled"=dword:00000000
 "EdgeShoppingAssistantEnabled"=dword:00000000
 "ExperimentationAndConfigurationServiceControl"=dword:00000002
@@ -257,15 +253,11 @@
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge]
-"AllowGamesMenu"=dword:00000000
 "ConfigureDoNotTrack"=dword:00000001
-"CopilotCDPPageContext"=dword:00000000
-"CopilotPageContext"=dword:00000000
 "CryptoWalletEnabled"=dword:00000000
 "DiagnosticData"=dword:00000000
 "EdgeAssetDeliveryServiceEnabled"=dword:00000000
 "EdgeCollectionsEnabled"=dword:00000000
-"EdgeEntraCopilotPageContext"=dword:00000000
 "EdgeHistoryAISearchEnabled"=dword:00000000
 "EdgeShoppingAssistantEnabled"=dword:00000000
 "ExperimentationAndConfigurationServiceControl"=dword:00000002
