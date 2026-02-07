@@ -37,7 +37,7 @@
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.02.04",
+        "version":  "2026.02.07",
         "source":  "GitHub",
         "mode":  "tags",
         "repository":  "Raphire/Win11Debloat"
