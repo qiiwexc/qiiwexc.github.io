@@ -57,10 +57,6 @@
 "ShowCmd"=dword:00000003
 "WFlags"=dword:00000002
 
-; Disable widgets service
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
-"value"=dword:00000000
-
 ; Disable chat taskbar (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 "HideSCAMeetNow"=dword:00000001
