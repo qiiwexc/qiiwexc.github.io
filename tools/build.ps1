@@ -117,7 +117,7 @@ if ($Html) {
 if ($Autounattend) {
     Write-ActivityProgress 70
     . "$BuilderPath\New-UnattendedFile.ps1"
-    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath $CI
+    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $DistPath $VmPath -CI:$CI
 }
 
 if ($Ps1) {
