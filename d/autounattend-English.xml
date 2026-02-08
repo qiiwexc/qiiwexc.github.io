@@ -1,4 +1,4 @@
-<!-- Version: 26.2.8 -->
+<!-- Version: 26.2.9 -->
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
   <!--https://schneegans.de/windows/unattend-generator/?LanguageMode=Unattended&UILanguage=en-US&Locale=en-GB&Keyboard=00000809&GeoLocation=140&ProcessorArchitecture=amd64&BypassRequirementsCheck=true&ComputerNameMode=Random&CompactOsMode=Default&TimeZoneMode=Implicit&PartitionMode=Unattended&PartitionLayout=GPT&EspSize=300&RecoveryMode=Partition&RecoverySize=1000&DiskAssertionMode=Skip&WindowsEditionMode=Interactive&InstallFromMode=Name&InstallFromName=Windows+11+Home&PEMode=Default&UserAccountMode=Unattended&AccountName0=Test&AccountDisplayName0=&AccountPassword0=&AccountGroup0=Administrators&AutoLogonMode=Own&PasswordExpirationMode=Unlimited&LockoutMode=Default&HideFiles=Hidden&ClassicContextMenu=true&LaunchToThisPC=true&ShowEndTask=true&TaskbarSearch=Icon&TaskbarIconsMode=Default&DisableWidgets=true&LeftTaskbar=true&DisableBingResults=true&StartTilesMode=Custom&StartTilesXml=%3CLayoutModificationTemplate+xmlns%3Adefaultlayout%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FFullDefaultLayout%22+xmlns%3Astart%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FStartLayout%22+Version%3D%221%22+xmlns%3D%22http%3A%2F%2Fschemas.microsoft.com%2FStart%2F2014%2FLayoutModification%22%3E%0D%0A++%3CLayoutOptions+StartTileGroupCellWidth%3D%226%22+%2F%3E%0D%0A++%3CDefaultLayoutOverride%3E%0D%0A++++%3CStartLayoutCollection%3E%0D%0A++++++%3Cdefaultlayout%3AStartLayout+GroupCellWidth%3D%226%22%3E%0D%0A++++++++%3Cstart%3AGroup+Name%3D%22%22%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5Ccomputer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%220%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CMicrosoft+Edge.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%220%22+AppUserModelID%3D%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.YourPhone_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%222%22+AppUserModelID%3D%22Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%224%22+AppUserModelID%3D%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CPaint.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%224%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CNotepad.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%226%22+AppUserModelID%3D%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%226%22+AppUserModelID%3D%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CControl+Panel.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%228%22+AppUserModelID%3D%22Microsoft.Windows.SecHealthUI_cw5n1h2txyewy%21SecHealthUI%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%228%22+DesktopApplicationLinkPath%3D%22%25ALLUSERSPROFILE%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CTask+Manager.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%2210%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CAccessories%5CInternet+Explorer.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%222%22+Row%3D%2210%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CSystem+Tools%5CCommand+Prompt.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ADesktopApplicationTile+Size%3D%222x2%22+Column%3D%224%22+Row%3D%2210%22+DesktopApplicationLinkPath%3D%22%25APPDATA%25%5CMicrosoft%5CWindows%5CStart+Menu%5CPrograms%5CWindows+PowerShell%5CWindows+PowerShell.lnk%22+%2F%3E%0D%0A++++++++++%3Cstart%3ATile+Size%3D%222x2%22+Column%3D%220%22+Row%3D%2212%22+AppUserModelID%3D%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%2F%3E%0D%0A++++++++%3C%2Fstart%3AGroup%3E%0D%0A++++++%3C%2Fdefaultlayout%3AStartLayout%3E%0D%0A++++%3C%2FStartLayoutCollection%3E%0D%0A++%3C%2FDefaultLayoutOverride%3E%0D%0A%3C%2FLayoutModificationTemplate%3E%0D%0A&StartPinsMode=Custom&StartPinsJson=%7B%0D%0A++%22pinnedList%22%3A+%5B%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CFile+Explorer.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25ALLUSERSPROFILE%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CMicrosoft+Edge.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22MSTeams_8wekyb3d8bbwe%21MSTeams%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.ScreenSketch_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.Paint_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsNotepad_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.BingWeather_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.YourPhone_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCalculator_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsCamera_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsStore_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22windows.immersivecontrolpanel_cw5n1h2txyewy%21microsoft.windows.immersivecontrolpanel%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CAdministrative+Tools.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CWindows+System%5C%5CControl+Panel.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.SecHealthUI_8wekyb3d8bbwe%21SecHealthUI%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25ALLUSERSPROFILE%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CSystem+Tools%5C%5CTask+Manager.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CWindows+System%5C%5CCommand+Prompt.lnk%22+%7D%2C%0D%0A++++%7B+%22desktopAppLink%22%3A+%22%25APPDATA%25%5C%5CMicrosoft%5C%5CWindows%5C%5CStart+Menu%5C%5CPrograms%5C%5CWindows+PowerShell%5C%5CWindows+PowerShell.lnk%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.WindowsTerminal_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.GetHelp_8wekyb3d8bbwe%21App%22+%7D%2C%0D%0A++++%7B+%22packagedAppId%22%3A+%22Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe%21App%22+%7D%0D%0A++%5D%0D%0A%7D&EnableLongPaths=true&HardenSystemDriveAcl=true&DeleteJunctions=true&DisableAppSuggestions=true&HideEdgeFre=true&DisableEdgeStartupBoost=true&DeleteWindowsOld=true&DisableAutomaticRestartSignOn=true&EffectsMode=Appearance&DeleteEdgeDesktopIcon=true&DesktopIconsMode=Custom&IconControlPanel=true&IconDownloads=true&IconRecycleBin=true&IconThisPC=true&IconUserFiles=true&StartFoldersMode=Custom&StartFolderDownloads=true&StartFolderPersonalFolder=true&StartFolderSettings=true&VBoxGuestAdditions=true&WifiMode=Skip&ExpressSettings=DisableAll&LockKeysMode=Skip&StickyKeysMode=Default&ColorMode=Default&WallpaperMode=Default&LockScreenMode=Default&Remove3DViewer=true&RemoveBingSearch=true&RemoveClipchamp=true&RemoveClock=true&RemoveCopilot=true&RemoveCortana=true&RemoveDevHome=true&RemoveFamily=true&RemoveFeedbackHub=true&RemoveGameAssist=true&RemoveMailCalendar=true&RemoveMaps=true&RemoveMixedReality=true&RemoveZuneVideo=true&RemoveNews=true&RemoveOffice365=true&RemoveOneNote=true&RemoveOutlook=true&RemovePaint3D=true&RemovePeople=true&RemovePowerAutomate=true&RemoveQuickAssist=true&RemoveRecall=true&RemoveSkype=true&RemoveStepsRecorder=true&RemoveGetStarted=true&RemoveToDo=true&RemoveVoiceRecorder=true&RemoveWallet=true&RemoveZuneMusic=true&RemoveXboxApps=true&SystemScript0=Set-ItemProperty+-Path+%27HKLM%3A%5CSYSTEM%5CCurrentControlSet%5CServices%5Ctzautoupdate%27+-Name+%27Start%27+-Value+3%0D%0Adism+%2Fonline+%2FImport-DefaultAppAssociations%3A%27C%3A%5CWindows%5CSetup%5CAppAssociations.xml%27&SystemScriptType0=Ps1&SystemScript1=%7BWINDOWS_MALWARE_PROTECTION_CONFIGURATION%7D&SystemScriptType1=Ps1&SystemScript2=%7BPOWER_SCHEME_CONFIGURATION%7D&SystemScriptType2=Cmd&SystemScript3=%7BCONFIG_SECURITY%7D&SystemScriptType3=Reg&SystemScript4=%7BCONFIG_PERFORMANCE%7D&SystemScriptType4=Reg&SystemScript5=%7BCONFIG_BASELINE%7D&SystemScriptType5=Reg&SystemScript6=%7BCONFIG_ANNOYANCES%7D&SystemScriptType6=Reg&SystemScript7=%7BCONFIG_PRIVACY%7D&SystemScriptType7=Reg&SystemScript8=%7BCONFIG_PERSONALISATION%7D&SystemScriptType8=Reg&DefaultUserScript0=Set-Variable+-Option+Constant+NetworkAdapter+%28Get-CimInstance+Win32_NetworkAdapterConfiguration+-Filter+%27IPEnabled%3DTrue%27%29%0D%0Aif+%28%24NetworkAdapter%29+%7B%0D%0A++++%24NetworkAdapter+%7C+Invoke-CimMethod+-MethodName+%27SetDNSServerSearchOrder%27+-Arguments+%40%7B+DNSServerSearchOrder+%3D+%40%28%271.1.1.2%27%2C+%271.0.0.2%27%29+%7D%0D%0A%7D&DefaultUserScriptType0=Ps1&DefaultUserScript1=%7BCONFIG_SECURITY%7D&DefaultUserScriptType1=Reg&DefaultUserScript2=%7BCONFIG_PERFORMANCE%7D&DefaultUserScriptType2=Reg&DefaultUserScript3=%7BCONFIG_BASELINE%7D&DefaultUserScriptType3=Reg&DefaultUserScript4=%7BCONFIG_ANNOYANCES%7D&DefaultUserScriptType4=Reg&DefaultUserScript5=%7BCONFIG_PRIVACY%7D&DefaultUserScriptType5=Reg&DefaultUserScript6=%7BCONFIG_PERSONALISATION%7D&DefaultUserScriptType6=Reg&DefaultUserScript7=%7BCONFIG_WINDOWS_LOCALISED%7D&DefaultUserScriptType7=Reg&DefaultUserScript8=%7BCONFIG_MICROSOFT_OFFICE%7D&DefaultUserScriptType8=Reg&DefaultUserScript9=%7BCONFIG_7ZIP%7D&DefaultUserScriptType9=Reg&FirstLogonScript0=Set-ItemProperty+-LiteralPath+%27Registry%3A%3AHKLM%5CSOFTWARE%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0ASet-ItemProperty+-LiteralPath+%27Registry%3A%3AHKEY_CURRENT_USER%5CSoftware%5CMicrosoft%5CWindows%5CCurrentVersion%5CCapabilityAccessManager%5CConsentStore%5Clocation%27+-Name+%27Value%27+-Force+-Value+%22Allow%22%0D%0A%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.xml%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.reg%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.cmd%22%0D%0ARemove-Item+%22C%3A%5CWindows%5CSetup%5C*.ps1%22+-Exclude+*UserOnce*%0D%0A%0D%0ASet-Variable+-Option+Constant+BatchFileUrl+%28%5BString%5D%27https%3A%2F%2Fbit.ly%2Fqiiwexc_bat%27%29%0D%0ASet-Variable+-Option+Constant+BatchFilePath+%28%5BString%5D%22%24env%3AUSERPROFILE%5CDesktop%5Cqiiwexc.bat%22%29%0D%0A%0D%0AInvoke-WebRequest+-Uri+%24BatchFileUrl+-OutFile+%24BatchFilePath%0D%0Aif+%28Test-Path+%24BatchFilePath%29+%7B%0D%0A++++Start-Process+PowerShell+%22%26+%24BatchFilePath%22%0D%0A%7D+else+%7B%0D%0A++++Start-Process+%24BatchFileUrl%0D%0A%7D%0D%0A&FirstLogonScriptType0=Ps1&WdacMode=Skip&AppLockerMode=Skip&ComponentContent0=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSetupUILanguage%3E%0D%0A++%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3C%2FSetupUILanguage%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component0=Microsoft-Windows-International-Core-WinPE-windowsPE&ComponentContent1=%3CInputLocale%3E%7BKEYBOARD1%7D%3A0000%7BKEYBOARD1%7D%3B%7BKEYBOARD2%7D%3A0000%7BKEYBOARD2%7D%3B%7BKEYBOARD3%7D%3A0000%7BKEYBOARD3%7D%3C%2FInputLocale%3E%0D%0A%3CSystemLocale%3E%7BLOCALE1%7D%3C%2FSystemLocale%3E%0D%0A%3CUILanguage%3E%7BUI_LANGUAGE%7D%3C%2FUILanguage%3E%0D%0A%3CUILanguageFallback%3E%7BUI_LANGUAGE_FALLBACK%7D%3C%2FUILanguageFallback%3E%0D%0A%3CUserLocale%3E%7BLOCALE1%7D%3C%2FUserLocale%3E&Component1=Microsoft-Windows-International-Core-oobeSystem&ComponentContent2=%3CDisableWER%3E1%3C%2FDisableWER%3E&Component2=Microsoft-Windows-ErrorReportingCore-specialize&ComponentContent3=%3CDisableFirstRunWizard%3Etrue%3C%2FDisableFirstRunWizard%3E%0D%0A%3CDisableOOBAccelerators%3Etrue%3C%2FDisableOOBAccelerators%3E%0D%0A%3CFavoritesDelete%3Etrue%3C%2FFavoritesDelete%3E%0D%0A%3CHome_Page%3Eabout%3Ablank%3C%2FHome_Page%3E%0D%0A%3CSearchScopes%3E%0D%0A++%3CScope+wcm%3Aaction%3D%22add%22%3E%0D%0A++++%3CScopeDefault%3Etrue%3C%2FScopeDefault%3E%0D%0A++++%3CScopeDisplayName%3EGoogle%3C%2FScopeDisplayName%3E%0D%0A++++%3CScopeKey%3EGoogle%3C%2FScopeKey%3E%0D%0A++++%3CScopeUrl%3Ehttp%3A%2F%2Fwww.google.lv%2Fsearch%3Fq%3D%7BsearchTerms%7D%3C%2FScopeUrl%3E%0D%0A++%3C%2FScope%3E%0D%0A%3C%2FSearchScopes%3E%0D%0A%3CSuggestedSitesEnabled%3Efalse%3C%2FSuggestedSitesEnabled%3E&Component3=Microsoft-Windows-IE-InternetExplorer-specialize&ComponentContent4=%3CPreferredPlan%3E8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c%3C%2FPreferredPlan%3E&Component4=Microsoft-Windows-PowerCPL-generalize-->
@@ -238,6 +238,946 @@ qt-privacy-ask=0
 [core]
 video-title-show=0
 metadata-network-access=1
+    </File>
+    <File path="C:\Users\Default\AppData\Local\Microsoft\Windows\TaskManager\settings.json">
+{
+  &quot;FullPosition&quot;: { &quot;Left&quot;: 0, &quot;Top&quot;: 0, &quot;Right&quot;: 1936, &quot;Bottom&quot;: 975 },
+  &quot;ListSettings&quot;: {
+    &quot;Lists&quot;: [
+      {
+        &quot;TabId&quot;: 0,
+        &quot;Columns&quot;: [
+          {
+            &quot;ColElementId&quot;: &quot;TmColFriendlyName&quot;,
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 381,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 5243137
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColType&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 129,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 11,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 1052672
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColAppStatus&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 51,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 13,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 1180161
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColPublisher&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 157,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 10,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 1048832
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColPid&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 43,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 9,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 2099200
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColProcessName&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 178,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 8,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 1048832
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColCommandLine&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 254,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 14,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 1048832
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColCPUPercent&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 73,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 1,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 2425856
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColMemory&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 85,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 2,
+            &quot;SortDir&quot;: 1,
+            &quot;Flags&quot;: 35980288
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColDisk&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 80,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 3,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 136643584
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColNetwork&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 73,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 4,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 136643584
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColGPUPercent&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 73,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 5,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 203752448
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColGpuEngineName&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 109,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 12,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 202375424
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColPowerUsage&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 100,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 6,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 135594496
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColPowerUsageTrend&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 112,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 7,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 135594496
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColIsolation&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 120,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 15,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 152043776
+          }
+        ]
+      },
+      {
+        &quot;TabId&quot;: 3,
+        &quot;Columns&quot;: [
+          {
+            &quot;ColElementId&quot;: &quot;TmColFriendlyName&quot;,
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 223,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 5243137
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColPublisher&quot;,
+            &quot;ChildColIndex&quot;: 1,
+            &quot;ColWidthRp&quot;: 155,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 1,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 1048833
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColStartupStatus&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 67,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 2,
+            &quot;SortDir&quot;: 1,
+            &quot;Flags&quot;: 1049088
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColStartupImpact&quot;,
+            &quot;ChildColIndex&quot;: 3,
+            &quot;ColWidthRp&quot;: 97,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 3,
+            &quot;SortDir&quot;: 1,
+            &quot;Flags&quot;: 1049089
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColStartupType&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 83,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 4,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 1048832
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColStartupDiskIO&quot;,
+            &quot;ChildColIndex&quot;: 5,
+            &quot;ColWidthRp&quot;: 114,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 5,
+            &quot;SortDir&quot;: 1,
+            &quot;Flags&quot;: 2098177
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColStartupCPU&quot;,
+            &quot;ChildColIndex&quot;: 6,
+            &quot;ColWidthRp&quot;: 95,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 6,
+            &quot;SortDir&quot;: 1,
+            &quot;Flags&quot;: 35652609
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColRunningNow&quot;,
+            &quot;ChildColIndex&quot;: 7,
+            &quot;ColWidthRp&quot;: 85,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 7,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 1048833
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColDisabledTime&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 151,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 8,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 1048832
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColCommandLine&quot;,
+            &quot;ChildColIndex&quot;: 9,
+            &quot;ColWidthRp&quot;: 795,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 9,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 1048833
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          }
+        ]
+      },
+      {
+        &quot;TabId&quot;: 4,
+        &quot;Columns&quot;: [
+          {
+            &quot;ColElementId&quot;: &quot;TmColFriendlyName&quot;,
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 355,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 5243137
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColSessionID&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 45,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 1,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 2098176
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColSessionType&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 100,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 2,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 1048832
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColClientName&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 100,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 3,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 1048832
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColUsersStatus&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 128,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 4,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 1049089
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColCPUPercent&quot;,
+            &quot;ChildColIndex&quot;: 5,
+            &quot;ColWidthRp&quot;: 73,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 5,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 2163713
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColMemory&quot;,
+            &quot;ChildColIndex&quot;: 6,
+            &quot;ColWidthRp&quot;: 85,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 6,
+            &quot;SortDir&quot;: 1,
+            &quot;Flags&quot;: 35718145
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColDisk&quot;,
+            &quot;ChildColIndex&quot;: 7,
+            &quot;ColWidthRp&quot;: 73,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 7,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 136381441
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColNetwork&quot;,
+            &quot;ChildColIndex&quot;: 8,
+            &quot;ColWidthRp&quot;: 73,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 8,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 136381441
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColGPUPercent&quot;,
+            &quot;ChildColIndex&quot;: 9,
+            &quot;ColWidthRp&quot;: 73,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 9,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 203490305
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColGpuEngineName&quot;,
+            &quot;ChildColIndex&quot;: 10,
+            &quot;ColWidthRp&quot;: 150,
+            &quot;ColMinWidthRp&quot;: 73,
+            &quot;ColOrder&quot;: 10,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 202375424
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          }
+        ]
+      },
+      {
+        &quot;TabId&quot;: 2,
+        &quot;Columns&quot;: [
+          {
+            &quot;ColElementId&quot;: &quot;TmColFriendlyName&quot;,
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 426,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 255,
+            &quot;Flags&quot;: 5243137
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColProcessorCycles&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 107,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 1,
+            &quot;SortDir&quot;: 1,
+            &quot;Flags&quot;: 2425856
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColNetworkTotal&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 107,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 2,
+            &quot;SortDir&quot;: 1,
+            &quot;Flags&quot;: 35980288
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColNetworkCosted&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 107,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 3,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 2425856
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColNetworkNotifications&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 107,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 4,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 2425856
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColNetworkUncosted&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 160,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 5,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 2098176
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColNetworkDownstream&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 125,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 6,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 2098176
+          },
+          {
+            &quot;ColElementId&quot;: &quot;TmColNetworkUpstream&quot;,
+            &quot;ChildColIndex&quot;: 4294967295,
+            &quot;ColWidthRp&quot;: 125,
+            &quot;ColMinWidthRp&quot;: 30,
+            &quot;ColOrder&quot;: 7,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 2098176
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          },
+          {
+            &quot;ChildColIndex&quot;: 0,
+            &quot;ColWidthRp&quot;: 0,
+            &quot;ColMinWidthRp&quot;: 0,
+            &quot;ColOrder&quot;: 0,
+            &quot;SortDir&quot;: 0,
+            &quot;Flags&quot;: 0
+          }
+        ]
+      }
+    ]
+  },
+  &quot;CurrentViewResource&quot;: &quot;&quot;,
+  &quot;TableSetting&quot;: {
+    &quot;Tables&quot;: [
+      {
+        &quot;SelectedColumns&quot;: 106661087812381,
+        &quot;ColumnWidths_TwoCpuMetrics&quot;: [
+          190, 529, 38, 59, 116, 65, 80, 36, 69, 72, 45, 131, 159, 160, 206,
+          171, 170, 79, 74, 57, 70, 80, 89, 56, 58, 78, 78, 75, 68, 68, 95, 90,
+          91, 741, 1750, 150, 58, 78, 57, 109, 299, 151, 107, 102, 102, 37, 80,
+          141, 122, 208, 167
+        ],
+        &quot;ColumnOrder_TwoCpuMetrics&quot;: [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50
+        ],
+        &quot;ColumnWidths&quot;: [
+          190, 529, 38, 59, 116, 65, 80, 36, 69, 72, 45, 131, 159, 160, 206,
+          171, 170, 79, 74, 57, 70, 80, 89, 56, 58, 78, 78, 75, 68, 68, 95, 90,
+          91, 741, 1750, 150, 58, 78, 57, 109, 299, 151, 107, 102, 102, 37, 80,
+          141, 122, 208
+        ],
+        &quot;ColumnOrder&quot;: [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49
+        ],
+        &quot;Sort&quot;: 31,
+        &quot;Descending&quot;: true
+      },
+      {
+        &quot;SelectedColumns&quot;: 31,
+        &quot;ColumnWidths_TwoCpuMetrics&quot;: [
+          293, 49, 528, 64, 229, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0
+        ],
+        &quot;ColumnOrder_TwoCpuMetrics&quot;: [
+          0, 1, 2, 3, 4, 0, 0, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0
+        ],
+        &quot;ColumnWidths&quot;: [
+          293, 49, 528, 64, 229, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0
+        ],
+        &quot;ColumnOrder&quot;: [
+          0, 1, 2, 3, 4, 0, 0, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0
+        ],
+        &quot;Sort&quot;: 0,
+        &quot;Descending&quot;: false
+      }
+    ],
+    &quot;AutoAdjustColumns&quot;: false
+  },
+  &quot;FullViewDefaultSize&quot;: false,
+  &quot;EfficiencyModeDenyList&quot;: [
+    { &quot;processName&quot;: &quot;searchhost.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;explorer.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;sihost.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;system&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;logonui.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservicenetworkrestricted -p -s winhttpautoproxysvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;csrss.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;systemsettings.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;lsass.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;consent.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k wbiosvcgroup -s wbiosrvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;runtimebroker.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;microsoftwindows.client.cbs&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;startmenuexperiencehost.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k rpcss -p&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;dwm.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;ctfmon.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k dcomlaunch -p&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k netsvcs -p -s appinfo&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;taskmgr.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k netsvcs -p -s usermanager&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;shellexperiencehost.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;fontdrvhost.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;services.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservicenetworkrestricted -p -s dhcp&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;wudfhost.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k camera -s frameserver&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;winlogon.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k osprivacy -p -s camsvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;lockapp.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;textinputhost.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservicenetworkrestricted -p&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k unistacksvcgroup -s wpnuserservice&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k dcomlaunch -p -s lsm&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;runtimebroker.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;microsoft.lockapp&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k appmodel -p -s staterepository&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k appmodel -p -s staterepository&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k networkservice -p&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservicenetworkrestricted -p -s ngcctnrsvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;applicationframehost.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;runtimebroker.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;microsoft.windows.shellexperiencehost&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localsystemnetworkrestricted -p -s ngcsvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservicenonetwork -p&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k netprofm -p -s netprofm&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k udksvcgroup -s udkusersvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k securenetsvcs -p -s appinfo&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservice -p -s npsmsvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k netsvcs -p -s themes&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k netsvcs -p -s sens&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localsystemnetworkrestricted -p&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;runtimebroker.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;microsoft.windows.startmenuexperiencehost&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k netsvcs -p -s shellhwdetection&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservicenetworkrestricted -s rmsvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k clipboardsvcgroup -p -s cbdhsvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;userinit.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;wininit.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservice -p -s eventsystem&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;tabtip.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;smss.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservicenetworkrestricted -p -s eventlog&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k unistacksvcgroup -s cdpusersvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k networkservice -p -s lanmanworkstation&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k netsvcs -p -s profsvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservicenonetworkfirewall -p&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k netsvcs -p -s tokenbroker&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;memcompression&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k networkservice -s termservice&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k localservice -p -s fontcache&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k cameramonitor&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;svchost.exe&quot;,
+      &quot;commandLine&quot;: &quot;-k wsappx -p -s appxsvc&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    {
+      &quot;processName&quot;: &quot;msedgewebview2.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;spoolsv.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;ism.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;msmpeng.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;msmpengcp.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;nissrv.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    { &quot;processName&quot;: &quot;sgrmbroker.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; },
+    {
+      &quot;processName&quot;: &quot;securityhealthservice.exe&quot;,
+      &quot;commandLine&quot;: &quot;&quot;,
+      &quot;packageName&quot;: &quot;&quot;
+    },
+    { &quot;processName&quot;: &quot;svchost.exe&quot;, &quot;commandLine&quot;: &quot;&quot;, &quot;packageName&quot;: &quot;&quot; }
+  ],
+  &quot;SmallPosition&quot;: { &quot;Left&quot;: 0, &quot;Top&quot;: 0, &quot;Right&quot;: 0, &quot;Bottom&quot;: 0 },
+  &quot;RefreshRate&quot;: 500,
+  &quot;ShowFullAccountName&quot;: true,
+  &quot;SidebarWidthRp&quot;: 275,
+  &quot;AppHistoryShowAllProcesses&quot;: true,
+  &quot;CpuMode&quot;: 1,
+  &quot;DashboardKernelTimeOn&quot;: true,
+  &quot;CurrentView&quot;: 0,
+  &quot;GpuMode&quot;: 0,
+  &quot;IsNavigationMenuOpened&quot;: false,
+  &quot;HandleTMCloseTimeoutGeneral&quot;: 5000,
+  &quot;HandleTMCloseTimeoutToCheckExplorerHung&quot;: 500,
+  &quot;captureUser&quot;: true,
+  &quot;captureHyperV&quot;: true,
+  &quot;captureHyperVFull&quot;: true
+}
     </File>
     <File path="C:\Users\Default\AppData\Roaming\qBittorrent\qBittorrent.ini">
 [Appearance]
@@ -672,7 +1612,6 @@ Set-MpPreference -DisableScriptScanning $False
 Set-MpPreference -DisableSmtpParsing $False
 Set-MpPreference -DisableSshParsing $False
 Set-MpPreference -DisableTlsParsing $False
-Set-MpPreference -IntelTDTEnabled 1
 Set-MpPreference -MeteredConnectionUpdates $True
 Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
 
@@ -1405,7 +2344,6 @@ Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\CloudContent]
 &quot;DisableTailoredExperiencesWithDiagnosticData&quot;=dword:00000001
-&quot;DisableWindowsSpotlightOnLockScreen&quot;=dword:00000001
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\Windows Feeds]
 &quot;EnableFeeds&quot;=dword:00000000
@@ -1483,7 +2421,6 @@ Windows Registry Editor Version 5.00
 &quot;DiagnosticData&quot;=dword:00000000
 &quot;EdgeAssetDeliveryServiceEnabled&quot;=dword:00000000
 &quot;EdgeCollectionsEnabled&quot;=dword:00000000
-&quot;EdgeHistoryAISearchEnabled&quot;=dword:00000000
 &quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
 &quot;ExperimentationAndConfigurationServiceControl&quot;=dword:00000002
 &quot;HubsSidebarEnabled&quot;=dword:00000000
@@ -1495,14 +2432,12 @@ Windows Registry Editor Version 5.00
 &quot;ShowMicrosoftRewards&quot;=dword:00000000
 &quot;ShowRecommendationsEnabled&quot;=dword:00000000
 &quot;SpotlightExperiencesAndRecommendationsEnabled&quot;=dword:00000000
-&quot;TabServicesEnabled&quot;=dword:00000000
 &quot;UserFeedbackAllowed&quot;=dword:00000000
 &quot;WalletDonationEnabled&quot;=dword:00000000
 &quot;WebWidgetAllowed&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
 &quot;BlockThirdPartyCookies&quot;=dword:00000001
-&quot;DefaultShareAdditionalOSRegionSetting&quot;=dword:00000002
 
 ; Disable &quot;Let Apps use Advertising ID for Relevant Ads&quot; (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
@@ -1577,7 +2512,6 @@ Windows Registry Editor Version 5.00
 &quot;DiagnosticData&quot;=dword:00000000
 &quot;EdgeAssetDeliveryServiceEnabled&quot;=dword:00000000
 &quot;EdgeCollectionsEnabled&quot;=dword:00000000
-&quot;EdgeHistoryAISearchEnabled&quot;=dword:00000000
 &quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
 &quot;ExperimentationAndConfigurationServiceControl&quot;=dword:00000002
 &quot;HubsSidebarEnabled&quot;=dword:00000000
@@ -1589,14 +2523,12 @@ Windows Registry Editor Version 5.00
 &quot;ShowMicrosoftRewards&quot;=dword:00000000
 &quot;ShowRecommendationsEnabled&quot;=dword:00000000
 &quot;SpotlightExperiencesAndRecommendationsEnabled&quot;=dword:00000000
-&quot;TabServicesEnabled&quot;=dword:00000000
 &quot;UserFeedbackAllowed&quot;=dword:00000000
 &quot;WalletDonationEnabled&quot;=dword:00000000
 &quot;WebWidgetAllowed&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
 &quot;BlockThirdPartyCookies&quot;=dword:00000001
-&quot;DefaultShareAdditionalOSRegionSetting&quot;=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
 &quot;AITEnable&quot;=dword:00000000
@@ -1706,10 +2638,6 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 &quot;ShowCmd&quot;=dword:00000003
 &quot;WFlags&quot;=dword:00000002
-
-; Disable widgets service
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
-&quot;value&quot;=dword:00000000
 
 ; Disable chat taskbar (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
@@ -2450,7 +3378,6 @@ Windows Registry Editor Version 5.00
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\CloudContent]
 &quot;DisableTailoredExperiencesWithDiagnosticData&quot;=dword:00000001
-&quot;DisableWindowsSpotlightOnLockScreen&quot;=dword:00000001
 
 [HKEY_USERS\DefaultUser\Software\Policies\Microsoft\Windows\Windows Feeds]
 &quot;EnableFeeds&quot;=dword:00000000
@@ -2528,7 +3455,6 @@ Windows Registry Editor Version 5.00
 &quot;DiagnosticData&quot;=dword:00000000
 &quot;EdgeAssetDeliveryServiceEnabled&quot;=dword:00000000
 &quot;EdgeCollectionsEnabled&quot;=dword:00000000
-&quot;EdgeHistoryAISearchEnabled&quot;=dword:00000000
 &quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
 &quot;ExperimentationAndConfigurationServiceControl&quot;=dword:00000002
 &quot;HubsSidebarEnabled&quot;=dword:00000000
@@ -2540,14 +3466,12 @@ Windows Registry Editor Version 5.00
 &quot;ShowMicrosoftRewards&quot;=dword:00000000
 &quot;ShowRecommendationsEnabled&quot;=dword:00000000
 &quot;SpotlightExperiencesAndRecommendationsEnabled&quot;=dword:00000000
-&quot;TabServicesEnabled&quot;=dword:00000000
 &quot;UserFeedbackAllowed&quot;=dword:00000000
 &quot;WalletDonationEnabled&quot;=dword:00000000
 &quot;WebWidgetAllowed&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
 &quot;BlockThirdPartyCookies&quot;=dword:00000001
-&quot;DefaultShareAdditionalOSRegionSetting&quot;=dword:00000002
 
 ; Disable &quot;Let Apps use Advertising ID for Relevant Ads&quot; (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
@@ -2622,7 +3546,6 @@ Windows Registry Editor Version 5.00
 &quot;DiagnosticData&quot;=dword:00000000
 &quot;EdgeAssetDeliveryServiceEnabled&quot;=dword:00000000
 &quot;EdgeCollectionsEnabled&quot;=dword:00000000
-&quot;EdgeHistoryAISearchEnabled&quot;=dword:00000000
 &quot;EdgeShoppingAssistantEnabled&quot;=dword:00000000
 &quot;ExperimentationAndConfigurationServiceControl&quot;=dword:00000002
 &quot;HubsSidebarEnabled&quot;=dword:00000000
@@ -2634,14 +3557,12 @@ Windows Registry Editor Version 5.00
 &quot;ShowMicrosoftRewards&quot;=dword:00000000
 &quot;ShowRecommendationsEnabled&quot;=dword:00000000
 &quot;SpotlightExperiencesAndRecommendationsEnabled&quot;=dword:00000000
-&quot;TabServicesEnabled&quot;=dword:00000000
 &quot;UserFeedbackAllowed&quot;=dword:00000000
 &quot;WalletDonationEnabled&quot;=dword:00000000
 &quot;WebWidgetAllowed&quot;=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
 &quot;BlockThirdPartyCookies&quot;=dword:00000001
-&quot;DefaultShareAdditionalOSRegionSetting&quot;=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
 &quot;AITEnable&quot;=dword:00000000
@@ -2751,10 +3672,6 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
 &quot;ShowCmd&quot;=dword:00000003
 &quot;WFlags&quot;=dword:00000002
-
-; Disable widgets service
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
-&quot;value&quot;=dword:00000000
 
 ; Disable chat taskbar (Windows 10)
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
