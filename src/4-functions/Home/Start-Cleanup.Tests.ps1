@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\types.ps1'
+    . '.\src\4-functions\Configuration\Windows\Tools\Assertions.ps1'
     . '.\src\4-functions\App lifecycle\Logger.ps1'
     . '.\src\4-functions\App lifecycle\Progressbar.ps1'
     . '.\src\4-functions\App lifecycle\Set-Icon.ps1'
@@ -16,6 +17,10 @@ BeforeAll {
 
 Describe 'Start-Cleanup' {
     BeforeEach {
+        Mock Assert-SdiIsRunning {}
+        Mock Assert-DownloadingWindowsUpdates {}
+        Mock Assert-InstallingWindowsUpdates {}
+        Mock Write-LogWarning {}
         Mock New-Activity {}
         Mock Set-Icon {}
         Mock Write-ActivityProgress {}
@@ -34,6 +39,10 @@ Describe 'Start-Cleanup' {
     It 'Should run cleanup' {
         Start-Cleanup
 
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Cleanup) }
@@ -107,11 +116,153 @@ Describe 'Start-Cleanup' {
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
+    It 'Should exit if SDI is running' {
+        Mock Assert-SdiIsRunning { return @(@{ ProcessName = 'SDI64-drv' }) }
+
+        Start-Cleanup
+
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 0
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke New-Activity -Exactly 0
+        Should -Invoke Set-Icon -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Remove-Item -Exactly 0
+        Should -Invoke Get-ChildItem -Exactly 0
+        Should -Invoke Remove-ItemProperty -Exactly 0
+        Should -Invoke New-ItemProperty -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should exit if downloading Windows updates' {
+        Mock Assert-DownloadingWindowsUpdates { return @(@{ JobState = 'Transferring' }) }
+
+        Start-Cleanup
+
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke New-Activity -Exactly 0
+        Should -Invoke Set-Icon -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Remove-Item -Exactly 0
+        Should -Invoke Get-ChildItem -Exactly 0
+        Should -Invoke Remove-ItemProperty -Exactly 0
+        Should -Invoke New-ItemProperty -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should exit if installing Windows updates' {
+        Mock Assert-InstallingWindowsUpdates { return @(@{ ProcessName = 'TiWorker' }) }
+
+        Start-Cleanup
+
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke New-Activity -Exactly 0
+        Should -Invoke Set-Icon -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Remove-Item -Exactly 0
+        Should -Invoke Get-ChildItem -Exactly 0
+        Should -Invoke Remove-ItemProperty -Exactly 0
+        Should -Invoke New-ItemProperty -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Assert-SdiIsRunning failure' {
+        Mock Assert-SdiIsRunning { throw $TestException }
+
+        { Start-Cleanup } | Should -Throw $TestException
+
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 0
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke New-Activity -Exactly 0
+        Should -Invoke Set-Icon -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Remove-Item -Exactly 0
+        Should -Invoke Get-ChildItem -Exactly 0
+        Should -Invoke Remove-ItemProperty -Exactly 0
+        Should -Invoke New-ItemProperty -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Assert-DownloadingWindowsUpdates failure' {
+        Mock Assert-DownloadingWindowsUpdates { throw $TestException }
+
+        { Start-Cleanup } | Should -Throw $TestException
+
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke New-Activity -Exactly 0
+        Should -Invoke Set-Icon -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Remove-Item -Exactly 0
+        Should -Invoke Get-ChildItem -Exactly 0
+        Should -Invoke Remove-ItemProperty -Exactly 0
+        Should -Invoke New-ItemProperty -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should handle Assert-InstallingWindowsUpdates failure' {
+        Mock Assert-InstallingWindowsUpdates { throw $TestException }
+
+        { Start-Cleanup } | Should -Throw $TestException
+
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke New-Activity -Exactly 0
+        Should -Invoke Set-Icon -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Remove-Item -Exactly 0
+        Should -Invoke Get-ChildItem -Exactly 0
+        Should -Invoke Remove-ItemProperty -Exactly 0
+        Should -Invoke New-ItemProperty -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
     It 'Should handle Delete-DeliveryOptimizationCache failure' {
         Mock Delete-DeliveryOptimizationCache { throw $TestException }
 
         { Start-Cleanup } | Should -Throw $TestException
 
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -131,6 +282,10 @@ Describe 'Start-Cleanup' {
 
         { Start-Cleanup } | Should -Throw $TestException
 
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
@@ -150,6 +305,10 @@ Describe 'Start-Cleanup' {
 
         { Start-Cleanup } | Should -Throw $TestException
 
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
@@ -169,6 +328,10 @@ Describe 'Start-Cleanup' {
 
         { Start-Cleanup } | Should -Throw $TestException
 
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
@@ -188,6 +351,10 @@ Describe 'Start-Cleanup' {
 
         { Start-Cleanup } | Should -Throw $TestException
 
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -207,6 +374,10 @@ Describe 'Start-Cleanup' {
 
         { Start-Cleanup } | Should -Throw $TestException
 
+        Should -Invoke Assert-SdiIsRunning -Exactly 1
+        Should -Invoke Assert-DownloadingWindowsUpdates -Exactly 1
+        Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 7

@@ -7,8 +7,20 @@ function Start-WindowsDebloat {
 
     Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 
-    if (Find-RunningScript 'debloat.raphi.re') {
+    if (Assert-WindowsDebloatIsRunning) {
         Write-LogWarning 'Windows debloat utility is already running'
+        return
+    }
+
+    if (Assert-WinUtilIsRunning) {
+        Write-LogWarning 'WinUtil utility is running, which may interfere with the Windows debloat utility'
+        Write-LogWarning 'Repeat the attempt after WinUtil utility has finished running'
+        return
+    }
+
+    if (Assert-OOShutUp10IsRunning) {
+        Write-LogWarning 'OOShutUp10++ utility is running, which may interfere with the Windows debloat utility'
+        Write-LogWarning 'Repeat the attempt after OOShutUp10++ utility has finished running'
         return
     }
 

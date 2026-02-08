@@ -6,6 +6,18 @@ function Start-OoShutUp10 {
 
     Write-LogInfo 'Starting OOShutUp10++ utility...'
 
+    if (Assert-WindowsDebloatIsRunning) {
+        Write-LogWarning 'Windows debloat utility is running, which may interfere with the OOShutUp10++ utility'
+        Write-LogWarning 'Repeat the attempt after Windows debloat utility has finished running'
+        return
+    }
+
+    if (Assert-WinUtilIsRunning) {
+        Write-LogWarning 'WinUtil utility is running, which may interfere with the OOShutUp10++ utility'
+        Write-LogWarning 'Repeat the attempt after WinUtil utility has finished running'
+        return
+    }
+
     try {
         if ($Execute) {
             Set-Variable -Option Constant TargetPath ([String]$PATH_OOSHUTUP10)
@@ -18,15 +30,14 @@ function Start-OoShutUp10 {
         New-Directory $TargetPath
 
         Set-Content $ConfigFile $CONFIG_OOSHUTUP10 -NoNewline -ErrorAction Stop
+
+        if ($Execute -and $Silent) {
+            Set-Variable -Option Constant Params $ConfigFile
+        }
     } catch {
         Write-LogWarning "Failed to initialize OOShutUp10++ configuration: $_"
     }
 
-    if ($Execute -and $Silent) {
-        Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute -Params $ConfigFile
-        Out-Success
-    } else {
-        Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute
-        Out-Success
-    }
+    Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute -Params $Params
+    Out-Success
 }

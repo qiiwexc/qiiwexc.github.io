@@ -9,6 +9,5 @@ New-Button 'Update Windows' $BUTTON_FUNCTION
 New-Button 'Update Store apps' $BUTTON_FUNCTION
 
 
-[Switch]$BUTTON_DISABLED = $OFFICE_INSTALL_TYPE -ne 'C2R'
 [ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftOffice }
-New-Button 'Update Microsoft Office' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+New-Button 'Update Microsoft Office' $BUTTON_FUNCTION

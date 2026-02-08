@@ -1,4 +1,14 @@
 function Start-Cleanup {
+    if (Assert-SdiIsRunning) {
+        Write-LogWarning 'Snappy Driver Installer is currently running. Please close it before starting the cleanup process.'
+        return
+    }
+
+    if ((Assert-DownloadingWindowsUpdates) -or (Assert-InstallingWindowsUpdates)) {
+        Write-LogWarning 'Windows Update is currently running. Please wait for updates to complete before starting the cleanup process.'
+        return
+    }
+
     New-Activity 'Cleaning up the system'
     Set-Icon ([IconName]::Cleanup)
 
