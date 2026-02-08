@@ -2,7 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Common\Find-RunningProcess.ps1'
+    . '.\src\4-functions\Common\Find-RunningProcesses.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -11,7 +11,7 @@ BeforeAll {
 
 Describe 'Stop-ProcessIfRunning' {
     BeforeEach {
-        Mock Find-RunningProcess { return @(@{ ProcessName = $TestProcessName }) }
+        Mock Find-RunningProcesses { return @(@{ ProcessName = $TestProcessName }) }
         Mock Write-LogInfo {}
         Mock Stop-Process {}
         Mock Out-Success {}
@@ -20,8 +20,8 @@ Describe 'Stop-ProcessIfRunning' {
     It 'Should stop running process' {
         Stop-ProcessIfRunning $TestProcessName
 
-        Should -Invoke Find-RunningProcess -Exactly 1
-        Should -Invoke Find-RunningProcess -Exactly 1 -ParameterFilter { $ProcessName -eq $TestProcessName }
+        Should -Invoke Find-RunningProcesses -Exactly 1
+        Should -Invoke Find-RunningProcesses -Exactly 1 -ParameterFilter { $ProcessNames -eq $TestProcessName }
         Should -Invoke Stop-Process -Exactly 1
         Should -Invoke Stop-Process -Exactly 1 -ParameterFilter {
             $Name -eq $TestProcessName -and
@@ -31,21 +31,21 @@ Describe 'Stop-ProcessIfRunning' {
     }
 
     It 'Should skip if process is not running' {
-        Mock Find-RunningProcess { return @() }
+        Mock Find-RunningProcesses { return @() }
 
         Stop-ProcessIfRunning $TestProcessName
 
-        Should -Invoke Find-RunningProcess -Exactly 1
+        Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Stop-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
-    It 'Should handle Find-RunningProcess failure' {
-        Mock Find-RunningProcess { throw $TestException }
+    It 'Should handle Find-RunningProcesses failure' {
+        Mock Find-RunningProcesses { throw $TestException }
 
         { Stop-ProcessIfRunning $TestProcessName } | Should -Throw $TestException
 
-        Should -Invoke Find-RunningProcess -Exactly 1
+        Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Stop-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -55,7 +55,7 @@ Describe 'Stop-ProcessIfRunning' {
 
         { Stop-ProcessIfRunning $TestProcessName } | Should -Throw $TestException
 
-        Should -Invoke Find-RunningProcess -Exactly 1
+        Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Stop-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 0
     }
