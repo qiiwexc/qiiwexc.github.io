@@ -31,9 +31,6 @@ function Get-SystemInformation {
         12 {
             Set-Variable -Option Constant OfficeYear ([String]'2007')
         }
-        11 {
-            Set-Variable -Option Constant OfficeYear ([String]'2003')
-        }
     }
 
     if ($OfficeYear) {

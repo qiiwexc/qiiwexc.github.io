@@ -83,16 +83,6 @@ Describe 'Get-SystemInformation' {
         Should -Invoke Get-ItemProperty -Exactly 1
     }
 
-    It 'Should get system information for Office version 11' {
-        [Int]$OFFICE_VERSION = 11
-
-        Get-SystemInformation
-
-        Should -Invoke Write-LogInfo -Exactly 10
-        Should -Invoke Get-CimInstance -Exactly 2
-        Should -Invoke Get-ItemProperty -Exactly 1
-    }
-
     It 'Should get system information for unknown Office version' {
         [String]$OFFICE_INSTALL_TYPE = $Null
 
