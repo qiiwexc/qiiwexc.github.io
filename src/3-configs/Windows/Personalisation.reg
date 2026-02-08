@@ -18,7 +18,6 @@
 "MMTaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
 "NavPaneExpandToCurrentFolder"=dword:00000001
 "NavPaneShowAllFolders"=dword:00000001
-"ShowCopilotButton"=dword:00000000 ; Disable Copilot button on the taskbar
 "Start_Layout"=dword:00000001
 "TaskbarAl"=dword:00000000 ; Align taskbar left
 "TaskbarGlomLevel"=dword:00000001 ; Combine taskbar when full
