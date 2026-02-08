@@ -5,6 +5,8 @@ function Start-Executable {
         [Switch]$Silent
     )
 
+    Write-ActivityProgress 85
+
     Set-Variable -Option Constant ProcessName ([String](Split-Path -Leaf $Executable -ErrorAction Stop) -replace '\.exe$', '')
     if (Find-RunningProcesses $ProcessName) {
         Write-LogWarning "Process '$ProcessName' is already running"

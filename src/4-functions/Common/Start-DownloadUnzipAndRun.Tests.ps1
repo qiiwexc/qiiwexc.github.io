@@ -4,7 +4,6 @@ BeforeAll {
     . '.\src\4-functions\Common\types.ps1'
     . '.\src\4-functions\App lifecycle\Logger.ps1'
     . '.\src\4-functions\App lifecycle\Progressbar.ps1'
-    . '.\src\4-functions\App lifecycle\Set-Icon.ps1'
     . '.\src\4-functions\Common\Expand-Zip.ps1'
     . '.\src\4-functions\Common\Start-Download.ps1'
     . '.\src\4-functions\Common\Start-Executable.ps1'
@@ -28,7 +27,6 @@ BeforeAll {
 Describe 'Start-DownloadUnzipAndRun' {
     BeforeEach {
         Mock New-Activity {}
-        Mock Set-Icon {}
         Mock Start-Download { return $TestDownloadedFile }
         Mock Out-Failure {}
         Mock Write-ActivityCompleted {}
@@ -41,8 +39,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Start-Download -Exactly 1 -ParameterFilter {
             $URL -eq $TestUrl -and
@@ -61,8 +57,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl $TestFileName | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Start-Download -Exactly 1 -ParameterFilter {
             $URL -eq $TestUrl -and
@@ -81,8 +75,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl -ConfigFile $TestConfigFile -Configuration $TestConfiguration | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
         Should -Invoke Set-Content -Exactly 1
@@ -101,8 +93,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrlZip | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Start-Download -Exactly 1 -ParameterFilter {
             $URL -eq $TestUrlZip -and
@@ -125,8 +115,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl7z | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Start-Download -Exactly 1 -ParameterFilter {
             $URL -eq $TestUrl7z -and
@@ -149,8 +137,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl -Execute | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -169,8 +155,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl -Execute -Silent | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -189,8 +173,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl -Params $TestParams -Execute | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -209,8 +191,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrlZip -Execute | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 1
         Should -Invoke Expand-Zip -Exactly 1 -ParameterFilter {
@@ -235,8 +215,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -252,8 +230,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         { Start-DownloadUnzipAndRun $TestUrl -ConfigFile $TestConfigFile -Configuration $TestConfiguration } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
         Should -Invoke Set-Content -Exactly 1
@@ -268,8 +244,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrlZip | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 1
         Should -Invoke Set-Content -Exactly 0
@@ -285,8 +259,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Start-DownloadUnzipAndRun $TestUrl -Execute | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Download) }
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
         Should -Invoke Set-Content -Exactly 0

@@ -46,7 +46,7 @@ Describe 'Start-Download' {
 
         Start-Download $TestUrl | Should -BeExactly $TestSavePath
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Test-Path -Exactly 2 -ParameterFilter { $Path -eq $TestSavePath }
         Should -Invoke Write-LogWarning -Exactly 0
@@ -73,7 +73,7 @@ Describe 'Start-Download' {
 
         Start-Download $TestUrl $TestSaveAs | Should -BeExactly $TestSavePathSaveAs
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Test-Path -Exactly 2 -ParameterFilter { $Path -eq $TestSavePathSaveAs }
         Should -Invoke Write-LogWarning -Exactly 0
@@ -100,7 +100,7 @@ Describe 'Start-Download' {
 
         Start-Download $TestUrl -Temp | Should -BeExactly $TestSavePath
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Test-Path -Exactly 2 -ParameterFilter { $Path -eq $TestTempPath }
         Should -Invoke Write-LogWarning -Exactly 0
@@ -150,7 +150,7 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw 'Possibly computer is offline or disk is full'
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -226,7 +226,7 @@ Describe 'Start-Download' {
 
         Start-Download $TestUrl  | Should -BeExactly $TestSavePath
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -262,7 +262,7 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1

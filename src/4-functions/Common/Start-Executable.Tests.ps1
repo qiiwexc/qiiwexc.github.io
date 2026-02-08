@@ -31,7 +31,7 @@ Describe 'Start-Executable' {
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Find-RunningProcesses -Exactly 1 -ParameterFilter { $ProcessNames -eq $TestExecutableName }
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq $TestExecutable -and
@@ -48,7 +48,7 @@ Describe 'Start-Executable' {
 
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq $TestExecutable -and
@@ -65,7 +65,7 @@ Describe 'Start-Executable' {
 
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq $TestExecutable -and
@@ -88,7 +88,7 @@ Describe 'Start-Executable' {
 
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -100,7 +100,7 @@ Describe 'Start-Executable' {
 
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
+        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Remove-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -113,7 +113,7 @@ Describe 'Start-Executable' {
 
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Remove-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -126,7 +126,7 @@ Describe 'Start-Executable' {
 
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Remove-File -Exactly 1
         Should -Invoke Out-Success -Exactly 0

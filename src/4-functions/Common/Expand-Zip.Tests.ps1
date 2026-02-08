@@ -77,7 +77,7 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $TestZipFilePath | Should -BeExactly $TestTargetExe
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Get-ExecutableName -Exactly 1 -ParameterFilter {
@@ -112,7 +112,7 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $TestZipFilePath -Temp | Should -BeExactly $TestTargetExe
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -139,7 +139,7 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $TestZipFilePath | Should -BeExactly $TestTargetExe
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -172,7 +172,7 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $TestZipFilePath | Should -BeExactly $TestTargetExe
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Get-ExecutableName -Exactly 1 -ParameterFilter {
@@ -221,7 +221,7 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $Test7zFilePath | Should -BeExactly $TestExeFile
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -243,7 +243,7 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $Test7zFilePath } | Should -Throw '7-Zip not found at*'
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -302,7 +302,7 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -321,7 +321,7 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -340,7 +340,7 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -359,7 +359,7 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -378,7 +378,7 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -399,7 +399,7 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -418,7 +418,7 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
+        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1

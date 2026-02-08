@@ -4,11 +4,8 @@ function Set-Icon {
     )
 
     switch ($Name) {
-        ([IconName]::Cleanup) {
-            $FORM.Icon = $ICON_CLEANUP
-        }
-        ([IconName]::Download) {
-            $FORM.Icon = $ICON_DOWNLOAD
+        ([IconName]::Working) {
+            $FORM.Icon = $ICON_WORKING
         }
         Default {
             $FORM.Icon = $ICON_DEFAULT

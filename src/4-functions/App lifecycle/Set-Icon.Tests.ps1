@@ -4,8 +4,7 @@ BeforeAll {
     . '.\src\4-functions\Common\types.ps1'
 
     Set-Variable -Option Constant ICON_DEFAULT ([String]('ICON_DEFAULT'))
-    Set-Variable -Option Constant ICON_CLEANUP ([String]('ICON_CLEANUP'))
-    Set-Variable -Option Constant ICON_DOWNLOAD ([String]('ICON_DOWNLOAD'))
+    Set-Variable -Option Constant ICON_WORKING ([String]('ICON_WORKING'))
 }
 
 Describe 'Set-Icon' {
@@ -19,16 +18,10 @@ Describe 'Set-Icon' {
         $FORM.Icon | Should -BeExactly $ICON_DEFAULT
     }
 
-    It 'Should set cleanup icon' {
-        Set-Icon ([IconName]::Cleanup)
-
-        $FORM.Icon | Should -BeExactly $ICON_CLEANUP
-    }
-
     It 'Should set download icon' {
-        Set-Icon ([IconName]::Download)
+        Set-Icon ([IconName]::Working)
 
-        $FORM.Icon | Should -BeExactly $ICON_DOWNLOAD
+        $FORM.Icon | Should -BeExactly $ICON_WORKING
     }
 
     It 'Should set default icon if icon name is omitted' {

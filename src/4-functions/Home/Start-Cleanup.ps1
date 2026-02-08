@@ -10,7 +10,6 @@ function Start-Cleanup {
     }
 
     New-Activity 'Cleaning up the system'
-    Set-Icon ([IconName]::Cleanup)
 
     Write-ActivityProgress 10 'Clearing delivery optimization cache...'
     Delete-DeliveryOptimizationCache -Force
