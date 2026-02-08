@@ -25,7 +25,7 @@ Describe 'Set-InlineFiles' {
     It 'Should inline English configuration files correctly' {
         Set-Variable -Option Constant Result (Set-InlineFiles $LocaleEnglish $TestConfigsPath $TestUnattendedPath $TestTemplateContent)
 
-        Should -Invoke Read-TextFile -Exactly 14
+        Should -Invoke Read-TextFile -Exactly 15
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestUnattendedPath\App associations.xml" }
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Apps\qBittorrent English.ini" }
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Windows\Security.reg" }
@@ -40,7 +40,7 @@ Describe 'Set-InlineFiles' {
     It 'Should inline Russian configuration files correctly' {
         Set-Variable -Option Constant Result (Set-InlineFiles $LocaleRussian $TestConfigsPath $TestUnattendedPath $TestTemplateContent)
 
-        Should -Invoke Read-TextFile -Exactly 14
+        Should -Invoke Read-TextFile -Exactly 15
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestUnattendedPath\App associations.xml" }
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Apps\qBittorrent Russian.ini" }
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Windows\Security.reg" }

@@ -1,0 +1,938 @@
+{
+  "FullPosition": { "Left": 0, "Top": 0, "Right": 1936, "Bottom": 975 },
+  "ListSettings": {
+    "Lists": [
+      {
+        "TabId": 0,
+        "Columns": [
+          {
+            "ColElementId": "TmColFriendlyName",
+            "ChildColIndex": 0,
+            "ColWidthRp": 529,
+            "ColMinWidthRp": 30,
+            "ColOrder": 0,
+            "SortDir": 255,
+            "Flags": 5243137
+          },
+          {
+            "ColElementId": "TmColType",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 123,
+            "ColMinWidthRp": 30,
+            "ColOrder": 11,
+            "SortDir": 255,
+            "Flags": 1052672
+          },
+          {
+            "ColElementId": "TmColAppStatus",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 75,
+            "ColMinWidthRp": 30,
+            "ColOrder": 13,
+            "SortDir": 0,
+            "Flags": 1180161
+          },
+          {
+            "ColElementId": "TmColPublisher",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 164,
+            "ColMinWidthRp": 30,
+            "ColOrder": 10,
+            "SortDir": 0,
+            "Flags": 1048832
+          },
+          {
+            "ColElementId": "TmColPid",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 86,
+            "ColMinWidthRp": 30,
+            "ColOrder": 9,
+            "SortDir": 255,
+            "Flags": 2099200
+          },
+          {
+            "ColElementId": "TmColProcessName",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 189,
+            "ColMinWidthRp": 30,
+            "ColOrder": 8,
+            "SortDir": 0,
+            "Flags": 1048832
+          },
+          {
+            "ColElementId": "TmColCommandLine",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 254,
+            "ColMinWidthRp": 30,
+            "ColOrder": 14,
+            "SortDir": 0,
+            "Flags": 17826048
+          },
+          {
+            "ColElementId": "TmColCPUPercent",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 73,
+            "ColMinWidthRp": 73,
+            "ColOrder": 1,
+            "SortDir": 0,
+            "Flags": 2425856
+          },
+          {
+            "ColElementId": "TmColMemory",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 85,
+            "ColMinWidthRp": 73,
+            "ColOrder": 2,
+            "SortDir": 1,
+            "Flags": 35980288
+          },
+          {
+            "ColElementId": "TmColDisk",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 80,
+            "ColMinWidthRp": 73,
+            "ColOrder": 3,
+            "SortDir": 0,
+            "Flags": 136643584
+          },
+          {
+            "ColElementId": "TmColNetwork",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 73,
+            "ColMinWidthRp": 73,
+            "ColOrder": 4,
+            "SortDir": 0,
+            "Flags": 136643584
+          },
+          {
+            "ColElementId": "TmColGPUPercent",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 73,
+            "ColMinWidthRp": 73,
+            "ColOrder": 5,
+            "SortDir": 0,
+            "Flags": 203752448
+          },
+          {
+            "ColElementId": "TmColGpuEngineName",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 109,
+            "ColMinWidthRp": 73,
+            "ColOrder": 12,
+            "SortDir": 0,
+            "Flags": 202375424
+          },
+          {
+            "ColElementId": "TmColPowerUsage",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 126,
+            "ColMinWidthRp": 73,
+            "ColOrder": 6,
+            "SortDir": 0,
+            "Flags": 135594496
+          },
+          {
+            "ColElementId": "TmColPowerUsageTrend",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 185,
+            "ColMinWidthRp": 73,
+            "ColOrder": 7,
+            "SortDir": 0,
+            "Flags": 135594496
+          },
+          {
+            "ColElementId": "TmColIsolation",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 120,
+            "ColMinWidthRp": 73,
+            "ColOrder": 15,
+            "SortDir": 0,
+            "Flags": 152043776
+          }
+        ]
+      },
+      {
+        "TabId": 3,
+        "Columns": [
+          {
+            "ColElementId": "TmColFriendlyName",
+            "ChildColIndex": 0,
+            "ColWidthRp": 318,
+            "ColMinWidthRp": 30,
+            "ColOrder": 0,
+            "SortDir": 255,
+            "Flags": 5243137
+          },
+          {
+            "ColElementId": "TmColPublisher",
+            "ChildColIndex": 1,
+            "ColWidthRp": 155,
+            "ColMinWidthRp": 30,
+            "ColOrder": 1,
+            "SortDir": 255,
+            "Flags": 1048833
+          },
+          {
+            "ColElementId": "TmColStartupStatus",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 86,
+            "ColMinWidthRp": 30,
+            "ColOrder": 2,
+            "SortDir": 1,
+            "Flags": 1049088
+          },
+          {
+            "ColElementId": "TmColStartupImpact",
+            "ChildColIndex": 3,
+            "ColWidthRp": 119,
+            "ColMinWidthRp": 30,
+            "ColOrder": 3,
+            "SortDir": 1,
+            "Flags": 1049089
+          },
+          {
+            "ColElementId": "TmColStartupType",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 83,
+            "ColMinWidthRp": 30,
+            "ColOrder": 4,
+            "SortDir": 255,
+            "Flags": 1048832
+          },
+          {
+            "ColElementId": "TmColStartupDiskIO",
+            "ChildColIndex": 5,
+            "ColWidthRp": 205,
+            "ColMinWidthRp": 30,
+            "ColOrder": 5,
+            "SortDir": 1,
+            "Flags": 2098177
+          },
+          {
+            "ColElementId": "TmColStartupCPU",
+            "ChildColIndex": 6,
+            "ColWidthRp": 100,
+            "ColMinWidthRp": 30,
+            "ColOrder": 6,
+            "SortDir": 1,
+            "Flags": 35652609
+          },
+          {
+            "ColElementId": "TmColRunningNow",
+            "ChildColIndex": 7,
+            "ColWidthRp": 128,
+            "ColMinWidthRp": 30,
+            "ColOrder": 7,
+            "SortDir": 255,
+            "Flags": 1048833
+          },
+          {
+            "ColElementId": "TmColDisabledTime",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 151,
+            "ColMinWidthRp": 30,
+            "ColOrder": 8,
+            "SortDir": 255,
+            "Flags": 1048832
+          },
+          {
+            "ColElementId": "TmColCommandLine",
+            "ChildColIndex": 9,
+            "ColWidthRp": 511,
+            "ColMinWidthRp": 30,
+            "ColOrder": 9,
+            "SortDir": 255,
+            "Flags": 1048833
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          }
+        ]
+      },
+      {
+        "TabId": 4,
+        "Columns": [
+          {
+            "ColElementId": "TmColFriendlyName",
+            "ChildColIndex": 0,
+            "ColWidthRp": 355,
+            "ColMinWidthRp": 30,
+            "ColOrder": 0,
+            "SortDir": 255,
+            "Flags": 5243137
+          },
+          {
+            "ColElementId": "TmColSessionID",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 45,
+            "ColMinWidthRp": 30,
+            "ColOrder": 1,
+            "SortDir": 255,
+            "Flags": 2098176
+          },
+          {
+            "ColElementId": "TmColSessionType",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 100,
+            "ColMinWidthRp": 30,
+            "ColOrder": 2,
+            "SortDir": 0,
+            "Flags": 1048832
+          },
+          {
+            "ColElementId": "TmColClientName",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 100,
+            "ColMinWidthRp": 30,
+            "ColOrder": 3,
+            "SortDir": 0,
+            "Flags": 1048832
+          },
+          {
+            "ColElementId": "TmColUsersStatus",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 128,
+            "ColMinWidthRp": 30,
+            "ColOrder": 4,
+            "SortDir": 0,
+            "Flags": 1049089
+          },
+          {
+            "ColElementId": "TmColCPUPercent",
+            "ChildColIndex": 5,
+            "ColWidthRp": 73,
+            "ColMinWidthRp": 73,
+            "ColOrder": 5,
+            "SortDir": 0,
+            "Flags": 2163713
+          },
+          {
+            "ColElementId": "TmColMemory",
+            "ChildColIndex": 6,
+            "ColWidthRp": 85,
+            "ColMinWidthRp": 73,
+            "ColOrder": 6,
+            "SortDir": 1,
+            "Flags": 35718145
+          },
+          {
+            "ColElementId": "TmColDisk",
+            "ChildColIndex": 7,
+            "ColWidthRp": 73,
+            "ColMinWidthRp": 73,
+            "ColOrder": 7,
+            "SortDir": 0,
+            "Flags": 136381441
+          },
+          {
+            "ColElementId": "TmColNetwork",
+            "ChildColIndex": 8,
+            "ColWidthRp": 73,
+            "ColMinWidthRp": 73,
+            "ColOrder": 8,
+            "SortDir": 0,
+            "Flags": 136381441
+          },
+          {
+            "ColElementId": "TmColGPUPercent",
+            "ChildColIndex": 9,
+            "ColWidthRp": 73,
+            "ColMinWidthRp": 73,
+            "ColOrder": 9,
+            "SortDir": 0,
+            "Flags": 203490305
+          },
+          {
+            "ColElementId": "TmColGpuEngineName",
+            "ChildColIndex": 10,
+            "ColWidthRp": 150,
+            "ColMinWidthRp": 73,
+            "ColOrder": 10,
+            "SortDir": 0,
+            "Flags": 202375424
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          }
+        ]
+      },
+      {
+        "TabId": 2,
+        "Columns": [
+          {
+            "ColElementId": "TmColFriendlyName",
+            "ChildColIndex": 0,
+            "ColWidthRp": 426,
+            "ColMinWidthRp": 30,
+            "ColOrder": 0,
+            "SortDir": 255,
+            "Flags": 5243137
+          },
+          {
+            "ColElementId": "TmColProcessorCycles",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 107,
+            "ColMinWidthRp": 30,
+            "ColOrder": 1,
+            "SortDir": 1,
+            "Flags": 2425856
+          },
+          {
+            "ColElementId": "TmColNetworkTotal",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 107,
+            "ColMinWidthRp": 30,
+            "ColOrder": 2,
+            "SortDir": 1,
+            "Flags": 35980288
+          },
+          {
+            "ColElementId": "TmColNetworkCosted",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 139,
+            "ColMinWidthRp": 30,
+            "ColOrder": 3,
+            "SortDir": 0,
+            "Flags": 2425856
+          },
+          {
+            "ColElementId": "TmColNetworkNotifications",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 107,
+            "ColMinWidthRp": 30,
+            "ColOrder": 4,
+            "SortDir": 0,
+            "Flags": 2425856
+          },
+          {
+            "ColElementId": "TmColNetworkUncosted",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 160,
+            "ColMinWidthRp": 30,
+            "ColOrder": 5,
+            "SortDir": 0,
+            "Flags": 2098176
+          },
+          {
+            "ColElementId": "TmColNetworkDownstream",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 125,
+            "ColMinWidthRp": 30,
+            "ColOrder": 6,
+            "SortDir": 0,
+            "Flags": 2098176
+          },
+          {
+            "ColElementId": "TmColNetworkUpstream",
+            "ChildColIndex": 4294967295,
+            "ColWidthRp": 125,
+            "ColMinWidthRp": 30,
+            "ColOrder": 7,
+            "SortDir": 0,
+            "Flags": 2098176
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          },
+          {
+            "ChildColIndex": 0,
+            "ColWidthRp": 0,
+            "ColMinWidthRp": 0,
+            "ColOrder": 0,
+            "SortDir": 0,
+            "Flags": 0
+          }
+        ]
+      }
+    ]
+  },
+  "CurrentViewResource": "",
+  "TableSetting": {
+    "Tables": [
+      {
+        "SelectedColumns": 106655853320961,
+        "ColumnWidths_TwoCpuMetrics": [
+          201, 529, 84, 108, 116, 65, 80, 36, 162, 72, 45, 147, 201, 160, 206,
+          171, 170, 79, 74, 57, 70, 80, 120, 56, 58, 78, 78, 213, 211, 191, 186,
+          175, 162, 741, 1750, 150, 58, 78, 57, 109, 407, 151, 107, 102, 102,
+          37, 69, 141, 122, 208, 167
+        ],
+        "ColumnOrder_TwoCpuMetrics": [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50
+        ],
+        "ColumnWidths": [
+          201, 529, 84, 108, 116, 65, 80, 36, 162, 72, 45, 147, 201, 160, 206,
+          171, 170, 79, 74, 57, 70, 80, 120, 56, 58, 78, 78, 213, 211, 191, 186,
+          175, 162, 741, 1750, 150, 58, 78, 57, 109, 407, 151, 107, 102, 102,
+          37, 69, 141, 122, 208
+        ],
+        "ColumnOrder": [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49
+        ],
+        "Sort": 11,
+        "Descending": true
+      },
+      {
+        "SelectedColumns": 31,
+        "ColumnWidths_TwoCpuMetrics": [
+          294, 92, 795, 93, 229, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0
+        ],
+        "ColumnOrder_TwoCpuMetrics": [
+          0, 1, 2, 3, 4, 0, 0, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0
+        ],
+        "ColumnWidths": [
+          294, 92, 795, 93, 229, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0
+        ],
+        "ColumnOrder": [
+          0, 1, 2, 3, 4, 0, 0, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0
+        ],
+        "Sort": 0,
+        "Descending": false
+      }
+    ],
+    "AutoAdjustColumns": false
+  },
+  "FullViewDefaultSize": false,
+  "EfficiencyModeDenyList": [
+    { "processName": "searchhost.exe", "commandLine": "", "packageName": "" },
+    { "processName": "explorer.exe", "commandLine": "", "packageName": "" },
+    { "processName": "sihost.exe", "commandLine": "", "packageName": "" },
+    { "processName": "system", "commandLine": "", "packageName": "" },
+    { "processName": "logonui.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservicenetworkrestricted -p -s winhttpautoproxysvc",
+      "packageName": ""
+    },
+    { "processName": "csrss.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "systemsettings.exe",
+      "commandLine": "",
+      "packageName": ""
+    },
+    { "processName": "lsass.exe", "commandLine": "", "packageName": "" },
+    { "processName": "consent.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k wbiosvcgroup -s wbiosrvc",
+      "packageName": ""
+    },
+    {
+      "processName": "runtimebroker.exe",
+      "commandLine": "",
+      "packageName": "microsoftwindows.client.cbs"
+    },
+    {
+      "processName": "startmenuexperiencehost.exe",
+      "commandLine": "",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k rpcss -p",
+      "packageName": ""
+    },
+    { "processName": "dwm.exe", "commandLine": "", "packageName": "" },
+    { "processName": "ctfmon.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k dcomlaunch -p",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k netsvcs -p -s appinfo",
+      "packageName": ""
+    },
+    { "processName": "taskmgr.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k netsvcs -p -s usermanager",
+      "packageName": ""
+    },
+    {
+      "processName": "shellexperiencehost.exe",
+      "commandLine": "",
+      "packageName": ""
+    },
+    { "processName": "fontdrvhost.exe", "commandLine": "", "packageName": "" },
+    { "processName": "services.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservicenetworkrestricted -p -s dhcp",
+      "packageName": ""
+    },
+    { "processName": "wudfhost.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k camera -s frameserver",
+      "packageName": ""
+    },
+    { "processName": "winlogon.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k osprivacy -p -s camsvc",
+      "packageName": ""
+    },
+    { "processName": "lockapp.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "textinputhost.exe",
+      "commandLine": "",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservicenetworkrestricted -p",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k unistacksvcgroup -s wpnuserservice",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k dcomlaunch -p -s lsm",
+      "packageName": ""
+    },
+    {
+      "processName": "runtimebroker.exe",
+      "commandLine": "",
+      "packageName": "microsoft.lockapp"
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k appmodel -p -s staterepository",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k appmodel -p -s staterepository",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k networkservice -p",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservicenetworkrestricted -p -s ngcctnrsvc",
+      "packageName": ""
+    },
+    {
+      "processName": "applicationframehost.exe",
+      "commandLine": "",
+      "packageName": ""
+    },
+    {
+      "processName": "runtimebroker.exe",
+      "commandLine": "",
+      "packageName": "microsoft.windows.shellexperiencehost"
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localsystemnetworkrestricted -p -s ngcsvc",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservicenonetwork -p",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k netprofm -p -s netprofm",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k udksvcgroup -s udkusersvc",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k securenetsvcs -p -s appinfo",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservice -p -s npsmsvc",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k netsvcs -p -s themes",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k netsvcs -p -s sens",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localsystemnetworkrestricted -p",
+      "packageName": ""
+    },
+    {
+      "processName": "runtimebroker.exe",
+      "commandLine": "",
+      "packageName": "microsoft.windows.startmenuexperiencehost"
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k netsvcs -p -s shellhwdetection",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservicenetworkrestricted -s rmsvc",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k clipboardsvcgroup -p -s cbdhsvc",
+      "packageName": ""
+    },
+    { "processName": "userinit.exe", "commandLine": "", "packageName": "" },
+    { "processName": "wininit.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservice -p -s eventsystem",
+      "packageName": ""
+    },
+    { "processName": "tabtip.exe", "commandLine": "", "packageName": "" },
+    { "processName": "smss.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservicenetworkrestricted -p -s eventlog",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k unistacksvcgroup -s cdpusersvc",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k networkservice -p -s lanmanworkstation",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k netsvcs -p -s profsvc",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservicenonetworkfirewall -p",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k netsvcs -p -s tokenbroker",
+      "packageName": ""
+    },
+    { "processName": "memcompression", "commandLine": "", "packageName": "" },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k networkservice -s termservice",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k localservice -p -s fontcache",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k cameramonitor",
+      "packageName": ""
+    },
+    {
+      "processName": "svchost.exe",
+      "commandLine": "-k wsappx -p -s appxsvc",
+      "packageName": ""
+    },
+    {
+      "processName": "msedgewebview2.exe",
+      "commandLine": "",
+      "packageName": ""
+    },
+    { "processName": "spoolsv.exe", "commandLine": "", "packageName": "" },
+    { "processName": "ism.exe", "commandLine": "", "packageName": "" },
+    { "processName": "msmpeng.exe", "commandLine": "", "packageName": "" },
+    { "processName": "msmpengcp.exe", "commandLine": "", "packageName": "" },
+    { "processName": "nissrv.exe", "commandLine": "", "packageName": "" },
+    { "processName": "sgrmbroker.exe", "commandLine": "", "packageName": "" },
+    {
+      "processName": "securityhealthservice.exe",
+      "commandLine": "",
+      "packageName": ""
+    },
+    { "processName": "svchost.exe", "commandLine": "", "packageName": "" }
+  ],
+  "SmallPosition": { "Left": 0, "Top": 0, "Right": 0, "Bottom": 0 },
+  "RefreshRate": 500,
+  "ShowFullAccountName": true,
+  "SidebarWidthRp": 275,
+  "AppHistoryShowAllProcesses": true,
+  "CpuMode": 1,
+  "DashboardKernelTimeOn": true,
+  "CurrentView": 0,
+  "GpuMode": 0,
+  "IsNavigationMenuOpened": false,
+  "HandleTMCloseTimeoutGeneral": 5000,
+  "HandleTMCloseTimeoutToCheckExplorerHung": 500,
+  "captureUser": true,
+  "captureHyperV": true,
+  "captureHyperVFull": true
+}

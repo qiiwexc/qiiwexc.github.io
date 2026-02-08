@@ -11,6 +11,9 @@ BeforeAll {
     Set-Variable -Option Constant CONFIG_BASELINE_ENGLISH ([String]'TEST_CONFIG_BASELINE_ENGLISH')
     Set-Variable -Option Constant CONFIG_BASELINE ([String]'TEST_CONFIG_BASELINE')
 
+    Set-Variable -Option Constant CONFIG_TASK_MANAGER_RUSSIAN ([String]'TEST_CONFIG_TASK_MANAGER_RUSSIAN')
+    Set-Variable -Option Constant CONFIG_TASK_MANAGER_ENGLISH ([String]'TEST_CONFIG_TASK_MANAGER_ENGLISH')
+
     Set-Variable -Option Constant TestUnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
     Set-Variable -Option Constant TestScheduledTask ([PSObject[]]@(@{ TaskName = $TestUnelevatedExplorerTaskName }))
 
@@ -21,6 +24,8 @@ BeforeAll {
             @{Name = 'TEST_VOLUME_2' }
         )
     )
+
+    Set-Variable -Option Constant TestTaskManagerConfig ([String]"$env:LocalAppData\Microsoft\Windows\TaskManager\settings.json")
 }
 
 Describe 'Set-BaselineConfiguration' {
@@ -33,8 +38,10 @@ Describe 'Set-BaselineConfiguration' {
         Mock Add-SysPrepConfig { return $TestSysPrepConfig }
         Mock Get-Item { return $TestVolumes }
         Mock Import-RegistryConfiguration {}
+        Mock Set-Content {}
 
         [String]$SYSTEM_LANGUAGE = 'en-GB'
+        [Int]$OS_VERSION = 10
     }
 
     It 'Should apply English Windows baseline configuration' {
@@ -53,6 +60,7 @@ Describe 'Set-BaselineConfiguration' {
             $TaskName -eq $TestUnelevatedExplorerTaskName -and
             $Confirm -eq $False
         }
+        Should -Invoke Set-Content -Exactly 0
         Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE_ENGLISH }
         Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE }
@@ -78,8 +86,52 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Set-Content -Exactly 0
         Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE_RUSSIAN }
+        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Import-RegistryConfiguration -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should apply English Windows 11 baseline configuration with TaskManager settings' {
+        [Int]$OS_VERSION = 11
+
+        Set-BaselineConfiguration
+
+        Should -Invoke Set-ItemProperty -Exactly 1
+        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Get-ScheduledTask -Exactly 1
+        Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            $Path -eq $TestTaskManagerConfig -and
+            $Value -eq $CONFIG_TASK_MANAGER_ENGLISH -and
+            $NoNewline -eq $True
+        }
+        Should -Invoke Add-SysPrepConfig -Exactly 2
+        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Import-RegistryConfiguration -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should apply Russian Windows 11 baseline configuration with TaskManager settings' {
+        [String]$SYSTEM_LANGUAGE = 'ru-RU'
+        [Int]$OS_VERSION = 11
+
+        Set-BaselineConfiguration
+
+        Should -Invoke Set-ItemProperty -Exactly 1
+        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Get-ScheduledTask -Exactly 1
+        Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            $Path -eq $TestTaskManagerConfig -and
+            $Value -eq $CONFIG_TASK_MANAGER_RUSSIAN -and
+            $NoNewline -eq $True
+        }
+        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -117,8 +169,8 @@ Describe 'Set-BaselineConfiguration' {
             $Content -notmatch "`n\[$($TestVolumes[0].Name)\]`n" -and
             $Content -notmatch "`n\[$($TestVolumes[1].Name)\]`n" -and
             $Content -notmatch "`"MaxCapacity`"=dword:000FFFFF`n"
-            Should -Invoke Out-Success -Exactly 1
         }
+        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should handle Set-ItemProperty failure' {
