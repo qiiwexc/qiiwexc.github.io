@@ -13,11 +13,14 @@ BeforeAll {
 
 Describe 'Invoke-WriteProgress' {
     BeforeEach {
+        $PROGRESSBAR = [PSCustomObject]@{ Value = 0 }
         Mock Write-Progress {}
     }
 
     It 'Should call Write-Progress with basic parameters' {
         Invoke-WriteProgress -Id 1 -Activity $TestActivity1 -PercentComplete $TestPercentComplete
+
+        $PROGRESSBAR.Value | Should -Be $TestPercentComplete
 
         Should -Invoke Write-Progress -Exactly 1
         Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
@@ -33,6 +36,8 @@ Describe 'Invoke-WriteProgress' {
     It 'Should include ParentId when greater than 0' {
         Invoke-WriteProgress -Id 2 -Activity $TestActivity1 -ParentId 1 -PercentComplete $TestPercentComplete
 
+        $PROGRESSBAR.Value | Should -Be $TestPercentComplete
+
         Should -Invoke Write-Progress -Exactly 1
         Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
             $Id -eq 2 -and
@@ -45,6 +50,8 @@ Describe 'Invoke-WriteProgress' {
     It 'Should not include ParentId when 0' {
         Invoke-WriteProgress -Id 1 -Activity $TestActivity1 -ParentId 0 -PercentComplete $TestPercentComplete
 
+        $PROGRESSBAR.Value | Should -Be $TestPercentComplete
+
         Should -Invoke Write-Progress -Exactly 1
         Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
             $Id -eq 1 -and
@@ -55,6 +62,8 @@ Describe 'Invoke-WriteProgress' {
     It 'Should include Status when provided' {
         Invoke-WriteProgress -Id 1 -Activity $TestActivity1 -PercentComplete $TestPercentComplete -Status $TestTask
 
+        $PROGRESSBAR.Value | Should -Be $TestPercentComplete
+
         Should -Invoke Write-Progress -Exactly 1
         Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity1 -and
@@ -64,6 +73,8 @@ Describe 'Invoke-WriteProgress' {
 
     It 'Should use Completed flag instead of PercentComplete' {
         Invoke-WriteProgress -Id 1 -Activity $TestActivity1 -Completed
+
+        $PROGRESSBAR.Value | Should -Be 100
 
         Should -Invoke Write-Progress -Exactly 1
         Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
@@ -76,6 +87,8 @@ Describe 'Invoke-WriteProgress' {
 
     It 'Should pass all parameters together correctly' {
         Invoke-WriteProgress -Id 3 -Activity $TestActivity2 -ParentId 2 -PercentComplete 75 -Status $TestTask
+
+        $PROGRESSBAR.Value | Should -Be 75
 
         Should -Invoke Write-Progress -Exactly 1
         Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
@@ -91,6 +104,7 @@ Describe 'Invoke-WriteProgress' {
 Describe 'New-Activity' {
     BeforeEach {
         Mock Write-LogInfo {}
+        Mock Set-Icon {}
         Mock Invoke-WriteProgress {}
     }
 
@@ -103,11 +117,13 @@ Describe 'New-Activity' {
 
         Should -Invoke Write-LogInfo -Exactly 1
         Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq "$TestActivity1..." }
+        Should -Invoke Set-Icon -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Working) }
         Should -Invoke Invoke-WriteProgress -Exactly 1
         Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity1 -and
             $Id -eq 1 -and
-            $PercentComplete -eq 1 -and
+            $PercentComplete -eq 5 -and
             $ParentId -eq 0
         }
     }
@@ -120,11 +136,13 @@ Describe 'New-Activity' {
         $ACTIVITIES.Peek() | Should -BeExactly $TestActivity2
 
         Should -Invoke Write-LogInfo -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1
+        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Working) }
         Should -Invoke Invoke-WriteProgress -Exactly 1
         Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity2 -and
             $Id -eq 2 -and
-            $PercentComplete -eq 1 -and
+            $PercentComplete -eq 5 -and
             $ParentId -eq 1
         }
     }
@@ -227,6 +245,7 @@ Describe 'Write-ActivityCompleted' {
     }
 
     BeforeEach {
+        $PROGRESSBAR = [PSCustomObject]@{ Value = 50 }
         Mock Out-Success {}
         Mock Out-Failure {}
         Mock Invoke-WriteProgress {}
@@ -240,6 +259,7 @@ Describe 'Write-ActivityCompleted' {
 
         $script:CURRENT_TASK | Should -BeNullOrEmpty
         $ACTIVITIES.Count | Should -BeExactly 0
+        $PROGRESSBAR.Value | Should -Be 0
 
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -255,9 +275,11 @@ Describe 'Write-ActivityCompleted' {
 
         $script:CURRENT_TASK | Should -BeNullOrEmpty
         $ACTIVITIES.Count | Should -BeExactly 0
+        $PROGRESSBAR.Value | Should -Be 0
 
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -eq "$TestTask failed" }
         Should -Invoke Invoke-WriteProgress -Exactly 1
         Should -Invoke Invoke-WriteProgress -Exactly 1 -ParameterFilter {
             $Activity -eq $TestActivity1 -and
@@ -277,6 +299,7 @@ Describe 'Write-ActivityCompleted' {
 
         $script:CURRENT_TASK | Should -BeNullOrEmpty
         $ACTIVITIES.Count | Should -BeExactly 1
+        $PROGRESSBAR.Value | Should -Be 0
 
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0

@@ -4,7 +4,7 @@ function Expand-Zip {
         [Switch]$Temp
     )
 
-    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
+    Write-ActivityProgress 65 "Extracting '$ZipPath'..."
 
     if (-not (Test-Path $ZipPath)) {
         throw "Archive not found: $ZipPath"
@@ -31,6 +31,8 @@ function Expand-Zip {
         return $TargetExe
     }
 
+    Write-ActivityProgress 70
+
     Initialize-AppDirectory
 
     Remove-File $TemporaryExe
@@ -38,6 +40,8 @@ function Expand-Zip {
     Remove-Directory $ExtractionPath
 
     New-Directory $ExtractionPath
+
+    Write-ActivityProgress 75
 
     if (Test-Path $PATH_7ZIP_EXE) {
         Invoke-7Zip $ExtractionPath $ZipPath
@@ -54,6 +58,8 @@ function Expand-Zip {
             throw "7-Zip not found at '$PATH_7ZIP_EXE'"
         }
     }
+
+    Write-ActivityProgress 80
 
     if (-not $IsDirectory) {
         Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop

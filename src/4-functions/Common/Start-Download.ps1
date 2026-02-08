@@ -34,7 +34,7 @@ function Start-Download {
 
     Initialize-AppDirectory
 
-    Write-ActivityProgress 20
+    Write-ActivityProgress 10
 
     [Int]$RetryCount = 0
     [Bool]$DownloadSuccess = $False
@@ -57,9 +57,13 @@ function Start-Download {
         }
     }
 
+    Write-ActivityProgress 55
+
     if (-not $Temp) {
         Move-Item -Force $TempPath $SavePath -ErrorAction Stop
     }
+
+    Write-ActivityProgress 60
 
     if (Test-Path $SavePath) {
         Out-Success

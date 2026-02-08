@@ -10,16 +10,28 @@ $FORM.Add_Shown( { Initialize-App } )
 $FORM.Add_FormClosing( { Reset-State } )
 
 
+Set-Variable -Option Constant TAB_CONTROL ([Windows.Forms.TabControl](New-Object Windows.Forms.TabControl))
+$TAB_CONTROL.Location = '4, 5'
+
+
 Set-Variable -Option Constant LOG ([Windows.Forms.RichTextBox](New-Object Windows.Forms.RichTextBox))
 $LOG.Height = 200
-$LOG.Width = $FORM_WIDTH - 10
-$LOG.Location = "5, $($FORM_HEIGHT - $LOG.Height - 5)"
+$LOG.Width = $FORM_WIDTH - 9
 $LOG.Font = "$FONT_NAME, 9"
 $LOG.ReadOnly = $True
-$FORM.Controls.Add($LOG)
 
 
-Set-Variable -Option Constant TAB_CONTROL ([Windows.Forms.TabControl](New-Object Windows.Forms.TabControl))
-$TAB_CONTROL.Size = "$($LOG.Width + 1), $($FORM_HEIGHT - $LOG.Height - 1)"
-$TAB_CONTROL.Location = '5, 5'
+Set-Variable -Option Constant PROGRESSBAR ([Windows.Forms.ProgressBar](New-Object Windows.Forms.ProgressBar))
+$PROGRESSBAR.Enabled = $False
+$PROGRESSBAR.Size = "$($LOG.Width), 30"
+
+
+$TAB_CONTROL.Size = "$($LOG.Width + 2), $($FORM_HEIGHT - $PROGRESSBAR.Height - $LOG.Height - 10)"
+
+$PROGRESSBAR.Location = "$($TAB_CONTROL.Location.X), $($TAB_CONTROL.Height + 5)"
+$LOG.Location = "$($PROGRESSBAR.Location.X), $($PROGRESSBAR.Location.Y + $PROGRESSBAR.Height + 1)"
+
+
 $FORM.Controls.Add($TAB_CONTROL)
+$FORM.Controls.Add($PROGRESSBAR)
+$FORM.Controls.Add($LOG)

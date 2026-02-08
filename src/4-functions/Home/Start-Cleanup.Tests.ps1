@@ -5,7 +5,6 @@ BeforeAll {
     . '.\src\4-functions\Configuration\Windows\Tools\Assertions.ps1'
     . '.\src\4-functions\App lifecycle\Logger.ps1'
     . '.\src\4-functions\App lifecycle\Progressbar.ps1'
-    . '.\src\4-functions\App lifecycle\Set-Icon.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -22,7 +21,6 @@ Describe 'Start-Cleanup' {
         Mock Assert-InstallingWindowsUpdates {}
         Mock Write-LogWarning {}
         Mock New-Activity {}
-        Mock Set-Icon {}
         Mock Write-ActivityProgress {}
         Mock Delete-DeliveryOptimizationCache {}
         Mock Out-Success {}
@@ -44,8 +42,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Cleanup) }
         Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1 -ParameterFilter { $Force -eq $True }
@@ -126,7 +122,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Set-Icon -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -149,7 +144,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Set-Icon -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -172,7 +166,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Set-Icon -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -195,7 +188,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Set-Icon -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -218,7 +210,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Set-Icon -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -241,7 +232,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Set-Icon -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -264,7 +254,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 0
@@ -287,7 +276,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -310,7 +298,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
@@ -333,7 +320,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
@@ -356,7 +342,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
@@ -379,7 +364,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Assert-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 7
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4

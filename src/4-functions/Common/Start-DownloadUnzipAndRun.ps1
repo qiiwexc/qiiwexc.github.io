@@ -10,7 +10,6 @@ function Start-DownloadUnzipAndRun {
     )
 
     New-Activity 'Download and run'
-    Set-Icon ([IconName]::Download)
 
     try {
         Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())

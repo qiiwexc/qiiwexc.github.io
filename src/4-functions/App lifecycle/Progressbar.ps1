@@ -22,8 +22,10 @@ function Invoke-WriteProgress {
     if ($Status) { $Params.Status = $Status }
 
     if ($Completed) {
+        $PROGRESSBAR.Value = 100
         $Params.Completed = $True
     } else {
+        $PROGRESSBAR.Value = $PercentComplete
         $Params.PercentComplete = $PercentComplete
     }
 
@@ -37,6 +39,8 @@ function New-Activity {
 
     Write-LogInfo "$Activity..."
 
+    Set-Icon ([IconName]::Working)
+
     $ACTIVITIES.Push($Activity)
 
     Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
@@ -47,7 +51,7 @@ function New-Activity {
         Set-Variable -Option Constant ParentId ([Int]0)
     }
 
-    Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -PercentComplete 1
+    Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -PercentComplete 5
 }
 
 function Write-ActivityProgress {
@@ -103,5 +107,6 @@ function Write-ActivityCompleted {
 
     Set-Variable -Scope Script CURRENT_TASK $Null
 
+    $PROGRESSBAR.Value = 0
     Set-Icon (([IconName]::Default))
 }

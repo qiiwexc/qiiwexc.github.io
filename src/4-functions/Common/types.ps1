@@ -7,6 +7,5 @@ enum LogLevel {
 
 enum IconName {
     Default
-    Cleanup
-    Download
+    Working
 }
