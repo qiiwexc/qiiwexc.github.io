@@ -18,6 +18,11 @@ function Assert-SdiIsRunning {
 }
 
 
+function Assert-OfficeInstallerRunning {
+    return Find-RunningProcesses @('Office Installer.exe', 'Office Installer x86.exe')
+}
+
+
 function Assert-DownloadingWindowsUpdates {
     return Get-BitsTransfer -AllUsers | Where-Object JobState -EQ 'Transferring'
 }

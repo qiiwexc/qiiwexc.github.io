@@ -211,3 +211,38 @@ Describe 'Assert-InstallingWindowsUpdates' {
         Should -Invoke Find-RunningProcesses -Exactly 1
     }
 }
+
+Describe 'Assert-OfficeInstallerRunning' {
+    BeforeEach {
+        Mock Find-RunningProcesses {}
+    }
+
+    It 'Should return true if Office Installer is running' {
+        Mock Find-RunningProcesses { return $TestProcess }
+
+        Set-Variable -Option Constant Result ([PSObject](Assert-OfficeInstallerRunning))
+
+        $Result.ProcessName | Should -BeExactly $TestProcess.ProcessName
+
+        Should -Invoke Find-RunningProcesses -Exactly 1
+        Should -Invoke Find-RunningProcesses -Exactly 1 -ParameterFilter {
+            $ProcessNames.Count -eq 2 -and
+            $ProcessNames[0] -eq 'Office Installer.exe' -and
+            $ProcessNames[1] -eq 'Office Installer x86.exe'
+        }
+    }
+
+    It 'Should return false if Office Installer is not running' {
+        Assert-OfficeInstallerRunning | Should -BeNullOrEmpty
+
+        Should -Invoke Find-RunningProcesses -Exactly 1
+    }
+
+    It 'Should handle Find-RunningProcesses failure' {
+        Mock Find-RunningProcesses { throw $TestException }
+
+        { Assert-OfficeInstallerRunning } | Should -Throw $TestException
+
+        Should -Invoke Find-RunningProcesses -Exactly 1
+    }
+}
