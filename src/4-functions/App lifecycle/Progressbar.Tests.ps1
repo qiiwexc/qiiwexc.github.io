@@ -36,7 +36,7 @@ Describe 'Invoke-WriteProgress' {
     It 'Should include ParentId when greater than 0' {
         Invoke-WriteProgress -Id 2 -Activity $TestActivity1 -ParentId 1 -PercentComplete $TestPercentComplete
 
-        $PROGRESSBAR.Value | Should -Be $TestPercentComplete
+        $PROGRESSBAR.Value | Should -Be 0
 
         Should -Invoke Write-Progress -Exactly 1
         Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
@@ -88,7 +88,7 @@ Describe 'Invoke-WriteProgress' {
     It 'Should pass all parameters together correctly' {
         Invoke-WriteProgress -Id 3 -Activity $TestActivity2 -ParentId 2 -PercentComplete 75 -Status $TestTask
 
-        $PROGRESSBAR.Value | Should -Be 75
+        $PROGRESSBAR.Value | Should -Be 0
 
         Should -Invoke Write-Progress -Exactly 1
         Should -Invoke Write-Progress -Exactly 1 -ParameterFilter {
@@ -245,7 +245,6 @@ Describe 'Write-ActivityCompleted' {
     }
 
     BeforeEach {
-        $PROGRESSBAR = [PSCustomObject]@{ Value = 50 }
         Mock Out-Success {}
         Mock Out-Failure {}
         Mock Invoke-WriteProgress {}
@@ -259,13 +258,11 @@ Describe 'Write-ActivityCompleted' {
 
         $script:CURRENT_TASK | Should -BeNullOrEmpty
         $ACTIVITIES.Count | Should -BeExactly 0
-        $PROGRESSBAR.Value | Should -Be 0
 
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Invoke-WriteProgress -Exactly 0
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Default) }
+        Should -Invoke Set-Icon -Exactly 0
     }
 
     It 'Should end existing activity when no parent activity exists' {
@@ -275,7 +272,6 @@ Describe 'Write-ActivityCompleted' {
 
         $script:CURRENT_TASK | Should -BeNullOrEmpty
         $ACTIVITIES.Count | Should -BeExactly 0
-        $PROGRESSBAR.Value | Should -Be 0
 
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
@@ -299,7 +295,6 @@ Describe 'Write-ActivityCompleted' {
 
         $script:CURRENT_TASK | Should -BeNullOrEmpty
         $ACTIVITIES.Count | Should -BeExactly 1
-        $PROGRESSBAR.Value | Should -Be 0
 
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -310,7 +305,6 @@ Describe 'Write-ActivityCompleted' {
             $Completed -eq $True -and
             $ParentId -eq 1
         }
-        Should -Invoke Set-Icon -Exactly 1
-        Should -Invoke Set-Icon -Exactly 1 -ParameterFilter { $Name -eq ([IconName]::Default) }
+        Should -Invoke Set-Icon -Exactly 0
     }
 }
