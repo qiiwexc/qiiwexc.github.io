@@ -31,7 +31,7 @@ if "%~1"=="Debug" (
 ::
 ::#region init > Version
 ::
-::Set-Variable -Option Constant VERSION ([Version]'26.2.8')
+::Set-Variable -Option Constant VERSION ([Version]'26.2.9')
 ::
 ::#endregion init > Version
 ::
@@ -68,28 +68,15 @@ if "%~1"=="Debug" (
 ::}
 ::
 ::Set-Variable -Option Constant OPERATING_SYSTEM ([PSObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
-::Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
 ::Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
 ::
 ::Set-Variable -Option Constant OS_64_BIT ([Bool]($env:PROCESSOR_ARCHITECTURE -like '*64'))
 ::
-::if ($IsWindows11) {
+::if ($OPERATING_SYSTEM.Caption -match 'Windows 11') {
 ::    Set-Variable -Option Constant OS_VERSION ([Int]11)
+::} elseif ($WindowsBuild -match '10.0.*') {
+::    Set-Variable -Option Constant OS_VERSION ([Int]10)
 ::} else {
-::    switch -Wildcard ($WindowsBuild) {
-::        '10.0.*' {
-::            Set-Variable -Option Constant OS_VERSION ([Int]10)
-::        }
-::        '6.3.*' {
-::            Set-Variable -Option Constant OS_VERSION ([Int]8)
-::        }
-::        Default {
-::            Set-Variable -Option Constant OS_VERSION ([Int]0)
-::        }
-::    }
-::}
-::
-::if ($OS_VERSION -lt 10) {
 ::    Write-Error "Unsupported Operating System: $($OPERATING_SYSTEM.Caption) (Build $WindowsBuild)"
 ::    Start-Sleep -Seconds 5
 ::    break
@@ -116,19 +103,6 @@ if "%~1"=="Debug" (
 ::Set-Variable -Option Constant IS_LAPTOP ([Bool]((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2))
 ::Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
 ::
-::
-::Set-Variable -Option Constant WordRegPath ([String]'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer')
-::if (Test-Path $WordRegPath) {
-::    Set-Variable -Option Constant WordPath ([PSObject](Get-ItemProperty $WordRegPath))
-::    Set-Variable -Option Constant OFFICE_VERSION ([String]($WordPath.'(default)' -replace '\D+', ''))
-::
-::    if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {
-::        Set-Variable -Option Constant OFFICE_INSTALL_TYPE ([String]'C2R')
-::    } else {
-::        Set-Variable -Option Constant OFFICE_INSTALL_TYPE ([String]'MSI')
-::    }
-::}
-::
 ::#endregion init > Initialization
 ::
 ::
@@ -150,7 +124,7 @@ if "%~1"=="Debug" (
 ::Set-Variable -Option Constant GROUP_WIDTH ([Int]($COMMON_PADDING + $BUTTON_WIDTH + $COMMON_PADDING))
 ::
 ::Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH * 3) + ($COMMON_PADDING * 4) + $COMMON_PADDING))
-::Set-Variable -Option Constant FORM_HEIGHT ([Int]610)
+::Set-Variable -Option Constant FORM_HEIGHT ([Int]620)
 ::
 ::Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]"$COMMON_PADDING, $($COMMON_PADDING + 5)")
 ::
@@ -162,8 +136,7 @@ if "%~1"=="Debug" (
 ::
 ::
 ::Set-Variable -Option Constant ICON_DEFAULT ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\cliconfg.exe"))
-::Set-Variable -Option Constant ICON_CLEANUP ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\cleanmgr.exe"))
-::Set-Variable -Option Constant ICON_DOWNLOAD ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\Dxpserver.exe"))
+::Set-Variable -Option Constant ICON_WORKING ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\Dxpserver.exe"))
 ::
 ::#endregion init > UI constants
 ::
@@ -403,19 +376,31 @@ if "%~1"=="Debug" (
 ::$FORM.Add_FormClosing( { Reset-State } )
 ::
 ::
+::Set-Variable -Option Constant TAB_CONTROL ([Windows.Forms.TabControl](New-Object Windows.Forms.TabControl))
+::$TAB_CONTROL.Location = '4, 5'
+::
+::
 ::Set-Variable -Option Constant LOG ([Windows.Forms.RichTextBox](New-Object Windows.Forms.RichTextBox))
 ::$LOG.Height = 200
-::$LOG.Width = $FORM_WIDTH - 10
-::$LOG.Location = "5, $($FORM_HEIGHT - $LOG.Height - 5)"
+::$LOG.Width = $FORM_WIDTH - 9
 ::$LOG.Font = "$FONT_NAME, 9"
 ::$LOG.ReadOnly = $True
-::$FORM.Controls.Add($LOG)
 ::
 ::
-::Set-Variable -Option Constant TAB_CONTROL ([Windows.Forms.TabControl](New-Object Windows.Forms.TabControl))
-::$TAB_CONTROL.Size = "$($LOG.Width + 1), $($FORM_HEIGHT - $LOG.Height - 1)"
-::$TAB_CONTROL.Location = '5, 5'
+::Set-Variable -Option Constant PROGRESSBAR ([Windows.Forms.ProgressBar](New-Object Windows.Forms.ProgressBar))
+::$PROGRESSBAR.Enabled = $False
+::$PROGRESSBAR.Size = "$($LOG.Width), 30"
+::
+::
+::$TAB_CONTROL.Size = "$($LOG.Width + 2), $($FORM_HEIGHT - $PROGRESSBAR.Height - $LOG.Height - 10)"
+::
+::$PROGRESSBAR.Location = "$($TAB_CONTROL.Location.X), $($TAB_CONTROL.Height + 5)"
+::$LOG.Location = "$($PROGRESSBAR.Location.X), $($PROGRESSBAR.Location.Y + $PROGRESSBAR.Height + 1)"
+::
+::
 ::$FORM.Controls.Add($TAB_CONTROL)
+::$FORM.Controls.Add($PROGRESSBAR)
+::$FORM.Controls.Add($LOG)
 ::
 ::#endregion ui > Form
 ::
@@ -440,9 +425,8 @@ if "%~1"=="Debug" (
 ::New-Button 'Update Store apps' $BUTTON_FUNCTION
 ::
 ::
-::[Switch]$BUTTON_DISABLED = $OFFICE_INSTALL_TYPE -ne 'C2R'
 ::[ScriptBlock]$BUTTON_FUNCTION = { Update-MicrosoftOffice }
-::New-Button 'Update Microsoft Office' $BUTTON_FUNCTION -Disabled:$BUTTON_DISABLED
+::New-Button 'Update Microsoft Office' $BUTTON_FUNCTION
 ::
 ::#endregion ui > Home > Updates
 ::
@@ -2120,10 +2104,6 @@ if "%~1"=="Debug" (
 ::"ShowCmd"=dword:00000003
 ::"WFlags"=dword:00000002
 ::
-::; Disable widgets service
-::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests]
-::"value"=dword:00000000
-::
 ::; Disable chat taskbar (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 ::"HideSCAMeetNow"=dword:00000001
@@ -2250,7 +2230,6 @@ if "%~1"=="Debug" (
 ::
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\CloudContent]
 ::"DisableTailoredExperiencesWithDiagnosticData"=dword:00000001
-::"DisableWindowsSpotlightOnLockScreen"=dword:00000001
 ::
 ::[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Windows Feeds]
 ::"EnableFeeds"=dword:00000000
@@ -2328,7 +2307,6 @@ if "%~1"=="Debug" (
 ::"DiagnosticData"=dword:00000000
 ::"EdgeAssetDeliveryServiceEnabled"=dword:00000000
 ::"EdgeCollectionsEnabled"=dword:00000000
-::"EdgeHistoryAISearchEnabled"=dword:00000000
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
 ::"ExperimentationAndConfigurationServiceControl"=dword:00000002
 ::"HubsSidebarEnabled"=dword:00000000
@@ -2340,14 +2318,12 @@ if "%~1"=="Debug" (
 ::"ShowMicrosoftRewards"=dword:00000000
 ::"ShowRecommendationsEnabled"=dword:00000000
 ::"SpotlightExperiencesAndRecommendationsEnabled"=dword:00000000
-::"TabServicesEnabled"=dword:00000000
 ::"UserFeedbackAllowed"=dword:00000000
 ::"WalletDonationEnabled"=dword:00000000
 ::"WebWidgetAllowed"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended]
 ::"BlockThirdPartyCookies"=dword:00000001
-::"DefaultShareAdditionalOSRegionSetting"=dword:00000002
 ::
 ::; Disable "Let Apps use Advertising ID for Relevant Ads" (Windows 10)
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo]
@@ -2422,7 +2398,6 @@ if "%~1"=="Debug" (
 ::"DiagnosticData"=dword:00000000
 ::"EdgeAssetDeliveryServiceEnabled"=dword:00000000
 ::"EdgeCollectionsEnabled"=dword:00000000
-::"EdgeHistoryAISearchEnabled"=dword:00000000
 ::"EdgeShoppingAssistantEnabled"=dword:00000000
 ::"ExperimentationAndConfigurationServiceControl"=dword:00000002
 ::"HubsSidebarEnabled"=dword:00000000
@@ -2434,14 +2409,12 @@ if "%~1"=="Debug" (
 ::"ShowMicrosoftRewards"=dword:00000000
 ::"ShowRecommendationsEnabled"=dword:00000000
 ::"SpotlightExperiencesAndRecommendationsEnabled"=dword:00000000
-::"TabServicesEnabled"=dword:00000000
 ::"UserFeedbackAllowed"=dword:00000000
 ::"WalletDonationEnabled"=dword:00000000
 ::"WebWidgetAllowed"=dword:00000000
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\Recommended]
 ::"BlockThirdPartyCookies"=dword:00000001
-::"DefaultShareAdditionalOSRegionSetting"=dword:00000002
 ::
 ::[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\AppCompat]
 ::"AITEnable"=dword:00000000
@@ -2716,6 +2689,1896 @@ if "%~1"=="Debug" (
 ::'))
 ::
 ::#endregion configs > Windows > Security
+::
+::
+::#region configs > Windows > Task Manager English
+::
+::Set-Variable -Option Constant CONFIG_TASK_MANAGER_ENGLISH ([String]('{
+::  "FullPosition": { "Left": 0, "Top": 0, "Right": 1936, "Bottom": 975 },
+::  "ListSettings": {
+::    "Lists": [
+::      {
+::        "TabId": 0,
+::        "Columns": [
+::          {
+::            "ColElementId": "TmColFriendlyName",
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 381,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 0,
+::            "SortDir": 255,
+::            "Flags": 5243137
+::          },
+::          {
+::            "ColElementId": "TmColType",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 129,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 11,
+::            "SortDir": 255,
+::            "Flags": 1052672
+::          },
+::          {
+::            "ColElementId": "TmColAppStatus",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 51,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 13,
+::            "SortDir": 0,
+::            "Flags": 1180161
+::          },
+::          {
+::            "ColElementId": "TmColPublisher",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 157,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 10,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColPid",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 43,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 9,
+::            "SortDir": 255,
+::            "Flags": 2099200
+::          },
+::          {
+::            "ColElementId": "TmColProcessName",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 178,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 8,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColCommandLine",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 254,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 14,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColCPUPercent",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 1,
+::            "SortDir": 0,
+::            "Flags": 2425856
+::          },
+::          {
+::            "ColElementId": "TmColMemory",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 85,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 2,
+::            "SortDir": 1,
+::            "Flags": 35980288
+::          },
+::          {
+::            "ColElementId": "TmColDisk",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 80,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 3,
+::            "SortDir": 0,
+::            "Flags": 136643584
+::          },
+::          {
+::            "ColElementId": "TmColNetwork",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 4,
+::            "SortDir": 0,
+::            "Flags": 136643584
+::          },
+::          {
+::            "ColElementId": "TmColGPUPercent",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 5,
+::            "SortDir": 0,
+::            "Flags": 203752448
+::          },
+::          {
+::            "ColElementId": "TmColGpuEngineName",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 109,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 12,
+::            "SortDir": 0,
+::            "Flags": 202375424
+::          },
+::          {
+::            "ColElementId": "TmColPowerUsage",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 100,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 6,
+::            "SortDir": 0,
+::            "Flags": 135594496
+::          },
+::          {
+::            "ColElementId": "TmColPowerUsageTrend",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 112,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 7,
+::            "SortDir": 0,
+::            "Flags": 135594496
+::          },
+::          {
+::            "ColElementId": "TmColIsolation",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 120,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 15,
+::            "SortDir": 0,
+::            "Flags": 152043776
+::          }
+::        ]
+::      },
+::      {
+::        "TabId": 3,
+::        "Columns": [
+::          {
+::            "ColElementId": "TmColFriendlyName",
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 223,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 0,
+::            "SortDir": 255,
+::            "Flags": 5243137
+::          },
+::          {
+::            "ColElementId": "TmColPublisher",
+::            "ChildColIndex": 1,
+::            "ColWidthRp": 155,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 1,
+::            "SortDir": 255,
+::            "Flags": 1048833
+::          },
+::          {
+::            "ColElementId": "TmColStartupStatus",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 67,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 2,
+::            "SortDir": 1,
+::            "Flags": 1049088
+::          },
+::          {
+::            "ColElementId": "TmColStartupImpact",
+::            "ChildColIndex": 3,
+::            "ColWidthRp": 97,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 3,
+::            "SortDir": 1,
+::            "Flags": 1049089
+::          },
+::          {
+::            "ColElementId": "TmColStartupType",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 83,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 4,
+::            "SortDir": 255,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColStartupDiskIO",
+::            "ChildColIndex": 5,
+::            "ColWidthRp": 114,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 5,
+::            "SortDir": 1,
+::            "Flags": 2098177
+::          },
+::          {
+::            "ColElementId": "TmColStartupCPU",
+::            "ChildColIndex": 6,
+::            "ColWidthRp": 95,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 6,
+::            "SortDir": 1,
+::            "Flags": 35652609
+::          },
+::          {
+::            "ColElementId": "TmColRunningNow",
+::            "ChildColIndex": 7,
+::            "ColWidthRp": 85,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 7,
+::            "SortDir": 255,
+::            "Flags": 1048833
+::          },
+::          {
+::            "ColElementId": "TmColDisabledTime",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 151,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 8,
+::            "SortDir": 255,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColCommandLine",
+::            "ChildColIndex": 9,
+::            "ColWidthRp": 795,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 9,
+::            "SortDir": 255,
+::            "Flags": 1048833
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          }
+::        ]
+::      },
+::      {
+::        "TabId": 4,
+::        "Columns": [
+::          {
+::            "ColElementId": "TmColFriendlyName",
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 355,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 0,
+::            "SortDir": 255,
+::            "Flags": 5243137
+::          },
+::          {
+::            "ColElementId": "TmColSessionID",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 45,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 1,
+::            "SortDir": 255,
+::            "Flags": 2098176
+::          },
+::          {
+::            "ColElementId": "TmColSessionType",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 100,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 2,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColClientName",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 100,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 3,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColUsersStatus",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 128,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 4,
+::            "SortDir": 0,
+::            "Flags": 1049089
+::          },
+::          {
+::            "ColElementId": "TmColCPUPercent",
+::            "ChildColIndex": 5,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 5,
+::            "SortDir": 0,
+::            "Flags": 2163713
+::          },
+::          {
+::            "ColElementId": "TmColMemory",
+::            "ChildColIndex": 6,
+::            "ColWidthRp": 85,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 6,
+::            "SortDir": 1,
+::            "Flags": 35718145
+::          },
+::          {
+::            "ColElementId": "TmColDisk",
+::            "ChildColIndex": 7,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 7,
+::            "SortDir": 0,
+::            "Flags": 136381441
+::          },
+::          {
+::            "ColElementId": "TmColNetwork",
+::            "ChildColIndex": 8,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 8,
+::            "SortDir": 0,
+::            "Flags": 136381441
+::          },
+::          {
+::            "ColElementId": "TmColGPUPercent",
+::            "ChildColIndex": 9,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 9,
+::            "SortDir": 0,
+::            "Flags": 203490305
+::          },
+::          {
+::            "ColElementId": "TmColGpuEngineName",
+::            "ChildColIndex": 10,
+::            "ColWidthRp": 150,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 10,
+::            "SortDir": 0,
+::            "Flags": 202375424
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          }
+::        ]
+::      },
+::      {
+::        "TabId": 2,
+::        "Columns": [
+::          {
+::            "ColElementId": "TmColFriendlyName",
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 426,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 0,
+::            "SortDir": 255,
+::            "Flags": 5243137
+::          },
+::          {
+::            "ColElementId": "TmColProcessorCycles",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 107,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 1,
+::            "SortDir": 1,
+::            "Flags": 2425856
+::          },
+::          {
+::            "ColElementId": "TmColNetworkTotal",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 107,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 2,
+::            "SortDir": 1,
+::            "Flags": 35980288
+::          },
+::          {
+::            "ColElementId": "TmColNetworkCosted",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 107,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 3,
+::            "SortDir": 0,
+::            "Flags": 2425856
+::          },
+::          {
+::            "ColElementId": "TmColNetworkNotifications",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 107,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 4,
+::            "SortDir": 0,
+::            "Flags": 2425856
+::          },
+::          {
+::            "ColElementId": "TmColNetworkUncosted",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 160,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 5,
+::            "SortDir": 0,
+::            "Flags": 2098176
+::          },
+::          {
+::            "ColElementId": "TmColNetworkDownstream",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 125,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 6,
+::            "SortDir": 0,
+::            "Flags": 2098176
+::          },
+::          {
+::            "ColElementId": "TmColNetworkUpstream",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 125,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 7,
+::            "SortDir": 0,
+::            "Flags": 2098176
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          }
+::        ]
+::      }
+::    ]
+::  },
+::  "CurrentViewResource": "",
+::  "TableSetting": {
+::    "Tables": [
+::      {
+::        "SelectedColumns": 106661087812381,
+::        "ColumnWidths_TwoCpuMetrics": [
+::          190, 529, 38, 59, 116, 65, 80, 36, 69, 72, 45, 131, 159, 160, 206,
+::          171, 170, 79, 74, 57, 70, 80, 89, 56, 58, 78, 78, 75, 68, 68, 95, 90,
+::          91, 741, 1750, 150, 58, 78, 57, 109, 299, 151, 107, 102, 102, 37, 80,
+::          141, 122, 208, 167
+::        ],
+::        "ColumnOrder_TwoCpuMetrics": [
+::          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+::          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+::          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50
+::        ],
+::        "ColumnWidths": [
+::          190, 529, 38, 59, 116, 65, 80, 36, 69, 72, 45, 131, 159, 160, 206,
+::          171, 170, 79, 74, 57, 70, 80, 89, 56, 58, 78, 78, 75, 68, 68, 95, 90,
+::          91, 741, 1750, 150, 58, 78, 57, 109, 299, 151, 107, 102, 102, 37, 80,
+::          141, 122, 208
+::        ],
+::        "ColumnOrder": [
+::          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+::          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+::          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49
+::        ],
+::        "Sort": 31,
+::        "Descending": true
+::      },
+::      {
+::        "SelectedColumns": 31,
+::        "ColumnWidths_TwoCpuMetrics": [
+::          293, 49, 528, 64, 229, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0
+::        ],
+::        "ColumnOrder_TwoCpuMetrics": [
+::          0, 1, 2, 3, 4, 0, 0, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0
+::        ],
+::        "ColumnWidths": [
+::          293, 49, 528, 64, 229, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0
+::        ],
+::        "ColumnOrder": [
+::          0, 1, 2, 3, 4, 0, 0, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0
+::        ],
+::        "Sort": 0,
+::        "Descending": false
+::      }
+::    ],
+::    "AutoAdjustColumns": false
+::  },
+::  "FullViewDefaultSize": false,
+::  "EfficiencyModeDenyList": [
+::    { "processName": "searchhost.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "explorer.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "sihost.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "system", "commandLine": "", "packageName": "" },
+::    { "processName": "logonui.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p -s winhttpautoproxysvc",
+::      "packageName": ""
+::    },
+::    { "processName": "csrss.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "systemsettings.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    { "processName": "lsass.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "consent.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k wbiosvcgroup -s wbiosrvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "runtimebroker.exe",
+::      "commandLine": "",
+::      "packageName": "microsoftwindows.client.cbs"
+::    },
+::    {
+::      "processName": "startmenuexperiencehost.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k rpcss -p",
+::      "packageName": ""
+::    },
+::    { "processName": "dwm.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "ctfmon.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k dcomlaunch -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s appinfo",
+::      "packageName": ""
+::    },
+::    { "processName": "taskmgr.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s usermanager",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "shellexperiencehost.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    { "processName": "fontdrvhost.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "services.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p -s dhcp",
+::      "packageName": ""
+::    },
+::    { "processName": "wudfhost.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k camera -s frameserver",
+::      "packageName": ""
+::    },
+::    { "processName": "winlogon.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k osprivacy -p -s camsvc",
+::      "packageName": ""
+::    },
+::    { "processName": "lockapp.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "textinputhost.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k unistacksvcgroup -s wpnuserservice",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k dcomlaunch -p -s lsm",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "runtimebroker.exe",
+::      "commandLine": "",
+::      "packageName": "microsoft.lockapp"
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k appmodel -p -s staterepository",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k appmodel -p -s staterepository",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k networkservice -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p -s ngcctnrsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "applicationframehost.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "runtimebroker.exe",
+::      "commandLine": "",
+::      "packageName": "microsoft.windows.shellexperiencehost"
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localsystemnetworkrestricted -p -s ngcsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenonetwork -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netprofm -p -s netprofm",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k udksvcgroup -s udkusersvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k securenetsvcs -p -s appinfo",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservice -p -s npsmsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s themes",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s sens",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localsystemnetworkrestricted -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "runtimebroker.exe",
+::      "commandLine": "",
+::      "packageName": "microsoft.windows.startmenuexperiencehost"
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s shellhwdetection",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -s rmsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k clipboardsvcgroup -p -s cbdhsvc",
+::      "packageName": ""
+::    },
+::    { "processName": "userinit.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "wininit.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservice -p -s eventsystem",
+::      "packageName": ""
+::    },
+::    { "processName": "tabtip.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "smss.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p -s eventlog",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k unistacksvcgroup -s cdpusersvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k networkservice -p -s lanmanworkstation",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s profsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenonetworkfirewall -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s tokenbroker",
+::      "packageName": ""
+::    },
+::    { "processName": "memcompression", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k networkservice -s termservice",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservice -p -s fontcache",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k cameramonitor",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k wsappx -p -s appxsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "msedgewebview2.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    { "processName": "spoolsv.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "ism.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "msmpeng.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "msmpengcp.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "nissrv.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "sgrmbroker.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "securityhealthservice.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    { "processName": "svchost.exe", "commandLine": "", "packageName": "" }
+::  ],
+::  "SmallPosition": { "Left": 0, "Top": 0, "Right": 0, "Bottom": 0 },
+::  "RefreshRate": 500,
+::  "ShowFullAccountName": true,
+::  "SidebarWidthRp": 275,
+::  "AppHistoryShowAllProcesses": true,
+::  "CpuMode": 1,
+::  "DashboardKernelTimeOn": true,
+::  "CurrentView": 0,
+::  "GpuMode": 0,
+::  "IsNavigationMenuOpened": false,
+::  "HandleTMCloseTimeoutGeneral": 5000,
+::  "HandleTMCloseTimeoutToCheckExplorerHung": 500,
+::  "captureUser": true,
+::  "captureHyperV": true,
+::  "captureHyperVFull": true
+::}
+::'))
+::
+::#endregion configs > Windows > Task Manager English
+::
+::
+::#region configs > Windows > Task Manager Russian
+::
+::Set-Variable -Option Constant CONFIG_TASK_MANAGER_RUSSIAN ([String]('{
+::  "FullPosition": { "Left": 0, "Top": 0, "Right": 1936, "Bottom": 975 },
+::  "ListSettings": {
+::    "Lists": [
+::      {
+::        "TabId": 0,
+::        "Columns": [
+::          {
+::            "ColElementId": "TmColFriendlyName",
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 529,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 0,
+::            "SortDir": 255,
+::            "Flags": 5243137
+::          },
+::          {
+::            "ColElementId": "TmColType",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 123,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 11,
+::            "SortDir": 255,
+::            "Flags": 1052672
+::          },
+::          {
+::            "ColElementId": "TmColAppStatus",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 75,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 13,
+::            "SortDir": 0,
+::            "Flags": 1180161
+::          },
+::          {
+::            "ColElementId": "TmColPublisher",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 164,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 10,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColPid",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 86,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 9,
+::            "SortDir": 255,
+::            "Flags": 2099200
+::          },
+::          {
+::            "ColElementId": "TmColProcessName",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 189,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 8,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColCommandLine",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 254,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 14,
+::            "SortDir": 0,
+::            "Flags": 17826048
+::          },
+::          {
+::            "ColElementId": "TmColCPUPercent",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 1,
+::            "SortDir": 0,
+::            "Flags": 2425856
+::          },
+::          {
+::            "ColElementId": "TmColMemory",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 85,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 2,
+::            "SortDir": 1,
+::            "Flags": 35980288
+::          },
+::          {
+::            "ColElementId": "TmColDisk",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 80,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 3,
+::            "SortDir": 0,
+::            "Flags": 136643584
+::          },
+::          {
+::            "ColElementId": "TmColNetwork",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 4,
+::            "SortDir": 0,
+::            "Flags": 136643584
+::          },
+::          {
+::            "ColElementId": "TmColGPUPercent",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 5,
+::            "SortDir": 0,
+::            "Flags": 203752448
+::          },
+::          {
+::            "ColElementId": "TmColGpuEngineName",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 109,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 12,
+::            "SortDir": 0,
+::            "Flags": 202375424
+::          },
+::          {
+::            "ColElementId": "TmColPowerUsage",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 126,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 6,
+::            "SortDir": 0,
+::            "Flags": 135594496
+::          },
+::          {
+::            "ColElementId": "TmColPowerUsageTrend",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 185,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 7,
+::            "SortDir": 0,
+::            "Flags": 135594496
+::          },
+::          {
+::            "ColElementId": "TmColIsolation",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 120,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 15,
+::            "SortDir": 0,
+::            "Flags": 152043776
+::          }
+::        ]
+::      },
+::      {
+::        "TabId": 3,
+::        "Columns": [
+::          {
+::            "ColElementId": "TmColFriendlyName",
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 318,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 0,
+::            "SortDir": 255,
+::            "Flags": 5243137
+::          },
+::          {
+::            "ColElementId": "TmColPublisher",
+::            "ChildColIndex": 1,
+::            "ColWidthRp": 155,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 1,
+::            "SortDir": 255,
+::            "Flags": 1048833
+::          },
+::          {
+::            "ColElementId": "TmColStartupStatus",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 86,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 2,
+::            "SortDir": 1,
+::            "Flags": 1049088
+::          },
+::          {
+::            "ColElementId": "TmColStartupImpact",
+::            "ChildColIndex": 3,
+::            "ColWidthRp": 119,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 3,
+::            "SortDir": 1,
+::            "Flags": 1049089
+::          },
+::          {
+::            "ColElementId": "TmColStartupType",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 83,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 4,
+::            "SortDir": 255,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColStartupDiskIO",
+::            "ChildColIndex": 5,
+::            "ColWidthRp": 205,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 5,
+::            "SortDir": 1,
+::            "Flags": 2098177
+::          },
+::          {
+::            "ColElementId": "TmColStartupCPU",
+::            "ChildColIndex": 6,
+::            "ColWidthRp": 100,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 6,
+::            "SortDir": 1,
+::            "Flags": 35652609
+::          },
+::          {
+::            "ColElementId": "TmColRunningNow",
+::            "ChildColIndex": 7,
+::            "ColWidthRp": 128,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 7,
+::            "SortDir": 255,
+::            "Flags": 1048833
+::          },
+::          {
+::            "ColElementId": "TmColDisabledTime",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 151,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 8,
+::            "SortDir": 255,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColCommandLine",
+::            "ChildColIndex": 9,
+::            "ColWidthRp": 511,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 9,
+::            "SortDir": 255,
+::            "Flags": 1048833
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          }
+::        ]
+::      },
+::      {
+::        "TabId": 4,
+::        "Columns": [
+::          {
+::            "ColElementId": "TmColFriendlyName",
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 355,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 0,
+::            "SortDir": 255,
+::            "Flags": 5243137
+::          },
+::          {
+::            "ColElementId": "TmColSessionID",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 45,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 1,
+::            "SortDir": 255,
+::            "Flags": 2098176
+::          },
+::          {
+::            "ColElementId": "TmColSessionType",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 100,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 2,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColClientName",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 100,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 3,
+::            "SortDir": 0,
+::            "Flags": 1048832
+::          },
+::          {
+::            "ColElementId": "TmColUsersStatus",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 128,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 4,
+::            "SortDir": 0,
+::            "Flags": 1049089
+::          },
+::          {
+::            "ColElementId": "TmColCPUPercent",
+::            "ChildColIndex": 5,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 5,
+::            "SortDir": 0,
+::            "Flags": 2163713
+::          },
+::          {
+::            "ColElementId": "TmColMemory",
+::            "ChildColIndex": 6,
+::            "ColWidthRp": 85,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 6,
+::            "SortDir": 1,
+::            "Flags": 35718145
+::          },
+::          {
+::            "ColElementId": "TmColDisk",
+::            "ChildColIndex": 7,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 7,
+::            "SortDir": 0,
+::            "Flags": 136381441
+::          },
+::          {
+::            "ColElementId": "TmColNetwork",
+::            "ChildColIndex": 8,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 8,
+::            "SortDir": 0,
+::            "Flags": 136381441
+::          },
+::          {
+::            "ColElementId": "TmColGPUPercent",
+::            "ChildColIndex": 9,
+::            "ColWidthRp": 73,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 9,
+::            "SortDir": 0,
+::            "Flags": 203490305
+::          },
+::          {
+::            "ColElementId": "TmColGpuEngineName",
+::            "ChildColIndex": 10,
+::            "ColWidthRp": 150,
+::            "ColMinWidthRp": 73,
+::            "ColOrder": 10,
+::            "SortDir": 0,
+::            "Flags": 202375424
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          }
+::        ]
+::      },
+::      {
+::        "TabId": 2,
+::        "Columns": [
+::          {
+::            "ColElementId": "TmColFriendlyName",
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 426,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 0,
+::            "SortDir": 255,
+::            "Flags": 5243137
+::          },
+::          {
+::            "ColElementId": "TmColProcessorCycles",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 107,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 1,
+::            "SortDir": 1,
+::            "Flags": 2425856
+::          },
+::          {
+::            "ColElementId": "TmColNetworkTotal",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 107,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 2,
+::            "SortDir": 1,
+::            "Flags": 35980288
+::          },
+::          {
+::            "ColElementId": "TmColNetworkCosted",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 139,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 3,
+::            "SortDir": 0,
+::            "Flags": 2425856
+::          },
+::          {
+::            "ColElementId": "TmColNetworkNotifications",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 107,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 4,
+::            "SortDir": 0,
+::            "Flags": 2425856
+::          },
+::          {
+::            "ColElementId": "TmColNetworkUncosted",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 160,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 5,
+::            "SortDir": 0,
+::            "Flags": 2098176
+::          },
+::          {
+::            "ColElementId": "TmColNetworkDownstream",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 125,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 6,
+::            "SortDir": 0,
+::            "Flags": 2098176
+::          },
+::          {
+::            "ColElementId": "TmColNetworkUpstream",
+::            "ChildColIndex": 4294967295,
+::            "ColWidthRp": 125,
+::            "ColMinWidthRp": 30,
+::            "ColOrder": 7,
+::            "SortDir": 0,
+::            "Flags": 2098176
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          },
+::          {
+::            "ChildColIndex": 0,
+::            "ColWidthRp": 0,
+::            "ColMinWidthRp": 0,
+::            "ColOrder": 0,
+::            "SortDir": 0,
+::            "Flags": 0
+::          }
+::        ]
+::      }
+::    ]
+::  },
+::  "CurrentViewResource": "",
+::  "TableSetting": {
+::    "Tables": [
+::      {
+::        "SelectedColumns": 106655853320961,
+::        "ColumnWidths_TwoCpuMetrics": [
+::          201, 529, 84, 108, 116, 65, 80, 36, 162, 72, 45, 147, 201, 160, 206,
+::          171, 170, 79, 74, 57, 70, 80, 120, 56, 58, 78, 78, 213, 211, 191, 186,
+::          175, 162, 741, 1750, 150, 58, 78, 57, 109, 407, 151, 107, 102, 102,
+::          37, 69, 141, 122, 208, 167
+::        ],
+::        "ColumnOrder_TwoCpuMetrics": [
+::          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+::          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+::          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50
+::        ],
+::        "ColumnWidths": [
+::          201, 529, 84, 108, 116, 65, 80, 36, 162, 72, 45, 147, 201, 160, 206,
+::          171, 170, 79, 74, 57, 70, 80, 120, 56, 58, 78, 78, 213, 211, 191, 186,
+::          175, 162, 741, 1750, 150, 58, 78, 57, 109, 407, 151, 107, 102, 102,
+::          37, 69, 141, 122, 208
+::        ],
+::        "ColumnOrder": [
+::          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+::          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+::          37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49
+::        ],
+::        "Sort": 11,
+::        "Descending": true
+::      },
+::      {
+::        "SelectedColumns": 31,
+::        "ColumnWidths_TwoCpuMetrics": [
+::          294, 92, 795, 93, 229, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0
+::        ],
+::        "ColumnOrder_TwoCpuMetrics": [
+::          0, 1, 2, 3, 4, 0, 0, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0
+::        ],
+::        "ColumnWidths": [
+::          294, 92, 795, 93, 229, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0
+::        ],
+::        "ColumnOrder": [
+::          0, 1, 2, 3, 4, 0, 0, 0, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+::          0, 0, 0, 0
+::        ],
+::        "Sort": 0,
+::        "Descending": false
+::      }
+::    ],
+::    "AutoAdjustColumns": false
+::  },
+::  "FullViewDefaultSize": false,
+::  "EfficiencyModeDenyList": [
+::    { "processName": "searchhost.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "explorer.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "sihost.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "system", "commandLine": "", "packageName": "" },
+::    { "processName": "logonui.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p -s winhttpautoproxysvc",
+::      "packageName": ""
+::    },
+::    { "processName": "csrss.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "systemsettings.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    { "processName": "lsass.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "consent.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k wbiosvcgroup -s wbiosrvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "runtimebroker.exe",
+::      "commandLine": "",
+::      "packageName": "microsoftwindows.client.cbs"
+::    },
+::    {
+::      "processName": "startmenuexperiencehost.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k rpcss -p",
+::      "packageName": ""
+::    },
+::    { "processName": "dwm.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "ctfmon.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k dcomlaunch -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s appinfo",
+::      "packageName": ""
+::    },
+::    { "processName": "taskmgr.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s usermanager",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "shellexperiencehost.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    { "processName": "fontdrvhost.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "services.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p -s dhcp",
+::      "packageName": ""
+::    },
+::    { "processName": "wudfhost.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k camera -s frameserver",
+::      "packageName": ""
+::    },
+::    { "processName": "winlogon.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k osprivacy -p -s camsvc",
+::      "packageName": ""
+::    },
+::    { "processName": "lockapp.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "textinputhost.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k unistacksvcgroup -s wpnuserservice",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k dcomlaunch -p -s lsm",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "runtimebroker.exe",
+::      "commandLine": "",
+::      "packageName": "microsoft.lockapp"
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k appmodel -p -s staterepository",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k appmodel -p -s staterepository",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k networkservice -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p -s ngcctnrsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "applicationframehost.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "runtimebroker.exe",
+::      "commandLine": "",
+::      "packageName": "microsoft.windows.shellexperiencehost"
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localsystemnetworkrestricted -p -s ngcsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenonetwork -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netprofm -p -s netprofm",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k udksvcgroup -s udkusersvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k securenetsvcs -p -s appinfo",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservice -p -s npsmsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s themes",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s sens",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localsystemnetworkrestricted -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "runtimebroker.exe",
+::      "commandLine": "",
+::      "packageName": "microsoft.windows.startmenuexperiencehost"
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s shellhwdetection",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -s rmsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k clipboardsvcgroup -p -s cbdhsvc",
+::      "packageName": ""
+::    },
+::    { "processName": "userinit.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "wininit.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservice -p -s eventsystem",
+::      "packageName": ""
+::    },
+::    { "processName": "tabtip.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "smss.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenetworkrestricted -p -s eventlog",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k unistacksvcgroup -s cdpusersvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k networkservice -p -s lanmanworkstation",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s profsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservicenonetworkfirewall -p",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k netsvcs -p -s tokenbroker",
+::      "packageName": ""
+::    },
+::    { "processName": "memcompression", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k networkservice -s termservice",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k localservice -p -s fontcache",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k cameramonitor",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "svchost.exe",
+::      "commandLine": "-k wsappx -p -s appxsvc",
+::      "packageName": ""
+::    },
+::    {
+::      "processName": "msedgewebview2.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    { "processName": "spoolsv.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "ism.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "msmpeng.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "msmpengcp.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "nissrv.exe", "commandLine": "", "packageName": "" },
+::    { "processName": "sgrmbroker.exe", "commandLine": "", "packageName": "" },
+::    {
+::      "processName": "securityhealthservice.exe",
+::      "commandLine": "",
+::      "packageName": ""
+::    },
+::    { "processName": "svchost.exe", "commandLine": "", "packageName": "" }
+::  ],
+::  "SmallPosition": { "Left": 0, "Top": 0, "Right": 0, "Bottom": 0 },
+::  "RefreshRate": 500,
+::  "ShowFullAccountName": true,
+::  "SidebarWidthRp": 275,
+::  "AppHistoryShowAllProcesses": true,
+::  "CpuMode": 1,
+::  "DashboardKernelTimeOn": true,
+::  "CurrentView": 0,
+::  "GpuMode": 0,
+::  "IsNavigationMenuOpened": false,
+::  "HandleTMCloseTimeoutGeneral": 5000,
+::  "HandleTMCloseTimeoutToCheckExplorerHung": 500,
+::  "captureUser": true,
+::  "captureHyperV": true,
+::  "captureHyperVFull": true
+::}
+::'))
+::
+::#endregion configs > Windows > Task Manager Russian
 ::
 ::
 ::#region configs > Windows > Tools > Debloat app list
@@ -3398,7 +5261,19 @@ if "%~1"=="Debug" (
 ::    Write-LogInfo "OS architecture: $($OPERATING_SYSTEM.OSArchitecture)" $LogIndentLevel
 ::    Write-LogInfo "OS language: $SYSTEM_LANGUAGE" $LogIndentLevel
 ::
-::    switch ($OFFICE_VERSION) {
+::    Set-Variable -Option Constant WordRegPath ([String]'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer')
+::    if (Test-Path $WordRegPath) {
+::        Set-Variable -Option Constant WordPath ([PSObject](Get-ItemProperty $WordRegPath))
+::        Set-Variable -Option Constant OfficeVersion ([String]($WordPath.'(default)' -replace '\D+', ''))
+::
+::        if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {
+::            Set-Variable -Option Constant OfficeInstallType ([String]'C2R')
+::        } else {
+::            Set-Variable -Option Constant OfficeInstallType ([String]'MSI')
+::        }
+::    }
+::
+::    switch ($OfficeVersion) {
 ::        16 {
 ::            Set-Variable -Option Constant OfficeYear ([String]'2016 / 2019 / 2021 / 2024')
 ::        }
@@ -3411,9 +5286,6 @@ if "%~1"=="Debug" (
 ::        12 {
 ::            Set-Variable -Option Constant OfficeYear ([String]'2007')
 ::        }
-::        11 {
-::            Set-Variable -Option Constant OfficeYear ([String]'2003')
-::        }
 ::    }
 ::
 ::    if ($OfficeYear) {
@@ -3424,8 +5296,8 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo "Office version: $OfficeName" $LogIndentLevel
 ::
-::    if ($OFFICE_INSTALL_TYPE) {
-::        Write-LogInfo "Office installation type: $OFFICE_INSTALL_TYPE" $LogIndentLevel
+::    if ($OfficeInstallType) {
+::        Write-LogInfo "Office installation type: $OfficeInstallType" $LogIndentLevel
 ::    }
 ::}
 ::
@@ -3631,13 +5503,26 @@ if "%~1"=="Debug" (
 ::        }
 ::    )
 ::
-::    if ($ParentId -gt 0) { $Params.ParentId = $ParentId }
-::    if ($Status) { $Params.Status = $Status }
+::    if ($ParentId -gt 0) {
+::        $Params.ParentId = $ParentId
+::    }
+::
+::    if ($Status) {
+::        $Params.Status = $Status
+::    }
 ::
 ::    if ($Completed) {
 ::        $Params.Completed = $True
+::
+::        if ($ParentId -eq 0) {
+::            $PROGRESSBAR.Value = 100
+::        }
 ::    } else {
 ::        $Params.PercentComplete = $PercentComplete
+::
+::        if ($ParentId -eq 0) {
+::            $PROGRESSBAR.Value = $PercentComplete
+::        }
 ::    }
 ::
 ::    Write-Progress @Params
@@ -3650,6 +5535,8 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo "$Activity..."
 ::
+::    Set-Icon ([IconName]::Working)
+::
 ::    $ACTIVITIES.Push($Activity)
 ::
 ::    Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
@@ -3660,7 +5547,7 @@ if "%~1"=="Debug" (
 ::        Set-Variable -Option Constant ParentId ([Int]0)
 ::    }
 ::
-::    Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -PercentComplete 1
+::    Invoke-WriteProgress -Id $TaskLevel -Activity $Activity -ParentId $ParentId -PercentComplete 5
 ::}
 ::
 ::function Write-ActivityProgress {
@@ -3716,7 +5603,9 @@ if "%~1"=="Debug" (
 ::
 ::    Set-Variable -Scope Script CURRENT_TASK $Null
 ::
-::    Set-Icon (([IconName]::Default))
+::    if ($TaskLevel -eq 1) {
+::        Set-Icon (([IconName]::Default))
+::    }
 ::}
 ::
 ::#endregion functions > App lifecycle > Progressbar
@@ -3748,11 +5637,8 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    switch ($Name) {
-::        ([IconName]::Cleanup) {
-::            $FORM.Icon = $ICON_CLEANUP
-::        }
-::        ([IconName]::Download) {
-::            $FORM.Icon = $ICON_DOWNLOAD
+::        ([IconName]::Working) {
+::            $FORM.Icon = $ICON_WORKING
 ::        }
 ::        Default {
 ::            $FORM.Icon = $ICON_DEFAULT
@@ -3844,7 +5730,7 @@ if "%~1"=="Debug" (
 ::        [Switch]$Temp
 ::    )
 ::
-::    Write-ActivityProgress 50 "Extracting '$ZipPath'..."
+::    Write-ActivityProgress 65 "Extracting '$ZipPath'..."
 ::
 ::    if (-not (Test-Path $ZipPath)) {
 ::        throw "Archive not found: $ZipPath"
@@ -3871,6 +5757,8 @@ if "%~1"=="Debug" (
 ::        return $TargetExe
 ::    }
 ::
+::    Write-ActivityProgress 70
+::
 ::    Initialize-AppDirectory
 ::
 ::    Remove-File $TemporaryExe
@@ -3878,6 +5766,8 @@ if "%~1"=="Debug" (
 ::    Remove-Directory $ExtractionPath
 ::
 ::    New-Directory $ExtractionPath
+::
+::    Write-ActivityProgress 75
 ::
 ::    if (Test-Path $PATH_7ZIP_EXE) {
 ::        Invoke-7Zip $ExtractionPath $ZipPath
@@ -3894,6 +5784,8 @@ if "%~1"=="Debug" (
 ::            throw "7-Zip not found at '$PATH_7ZIP_EXE'"
 ::        }
 ::    }
+::
+::    Write-ActivityProgress 80
 ::
 ::    if (-not $IsDirectory) {
 ::        Move-Item -Force $TemporaryExe $TargetExe -ErrorAction Stop
@@ -3912,17 +5804,17 @@ if "%~1"=="Debug" (
 ::#endregion functions > Common > Expand-Zip
 ::
 ::
-::#region functions > Common > Find-RunningProcess
+::#region functions > Common > Find-RunningProcesses
 ::
-::function Find-RunningProcess {
+::function Find-RunningProcesses {
 ::    param(
-::        [String][Parameter(Position = 0, Mandatory)]$ProcessName
+::        [String[]][Parameter(Position = 0, Mandatory)]$ProcessNames
 ::    )
 ::
-::    return Get-Process -ErrorAction Stop | Where-Object { $_.ProcessName -eq $ProcessName }
+::    return Get-Process -ErrorAction Stop | Where-Object { $ProcessNames -contains $_.ProcessName }
 ::}
 ::
-::#endregion functions > Common > Find-RunningProcess
+::#endregion functions > Common > Find-RunningProcesses
 ::
 ::
 ::#region functions > Common > Find-RunningScript
@@ -4163,7 +6055,7 @@ if "%~1"=="Debug" (
 ::
 ::    Initialize-AppDirectory
 ::
-::    Write-ActivityProgress 20
+::    Write-ActivityProgress 10
 ::
 ::    [Int]$RetryCount = 0
 ::    [Bool]$DownloadSuccess = $False
@@ -4186,9 +6078,13 @@ if "%~1"=="Debug" (
 ::        }
 ::    }
 ::
+::    Write-ActivityProgress 55
+::
 ::    if (-not $Temp) {
 ::        Move-Item -Force $TempPath $SavePath -ErrorAction Stop
 ::    }
+::
+::    Write-ActivityProgress 60
 ::
 ::    if (Test-Path $SavePath) {
 ::        Out-Success
@@ -4215,7 +6111,6 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    New-Activity 'Download and run'
-::    Set-Icon ([IconName]::Download)
 ::
 ::    try {
 ::        Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
@@ -4271,8 +6166,10 @@ if "%~1"=="Debug" (
 ::        [Switch]$Silent
 ::    )
 ::
+::    Write-ActivityProgress 85
+::
 ::    Set-Variable -Option Constant ProcessName ([String](Split-Path -Leaf $Executable -ErrorAction Stop) -replace '\.exe$', '')
-::    if (Find-RunningProcess $ProcessName) {
+::    if (Find-RunningProcesses $ProcessName) {
 ::        Write-LogWarning "Process '$ProcessName' is already running"
 ::        return
 ::    }
@@ -4307,8 +6204,7 @@ if "%~1"=="Debug" (
 ::
 ::enum IconName {
 ::    Default
-::    Cleanup
-::    Download
+::    Working
 ::}
 ::
 ::#endregion functions > Common > types
@@ -4614,7 +6510,7 @@ if "%~1"=="Debug" (
 ::
 ::    Set-Variable -Option Constant LogIndentLevel ([Int]2)
 ::
-::    if (Find-RunningProcess $ProcessName) {
+::    if (Find-RunningProcesses $ProcessName) {
 ::        Write-LogInfo "Stopping process '$AppName'..." $LogIndentLevel
 ::        Stop-Process -Name $ProcessName -Force -ErrorAction Stop
 ::        Out-Success $LogIndentLevel
@@ -4742,6 +6638,16 @@ if "%~1"=="Debug" (
 ::        Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_BASELINE_RUSSIAN)
 ::    } else {
 ::        Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_BASELINE_ENGLISH)
+::    }
+::
+::    if ($OS_VERSION -ge 11) {
+::        Set-Variable -Option Constant TaskManagerConfig ([String]"$env:LocalAppData\Microsoft\Windows\TaskManager\settings.json")
+::
+::        if ($SYSTEM_LANGUAGE -match 'ru') {
+::            Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_RUSSIAN -NoNewline
+::        } else {
+::            Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_ENGLISH -NoNewline
+::        }
 ::    }
 ::
 ::    [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_BASELINE
@@ -4879,7 +6785,6 @@ if "%~1"=="Debug" (
 ::        Set-MpPreference -DisableSmtpParsing $False
 ::        Set-MpPreference -DisableSshParsing $False
 ::        Set-MpPreference -DisableTlsParsing $False
-::        Set-MpPreference -IntelTDTEnabled 1
 ::        Set-MpPreference -MeteredConnectionUpdates $True
 ::
 ::        Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $True
@@ -5041,6 +6946,24 @@ if "%~1"=="Debug" (
 ::        [Windows.Forms.CheckBox][Parameter(Position = 6, Mandatory)]$Personalisation
 ::    )
 ::
+::    if (Assert-WindowsDebloatIsRunning) {
+::        Write-LogWarning 'Windows debloat utility is currently running, which may interfere with the Windows configuration process'
+::        Write-LogWarning 'Repeat the attempt after the debloat utility has finished running'
+::        return
+::    }
+::
+::    if (Assert-WinUtilIsRunning) {
+::        Write-LogWarning 'WinUtil utility is running, which may interfere with the Windows configuration process'
+::        Write-LogWarning 'Repeat the attempt after WinUtil utility has finished running'
+::        return
+::    }
+::
+::    if (Assert-OOShutUp10IsRunning) {
+::        Write-LogWarning 'OOShutUp10++ utility is running, which may interfere with the Windows configuration process'
+::        Write-LogWarning 'Repeat the attempt after OOShutUp10++ utility has finished running'
+::        return
+::    }
+::
 ::    New-Activity 'Configuring Windows'
 ::
 ::    if ($Security.Checked) {
@@ -5090,6 +7013,40 @@ if "%~1"=="Debug" (
 ::#endregion functions > Configuration > Windows > Set-WindowsConfiguration
 ::
 ::
+::#region functions > Configuration > Windows > Tools > Assertions
+::
+::function Assert-WindowsDebloatIsRunning {
+::    return Find-RunningScript 'debloat.raphi.re'
+::}
+::
+::
+::function Assert-WinUtilIsRunning {
+::    return Find-RunningScript 'christitus.com'
+::}
+::
+::
+::function Assert-OOShutUp10IsRunning {
+::    return Find-RunningProcesses 'OOSU10'
+::}
+::
+::
+::function Assert-SdiIsRunning {
+::    return Find-RunningProcesses @('SDI64-drv', 'SDI-drv')
+::}
+::
+::
+::function Assert-DownloadingWindowsUpdates {
+::    return Get-BitsTransfer -AllUsers | Where-Object JobState -EQ 'Transferring'
+::}
+::
+::
+::function Assert-InstallingWindowsUpdates {
+::    return Find-RunningProcesses @('TiWorker', 'TrustedInstaller')
+::}
+::
+::#endregion functions > Configuration > Windows > Tools > Assertions
+::
+::
 ::#region functions > Configuration > Windows > Tools > Start-OoShutUp10
 ::
 ::function Start-OoShutUp10 {
@@ -5099,6 +7056,18 @@ if "%~1"=="Debug" (
 ::    )
 ::
 ::    Write-LogInfo 'Starting OOShutUp10++ utility...'
+::
+::    if (Assert-WindowsDebloatIsRunning) {
+::        Write-LogWarning 'Windows debloat utility is running, which may interfere with the OOShutUp10++ utility'
+::        Write-LogWarning 'Repeat the attempt after Windows debloat utility has finished running'
+::        return
+::    }
+::
+::    if (Assert-WinUtilIsRunning) {
+::        Write-LogWarning 'WinUtil utility is running, which may interfere with the OOShutUp10++ utility'
+::        Write-LogWarning 'Repeat the attempt after WinUtil utility has finished running'
+::        return
+::    }
 ::
 ::    try {
 ::        if ($Execute) {
@@ -5112,17 +7081,16 @@ if "%~1"=="Debug" (
 ::        New-Directory $TargetPath
 ::
 ::        Set-Content $ConfigFile $CONFIG_OOSHUTUP10 -NoNewline -ErrorAction Stop
+::
+::        if ($Execute -and $Silent) {
+::            Set-Variable -Option Constant Params $ConfigFile
+::        }
 ::    } catch {
 ::        Write-LogWarning "Failed to initialize OOShutUp10++ configuration: $_"
 ::    }
 ::
-::    if ($Execute -and $Silent) {
-::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute -Params $ConfigFile
-::        Out-Success
-::    } else {
-::        Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute
-::        Out-Success
-::    }
+::    Start-DownloadUnzipAndRun 'https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe' -Execute:$Execute -Params $Params
+::    Out-Success
 ::}
 ::
 ::#endregion functions > Configuration > Windows > Tools > Start-OoShutUp10
@@ -5139,8 +7107,20 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 ::
-::    if (Find-RunningScript 'debloat.raphi.re') {
+::    if (Assert-WindowsDebloatIsRunning) {
 ::        Write-LogWarning 'Windows debloat utility is already running'
+::        return
+::    }
+::
+::    if (Assert-WinUtilIsRunning) {
+::        Write-LogWarning 'WinUtil utility is running, which may interfere with the Windows debloat utility'
+::        Write-LogWarning 'Repeat the attempt after WinUtil utility has finished running'
+::        return
+::    }
+::
+::    if (Assert-OOShutUp10IsRunning) {
+::        Write-LogWarning 'OOShutUp10++ utility is running, which may interfere with the Windows debloat utility'
+::        Write-LogWarning 'Repeat the attempt after OOShutUp10++ utility has finished running'
 ::        return
 ::    }
 ::
@@ -5208,8 +7188,20 @@ if "%~1"=="Debug" (
 ::
 ::    Write-LogInfo 'Starting WinUtil utility...'
 ::
-::    if (Find-RunningScript 'christitus.com') {
+::    if (Assert-WinUtilIsRunning) {
 ::        Write-LogWarning 'WinUtil utility is already running'
+::        return
+::    }
+::
+::    if (Assert-WindowsDebloatIsRunning) {
+::        Write-LogWarning 'Windows debloat utility is running, which may interfere with the WinUtil utility'
+::        Write-LogWarning 'Repeat the attempt after Windows debloat utility has finished running'
+::        return
+::    }
+::
+::    if (Assert-OOShutUp10IsRunning) {
+::        Write-LogWarning 'OOShutUp10++ utility is running, which may interfere with the WinUtil utility'
+::        Write-LogWarning 'Repeat the attempt after OOShutUp10++ utility has finished running'
 ::        return
 ::    }
 ::
@@ -5319,8 +7311,17 @@ if "%~1"=="Debug" (
 ::#region functions > Home > Start-Cleanup
 ::
 ::function Start-Cleanup {
+::    if (Assert-SdiIsRunning) {
+::        Write-LogWarning 'Snappy Driver Installer is currently running. Please close it before starting the cleanup process.'
+::        return
+::    }
+::
+::    if ((Assert-DownloadingWindowsUpdates) -or (Assert-InstallingWindowsUpdates)) {
+::        Write-LogWarning 'Windows Update is currently running. Please wait for updates to complete before starting the cleanup process.'
+::        return
+::    }
+::
 ::    New-Activity 'Cleaning up the system'
-::    Set-Icon ([IconName]::Cleanup)
 ::
 ::    Write-ActivityProgress 10 'Clearing delivery optimization cache...'
 ::    Delete-DeliveryOptimizationCache -Force
@@ -5405,6 +7406,11 @@ if "%~1"=="Debug" (
 ::    try {
 ::        Write-LogInfo 'Starting Microsoft Office update...'
 ::
+::        if (-not (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE)) {
+::            Write-LogWarning "Microsoft Office Click-to-Run client executable not found at '$PATH_OFFICE_C2R_CLIENT_EXE'"
+::            return
+::        }
+::
 ::        Start-Process $PATH_OFFICE_C2R_CLIENT_EXE '/update user' -ErrorAction Stop
 ::
 ::        Out-Success
@@ -5421,6 +7427,12 @@ if "%~1"=="Debug" (
 ::function Update-MicrosoftStoreApps {
 ::    try {
 ::        Write-LogInfo 'Starting Microsoft Store apps update...'
+::
+::        if (Assert-WindowsDebloatIsRunning) {
+::            Write-LogWarning 'Windows debloat utility is currently running, which may interfere with the Microsoft Store apps update process'
+::            Write-LogWarning 'Repeat the attempt after the debloat utility has finished running'
+::            return
+::        }
 ::
 ::        Get-CimInstance MDM_EnterpriseModernAppManagement_AppManagement01 -Namespace 'root\cimv2\mdm\dmmap' | Invoke-CimMethod -MethodName 'UpdateScanMethod'
 ::
