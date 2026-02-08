@@ -20,6 +20,16 @@ function Set-BaselineConfiguration {
         Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_BASELINE_ENGLISH)
     }
 
+    if ($OS_VERSION -ge 11) {
+        Set-Variable -Option Constant TaskManagerConfig ([String]"$env:LocalAppData\Microsoft\Windows\TaskManager\settings.json")
+
+        if ($SYSTEM_LANGUAGE -match 'ru') {
+            Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_RUSSIAN -NoNewline
+        } else {
+            Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_ENGLISH -NoNewline
+        }
+    }
+
     [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_BASELINE
     $ConfigLines.Add("`n")
     $ConfigLines.Add((Add-SysPrepConfig $LocalisedConfig))

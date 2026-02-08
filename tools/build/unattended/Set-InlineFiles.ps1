@@ -8,20 +8,21 @@ function Set-InlineFiles {
 
     Set-Variable -Option Constant KEY_FILE_MAP (
         [Hashtable]@{
-            'CONFIG_APP_ASSOCIATIONS'      = "$UnattendedPath\App associations.xml"
-            'CONFIG_7ZIP'                  = "$ConfigsPath\Apps\7zip.reg"
-            'CONFIG_ANYDESK'               = "$ConfigsPath\Apps\AnyDesk.conf"
-            'CONFIG_MICROSOFT_OFFICE'      = "$ConfigsPath\Apps\Microsoft Office.reg"
-            'CONFIG_QBITTORRENT_LOCALIZED' = "$ConfigsPath\Apps\qBittorrent {LOCALE}.ini"
-            'CONFIG_QBITTORRENT'           = "$ConfigsPath\Apps\qBittorrent base.ini"
-            'CONFIG_VLC'                   = "$ConfigsPath\Apps\VLC.ini"
-            'CONFIG_SECURITY'              = "$ConfigsPath\Windows\Security.reg"
-            'CONFIG_PERFORMANCE'           = "$ConfigsPath\Windows\Performance.reg"
-            'CONFIG_BASELINE'              = "$ConfigsPath\Windows\Baseline.reg"
-            'CONFIG_WINDOWS_LOCALISED'     = "$ConfigsPath\Windows\Baseline {LOCALE}.reg"
-            'CONFIG_ANNOYANCES'            = "$ConfigsPath\Windows\Annoyances.reg"
-            'CONFIG_PRIVACY'               = "$ConfigsPath\Windows\Privacy.reg"
-            'CONFIG_PERSONALISATION'       = "$ConfigsPath\Windows\Personalisation.reg"
+            'CONFIG_APP_ASSOCIATIONS'       = "$UnattendedPath\App associations.xml"
+            'CONFIG_7ZIP'                   = "$ConfigsPath\Apps\7zip.reg"
+            'CONFIG_ANYDESK'                = "$ConfigsPath\Apps\AnyDesk.conf"
+            'CONFIG_MICROSOFT_OFFICE'       = "$ConfigsPath\Apps\Microsoft Office.reg"
+            'CONFIG_QBITTORRENT_LOCALIZED'  = "$ConfigsPath\Apps\qBittorrent {LOCALE}.ini"
+            'CONFIG_QBITTORRENT'            = "$ConfigsPath\Apps\qBittorrent base.ini"
+            'CONFIG_VLC'                    = "$ConfigsPath\Apps\VLC.ini"
+            'CONFIG_SECURITY'               = "$ConfigsPath\Windows\Security.reg"
+            'CONFIG_PERFORMANCE'            = "$ConfigsPath\Windows\Performance.reg"
+            'CONFIG_BASELINE'               = "$ConfigsPath\Windows\Baseline.reg"
+            'CONFIG_TASK_MANAGER_LOCALISED' = "$ConfigsPath\Windows\Task Manager {LOCALE}.json"
+            'CONFIG_WINDOWS_LOCALISED'      = "$ConfigsPath\Windows\Baseline {LOCALE}.reg"
+            'CONFIG_ANNOYANCES'             = "$ConfigsPath\Windows\Annoyances.reg"
+            'CONFIG_PRIVACY'                = "$ConfigsPath\Windows\Privacy.reg"
+            'CONFIG_PERSONALISATION'        = "$ConfigsPath\Windows\Personalisation.reg"
         }
     )
 
