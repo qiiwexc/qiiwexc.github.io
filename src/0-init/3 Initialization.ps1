@@ -10,28 +10,15 @@ try {
 }
 
 Set-Variable -Option Constant OPERATING_SYSTEM ([PSObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
-Set-Variable -Option Constant IsWindows11 ([Bool]($OPERATING_SYSTEM.Caption -match 'Windows 11'))
 Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
 
 Set-Variable -Option Constant OS_64_BIT ([Bool]($env:PROCESSOR_ARCHITECTURE -like '*64'))
 
-if ($IsWindows11) {
+if ($OPERATING_SYSTEM.Caption -match 'Windows 11') {
     Set-Variable -Option Constant OS_VERSION ([Int]11)
+} elseif ($WindowsBuild -match '10.0.*') {
+    Set-Variable -Option Constant OS_VERSION ([Int]10)
 } else {
-    switch -Wildcard ($WindowsBuild) {
-        '10.0.*' {
-            Set-Variable -Option Constant OS_VERSION ([Int]10)
-        }
-        '6.3.*' {
-            Set-Variable -Option Constant OS_VERSION ([Int]8)
-        }
-        Default {
-            Set-Variable -Option Constant OS_VERSION ([Int]0)
-        }
-    }
-}
-
-if ($OS_VERSION -lt 10) {
     Write-Error "Unsupported Operating System: $($OPERATING_SYSTEM.Caption) (Build $WindowsBuild)"
     Start-Sleep -Seconds 5
     break
