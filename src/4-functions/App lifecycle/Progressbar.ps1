@@ -18,15 +18,26 @@ function Invoke-WriteProgress {
         }
     )
 
-    if ($ParentId -gt 0) { $Params.ParentId = $ParentId }
-    if ($Status) { $Params.Status = $Status }
+    if ($ParentId -gt 0) {
+        $Params.ParentId = $ParentId
+    }
+
+    if ($Status) {
+        $Params.Status = $Status
+    }
 
     if ($Completed) {
-        $PROGRESSBAR.Value = 100
         $Params.Completed = $True
+
+        if ($ParentId -eq 0) {
+            $PROGRESSBAR.Value = 100
+        }
     } else {
-        $PROGRESSBAR.Value = $PercentComplete
         $Params.PercentComplete = $PercentComplete
+
+        if ($ParentId -eq 0) {
+            $PROGRESSBAR.Value = $PercentComplete
+        }
     }
 
     Write-Progress @Params
@@ -107,6 +118,7 @@ function Write-ActivityCompleted {
 
     Set-Variable -Scope Script CURRENT_TASK $Null
 
-    $PROGRESSBAR.Value = 0
-    Set-Icon (([IconName]::Default))
+    if ($TaskLevel -eq 1) {
+        Set-Icon (([IconName]::Default))
+    }
 }
