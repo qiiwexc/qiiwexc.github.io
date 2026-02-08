@@ -16,8 +16,6 @@ Describe 'Update-MicrosoftOffice' {
         Mock Start-Process {}
         Mock Out-Success {}
         Mock Out-Failure {}
-
-        [String]$OFFICE_INSTALL_TYPE = 'C2R'
     }
 
     It 'Should update Microsoft Office' {
@@ -32,18 +30,6 @@ Describe 'Update-MicrosoftOffice' {
             $ArgumentList -eq '/update user'
         }
         Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Out-Failure -Exactly 0
-    }
-
-    It 'Should exit if not Click-to-Run installation' {
-        [String]$OFFICE_INSTALL_TYPE = 'MSI'
-
-        Update-MicrosoftOffice
-
-        Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Test-Path -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
     }
 

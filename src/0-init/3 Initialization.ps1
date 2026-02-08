@@ -44,16 +44,3 @@ Set-Variable -Option Constant PATH_OOSHUTUP10 ([String]"$env:ProgramData\OOShutU
 
 Set-Variable -Option Constant IS_LAPTOP ([Bool]((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2))
 Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
-
-
-Set-Variable -Option Constant WordRegPath ([String]'Registry::HKEY_CLASSES_ROOT\Word.Application\CurVer')
-if (Test-Path $WordRegPath) {
-    Set-Variable -Option Constant WordPath ([PSObject](Get-ItemProperty $WordRegPath))
-    Set-Variable -Option Constant OFFICE_VERSION ([String]($WordPath.'(default)' -replace '\D+', ''))
-
-    if (Test-Path $PATH_OFFICE_C2R_CLIENT_EXE) {
-        Set-Variable -Option Constant OFFICE_INSTALL_TYPE ([String]'C2R')
-    } else {
-        Set-Variable -Option Constant OFFICE_INSTALL_TYPE ([String]'MSI')
-    }
-}
