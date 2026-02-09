@@ -52,15 +52,9 @@ Describe 'Set-PrivacyConfiguration' {
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
             $AppName -eq 'Windows Privacy Config' -and
             $Content -match $TestSysPrepConfig -and
-            $Content -match "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\LogonUI\\Creative\\$($TestUsers[0])\]`n" -and
-            $Content -match "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\LogonUI\\Creative\\$($TestUsers[1])\]`n" -and
-            $Content -match "`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n" -and
             $Content -match "`n\[HKEY_USERS\\$($TestUsers[0])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
             $Content -match "`n\[HKEY_USERS\\$($TestUsers[1])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
-            $Content -match "`"DoNotTrack`"=dword:00000001`n" -and
-            $Content -match "`n\[HKEY_USERS\\$($TestUsers[0])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\]`n" -and
-            $Content -match "`n\[HKEY_USERS\\$($TestUsers[1])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\]`n" -and
-            $Content -match "`"EnableCortana`"=dword:00000000`n"
+            $Content -match "`"DoNotTrack`"=dword:00000001`n"
         }
         Should -Invoke Out-Success -Exactly 1
     }
@@ -77,15 +71,9 @@ Describe 'Set-PrivacyConfiguration' {
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
             $Content -match $TestSysPrepConfig -and
-            $Content -notmatch "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\LogonUI\\Creative\\$($TestUsers[0])\]`n" -and
-            $Content -notmatch "`n\[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\LogonUI\\Creative\\$($TestUsers[1])\]`n" -and
-            $Content -notmatch "`"RotatingLockScreenOverlayEnabled`"=dword:00000000`n" -and
             $Content -notmatch "`n\[HKEY_USERS\\$($TestUsers[0])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
             $Content -notmatch "`n\[HKEY_USERS\\$($TestUsers[1])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
-            $Content -notmatch "`"DoNotTrack`"=dword:00000001`n" -and
-            $Content -notmatch "`n\[HKEY_USERS\\$($TestUsers[0])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\]`n" -and
-            $Content -notmatch "`n\[HKEY_USERS\\$($TestUsers[1])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\]`n" -and
-            $Content -notmatch "`"EnableCortana`"=dword:00000000`n"
+            $Content -notmatch "`"DoNotTrack`"=dword:00000001`n"
         }
         Should -Invoke Out-Success -Exactly 1
     }

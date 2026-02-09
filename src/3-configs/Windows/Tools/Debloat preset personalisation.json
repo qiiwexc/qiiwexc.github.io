@@ -23,7 +23,7 @@
     { "Name": "DisableEdgeAI", "Value": false },
     { "Name": "DisableFastStartup", "Value": false },
     { "Name": "DisableGameBarIntegration", "Value": false },
-    { "Name": "DisableLockscreenTips", "Value": true },
+    { "Name": "DisableLockscreenTips", "Value": false },
     { "Name": "DisableModernStandbyNetworking", "Value": false },
     { "Name": "DisableMouseAcceleration", "Value": false },
     { "Name": "DisableNotepadAI", "Value": false },
