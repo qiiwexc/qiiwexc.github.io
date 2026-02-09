@@ -10,13 +10,9 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant PATH_WINUTIL ([String]'TEST_PATH_WINUTIL')
-    Set-Variable -Option Constant CONFIG_WINUTIL ([String]"TEST_CONFIG_WINUTIL_1    `"WPFTweaks`":  [
- TEST_CONFIG_WINUTIL_2")
-    Set-Variable -Option Constant CONFIG_WINUTIL_PERSONALISATION ([String]'TEST_CONFIG_WINUTIL_PERSONALISATION')
+    Set-Variable -Option Constant CONFIG_WINUTIL ([String]'TEST_CONFIG_WINUTIL')
 
     Set-Variable -Option Constant TestConfigFile ([String]"$PATH_WINUTIL\WinUtil.json")
-    Set-Variable -Option Constant TestConfigWithPersonalization ([String]"TEST_CONFIG_WINUTIL_1    `"WPFTweaks`":  [
-TEST_CONFIG_WINUTIL_PERSONALISATION TEST_CONFIG_WINUTIL_2")
     Set-Variable -Option Constant TestCommand ([String]"& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) -Config $TestConfigFile")
 }
 
@@ -53,26 +49,6 @@ Describe 'Start-WinUtil' {
         }
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter { $Command -eq $TestCommand }
-        Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Out-Failure -Exactly 0
-    }
-
-    It 'Should start WinUtil with personalisation configuration' {
-        Start-WinUtil -Personalisation
-
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestConfigFile -and
-            $Value -eq $TestConfigWithPersonalization -and
-            $NoNewline -eq $True
-        }
-        Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }

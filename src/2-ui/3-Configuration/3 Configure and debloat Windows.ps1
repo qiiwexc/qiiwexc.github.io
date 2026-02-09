@@ -15,10 +15,8 @@ $CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
 [Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks' -Padded
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -Personalisation:$CHECKBOX_WinUtilPersonalisation.Checked -AutomaticallyApply:$CHECKBOX_AutomaticallyRunWinUtil.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -AutomaticallyApply:$CHECKBOX_AutomaticallyRunWinUtil.Checked }
 New-Button 'WinUtil' $BUTTON_FUNCTION
-
-[Windows.Forms.CheckBox]$CHECKBOX_WinUtilPersonalisation = New-CheckBox '+ Personalisation settings'
 
 [Windows.Forms.CheckBox]$CHECKBOX_AutomaticallyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Padded
 
