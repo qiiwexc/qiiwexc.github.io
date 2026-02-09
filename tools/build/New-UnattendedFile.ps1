@@ -5,8 +5,7 @@ function New-UnattendedFile {
         [String][Parameter(Position = 2, Mandatory)]$SourcePath,
         [String][Parameter(Position = 3, Mandatory)]$TemplatesPath,
         [String][Parameter(Position = 4, Mandatory)]$BuildPath,
-        [String][Parameter(Position = 5, Mandatory)]$DistPath,
-        [String][Parameter(Position = 6, Mandatory)]$VmPath,
+        [String][Parameter(Position = 5, Mandatory)]$VmPath,
         [Switch]$CI
     )
 
@@ -102,7 +101,6 @@ function New-UnattendedFile {
     foreach ($Locale in $Locales) {
         [String]$LocalisedFileName = $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
         [String]$BuildFileName = "$BuildPath\$LocalisedFileName"
-        [String]$OutputFileName = "$DistPath\$LocalisedFileName"
 
         [String]$FileContent = Read-TextFile $BuildFileName
 
@@ -110,7 +108,7 @@ function New-UnattendedFile {
             $FileContent = $FileContent -replace $Regex, ''
         }
 
-        Write-TextFile $OutputFileName $FileContent -NoNewline
+        Write-TextFile $BuildFileName $FileContent -NoNewline
     }
 
     Write-ActivityCompleted
