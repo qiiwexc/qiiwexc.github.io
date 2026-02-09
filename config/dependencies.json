@@ -72,10 +72,10 @@
     },
     {
         "name":  "SDI",
-        "version":  "1.26.0",
+        "version":  "1.26.1",
         "source":  "URL",
-        "url":  "https://sdi-tool.org/download/",
-        "regex":  "^\\s+\u003ctd\u003eDirect\u003c/td\u003e\n\\s+\u003ctd\u003e(?:\\d|\\d\\.\\d)\\sMB\u003c/td\u003e\n\\s+\u003ctd\u003e(.*?)\\s\\(R\\d{4}\\)\u003c/td\u003e$"
+        "url":  "https://driveroff.net/dp/",
+        "regex":  "\u003ctr\u003e\u003ctd\u003eSnappy Driver Installer\u003c/td\u003e\u003ctd\u003e(.*?) \\((?:\\d{2}\\.\\d{2}\\.\\d{4})\\)\u003c/td\u003e"
     },
     {
         "name":  "CPU-Z",
