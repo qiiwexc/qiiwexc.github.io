@@ -56,7 +56,7 @@ Set-Variable -Option Constant CommonPath ([String]"$ToolsPath\common")
 Set-Variable -Option Constant TestsFile ([String]"$ToolsPath\test.ps1")
 Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
-Set-Variable -Option Constant BatchFile ([String]"$DistPath\$ProjectName.bat")
+Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
 
 . "$CommonPath\types.ps1"
 . "$CommonPath\logger.ps1"

@@ -28,7 +28,8 @@ jobs:
         with:
           name: build-output
           path: |
-            d/qiiwexc.bat
+            build/qiiwexc.bat
+            build/qiiwexc.ps1
             build/autounattend-*.xml
 
       - name: Check for tag
