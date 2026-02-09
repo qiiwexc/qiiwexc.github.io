@@ -121,7 +121,7 @@ Describe 'Get-NewVersion' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
-            $Uri -eq '{URL_BAT_FILE}' -and
+            $Uri -eq '{URL_BAT_FILE_UPDATE}' -and
             $OutFile -eq $TestAppBatFile
         }
         Should -Invoke Out-Failure -Exactly 0

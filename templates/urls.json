@@ -4,8 +4,16 @@
     "value": "https://bit.ly/qiiwexc_version"
   },
   {
-    "key": "URL_BAT_FILE",
-    "value": "https://bit.ly/qiiwexc_bat"
+    "key": "URL_BAT_FILE_WEB",
+    "value": "https://bit.ly/qiiwexc_bat_github"
+  },
+  {
+    "key": "URL_BAT_FILE_UPDATE",
+    "value": "https://bit.ly/qiiwexc_bat_update"
+  },
+  {
+    "key": "URL_BAT_FILE_UNATTEND",
+    "value": "https://bit.ly/qiiwexc_bat_unattend"
   },
   {
     "key": "URL_WINDOWS_11",

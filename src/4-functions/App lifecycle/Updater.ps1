@@ -58,7 +58,7 @@ function Get-NewVersion {
             return
         }
 
-        Invoke-WebRequest -Uri '{URL_BAT_FILE}' -OutFile $AppBatFile
+        Invoke-WebRequest -Uri '{URL_BAT_FILE_UPDATE}' -OutFile $AppBatFile
 
         Out-Success
     } catch {
