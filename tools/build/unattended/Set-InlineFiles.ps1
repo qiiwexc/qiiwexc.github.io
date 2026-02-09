@@ -28,25 +28,18 @@ function Set-InlineFiles {
 
     $KEY_FILE_MAP.GetEnumerator() | ForEach-Object {
         [String]$FileName = $_.Value.Replace('{LOCALE}', $Locale)
-
         [String]$FileContent = (Read-TextFile $FileName).Trim()
 
-        [Collections.Generic.List[String]]$FullContent = @()
-
         if ($FileName -match '.reg$') {
-            $FullContent.Add("Windows Registry Editor Version 5.00`n")
-            $FullContent.Add($FileContent.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\DefaultUser'))
+            [String]$FullContent = $FileContent.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\DefaultUser')
         } else {
-            $FullContent = $FileContent
-        }
-
-        [Collections.Generic.List[String]]$EscapedContent = @()
-        foreach ($Line in $FullContent) {
-            $EscapedContent.Add([Security.SecurityElement]::Escape($Line))
+            [String]$FullContent = $FileContent
         }
 
         [String]$Placeholder = "{$($_.Key)}"
-        $TemplateContent = $TemplateContent.Replace($Placeholder, ($EscapedContent -join "`n"))
+        [String]$EscapedContent = [Security.SecurityElement]::Escape($FullContent)
+
+        $TemplateContent = $TemplateContent.Replace($Placeholder, $EscapedContent)
     }
 
     return $TemplateContent
