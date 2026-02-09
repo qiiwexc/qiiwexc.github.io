@@ -26,7 +26,6 @@ AmazonVideo.PrimeVideo                         # Amazon Prime Video streaming se
 Asphalt8Airborne                               # Racing game
 AutodeskSketchBook                             # Digital drawing and sketching app
 CaesarsSlotsFreeCasino                         # Casino slot machine game
-Clipchamp.Clipchamp                            # Video editor from Microsoft
 COOKINGFEVER                                   # Restaurant simulation game
 CyberLinkMediaSuiteEssentials                  # Multimedia software suite (often preinstalled by OEMs)
 Disney                                         # General Disney content app (may vary by region/OEM, often Disney+)
