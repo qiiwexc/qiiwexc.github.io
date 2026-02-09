@@ -32,7 +32,7 @@ Describe 'Set-InlineFiles' {
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Windows\Baseline English.reg" }
 
         $Result | Should -MatchExactly 'TEST_TEMPLATE_CONTENT_1'
-        $Result | Should -MatchExactly "Windows Registry Editor Version 5\.00`n`nTEST_REG_FILE_CONTENT_1`n\[HKEY_USERS\\DefaultUser\\Test\]`n&quot;TestValue&quot;=1`nTEST_REG_FILE_CONTENT_2"
+        $Result | Should -MatchExactly "TEST_REG_FILE_CONTENT_1`n\[HKEY_USERS\\DefaultUser\\Test\]`n&quot;TestValue&quot;=1`nTEST_REG_FILE_CONTENT_2"
         $Result | Should -MatchExactly "TEST_GENERIC_FILE_CONTENT_1`nTEST_GENERIC_FILE_CONTENT_2"
         $Result | Should -MatchExactly 'TEST_TEMPLATE_CONTENT_2'
     }
@@ -47,7 +47,7 @@ Describe 'Set-InlineFiles' {
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigsPath\Windows\Baseline Russian.reg" }
 
         $Result | Should -MatchExactly 'TEST_TEMPLATE_CONTENT_1'
-        $Result | Should -MatchExactly "Windows Registry Editor Version 5\.00`n`nTEST_REG_FILE_CONTENT_1`n\[HKEY_USERS\\DefaultUser\\Test\]`n&quot;TestValue&quot;=1`nTEST_REG_FILE_CONTENT_2"
+        $Result | Should -MatchExactly "TEST_REG_FILE_CONTENT_1`n\[HKEY_USERS\\DefaultUser\\Test\]`n&quot;TestValue&quot;=1`nTEST_REG_FILE_CONTENT_2"
         $Result | Should -MatchExactly "TEST_GENERIC_FILE_CONTENT_1`nTEST_GENERIC_FILE_CONTENT_2"
         $Result | Should -MatchExactly 'TEST_TEMPLATE_CONTENT_2'
     }

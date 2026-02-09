@@ -11,7 +11,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestTemplateFileFilePath ([String]"$TestTemplatesPath\autounattend.xml")
 
-    Set-Variable -Option Constant TestTemplateFileContent ([String]"Windows Registry Editor Version 5.00`n`n<ExtractScript><HideOnlineAccountScreens>false</HideOnlineAccountScreens></ExtractScript>`n`t`t<File path=`"C:\Windows\Setup\Scripts\RemovePackages.ps1`">`n`$selectors = @(`n`t'Test1'`n`t'Test2'`n);`n`t`t</File>`n")
+    Set-Variable -Option Constant TestTemplateFileContent ([String]"Windows Registry Editor Version 5.00`r`n`r`n<ExtractScript><HideOnlineAccountScreens>false</HideOnlineAccountScreens></ExtractScript>`n`t`t<File path=`"C:\Windows\Setup\Scripts\RemovePackages.ps1`">`n`$selectors = @(`n`t'Test1'`n`t'Test2'`n);`n`t`t</File>`n")
 }
 
 Describe 'New-UnattendedBase' {
@@ -30,7 +30,7 @@ Describe 'New-UnattendedBase' {
             $Path -eq $TestBaseFilePath -and
             $Content -match "^<!-- Version: {VERSION} -->`n" -and
             $Content -notmatch "`t" -and
-            $Content -notmatch "Windows Registry Editor Version 5\.00`r`n`r`n" -and
+            $Content -match "Windows Registry Editor Version 5\.00`r`n`r`n" -and
             $Content -notmatch '<HideOnlineAccountScreens>false</HideOnlineAccountScreens>' -and
             $Content -match '<HideOnlineAccountScreens>true</HideOnlineAccountScreens>' -and
             $Content -notmatch 'C:\\Windows\\Setup\\Scripts\\' -and
