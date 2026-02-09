@@ -216,7 +216,6 @@
 "NoLockScreenCamera"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
-"EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000
 
@@ -291,7 +290,6 @@
 "NoLockScreenCamera"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\System]
-"EnableMmx"=dword:00000000
 "PublishUserActivities"=dword:00000000 ; Disable "Activity History"
 "UploadUserActivities"=dword:00000000
 
