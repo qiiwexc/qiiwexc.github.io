@@ -15,7 +15,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
+    Set-Variable -Option Constant TestVersion ([Version]'1.2.3')
     Set-Variable -Option Constant TestSourcePath ([String]'TEST_SOURCE_PATH')
     Set-Variable -Option Constant TestTemplatesPath ([String]'TEST_TEMPLATES_PATH')
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')

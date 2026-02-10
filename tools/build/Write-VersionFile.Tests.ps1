@@ -6,7 +6,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
+    Set-Variable -Option Constant TestVersion ([Version]'1.2.3')
     Set-Variable -Option Constant TestFilePath ([String]'TEST_FILE_PATH')
 }
 
