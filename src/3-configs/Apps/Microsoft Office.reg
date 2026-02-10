@@ -15,7 +15,6 @@
 "QMEnable"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
-"Enabled"=dword:00000000
 "IncludeEmail"=dword:00000000
 "SurveyEnabled"=dword:00000000
 

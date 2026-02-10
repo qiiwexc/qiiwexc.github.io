@@ -57,22 +57,18 @@
 "TailoredExperiencesWithDiagnosticDataEnabled"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search]
-"AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchPrivacy"=dword:00000003
 
 ; Disable personalization of ads, Microsoft Edge, search, news and other Microsoft services by sending browsing history, favorites and collections, usage and other browsing data to Microsoft
 ; Disable required and optional diagnostic data about browser usage
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Edge]
 "ConfigureDoNotTrack"=dword:00000001
-"EdgeShoppingAssistantEnabled"=dword:00000000
 "PersonalizationReportingEnabled"=dword:00000000
-"UserFeedbackAllowed"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common]
 "QMEnable"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Common\Feedback]
-"Enabled"=dword:00000000
 "IncludeEmail"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\osm]
@@ -163,10 +159,8 @@
 "DiagnosticData"=dword:00000000
 "EdgeAssetDeliveryServiceEnabled"=dword:00000000
 "EdgeCollectionsEnabled"=dword:00000000
-"EdgeShoppingAssistantEnabled"=dword:00000000
 "ExperimentationAndConfigurationServiceControl"=dword:00000002
 "HubsSidebarEnabled"=dword:00000000
-"Microsoft365CopilotChatIconEnabled"=dword:00000000
 "MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
 "NewTabPageContentEnabled"=dword:00000000
 "NewTabPageHideDefaultTopSites"=dword:00000001
@@ -174,7 +168,6 @@
 "ShowMicrosoftRewards"=dword:00000000
 "ShowRecommendationsEnabled"=dword:00000000
 "SpotlightExperiencesAndRecommendationsEnabled"=dword:00000000
-"UserFeedbackAllowed"=dword:00000000
 "WalletDonationEnabled"=dword:00000000
 "WebWidgetAllowed"=dword:00000000
 
@@ -209,9 +202,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports]
 "PreventHandwritingErrorReports"=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors]
-"DisableLocationScripting"=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization]
 "NoLockScreenCamera"=dword:00000001
 
@@ -226,7 +216,6 @@
 "EnableFeeds"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
-"AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchUseWeb"=dword:00000000
 "DisableWebSearch"=dword:00000001
 "EnableDynamicContentInWSB"=dword:00000000
@@ -236,9 +225,6 @@
 "DisableAIDataAnalysis"=dword:00000001 ; Disable AI recall
 "DisableClickToDo"=dword:00000001 ; Disable click to do
 "TurnOffSavingSnapshots"=dword:00000001 ; Disable AI recall
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet]
-"SpyNetReporting"=dword:00000000
 
 ; Send only Required Diagnostic and Usage Data
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection]
@@ -253,10 +239,8 @@
 "DiagnosticData"=dword:00000000
 "EdgeAssetDeliveryServiceEnabled"=dword:00000000
 "EdgeCollectionsEnabled"=dword:00000000
-"EdgeShoppingAssistantEnabled"=dword:00000000
 "ExperimentationAndConfigurationServiceControl"=dword:00000002
 "HubsSidebarEnabled"=dword:00000000
-"Microsoft365CopilotChatIconEnabled"=dword:00000000
 "MicrosoftEdgeInsiderPromotionEnabled"=dword:00000000
 "NewTabPageContentEnabled"=dword:00000000
 "NewTabPageHideDefaultTopSites"=dword:00000001
@@ -264,7 +248,6 @@
 "ShowMicrosoftRewards"=dword:00000000
 "ShowRecommendationsEnabled"=dword:00000000
 "SpotlightExperiencesAndRecommendationsEnabled"=dword:00000000
-"UserFeedbackAllowed"=dword:00000000
 "WalletDonationEnabled"=dword:00000000
 "WebWidgetAllowed"=dword:00000000
 
@@ -283,9 +266,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\HandwritingErrorReports]
 "PreventHandwritingErrorReports"=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\LocationAndSensors]
-"DisableLocationScripting"=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Personalization]
 "NoLockScreenCamera"=dword:00000001
 
@@ -297,7 +277,6 @@
 "PreventHandwritingDataSharing"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\Windows Search]
-"AllowSearchToUseLocation"=dword:00000000
 "ConnectedSearchUseWeb"=dword:00000000
 "DisableWebSearch"=dword:00000001
 "EnableDynamicContentInWSB"=dword:00000000
@@ -307,9 +286,6 @@
 "DisableAIDataAnalysis"=dword:00000001
 "DisableClickToDo"=dword:00000001 ; Disable click to do
 "TurnOffSavingSnapshots"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender\Spynet]
-"SpyNetReporting"=dword:00000000
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager]
 "EnablePeriodicBackup"=dword:00000001
