@@ -12,12 +12,6 @@ function Start-OoShutUp10 {
         return
     }
 
-    if (Assert-WinUtilIsRunning) {
-        Write-LogWarning 'WinUtil utility is running, which may interfere with the OOShutUp10++ utility'
-        Write-LogWarning 'Repeat the attempt after WinUtil utility has finished running'
-        return
-    }
-
     try {
         if ($Execute) {
             Set-Variable -Option Constant TargetPath ([String]$PATH_OOSHUTUP10)

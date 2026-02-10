@@ -15,12 +15,6 @@ $CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
 [Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks' -Padded
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -AutomaticallyApply:$CHECKBOX_AutomaticallyRunWinUtil.Checked }
-New-Button 'WinUtil' $BUTTON_FUNCTION
-
-[Windows.Forms.CheckBox]$CHECKBOX_AutomaticallyRunWinUtil = New-CheckBox 'Auto apply tweaks' -Padded
-
-
 [ScriptBlock]$BUTTON_FUNCTION = { Start-OoShutUp10 -Execute:$CHECKBOX_StartOoShutUp10.Checked -Silent:($CHECKBOX_StartOoShutUp10.Checked -and $CHECKBOX_SilentlyRunOoShutUp10.Checked) }
 New-Button 'OOShutUp10++ privacy' $BUTTON_FUNCTION
 
@@ -30,3 +24,7 @@ $CHECKBOX_StartOoShutUp10.Add_CheckStateChanged( {
     } )
 
 [Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks' -Padded
+
+
+[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -AutomaticallyApply:$CHECKBOX_AutomaticallyRunWinUtil.Checked }
+New-Button 'WinUtil' $BUTTON_FUNCTION

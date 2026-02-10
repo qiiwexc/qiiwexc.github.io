@@ -3,11 +3,6 @@ function Assert-WindowsDebloatIsRunning {
 }
 
 
-function Assert-WinUtilIsRunning {
-    return Find-RunningScript 'christitus.com'
-}
-
-
 function Assert-OOShutUp10IsRunning {
     return Find-RunningProcesses 'OOSU10'
 }

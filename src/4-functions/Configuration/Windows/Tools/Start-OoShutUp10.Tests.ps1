@@ -21,7 +21,6 @@ Describe 'Start-OoShutUp10' {
     BeforeEach {
         Mock Write-LogInfo {}
         Mock Assert-WindowsDebloatIsRunning {}
-        Mock Assert-WinUtilIsRunning {}
         Mock New-Directory {}
         Mock Set-Content {}
         Mock Start-DownloadUnzipAndRun {}
@@ -33,7 +32,6 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_WORKING_DIR }
         Should -Invoke Set-Content -Exactly 1
@@ -56,7 +54,6 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10 -Execute
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_OOSHUTUP10 }
         Should -Invoke Set-Content -Exactly 1
@@ -79,7 +76,6 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10 -Execute -Silent
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -98,21 +94,6 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 2
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-    }
-
-    It 'Should exit if WinUtil is running' {
-        Mock Assert-WinUtilIsRunning { return @(@{ ProcessName = 'powershell' }) }
-
-        Start-OoShutUp10
-
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -126,21 +107,6 @@ Describe 'Start-OoShutUp10' {
         { Start-OoShutUp10 } | Should -Throw $TestException
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 0
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-    }
-
-    It 'Should handle Assert-WinUtilIsRunning failure' {
-        Mock Assert-WinUtilIsRunning { throw $TestException }
-
-        { Start-OoShutUp10 } | Should -Throw $TestException
-
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
@@ -154,7 +120,6 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
@@ -168,7 +133,6 @@ Describe 'Start-OoShutUp10' {
         Start-OoShutUp10
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -182,7 +146,6 @@ Describe 'Start-OoShutUp10' {
         { Start-OoShutUp10 } | Should -Throw $TestException
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
