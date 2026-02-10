@@ -38,7 +38,6 @@ $ErrorActionPreference = 'Stop'
 
 Set-Variable -Option Constant ProjectRoot ([String](Split-Path -Parent $PSScriptRoot))
 
-Set-Variable -Option Constant Version ([String](Get-Date -Format 'y.M.d'))
 Set-Variable -Option Constant ProjectName ([String]'qiiwexc')
 
 Set-Variable -Option Constant BuildPath ([String]"$ProjectRoot\build")
@@ -57,6 +56,12 @@ Set-Variable -Option Constant TestsFile ([String]"$ToolsPath\test.ps1")
 Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
+
+if ($CI) {
+    Set-Variable -Option Constant Version ([Version](Get-Content $VersionFile).Trim())
+} else {
+    Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
+}
 
 . "$CommonPath\types.ps1"
 . "$CommonPath\logger.ps1"
