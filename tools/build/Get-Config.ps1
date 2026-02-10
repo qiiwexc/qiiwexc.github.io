@@ -1,7 +1,7 @@
 function Get-Config {
     param(
         [String][Parameter(Position = 0, Mandatory)]$BuildPath,
-        [String][Parameter(Position = 1, Mandatory)]$Version
+        [Version][Parameter(Position = 1, Mandatory)]$Version
     )
 
     New-Activity 'Loading config'

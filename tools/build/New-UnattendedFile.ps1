@@ -1,6 +1,6 @@
 function New-UnattendedFile {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Version,
+        [Version][Parameter(Position = 0, Mandatory)]$Version,
         [String][Parameter(Position = 1, Mandatory)]$BuilderPath,
         [String][Parameter(Position = 2, Mandatory)]$SourcePath,
         [String][Parameter(Position = 3, Mandatory)]$TemplatesPath,
