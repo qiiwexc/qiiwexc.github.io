@@ -24,7 +24,6 @@ Describe 'Start-WindowsDebloat' {
     BeforeEach {
         Mock Write-LogInfo {}
         Mock Assert-WindowsDebloatIsRunning {}
-        Mock Assert-WinUtilIsRunning {}
         Mock Assert-OOShutUp10IsRunning {}
         Mock Write-LogWarning {}
         Mock Test-NetworkConnection { return $True }
@@ -41,7 +40,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -73,7 +71,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -92,7 +89,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat -UsePreset
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -111,7 +107,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat -UsePreset -Personalisation
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -140,7 +135,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat -Silent
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -161,26 +155,8 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 0
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 0
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Out-Failure -Exactly 0
-    }
-
-    It 'Should exit if WinUtil is running' {
-        Mock Assert-WinUtilIsRunning { return @(@{ ProcessName = 'powershell' }) }
-
-        Start-WindowsDebloat
-
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Test-NetworkConnection -Exactly 0
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -195,7 +171,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Test-NetworkConnection -Exactly 0
@@ -212,7 +187,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -229,24 +203,6 @@ Describe 'Start-WindowsDebloat' {
         { Start-WindowsDebloat } | Should -Throw $TestException
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 0
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 0
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Out-Failure -Exactly 0
-    }
-
-    It 'Should handle Assert-WinUtilIsRunning failure' {
-        Mock Assert-WinUtilIsRunning { throw $TestException }
-
-        { Start-WindowsDebloat } | Should -Throw $TestException
-
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 0
@@ -263,7 +219,6 @@ Describe 'Start-WindowsDebloat' {
         { Start-WindowsDebloat } | Should -Throw $TestException
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 0
@@ -280,7 +235,6 @@ Describe 'Start-WindowsDebloat' {
         { Start-WindowsDebloat } | Should -Throw $TestException
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -297,7 +251,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -314,7 +267,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -331,7 +283,6 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-WinUtilIsRunning -Exactly 1
         Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1

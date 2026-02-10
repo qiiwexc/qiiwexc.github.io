@@ -41,37 +41,6 @@ Describe 'Assert-WindowsDebloatIsRunning' {
     }
 }
 
-Describe 'Assert-WinUtilIsRunning' {
-    BeforeEach {
-        Mock Find-RunningScript {}
-    }
-
-    It 'Should return true if WinUtil is running' {
-        Mock Find-RunningScript { return $TestProcess }
-
-        Set-Variable -Option Constant Result ([PSObject](Assert-WinUtilIsRunning))
-
-        $Result.ProcessName | Should -BeExactly $TestProcess.ProcessName
-
-        Should -Invoke Find-RunningScript -Exactly 1
-        Should -Invoke Find-RunningScript -Exactly 1 -ParameterFilter { $CommandLinePart -eq 'christitus.com' }
-    }
-
-    It 'Should return false if WinUtil is not running' {
-        Assert-WinUtilIsRunning | Should -BeNullOrEmpty
-
-        Should -Invoke Find-RunningScript -Exactly 1
-    }
-
-    It 'Should handle Find-RunningScript failure' {
-        Mock Find-RunningScript { throw $TestException }
-
-        { Assert-WinUtilIsRunning } | Should -Throw $TestException
-
-        Should -Invoke Find-RunningScript -Exactly 1
-    }
-}
-
 Describe 'Assert-OOShutUp10IsRunning' {
     BeforeEach {
         Mock Find-RunningProcesses {}
