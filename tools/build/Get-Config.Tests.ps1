@@ -8,7 +8,7 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
-    Set-Variable -Option Constant TestVersion ([String]'TEST_VERSION')
+    Set-Variable -Option Constant TestVersion ([Version]'1.2.3')
     Set-Variable -Option Constant TestContent (
         [Collections.Generic.List[Config]]@(
             @{key = 'TEST_KEY_1'; value = 'TEST_VALUE_1' },
