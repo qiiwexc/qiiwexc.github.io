@@ -60,7 +60,6 @@
   <Association Identifier=".tar" ProgId="ArchiveFolder" ApplicationName="File Explorer" />
   <Association Identifier=".tbz2" ProgId="7-Zip.tbz2" ApplicationName="7-Zip File Manager" />
   <Association Identifier=".tgz" ProgId="7-Zip.tgz" ApplicationName="7-Zip File Manager" />
-  <Association Identifier=".torrent" ProgId="qBittorrent.File.Torrent" ApplicationName="qBittorrent - A Bittorrent Client" />
   <Association Identifier=".ts" ProgId="VLC.ts" ApplicationName="VLC media player" />
   <Association Identifier=".tts" ProgId="VLC.tts" ApplicationName="VLC media player" />
   <Association Identifier=".txz" ProgId="7-Zip.txz" ApplicationName="7-Zip File Manager" />
