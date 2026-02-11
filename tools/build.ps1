@@ -141,7 +141,21 @@ if ($Ps1) {
 
 if ($Lint) {
     Write-ActivityProgress 80 'Running linter...'
-    Invoke-ScriptAnalyzer -Path .\build\qiiwexc.ps1 -Settings .\PSScriptAnalyzerSettings.psd1
+
+    Set-Variable -Option Constant MaxRetries ([int]3)
+
+    for ($i = 1; $i -le $MaxRetries; $i++) {
+        try {
+            Invoke-ScriptAnalyzer -Path .\build\qiiwexc.ps1 -Settings .\PSScriptAnalyzerSettings.psd1 -ErrorAction Stop
+            break
+        } catch {
+            if ($i -eq $MaxRetries) {
+                throw
+            }
+            Write-LogInfo "Linter failed (attempt $i/$MaxRetries), retrying..."
+            Start-Sleep -Seconds 1
+        }
+    }
     Out-Success
 }
 
