@@ -12,7 +12,6 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant PATH_WINUTIL ([String]'TEST_WINUTIL')
     Set-Variable -Option Constant PATH_OOSHUTUP10 ([String]'TEST_OOSHUTUP10')
     Set-Variable -Option Constant PATH_APP_DIR ([String]'TEST_APP_DIR')
 
@@ -46,11 +45,7 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Get-SystemInformation -Exactly 1
-        Should -Invoke Remove-Directory -Exactly 3
-        Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter {
-            $DirectoryPath -eq $PATH_WINUTIL -and
-            $Silent -eq $True
-        }
+        Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter {
             $DirectoryPath -eq $PATH_OOSHUTUP10 -and
             $Silent -eq $True
@@ -103,7 +98,7 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Get-SystemInformation -Exactly 1
-        Should -Invoke Remove-Directory -Exactly 3
+        Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Update-App -Exactly 0
     }
@@ -118,7 +113,7 @@ Describe 'Initialize-App' {
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
         Should -Invoke Get-SystemInformation -Exactly 1
-        Should -Invoke Remove-Directory -Exactly 3
+        Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Update-App -Exactly 1
     }

@@ -5,7 +5,6 @@ function Initialize-App {
 
     Get-SystemInformation
 
-    Remove-Directory $PATH_WINUTIL -Silent
     Remove-Directory $PATH_OOSHUTUP10 -Silent
     Remove-Directory $PATH_APP_DIR -Silent
 

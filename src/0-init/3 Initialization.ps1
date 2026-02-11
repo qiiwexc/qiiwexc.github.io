@@ -38,7 +38,6 @@ Set-Variable -Option Constant PATH_SYSTEM_32 ("$env:SystemRoot\System32")
 Set-Variable -Option Constant PATH_APP_DIR ([String]"$($PATH_TEMP_DIR)qiiwexc")
 Set-Variable -Option Constant PATH_OFFICE_C2R_CLIENT_EXE ([String]"$env:CommonProgramFiles\Microsoft Shared\ClickToRun\OfficeC2RClient.exe")
 Set-Variable -Option Constant PATH_7ZIP_EXE ([String]"$env:ProgramFiles\7-Zip\7z.exe")
-Set-Variable -Option Constant PATH_WINUTIL ([String]"$env:ProgramData\WinUtil")
 Set-Variable -Option Constant PATH_OOSHUTUP10 ([String]"$env:ProgramData\OOShutUp10++")
 
 
