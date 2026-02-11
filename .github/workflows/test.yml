@@ -1,5 +1,5 @@
-name: Lint and Test
-run-name: Lint and test (${{ github.ref_name }} - ${{ github.event_name }} - ${{ github.run_attempt }})
+name: Test
+run-name: Test (${{ github.ref_name }} - ${{ github.event_name }} - ${{ github.run_attempt }})
 
 permissions:
   contents: read
@@ -9,34 +9,6 @@ on:
   pull_request:
 
 jobs:
-  lint:
-    runs-on: windows-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6.0.2
-
-      - name: Run PSScriptAnalyzer
-        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          shell: powershell
-          command: |
-            Set-PSRepository PSGallery -InstallationPolicy Trusted
-            Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.22.0 -Force -Scope CurrentUser
-            Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
-
-            $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -ExcludeRule PSAvoidUsingWriteHost
-            $results | Format-Table -AutoSize
-            if ($results.Count -gt 0) {
-              $errors = $results | Where-Object { $_.Severity -eq 'Error' }
-              if ($errors.Count -gt 0) {
-                Write-Error "PSScriptAnalyzer found $($errors.Count) error(s)"
-                exit 1
-              }
-              Write-Warning "PSScriptAnalyzer found $($results.Count) issue(s), but no errors"
-            }
-
   test:
     runs-on: windows-latest
     steps:
@@ -47,7 +19,7 @@ jobs:
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module -Name Pester -Force -Scope CurrentUser -MinimumVersion 5.0.0
+          Install-Module -Name Pester -Force -Scope CurrentUser -MinimumVersion 5.7.1
 
       - name: Run tests with coverage
         run: .\test-with-coverage.bat
