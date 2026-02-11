@@ -26,5 +26,5 @@ $CHECKBOX_StartOoShutUp10.Add_CheckStateChanged( {
 [Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks' -Padded
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil -AutomaticallyApply:$CHECKBOX_AutomaticallyRunWinUtil.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil }
 New-Button 'WinUtil' $BUTTON_FUNCTION
