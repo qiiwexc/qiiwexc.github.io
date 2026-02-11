@@ -1,5 +1,5 @@
 name: Test
-run-name: Test (${{ github.ref_name }} - ${{ github.event_name }} - ${{ github.run_attempt }})
+run-name: Test (${{ github.event_name }} on ${{ github.ref_name }})
 
 permissions:
   contents: read
