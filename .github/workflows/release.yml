@@ -1,5 +1,5 @@
-name: Release
-run-name: Release (${{ github.ref_name }} - ${{ github.run_attempt }})
+name: Create a release
+run-name: Create a release
 
 permissions:
   contents: write
@@ -7,7 +7,7 @@ permissions:
 on:
   workflow_run:
     branches: [master]
-    workflows: [Deploy]
+    workflows: [Deploy to GitHub Pages]
     types: [completed]
 
 jobs:
@@ -23,31 +23,29 @@ jobs:
 
       - name: Check for tag
         id: check_tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           tag=$(git tag --points-at ${{ github.event.workflow_run.head_sha }})
-          if [ -n "$tag" ]; then
-            echo "tag=$tag" >> $GITHUB_OUTPUT
-            echo "is_tag=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_tag=false" >> $GITHUB_OUTPUT
+          if [ -z "$tag" ]; then
+            echo "No tag found, cancelling workflow"
+            gh run cancel ${{ github.run_id }}
+            gh run watch ${{ github.run_id }}
           fi
+          echo "tag=$tag" >> $GITHUB_OUTPUT
 
       - name: Check if release exists
-        id: check_release
-        if: steps.check_tag.outputs.is_tag == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag="${{ steps.check_tag.outputs.tag }}"
           if gh release view "$tag" > /dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-            echo "Release $tag already exists, skipping creation"
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Release $tag already exists, cancelling workflow"
+            gh run cancel ${{ github.run_id }}
+            gh run watch ${{ github.run_id }}
           fi
 
       - name: Download build artifacts
-        if: steps.check_tag.outputs.is_tag == 'true' && steps.check_release.outputs.exists != 'true'
         uses: actions/download-artifact@v7.0.0
         with:
           name: deploy-output
@@ -57,7 +55,6 @@ jobs:
 
       - name: Create release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
-        if: steps.check_tag.outputs.is_tag == 'true' && steps.check_release.outputs.exists != 'true'
         with:
           tag_name: ${{ steps.check_tag.outputs.tag }}
           name: ${{ steps.check_tag.outputs.tag }}
