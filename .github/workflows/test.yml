@@ -1,5 +1,5 @@
 name: Lint and Test
-run-name: Lint and test (${{ github.ref_name }} - ${{ github.event_name }} - ${{ github.run_number }} - ${{ github.run_attempt }})
+run-name: Lint and test (${{ github.ref_name }} - ${{ github.event_name }} - ${{ github.run_attempt }})
 
 permissions:
   contents: read
@@ -27,6 +27,7 @@ jobs:
             Set-PSRepository PSGallery -InstallationPolicy Trusted
             Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.22.0 -Force -Scope CurrentUser
             Import-Module PSScriptAnalyzer -RequiredVersion 1.22.0 -Force
+
             $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -ExcludeRule PSAvoidUsingWriteHost
             $results | Format-Table -AutoSize
             if ($results.Count -gt 0) {
@@ -52,10 +53,3 @@ jobs:
 
       - name: Run tests with coverage
         run: .\test-with-coverage.bat
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v6.0.0
-        if: always()
-        with:
-          name: coverage-report
-          path: build/coverage.xml
