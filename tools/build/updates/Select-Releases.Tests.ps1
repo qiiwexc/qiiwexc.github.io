@@ -16,7 +16,7 @@ BeforeAll {
     Set-Variable -Option Constant TestNewVersion ([String]'v2.0.0')
     Set-Variable -Option Constant TestLatestVersion ([String]'v3.0.0')
 
-    Set-Variable -Option Constant TestGitHubReleasesUrl ([String]"https://api.github.com/repos/$TestRepositoryName/releases")
+    Set-Variable -Option Constant TestGitHubReleasesUrl ([String]"https://api.github.com/repos/$TestRepositoryName/releases?per_page=5")
 
     Set-Variable -Option Constant TestNewVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/$TestNewVersion")
     Set-Variable -Option Constant TestLatestVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/$TestLatestVersion")
