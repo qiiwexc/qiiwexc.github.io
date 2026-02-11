@@ -1,5 +1,5 @@
 name: Deploy to GitHub Pages
-run-name: Deploy (${{ github.ref_name }} - ${{ github.event_name }} - ${{ github.run_number }} - ${{ github.run_attempt }})
+run-name: Deploy (${{ github.ref_name }} - ${{ github.run_attempt }})
 
 permissions:
   contents: read
@@ -12,7 +12,7 @@ concurrency:
 
 on:
   workflow_run:
-    workflows: [Build]
+    workflows: [Release]
     types: [completed]
     branches: [master]
 
@@ -24,8 +24,13 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v6.0.2
+      - name: Download build artifacts
+        uses: actions/download-artifact@v7.0.0
+        with:
+          name: build-output
+          path: build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5.0.0
@@ -33,13 +38,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4.0.0
         with:
-          path: |
-            index.html
-            d
-            assets
-            build/qiiwexc.bat
-            build/qiiwexc.ps1
-            build/autounattend-*.xml
+          path: build-output
 
       - name: Deploy to GitHub Pages
         id: deployment

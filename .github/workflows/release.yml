@@ -1,0 +1,67 @@
+name: Release
+run-name: Release (${{ github.ref_name }} - ${{ github.run_attempt }})
+
+permissions:
+  contents: write
+
+on:
+  workflow_run:
+    workflows: [Build]
+    types: [completed]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Check for tag
+        id: check_tag
+        run: |
+          tag=$(git tag --points-at ${{ github.event.workflow_run.head_sha }})
+          if [ -n "$tag" ]; then
+            echo "tag=$tag" >> $GITHUB_OUTPUT
+            echo "is_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_tag=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if release exists
+        id: check_release
+        if: steps.check_tag.outputs.is_tag == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.check_tag.outputs.tag }}"
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Release $tag already exists, skipping creation"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download build artifacts
+        if: steps.check_tag.outputs.is_tag == 'true' && steps.check_release.outputs.exists != 'true'
+        uses: actions/download-artifact@v7.0.0
+        with:
+          name: build-output
+          path: build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Create release
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
+        if: steps.check_tag.outputs.is_tag == 'true' && steps.check_release.outputs.exists != 'true'
+        with:
+          tag_name: ${{ steps.check_tag.outputs.tag }}
+          name: ${{ steps.check_tag.outputs.tag }}
+          generate_release_notes: true
+          files: |
+            build/qiiwexc.bat
+            build/qiiwexc.ps1
+            build/autounattend-*.xml
