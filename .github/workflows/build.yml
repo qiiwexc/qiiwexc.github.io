@@ -29,9 +29,9 @@ jobs:
           name: build-output
           path: |
             assets
+            d/version
             d/*.css
-            d/*.zip
-            index.html
-            build/qiiwexc.bat
-            build/qiiwexc.ps1
+            build/*.html
+            build/*.bat
+            build/*.ps1
             build/autounattend-*.xml

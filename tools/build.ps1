@@ -116,7 +116,7 @@ if ($Html -or $Ps1) {
 if ($Html) {
     Write-ActivityProgress 60
     . "$BuilderPath\New-HtmlFile.ps1"
-    New-HtmlFile $TemplatesPath $Config
+    New-HtmlFile $TemplatesPath $BuildPath $Config
 }
 
 if ($Autounattend) {

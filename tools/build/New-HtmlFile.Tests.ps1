@@ -9,6 +9,7 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestTemplatesPath ([String]'TEST_TEMPLATES_PATH')
+    Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
     Set-Variable -Option Constant TestConfig ([Config[]]@(
             @{key = 'KEY_1'; value = 'VALUE_1' },
             @{key = 'KEY_2'; value = 'VALUE_2' },
@@ -16,7 +17,7 @@ BeforeAll {
         ))
 
     Set-Variable -Option Constant TestTemplateFilePath ([String]"$TestTemplatesPath\home.html")
-    Set-Variable -Option Constant TestOutFilePath ([String]'.\index.html')
+    Set-Variable -Option Constant TestOutFilePath ([String]"$TestBuildPath\index.html")
 
     Set-Variable -Option Constant TestTemplateContent ([String]'<html>{KEY_1} ../d/stylesheet.css {KEY_2}</html>')
     Set-Variable -Option Constant TestHtmlContent ([String]'<html>VALUE_1 https://bit.ly/stylesheet_web VALUE_2</html>')
@@ -31,7 +32,7 @@ Describe 'New-HtmlFile' {
     }
 
     It 'Should create new HTML file from template' {
-        New-HtmlFile $TestTemplatesPath $TestConfig
+        New-HtmlFile $TestTemplatesPath $TestBuildPath $TestConfig
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
@@ -48,7 +49,7 @@ Describe 'New-HtmlFile' {
     It 'Should handle Read-TextFile failure' {
         Mock Read-TextFile { throw $TestException }
 
-        { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
+        { New-HtmlFile $TestTemplatesPath $TestBuildPath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
@@ -59,7 +60,7 @@ Describe 'New-HtmlFile' {
     It 'Should handle Write-TextFile failure' {
         Mock Write-TextFile { throw $TestException }
 
-        { New-HtmlFile $TestTemplatesPath $TestConfig } | Should -Throw $TestException
+        { New-HtmlFile $TestTemplatesPath $TestBuildPath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
@@ -70,7 +71,7 @@ Describe 'New-HtmlFile' {
     It 'Should handle template with no placeholders' {
         Mock Read-TextFile { return '<html>Static content ../d/stylesheet.css</html>' }
 
-        New-HtmlFile $TestTemplatesPath $TestConfig
+        New-HtmlFile $TestTemplatesPath $TestBuildPath $TestConfig
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
@@ -84,7 +85,7 @@ Describe 'New-HtmlFile' {
     It 'Should handle empty template content' {
         Mock Read-TextFile { return '' }
 
-        New-HtmlFile $TestTemplatesPath $TestConfig
+        New-HtmlFile $TestTemplatesPath $TestBuildPath $TestConfig
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
@@ -98,7 +99,7 @@ Describe 'New-HtmlFile' {
     It 'Should leave unknown placeholders unchanged' {
         Mock Read-TextFile { return '<html>{UNKNOWN_KEY} ../d/stylesheet.css</html>' }
 
-        New-HtmlFile $TestTemplatesPath $TestConfig
+        New-HtmlFile $TestTemplatesPath $TestBuildPath $TestConfig
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
