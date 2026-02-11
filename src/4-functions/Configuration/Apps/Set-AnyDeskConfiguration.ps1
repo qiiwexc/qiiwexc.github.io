@@ -12,7 +12,7 @@ function Set-AnyDeskConfiguration {
             Set-Variable -Option Constant CurrentConfig ([String]'')
         }
 
-        Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) $ConfigPath
+        Write-ConfigurationFile $AppName ($CurrentConfig + $CONFIG_ANYDESK) -Path $ConfigPath
 
         Out-Success
     } catch {

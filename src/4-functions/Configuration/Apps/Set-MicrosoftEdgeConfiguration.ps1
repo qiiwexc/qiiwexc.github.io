@@ -6,8 +6,8 @@ function Set-MicrosoftEdgeConfiguration {
     try {
         Set-Variable -Option Constant ProcessName ([String]'msedge')
 
-        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_LOCAL_STATE "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
-        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_EDGE_PREFERENCES "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
+        Update-BrowserConfiguration $AppName $ProcessName -Content $CONFIG_EDGE_LOCAL_STATE -Path "$env:LocalAppData\Microsoft\Edge\User Data\Local State"
+        Update-BrowserConfiguration $AppName $ProcessName -Content $CONFIG_EDGE_PREFERENCES -Path "$env:LocalAppData\Microsoft\Edge\User Data\Default\Preferences"
 
         Out-Success
     } catch {

@@ -12,7 +12,6 @@ BeforeAll {
     Set-Variable -Option Constant TestAppName ([String]'TEST_APP_NAME')
     Set-Variable -Option Constant TestContent ([String]'TEST_CONTENT')
     Set-Variable -Option Constant TestPath ([String]"$TestParentPath\TEST_PATH_CHILD")
-    Set-Variable -Option Constant TestProcessName ([String]'TEST_PROCESS_NAME')
 }
 
 Describe 'Write-ConfigurationFile' {
@@ -27,10 +26,10 @@ Describe 'Write-ConfigurationFile' {
     }
 
     It 'Should write configuration file' {
-        Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName
+        Write-ConfigurationFile $TestAppName $TestContent $TestPath
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
-        Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestProcessName }
+        Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestAppName }
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke Split-Path -Exactly 1 -ParameterFilter {
             $Path -eq $TestPath -and
@@ -50,22 +49,10 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Write-LogWarning -Exactly 0
     }
 
-    It 'Should stop correct process when process name is not provided' {
-        Write-ConfigurationFile $TestAppName $TestContent $TestPath
-
-        Should -Invoke Stop-ProcessIfRunning -Exactly 1
-        Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestAppName }
-        Should -Invoke Split-Path -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Out-Success -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-    }
-
     It 'Should handle Stop-ProcessIfRunning failure' {
         Mock Stop-ProcessIfRunning { throw $TestException }
 
-        { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
+        { Write-ConfigurationFile $TestAppName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Split-Path -Exactly 0
@@ -78,7 +65,7 @@ Describe 'Write-ConfigurationFile' {
     It 'Should handle Split-Path failure' {
         Mock Split-Path { throw $TestException }
 
-        { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
+        { Write-ConfigurationFile $TestAppName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Split-Path -Exactly 1
@@ -91,7 +78,7 @@ Describe 'Write-ConfigurationFile' {
     It 'Should handle New-Directory failure' {
         Mock New-Directory { throw $TestException }
 
-        { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
+        { Write-ConfigurationFile $TestAppName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Split-Path -Exactly 1
@@ -104,7 +91,7 @@ Describe 'Write-ConfigurationFile' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        { Write-ConfigurationFile $TestAppName $TestContent $TestPath $TestProcessName } | Should -Throw $TestException
+        { Write-ConfigurationFile $TestAppName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Split-Path -Exactly 1

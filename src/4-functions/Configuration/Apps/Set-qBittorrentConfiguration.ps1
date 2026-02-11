@@ -10,7 +10,7 @@ function Set-qBittorrentConfiguration {
             Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH))
         }
 
-        Write-ConfigurationFile $AppName $Content "$env:AppData\$AppName\$AppName.ini"
+        Write-ConfigurationFile $AppName $Content -Path "$env:AppData\$AppName\$AppName.ini"
 
         Out-Success
     } catch {

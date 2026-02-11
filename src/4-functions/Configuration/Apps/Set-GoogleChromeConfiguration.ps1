@@ -6,8 +6,8 @@ function Set-GoogleChromeConfiguration {
     try {
         Set-Variable -Option Constant ProcessName ([String]'chrome')
 
-        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_LOCAL_STATE "$env:LocalAppData\Google\Chrome\User Data\Local State"
-        Update-BrowserConfiguration $AppName $ProcessName $CONFIG_CHROME_PREFERENCES "$env:LocalAppData\Google\Chrome\User Data\Default\Preferences"
+        Update-BrowserConfiguration $AppName $ProcessName -Content $CONFIG_CHROME_LOCAL_STATE -Path "$env:LocalAppData\Google\Chrome\User Data\Local State"
+        Update-BrowserConfiguration $AppName $ProcessName -Content $CONFIG_CHROME_PREFERENCES -Path "$env:LocalAppData\Google\Chrome\User Data\Default\Preferences"
 
         Out-Success
     } catch {
