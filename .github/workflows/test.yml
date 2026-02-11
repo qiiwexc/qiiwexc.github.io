@@ -1,5 +1,5 @@
-name: Test
-run-name: Test
+name: Lint and Test
+run-name: Lint and test (${{ github.ref_name }} - ${{ github.event_name }})
 
 permissions:
   contents: read

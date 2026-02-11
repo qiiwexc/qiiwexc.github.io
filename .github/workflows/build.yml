@@ -1,12 +1,12 @@
 name: Build
-run-name: Build
+run-name: Build (${{ github.ref_name }} - ${{ github.event_name }})
 
 permissions:
   contents: write
 
 on:
   workflow_run:
-    workflows: [Test]
+    workflows: [Lint and Test]
     types: [completed]
 
 jobs:
