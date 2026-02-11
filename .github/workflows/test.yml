@@ -40,7 +40,6 @@ jobs:
 
   test:
     runs-on: windows-latest
-    needs: lint
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
