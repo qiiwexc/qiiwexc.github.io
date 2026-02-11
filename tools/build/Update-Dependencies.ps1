@@ -18,7 +18,7 @@ function Update-Dependencies {
     . "$UpdatesPath\Compare-Tags.ps1"
     . "$UpdatesPath\Invoke-GitAPI.ps1"
     . "$UpdatesPath\Read-GitHubToken.ps1"
-    . "$UpdatesPath\Select-Tags.ps1"
+    . "$UpdatesPath\Select-Releases.ps1"
     . "$UpdatesPath\Set-NewVersion.ps1"
     . "$UpdatesPath\Update-FileDependency.ps1"
     . "$UpdatesPath\Update-GitDependency.ps1"

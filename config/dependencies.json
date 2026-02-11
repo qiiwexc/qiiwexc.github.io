@@ -3,7 +3,7 @@
         "name":  "SystemRescue",
         "version":  "12.03",
         "source":  "GitLab",
-        "mode":  "compare",
+        "mode":  "tags",
         "repository":  "systemrescue/systemrescue-sources",
         "projectId":  "10658830"
     },
@@ -11,14 +11,14 @@
         "name":  "TronScript",
         "version":  "v12.0.6",
         "source":  "GitHub",
-        "mode":  "compare",
+        "mode":  "tags",
         "repository":  "bmrf/tron"
     },
     {
         "name":  "Microsoft Activation Scripts",
         "version":  "3.10",
         "source":  "GitHub",
-        "mode":  "tags",
+        "mode":  "releases",
         "repository":  "massgravel/Microsoft-Activation-Scripts"
     },
     {
@@ -32,28 +32,28 @@
         "name":  "WinUtil",
         "version":  "26.02.11",
         "source":  "GitHub",
-        "mode":  "tags",
+        "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
     },
     {
         "name":  "Win11Debloat",
         "version":  "2026.02.07",
         "source":  "GitHub",
-        "mode":  "tags",
+        "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
     },
     {
         "name":  "Ventoy",
         "version":  "v1.1.10",
         "source":  "GitHub",
-        "mode":  "tags",
+        "mode":  "releases",
         "repository":  "ventoy/Ventoy"
     },
     {
         "name":  "Rufus",
         "version":  "v4.12",
         "source":  "GitHub",
-        "mode":  "tags",
+        "mode":  "releases",
         "repository":  "pbatard/rufus"
     },
     {
