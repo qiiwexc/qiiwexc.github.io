@@ -1,13 +1,14 @@
 function New-HtmlFile {
     param(
         [String][Parameter(Position = 0, Mandatory)]$TemplatesPath,
-        [Config[]][Parameter(Position = 1, Mandatory)]$Config
+        [String][Parameter(Position = 1, Mandatory)]$BuildPath,
+        [Config[]][Parameter(Position = 2, Mandatory)]$Config
     )
 
     New-Activity 'Building web page'
 
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\home.html")
-    Set-Variable -Option Constant OutputFile ([String]'.\index.html')
+    Set-Variable -Option Constant OutputFile ([String]"$BuildPath\index.html")
 
     [String]$TemplateContent = Read-TextFile $TemplateFile
     $TemplateContent = $TemplateContent.Replace('../d/stylesheet.css', '{URL_STYLESHEET_WEB}')
