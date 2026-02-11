@@ -16,11 +16,11 @@ param(
 if ($Full) {
     $Tests = $True
     $Update = $True
-    $Html = $True
 }
 
 if ($Full -or $CI) {
     $Autounattend = $True
+    $Html = $True
     $Ps1 = $True
     $Bat = $True
 }

@@ -12,7 +12,7 @@ concurrency:
 
 on:
   workflow_run:
-    workflows: [Release]
+    workflows: [Build]
     types: [completed]
     branches: [master]
 
