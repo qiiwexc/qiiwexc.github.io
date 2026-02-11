@@ -7,7 +7,7 @@ function Select-Releases {
     Set-Variable -Option Constant Repository ([String]$Dependency.repository)
     Set-Variable -Option Constant CurrentVersion ([String]$Dependency.version)
 
-    Set-Variable -Option Constant Releases ([GitRelease[]](Invoke-GitAPI "https://api.github.com/repos/$Repository/releases" $GitHubToken))
+    Set-Variable -Option Constant Releases ([GitRelease[]](Invoke-GitAPI "https://api.github.com/repos/$Repository/releases?per_page=5" $GitHubToken))
 
     Set-Variable -Option Constant FilteredReleases ([GitRelease[]]($Releases | Where-Object { $_.tag_name -inotmatch 'beta' }))
 
