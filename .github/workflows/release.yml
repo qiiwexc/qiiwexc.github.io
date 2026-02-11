@@ -6,7 +6,8 @@ permissions:
 
 on:
   workflow_run:
-    workflows: [Build]
+    branches: [master]
+    workflows: [Deploy]
     types: [completed]
 
 jobs:
@@ -17,7 +18,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
         with:
-          fetch-depth: 0
+          fetch-depth: 100
           fetch-tags: true
 
       - name: Check for tag
@@ -49,7 +50,7 @@ jobs:
         if: steps.check_tag.outputs.is_tag == 'true' && steps.check_release.outputs.exists != 'true'
         uses: actions/download-artifact@v7.0.0
         with:
-          name: build-output
+          name: deploy-output
           path: build
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ github.token }}
@@ -62,6 +63,6 @@ jobs:
           name: ${{ steps.check_tag.outputs.tag }}
           generate_release_notes: true
           files: |
-            build/qiiwexc.bat
-            build/qiiwexc.ps1
-            build/autounattend-*.xml
+            qiiwexc.bat
+            qiiwexc.ps1
+            autounattend-*.xml

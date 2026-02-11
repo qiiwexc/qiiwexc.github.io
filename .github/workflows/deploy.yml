@@ -12,9 +12,9 @@ concurrency:
 
 on:
   workflow_run:
+    branches: [master]
     workflows: [Build]
     types: [completed]
-    branches: [master]
 
 jobs:
   deploy:
@@ -47,3 +47,12 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4.0.5
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v6.0.0
+        with:
+          name: deploy-output
+          path: |
+            qiiwexc.bat
+            qiiwexc.ps1
+            autounattend-*.xml
