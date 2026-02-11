@@ -3,6 +3,7 @@ run-name: Create a release
 
 permissions:
   contents: write
+  actions: write
 
 on:
   workflow_run:
