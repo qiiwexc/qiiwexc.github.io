@@ -45,8 +45,7 @@
                 '6.2',
                 '6.1',
                 '6.0',
-                '5.1',
-                '5.0'
+                '5.1'
             )
         }
         PSUseConsistentIndentation                 = @{

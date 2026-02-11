@@ -5,16 +5,17 @@ param(
     [Switch]$Full,
     [Switch]$CI,
     [Switch]$Run,
-    [Switch]$Tests,
+    [Switch]$Test,
     [Switch]$Update,
     [Switch]$Html,
     [Switch]$Autounattend,
     [Switch]$Ps1,
+    [Switch]$Lint,
     [Switch]$Bat
 )
 
 if ($Full) {
-    $Tests = $True
+    $Test = $True
     $Update = $True
 }
 
@@ -22,6 +23,7 @@ if ($Full -or $CI) {
     $Autounattend = $True
     $Html = $True
     $Ps1 = $True
+    $Lint = $True
     $Bat = $True
 }
 
@@ -32,6 +34,10 @@ if ($Dev) {
 
 if ($Bat) {
     $Ps1 = $True
+}
+
+if (-not $Ps1) {
+    $Lint = $False
 }
 
 $ErrorActionPreference = 'Stop'
@@ -75,7 +81,8 @@ Write-LogInfo 'Build task started'
 Write-LogInfo "Version                  : $Version"
 Write-LogInfo "Full build               : $Full"
 Write-LogInfo "CI build                 : $CI"
-Write-LogInfo "Run tests                : $Tests"
+Write-LogInfo "Run tests                : $Test"
+Write-LogInfo "Run linter               : $Lint"
 Write-LogInfo "Check for updates        : $Update"
 Write-LogInfo "Build HTML page          : $Html"
 Write-LogInfo "Build autounattend files : $Autounattend"
@@ -88,9 +95,10 @@ New-Activity 'Building'
 $Null = New-Item -Force -ItemType Directory $BuildPath
 $Null = New-Item -Force -ItemType Directory $DistPath
 
-if ($Tests) {
-    Write-ActivityProgress 5
+if ($Test) {
+    Write-ActivityProgress 10 'Running unit tests...'
     Invoke-Pester -Configuration (. '.\PesterSettings.ps1' -Coverage)
+    Out-Success
 }
 
 if ($Update) {
@@ -104,31 +112,37 @@ if ($Html -or $Ps1) {
     . "$BuilderPath\Set-Urls.ps1"
     Set-Urls $ConfigPath $TemplatesPath $BuildPath
 
-    Write-ActivityProgress 40
+    Write-ActivityProgress 35
     . "$BuilderPath\Get-Config.ps1"
     Set-Variable -Option Constant Config (Get-Config $BuildPath $Version)
 
-    Write-ActivityProgress 50
+    Write-ActivityProgress 40
     . "$BuilderPath\Write-VersionFile.ps1"
     Write-VersionFile $Version $VersionFile
 }
 
 if ($Html) {
-    Write-ActivityProgress 60
+    Write-ActivityProgress 50
     . "$BuilderPath\New-HtmlFile.ps1"
     New-HtmlFile $TemplatesPath $BuildPath $Config
 }
 
 if ($Autounattend) {
-    Write-ActivityProgress 70
+    Write-ActivityProgress 60
     . "$BuilderPath\New-UnattendedFile.ps1"
     New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $VmPath -CI:$CI
 }
 
 if ($Ps1) {
-    Write-ActivityProgress 80
+    Write-ActivityProgress 70
     . "$BuilderPath\New-PowerShellScript.ps1"
     New-PowerShellScript $SourcePath $Ps1File -Config $Config
+}
+
+if ($Lint) {
+    Write-ActivityProgress 80 'Running linter...'
+    Invoke-ScriptAnalyzer -Path .\build\qiiwexc.ps1 -Settings .\PSScriptAnalyzerSettings.psd1
+    Out-Success
 }
 
 if ($Bat) {
