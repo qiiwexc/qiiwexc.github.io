@@ -7,11 +7,11 @@ function Update-GitDependency {
     Set-Variable -Option Constant Mode ([String]$Dependency.mode)
 
     switch ($Mode) {
-        ('compare') {
+        ('tags') {
             return Compare-Tags $Dependency $GitHubToken
         }
-        ('tags') {
-            return Select-Tags $Dependency $GitHubToken
+        ('releases') {
+            return Select-Releases $Dependency $GitHubToken
         }
         ('commits') {
             return Compare-Commits $Dependency $GitHubToken

@@ -16,10 +16,10 @@ BeforeAll {
     Set-Variable -Option Constant TestNewVersion ([String]'v2.0.0')
     Set-Variable -Option Constant TestLatestVersion ([String]'v3.0.0')
 
-    Set-Variable -Option Constant TestGitHubTagsUrl ([String]"https://api.github.com/repos/$TestRepositoryName/tags")
+    Set-Variable -Option Constant TestGitHubReleasesUrl ([String]"https://api.github.com/repos/$TestRepositoryName/releases")
 
-    Set-Variable -Option Constant TestNewVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/tag/$TestNewVersion")
-    Set-Variable -Option Constant TestLatestVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/tag/$TestLatestVersion")
+    Set-Variable -Option Constant TestNewVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/$TestNewVersion")
+    Set-Variable -Option Constant TestLatestVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/$TestLatestVersion")
 
     Set-Variable -Option Constant TestDependency (
         [PSObject]@{
@@ -29,17 +29,17 @@ BeforeAll {
     )
 }
 
-Describe 'Select-Tags' {
+Describe 'Select-Releases' {
     BeforeEach {
-        Mock Invoke-GitAPI { return @( @{ Name = $TestNewVersion }, @{ Name = $TestCurrentVersion } ) }
+        Mock Invoke-GitAPI { return @( @{ tag_name = $TestNewVersion }, @{ tag_name = $TestCurrentVersion } ) }
         Mock Set-NewVersion {}
     }
 
     It 'Should update to new version from GitHub without GitHub token' {
-        Select-Tags $TestDependency | Should -BeExactly @($TestNewVersionUrl)
+        Select-Releases $TestDependency | Should -BeExactly @($TestNewVersionUrl)
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubTagsUrl }
+        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq $TestGitHubReleasesUrl }
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
             $Dependency.repository -eq $TestRepositoryName -and
@@ -49,20 +49,20 @@ Describe 'Select-Tags' {
     }
 
     It 'Should update to new version from GitHub with GitHub token' {
-        Select-Tags $TestDependency $TestGitHubToken | Should -BeExactly @($TestNewVersionUrl)
+        Select-Releases $TestDependency $TestGitHubToken | Should -BeExactly @($TestNewVersionUrl)
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter {
-            $Uri -eq $TestGitHubTagsUrl -and
+            $Uri -eq $TestGitHubReleasesUrl -and
             $GitHubToken -eq $TestGitHubToken
         }
         Should -Invoke Set-NewVersion -Exactly 1
     }
 
     It 'Should update to latest version if multiple new versions are available' {
-        Mock Invoke-GitAPI { return @( @{ Name = $TestLatestVersion }, @{ Name = $TestNewVersion }, @{ Name = $TestCurrentVersion } ) }
+        Mock Invoke-GitAPI { return @( @{ tag_name = $TestLatestVersion }, @{ tag_name = $TestNewVersion }, @{ tag_name = $TestCurrentVersion } ) }
 
-        Select-Tags $TestDependency | Should -BeExactly @($TestLatestVersionUrl, $TestNewVersionUrl)
+        Select-Releases $TestDependency | Should -BeExactly @($TestLatestVersionUrl, $TestNewVersionUrl)
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1
@@ -74,18 +74,18 @@ Describe 'Select-Tags' {
     }
 
     It 'Should skip beta versions' {
-        Mock Invoke-GitAPI { return @( @{ Name = "$TestNewVersion-beta" }, @{ Name = $TestCurrentVersion } ) }
+        Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-beta" }, @{ tag_name = $TestCurrentVersion } ) }
 
-        Select-Tags $TestDependency | Should -BeNullOrEmpty
+        Select-Releases $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
     It 'Should not update if version is the same' {
-        Mock Invoke-GitAPI { return @( @{ Name = $TestCurrentVersion }, @{ Name = $TestCurrentVersion } ) }
+        Mock Invoke-GitAPI { return @( @{ tag_name = $TestCurrentVersion }, @{ tag_name = $TestCurrentVersion } ) }
 
-        Select-Tags $TestDependency | Should -BeNullOrEmpty
+        Select-Releases $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
@@ -94,7 +94,7 @@ Describe 'Select-Tags' {
     It 'Should not update if new version is empty' {
         Mock Invoke-GitAPI { return @( @{}, @{} ) }
 
-        Select-Tags $TestDependency | Should -BeNullOrEmpty
+        Select-Releases $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
@@ -103,7 +103,7 @@ Describe 'Select-Tags' {
     It 'Should not update if the response is empty' {
         Mock Invoke-GitAPI { return @() }
 
-        Select-Tags $TestDependency | Should -BeNullOrEmpty
+        Select-Releases $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
@@ -112,7 +112,7 @@ Describe 'Select-Tags' {
     It 'Should handle Invoke-GitAPI failure' {
         Mock Invoke-GitAPI { throw $TestException }
 
-        { Select-Tags $TestDependency } | Should -Throw $TestException
+        { Select-Releases $TestDependency } | Should -Throw $TestException
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
