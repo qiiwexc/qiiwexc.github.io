@@ -16,14 +16,12 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
-        with:
-          fetch-depth: 0
-          fetch-tags: true
 
       - name: Run build
         run: .\build-ci.bat
 
       - name: Upload build artifacts
+        if: ${{ github.ref_name == 'master' }}
         uses: actions/upload-artifact@v6.0.0
         with:
           name: build-output
@@ -31,7 +29,7 @@ jobs:
             assets
             d/version
             d/*.css
-            build/*.html
-            build/*.bat
-            build/*.ps1
+            build/index.html
+            build/qiiwexc.bat
+            build/qiiwexc.ps1
             build/autounattend-*.xml
