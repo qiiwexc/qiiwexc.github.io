@@ -19,7 +19,7 @@ Describe 'Get-UpdateAvailability' {
         Mock Write-LogInfo {}
         Mock Out-Status {}
         Mock Test-NetworkConnection { return $True }
-        Mock Invoke-WebRequest { return '2.0.0' }
+        Mock Invoke-WebRequest { return @{ Content = '[{"tag_name":"v2.0.0"}]' } }
         Mock Out-Failure {}
         Mock Write-LogWarning {}
 
@@ -41,7 +41,7 @@ Describe 'Get-UpdateAvailability' {
     }
 
     It 'Should detect no available update' {
-        Mock Invoke-WebRequest { return $VERSION }
+        Mock Invoke-WebRequest { return @{ Content = '[{"tag_name":"v1.0.0"}]' } }
 
         Get-UpdateAvailability
 
