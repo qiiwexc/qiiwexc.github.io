@@ -2,8 +2,42 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_call:
+    outputs:
+      tag:
+        value: ${{ jobs.check.outputs.tag }}
+      should_release:
+        value: ${{ jobs.check.outputs.should_release }}
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.check.outputs.tag }}
+      should_release: ${{ steps.check.outputs.should_release }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 100
+          fetch-tags: true
+
+      - name: Check for tag and existing release
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(git tag --points-at HEAD)
+          if [ -z "$tag" ]; then
+            echo "No tag found, skipping release"
+            exit 0
+          fi
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "Release $tag already exists, skipping"
+            exit 0
+          fi
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+          echo "should_release=true" >> $GITHUB_OUTPUT
+
   deploy:
     runs-on: ubuntu-latest
     concurrency:
