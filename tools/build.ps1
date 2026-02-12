@@ -63,10 +63,14 @@ Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
 
 if ($CI) {
-    $tag = git describe --tags --abbrev=0 2>$null
-    if ($tag) {
-        Set-Variable -Option Constant Version ([Version]$tag)
-    } else {
+    try {
+        Set-Variable -Option Constant Tag ([String](git describe --tags --abbrev=0 2>&1))
+        if ($LASTEXITCODE -eq 0 -and $Tag) {
+            Set-Variable -Option Constant Version ([Version]$Tag)
+        } else {
+            Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
+        }
+    } catch {
         Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
     }
 } else {
