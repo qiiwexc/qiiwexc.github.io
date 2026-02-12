@@ -21,7 +21,6 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 100
           fetch-tags: true
 
@@ -30,7 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag=$(git tag --points-at ${{ github.event.workflow_run.head_sha }})
+          tag=$(git tag --points-at master)
           if [ -z "$tag" ]; then
             echo "No tag found, skipping release"
             echo "should_release=false" >> $GITHUB_OUTPUT
