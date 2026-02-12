@@ -2,7 +2,7 @@ function Write-TextFile {
     param(
         [ValidateNotNullOrEmpty()][String][Parameter(Position = 0, Mandatory)]$Path,
         [AllowEmptyString()][String[]][Parameter(Position = 1, Mandatory)]$Content,
-        [Switch]$Normalize = $False,
+        [Switch]$Normalize,
         [Switch]$NoNewLine
     )
 

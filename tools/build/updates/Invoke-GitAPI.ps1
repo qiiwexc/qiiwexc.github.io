@@ -15,7 +15,7 @@ function Invoke-GitAPI {
             Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest $Uri -Method Get -UseBasicParsing))
         }
     } catch {
-        Out-Failure "Failed to invoke API '$Uri': $_"$LogIndentLevel
+        Out-Failure "Failed to invoke API '$Uri': $_" $LogIndentLevel
         return $Null
     }
 

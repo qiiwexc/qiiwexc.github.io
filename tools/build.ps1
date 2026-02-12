@@ -137,7 +137,7 @@ if ($Lint) {
 
     for ($i = 1; $i -le $MaxRetries; $i++) {
         try {
-            Invoke-ScriptAnalyzer -Path .\build\qiiwexc.ps1 -Settings .\PSScriptAnalyzerSettings.psd1 -ErrorAction Stop
+            Invoke-ScriptAnalyzer -Path $Ps1File -Settings .\PSScriptAnalyzerSettings.psd1 -ErrorAction Stop
             break
         } catch {
             if ($i -eq $MaxRetries) {
