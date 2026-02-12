@@ -1,7 +1,7 @@
 @font-face {
   font-family: "Segoe UI Light";
-  src: url(assets/segoeuil.eot);
-  src: url(assets/segoeuil.eot?#iefix) format(embedded-opentype);
+  src: url(public/segoeuil.eot);
+  src: url(public/segoeuil.eot?#iefix) format(embedded-opentype);
 }
 
 a {

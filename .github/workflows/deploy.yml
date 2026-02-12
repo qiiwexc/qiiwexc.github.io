@@ -34,7 +34,7 @@ jobs:
 
       - name: Move build artifacts
         shell: bash
-        run: mv assets/favicon.ico ./ && mv build/* ./ && rm -r build
+        run: mv public/favicon.ico ./ && mv build/* ./ && rm -r build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5.0.0
