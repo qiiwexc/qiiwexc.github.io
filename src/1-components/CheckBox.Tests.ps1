@@ -9,6 +9,7 @@ BeforeAll {
     Set-Variable -Option Constant COMMON_PADDING ([Int]15)
     Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
     Set-Variable -Option Constant CHECKBOX_HEIGHT ([Int]20)
+    Set-Variable -Option Constant CHECKBOX_WIDTH ([Int]175)
     Set-Variable -Option Constant INTERVAL_CHECKBOX ([Int]25)
     Set-Variable -Option Constant CHECKBOX_PADDING ([Int]20)
     Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
@@ -42,7 +43,7 @@ Describe 'New-CheckBox' {
         $Result.Name | Should -BeExactly $TestName
         $Result.Checked | Should -BeFalse
         $Result.Enabled | Should -BeTrue
-        $Result.Size.Width | Should -BeExactly 175
+        $Result.Size.Width | Should -BeExactly $CHECKBOX_WIDTH
         $Result.Size.Height | Should -BeExactly $CHECKBOX_HEIGHT
         $Result.Location | Should -BeExactly $INITIAL_LOCATION_BUTTON
 

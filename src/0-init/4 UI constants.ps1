@@ -4,6 +4,7 @@ Set-Variable -Option Constant BUTTON_WIDTH ([Int]170)
 Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
 
 Set-Variable -Option Constant CHECKBOX_HEIGHT ([Int]($BUTTON_HEIGHT - 10))
+Set-Variable -Option Constant CHECKBOX_WIDTH ([Int]($BUTTON_WIDTH + 5))
 
 
 Set-Variable -Option Constant INTERVAL_BUTTON ([Int]($BUTTON_HEIGHT + $COMMON_PADDING))
