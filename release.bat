@@ -1,11 +1,8 @@
 @echo off
 
-set /p version=< d/version
+for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format \"y.M.d\""') do set version=%%i
 
 git fetch --all --prune
 git pull --tags --autostash -r origin master
-git add -A -- d/version
-git commit -m "Release %version%"
-git tag -a v%version% -m "Release %version%"
-git push origin master:master
+git tag -a v%version%
 git push origin --tags
