@@ -8,9 +8,9 @@ function Get-Config {
 
     Set-Variable -Option Constant UrlsFile ([String]"$BuildPath\urls.json")
 
-    [Collections.Generic.List[Config]]$Config = Read-JsonFile $UrlsFile
+    [PSCustomObject]$Config = Read-JsonFile $UrlsFile
 
-    $Config.Add(@{key = 'PROJECT_VERSION'; value = $Version })
+    $Config | Add-Member -NotePropertyName 'PROJECT_VERSION' -NotePropertyValue $Version
 
     Write-ActivityCompleted
 
