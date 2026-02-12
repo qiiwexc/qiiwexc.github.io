@@ -13,7 +13,7 @@ function New-GroupBox {
     if ($IndexOverride) {
         $GroupIndex = $IndexOverride
     } else {
-        $CURRENT_TAB.Controls | ForEach-Object { $GroupIndex += $_.Count }
+        $GroupIndex = $CURRENT_TAB.Controls.Count
     }
 
     if ($GroupIndex -lt 3) {

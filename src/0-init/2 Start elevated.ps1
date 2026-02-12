@@ -8,5 +8,5 @@ if (-not (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
         Start-Sleep -Seconds 5
     }
 
-    break
+    exit
 }
