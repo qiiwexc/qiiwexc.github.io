@@ -59,15 +59,10 @@ Set-Variable -Option Constant BuilderPath ([String]"$ToolsPath\build")
 Set-Variable -Option Constant CommonPath ([String]"$ToolsPath\common")
 
 Set-Variable -Option Constant TestsFile ([String]"$ToolsPath\test.ps1")
-Set-Variable -Option Constant VersionFile ([String]"$DistPath\version")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
 
-if ($CI) {
-    Set-Variable -Option Constant Version ([Version](Get-Content $VersionFile).Trim())
-} else {
-    Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
-}
+Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
 
 . "$CommonPath\types.ps1"
 . "$CommonPath\logger.ps1"
@@ -112,13 +107,9 @@ if ($Html -or $Ps1) {
     . "$BuilderPath\Set-Urls.ps1"
     Set-Urls $ResourcesPath $BuildPath
 
-    Write-ActivityProgress 35
+    Write-ActivityProgress 40
     . "$BuilderPath\Get-Config.ps1"
     Set-Variable -Option Constant Config (Get-Config $BuildPath $Version)
-
-    Write-ActivityProgress 40
-    . "$BuilderPath\Write-VersionFile.ps1"
-    Write-VersionFile $Version $VersionFile
 }
 
 if ($Html) {
