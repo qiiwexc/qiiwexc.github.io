@@ -10,10 +10,10 @@ BeforeAll {
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
     Set-Variable -Option Constant TestVersion ([Version]'1.2.3')
     Set-Variable -Option Constant TestContent (
-        [Collections.Generic.List[Config]]@(
-            @{key = 'TEST_KEY_1'; value = 'TEST_VALUE_1' },
-            @{key = 'TEST_KEY_2'; value = 'TEST_VALUE_2' }
-        )
+        [PSCustomObject]@{
+            TEST_KEY_1 = 'TEST_VALUE_1'
+            TEST_KEY_2 = 'TEST_VALUE_2'
+        }
     )
 
     Set-Variable -Option Constant TestKey1 ([String]'TEST_KEY_1')
@@ -37,12 +37,9 @@ Describe 'Get-Config' {
         Should -Invoke Read-JsonFile -Exactly 1 -ParameterFilter { $Path -eq "$TestBuildPath\urls.json" }
         Should -Invoke Write-ActivityCompleted -Exactly 1
 
-        $Result[0].key | Should -BeExactly $TestKey1
-        $Result[0].value | Should -BeExactly $TestValue1
-        $Result[1].key | Should -BeExactly $TestKey2
-        $Result[1].value | Should -BeExactly $TestValue2
-        $Result[2].key | Should -BeExactly 'PROJECT_VERSION'
-        $Result[2].value | Should -BeExactly $TestVersion
+        $Result.TEST_KEY_1 | Should -BeExactly $TestValue1
+        $Result.TEST_KEY_2 | Should -BeExactly $TestValue2
+        $Result.PROJECT_VERSION | Should -BeExactly $TestVersion
     }
 
     It 'Should handle Read-JsonFile failure' {

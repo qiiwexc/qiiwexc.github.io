@@ -4,11 +4,6 @@ enum DevLogLevel {
     INFO
 }
 
-class Config {
-    [ValidateNotNullOrEmpty()][String]$key
-    [ValidateNotNullOrEmpty()][String]$value
-}
-
 class Dependency: PSObject {
     [ValidateNotNullOrEmpty()][String]$name
     [ValidateNotNullOrEmpty()][String]$version

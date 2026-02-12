@@ -12,16 +12,15 @@ function Set-Urls {
     Set-Variable -Option Constant OutputFile ([String]"$BuildPath\urls.json")
 
     [Dependency[]]$Dependencies = Read-JsonFile $DependenciesFile
-    [Config[]]$TemplateContent = Read-JsonFile $TemplateFile
+    [PSCustomObject]$TemplateContent = Read-JsonFile $TemplateFile
 
     foreach ($Dependency in $Dependencies) {
         [String]$Name = $Dependency.name.ToUpper().Replace(' ', '_').Replace('-', '_')
         [String]$Version = $Dependency.version.TrimStart('v')
+        [String]$Key = "URL_$Name"
 
-        foreach ($Entry in $TemplateContent) {
-            if ($Name -eq $Entry.key.Replace('URL_', '')) {
-                $Entry.value = $Entry.value.Replace('{VERSION}', $Version)
-            }
+        if ($null -ne $TemplateContent.$Key) {
+            $TemplateContent.$Key = $TemplateContent.$Key.Replace('{VERSION}', $Version)
         }
     }
 

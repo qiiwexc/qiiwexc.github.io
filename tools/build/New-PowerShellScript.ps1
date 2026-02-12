@@ -2,7 +2,7 @@ function New-PowerShellScript {
     param(
         [String][Parameter(Position = 0, Mandatory)]$SourcePath,
         [String][Parameter(Position = 1, Mandatory)]$Ps1File,
-        [Config[]][Parameter(Position = 2, Mandatory)]$Config
+        [PSCustomObject][Parameter(Position = 2, Mandatory)]$Config
     )
 
     New-Activity 'Building PowerShell script'
@@ -51,9 +51,9 @@ function New-PowerShellScript {
         $CurrentFileNum++
     }
 
-    $Config | ForEach-Object {
-        [String]$Placeholder = "{$($_.key)}"
-        $OutputLines = $OutputLines.Replace($Placeholder, $_.value)
+    $Config.PSObject.Properties | ForEach-Object {
+        [String]$Placeholder = "{$($_.Name)}"
+        $OutputLines = $OutputLines.Replace($Placeholder, $_.Value)
     }
 
     Write-LogInfo "Writing output file $Ps1File"

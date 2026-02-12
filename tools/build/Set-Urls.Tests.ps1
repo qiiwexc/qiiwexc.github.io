@@ -19,10 +19,10 @@ BeforeAll {
         )
     )
     Set-Variable -Option Constant TestTemplateContent (
-        [Config[]]@(
-            @{key = 'URL_TEST_DEPENDENCY_NAME_1'; value = 'TEST_VALUE_1_{VERSION}' },
-            @{key = 'URL_TEST_DEPENDENCY_NAME_2'; value = '{VERSION}_TEST_VALUE_2' }
-        )
+        [PSCustomObject]@{
+            URL_TEST_DEPENDENCY_NAME_1 = 'TEST_VALUE_1_{VERSION}'
+            URL_TEST_DEPENDENCY_NAME_2 = '{VERSION}_TEST_VALUE_2'
+        }
     )
 
     Set-Variable -Option Constant TestKey1 ([String]'URL_TEST_DEPENDENCY_NAME_1')
@@ -30,10 +30,10 @@ BeforeAll {
     Set-Variable -Option Constant TestKey2 ([String]'URL_TEST_DEPENDENCY_NAME_2')
     Set-Variable -Option Constant TestValue2 ([String]'{VERSION}_TEST_VALUE_2')
     Set-Variable -Option Constant TestUrlsTemplate (
-        [Config[]]@(
-            @{key = $TestKey1; value = $TestValue1 }
-            @{key = $TestKey2; value = $TestValue2 }
-        )
+        [PSCustomObject]@{
+            $TestKey1 = $TestValue1
+            $TestKey2 = $TestValue2
+        }
     )
 }
 
@@ -56,11 +56,8 @@ Describe 'Set-Urls' {
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
             $Path -eq "$TestBuildPath\urls.json" -and
-            $Content.Count -eq 2 -and
-            $Content[0].key -eq $TestKey1 -and
-            $Content[1].key -eq $TestKey2 -and
-            $Content[0].value -eq 'TEST_VALUE_1_TEST_VERSION_1' -and
-            $Content[1].value -eq 'TEST_VERSION_2_TEST_VALUE_2'
+            $Content.URL_TEST_DEPENDENCY_NAME_1 -eq 'TEST_VALUE_1_TEST_VERSION_1' -and
+            $Content.URL_TEST_DEPENDENCY_NAME_2 -eq 'TEST_VERSION_2_TEST_VALUE_2'
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
