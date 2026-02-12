@@ -1,14 +1,13 @@
 function Set-Urls {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ConfigPath,
-        [String][Parameter(Position = 1, Mandatory)]$TemplatesPath,
-        [String][Parameter(Position = 2, Mandatory)]$BuildPath
+        [String][Parameter(Position = 0, Mandatory)]$ResourcesPath,
+        [String][Parameter(Position = 1, Mandatory)]$BuildPath
     )
 
     New-Activity 'Setting URLs'
 
-    Set-Variable -Option Constant DependenciesFile ([String]"$ConfigPath\dependencies.json")
-    Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\urls.json")
+    Set-Variable -Option Constant DependenciesFile ([String]"$ResourcesPath\dependencies.json")
+    Set-Variable -Option Constant TemplateFile ([String]"$ResourcesPath\urls.json")
     Set-Variable -Option Constant OutputFile ([String]"$BuildPath\urls.json")
 
     [Dependency[]]$Dependencies = Read-JsonFile $DependenciesFile
