@@ -1,12 +1,13 @@
 name: Build
 
+permissions:
+  contents: read
+
 on:
   workflow_call:
 
 jobs:
   build:
-    permissions:
-      contents: read
     runs-on: windows-latest
     steps:
       - name: Check out repository
