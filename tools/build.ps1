@@ -62,7 +62,11 @@ Set-Variable -Option Constant TestsFile ([String]"$ToolsPath\test.ps1")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
 
-Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
+if ($CI) {
+    Set-Variable -Option Constant Version ([Version](git describe --tags --abbrev=0))
+} else {
+    Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
+}
 
 . "$CommonPath\types.ps1"
 . "$CommonPath\logger.ps1"
