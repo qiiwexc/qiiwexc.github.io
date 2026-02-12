@@ -1,5 +1,8 @@
 name: Deploy to GitHub Pages
 
+permissions:
+  contents: read
+
 on:
   workflow_call:
     outputs:
@@ -10,6 +13,8 @@ on:
 
 jobs:
   check:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.check.outputs.tag }}
