@@ -1,23 +1,14 @@
 name: Build
-run-name: Build (${{ github.ref_name }})
-
-permissions:
-  contents: read
 
 on:
-  workflow_run:
-    workflows: [Test]
-    types: [completed]
+  workflow_call:
 
 jobs:
   build:
     runs-on: windows-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Install PSScriptAnalyzer
         shell: pwsh
@@ -28,18 +19,12 @@ jobs:
       - name: Run build
         run: .\build-ci.bat
 
-      - name: Save commit SHA
-        if: ${{ github.ref_name == 'master' }}
-        shell: bash
-        run: echo "${{ github.event.workflow_run.head_sha }}" > commit-sha
-
       - name: Upload build artifacts
-        if: ${{ github.ref_name == 'master' }}
+        if: github.ref_name == 'master'
         uses: actions/upload-artifact@v6.0.0
         with:
           name: build-output
           path: |
-            commit-sha
             public
             d/version
             d/*.css

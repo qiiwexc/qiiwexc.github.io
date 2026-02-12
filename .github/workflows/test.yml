@@ -1,14 +1,7 @@
 name: Test
-run-name: Test (${{ github.event_name }} on ${{ github.ref_name }})
-
-permissions:
-  contents: read
 
 on:
-  push:
-    branches: ["*"]
-    tags-ignore: ["*"]
-  pull_request:
+  workflow_call:
 
 jobs:
   test:
