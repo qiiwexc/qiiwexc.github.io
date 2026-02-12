@@ -47,9 +47,9 @@ Set-Variable -Option Constant ProjectRoot ([String](Split-Path -Parent $PSScript
 Set-Variable -Option Constant ProjectName ([String]'qiiwexc')
 
 Set-Variable -Option Constant BuildPath ([String]"$ProjectRoot\build")
-Set-Variable -Option Constant ConfigPath ([String]"$ProjectRoot\config")
 Set-Variable -Option Constant DistPath ([String]"$ProjectRoot\d")
 Set-Variable -Option Constant SourcePath ([String]"$ProjectRoot\src")
+Set-Variable -Option Constant ResourcesPath ([String]"$ProjectRoot\resources")
 Set-Variable -Option Constant TemplatesPath ([String]"$ProjectRoot\templates")
 Set-Variable -Option Constant ToolsPath ([String]"$ProjectRoot\tools")
 Set-Variable -Option Constant VmPath ([String]"$ProjectRoot\vm")
@@ -104,13 +104,13 @@ if ($Test) {
 if ($Update) {
     Write-ActivityProgress 20
     . "$BuilderPath\Update-Dependencies.ps1"
-    Update-Dependencies $ConfigPath $BuilderPath $WipPath
+    Update-Dependencies $ResourcesPath $BuilderPath $WipPath
 }
 
 if ($Html -or $Ps1) {
     Write-ActivityProgress 30
     . "$BuilderPath\Set-Urls.ps1"
-    Set-Urls $ConfigPath $TemplatesPath $BuildPath
+    Set-Urls $ResourcesPath $BuildPath
 
     Write-ActivityProgress 35
     . "$BuilderPath\Get-Config.ps1"
@@ -130,7 +130,7 @@ if ($Html) {
 if ($Autounattend) {
     Write-ActivityProgress 60
     . "$BuilderPath\New-UnattendedFile.ps1"
-    New-UnattendedFile $Version $BuilderPath $SourcePath $TemplatesPath $BuildPath $VmPath -CI:$CI
+    New-UnattendedFile $Version $BuilderPath $SourcePath $ResourcesPath $TemplatesPath $BuildPath $VmPath -CI:$CI
 }
 
 if ($Ps1) {

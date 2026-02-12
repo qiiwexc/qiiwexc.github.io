@@ -29,7 +29,7 @@ BeforeAll {
     Set-Variable -Option Constant TestFileNameEnglish ([String]'autounattend-English.xml')
 
     Set-Variable -Option Constant TestConfigsPath ([String]"$TestSourcePath\3-configs")
-    Set-Variable -Option Constant TestUnattendedPath ([String]"$BuilderPath\unattended")
+    Set-Variable -Option Constant TestResourcesPath ([String]'TEST_RESOURCES_PATH')
     Set-Variable -Option Constant TestBaseFilePath ([String]"$TestBuildPath\$NonLocalisedFileName")
     Set-Variable -Option Constant TestVmFilePath ([String]"$TestVmPath\unattend\$NonLocalisedFileName")
     Set-Variable -Option Constant TestBuildFileNameRussian ([String]"$TestBuildPath\$TestFileNameRussian")
@@ -92,7 +92,7 @@ Describe 'New-UnattendedFile' {
     }
 
     It 'Should create unattended files' {
-        New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath
+        New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 18
@@ -131,13 +131,13 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-InlineFiles -Exactly 1 -ParameterFilter {
             $Locale -eq $LocaleEnglish -and
             $ConfigsPath -eq $TestConfigsPath -and
-            $UnattendedPath -eq $TestUnattendedPath -and
+            $ResourcesPath -eq $TestResourcesPath -and
             $TemplateContent -eq $TestSetPowerSchemeConfigurationResult
         }
         Should -Invoke Set-InlineFiles -Exactly 1 -ParameterFilter {
             $Locale -eq $LocaleRussian -and
             $ConfigsPath -eq $TestConfigsPath -and
-            $UnattendedPath -eq $TestUnattendedPath -and
+            $ResourcesPath -eq $TestResourcesPath -and
             $TemplateContent -eq $TestSetPowerSchemeConfigurationResult
         }
         Should -Invoke Write-TextFile -Exactly 4
@@ -172,7 +172,7 @@ Describe 'New-UnattendedFile' {
     }
 
     It 'Should skip copying to VM path in CI mode' {
-        New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath -CI
+        New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath -CI
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 18
@@ -191,7 +191,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle New-UnattendedBase failure' {
         Mock New-UnattendedBase { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
@@ -210,7 +210,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Read-TextFile failure when reading base file' {
         Mock Read-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBaseFilePath }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 3
@@ -230,7 +230,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-LocaleSettings failure' {
         Mock Set-LocaleSettings { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
@@ -249,7 +249,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-AppRemovalList failure' {
         Mock Set-AppRemovalList { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
@@ -268,7 +268,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-MalwareProtectionConfiguration failure' {
         Mock Set-MalwareProtectionConfiguration { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -287,7 +287,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-PowerSchemeConfiguration failure' {
         Mock Set-PowerSchemeConfiguration { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 7
@@ -306,7 +306,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Set-InlineFiles failure' {
         Mock Set-InlineFiles { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 8
@@ -325,7 +325,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Write-TextFile failure when writing English build file' {
         Mock Write-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 9
@@ -345,7 +345,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Write-TextFile failure when writing Russian build file' {
         Mock Write-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 15
@@ -365,7 +365,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Copy-Item failure' {
         Mock Copy-Item { throw $TestException }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 17
@@ -384,7 +384,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Read-TextFile failure when reading English build file' {
         Mock Read-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 18
@@ -404,7 +404,7 @@ Describe 'New-UnattendedFile' {
     It 'Should handle Read-TextFile failure when reading Russian build file' {
         Mock Read-TextFile { throw $TestException } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
 
-        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 18

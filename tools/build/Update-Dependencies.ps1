@@ -1,6 +1,6 @@
 function Update-Dependencies {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ConfigPath,
+        [String][Parameter(Position = 0, Mandatory)]$ResourcesPath,
         [String][Parameter(Position = 1, Mandatory)]$BuilderPath,
         [String][Parameter(Position = 2, Mandatory)]$WipPath
     )
@@ -12,7 +12,7 @@ function Update-Dependencies {
     Set-Variable -Option Constant UpdatesPath ([String]"$BuilderPath\updates")
 
     Set-Variable -Option Constant EnvFile ([String]'.env')
-    Set-Variable -Option Constant DependenciesFile ([String]"$ConfigPath\dependencies.json")
+    Set-Variable -Option Constant DependenciesFile ([String]"$ResourcesPath\dependencies.json")
 
     . "$UpdatesPath\Compare-Commits.ps1"
     . "$UpdatesPath\Compare-Tags.ps1"

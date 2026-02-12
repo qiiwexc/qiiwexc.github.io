@@ -2,13 +2,13 @@ function Set-InlineFiles {
     param(
         [String][Parameter(Position = 0, Mandatory)][ValidateSet('English', 'Russian')]$Locale,
         [String][Parameter(Position = 1, Mandatory)]$ConfigsPath,
-        [String][Parameter(Position = 2, Mandatory)]$UnattendedPath,
+        [String][Parameter(Position = 2, Mandatory)]$ResourcesPath,
         [Collections.Generic.List[String]][Parameter(Position = 3, Mandatory)]$TemplateContent
     )
 
     Set-Variable -Option Constant KEY_FILE_MAP (
         [Hashtable]@{
-            'CONFIG_APP_ASSOCIATIONS'       = "$UnattendedPath\App associations.xml"
+            'CONFIG_APP_ASSOCIATIONS'       = "$ResourcesPath\App associations.xml"
             'CONFIG_7ZIP'                   = "$ConfigsPath\Apps\7zip.reg"
             'CONFIG_ANYDESK'                = "$ConfigsPath\Apps\AnyDesk.conf"
             'CONFIG_MICROSOFT_OFFICE'       = "$ConfigsPath\Apps\Microsoft Office.reg"

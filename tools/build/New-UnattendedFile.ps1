@@ -3,9 +3,10 @@ function New-UnattendedFile {
         [Version][Parameter(Position = 0, Mandatory)]$Version,
         [String][Parameter(Position = 1, Mandatory)]$BuilderPath,
         [String][Parameter(Position = 2, Mandatory)]$SourcePath,
-        [String][Parameter(Position = 3, Mandatory)]$TemplatesPath,
-        [String][Parameter(Position = 4, Mandatory)]$BuildPath,
-        [String][Parameter(Position = 5, Mandatory)]$VmPath,
+        [String][Parameter(Position = 3, Mandatory)]$ResourcesPath,
+        [String][Parameter(Position = 4, Mandatory)]$TemplatesPath,
+        [String][Parameter(Position = 5, Mandatory)]$BuildPath,
+        [String][Parameter(Position = 6, Mandatory)]$VmPath,
         [Switch]$CI
     )
 
@@ -64,7 +65,7 @@ function New-UnattendedFile {
         $Percentage += 2
         Write-ActivityProgress $Percentage
 
-        $UpdatedTemplateContent = Set-InlineFiles $Locale $ConfigsPath $UnattendedPath $UpdatedTemplateContent
+        $UpdatedTemplateContent = Set-InlineFiles $Locale $ConfigsPath $ResourcesPath $UpdatedTemplateContent
         $Percentage += 2
         Write-ActivityProgress $Percentage
 

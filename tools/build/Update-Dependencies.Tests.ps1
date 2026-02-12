@@ -15,11 +15,11 @@ BeforeAll {
 
     Set-Variable -Option Constant BuilderPath ([String]'.\tools\build')
 
-    Set-Variable -Option Constant TestConfigPath ([String]'TEST_CONFIG_PATH')
+    Set-Variable -Option Constant TestResourcesPath ([String]'TEST_RESOURCES_PATH')
     Set-Variable -Option Constant TestWipPath ([String]'TEST_WIP_PATH')
 
     Set-Variable -Option Constant TestGitHubToken ([String]'TEST_GITHUB_TOKEN')
-    Set-Variable -Option Constant TestDependenciesFile ([String]"$TestConfigPath\dependencies.json")
+    Set-Variable -Option Constant TestDependenciesFile ([String]"$TestResourcesPath\dependencies.json")
 
     Set-Variable -Option Constant SourceGitHub ([String]'GitHub')
     Set-Variable -Option Constant SourceGitLab ([String]'GitLab')
@@ -73,7 +73,7 @@ Describe 'Update-Dependencies' {
     }
 
     It 'Should update GitHub dependencies successfully when GitHub token is provided' {
-        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -107,7 +107,7 @@ Describe 'Update-Dependencies' {
     It 'Should update GitHub dependencies successfully when no GitHub token is provided' {
         Mock Read-GitHubToken {}
 
-        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -132,7 +132,7 @@ Describe 'Update-Dependencies' {
     It 'Should update GitLab dependencies' {
         Mock Read-JsonFile { return $TestGitLabDependency }
 
-        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -164,7 +164,7 @@ Describe 'Update-Dependencies' {
     It 'Should update web dependencies' {
         Mock Read-JsonFile { return $TestWebDependency }
 
-        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -195,7 +195,7 @@ Describe 'Update-Dependencies' {
     It 'Should update file dependencies' {
         Mock Read-JsonFile { return $TestFileDependency }
 
-        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -227,7 +227,7 @@ Describe 'Update-Dependencies' {
     It 'Should handle Read-GitHubToken failure' {
         Mock Read-GitHubToken { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -245,7 +245,7 @@ Describe 'Update-Dependencies' {
     It 'Should handle Read-JsonFile failure' {
         Mock Read-JsonFile { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
@@ -263,7 +263,7 @@ Describe 'Update-Dependencies' {
     It 'Should return early when dependencies file is empty' {
         Mock Read-JsonFile { return @() }
 
-        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
@@ -282,7 +282,7 @@ Describe 'Update-Dependencies' {
     It 'Should return early when dependencies file returns null' {
         Mock Read-JsonFile { return $Null }
 
-        Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
@@ -302,7 +302,7 @@ Describe 'Update-Dependencies' {
         Mock Read-JsonFile { return $TestGitHubDependency }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
@@ -321,7 +321,7 @@ Describe 'Update-Dependencies' {
         Mock Read-JsonFile { return $TestGitLabDependency }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitLab }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
@@ -340,7 +340,7 @@ Describe 'Update-Dependencies' {
         Mock Read-JsonFile { return $TestWebDependency }
         Mock Update-WebDependency { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
@@ -359,7 +359,7 @@ Describe 'Update-Dependencies' {
         Mock Read-JsonFile { return $TestFileDependency }
         Mock Update-FileDependency { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
@@ -377,7 +377,7 @@ Describe 'Update-Dependencies' {
     It 'Should handle Start-Process failure' {
         Mock Start-Process { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 5
@@ -395,7 +395,7 @@ Describe 'Update-Dependencies' {
     It 'Should handle Write-JsonFile failure' {
         Mock Write-JsonFile { throw $TestException }
 
-        { Update-Dependencies $TestConfigPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6

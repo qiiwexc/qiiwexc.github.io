@@ -8,8 +8,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant TestConfigPath ([String]'TEST_CONFIG_PATH')
-    Set-Variable -Option Constant TestTemplatesPath ([String]'TEST_TEMPLATES_PATH')
+    Set-Variable -Option Constant TestResourcesPath ([String]'TEST_RESOURCES_PATH')
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
 
     Set-Variable -Option Constant TestDependenciesContent (
@@ -40,19 +39,19 @@ BeforeAll {
 Describe 'Set-Urls' {
     BeforeEach {
         Mock New-Activity {}
-        Mock Read-JsonFile { return $TestDependenciesContent } -ParameterFilter { $Path -match $TestConfigPath }
-        Mock Read-JsonFile { return $TestTemplateContent } -ParameterFilter { $Path -match $TestTemplatesPath }
+        Mock Read-JsonFile { return $TestDependenciesContent } -ParameterFilter { $Path -match 'dependencies' }
+        Mock Read-JsonFile { return $TestTemplateContent } -ParameterFilter { $Path -match 'urls' }
         Mock Write-JsonFile {}
         Mock Write-ActivityCompleted {}
     }
 
     It 'Should set URLs correctly' {
-        Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath
+        Set-Urls $TestResourcesPath $TestBuildPath
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 2
-        Should -Invoke Read-JsonFile -Exactly 1 -ParameterFilter { $Path -eq "$TestConfigPath\dependencies.json" }
-        Should -Invoke Read-JsonFile -Exactly 1 -ParameterFilter { $Path -eq "$TestTemplatesPath\urls.json" }
+        Should -Invoke Read-JsonFile -Exactly 1 -ParameterFilter { $Path -eq "$TestResourcesPath\dependencies.json" }
+        Should -Invoke Read-JsonFile -Exactly 1 -ParameterFilter { $Path -eq "$TestResourcesPath\urls.json" }
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
             $Path -eq "$TestBuildPath\urls.json" -and
@@ -63,9 +62,9 @@ Describe 'Set-Urls' {
     }
 
     It 'Should handle first Read-JsonFile failure' {
-        Mock Read-JsonFile { throw $TestException } -ParameterFilter { $Path -match $TestConfigPath }
+        Mock Read-JsonFile { throw $TestException } -ParameterFilter { $Path -match 'dependencies' }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
+        { Set-Urls $TestResourcesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1
@@ -74,9 +73,9 @@ Describe 'Set-Urls' {
     }
 
     It 'Should handle second Read-JsonFile failure' {
-        Mock Read-JsonFile { throw $TestException } -ParameterFilter { $Path -match $TestTemplatesPath }
+        Mock Read-JsonFile { throw $TestException } -ParameterFilter { $Path -match 'urls' }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
+        { Set-Urls $TestResourcesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 2
@@ -87,7 +86,7 @@ Describe 'Set-Urls' {
     It 'Should handle Write-JsonFile failure' {
         Mock Write-JsonFile { throw $TestException }
 
-        { Set-Urls $TestConfigPath $TestTemplatesPath $TestBuildPath } | Should -Throw $TestException
+        { Set-Urls $TestResourcesPath $TestBuildPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 2
