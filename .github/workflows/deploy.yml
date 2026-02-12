@@ -53,6 +53,7 @@ jobs:
         with:
           name: deploy-output
           path: |
+            commit-sha
             qiiwexc.bat
             qiiwexc.ps1
             autounattend-*.xml
