@@ -1,5 +1,8 @@
 name: Deploy to GitHub Pages
 
+permissions:
+  contents: read
+
 on:
   workflow_call:
     outputs:
@@ -39,6 +42,9 @@ jobs:
           echo "should_release=true" >> $GITHUB_OUTPUT
 
   deploy:
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     concurrency:
       group: pages
