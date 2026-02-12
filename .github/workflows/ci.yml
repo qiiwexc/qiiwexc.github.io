@@ -9,8 +9,7 @@ permissions:
 on:
   push:
     branches: ["*"]
-    tags-ignore: ["*"]
-  pull_request:
+    tags: ["*"]
 
 jobs:
   test:
@@ -26,7 +25,7 @@ jobs:
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/master'
+    if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: read
       pages: write
