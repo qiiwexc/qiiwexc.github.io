@@ -4,5 +4,5 @@ for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format \"y.M.d\""') do
 
 git fetch --all --prune
 git pull --tags --autostash -r origin master
-git tag -a v%version% -M "Release v%version%"
+git tag -a v%version% -m "Release v%version%"
 git push origin --tags
