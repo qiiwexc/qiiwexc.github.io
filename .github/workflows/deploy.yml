@@ -5,6 +5,9 @@ on:
 
 jobs:
   deploy:
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     concurrency:
       group: pages
