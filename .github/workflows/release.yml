@@ -18,10 +18,22 @@ jobs:
       should_release: ${{ steps.check.outputs.should_release }}
       tag: ${{ steps.check.outputs.tag }}
     steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v7.0.0
+        with:
+          name: deploy-output
+          path: artifacts
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Read commit SHA
+        id: sha
+        run: echo "sha=$(cat artifacts/commit-sha)" >> $GITHUB_OUTPUT
+
       - name: Check out repository
         uses: actions/checkout@v6.0.2
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ steps.sha.outputs.sha }}
           fetch-depth: 100
           fetch-tags: true
 
@@ -30,7 +42,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag=$(git tag --points-at master)
+          tag=$(git tag --points-at HEAD)
           if [ -z "$tag" ]; then
             echo "No tag found, skipping release"
             echo "should_release=false" >> $GITHUB_OUTPUT
