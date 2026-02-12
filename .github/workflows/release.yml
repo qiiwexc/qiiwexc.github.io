@@ -2,47 +2,26 @@ name: Create a release
 
 on:
   workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v6.0.2
-        with:
-          fetch-depth: 100
-          fetch-tags: true
-
-      - name: Check for tag and existing release
-        id: check
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          tag=$(git tag --points-at HEAD)
-          if [ -z "$tag" ]; then
-            echo "No tag found, skipping release"
-            exit 0
-          fi
-          if gh release view "$tag" > /dev/null 2>&1; then
-            echo "Release $tag already exists, skipping"
-            exit 0
-          fi
-          echo "tag=$tag" >> $GITHUB_OUTPUT
-          echo "should_release=true" >> $GITHUB_OUTPUT
-
       - name: Download build artifacts
-        if: steps.check.outputs.should_release == 'true'
         uses: actions/download-artifact@v7.0.0
         with:
           name: build-output
           path: artifacts
 
       - name: Create release
-        if: steps.check.outputs.should_release == 'true'
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         with:
-          tag_name: ${{ steps.check.outputs.tag }}
-          name: ${{ steps.check.outputs.tag }}
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
           generate_release_notes: true
           files: |
             artifacts/build/qiiwexc.bat
