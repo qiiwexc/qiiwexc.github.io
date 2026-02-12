@@ -32,7 +32,7 @@ jobs:
         with:
           name: build-output
           path: |
-            assets
+            public
             d/version
             d/*.css
             build/index.html
