@@ -62,8 +62,8 @@ Set-Variable -Option Constant TestsFile ([String]"$ToolsPath\test.ps1")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
 
-if ($CI -and $Env:GITHUB_REF_NAME) {
-    Set-Variable -Option Constant Version ([Version]$Env:GITHUB_REF_NAME)
+if ($CI -and $Env:GITHUB_REF -match '^refs/tags/') {
+    Set-Variable -Option Constant Version ([Version]($Env:GITHUB_REF_NAME -replace '^v'))
 } else {
     Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
 }
