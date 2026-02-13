@@ -1,9 +1,6 @@
 name: CI
 run-name: CI (${{ github.event_name }} on ${{ github.ref_name }})
 
-permissions:
-  contents: read
-
 on:
   push:
     branches: ["*"]
@@ -11,10 +8,14 @@ on:
 
 jobs:
   test:
+    permissions:
+      contents: read
     uses: ./.github/workflows/test.yml
 
   build:
     needs: test
+    permissions:
+      contents: read
     uses: ./.github/workflows/build.yml
 
   deploy:
