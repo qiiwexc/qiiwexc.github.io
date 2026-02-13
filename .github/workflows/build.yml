@@ -15,7 +15,7 @@ jobs:
 
       - name: Cache PSScriptAnalyzer
         id: cache-psmodules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/Documents/PowerShell/Modules
           key: psmodules-PSScriptAnalyzer-1.24.0
