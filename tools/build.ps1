@@ -62,17 +62,8 @@ Set-Variable -Option Constant TestsFile ([String]"$ToolsPath\test.ps1")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
 
-if ($CI) {
-    try {
-        Set-Variable -Option Constant Tag ([String](git describe --tags --abbrev=0 2>&1))
-        if ($LASTEXITCODE -eq 0 -and $Tag) {
-            Set-Variable -Option Constant Version ([Version]$Tag)
-        } else {
-            Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
-        }
-    } catch {
-        Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
-    }
+if ($CI -and $Env:GITHUB_REF_NAME) {
+    Set-Variable -Option Constant Version ([Version]$Env:GITHUB_REF_NAME)
 } else {
     Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
 }
