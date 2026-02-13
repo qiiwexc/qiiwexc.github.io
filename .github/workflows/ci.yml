@@ -2,9 +2,7 @@ name: CI
 run-name: CI (${{ github.event_name }} on ${{ github.ref_name }})
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 on:
   push:
@@ -13,21 +11,16 @@ on:
 
 jobs:
   test:
-    permissions:
-      contents: read
     uses: ./.github/workflows/test.yml
 
   build:
     needs: test
-    permissions:
-      contents: read
     uses: ./.github/workflows/build.yml
 
   deploy:
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
-      contents: read
       pages: write
       id-token: write
     uses: ./.github/workflows/deploy.yml
