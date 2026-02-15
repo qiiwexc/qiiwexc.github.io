@@ -1,12 +1,12 @@
 function Set-WindowsConfiguration {
     param(
-        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Security,
-        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$Performance,
-        [Windows.Forms.CheckBox][Parameter(Position = 2, Mandatory)]$Baseline,
-        [Windows.Forms.CheckBox][Parameter(Position = 3, Mandatory)]$Annoyances,
-        [Windows.Forms.CheckBox][Parameter(Position = 4, Mandatory)]$Privacy,
-        [Windows.Forms.CheckBox][Parameter(Position = 5, Mandatory)]$Localisation,
-        [Windows.Forms.CheckBox][Parameter(Position = 6, Mandatory)]$Personalisation
+        [Object][Parameter(Position = 0, Mandatory)]$Security,
+        [Object][Parameter(Position = 1, Mandatory)]$Performance,
+        [Object][Parameter(Position = 2, Mandatory)]$Baseline,
+        [Object][Parameter(Position = 3, Mandatory)]$Annoyances,
+        [Object][Parameter(Position = 4, Mandatory)]$Privacy,
+        [Object][Parameter(Position = 5, Mandatory)]$Localisation,
+        [Object][Parameter(Position = 6, Mandatory)]$Personalisation
     )
 
     if (Assert-WindowsDebloatIsRunning) {
@@ -23,7 +23,7 @@ function Set-WindowsConfiguration {
 
     New-Activity 'Configuring Windows'
 
-    if ($Security.Checked) {
+    if ($Security.IsChecked) {
         Write-ActivityProgress 10 'Applying malware protection configuration...'
         Set-MalwareProtectionConfiguration
 
@@ -31,7 +31,7 @@ function Set-WindowsConfiguration {
         Set-SecurityConfiguration
     }
 
-    if ($Performance.Checked) {
+    if ($Performance.IsChecked) {
         Write-ActivityProgress 30 'Applying Windows power scheme settings...'
         Set-PowerSchemeConfiguration
 
@@ -39,27 +39,27 @@ function Set-WindowsConfiguration {
         Set-PerformanceConfiguration
     }
 
-    if ($Baseline.Checked) {
+    if ($Baseline.IsChecked) {
         Write-ActivityProgress 50 'Applying Windows baseline configuration...'
         Set-BaselineConfiguration
     }
 
-    if ($Annoyances.Checked) {
+    if ($Annoyances.IsChecked) {
         Write-ActivityProgress 60 'Removing Windows ads and annoyances...'
         Remove-Annoyances
     }
 
-    if ($Privacy.Checked) {
+    if ($Privacy.IsChecked) {
         Write-ActivityProgress 70 'Removing Windows telemetry and improving privacy...'
         Set-PrivacyConfiguration
     }
 
-    if ($Localisation.Checked) {
+    if ($Localisation.IsChecked) {
         Write-ActivityProgress 80 'Applying Windows localisation configuration...'
         Set-LocalisationConfiguration
     }
 
-    if ($Personalisation.Checked) {
+    if ($Personalisation.IsChecked) {
         Write-ActivityProgress 90 'Applying Windows personalisation configuration...'
         Set-PersonalisationConfiguration
     }

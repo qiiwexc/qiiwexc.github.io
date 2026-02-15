@@ -1,7 +1,12 @@
-New-GroupBox 'HDD diagnostics'
+New-Card 'HDD diagnostics'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun '{URL_VICTORIA}' -Execute:$CHECKBOX_StartVictoria.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $Execute = $CHECKBOX_StartVictoria.IsChecked
+    Start-AsyncOperation -Sender $this { Start-DownloadUnzipAndRun '{URL_VICTORIA}' -Execute:$Execute } -Variables @{
+        Execute = $Execute
+    }
+}
 New-Button 'Victoria' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_StartVictoria = New-CheckBoxRunAfterDownload -Checked

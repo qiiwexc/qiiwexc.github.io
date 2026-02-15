@@ -25,6 +25,9 @@ Describe 'New-ButtonBrowser' {
             $Function -eq $TestFunction
         }
         Should -Invoke New-Label -Exactly 1
-        Should -Invoke New-Label -Exactly 1 -ParameterFilter { $Text -eq 'Open in a browser' }
+        Should -Invoke New-Label -Exactly 1 -ParameterFilter {
+            $Text -eq 'Open in a browser' -and
+            $Centered -eq $True
+        }
     }
 }

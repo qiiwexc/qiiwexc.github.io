@@ -1,4 +1,4 @@
-New-GroupBox 'Windows disinfection'
+New-Card 'Windows disinfection'
 
 
 [ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser '{URL_TRONSCRIPT}' }

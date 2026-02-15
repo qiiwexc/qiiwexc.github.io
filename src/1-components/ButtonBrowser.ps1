@@ -6,5 +6,5 @@ function New-ButtonBrowser {
 
     New-Button $Text $Function
 
-    New-Label 'Open in a browser'
+    New-Label 'Open in a browser' -Centered
 }

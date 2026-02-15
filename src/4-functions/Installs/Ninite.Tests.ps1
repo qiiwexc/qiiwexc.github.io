@@ -1,53 +1,42 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
 
     . '.\src\4-functions\Common\Open-InBrowser.ps1'
     . '.\src\4-functions\Common\Start-DownloadUnzipAndRun.ps1'
 
-    Set-Variable -Option Constant TEST_CHECKBOX_1 (
-        [Windows.Forms.CheckBox]@{
-            Checked = $True
-            Name    = 'TEST_CHECKBOX_1_NAME'
-            Text    = 'APP_NAME_1'
-        }
-    )
+    function New-TestCheckBox([Bool]$IsChecked, [String]$Tag, [String]$Content) {
+        $cb = New-Object Windows.Controls.CheckBox
+        $cb.IsChecked = $IsChecked
+        $cb.Tag = $Tag
+        $cb.Content = $Content
+        return $cb
+    }
 
-    Set-Variable -Option Constant TEST_CHECKBOX_2 (
-        [Windows.Forms.CheckBox]@{
-            Checked = $False
-            Name    = 'TEST_CHECKBOX_2_NAME'
-            Text    = 'APP_NAME_2'
-        }
-    )
-
-    Set-Variable -Option Constant TEST_CHECKBOX_3 (
-        [Windows.Forms.CheckBox]@{
-            Checked = $True
-            Name    = 'TEST_CHECKBOX_3_NAME'
-            Text    = 'Install APP_NAME_3'
-        }
-    )
+    Set-Variable -Option Constant TEST_CHECKBOX_1 (New-TestCheckBox -IsChecked $True -Tag 'TEST_CHECKBOX_1_NAME' -Content 'APP_NAME_1')
+    Set-Variable -Option Constant TEST_CHECKBOX_2 (New-TestCheckBox -IsChecked $False -Tag 'TEST_CHECKBOX_2_NAME' -Content 'APP_NAME_2')
+    Set-Variable -Option Constant TEST_CHECKBOX_3 (New-TestCheckBox -IsChecked $True -Tag 'TEST_CHECKBOX_3_NAME' -Content 'Install APP_NAME_3')
 
     Set-Variable -Option Constant TestCheckboxes (
-        [Windows.Forms.CheckBox[]]@(
+        [Windows.Controls.CheckBox[]]@(
             $TEST_CHECKBOX_1,
             $TEST_CHECKBOX_2,
             $TEST_CHECKBOX_3
         )
     )
 
-    Set-Variable -Option Constant TestQuery ([String]"$($TEST_CHECKBOX_1.Name)-$($TEST_CHECKBOX_3.Name)")
+    Set-Variable -Option Constant TestQuery ([String]"$($TEST_CHECKBOX_1.Tag)-$($TEST_CHECKBOX_3.Tag)")
 }
 
 Describe 'Set-NiniteButtonState' {
     BeforeEach {
-        Set-Variable -Option Constant CHECKBOX_StartNinite ([Windows.Forms.CheckBox]@{ Enabled = $False })
+        Set-Variable -Option Constant CHECKBOX_StartNinite (& { $cb = New-Object Windows.Controls.CheckBox; $cb.IsEnabled = $False; $cb })
     }
 
     It 'Should enable the Ninite button when at least one checkbox is checked' {
-        [Windows.Forms.CheckBox[]]$NINITE_CHECKBOXES =
+        [Windows.Controls.CheckBox[]]$NINITE_CHECKBOXES =
         @(
             $TEST_CHECKBOX_1,
             $TEST_CHECKBOX_2,
@@ -56,11 +45,11 @@ Describe 'Set-NiniteButtonState' {
 
         Set-NiniteButtonState
 
-        $CHECKBOX_StartNinite.Enabled | Should -BeTrue
+        $CHECKBOX_StartNinite.IsEnabled | Should -BeTrue
     }
 
     It 'Should disable the Ninite button when no checkboxes are checked' {
-        [Windows.Forms.CheckBox[]]$NINITE_CHECKBOXES =
+        [Windows.Controls.CheckBox[]]$NINITE_CHECKBOXES =
         @(
             $TEST_CHECKBOX_2,
             $TEST_CHECKBOX_2
@@ -68,7 +57,7 @@ Describe 'Set-NiniteButtonState' {
 
         Set-NiniteButtonState
 
-        $CHECKBOX_StartNinite.Enabled | Should -BeFalse
+        $CHECKBOX_StartNinite.IsEnabled | Should -BeFalse
     }
 }
 
@@ -97,7 +86,7 @@ Describe 'Get-NiniteInstaller' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq "{URL_NINITE}/$TestQuery/ninite.exe" -and
-            $FileName -eq 'Ninite APP_NAME_1 APP_NAME_3 Installer.exe' -and
+            $FileName -eq 'Ninite APP_NAME_1 Install APP_NAME_3 Installer.exe' -and
             $Execute -eq $True
         }
     }

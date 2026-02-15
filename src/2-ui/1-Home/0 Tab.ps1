@@ -1,1 +1,1 @@
-Set-Variable -Option Constant TAB_HOME ([Windows.Forms.TabPage](New-TabPage 'Home'))
+Set-Variable -Option Constant TAB_HOME ([Windows.Controls.TabItem](New-TabPage 'Home'))

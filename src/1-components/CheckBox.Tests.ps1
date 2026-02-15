@@ -1,101 +1,56 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
 
     Set-Variable -Option Constant TestText ([String]'TEST_TEXT')
     Set-Variable -Option Constant TestName ([String]'TEST_NAME')
-
-    Set-Variable -Option Constant COMMON_PADDING ([Int]15)
-    Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
-    Set-Variable -Option Constant CHECKBOX_HEIGHT ([Int]20)
-    Set-Variable -Option Constant CHECKBOX_WIDTH ([Int]175)
-    Set-Variable -Option Constant INTERVAL_CHECKBOX ([Int]25)
-    Set-Variable -Option Constant CHECKBOX_PADDING ([Int]20)
-    Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]'15, 20')
-
-    function Add {}
+    Set-Variable -Option Constant TestStyle ([Windows.Style](New-Object Windows.Style))
 }
 
 Describe 'New-CheckBox' {
     BeforeEach {
-        [Windows.Forms.Button]$script:PREVIOUS_BUTTON = $Null
-        [Windows.Forms.CheckBox]$script:PREVIOUS_LABEL_OR_CHECKBOX = $Null
+        $script:PREVIOUS_BUTTON = $Null
+        $script:PREVIOUS_LABEL_OR_CHECKBOX = $Null
+        $script:CENTERED_CHECKBOX_GROUP = $Null
 
-        [Windows.Forms.GroupBox]$script:CURRENT_GROUP = (
-            New-MockObject -Type Windows.Forms.GroupBox -Properties @{
-                Height   = 0
-                Controls = New-MockObject -Type Windows.Forms.Control -Methods @{
-                    Add = { Add }
-                }
-            }
-        )
-
-        Mock Add {}
+        $script:CURRENT_GROUP = New-Object Windows.Controls.StackPanel
+        $script:FORM = [PSCustomObject]@{}
+        $script:FORM | Add-Member -MemberType ScriptMethod -Name FindResource -Value { param($key) return $TestStyle }
     }
 
     It 'Should create a new checkbox' {
-        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName))
+        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $TestText $TestName))
 
-        Should -Invoke Add -Exactly 1
+        $Result.Content | Should -BeExactly $TestText
+        $Result.Tag | Should -BeExactly $TestName
+        $Result.IsChecked | Should -BeFalse
+        $Result.IsEnabled | Should -BeTrue
+        $Result.Style | Should -BeExactly $TestStyle
+        $Result.Margin.Left | Should -BeExactly 10
+        $Result.Margin.Top | Should -BeExactly 4
+        $Result.Margin.Bottom | Should -BeExactly 4
 
-        $Result.Text | Should -BeExactly $TestText
-        $Result.Name | Should -BeExactly $TestName
-        $Result.Checked | Should -BeFalse
-        $Result.Enabled | Should -BeTrue
-        $Result.Size.Width | Should -BeExactly $CHECKBOX_WIDTH
-        $Result.Size.Height | Should -BeExactly $CHECKBOX_HEIGHT
-        $Result.Location | Should -BeExactly $INITIAL_LOCATION_BUTTON
-
-        $script:CURRENT_GROUP.Height | Should -BeExactly 50
+        $script:CURRENT_GROUP.Children.Count | Should -BeExactly 1
         $script:PREVIOUS_LABEL_OR_CHECKBOX | Should -BeExactly $Result
+        $script:PREVIOUS_BUTTON | Should -BeNullOrEmpty
     }
 
-    It 'Should create a checkbox under a button' {
-        $script:PREVIOUS_BUTTON = @{ Location = '100, 200' }
+    It 'Should create a disabled checked checkbox' {
+        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $TestText $TestName -Disabled -Checked))
 
-        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName -Disabled -Checked))
-
-        $Result.Checked | Should -BeTrue
-        $Result.Enabled | Should -BeFalse
-        $Result.Location.X | Should -BeExactly 120
-        $Result.Location.Y | Should -BeExactly 230
-
-        $script:CURRENT_GROUP.Height | Should -BeExactly 260
+        $Result.IsChecked | Should -BeTrue
+        $Result.IsEnabled | Should -BeFalse
     }
 
-    It 'Should create a checkbox without padding under a checkbox/label' {
-        $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
+    It 'Should add to CENTERED_CHECKBOX_GROUP when set' {
+        $script:CENTERED_CHECKBOX_GROUP = New-Object Windows.Controls.StackPanel
 
-        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName))
+        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $TestText $TestName))
 
-        $Result.Location.X | Should -BeExactly 15
-        $Result.Location.Y | Should -BeExactly 225
-
-        $script:CURRENT_GROUP.Height | Should -BeExactly 255
+        $Result.Margin.Left | Should -BeExactly 0
+        $script:CENTERED_CHECKBOX_GROUP.Children.Count | Should -BeExactly 1
+        $script:CURRENT_GROUP.Children.Count | Should -BeExactly 0
     }
-
-    It 'Should create a checkbox with padding' {
-        $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '100, 200' }
-
-        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName -Padded))
-
-        $Result.Location.X | Should -BeExactly 35
-        $Result.Location.Y | Should -BeExactly 220
-
-        $script:CURRENT_GROUP.Height | Should -BeExactly 250
-    }
-
-    It 'Should create a checkbox under a button and a checkbox/label' {
-        $script:PREVIOUS_BUTTON = @{ Location = '100, 200' }
-        $script:PREVIOUS_LABEL_OR_CHECKBOX = @{ Location = '200, 300' }
-
-        Set-Variable -Option Constant Result ([Windows.Forms.CheckBox](New-CheckBox $TestText $TestName))
-
-        $Result.Location.X | Should -BeExactly 100
-        $Result.Location.Y | Should -BeExactly 325
-
-        $script:CURRENT_GROUP.Height | Should -BeExactly 355
-    }
-
 }

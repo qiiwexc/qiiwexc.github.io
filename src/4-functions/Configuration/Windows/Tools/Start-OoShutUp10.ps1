@@ -33,5 +33,4 @@ function Start-OoShutUp10 {
     }
 
     Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute -Params $Params
-    Out-Success
 }

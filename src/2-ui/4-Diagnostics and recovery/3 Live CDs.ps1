@@ -1,4 +1,4 @@
-New-GroupBox 'Live CDs'
+New-Card 'Live CDs'
 
 
 [ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser '{URL_WINDOWS_PE}' }

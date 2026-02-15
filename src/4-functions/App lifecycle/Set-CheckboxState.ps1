@@ -1,12 +1,12 @@
 function Set-CheckboxState {
     param(
-        [Windows.Forms.CheckBox][Parameter(Position = 0, Mandatory)]$Control,
-        [Windows.Forms.CheckBox][Parameter(Position = 1, Mandatory)]$Dependant
+        [Windows.Controls.CheckBox][Parameter(Position = 0, Mandatory)]$Control,
+        [Windows.Controls.CheckBox][Parameter(Position = 1, Mandatory)]$Dependant
     )
 
-    $Dependant.Enabled = $Control.Checked
+    $Dependant.IsEnabled = $Control.IsChecked
 
-    if (-not $Dependant.Enabled) {
-        $Dependant.Checked = $False
+    if (-not $Dependant.IsEnabled) {
+        $Dependant.IsChecked = $False
     }
 }

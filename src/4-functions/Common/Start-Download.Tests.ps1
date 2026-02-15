@@ -1,4 +1,9 @@
 BeforeAll {
+    # Define untyped stubs before BitsTransfer module auto-loads,
+    # so Pester mocks use simple parameters instead of the module's typed [BitsJob[]] constraint
+    function Complete-BitsTransfer { param($BitsJob) }
+    function Remove-BitsTransfer { param($BitsJob) }
+
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\Network.ps1'
@@ -36,6 +41,11 @@ Describe 'Start-Download' {
         Mock Test-NetworkConnection { return $True }
         Mock Initialize-AppDirectory {}
         Mock Start-BitsTransfer {}
+        Mock Complete-BitsTransfer {}
+        Mock Get-Item { return [PSCustomObject]@{ Length = 1024 } }
+        Mock Invoke-WebRequest {}
+        Mock Remove-BitsTransfer {}
+        Mock Remove-Item {}
         Mock Start-Sleep {}
         Mock Move-Item {}
         Mock Out-Success {}
@@ -47,8 +57,8 @@ Describe 'Start-Download' {
         Start-Download $TestUrl | Should -BeExactly $TestSavePath
 
         Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Test-Path -Exactly 2
-        Should -Invoke Test-Path -Exactly 2 -ParameterFilter { $Path -eq $TestSavePath }
+        Should -Invoke Test-Path -Exactly 3
+        Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestSavePath }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -56,8 +66,11 @@ Describe 'Start-Download' {
         Should -Invoke Start-BitsTransfer -Exactly 1 -ParameterFilter {
             $Source -eq $TestUrl -and
             $Destination -eq $TestTempPath -and
-            $Dynamic -eq $True
+            $Asynchronous -eq $True
         }
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -74,17 +87,20 @@ Describe 'Start-Download' {
         Start-Download $TestUrl $TestSaveAs | Should -BeExactly $TestSavePathSaveAs
 
         Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Test-Path -Exactly 2
-        Should -Invoke Test-Path -Exactly 2 -ParameterFilter { $Path -eq $TestSavePathSaveAs }
+        Should -Invoke Test-Path -Exactly 3
+        Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestSavePathSaveAs }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1 -ParameterFilter {
             $Source -eq $TestUrl -and
-            $Destination -eq $TestSavePathSaveAs -and
-            $Dynamic -eq $True
+            $Destination -eq $TestTempPathSaveAs -and
+            $Asynchronous -eq $True
         }
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
@@ -101,12 +117,15 @@ Describe 'Start-Download' {
         Start-Download $TestUrl -Temp | Should -BeExactly $TestSavePath
 
         Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Test-Path -Exactly 2
-        Should -Invoke Test-Path -Exactly 2 -ParameterFilter { $Path -eq $TestTempPath }
+        Should -Invoke Test-Path -Exactly 3
+        Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestTempPath }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 1
@@ -146,16 +165,24 @@ Describe 'Start-Download' {
     }
 
     It 'Should throw if download fails' {
-        [Int]$TestPathSuccessIteration = 3
+        # Test-Path returns: false (initial check), true (BITS file exists), false (final validation)
+        [Bool[]]$script:PathResults = @($False, $True, $False)
+        [Int]$script:PathIndex = 0
+        Mock Test-Path {
+            $Result = $script:PathResults[$script:PathIndex]
+            $script:PathIndex++
+            return $Result
+        }
 
         { Start-Download $TestUrl } | Should -Throw 'Possibly computer is offline or disk is full'
 
         Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Test-Path -Exactly 2
+        Should -Invoke Test-Path -Exactly 3
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Complete-BitsTransfer -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 0
@@ -227,11 +254,13 @@ Describe 'Start-Download' {
         Start-Download $TestUrl  | Should -BeExactly $TestSavePath
 
         Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Test-Path -Exactly 2
+        Should -Invoke Test-Path -Exactly 3
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 2
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Get-Item -Exactly 1
         Should -Invoke Start-Sleep -Exactly 1
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -263,13 +292,36 @@ Describe 'Start-Download' {
         { Start-Download $TestUrl } | Should -Throw $TestException
 
         Should -Invoke Write-ActivityProgress -Exactly 3
-        Should -Invoke Test-Path -Exactly 1
+        Should -Invoke Test-Path -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Get-Item -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 0
+    }
+
+    It 'Should fallback to WebRequest when BITS returns empty file' {
+        [Int]$TestPathSuccessIteration = 2
+        Mock Get-Item { return [PSCustomObject]@{ Length = 0 } }
+
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
+
+        Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Remove-Item -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
+            $Uri -eq $TestUrl -and
+            $OutFile -eq $TestTempPath -and
+            $UseBasicParsing -eq $True
+        }
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Move-Item -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
     }
 }

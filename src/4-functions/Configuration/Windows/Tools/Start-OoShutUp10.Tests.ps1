@@ -25,7 +25,6 @@ Describe 'Start-OoShutUp10' {
         Mock Set-Content {}
         Mock Start-DownloadUnzipAndRun {}
         Mock Write-LogWarning {}
-        Mock Out-Success {}
     }
 
     It 'Should download OoShutUp10' {
@@ -47,7 +46,6 @@ Describe 'Start-OoShutUp10' {
             $Execute -eq $False -and
             $Params -eq ''
         }
-        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should download OoShutUp10 and run' {
@@ -69,7 +67,6 @@ Describe 'Start-OoShutUp10' {
             $Execute -eq $True -and
             $Params -eq ''
         }
-        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should download OoShutUp10 and run silently' {
@@ -85,7 +82,6 @@ Describe 'Start-OoShutUp10' {
             $Execute -eq $True -and
             $Params -eq "$PATH_OOSHUTUP10\$TestConfigFileName"
         }
-        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should exit if Windows debloat is running' {
@@ -98,7 +94,6 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
     }
 
     It 'Should handle Assert-WindowsDebloatIsRunning failure' {
@@ -111,7 +106,6 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
     }
 
     It 'Should handle New-Directory failure' {
@@ -124,7 +118,6 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
-        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should handle Set-Content failure' {
@@ -137,7 +130,6 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
-        Should -Invoke Out-Success -Exactly 1
     }
 
     It 'Should handle Start-DownloadUnzipAndRun failure' {
@@ -150,6 +142,5 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
     }
 }

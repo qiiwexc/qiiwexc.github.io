@@ -1,12 +1,12 @@
-New-GroupBox 'Apps configuration'
+New-Card 'Apps configuration'
 
 
-[Windows.Forms.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Name '7-Zip' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Name 'VLC' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Name 'AnyDesk' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qBittorrent' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Name 'Microsoft Edge' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Name 'Google Chrome' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_7zip = New-CheckBox '7-Zip' -Name '7-Zip' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_VLC = New-CheckBox 'VLC' -Name 'VLC' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_AnyDesk = New-CheckBox 'AnyDesk' -Name 'AnyDesk' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_qBittorrent = New-CheckBox 'qBittorrent' -Name 'qBittorrent' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_Edge = New-CheckBox 'Microsoft Edge' -Name 'Microsoft Edge' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_Chrome = New-CheckBox 'Google Chrome' -Name 'Google Chrome' -Checked
 
 
 Set-Variable -Option Constant AppsConfigurationParameters (
@@ -20,5 +20,13 @@ Set-Variable -Option Constant AppsConfigurationParameters (
     }
 )
 
-[ScriptBlock]$BUTTON_FUNCTION = { Set-AppsConfiguration @AppsConfigurationParameters }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $CapturedAppsConfig = @{}
+    foreach ($Entry in $AppsConfigurationParameters.GetEnumerator()) {
+        $CapturedAppsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $Entry.Value.IsChecked; Tag = [String]$Entry.Value.Tag }
+    }
+    Start-AsyncOperation -Sender $this { Set-AppsConfiguration @CapturedAppsConfig } -Variables @{
+        CapturedAppsConfig = $CapturedAppsConfig
+    }
+}
 New-Button 'Apply configuration' $BUTTON_FUNCTION

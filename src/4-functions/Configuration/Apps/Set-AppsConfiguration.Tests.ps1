@@ -9,82 +9,31 @@ BeforeAll {
     . '.\src\4-functions\Configuration\Apps\Set-qBittorrentConfiguration.ps1'
     . '.\src\4-functions\Configuration\Apps\Set-VlcConfiguration.ps1'
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant TestCheckbox7zipChecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = '7zip'
-            Checked = $True
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxVlcChecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'VLC'
-            Checked = $True
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxAnyDeskChecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'AnyDesk'
-            Checked = $True
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxqBittorrentChecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'qBittorrent'
-            Checked = $True
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxEdgeChecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'Edge'
-            Checked = $True
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxChromeChecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'Chrome'
-            Checked = $True
-        }
-    )
-    Set-Variable -Option Constant TestCheckbox7zipUnchecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = '7zip'
-            Checked = $False
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxVlcUnchecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'VLC'
-            Checked = $False
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxAnyDeskUnchecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'AnyDesk'
-            Checked = $False
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxqBittorrentUnchecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'qBittorrent'
-            Checked = $False
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxEdgeUnchecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'Edge'
-            Checked = $False
-        }
-    )
-    Set-Variable -Option Constant TestCheckboxChromeUnchecked (
-        [Windows.Forms.CheckBox]@{
-            Name    = 'Chrome'
-            Checked = $False
-        }
-    )
+    function New-TestCheckBox([String]$Tag, [Bool]$IsChecked) {
+        $cb = New-Object Windows.Controls.CheckBox
+        $cb.Tag = $Tag
+        $cb.IsChecked = $IsChecked
+        return $cb
+    }
+
+    Set-Variable -Option Constant TestCheckbox7zipChecked (New-TestCheckBox -Tag '7zip' -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxVlcChecked (New-TestCheckBox -Tag 'VLC' -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxAnyDeskChecked (New-TestCheckBox -Tag 'AnyDesk' -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxqBittorrentChecked (New-TestCheckBox -Tag 'qBittorrent' -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxEdgeChecked (New-TestCheckBox -Tag 'Edge' -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxChromeChecked (New-TestCheckBox -Tag 'Chrome' -IsChecked $True)
+
+    Set-Variable -Option Constant TestCheckbox7zipUnchecked (New-TestCheckBox -Tag '7zip' -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxVlcUnchecked (New-TestCheckBox -Tag 'VLC' -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxAnyDeskUnchecked (New-TestCheckBox -Tag 'AnyDesk' -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxqBittorrentUnchecked (New-TestCheckBox -Tag 'qBittorrent' -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxEdgeUnchecked (New-TestCheckBox -Tag 'Edge' -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxChromeUnchecked (New-TestCheckBox -Tag 'Chrome' -IsChecked $False)
 }
 
 Describe 'Set-AppsConfiguration' {
@@ -111,17 +60,17 @@ Describe 'Set-AppsConfiguration' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Set-7zipConfiguration -Exactly 1
-        Should -Invoke Set-7zipConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckbox7zipChecked.Name }
+        Should -Invoke Set-7zipConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckbox7zipChecked.Tag }
         Should -Invoke Set-VlcConfiguration -Exactly 1
-        Should -Invoke Set-VlcConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxVlcChecked.Name }
+        Should -Invoke Set-VlcConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxVlcChecked.Tag }
         Should -Invoke Set-AnyDeskConfiguration -Exactly 1
-        Should -Invoke Set-AnyDeskConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxAnyDeskChecked.Name }
+        Should -Invoke Set-AnyDeskConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxAnyDeskChecked.Tag }
         Should -Invoke Set-qBittorrentConfiguration -Exactly 1
-        Should -Invoke Set-qBittorrentConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxqBittorrentChecked.Name }
+        Should -Invoke Set-qBittorrentConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxqBittorrentChecked.Tag }
         Should -Invoke Set-MicrosoftEdgeConfiguration -Exactly 1
-        Should -Invoke Set-MicrosoftEdgeConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxEdgeChecked.Name }
+        Should -Invoke Set-MicrosoftEdgeConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxEdgeChecked.Tag }
         Should -Invoke Set-GoogleChromeConfiguration -Exactly 1
-        Should -Invoke Set-GoogleChromeConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxChromeChecked.Name }
+        Should -Invoke Set-GoogleChromeConfiguration -Exactly 1 -ParameterFilter { $AppName -eq $TestCheckboxChromeChecked.Tag }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 

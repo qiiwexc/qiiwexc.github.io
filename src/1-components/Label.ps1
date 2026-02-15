@@ -1,18 +1,27 @@
 function New-Label {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Text
+        [String][Parameter(Position = 0, Mandatory)]$Text,
+        [Switch]$Centered
     )
 
-    Set-Variable -Option Constant Label ([Windows.Forms.Label](New-Object Windows.Forms.Label))
+    Set-Variable -Option Constant Label ([Windows.Controls.TextBlock](New-Object Windows.Controls.TextBlock))
 
-    Set-Variable -Option Constant Location ([Drawing.Point]$PREVIOUS_BUTTON.Location + [Drawing.Point]"40, $BUTTON_HEIGHT")
-
-    $Label.Size = "145, $CHECKBOX_HEIGHT"
     $Label.Text = $Text
-    $Label.Location = $Location
+    $Label.FontSize = $FONT_SIZE_NORMAL
+    $Label.FontFamily = [Windows.Media.FontFamily]::new($FONT_NAME)
+    $Label.SetResourceReference([Windows.Controls.TextBlock]::ForegroundProperty, 'FgColor')
+    $Label.Opacity = 0.7
 
-    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
-    $CURRENT_GROUP.Controls.Add($Label)
+    if ($Centered) {
+        $Label.HorizontalAlignment = [Windows.HorizontalAlignment]::Center
+        $Label.Margin = [Windows.Thickness]::new(0, 0, 0, 4)
+    } else {
+        $Label.Margin = [Windows.Thickness]::new(20, 0, 0, 4)
+    }
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Forms.Label]$Label)
+    [void]$CURRENT_GROUP.Children.Add($Label)
+
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Controls.TextBlock]$Label)
+    Set-Variable -Scope Script PREVIOUS_BUTTON $Null
+    Set-Variable -Scope Script CENTERED_CHECKBOX_GROUP $Null
 }

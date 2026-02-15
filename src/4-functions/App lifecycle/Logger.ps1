@@ -117,25 +117,35 @@ function Write-FormLog {
         [Switch]$NoNewLine
     )
 
-    $LOG.SelectionStart = $LOG.TextLength
+    Set-Variable -Option Constant LogAction ([Action] {
+            Set-Variable -Option Constant Run ([Windows.Documents.Run](New-Object Windows.Documents.Run))
 
-    switch ($Level) {
-        ([LogLevel]::WARN) {
-            $LOG.SelectionColor = 'blue'
-        }
-        ([LogLevel]::ERROR) {
-            $LOG.SelectionColor = 'red'
-        }
-        Default {
-            $LOG.SelectionColor = 'black'
-        }
-    }
+            switch ($Level) {
+                ([LogLevel]::WARN) {
+                    $Run.Foreground = $FORM.Resources['LogWarnColor']
+                }
+                ([LogLevel]::ERROR) {
+                    $Run.Foreground = $FORM.Resources['LogErrorColor']
+                }
+                Default {
+                    $Run.Foreground = $FORM.Resources['LogFgColor']
+                }
+            }
 
-    if ($NoNewLine) {
-        $LOG.AppendText($Message)
+            if ($NoNewLine) {
+                $Run.Text = $Message
+            } else {
+                $Run.Text = "`n$Message"
+            }
+
+            $LOG.Inlines.Add($Run)
+            $LOG_BOX.ScrollToEnd()
+        })
+
+    if ($FORM.Dispatcher.CheckAccess()) {
+        $LogAction.Invoke()
+        [void]$FORM.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Render, [Action] {})
     } else {
-        $LOG.AppendText("`n$Message")
+        [void]$FORM.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Render, $LogAction)
     }
-    $LOG.SelectionColor = 'black'
-    $LOG.ScrollToCaret()
 }

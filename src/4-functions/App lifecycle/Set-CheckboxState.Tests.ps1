@@ -1,43 +1,44 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
 }
 
 Describe 'Set-CheckboxState' {
     BeforeEach {
-        Set-Variable -Option Constant TestControlChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
-        Set-Variable -Option Constant TestControlUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
+        Set-Variable -Option Constant TestControlChecked (& { $cb = New-Object Windows.Controls.CheckBox; $cb.IsChecked = $True; $cb })
+        Set-Variable -Option Constant TestControlUnchecked (& { $cb = New-Object Windows.Controls.CheckBox; $cb.IsChecked = $False; $cb })
 
-        Set-Variable -Option Constant TestDependantEnabled ([Windows.Forms.CheckBox]@{ Enabled = $True; Checked = $True })
-        Set-Variable -Option Constant TestDependantDisabled ([Windows.Forms.CheckBox]@{ Enabled = $False; Checked = $False })
+        Set-Variable -Option Constant TestDependantEnabled (& { $cb = New-Object Windows.Controls.CheckBox; $cb.IsEnabled = $True; $cb.IsChecked = $True; $cb })
+        Set-Variable -Option Constant TestDependantDisabled (& { $cb = New-Object Windows.Controls.CheckBox; $cb.IsEnabled = $False; $cb.IsChecked = $False; $cb })
     }
 
     It 'Should set dependant enabled when control is checked' {
         Set-CheckboxState $TestControlChecked $TestDependantDisabled
 
-        $TestDependantDisabled.Enabled | Should -BeTrue
-        $TestDependantDisabled.Checked | Should -BeFalse
+        $TestDependantDisabled.IsEnabled | Should -BeTrue
+        $TestDependantDisabled.IsChecked | Should -BeFalse
     }
 
     It 'Should set dependant disabled when control is unchecked' {
         Set-CheckboxState $TestControlUnchecked $TestDependantDisabled
 
-        $TestDependantDisabled.Enabled | Should -BeFalse
-        $TestDependantDisabled.Checked | Should -BeFalse
+        $TestDependantDisabled.IsEnabled | Should -BeFalse
+        $TestDependantDisabled.IsChecked | Should -BeFalse
     }
 
     It 'Should set dependant enabled when control is checked' {
         Set-CheckboxState $TestControlChecked $TestDependantEnabled
 
-        $TestDependantEnabled.Enabled | Should -BeTrue
-        $TestDependantEnabled.Checked | Should -BeTrue
+        $TestDependantEnabled.IsEnabled | Should -BeTrue
+        $TestDependantEnabled.IsChecked | Should -BeTrue
     }
 
     It 'Should set dependant disabled when control is unchecked' {
         Set-CheckboxState $TestControlUnchecked $TestDependantEnabled
 
-        $TestDependantEnabled.Enabled | Should -BeFalse
-        $TestDependantEnabled.Checked | Should -BeFalse
+        $TestDependantEnabled.IsEnabled | Should -BeFalse
+        $TestDependantEnabled.IsChecked | Should -BeFalse
     }
 }

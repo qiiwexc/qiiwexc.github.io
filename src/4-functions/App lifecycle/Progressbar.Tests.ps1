@@ -14,6 +14,11 @@ BeforeAll {
 Describe 'Invoke-WriteProgress' {
     BeforeEach {
         $PROGRESSBAR = [PSCustomObject]@{ Value = 0 }
+        $FORM = [PSCustomObject]@{
+            Dispatcher = [PSCustomObject]@{}
+        }
+        $FORM.Dispatcher | Add-Member -MemberType ScriptMethod -Name CheckAccess -Value { return $true }
+        $FORM.Dispatcher | Add-Member -MemberType ScriptMethod -Name Invoke -Value { param($priority, $action) }
         Mock Write-Progress {}
     }
 
