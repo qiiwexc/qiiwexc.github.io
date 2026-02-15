@@ -1,37 +1,34 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
 
     Set-Variable -Option Constant TestText ([String]'TEST_TEXT')
+    Set-Variable -Option Constant CARD_COLUMN_WIDTH ([Int]230)
 
-    function Add {}
-
-    Set-Variable -Option Constant TAB_CONTROL (
-        New-MockObject -Type Windows.Forms.TabControl -Properties @{
-            Controls = New-MockObject -Type Windows.Forms.Control -Methods @{
-                Add = { Add }
-            }
-        }
-    )
+    Set-Variable -Option Constant TAB_CONTROL (New-Object Windows.Controls.TabControl)
 }
 
 Describe 'New-TabPage' {
     BeforeEach {
-        [Windows.Forms.GroupBox]$script:PREVIOUS_GROUP = @{}
-        [Windows.Forms.TabPage]$script:CURRENT_TAB = $Null
-
-        Mock Add {}
+        $script:CURRENT_TAB = $Null
     }
 
     It 'Should create a new tab' {
-        New-TabPage $TestText
+        Set-Variable -Option Constant Result ([Windows.Controls.TabItem](New-TabPage $TestText))
 
-        Should -Invoke Add -Exactly 1
+        $TAB_CONTROL.Items.Count | Should -BeExactly 1
 
-        $script:PREVIOUS_GROUP | Should -BeNullOrEmpty
+        $Result.Header | Should -BeExactly $TestText
+        $Result.Content | Should -BeOfType [Windows.Controls.ScrollViewer]
 
-        $script:CURRENT_TAB.UseVisualStyleBackColor | Should -BeTrue
-        $script:CURRENT_TAB.Text | Should -BeExactly $TestText
+        Set-Variable -Option Constant ScrollViewer ([Windows.Controls.ScrollViewer]$Result.Content)
+        $ScrollViewer.Content | Should -BeOfType [Windows.Controls.WrapPanel]
+
+        Set-Variable -Option Constant WrapPanel ([Windows.Controls.WrapPanel]$ScrollViewer.Content)
+        $WrapPanel.ItemWidth | Should -BeExactly $CARD_COLUMN_WIDTH
+
+        $script:CURRENT_TAB | Should -BeExactly $WrapPanel
     }
 }

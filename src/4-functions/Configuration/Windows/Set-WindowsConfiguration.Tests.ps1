@@ -14,25 +14,32 @@ BeforeAll {
     . '.\src\4-functions\Configuration\Windows\Set-PrivacyConfiguration.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-SecurityConfiguration.ps1'
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant TestCheckboxSecurityChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
-    Set-Variable -Option Constant TestCheckboxPerformanceChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
-    Set-Variable -Option Constant TestCheckboxBaselineChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
-    Set-Variable -Option Constant TestCheckboxAnnoyancesChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
-    Set-Variable -Option Constant TestCheckboxPrivacyChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
-    Set-Variable -Option Constant TestCheckboxLocalisationChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
-    Set-Variable -Option Constant TestCheckboxPersonalisationChecked ([Windows.Forms.CheckBox]@{ Checked = $True })
+    function New-TestCheckBox([Bool]$IsChecked) {
+        $cb = New-Object Windows.Controls.CheckBox
+        $cb.IsChecked = $IsChecked
+        return $cb
+    }
 
-    Set-Variable -Option Constant TestCheckboxSecurityUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
-    Set-Variable -Option Constant TestCheckboxPerformanceUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
-    Set-Variable -Option Constant TestCheckboxBaselineUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
-    Set-Variable -Option Constant TestCheckboxAnnoyancesUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
-    Set-Variable -Option Constant TestCheckboxPrivacyUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
-    Set-Variable -Option Constant TestCheckboxLocalisationUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
-    Set-Variable -Option Constant TestCheckboxPersonalisationUnchecked ([Windows.Forms.CheckBox]@{ Checked = $False })
+    Set-Variable -Option Constant TestCheckboxSecurityChecked (New-TestCheckBox -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxPerformanceChecked (New-TestCheckBox -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxBaselineChecked (New-TestCheckBox -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxAnnoyancesChecked (New-TestCheckBox -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxPrivacyChecked (New-TestCheckBox -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxLocalisationChecked (New-TestCheckBox -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxPersonalisationChecked (New-TestCheckBox -IsChecked $True)
+
+    Set-Variable -Option Constant TestCheckboxSecurityUnchecked (New-TestCheckBox -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxPerformanceUnchecked (New-TestCheckBox -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxBaselineUnchecked (New-TestCheckBox -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxAnnoyancesUnchecked (New-TestCheckBox -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxPrivacyUnchecked (New-TestCheckBox -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxLocalisationUnchecked (New-TestCheckBox -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxPersonalisationUnchecked (New-TestCheckBox -IsChecked $False)
 }
 
 Describe 'Set-WindowsConfiguration' {

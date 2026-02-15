@@ -1,4 +1,4 @@
-New-GroupBox 'Windows images'
+New-Card 'Windows images'
 
 
 [ScriptBlock]$BUTTON_FUNCTION = { Open-InBrowser '{URL_WINDOWS_11}' }

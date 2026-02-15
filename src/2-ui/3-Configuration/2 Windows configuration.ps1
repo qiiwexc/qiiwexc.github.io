@@ -1,13 +1,13 @@
-New-GroupBox 'Windows configuration'
+New-Card 'Windows configuration'
 
 
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsSecurity = New-CheckBox 'Improve security' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPerformance = New-CheckBox 'Improve performance' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsBaseline = New-CheckBox 'Baseline configuration' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsAnnoyances = New-CheckBox 'Remove ads and annoyances' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPrivacy = New-CheckBox 'Telemetry and privacy' -Checked
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsLocalisation = New-CheckBox 'Keyboard layout; location'
-[Windows.Forms.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
+[Windows.Controls.CheckBox]$CHECKBOX_Config_WindowsSecurity = New-CheckBox 'Improve security' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_WindowsPerformance = New-CheckBox 'Improve performance' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_WindowsBaseline = New-CheckBox 'Baseline configuration' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_WindowsAnnoyances = New-CheckBox 'Remove ads and annoyances' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_WindowsPrivacy = New-CheckBox 'Telemetry and privacy' -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_Config_WindowsLocalisation = New-CheckBox 'Keyboard layout; location'
+[Windows.Controls.CheckBox]$CHECKBOX_Config_WindowsPersonalisation = New-CheckBox 'Personalisation'
 
 
 Set-Variable -Option Constant WindowsConfigurationParameters (
@@ -22,5 +22,13 @@ Set-Variable -Option Constant WindowsConfigurationParameters (
     }
 )
 
-[ScriptBlock]$BUTTON_FUNCTION = { Set-WindowsConfiguration @WindowsConfigurationParameters }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $CapturedWindowsConfig = @{}
+    foreach ($Entry in $WindowsConfigurationParameters.GetEnumerator()) {
+        $CapturedWindowsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $Entry.Value.IsChecked }
+    }
+    Start-AsyncOperation -Sender $this { Set-WindowsConfiguration @CapturedWindowsConfig } -Variables @{
+        CapturedWindowsConfig = $CapturedWindowsConfig
+    }
+}
 New-Button 'Apply configuration' $BUTTON_FUNCTION

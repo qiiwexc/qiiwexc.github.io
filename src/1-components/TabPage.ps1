@@ -3,13 +3,25 @@ function New-TabPage {
         [String][Parameter(Position = 0, Mandatory)]$Text
     )
 
-    Set-Variable -Option Constant TabPage ([Windows.Forms.TabPage](New-Object Windows.Forms.TabPage))
+    Set-Variable -Option Constant TabItem ([Windows.Controls.TabItem](New-Object Windows.Controls.TabItem))
 
-    $TabPage.UseVisualStyleBackColor = $True
-    $TabPage.Text = $Text
+    $TabItem.Header = $Text
 
-    $TAB_CONTROL.Controls.Add($TabPage)
+    Set-Variable -Option Constant ScrollViewer ([Windows.Controls.ScrollViewer](New-Object Windows.Controls.ScrollViewer))
+    $ScrollViewer.VerticalScrollBarVisibility = 'Auto'
+    $ScrollViewer.HorizontalScrollBarVisibility = 'Disabled'
+    $ScrollViewer.Padding = [Windows.Thickness]::new(8, 8, 8, 8)
 
-    Set-Variable -Scope Script PREVIOUS_GROUP $Null
-    Set-Variable -Scope Script CURRENT_TAB ([Windows.Forms.TabPage]$TabPage)
+    Set-Variable -Option Constant WrapPanel ([Windows.Controls.WrapPanel](New-Object Windows.Controls.WrapPanel))
+    $WrapPanel.ItemWidth = $CARD_COLUMN_WIDTH
+    $WrapPanel.Margin = [Windows.Thickness]::new(0)
+
+    $ScrollViewer.Content = $WrapPanel
+    $TabItem.Content = $ScrollViewer
+
+    [void]$TAB_CONTROL.Items.Add($TabItem)
+
+    Set-Variable -Scope Script CURRENT_TAB ([Windows.Controls.WrapPanel]$WrapPanel)
+
+    return $TabItem
 }

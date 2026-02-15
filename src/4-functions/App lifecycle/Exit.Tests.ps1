@@ -1,7 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
 
     . '.\src\4-functions\Common\Remove-File.ps1'
     . '.\src\4-functions\App lifecycle\Logger.ps1'
@@ -63,7 +64,7 @@ Describe 'Exit-App' {
         Mock Reset-State {}
         Mock Close {}
 
-        [Windows.Forms.Form]$FORM = New-MockObject -Type Windows.Forms.Form -Methods @{ Close = { Close } }
+        [Windows.Window]$FORM = New-MockObject -Type Windows.Window -Methods @{ Close = { Close } }
     }
 
     It 'Should exit the application without update' {

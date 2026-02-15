@@ -1,9 +1,16 @@
-New-GroupBox 'Activation'
+New-Card 'Activation'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-Activator -ActivateWindows:$CHECKBOX_ActivateWindows.Checked -ActivateOffice:$CHECKBOX_ActivateOffice.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $ActivateWindows = $CHECKBOX_ActivateWindows.IsChecked
+    $ActivateOffice = $CHECKBOX_ActivateOffice.IsChecked
+    Start-AsyncOperation -Sender $this { Start-Activator -ActivateWindows:$ActivateWindows -ActivateOffice:$ActivateOffice } -Variables @{
+        ActivateWindows = $ActivateWindows
+        ActivateOffice  = $ActivateOffice
+    }
+}
 New-Button 'MAS Activator' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_ActivateWindows = New-CheckBox 'Activate Windows silently'
+[Windows.Controls.CheckBox]$CHECKBOX_ActivateWindows = New-CheckBox 'Activate Windows silently'
 
-[Windows.Forms.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office silently' -Padded
+[Windows.Controls.CheckBox]$CHECKBOX_ActivateOffice = New-CheckBox 'Activate Office silently'

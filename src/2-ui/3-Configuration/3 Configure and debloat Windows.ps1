@@ -1,30 +1,53 @@
-New-GroupBox 'Configure and debloat Windows'
+New-Card 'Debloat Windows'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-WindowsDebloat -UsePreset:$CHECKBOX_UseDebloatPreset.Checked -Personalisation:$CHECKBOX_DebloatAndPersonalise.Checked -Silent:$CHECKBOX_SilentlyRunDebloat.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $UsePreset = $CHECKBOX_UseDebloatPreset.IsChecked
+    $Personalisation = $CHECKBOX_DebloatAndPersonalise.IsChecked
+    $Silent = $CHECKBOX_SilentlyRunDebloat.IsChecked
+    Start-AsyncOperation -Sender $this { Start-WindowsDebloat -UsePreset:$UsePreset -Personalisation:$Personalisation -Silent:$Silent } -Variables @{
+        UsePreset       = $UsePreset
+        Personalisation = $Personalisation
+        Silent          = $Silent
+    }
+}
 New-Button 'Windows 10/11 debloat' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Checked
-$CHECKBOX_UseDebloatPreset.Add_CheckStateChanged( {
+[Windows.Controls.CheckBox]$CHECKBOX_UseDebloatPreset = New-CheckBox 'Use custom preset' -Checked
+$CHECKBOX_UseDebloatPreset.Add_Checked( {
+        Set-CheckboxState -Control $CHECKBOX_UseDebloatPreset -Dependant $CHECKBOX_SilentlyRunDebloat
+        Set-CheckboxState -Control $CHECKBOX_UseDebloatPreset -Dependant $CHECKBOX_DebloatAndPersonalise
+    } )
+$CHECKBOX_UseDebloatPreset.Add_Unchecked( {
         Set-CheckboxState -Control $CHECKBOX_UseDebloatPreset -Dependant $CHECKBOX_SilentlyRunDebloat
         Set-CheckboxState -Control $CHECKBOX_UseDebloatPreset -Dependant $CHECKBOX_DebloatAndPersonalise
     } )
 
-[Windows.Forms.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings' -Padded
+[Windows.Controls.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings'
 
-[Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks' -Padded
+[Windows.Controls.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-OoShutUp10 -Execute:$CHECKBOX_StartOoShutUp10.Checked -Silent:($CHECKBOX_StartOoShutUp10.Checked -and $CHECKBOX_SilentlyRunOoShutUp10.Checked) }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $Execute = $CHECKBOX_StartOoShutUp10.IsChecked
+    $Silent = $CHECKBOX_StartOoShutUp10.IsChecked -and $CHECKBOX_SilentlyRunOoShutUp10.IsChecked
+    Start-AsyncOperation -Sender $this { Start-OoShutUp10 -Execute:$Execute -Silent:$Silent } -Variables @{
+        Execute = $Execute
+        Silent  = $Silent
+    }
+}
 New-Button 'OOShutUp10++ privacy' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_StartOoShutUp10 = New-CheckBoxRunAfterDownload -Checked
-$CHECKBOX_StartOoShutUp10.Add_CheckStateChanged( {
+[Windows.Controls.CheckBox]$CHECKBOX_StartOoShutUp10 = New-CheckBoxRunAfterDownload -Checked
+$CHECKBOX_StartOoShutUp10.Add_Checked( {
+        Set-CheckboxState -Control $CHECKBOX_StartOoShutUp10 -Dependant $CHECKBOX_SilentlyRunOoShutUp10
+    } )
+$CHECKBOX_StartOoShutUp10.Add_Unchecked( {
         Set-CheckboxState -Control $CHECKBOX_StartOoShutUp10 -Dependant $CHECKBOX_SilentlyRunOoShutUp10
     } )
 
-[Windows.Forms.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks' -Padded
+[Windows.Controls.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-AsyncOperation -Sender $this { Start-WinUtil } }
 New-Button 'WinUtil' $BUTTON_FUNCTION

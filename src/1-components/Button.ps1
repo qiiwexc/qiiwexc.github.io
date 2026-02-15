@@ -5,36 +5,23 @@ function New-Button {
         [Switch]$Disabled
     )
 
-    Set-Variable -Option Constant Button ([Windows.Forms.Button](New-Object Windows.Forms.Button))
+    Set-Variable -Option Constant Button ([Windows.Controls.Button](New-Object Windows.Controls.Button))
 
-    [Drawing.Point]$BaseLocation = $INITIAL_LOCATION_BUTTON
-    [Drawing.Point]$Shift = '0, 0'
-
-    if ($PREVIOUS_LABEL_OR_CHECKBOX) {
-        $BaseLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
-        $Shift = "0, $($COMMON_PADDING * 2)"
-    } elseif ($PREVIOUS_BUTTON) {
-        $BaseLocation = $PREVIOUS_BUTTON.Location
-        $Shift = "0, $INTERVAL_BUTTON"
-    }
-
-    Set-Variable -Option Constant Location ([Drawing.Point]($BaseLocation + $Shift))
-
-    $Button.Font = $BUTTON_FONT
-    $Button.Height = $BUTTON_HEIGHT
-    $Button.Width = $BUTTON_WIDTH
-    $Button.Enabled = -not $Disabled
-    $Button.Location = $Location
-
-    $Button.Text = $Text
+    $Button.Content = $Text
+    $Button.IsEnabled = -not $Disabled
+    $Button.Style = $FORM.FindResource('Win11Button')
 
     if ($Function) {
         $Button.Add_Click($Function)
     }
 
-    $CURRENT_GROUP.Height = $Location.Y + $INTERVAL_BUTTON
-    $CURRENT_GROUP.Controls.Add($Button)
+    if ($PREVIOUS_LABEL_OR_CHECKBOX -or $PREVIOUS_BUTTON) {
+        $Button.Margin = [Windows.Thickness]::new(0, 14, 0, 4)
+    }
+
+    [void]$CURRENT_GROUP.Children.Add($Button)
 
     Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
-    Set-Variable -Scope Script PREVIOUS_BUTTON ([Windows.Forms.Button]$Button)
+    Set-Variable -Scope Script PREVIOUS_BUTTON ([Windows.Controls.Button]$Button)
+    Set-Variable -Scope Script CENTERED_CHECKBOX_GROUP $Null
 }

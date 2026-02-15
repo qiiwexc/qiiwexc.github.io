@@ -30,13 +30,29 @@ function Invoke-WriteProgress {
         $Params.Completed = $True
 
         if ($ParentId -eq 0) {
-            $PROGRESSBAR.Value = 100
+            Set-Variable -Option Constant ProgressValue ([Int]100)
+            if ($FORM.Dispatcher.CheckAccess()) {
+                $PROGRESSBAR.Value = $ProgressValue
+                [void]$FORM.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Render, [Action] {})
+            } else {
+                [void]$FORM.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Render, [Action] {
+                        $PROGRESSBAR.Value = $ProgressValue
+                    })
+            }
         }
     } else {
         $Params.PercentComplete = $PercentComplete
 
         if ($ParentId -eq 0) {
-            $PROGRESSBAR.Value = $PercentComplete
+            Set-Variable -Option Constant ProgressValue ([Int]$PercentComplete)
+            if ($FORM.Dispatcher.CheckAccess()) {
+                $PROGRESSBAR.Value = $ProgressValue
+                [void]$FORM.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Render, [Action] {})
+            } else {
+                [void]$FORM.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Render, [Action] {
+                        $PROGRESSBAR.Value = $ProgressValue
+                    })
+            }
         }
     }
 

@@ -3,7 +3,9 @@
 
     . '.\src\4-functions\Common\types.ps1'
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
+    Add-Type -AssemblyName WindowsBase
 
     Set-Variable -Option Constant EmojiCodeDone ([String]'2705')
     Set-Variable -Option Constant EmojiCodeWarning ([String]'26A0')
@@ -102,52 +104,46 @@ Describe 'Format-Message' {
 }
 
 Describe 'Write-FormLog' {
-    BeforeAll {
-        function AppendText {}
-        function ScrollToCaret {}
-    }
-
     BeforeEach {
-        $LOG = New-MockObject -Type Windows.Forms.RichTextBox -Properties @{
-            TextLength     = 123
-            SelectionStart = 0
-            SelectionColor = ''
-        } -Methods @{
-            AppendText    = { AppendText }
-            ScrollToCaret = { ScrollToCaret }
-        }
+        $LOG_BOX = [PSCustomObject]@{}
+        $LOG_BOX | Add-Member -MemberType ScriptMethod -Name ScrollToEnd -Value {}
+        $LOG = New-Object Windows.Documents.Paragraph
 
-        Mock AppendText {
-            $LOG.SelectionColor | Should -BeExactly $Expected
+        $script:FORM = [PSCustomObject]@{
+            Resources = @{
+                'LogFgColor'    = [Windows.Media.Brushes]::Black
+                'LogWarnColor'  = [Windows.Media.Brushes]::Blue
+                'LogErrorColor' = [Windows.Media.Brushes]::Red
+            }
         }
-        Mock ScrollToCaret {}
+        $script:FORM | Add-Member -MemberType ScriptProperty -Name Dispatcher -Value {
+            $d = [PSCustomObject]@{}
+            $d | Add-Member -MemberType ScriptMethod -Name CheckAccess -Value { return $true }
+            $d | Add-Member -MemberType ScriptMethod -Name Invoke -Value { param($priority, $action) }
+            return $d
+        }
     }
 
     Context 'Log levels' {
         It 'Should log message correctly for <LogLevel> level' -ForEach @(
-            @{ LogLevel = 'INFO'; Expected = 'black' }
-            @{ LogLevel = 'WARN'; Expected = 'blue' }
-            @{ LogLevel = 'ERROR'; Expected = 'red' }
+            @{ LogLevel = 'INFO'; Expected = 'Black' }
+            @{ LogLevel = 'WARN'; Expected = 'Blue' }
+            @{ LogLevel = 'ERROR'; Expected = 'Red' }
         ) {
             Write-FormLog $LogLevel $TestMessage
 
-            $LOG.SelectionStart | Should -BeExactly 123
-            $LOG.SelectionColor | Should -BeExactly 'black'
-
-            Should -Invoke AppendText -Exactly 1
-            Should -Invoke AppendText -Exactly 1 -ParameterFilter { $TestMessage }
-            Should -Invoke ScrollToCaret -Exactly 1
+            $LOG.Inlines.Count | Should -BeExactly 1
+            $LOG.Inlines[0].Foreground | Should -BeExactly ([Windows.Media.Brushes]::$Expected)
+            $LOG.Inlines[0].Text | Should -BeExactly "`n$TestMessage"
         }
     }
 
     Context 'New line' {
-        It 'Should log message correctly with new line' {
-            Mock AppendText {}
-
+        It 'Should log message correctly with NoNewLine' {
             Write-FormLog $LogLevelInfo $TestMessage -NoNewLine
 
-            Should -Invoke AppendText -Exactly 1
-            Should -Invoke AppendText -Exactly 1 -ParameterFilter { "`n$TestMessage" }
+            $LOG.Inlines.Count | Should -BeExactly 1
+            $LOG.Inlines[0].Text | Should -BeExactly $TestMessage
         }
     }
 }

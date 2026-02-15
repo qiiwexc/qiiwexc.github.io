@@ -1,12 +1,22 @@
-New-GroupBox 'Alternative DNS'
+New-Card 'Alternative DNS'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Set-CloudFlareDNS -MalwareProtection:$CHECKBOX_CloudFlareAntiMalware.Checked -FamilyFriendly:$CHECKBOX_CloudFlareFamilyFriendly.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $MalwareProtection = $CHECKBOX_CloudFlareAntiMalware.IsChecked
+    $FamilyFriendly = $CHECKBOX_CloudFlareFamilyFriendly.IsChecked
+    Start-AsyncOperation -Sender $this { Set-CloudFlareDNS -MalwareProtection:$MalwareProtection -FamilyFriendly:$FamilyFriendly } -Variables @{
+        MalwareProtection = $MalwareProtection
+        FamilyFriendly    = $FamilyFriendly
+    }
+}
 New-Button 'Setup CloudFlare DNS' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
-$CHECKBOX_CloudFlareAntiMalware.Add_CheckStateChanged( {
+[Windows.Controls.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
+$CHECKBOX_CloudFlareAntiMalware.Add_Checked( {
+        Set-CheckboxState -Control $CHECKBOX_CloudFlareAntiMalware -Dependant $CHECKBOX_CloudFlareFamilyFriendly
+    } )
+$CHECKBOX_CloudFlareAntiMalware.Add_Unchecked( {
         Set-CheckboxState -Control $CHECKBOX_CloudFlareAntiMalware -Dependant $CHECKBOX_CloudFlareFamilyFriendly
     } )
 
-[Windows.Forms.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering' -Padded
+[Windows.Controls.CheckBox]$CHECKBOX_CloudFlareFamilyFriendly = New-CheckBox 'Adult content filtering'

@@ -2,44 +2,28 @@ function New-CheckBox {
     param(
         [String][Parameter(Position = 0, Mandatory)]$Text,
         [String][Parameter(Position = 1)]$Name,
-        [Switch]$Padded,
         [Switch]$Disabled,
         [Switch]$Checked
     )
 
-    Set-Variable -Option Constant CheckBox ([Windows.Forms.CheckBox](New-Object Windows.Forms.CheckBox))
+    Set-Variable -Option Constant CheckBox ([Windows.Controls.CheckBox](New-Object Windows.Controls.CheckBox))
 
-    [Drawing.Point]$BaseLocation = $INITIAL_LOCATION_BUTTON
-    [Drawing.Point]$Shift = '0, 0'
+    $CheckBox.Content = $Text
+    $CheckBox.Tag = $Name
+    $CheckBox.IsChecked = [Bool]$Checked
+    $CheckBox.IsEnabled = -not $Disabled
+    $CheckBox.Style = $FORM.FindResource('Win11CheckBox')
 
-    if ($PREVIOUS_BUTTON) {
-        $BaseLocation = $PREVIOUS_BUTTON.Location
-        $Shift = "$CHECKBOX_PADDING, $($COMMON_PADDING * 2)"
+    if ($CENTERED_CHECKBOX_GROUP) {
+        $CheckBox.Margin = [Windows.Thickness]::new(0, 4, 0, 4)
+        [void]$CENTERED_CHECKBOX_GROUP.Children.Add($CheckBox)
+    } else {
+        $CheckBox.Margin = [Windows.Thickness]::new(10, 4, 0, 4)
+        [void]$CURRENT_GROUP.Children.Add($CheckBox)
     }
 
-    if ($PREVIOUS_LABEL_OR_CHECKBOX) {
-        $BaseLocation.Y = $PREVIOUS_LABEL_OR_CHECKBOX.Location.Y
-
-        if ($Padded) {
-            $Shift = "$CHECKBOX_PADDING, $CHECKBOX_HEIGHT"
-        } else {
-            $Shift = "0, $INTERVAL_CHECKBOX"
-        }
-    }
-
-    Set-Variable -Option Constant Location ([Drawing.Point]($BaseLocation + $Shift))
-
-    $CheckBox.Text = $Text
-    $CheckBox.Name = $Name
-    $CheckBox.Checked = $Checked
-    $CheckBox.Enabled = -not $Disabled
-    $CheckBox.Size = "$CHECKBOX_WIDTH, $CHECKBOX_HEIGHT"
-    $CheckBox.Location = $Location
-
-    $CURRENT_GROUP.Height = $Location.Y + $BUTTON_HEIGHT
-    $CURRENT_GROUP.Controls.Add($CheckBox)
-
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Forms.CheckBox]$CheckBox)
+    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Controls.CheckBox]$CheckBox)
+    Set-Variable -Scope Script PREVIOUS_BUTTON $Null
 
     return $CheckBox
 }

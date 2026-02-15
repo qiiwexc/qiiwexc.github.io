@@ -1,24 +1,44 @@
-New-GroupBox 'Essentials'
+New-Card 'Essentials'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-SnappyDriverInstaller -Execute:$CHECKBOX_StartSDI.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $Execute = $CHECKBOX_StartSDI.IsChecked
+    Start-AsyncOperation -Sender $this { Start-SnappyDriverInstaller -Execute:$Execute } -Variables @{
+        Execute = $Execute
+    }
+}
 New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_StartSDI = New-CheckBoxRunAfterDownload -Checked
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Install-MicrosoftOffice -Execute:$CHECKBOX_StartOfficeInstaller.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $Execute = $CHECKBOX_StartOfficeInstaller.IsChecked
+    Start-AsyncOperation -Sender $this { Install-MicrosoftOffice -Execute:$Execute } -Variables @{
+        Execute = $Execute
+    }
+}
 New-Button 'Office Installer' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_StartOfficeInstaller = New-CheckBoxRunAfterDownload -Checked
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Install-Unchecky -Execute:$CHECKBOX_StartUnchecky.Checked -Silent:$CHECKBOX_SilentlyInstallUnchecky.Checked }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $Execute = $CHECKBOX_StartUnchecky.IsChecked
+    $Silent = $CHECKBOX_SilentlyInstallUnchecky.IsChecked
+    Start-AsyncOperation -Sender $this { Install-Unchecky -Execute:$Execute -Silent:$Silent } -Variables @{
+        Execute = $Execute
+        Silent  = $Silent
+    }
+}
 New-Button 'Unchecky' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Checked
-$CHECKBOX_StartUnchecky.Add_CheckStateChanged( {
+[Windows.Controls.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Checked
+$CHECKBOX_StartUnchecky.Add_Checked( {
+        Set-CheckboxState -Control $CHECKBOX_StartUnchecky -Dependant $CHECKBOX_SilentlyInstallUnchecky
+    } )
+$CHECKBOX_StartUnchecky.Add_Unchecked( {
         Set-CheckboxState -Control $CHECKBOX_StartUnchecky -Dependant $CHECKBOX_SilentlyInstallUnchecky
     } )
 
-[Windows.Forms.CheckBox]$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Padded -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_SilentlyInstallUnchecky = New-CheckBox 'Install silently' -Checked

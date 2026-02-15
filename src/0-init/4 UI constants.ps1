@@ -1,30 +1,31 @@
-Set-Variable -Option Constant COMMON_PADDING ([Int]15)
+Set-Variable -Option Constant FONT_NAME ([String]'Segoe UI')
+Set-Variable -Option Constant FONT_SIZE_NORMAL ([Int]12)
+Set-Variable -Option Constant FONT_SIZE_BUTTON ([Int]14)
+Set-Variable -Option Constant FONT_SIZE_HEADER ([Int]16)
 
-Set-Variable -Option Constant BUTTON_WIDTH ([Int]170)
-Set-Variable -Option Constant BUTTON_HEIGHT ([Int]30)
+Set-Variable -Option Constant CARD_COLUMN_WIDTH ([Int]230)
+Set-Variable -Option Constant FORM_MIN_WIDTH ([Int]725)
+Set-Variable -Option Constant FORM_MIN_HEIGHT ([Int]765)
 
-Set-Variable -Option Constant CHECKBOX_HEIGHT ([Int]($BUTTON_HEIGHT - 10))
-Set-Variable -Option Constant CHECKBOX_WIDTH ([Int]($BUTTON_WIDTH + 5))
+Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public class IconExtractor {
+    [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+    public static extern int ExtractIconEx(string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, int nIcons);
+    [DllImport("user32.dll")]
+    public static extern bool DestroyIcon(IntPtr hIcon);
+}
+'@
 
+function Get-Shell32Icon {
+    param([Int]$Index)
+    $large = New-Object IntPtr[] 1
+    $small = New-Object IntPtr[] 1
+    [void][IconExtractor]::ExtractIconEx("$PATH_SYSTEM_32\shell32.dll", $Index, $large, $small, 1)
+    if ($small[0] -ne [IntPtr]::Zero) { [void][IconExtractor]::DestroyIcon($small[0]) }
+    return [Drawing.Icon]::FromHandle($large[0])
+}
 
-Set-Variable -Option Constant INTERVAL_BUTTON ([Int]($BUTTON_HEIGHT + $COMMON_PADDING))
-
-Set-Variable -Option Constant INTERVAL_CHECKBOX ([Int]($CHECKBOX_HEIGHT + 5))
-
-
-Set-Variable -Option Constant GROUP_WIDTH ([Int]($COMMON_PADDING + $BUTTON_WIDTH + $COMMON_PADDING))
-
-Set-Variable -Option Constant FORM_WIDTH ([Int](($GROUP_WIDTH * 3) + ($COMMON_PADDING * 4) + $COMMON_PADDING))
-Set-Variable -Option Constant FORM_HEIGHT ([Int]620)
-
-Set-Variable -Option Constant INITIAL_LOCATION_BUTTON ([Drawing.Point]"$COMMON_PADDING, $($COMMON_PADDING + 5)")
-
-Set-Variable -Option Constant CHECKBOX_PADDING ([Int]20)
-
-
-Set-Variable -Option Constant FONT_NAME ([String]'Microsoft Sans Serif')
-Set-Variable -Option Constant BUTTON_FONT ([Drawing.Font]"$FONT_NAME, 10")
-
-
-Set-Variable -Option Constant ICON_DEFAULT ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\cliconfg.exe"))
-Set-Variable -Option Constant ICON_WORKING ([Drawing.Icon]::ExtractAssociatedIcon("$PATH_SYSTEM_32\Dxpserver.exe"))
+Set-Variable -Option Constant ICON_DEFAULT ([Drawing.Icon](Get-Shell32Icon 314))
+Set-Variable -Option Constant ICON_WORKING ([Drawing.Icon](Get-Shell32Icon 238))

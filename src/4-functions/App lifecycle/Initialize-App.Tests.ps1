@@ -1,7 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework
+    Add-Type -AssemblyName PresentationCore
 
     . '.\src\4-functions\Common\types.ps1'
     . '.\src\4-functions\Common\Remove-Directory.ps1'
@@ -34,7 +35,7 @@ Describe 'Initialize-App' {
         Mock Initialize-AppDirectory {}
         Mock Update-App {}
 
-        [Windows.Forms.Form]$FORM = New-MockObject -Type Windows.Forms.Form -Methods @{ Activate = { Activate } }
+        [Windows.Window]$FORM = New-MockObject -Type Windows.Window -Methods @{ Activate = { Activate } }
     }
 
     It 'Should initialize the application' {

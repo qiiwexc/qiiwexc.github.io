@@ -1,11 +1,11 @@
 function Set-NiniteButtonState {
-    $CHECKBOX_StartNinite.Enabled = $NINITE_CHECKBOXES.Where({ $_.Checked }, 'First', 1)
+    $CHECKBOX_StartNinite.IsEnabled = $NINITE_CHECKBOXES.Where({ $_.IsChecked }, 'First', 1)
 }
 
 
 function Get-NiniteInstaller {
     param(
-        [Windows.Forms.CheckBox[]][Parameter(Position = 0, Mandatory)]$Checkboxes,
+        [Object[]][Parameter(Position = 0, Mandatory)]$Checkboxes,
         [Switch]$OpenInBrowser,
         [Switch]$Execute
     )
@@ -13,8 +13,8 @@ function Get-NiniteInstaller {
     [Collections.Generic.List[String]]$AppIds = @()
 
     foreach ($Checkbox in $Checkboxes) {
-        if ($Checkbox.Checked) {
-            $AppIds.Add($Checkbox.Name)
+        if ($Checkbox.IsChecked) {
+            $AppIds.Add($Checkbox.Tag)
         }
     }
 
@@ -26,8 +26,8 @@ function Get-NiniteInstaller {
         [Collections.Generic.List[String]]$AppNames = @()
 
         foreach ($Checkbox in $Checkboxes) {
-            if ($Checkbox.Checked) {
-                $AppNames.Add($Checkbox.Text.Replace('Install ', ''))
+            if ($Checkbox.IsChecked) {
+                $AppNames.Add([String]$Checkbox.Content)
             }
         }
 

@@ -1,16 +1,25 @@
-New-GroupBox 'Bootable USB tools'
+New-Card 'Bootable USB tools'
 
 
 [ScriptBlock]$BUTTON_FUNCTION = {
-    Set-Variable -Option Constant FileName $((Split-Path -Leaf '{URL_VENTOY}').Replace('-windows', ''))
-    Start-DownloadUnzipAndRun '{URL_VENTOY}' $FileName -Execute:$CHECKBOX_StartVentoy.Checked
+    $Execute = $CHECKBOX_StartVentoy.IsChecked
+    $FileName = (Split-Path -Leaf '{URL_VENTOY}').Replace('-windows', '')
+    Start-AsyncOperation -Sender $this { Start-DownloadUnzipAndRun '{URL_VENTOY}' $FileName -Execute:$Execute } -Variables @{
+        Execute  = $Execute
+        FileName = $FileName
+    }
 }
 New-Button 'Ventoy' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_StartVentoy = New-CheckBoxRunAfterDownload -Checked
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-DownloadUnzipAndRun '{URL_RUFUS}' -Execute:$CHECKBOX_StartRufus.Checked -Params '-g' }
+[ScriptBlock]$BUTTON_FUNCTION = {
+    $Execute = $CHECKBOX_StartRufus.IsChecked
+    Start-AsyncOperation -Sender $this { Start-DownloadUnzipAndRun '{URL_RUFUS}' -Execute:$Execute -Params '-g' } -Variables @{
+        Execute = $Execute
+    }
+}
 New-Button 'Rufus' $BUTTON_FUNCTION
 
-[Windows.Forms.CheckBox]$CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Checked
+[Windows.Controls.CheckBox]$CHECKBOX_StartRufus = New-CheckBoxRunAfterDownload -Checked
