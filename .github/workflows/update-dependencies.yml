@@ -1,0 +1,109 @@
+name: Nightly dependency update
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up GitHub token for API access
+        shell: pwsh
+        run: |
+          "GITHUB_TOKEN=$env:GH_TOKEN" | Out-File -FilePath .env -Encoding utf8 -NoNewline
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Check for dependency updates
+        id: update
+        shell: pwsh
+        run: |
+          $oldHash = (Get-FileHash resources/dependencies.json).Hash
+          Copy-Item resources/dependencies.json resources/dependencies.json.bak
+
+          try {
+              .\tools\build.ps1 -Update
+          } catch {
+              Write-Host "::warning::Build script error: $_"
+          }
+
+          $newHash = (Get-FileHash resources/dependencies.json).Hash
+
+          if ($oldHash -ne $newHash) {
+              . .\tools\common\types.ps1
+              . .\tools\build\Compare-Dependencies.ps1
+
+              [Dependency[]]$OldDeps = Get-Content resources/dependencies.json.bak -Raw | ConvertFrom-Json
+              [Dependency[]]$NewDeps = Get-Content resources/dependencies.json -Raw | ConvertFrom-Json
+              $UrlsTemplate = Get-Content resources/urls.json -Raw | ConvertFrom-Json
+
+              $Result = Compare-Dependencies $OldDeps $NewDeps $UrlsTemplate
+
+              "has_updates=true" >> $env:GITHUB_OUTPUT
+              "has_release_update=$($Result.HasReleaseUpdate)" >> $env:GITHUB_OUTPUT
+
+              if ($env:CHANGELOG_URLS) {
+                  "changelog_urls<<EOF" >> $env:GITHUB_OUTPUT
+                  $env:CHANGELOG_URLS >> $env:GITHUB_OUTPUT
+                  "EOF" >> $env:GITHUB_OUTPUT
+              }
+          } else {
+              "has_updates=false" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Annotate with changelog URLs
+        if: steps.update.outputs.has_updates == 'true'
+        shell: pwsh
+        env:
+          CHANGELOG_URLS: ${{ steps.update.outputs.changelog_urls }}
+        run: |
+          foreach ($line in ($env:CHANGELOG_URLS -split "`n")) {
+              $trimmed = $line.Trim()
+              if ($trimmed) {
+                  Write-Host "::notice title=Changelog::$trimmed"
+              }
+          }
+
+      - name: Update workflow run name
+        if: steps.update.outputs.has_updates == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}" -X PATCH -f "name=Nightly dependency update [New updates]"
+
+      - name: Commit, tag and push
+        if: steps.update.outputs.has_updates == 'true'
+        shell: pwsh
+        env:
+          HAS_RELEASE_UPDATE: ${{ steps.update.outputs.has_release_update }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          git add resources/dependencies.json
+          git commit -m 'Update dependencies'
+
+          if ($env:HAS_RELEASE_UPDATE -eq 'True') {
+              $version = Get-Date -Format 'y.M.d'
+              $tag = "v$version"
+
+              $existingTag = git tag -l $tag
+              if ($existingTag) {
+                  Write-Host "::warning::Tag $tag already exists, skipping tag creation"
+              } else {
+                  git tag -a $tag -m "Release $tag"
+              }
+          } else {
+              Write-Host "::notice::No release-worthy dependency updated, skipping tag creation"
+          }
+
+          git push origin master --tags
