@@ -1,0 +1,27 @@
+name: Tag
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Create and push tag
+        run: |
+          version=$(date +'%-y.%-m.%-d')
+          tag="v$version"
+
+          if git rev-parse "$tag" >/dev/null 2>&1; then
+              echo "::error::Tag $tag already exists"
+              exit 1
+          fi
+
+          git tag -a "$tag" -m "Release $tag"
+          git push origin "$tag"
