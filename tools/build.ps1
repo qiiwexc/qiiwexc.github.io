@@ -15,14 +15,10 @@ param(
 )
 
 if ($Full) {
-    $Test = $True
-    $Update = $True
-}
-
-if ($Full -or $CI) {
+    $Test = -not $CI
+    $Update = -not $CI
     $Autounattend = $True
     $Html = $True
-    $Ps1 = $True
     $Lint = $True
     $Bat = $True
 }
@@ -79,7 +75,7 @@ if ($CI -and $Env:GITHUB_REF -match '^refs/tags/') {
 Write-LogInfo 'Build task started'
 Write-LogInfo "Version                  : $Version"
 Write-LogInfo "Full build               : $Full"
-Write-LogInfo "CI build                 : $CI"
+Write-LogInfo "CI                       : $CI"
 Write-LogInfo "Run tests                : $Test"
 Write-LogInfo "Run linter               : $Lint"
 Write-LogInfo "Check for updates        : $Update"
@@ -103,27 +99,32 @@ if ($Test) {
 if ($Update) {
     Write-ActivityProgress 20
     . "$BuilderPath\Update-Dependencies.ps1"
-    Update-Dependencies $ResourcesPath $BuilderPath $WipPath
+    [String[]]$ChangelogUrls = Update-Dependencies $ResourcesPath $BuilderPath $WipPath
+
+    if ($CI) {
+        $env:CHANGELOG_URLS = $ChangelogUrls -join "`n"
+    } else {
+        foreach ($Url in $ChangelogUrls) {
+            Write-LogInfo "Opening URL: $Url"
+            Start-Process $Url
+        }
+    }
 }
 
 if ($Html -or $Ps1) {
     Write-ActivityProgress 30
-    . "$BuilderPath\Set-Urls.ps1"
-    Set-Urls $ResourcesPath $BuildPath
-
-    Write-ActivityProgress 40
     . "$BuilderPath\Get-Config.ps1"
-    Set-Variable -Option Constant Config (Get-Config $BuildPath $Version)
+    Set-Variable -Option Constant Config (Get-Config $ResourcesPath $Version)
 }
 
 if ($Html) {
-    Write-ActivityProgress 50
+    Write-ActivityProgress 40
     . "$BuilderPath\New-HtmlFile.ps1"
     New-HtmlFile $TemplatesPath $BuildPath $Config
 }
 
 if ($Autounattend) {
-    Write-ActivityProgress 60
+    Write-ActivityProgress 50
     . "$BuilderPath\New-UnattendedFile.ps1"
     New-UnattendedFile $Version $BuilderPath $SourcePath $ResourcesPath $TemplatesPath $BuildPath $VmPath -CI:$CI
 }

@@ -67,13 +67,12 @@ Describe 'Update-Dependencies' {
         Mock Update-GitDependency { return $TestGitLabChangelogUrl } -ParameterFilter { $Dependency.source -eq $SourceGitLab }
         Mock Update-WebDependency { return $TestWebChangelogUrl }
         Mock Update-FileDependency { return $TestFileChangelogUrl }
-        Mock Start-Process {}
         Mock Write-JsonFile {}
         Mock Write-ActivityCompleted {}
     }
 
     It 'Should update GitHub dependencies successfully when GitHub token is provided' {
-        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestGitHubChangelogUrl
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -91,8 +90,6 @@ Describe 'Update-Dependencies' {
         }
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestGitHubChangelogUrl }
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
@@ -107,7 +104,7 @@ Describe 'Update-Dependencies' {
     It 'Should update GitHub dependencies successfully when no GitHub token is provided' {
         Mock Read-GitHubToken {}
 
-        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestGitHubChangelogUrl
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 6
@@ -123,8 +120,6 @@ Describe 'Update-Dependencies' {
         }
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestGitHubChangelogUrl }
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
@@ -148,8 +143,6 @@ Describe 'Update-Dependencies' {
         }
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestGitLabChangelogUrl }
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
@@ -179,8 +172,6 @@ Describe 'Update-Dependencies' {
             $Dependency.version -eq $TestDependencyVersion
         }
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestWebChangelogUrl }
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
@@ -211,8 +202,6 @@ Describe 'Update-Dependencies' {
             $Dependency.name -eq $TestDependencyName -and
             $Dependency.version -eq $TestDependencyVersion
         }
-        Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestFileChangelogUrl }
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
@@ -237,7 +226,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -255,7 +243,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -274,7 +261,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
@@ -293,7 +279,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
@@ -312,7 +297,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 1
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -331,7 +315,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 1
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -350,7 +333,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 1
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -369,25 +351,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 1
-        Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Write-JsonFile -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
-    }
-
-    It 'Should handle Start-Process failure' {
-        Mock Start-Process { throw $TestException }
-
-        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
-
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 5
-        Should -Invoke Read-GitHubToken -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Read-JsonFile -Exactly 1
-        Should -Invoke Update-GitDependency -Exactly 1
-        Should -Invoke Update-WebDependency -Exactly 0
-        Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
@@ -405,7 +368,6 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 1
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
-        Should -Invoke Start-Process -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }

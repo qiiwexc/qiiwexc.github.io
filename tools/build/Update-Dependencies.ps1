@@ -78,17 +78,12 @@ function Update-Dependencies {
     Set-Variable -Option Constant UrlsToOpen ([String[]]($ChangeLogs | Select-Object -Unique | Where-Object { $_ }))
     Write-LogInfo "$($UrlsToOpen.Count) update(s) found"
 
-    if ($UrlsToOpen.Count -gt 0) {
-        foreach ($Url in @($UrlsToOpen | ForEach-Object { $_ })) {
-            Write-LogInfo "Opening URL: $Url"
-            Start-Process $Url
-        }
-    }
-
     Write-ActivityProgress 95
 
     Write-LogInfo "Saving updated dependencies to $DependenciesFile"
     Write-JsonFile $DependenciesFile $Dependencies
 
     Write-ActivityCompleted
+
+    return $UrlsToOpen
 }
