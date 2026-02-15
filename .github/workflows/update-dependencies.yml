@@ -28,22 +28,19 @@ jobs:
         id: update
         shell: pwsh
         run: |
-          $oldHash = (Get-FileHash resources/dependencies.json).Hash
-          Copy-Item resources/dependencies.json resources/dependencies.json.bak
-
           try {
               .\tools\build.ps1 -Update
           } catch {
               Write-Host "::warning::Build script error: $_"
           }
 
-          $newHash = (Get-FileHash resources/dependencies.json).Hash
+          git diff --quiet resources/dependencies.json
 
-          if ($oldHash -ne $newHash) {
+          if ($LASTEXITCODE -ne 0) {
               . .\tools\common\types.ps1
               . .\tools\build\Compare-Dependencies.ps1
 
-              [Dependency[]]$OldDeps = Get-Content resources/dependencies.json.bak -Raw | ConvertFrom-Json
+              [Dependency[]]$OldDeps = git show HEAD:resources/dependencies.json | ConvertFrom-Json
               [Dependency[]]$NewDeps = Get-Content resources/dependencies.json -Raw | ConvertFrom-Json
               $UrlsTemplate = Get-Content resources/urls.json -Raw | ConvertFrom-Json
 
@@ -73,12 +70,6 @@ jobs:
                   Write-Host "::notice title=Changelog::$trimmed"
               }
           }
-
-      - name: Update workflow run name
-        if: steps.update.outputs.has_updates == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}" -X PATCH -f "name=Nightly dependency update [New updates]"
 
       - name: Commit, tag and push
         if: steps.update.outputs.has_updates == 'true'
