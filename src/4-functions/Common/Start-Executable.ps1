@@ -1,7 +1,7 @@
 function Start-Executable {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Executable,
-        [String][Parameter(Position = 1)]$Switches,
+        [Parameter(Position = 0, Mandatory)][String]$Executable,
+        [Parameter(Position = 1)][String]$Switches,
         [Switch]$Silent
     )
 

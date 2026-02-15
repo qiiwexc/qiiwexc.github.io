@@ -1,6 +1,6 @@
 function Invoke-CustomCommand {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Command,
+        [Parameter(Position = 0, Mandatory)][String]$Command,
         [Switch]$Elevated,
         [Switch]$HideWindow
     )

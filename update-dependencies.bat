@@ -1,3 +1,3 @@
 @echo off
 
-powershell "Update-Module PSScriptAnalyzer, Pester"
+powershell -NoProfile -ExecutionPolicy Bypass "Update-Module PSScriptAnalyzer, Pester"

@@ -1,7 +1,7 @@
 function Invoke-GitAPI {
     param(
-        [ValidateNotNullOrEmpty()][String][Parameter(Position = 0, Mandatory)]$Uri,
-        [String][Parameter(Position = 1)]$GitHubToken
+        [Parameter(Position = 0, Mandatory)][ValidateNotNullOrEmpty()][String]$Uri,
+        [Parameter(Position = 1)][String]$GitHubToken
     )
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)

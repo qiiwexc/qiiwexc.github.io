@@ -14,6 +14,8 @@ param(
     [Switch]$Bat
 )
 
+Set-StrictMode -Version Latest
+
 if ($Full) {
     $Test = -not $CI
     $Update = -not $CI
@@ -61,7 +63,7 @@ Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
 if ($CI -and $Env:GITHUB_REF -match '^refs/tags/') {
     Set-Variable -Option Constant Version ([Version]($Env:GITHUB_REF_NAME -replace '^v'))
 } else {
-    Set-Variable -Option Constant Version ([Version](Get-Date -Format 'y.M.d'))
+    Set-Variable -Option Constant Version ([Version]"$((Get-Date).Year % 100).$((Get-Date).Month).$((Get-Date).Day)")
 }
 
 . "$CommonPath\types.ps1"
@@ -144,7 +146,7 @@ if ($Lint) {
         try {
             Invoke-ScriptAnalyzer -Path $Ps1File -Settings .\PSScriptAnalyzerSettings.psd1 -ErrorAction Stop
             break
-        } catch {
+        } catch [System.IO.IOException] {
             if ($i -eq $MaxRetries) {
                 throw
             }

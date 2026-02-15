@@ -1,7 +1,7 @@
 function Get-Config {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ResourcesPath,
-        [Version][Parameter(Position = 1, Mandatory)]$Version
+        [Parameter(Position = 0, Mandatory)][String]$ResourcesPath,
+        [Parameter(Position = 1, Mandatory)][Version]$Version
     )
 
     New-Activity 'Loading config'
@@ -17,12 +17,12 @@ function Get-Config {
         [String]$DepVersion = $Dependency.version.TrimStart('v')
         [String]$Key = "URL_$Name"
 
-        if ($null -ne $Config.$Key) {
+        if ($Config.PSObject.Properties[$Key]) {
             $Config.$Key = $Config.$Key.Replace('{VERSION}', $DepVersion)
         }
     }
 
-    $Config | Add-Member -NotePropertyName 'PROJECT_VERSION' -NotePropertyValue $Version
+    $Config | Add-Member -NotePropertyName 'PROJECT_VERSION' -NotePropertyValue $Version -Force
 
     Write-ActivityCompleted
 

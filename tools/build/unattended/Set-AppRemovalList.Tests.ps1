@@ -4,6 +4,7 @@ BeforeAll {
     . '.\tools\common\Read-TextFile.ps1'
 
     Set-Variable -Option Constant ConfigsPath ([String]'.\src\3-configs')
+    Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
     Set-Variable -Option Constant TestTemplateContent ([String]"TEST_TEMPLATE_CONTENT_1`n{APP_REMOVAL_LIST}`nTEST_TEMPLATE_CONTENT_2")
 
     Set-Variable -Option Constant TestFileContent (

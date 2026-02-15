@@ -29,18 +29,21 @@ BeforeAll {
 
 Describe 'Start-Download' {
     BeforeEach {
-        [Int]$script:TestPathCounter = 0
-        [Int]$TestPathSuccessIteration = 0
+        # Test-Path counter mock: returns False until call N, then True from call N onward.
+        # Set FileAppearsAtCall=2 for download tests (call 1 = not cached, call 2+ = file exists).
+        # Default (1) means file exists immediately (already downloaded scenario).
+        [Int]$script:TestPathCalls = 0
+        [Int]$FileAppearsAtCall = 1
 
         Mock Write-ActivityProgress {}
         Mock Test-Path {
-            $script:TestPathCounter++
-            return $script:TestPathCounter -ge $TestPathSuccessIteration
+            $script:TestPathCalls++
+            return $script:TestPathCalls -ge $FileAppearsAtCall
         }
         Mock Write-LogWarning {}
         Mock Test-NetworkConnection { return $True }
         Mock Initialize-AppDirectory {}
-        Mock Start-BitsTransfer {}
+        Mock Start-BitsTransfer { return [PSCustomObject]@{ JobState = 'Transferred'; BytesTotal = 0; BytesTransferred = 0; ErrorDescription = '' } }
         Mock Complete-BitsTransfer {}
         Mock Get-Item { return [PSCustomObject]@{ Length = 1024 } }
         Mock Invoke-WebRequest {}
@@ -52,7 +55,7 @@ Describe 'Start-Download' {
     }
 
     It 'Should download file' {
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         Start-Download $TestUrl | Should -BeExactly $TestSavePath
 
@@ -82,7 +85,7 @@ Describe 'Start-Download' {
     }
 
     It 'Should download file with custom save path' {
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         Start-Download $TestUrl $TestSaveAs | Should -BeExactly $TestSavePathSaveAs
 
@@ -112,7 +115,7 @@ Describe 'Start-Download' {
     }
 
     It 'Should download file to temporary path' {
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         Start-Download $TestUrl -Temp | Should -BeExactly $TestSavePath
 
@@ -149,7 +152,7 @@ Describe 'Start-Download' {
     It 'Should throw if no network connection' {
         Mock Test-NetworkConnection { return $False }
 
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         { Start-Download $TestUrl } | Should -Throw 'No network connection detected'
 
@@ -165,13 +168,12 @@ Describe 'Start-Download' {
     }
 
     It 'Should throw if download fails' {
-        # Test-Path returns: false (initial check), true (BITS file exists), false (final validation)
+        # Test-Path sequence: False (not cached), True (BITS file exists), False (final validation fails)
         [Bool[]]$script:PathResults = @($False, $True, $False)
-        [Int]$script:PathIndex = 0
+        [Int]$script:TestPathCalls = 0
         Mock Test-Path {
-            $Result = $script:PathResults[$script:PathIndex]
-            $script:PathIndex++
-            return $Result
+            $script:TestPathCalls++
+            return $script:PathResults[$script:TestPathCalls - 1]
         }
 
         { Start-Download $TestUrl } | Should -Throw 'Possibly computer is offline or disk is full'
@@ -207,7 +209,7 @@ Describe 'Start-Download' {
     It 'Should handle Test-NetworkConnection failure' {
         Mock Test-NetworkConnection { throw $TestException }
 
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         { Start-Download $TestUrl } | Should -Throw $TestException
 
@@ -225,7 +227,7 @@ Describe 'Start-Download' {
     It 'Should handle Initialize-AppDirectory failure' {
         Mock Initialize-AppDirectory { throw $TestException }
 
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         { Start-Download $TestUrl } | Should -Throw $TestException
 
@@ -247,9 +249,10 @@ Describe 'Start-Download' {
             if ($script:BitsTransferAttempts -lt 2) {
                 throw 'Transient error'
             }
+            return [PSCustomObject]@{ JobState = 'Transferred'; BytesTotal = 0; BytesTransferred = 0; ErrorDescription = '' }
         }
 
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         Start-Download $TestUrl  | Should -BeExactly $TestSavePath
 
@@ -269,7 +272,7 @@ Describe 'Start-Download' {
     It 'Should handle Start-BitsTransfer failure' {
         Mock Start-BitsTransfer { throw $TestException }
 
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         { Start-Download $TestUrl } | Should -Throw 'Download failed after 3 attempts*'
 
@@ -287,7 +290,7 @@ Describe 'Start-Download' {
     It 'Should handle Move-Item failure' {
         Mock Move-Item { throw $TestException }
 
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
 
         { Start-Download $TestUrl } | Should -Throw $TestException
 
@@ -305,7 +308,7 @@ Describe 'Start-Download' {
     }
 
     It 'Should fallback to WebRequest when BITS returns empty file' {
-        [Int]$TestPathSuccessIteration = 2
+        [Int]$FileAppearsAtCall = 2
         Mock Get-Item { return [PSCustomObject]@{ Length = 0 } }
 
         Start-Download $TestUrl | Should -BeExactly $TestSavePath
@@ -323,5 +326,80 @@ Describe 'Start-Download' {
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should download file using WebRequest when NoBits is specified' {
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl -NoBits | Should -BeExactly $TestSavePath
+
+        Should -Invoke Write-ActivityProgress -Exactly 4
+        Should -Invoke Test-Path -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Test-NetworkConnection -Exactly 1
+        Should -Invoke Initialize-AppDirectory -Exactly 1
+        Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Complete-BitsTransfer -Exactly 0
+        Should -Invoke Get-Item -Exactly 0
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
+            $Uri -eq $TestUrl -and
+            $OutFile -eq $TestTempPath -and
+            $UseBasicParsing -eq $True
+        }
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Move-Item -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should throw when BITS transfer enters error state' {
+        Mock Start-BitsTransfer { return [PSCustomObject]@{ JobState = 'Error'; BytesTotal = 0; BytesTransferred = 0; ErrorDescription = 'Transfer failed' } }
+
+        [Int]$FileAppearsAtCall = 2
+
+        { Start-Download $TestUrl } | Should -Throw 'Download failed after 3 attempts*'
+
+        Should -Invoke Start-BitsTransfer -Exactly 3
+        Should -Invoke Complete-BitsTransfer -Exactly 0
+        Should -Invoke Remove-BitsTransfer -Exactly 3
+        Should -Invoke Move-Item -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+    }
+
+    It 'Should track progress during BITS transfer' {
+        $script:MockBitsJob = [PSCustomObject]@{
+            JobState         = 'Transferring'
+            BytesTotal       = 100
+            BytesTransferred = 50
+            ErrorDescription = ''
+        }
+        Mock Start-BitsTransfer { return $script:MockBitsJob }
+        Mock Start-Sleep {
+            # After first sleep tick, mark transfer as complete
+            $script:MockBitsJob.JobState = 'Transferred'
+            $script:MockBitsJob.BytesTransferred = 100
+        } -ParameterFilter { $Milliseconds -eq 200 }
+
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
+
+        Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Move-Item -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should handle Invoke-WebRequest failure when NoBits is specified' {
+        Mock Invoke-WebRequest { throw $TestException }
+
+        [Int]$FileAppearsAtCall = 2
+
+        { Start-Download $TestUrl -NoBits } | Should -Throw 'Download failed after 3 attempts*'
+
+        Should -Invoke Invoke-WebRequest -Exactly 3
+        Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Move-Item -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
     }
 }

@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\types.ps1'
+    . '.\src\4-functions\App lifecycle\Invoke-OnDispatcher.ps1'
 
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
@@ -48,6 +49,25 @@ Describe 'Set-Icon' {
 
     It 'Should set default icon if icon name is omitted' {
         Set-Icon
+
+        $FORM.Icon | Should -Not -BeNullOrEmpty
+        $FORM.Icon | Should -BeOfType [Windows.Media.Imaging.BitmapSource]
+    }
+
+    It 'Should use cached icon on subsequent calls' {
+        Set-Icon ([IconName]::Default)
+        Set-Variable -Option Constant FirstCallIcon $FORM.Icon
+
+        $FORM.Icon = $Null
+        Set-Icon ([IconName]::Default)
+
+        $FORM.Icon | Should -BeExactly $FirstCallIcon
+    }
+
+    It 'Should reinitialize cache when cache is null' {
+        $script:IconCache = $Null
+
+        Set-Icon ([IconName]::Default)
 
         $FORM.Icon | Should -Not -BeNullOrEmpty
         $FORM.Icon | Should -BeOfType [Windows.Media.Imaging.BitmapSource]

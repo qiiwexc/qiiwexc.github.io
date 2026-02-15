@@ -1,6 +1,6 @@
 function New-Label {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Text,
+        [Parameter(Position = 0, Mandatory)][String]$Text,
         [Switch]$Centered
     )
 

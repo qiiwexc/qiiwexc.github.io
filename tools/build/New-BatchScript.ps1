@@ -1,9 +1,9 @@
 function New-BatchScript {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ProjectName,
-        [String][Parameter(Position = 1, Mandatory)]$Ps1File,
-        [String][Parameter(Position = 2, Mandatory)]$BatchFile,
-        [String][Parameter(Position = 3, Mandatory)]$VmPath
+        [Parameter(Position = 0, Mandatory)][String]$ProjectName,
+        [Parameter(Position = 1, Mandatory)][String]$Ps1File,
+        [Parameter(Position = 2, Mandatory)][String]$BatchFile,
+        [Parameter(Position = 3, Mandatory)][String]$VmPath
     )
 
     New-Activity 'Building batch script'

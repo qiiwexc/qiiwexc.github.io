@@ -1,12 +1,12 @@
 function New-UnattendedFile {
     param(
-        [Version][Parameter(Position = 0, Mandatory)]$Version,
-        [String][Parameter(Position = 1, Mandatory)]$BuilderPath,
-        [String][Parameter(Position = 2, Mandatory)]$SourcePath,
-        [String][Parameter(Position = 3, Mandatory)]$ResourcesPath,
-        [String][Parameter(Position = 4, Mandatory)]$TemplatesPath,
-        [String][Parameter(Position = 5, Mandatory)]$BuildPath,
-        [String][Parameter(Position = 6, Mandatory)]$VmPath,
+        [Parameter(Position = 0, Mandatory)][Version]$Version,
+        [Parameter(Position = 1, Mandatory)][String]$BuilderPath,
+        [Parameter(Position = 2, Mandatory)][String]$SourcePath,
+        [Parameter(Position = 3, Mandatory)][String]$ResourcesPath,
+        [Parameter(Position = 4, Mandatory)][String]$TemplatesPath,
+        [Parameter(Position = 5, Mandatory)][String]$BuildPath,
+        [Parameter(Position = 6, Mandatory)][String]$VmPath,
         [Switch]$CI
     )
 

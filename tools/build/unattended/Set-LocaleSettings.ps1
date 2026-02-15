@@ -1,7 +1,7 @@
 function Set-LocaleSettings {
     param(
-        [String][Parameter(Position = 0, Mandatory)][ValidateSet('English', 'Russian')]$Locale,
-        [String][Parameter(Position = 1, Mandatory)]$TemplateContent
+        [Parameter(Position = 0, Mandatory)][String][ValidateSet('English', 'Russian')]$Locale,
+        [Parameter(Position = 1, Mandatory)][String]$TemplateContent
     )
 
     $LOCALE_PARAMETERS[$Locale].GetEnumerator() | ForEach-Object {

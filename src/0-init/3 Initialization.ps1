@@ -1,5 +1,7 @@
 Write-Host 'Initializing...'
 
+Set-StrictMode -Version Latest
+
 Set-Variable -Option Constant ORIGINAL_WINDOW_TITLE ([String]$HOST.UI.RawUI.WindowTitle)
 $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION"
 

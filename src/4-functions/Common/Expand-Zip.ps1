@@ -1,6 +1,6 @@
 function Expand-Zip {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ZipPath,
+        [Parameter(Position = 0, Mandatory)][String]$ZipPath,
         [Switch]$Temp
     )
 
@@ -46,12 +46,16 @@ function Expand-Zip {
     if (Test-Path $PATH_7ZIP_EXE) {
         Invoke-7Zip $ExtractionPath $ZipPath
     } else {
-        if ($ZipPath.Split('.')[-1].ToLower() -eq 'zip') {
+        if ([IO.Path]::GetExtension($ZipPath).ToLower() -eq '.zip') {
             Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
         } elseif ($OS_VERSION -ge 11) {
             Set-Variable -Option Constant SHELL (New-Object -ComObject Shell.Application)
 
-            foreach ($Item in $SHELL.NameSpace($ZipPath).Items()) {
+            Set-Variable -Option Constant ArchiveNamespace ($SHELL.NameSpace($ZipPath))
+            if (-not $ArchiveNamespace) {
+                throw "Unsupported archive format: '$ZipPath'. Install 7-Zip to extract this file."
+            }
+            foreach ($Item in $ArchiveNamespace.Items()) {
                 $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
             }
         } else {

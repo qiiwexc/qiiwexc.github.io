@@ -1,8 +1,8 @@
 function Update-Dependencies {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ResourcesPath,
-        [String][Parameter(Position = 1, Mandatory)]$BuilderPath,
-        [String][Parameter(Position = 2, Mandatory)]$WipPath
+        [Parameter(Position = 0, Mandatory)][String]$ResourcesPath,
+        [Parameter(Position = 1, Mandatory)][String]$BuilderPath,
+        [Parameter(Position = 2, Mandatory)][String]$WipPath
     )
 
     New-Activity 'Checking for dependency updates'
@@ -75,7 +75,7 @@ function Update-Dependencies {
 
     Write-ActivityProgress 90
 
-    Set-Variable -Option Constant UrlsToOpen ([String[]]($ChangeLogs | Select-Object -Unique | Where-Object { $_ }))
+    Set-Variable -Option Constant UrlsToOpen ([String[]]@($ChangeLogs | Select-Object -Unique | Where-Object { $_ }))
     Write-LogInfo "$($UrlsToOpen.Count) update(s) found"
 
     Write-ActivityProgress 95

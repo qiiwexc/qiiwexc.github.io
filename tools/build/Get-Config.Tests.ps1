@@ -67,4 +67,25 @@ Describe 'Get-Config' {
         Should -Invoke Read-JsonFile -Exactly 2
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
+
+    It 'Should skip dependencies with no matching URL key' {
+        Set-Variable -Option Constant DepsWithNoUrl (
+            [Dependency[]]@(
+                @{name = 'test dependency-name 1'; version = 'v1.0.0' },
+                @{name = 'no url dependency'; version = '3.0.0' }
+            )
+        )
+        Mock Read-JsonFile { return $DepsWithNoUrl } -ParameterFilter { $Path -match 'dependencies' }
+
+        Set-Variable -Option Constant Result (Get-Config $TestResourcesPath $TestVersion)
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Read-JsonFile -Exactly 2
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+
+        $Result.URL_TEST_DEPENDENCY_NAME_1 | Should -BeExactly 'https://example.com/1.0.0/download'
+        $Result.URL_STATIC | Should -BeExactly 'https://example.com/static'
+        $Result.PROJECT_VERSION | Should -BeExactly $TestVersion
+        $Result.PSObject.Properties['URL_NO_URL_DEPENDENCY'] | Should -BeNullOrEmpty
+    }
 }

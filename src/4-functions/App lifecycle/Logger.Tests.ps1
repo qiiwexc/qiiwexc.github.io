@@ -2,6 +2,7 @@
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\types.ps1'
+    . '.\src\4-functions\App lifecycle\Invoke-OnDispatcher.ps1'
 
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
@@ -23,13 +24,13 @@
     Set-Variable -Option Constant FormattedMessage ([String]'FORMATTED_MESSAGE')
 }
 
-Describe 'Get-Emoji' {
+Describe 'ConvertTo-Emoji' {
     It 'Returns <Expected> (<Code>)' -ForEach @(
         @{ Code = '2705'; Expected = '✅' }
         @{ Code = '26A0'; Expected = '⚠' }
         @{ Code = '274C'; Expected = '❌' }
     ) {
-        Get-Emoji -Code $Code | Should -BeExactly $Expected
+        ConvertTo-Emoji -Code $Code | Should -BeExactly $Expected
     }
 }
 
@@ -43,7 +44,7 @@ Describe 'Format-Message' {
     BeforeEach {
         Mock ToString { return $TestDate }
         Mock Get-Date { return ToString }
-        Mock Get-Emoji { return $TestEmoji }
+        Mock ConvertTo-Emoji { return $TestEmoji }
     }
 
     Context 'Log levels' {
@@ -52,7 +53,7 @@ Describe 'Format-Message' {
 
             Should -Invoke Get-Date -Exactly 1
             Should -Invoke ToString -Exactly 1
-            Should -Invoke Get-Emoji -Exactly 0
+            Should -Invoke ConvertTo-Emoji -Exactly 0
         }
 
         It 'Should format message correctly for warning level' {
@@ -60,8 +61,8 @@ Describe 'Format-Message' {
 
             Should -Invoke Get-Date -Exactly 1
             Should -Invoke ToString -Exactly 1
-            Should -Invoke Get-Emoji -Exactly 1
-            Should -Invoke Get-Emoji -Exactly 1 -ParameterFilter { $Code -eq $EmojiCodeWarning }
+            Should -Invoke ConvertTo-Emoji -Exactly 1
+            Should -Invoke ConvertTo-Emoji -Exactly 1 -ParameterFilter { $Code -eq $EmojiCodeWarning }
         }
 
         It 'Should format message correctly for error level' {
@@ -69,8 +70,8 @@ Describe 'Format-Message' {
 
             Should -Invoke Get-Date -Exactly 1
             Should -Invoke ToString -Exactly 1
-            Should -Invoke Get-Emoji -Exactly 1
-            Should -Invoke Get-Emoji -Exactly 1 -ParameterFilter { $Code -eq $EmojiCodeError }
+            Should -Invoke ConvertTo-Emoji -Exactly 1
+            Should -Invoke ConvertTo-Emoji -Exactly 1 -ParameterFilter { $Code -eq $EmojiCodeError }
         }
     }
 
@@ -297,7 +298,7 @@ Describe 'Out-Status' {
 
 Describe 'Out-Success' {
     BeforeEach {
-        Mock Get-Emoji { return $TestEmoji }
+        Mock ConvertTo-Emoji { return $TestEmoji }
         Mock Out-Status {}
     }
 
@@ -317,7 +318,7 @@ Describe 'Out-Success' {
 
 Describe 'Out-Failure' {
     BeforeEach {
-        Mock Get-Emoji { return $TestEmoji }
+        Mock ConvertTo-Emoji { return $TestEmoji }
         Mock Out-Status {}
     }
 

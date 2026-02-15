@@ -7,21 +7,23 @@ BeforeAll {
 
 Describe 'Start-AsyncOperation' {
     BeforeEach {
-        $script:ASYNC_OPERATION_RUNNING = $False
-        $script:ASYNC_BUTTON = $Null
-        $script:ASYNC_ORIGINAL_CONTENT = $Null
-        $script:ASYNC_PS = $Null
-        $script:ASYNC_HANDLE = $Null
-        $script:ASYNC_RUNSPACE = $Null
-        $script:ASYNC_TIMER = $Null
+        $script:ASYNC = @{
+            Running         = $False
+            Button          = $Null
+            OriginalContent = $Null
+            PS              = $Null
+            Handle          = $Null
+            Runspace        = $Null
+            Timer           = $Null
+        }
 
         Mock Write-LogWarning {}
         Mock Stop-AsyncOperation {}
     }
 
     It 'Should cancel when same button clicked while operation is running' {
-        $script:ASYNC_OPERATION_RUNNING = $True
-        $script:ASYNC_BUTTON = 'BUTTON_A'
+        $script:ASYNC.Running = $True
+        $script:ASYNC.Button = 'BUTTON_A'
 
         Start-AsyncOperation { } -Button 'BUTTON_A'
 
@@ -30,8 +32,8 @@ Describe 'Start-AsyncOperation' {
     }
 
     It 'Should warn when different button clicked while operation is running' {
-        $script:ASYNC_OPERATION_RUNNING = $True
-        $script:ASYNC_BUTTON = 'BUTTON_A'
+        $script:ASYNC.Running = $True
+        $script:ASYNC.Button = 'BUTTON_A'
 
         Start-AsyncOperation { } -Button 'BUTTON_B'
 
@@ -45,8 +47,15 @@ Describe 'Start-AsyncOperation' {
 
 Describe 'Stop-AsyncOperation' {
     BeforeEach {
-        $script:ASYNC_OPERATION_RUNNING = $False
-        $script:ASYNC_PS = $Null
+        $script:ASYNC = @{
+            Running         = $False
+            Button          = $Null
+            OriginalContent = $Null
+            PS              = $Null
+            Handle          = $Null
+            Runspace        = $Null
+            Timer           = $Null
+        }
 
         Mock Write-LogWarning {}
     }
@@ -54,8 +63,8 @@ Describe 'Stop-AsyncOperation' {
     It 'Should stop operation when running' {
         $MockPS = [PSCustomObject]@{}
         $MockPS | Add-Member -MemberType ScriptMethod -Name Stop -Value {}
-        $script:ASYNC_OPERATION_RUNNING = $True
-        $script:ASYNC_PS = $MockPS
+        $script:ASYNC.Running = $True
+        $script:ASYNC.PS = $MockPS
 
         Stop-AsyncOperation
 
@@ -72,8 +81,8 @@ Describe 'Stop-AsyncOperation' {
     }
 
     It 'Should not stop when PowerShell instance is null' {
-        $script:ASYNC_OPERATION_RUNNING = $True
-        $script:ASYNC_PS = $Null
+        $script:ASYNC.Running = $True
+        $script:ASYNC.PS = $Null
 
         Stop-AsyncOperation
 

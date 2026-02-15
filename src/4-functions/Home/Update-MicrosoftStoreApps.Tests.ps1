@@ -15,7 +15,7 @@ Describe 'Update-MicrosoftStoreApps' {
     BeforeEach {
         Mock Write-LogInfo {}
         Mock Write-LogWarning {}
-        Mock Assert-WindowsDebloatIsRunning {}
+        Mock Test-WindowsDebloatIsRunning {}
         Mock Get-CimInstance { return $TestAppManagement }
         Mock Invoke-CimMethod {}
         Mock Out-Success {}
@@ -25,7 +25,7 @@ Describe 'Update-MicrosoftStoreApps' {
     It 'Should update Microsoft Store apps' {
         Update-MicrosoftStoreApps
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter {
@@ -42,11 +42,11 @@ Describe 'Update-MicrosoftStoreApps' {
     }
 
     It 'Should exit if Windows debloat is running' {
-        Mock Assert-WindowsDebloatIsRunning { return @(@{ ProcessName = 'powershell' }) }
+        Mock Test-WindowsDebloatIsRunning { return @(@{ ProcessName = 'powershell' }) }
 
         Update-MicrosoftStoreApps
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Get-CimInstance -Exactly 0
         Should -Invoke Invoke-CimMethod -Exactly 0
@@ -54,12 +54,12 @@ Describe 'Update-MicrosoftStoreApps' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should handle Assert-WindowsDebloatIsRunning failure' {
-        Mock Assert-WindowsDebloatIsRunning { throw $TestException }
+    It 'Should handle Test-WindowsDebloatIsRunning failure' {
+        Mock Test-WindowsDebloatIsRunning { throw $TestException }
 
         Update-MicrosoftStoreApps
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-CimInstance -Exactly 0
         Should -Invoke Invoke-CimMethod -Exactly 0
@@ -72,7 +72,7 @@ Describe 'Update-MicrosoftStoreApps' {
 
         Update-MicrosoftStoreApps
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Invoke-CimMethod -Exactly 0
@@ -85,7 +85,7 @@ Describe 'Update-MicrosoftStoreApps' {
 
         Update-MicrosoftStoreApps
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Invoke-CimMethod -Exactly 1

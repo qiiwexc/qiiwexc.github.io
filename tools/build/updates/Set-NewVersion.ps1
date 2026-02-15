@@ -1,7 +1,7 @@
 function Set-NewVersion {
     param(
-        [ValidateNotNull()][Dependency][Parameter(Position = 0, Mandatory)]$Dependency,
-        [ValidateNotNullOrEmpty()][String][Parameter(Position = 1)]$LatestVersion
+        [Parameter(Position = 0, Mandatory)][ValidateNotNull()][Dependency]$Dependency,
+        [Parameter(Position = 1)][ValidateNotNullOrEmpty()][String]$LatestVersion
     )
 
     Write-LogInfo "New version available: $LatestVersion"

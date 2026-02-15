@@ -1,9 +1,13 @@
 function Read-GitHubToken {
     param(
-        [ValidateNotNullOrEmpty()][String][Parameter(Position = 0, Mandatory)]$EnvPath
+        [Parameter(Position = 0, Mandatory)][String]$EnvPath
     )
 
     Write-LogInfo 'Reading GitHub token'
+
+    if ($env:GITHUB_TOKEN) {
+        return $env:GITHUB_TOKEN
+    }
 
     if (-not (Test-Path $EnvPath)) {
         Write-LogWarning "Environment file not found at path: $EnvPath"

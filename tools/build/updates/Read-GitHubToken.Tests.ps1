@@ -122,4 +122,18 @@ Describe 'Read-GitHubToken' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
     }
+
+    It 'Should return token from environment variable' {
+        $env:GITHUB_TOKEN = 'ENV_TOKEN_VALUE'
+        try {
+            Read-GitHubToken $TestEnvPath | Should -BeExactly 'ENV_TOKEN_VALUE'
+
+            Should -Invoke Write-LogInfo -Exactly 1
+            Should -Invoke Test-Path -Exactly 0
+            Should -Invoke Write-LogWarning -Exactly 0
+            Should -Invoke Read-TextFile -Exactly 0
+        } finally {
+            $env:GITHUB_TOKEN = $Null
+        }
+    }
 }

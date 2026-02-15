@@ -42,6 +42,5 @@ Set-Variable -Option Constant NINITE_CHECKBOXES (
 )
 
 foreach ($Checkbox in $NINITE_CHECKBOXES) {
-    $Checkbox.Add_Checked( { Set-NiniteButtonState } )
-    $Checkbox.Add_Unchecked( { Set-NiniteButtonState } )
+    $Checkbox.Add_Click( { Set-NiniteButtonState } )
 }

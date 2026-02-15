@@ -24,8 +24,18 @@ function Get-Shell32Icon {
     $small = New-Object IntPtr[] 1
     [void][IconExtractor]::ExtractIconEx("$PATH_SYSTEM_32\shell32.dll", $Index, $large, $small, 1)
     if ($small[0] -ne [IntPtr]::Zero) { [void][IconExtractor]::DestroyIcon($small[0]) }
-    return [Drawing.Icon]::FromHandle($large[0])
+    Set-Variable -Option Constant Icon ([Drawing.Icon][Drawing.Icon]::FromHandle($large[0]).Clone())
+    [void][IconExtractor]::DestroyIcon($large[0])
+    return $Icon
 }
 
 Set-Variable -Option Constant ICON_DEFAULT ([Drawing.Icon](Get-Shell32Icon 314))
 Set-Variable -Option Constant ICON_WORKING ([Drawing.Icon](Get-Shell32Icon 238))
+
+# Mutable layout state — tracks the previous element and current container
+# so component functions (New-Button, New-Card, etc.) can adjust spacing
+Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
+Set-Variable -Scope Script PREVIOUS_BUTTON $Null
+Set-Variable -Scope Script CURRENT_GROUP $Null
+Set-Variable -Scope Script CURRENT_TAB $Null
+Set-Variable -Scope Script CENTERED_CHECKBOX_GROUP $Null

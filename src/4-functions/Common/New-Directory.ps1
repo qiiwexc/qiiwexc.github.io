@@ -1,6 +1,6 @@
 function New-Directory {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Path
+        [Parameter(Position = 0, Mandatory)][String]$Path
     )
 
     $Null = New-Item -Force -ItemType Directory $Path -ErrorAction Stop

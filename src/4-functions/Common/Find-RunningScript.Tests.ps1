@@ -22,7 +22,7 @@ Describe 'Find-RunningScript' {
         Should -Invoke Get-CimInstance -Exactly 1
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter {
             $ClassName -eq 'Win32_Process' -and
-            $Filter -eq "name='powershell.exe'"
+            $Filter -eq "name='powershell.exe' OR name='pwsh.exe'"
         }
     }
 

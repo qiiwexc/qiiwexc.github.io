@@ -34,10 +34,7 @@ New-Button 'Office Installer' $BUTTON_FUNCTION
 New-Button 'Unchecky' $BUTTON_FUNCTION
 
 [Windows.Controls.CheckBox]$CHECKBOX_StartUnchecky = New-CheckBoxRunAfterDownload -Checked
-$CHECKBOX_StartUnchecky.Add_Checked( {
-        Set-CheckboxState -Control $CHECKBOX_StartUnchecky -Dependant $CHECKBOX_SilentlyInstallUnchecky
-    } )
-$CHECKBOX_StartUnchecky.Add_Unchecked( {
+$CHECKBOX_StartUnchecky.Add_Click( {
         Set-CheckboxState -Control $CHECKBOX_StartUnchecky -Dependant $CHECKBOX_SilentlyInstallUnchecky
     } )
 

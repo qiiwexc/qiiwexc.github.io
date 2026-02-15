@@ -121,8 +121,8 @@ Describe 'Update-FileDependency' {
     }
 
     It 'Should not update if new version is empty' {
-        Mock Get-Item { return (New-MockObject -Type IO.FileInfo) } -ParameterFilter { $Path -match ' x86.exe' }
-        Mock Get-Item { return (New-MockObject -Type IO.FileInfo) } -ParameterFilter { $Path -notmatch ' x86.exe' }
+        Mock Get-Item { return (New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $null } }) } -ParameterFilter { $Path -match ' x86.exe' }
+        Mock Get-Item { return (New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = @{ FileVersionRaw = $null } }) } -ParameterFilter { $Path -notmatch ' x86.exe' }
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 

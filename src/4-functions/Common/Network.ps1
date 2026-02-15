@@ -19,7 +19,16 @@ function Test-NetworkConnection {
 
     if (-not $IsConnected) {
         Out-Failure 'Computer is not connected to the Internet'
+        return $False
     }
 
-    return $IsConnected
+    try {
+        Set-Variable -Option Constant Target ([String]'1.1.1.1')
+        $null = Test-Connection -ComputerName $Target -Count 1 -Quiet -ErrorAction Stop
+    } catch {
+        Out-Failure 'No Internet connectivity'
+        return $False
+    }
+
+    return $True
 }

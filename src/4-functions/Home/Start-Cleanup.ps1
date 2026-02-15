@@ -1,10 +1,10 @@
 function Start-Cleanup {
-    if (Assert-SdiIsRunning) {
+    if (Test-SdiIsRunning) {
         Write-LogWarning 'Snappy Driver Installer is currently running. Please close it before starting the cleanup process.'
         return
     }
 
-    if ((Assert-DownloadingWindowsUpdates) -or (Assert-InstallingWindowsUpdates)) {
+    if ((Test-DownloadingWindowsUpdates) -or (Test-InstallingWindowsUpdates)) {
         Write-LogWarning 'Windows Update is currently running. Please wait for updates to complete before starting the cleanup process.'
         return
     }

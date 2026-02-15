@@ -1,11 +1,11 @@
 function Set-AppsConfiguration {
     param(
-        [Object][Parameter(Position = 0, Mandatory)]$7zip,
-        [Object][Parameter(Position = 1, Mandatory)]$VLC,
-        [Object][Parameter(Position = 2, Mandatory)]$AnyDesk,
-        [Object][Parameter(Position = 3, Mandatory)]$qBittorrent,
-        [Object][Parameter(Position = 4, Mandatory)]$Edge,
-        [Object][Parameter(Position = 5, Mandatory)]$Chrome
+        [Parameter(Position = 0, Mandatory)][Object]$7zip,
+        [Parameter(Position = 1, Mandatory)][Object]$VLC,
+        [Parameter(Position = 2, Mandatory)][Object]$AnyDesk,
+        [Parameter(Position = 3, Mandatory)][Object]$qBittorrent,
+        [Parameter(Position = 4, Mandatory)][Object]$Edge,
+        [Parameter(Position = 5, Mandatory)][Object]$Chrome
     )
 
     New-Activity 'Configuring apps'

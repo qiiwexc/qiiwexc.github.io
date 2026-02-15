@@ -63,7 +63,7 @@ function updateVersionElement() {
     .item(0);
 
   if (versionElement) {
-    versionElement.innerHTML =
+    versionElement.textContent =
       systemVersion + " " + systemArchitecture + " " + systemLanguage;
   }
 }

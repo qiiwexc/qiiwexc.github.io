@@ -2,7 +2,7 @@ function Update-App {
     try {
         Set-Variable -Option Constant AppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
 
-        Set-Variable -Option Constant IsUpdateAvailable ([Bool](Get-UpdateAvailability))
+        Set-Variable -Option Constant IsUpdateAvailable ([Bool](Test-UpdateAvailability))
 
         if ($IsUpdateAvailable) {
             Get-NewVersion $AppBatFile
@@ -19,17 +19,17 @@ function Update-App {
 }
 
 
-function Get-UpdateAvailability {
+function Test-UpdateAvailability {
     try {
         Write-LogInfo 'Checking for updates...'
 
         if ($DevMode) {
             Out-Status 'Skipping in dev mode'
-            return
+            return $False
         }
 
         if (-not (Test-NetworkConnection)) {
-            return
+            return $False
         }
 
         Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}'))
@@ -41,16 +41,18 @@ function Get-UpdateAvailability {
             return $True
         } else {
             Out-Status 'No updates available'
+            return $False
         }
     } catch {
         Out-Failure "Failed to check for updates: $_"
+        return $False
     }
 }
 
 
 function Get-NewVersion {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$AppBatFile
+        [Parameter(Position = 0, Mandatory)][String]$AppBatFile
     )
 
     try {
@@ -60,7 +62,7 @@ function Get-NewVersion {
             return
         }
 
-        Invoke-WebRequest -Uri '{URL_BAT_FILE_UPDATE}' -OutFile $AppBatFile
+        Invoke-WebRequest -UseBasicParsing -Uri '{URL_BAT_FILE_UPDATE}' -OutFile $AppBatFile
 
         Out-Success
     } catch {

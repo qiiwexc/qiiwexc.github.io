@@ -1,15 +1,19 @@
 function Select-Releases {
     param(
-        [ValidateNotNull()][PSObject][Parameter(Position = 0, Mandatory)]$Dependency,
-        [String][Parameter(Position = 1)]$GitHubToken
+        [Parameter(Position = 0, Mandatory)][ValidateNotNull()][PSObject]$Dependency,
+        [Parameter(Position = 1)][String]$GitHubToken
     )
 
     Set-Variable -Option Constant Repository ([String]$Dependency.repository)
     Set-Variable -Option Constant CurrentVersion ([String]$Dependency.version)
 
-    Set-Variable -Option Constant Releases ([GitRelease[]](Invoke-GitAPI "https://api.github.com/repos/$Repository/releases?per_page=5" $GitHubToken))
+    Set-Variable -Option Constant Releases ([GitRelease[]]@(Invoke-GitAPI "https://api.github.com/repos/$Repository/releases?per_page=5" $GitHubToken))
 
-    Set-Variable -Option Constant FilteredReleases ([GitRelease[]]($Releases | Where-Object { $_.tag_name -inotmatch 'beta' }))
+    if (-not $Releases -or $Releases.Count -eq 0) {
+        return
+    }
+
+    Set-Variable -Option Constant FilteredReleases ([GitRelease[]]@($Releases | Where-Object { $_.PSObject.Properties['tag_name'] -and $_.tag_name -inotmatch 'beta' }))
 
     if ($FilteredReleases -and $FilteredReleases.Count -gt 0) {
         Set-Variable -Option Constant LatestVersion ([String]($FilteredReleases[0].tag_name))

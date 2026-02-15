@@ -1,8 +1,8 @@
 function Compare-Dependencies {
     param(
-        [Dependency[]][Parameter(Position = 0, Mandatory)]$OldDependencies,
-        [Dependency[]][Parameter(Position = 1, Mandatory)]$NewDependencies,
-        [PSCustomObject][Parameter(Position = 2, Mandatory)]$UrlsTemplate
+        [Parameter(Position = 0, Mandatory)][Dependency[]]$OldDependencies,
+        [Parameter(Position = 1, Mandatory)][Dependency[]]$NewDependencies,
+        [Parameter(Position = 2, Mandatory)][PSCustomObject]$UrlsTemplate
     )
 
     [String[]]$UpdatedNames = @()
@@ -20,7 +20,7 @@ function Compare-Dependencies {
         $UpdateDetails += "$($NewDep.name): $($OldDep.version) -> $($NewDep.version)"
 
         [String]$UrlKey = "URL_$($NewDep.name.ToUpper().Replace(' ', '_').Replace('-', '_'))"
-        if ($null -ne $UrlsTemplate.$UrlKey) {
+        if ($UrlsTemplate.PSObject.Properties[$UrlKey]) {
             $HasReleaseUpdate = $True
         }
     }

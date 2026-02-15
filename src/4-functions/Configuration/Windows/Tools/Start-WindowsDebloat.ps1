@@ -7,12 +7,12 @@ function Start-WindowsDebloat {
 
     Write-LogInfo 'Starting Windows 10/11 debloat utility...'
 
-    if (Assert-WindowsDebloatIsRunning) {
+    if (Test-WindowsDebloatIsRunning) {
         Write-LogWarning 'Windows debloat utility is already running'
         return
     }
 
-    if (Assert-OOShutUp10IsRunning) {
+    if (Test-OOShutUp10IsRunning) {
         Write-LogWarning 'OOShutUp10++ utility is running, which may interfere with the Windows debloat utility'
         Write-LogWarning 'Repeat the attempt after OOShutUp10++ utility has finished running'
         return
@@ -47,16 +47,20 @@ function Start-WindowsDebloat {
     }
 
     try {
+        [String]$UsePresetParam = ''
+        [String]$SilentParam = ''
+        [String]$SysprepParam = ''
+
         if ($UsePreset -or $Personalisation) {
-            Set-Variable -Option Constant UsePresetParam ([String]' -RunSavedSettings -RemoveAppsCustom')
+            $UsePresetParam = ' -RunSavedSettings -RemoveAppsCustom'
         }
 
         if ($Silent) {
-            Set-Variable -Option Constant SilentParam ([String]' -Silent')
+            $SilentParam = ' -Silent'
         }
 
         if ($OS_VERSION -ge 11) {
-            Set-Variable -Option Constant SysprepParam ([String]' -Sysprep')
+            $SysprepParam = ' -Sysprep'
         }
 
         Set-Variable -Option Constant Params ([String]"-NoRestartExplorer$SysprepParam$UsePresetParam$SilentParam")

@@ -1,7 +1,7 @@
 function New-CheckBox {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Text,
-        [String][Parameter(Position = 1)]$Name,
+        [Parameter(Position = 0, Mandatory)][String]$Text,
+        [Parameter(Position = 1)][String]$Name,
         [Switch]$Disabled,
         [Switch]$Checked
     )

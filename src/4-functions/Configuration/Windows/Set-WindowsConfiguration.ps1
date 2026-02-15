@@ -1,21 +1,21 @@
 function Set-WindowsConfiguration {
     param(
-        [Object][Parameter(Position = 0, Mandatory)]$Security,
-        [Object][Parameter(Position = 1, Mandatory)]$Performance,
-        [Object][Parameter(Position = 2, Mandatory)]$Baseline,
-        [Object][Parameter(Position = 3, Mandatory)]$Annoyances,
-        [Object][Parameter(Position = 4, Mandatory)]$Privacy,
-        [Object][Parameter(Position = 5, Mandatory)]$Localisation,
-        [Object][Parameter(Position = 6, Mandatory)]$Personalisation
+        [Parameter(Position = 0, Mandatory)][Object]$Security,
+        [Parameter(Position = 1, Mandatory)][Object]$Performance,
+        [Parameter(Position = 2, Mandatory)][Object]$Baseline,
+        [Parameter(Position = 3, Mandatory)][Object]$Annoyances,
+        [Parameter(Position = 4, Mandatory)][Object]$Privacy,
+        [Parameter(Position = 5, Mandatory)][Object]$Localisation,
+        [Parameter(Position = 6, Mandatory)][Object]$Personalisation
     )
 
-    if (Assert-WindowsDebloatIsRunning) {
+    if (Test-WindowsDebloatIsRunning) {
         Write-LogWarning 'Windows debloat utility is currently running, which may interfere with the Windows configuration process'
         Write-LogWarning 'Repeat the attempt after the debloat utility has finished running'
         return
     }
 
-    if (Assert-OOShutUp10IsRunning) {
+    if (Test-OOShutUp10IsRunning) {
         Write-LogWarning 'OOShutUp10++ utility is running, which may interfere with the Windows configuration process'
         Write-LogWarning 'Repeat the attempt after OOShutUp10++ utility has finished running'
         return

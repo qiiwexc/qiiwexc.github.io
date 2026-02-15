@@ -1,9 +1,9 @@
 function Set-InlineFiles {
     param(
-        [String][Parameter(Position = 0, Mandatory)][ValidateSet('English', 'Russian')]$Locale,
-        [String][Parameter(Position = 1, Mandatory)]$ConfigsPath,
-        [String][Parameter(Position = 2, Mandatory)]$ResourcesPath,
-        [Collections.Generic.List[String]][Parameter(Position = 3, Mandatory)]$TemplateContent
+        [Parameter(Position = 0, Mandatory)][String][ValidateSet('English', 'Russian')]$Locale,
+        [Parameter(Position = 1, Mandatory)][String]$ConfigsPath,
+        [Parameter(Position = 2, Mandatory)][String]$ResourcesPath,
+        [Parameter(Position = 3, Mandatory)][String]$TemplateContent
     )
 
     Set-Variable -Option Constant KEY_FILE_MAP (

@@ -1,6 +1,6 @@
 function Read-TextFile {
     param(
-        [ValidateNotNullOrEmpty()][String][Parameter(Position = 0, Mandatory)]$Path,
+        [Parameter(Position = 0, Mandatory)][ValidateNotNullOrEmpty()][String]$Path,
         [Switch]$AsList
     )
 

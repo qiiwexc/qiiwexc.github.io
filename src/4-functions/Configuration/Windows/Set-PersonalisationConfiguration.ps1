@@ -3,10 +3,13 @@ function Set-PersonalisationConfiguration {
 
     try {
         if ($OS_VERSION -ge 11) {
-            Set-Variable -Option Constant NotificationRegistries ([String[]](Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*' -ErrorAction Stop).Name)
-            foreach ($Registry in $NotificationRegistries) {
-                $ConfigLines.Add("`n[$Registry]`n")
-                $ConfigLines.Add("`"IsPromoted`"=dword:00000001`n")
+            $NotificationItems = Get-Item 'HKCU:\Control Panel\NotifyIconSettings\*' -ErrorAction Stop
+            if ($NotificationItems) {
+                Set-Variable -Option Constant NotificationRegistries ([String[]]$NotificationItems.Name)
+                foreach ($Registry in $NotificationRegistries) {
+                    $ConfigLines.Add("`n[$Registry]`n")
+                    $ConfigLines.Add("`"IsPromoted`"=dword:00000001`n")
+                }
             }
         }
 
