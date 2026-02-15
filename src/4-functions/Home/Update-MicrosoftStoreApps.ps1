@@ -2,7 +2,7 @@ function Update-MicrosoftStoreApps {
     try {
         Write-LogInfo 'Starting Microsoft Store apps update...'
 
-        if (Assert-WindowsDebloatIsRunning) {
+        if (Test-WindowsDebloatIsRunning) {
             Write-LogWarning 'Windows debloat utility is currently running, which may interfere with the Microsoft Store apps update process'
             Write-LogWarning 'Repeat the attempt after the debloat utility has finished running'
             return

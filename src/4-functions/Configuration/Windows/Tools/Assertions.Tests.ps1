@@ -10,7 +10,7 @@ BeforeAll {
     Set-Variable -Option Constant TestBitsTransfer ([PSObject]@{ JobState = 'Transferring' })
 }
 
-Describe 'Assert-WindowsDebloatIsRunning' {
+Describe 'Test-WindowsDebloatIsRunning' {
     BeforeEach {
         Mock Find-RunningScript {}
     }
@@ -18,7 +18,7 @@ Describe 'Assert-WindowsDebloatIsRunning' {
     It 'Should return true if debloat is running' {
         Mock Find-RunningScript { return $TestProcess }
 
-        Set-Variable -Option Constant Result ([PSObject](Assert-WindowsDebloatIsRunning))
+        Set-Variable -Option Constant Result ([PSObject](Test-WindowsDebloatIsRunning))
 
         $Result.ProcessName | Should -BeExactly $TestProcess.ProcessName
 
@@ -27,7 +27,7 @@ Describe 'Assert-WindowsDebloatIsRunning' {
     }
 
     It 'Should return false if debloat is not running' {
-        Assert-WindowsDebloatIsRunning | Should -BeNullOrEmpty
+        Test-WindowsDebloatIsRunning | Should -BeNullOrEmpty
 
         Should -Invoke Find-RunningScript -Exactly 1
     }
@@ -35,13 +35,13 @@ Describe 'Assert-WindowsDebloatIsRunning' {
     It 'Should handle Find-RunningScript failure' {
         Mock Find-RunningScript { throw $TestException }
 
-        { Assert-WindowsDebloatIsRunning } | Should -Throw $TestException
+        { Test-WindowsDebloatIsRunning } | Should -Throw $TestException
 
         Should -Invoke Find-RunningScript -Exactly 1
     }
 }
 
-Describe 'Assert-OOShutUp10IsRunning' {
+Describe 'Test-OOShutUp10IsRunning' {
     BeforeEach {
         Mock Find-RunningProcesses {}
     }
@@ -49,7 +49,7 @@ Describe 'Assert-OOShutUp10IsRunning' {
     It 'Should return true if OOShutUp10 is running' {
         Mock Find-RunningProcesses { return $TestProcess }
 
-        Set-Variable -Option Constant Result ([PSObject](Assert-OOShutUp10IsRunning))
+        Set-Variable -Option Constant Result ([PSObject](Test-OOShutUp10IsRunning))
 
         $Result.ProcessName | Should -BeExactly $TestProcess.ProcessName
 
@@ -58,7 +58,7 @@ Describe 'Assert-OOShutUp10IsRunning' {
     }
 
     It 'Should return false if OOShutUp10 is not running' {
-        Assert-OOShutUp10IsRunning | Should -BeNullOrEmpty
+        Test-OOShutUp10IsRunning | Should -BeNullOrEmpty
 
         Should -Invoke Find-RunningProcesses -Exactly 1
     }
@@ -66,13 +66,13 @@ Describe 'Assert-OOShutUp10IsRunning' {
     It 'Should handle Find-RunningProcesses failure' {
         Mock Find-RunningProcesses { throw $TestException }
 
-        { Assert-OOShutUp10IsRunning } | Should -Throw $TestException
+        { Test-OOShutUp10IsRunning } | Should -Throw $TestException
 
         Should -Invoke Find-RunningProcesses -Exactly 1
     }
 }
 
-Describe 'Assert-SdiIsRunning' {
+Describe 'Test-SdiIsRunning' {
     BeforeEach {
         Mock Find-RunningProcesses {}
     }
@@ -80,7 +80,7 @@ Describe 'Assert-SdiIsRunning' {
     It 'Should return true if SDI is running' {
         Mock Find-RunningProcesses { return $TestProcess }
 
-        Set-Variable -Option Constant Result ([PSObject](Assert-SdiIsRunning))
+        Set-Variable -Option Constant Result ([PSObject](Test-SdiIsRunning))
 
         $Result.ProcessName | Should -BeExactly $TestProcess.ProcessName
 
@@ -93,7 +93,7 @@ Describe 'Assert-SdiIsRunning' {
     }
 
     It 'Should return false if SDI is not running' {
-        Assert-SdiIsRunning | Should -BeNullOrEmpty
+        Test-SdiIsRunning | Should -BeNullOrEmpty
 
         Should -Invoke Find-RunningProcesses -Exactly 1
     }
@@ -101,13 +101,13 @@ Describe 'Assert-SdiIsRunning' {
     It 'Should handle Find-RunningProcesses failure' {
         Mock Find-RunningProcesses { throw $TestException }
 
-        { Assert-SdiIsRunning } | Should -Throw $TestException
+        { Test-SdiIsRunning } | Should -Throw $TestException
 
         Should -Invoke Find-RunningProcesses -Exactly 1
     }
 }
 
-Describe 'Assert-DownloadingWindowsUpdates' {
+Describe 'Test-DownloadingWindowsUpdates' {
     BeforeEach {
         Mock Get-BitsTransfer {}
     }
@@ -115,7 +115,7 @@ Describe 'Assert-DownloadingWindowsUpdates' {
     It 'Should return true if downloading Windows updates' {
         Mock Get-BitsTransfer { return @($TestBitsTransfer) }
 
-        Set-Variable -Option Constant Result ([PSObject](Assert-DownloadingWindowsUpdates))
+        Set-Variable -Option Constant Result ([PSObject](Test-DownloadingWindowsUpdates))
 
         $Result.JobState | Should -BeExactly 'Transferring'
 
@@ -124,7 +124,7 @@ Describe 'Assert-DownloadingWindowsUpdates' {
     }
 
     It 'Should return false if not downloading Windows updates' {
-        Assert-DownloadingWindowsUpdates | Should -BeNullOrEmpty
+        Test-DownloadingWindowsUpdates | Should -BeNullOrEmpty
 
         Should -Invoke Get-BitsTransfer -Exactly 1
     }
@@ -132,7 +132,7 @@ Describe 'Assert-DownloadingWindowsUpdates' {
     It 'Should return false if no transfers are in transferring state' {
         Mock Get-BitsTransfer { return @(@{ JobState = 'Suspended' }) }
 
-        Assert-DownloadingWindowsUpdates | Should -BeNullOrEmpty
+        Test-DownloadingWindowsUpdates | Should -BeNullOrEmpty
 
         Should -Invoke Get-BitsTransfer -Exactly 1
     }
@@ -140,13 +140,13 @@ Describe 'Assert-DownloadingWindowsUpdates' {
     It 'Should handle Get-BitsTransfer failure' {
         Mock Get-BitsTransfer { throw $TestException }
 
-        { Assert-DownloadingWindowsUpdates } | Should -Throw $TestException
+        { Test-DownloadingWindowsUpdates } | Should -Throw $TestException
 
         Should -Invoke Get-BitsTransfer -Exactly 1
     }
 }
 
-Describe 'Assert-InstallingWindowsUpdates' {
+Describe 'Test-InstallingWindowsUpdates' {
     BeforeEach {
         Mock Find-RunningProcesses {}
     }
@@ -154,7 +154,7 @@ Describe 'Assert-InstallingWindowsUpdates' {
     It 'Should return true if installing Windows updates' {
         Mock Find-RunningProcesses { return $TestProcess }
 
-        Set-Variable -Option Constant Result ([PSObject](Assert-InstallingWindowsUpdates))
+        Set-Variable -Option Constant Result ([PSObject](Test-InstallingWindowsUpdates))
 
         $Result.ProcessName | Should -BeExactly $TestProcess.ProcessName
 
@@ -167,7 +167,7 @@ Describe 'Assert-InstallingWindowsUpdates' {
     }
 
     It 'Should return false if not installing Windows updates' {
-        Assert-InstallingWindowsUpdates | Should -BeNullOrEmpty
+        Test-InstallingWindowsUpdates | Should -BeNullOrEmpty
 
         Should -Invoke Find-RunningProcesses -Exactly 1
     }
@@ -175,7 +175,7 @@ Describe 'Assert-InstallingWindowsUpdates' {
     It 'Should handle Find-RunningProcesses failure' {
         Mock Find-RunningProcesses { throw $TestException }
 
-        { Assert-InstallingWindowsUpdates } | Should -Throw $TestException
+        { Test-InstallingWindowsUpdates } | Should -Throw $TestException
 
         Should -Invoke Find-RunningProcesses -Exactly 1
     }

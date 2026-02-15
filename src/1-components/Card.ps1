@@ -1,6 +1,6 @@
 function New-Card {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Text
+        [Parameter(Position = 0, Mandatory)][String]$Text
     )
 
     Set-Variable -Option Constant CardBorder ([Windows.Controls.Border](New-Object Windows.Controls.Border))

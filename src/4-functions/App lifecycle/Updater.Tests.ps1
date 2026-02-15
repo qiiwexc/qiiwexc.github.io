@@ -14,7 +14,7 @@ BeforeAll {
     Set-Variable -Option Constant TestAppBatFile ([String]"$PATH_WORKING_DIR\qiiwexc.bat")
 }
 
-Describe 'Get-UpdateAvailability' {
+Describe 'Test-UpdateAvailability' {
     BeforeEach {
         Mock Write-LogInfo {}
         Mock Out-Status {}
@@ -27,7 +27,7 @@ Describe 'Get-UpdateAvailability' {
     }
 
     It 'Should detect available update' {
-        Get-UpdateAvailability
+        Test-UpdateAvailability
 
         Should -Invoke Out-Status -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -43,7 +43,7 @@ Describe 'Get-UpdateAvailability' {
     It 'Should detect no available update' {
         Mock Invoke-WebRequest { return @{ Content = '[{"tag_name":"v1.0.0"}]' } }
 
-        Get-UpdateAvailability
+        Test-UpdateAvailability
 
         Should -Invoke Out-Status -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -59,7 +59,7 @@ Describe 'Get-UpdateAvailability' {
     It 'Should skip update check in dev mode' {
         [Bool]$DevMode = $True
 
-        Get-UpdateAvailability
+        Test-UpdateAvailability
 
         Should -Invoke Out-Status -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 0
@@ -71,7 +71,7 @@ Describe 'Get-UpdateAvailability' {
     It 'Should skip update check when no network connection' {
         Mock Test-NetworkConnection { return $False }
 
-        Get-UpdateAvailability
+        Test-UpdateAvailability
 
         Should -Invoke Out-Status -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -83,7 +83,7 @@ Describe 'Get-UpdateAvailability' {
     It 'Should handle Test-NetworkConnection failure' {
         Mock Test-NetworkConnection { throw $TestException }
 
-        Get-UpdateAvailability
+        Test-UpdateAvailability
 
         Should -Invoke Out-Status -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -95,7 +95,7 @@ Describe 'Get-UpdateAvailability' {
     It 'Should handle Invoke-WebRequest failure' {
         Mock Invoke-WebRequest { throw $TestException }
 
-        Get-UpdateAvailability
+        Test-UpdateAvailability
 
         Should -Invoke Out-Status -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -122,7 +122,8 @@ Describe 'Get-NewVersion' {
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq '{URL_BAT_FILE_UPDATE}' -and
-            $OutFile -eq $TestAppBatFile
+            $OutFile -eq $TestAppBatFile -and
+            $UseBasicParsing -eq $True
         }
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Out-Success -Exactly 1
@@ -167,7 +168,7 @@ Describe 'Get-NewVersion' {
 
 Describe 'Update-App' {
     BeforeEach {
-        Mock Get-UpdateAvailability { return $True }
+        Mock Test-UpdateAvailability { return $True }
         Mock Get-NewVersion {}
         Mock Write-LogWarning {}
         Mock Invoke-CustomCommand {}
@@ -178,7 +179,7 @@ Describe 'Update-App' {
     It 'Should download new version of the app' {
         Update-App
 
-        Should -Invoke Get-UpdateAvailability -Exactly 1
+        Should -Invoke Test-UpdateAvailability -Exactly 1
         Should -Invoke Get-NewVersion -Exactly 1
         Should -Invoke Get-NewVersion -Exactly 1 -ParameterFilter { $AppBatFile -eq $TestAppBatFile }
         Should -Invoke Write-LogWarning -Exactly 1
@@ -190,11 +191,11 @@ Describe 'Update-App' {
     }
 
     It 'Should skip download when no update is available' {
-        Mock Get-UpdateAvailability { return $False }
+        Mock Test-UpdateAvailability { return $False }
 
         Update-App
 
-        Should -Invoke Get-UpdateAvailability -Exactly 1
+        Should -Invoke Test-UpdateAvailability -Exactly 1
         Should -Invoke Get-NewVersion -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
@@ -202,12 +203,12 @@ Describe 'Update-App' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should handle Get-UpdateAvailability failure' {
-        Mock Get-UpdateAvailability { throw $TestException }
+    It 'Should handle Test-UpdateAvailability failure' {
+        Mock Test-UpdateAvailability { throw $TestException }
 
         Update-App
 
-        Should -Invoke Get-UpdateAvailability -Exactly 1
+        Should -Invoke Test-UpdateAvailability -Exactly 1
         Should -Invoke Get-NewVersion -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
@@ -220,7 +221,7 @@ Describe 'Update-App' {
 
         Update-App
 
-        Should -Invoke Get-UpdateAvailability -Exactly 1
+        Should -Invoke Test-UpdateAvailability -Exactly 1
         Should -Invoke Get-NewVersion -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Invoke-CustomCommand -Exactly 0
@@ -233,7 +234,7 @@ Describe 'Update-App' {
 
         Update-App
 
-        Should -Invoke Get-UpdateAvailability -Exactly 1
+        Should -Invoke Test-UpdateAvailability -Exactly 1
         Should -Invoke Get-NewVersion -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
@@ -246,7 +247,7 @@ Describe 'Update-App' {
 
         Update-App
 
-        Should -Invoke Get-UpdateAvailability -Exactly 1
+        Should -Invoke Test-UpdateAvailability -Exactly 1
         Should -Invoke Get-NewVersion -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1

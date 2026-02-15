@@ -35,10 +35,13 @@ function Set-BaselineConfiguration {
     $ConfigLines.Add((Add-SysPrepConfig $LocalisedConfig))
 
     try {
-        Set-Variable -Option Constant VolumeRegistries ([String[]](Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*' -ErrorAction Stop).Name)
-        foreach ($Registry in $VolumeRegistries) {
-            $ConfigLines.Add("`n[$Registry]`n")
-            $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
+        $VolumeItems = Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*' -ErrorAction Stop
+        if ($VolumeItems) {
+            Set-Variable -Option Constant VolumeRegistries ([String[]]$VolumeItems.Name)
+            foreach ($Registry in $VolumeRegistries) {
+                $ConfigLines.Add("`n[$Registry]`n")
+                $ConfigLines.Add("`"MaxCapacity`"=dword:000FFFFF`n")
+            }
         }
     } catch {
         Out-Failure "Failed to read the registry: $_"

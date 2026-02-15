@@ -11,23 +11,19 @@ on:
 jobs:
   update-dependencies:
     runs-on: windows-latest
+    timeout-minutes: 15
     permissions:
       contents: write
       pull-requests: write
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
-
-      - name: Set up GitHub token for API access
-        shell: pwsh
-        run: |
-          "GITHUB_TOKEN=$env:GH_TOKEN" | Out-File -FilePath .env -Encoding utf8 -NoNewline
-        env:
-          GH_TOKEN: ${{ github.token }}
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Check for dependency updates
         id: update
         shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           try {
               .\tools\build.ps1 -Update
@@ -35,9 +31,9 @@ jobs:
               Write-Host "::warning::Build script error: $_"
           }
 
-          git diff --quiet --ignore-cr-at-eol resources/dependencies.json
+          $diff = git diff --name-only --ignore-cr-at-eol resources/dependencies.json
 
-          if ($LASTEXITCODE -ne 0) {
+          if ($diff) {
               . .\tools\common\types.ps1
               . .\tools\build\Compare-Dependencies.ps1
 

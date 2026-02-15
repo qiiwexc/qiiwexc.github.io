@@ -1,7 +1,7 @@
 function Set-PowerSchemeConfiguration {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ConfigsPath,
-        [Collections.Generic.List[String]][Parameter(Position = 1, Mandatory)]$TemplateContent
+        [Parameter(Position = 0, Mandatory)][String]$ConfigsPath,
+        [Parameter(Position = 1, Mandatory)][String]$TemplateContent
     )
 
     . "$ConfigsPath\Windows\Power settings.ps1"

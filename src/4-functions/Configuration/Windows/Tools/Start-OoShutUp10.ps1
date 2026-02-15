@@ -6,11 +6,13 @@ function Start-OoShutUp10 {
 
     Write-LogInfo 'Starting OOShutUp10++ utility...'
 
-    if (Assert-WindowsDebloatIsRunning) {
+    if (Test-WindowsDebloatIsRunning) {
         Write-LogWarning 'Windows debloat utility is running, which may interfere with the OOShutUp10++ utility'
         Write-LogWarning 'Repeat the attempt after Windows debloat utility has finished running'
         return
     }
+
+    [String]$Params = ''
 
     try {
         if ($Execute) {
@@ -26,7 +28,7 @@ function Start-OoShutUp10 {
         Set-Content $ConfigFile $CONFIG_OOSHUTUP10 -NoNewline -ErrorAction Stop
 
         if ($Execute -and $Silent) {
-            Set-Variable -Option Constant Params $ConfigFile
+            $Params = $ConfigFile
         }
     } catch {
         Write-LogWarning "Failed to initialize OOShutUp10++ configuration: $_"

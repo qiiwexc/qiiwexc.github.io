@@ -5,7 +5,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant TestUrl ([String]'TEST_URL')
+    Set-Variable -Option Constant TestUrl ([String]'https://TEST_URL')
 }
 
 Describe 'Open-InBrowser' {

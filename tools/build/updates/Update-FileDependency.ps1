@@ -1,7 +1,7 @@
 function Update-FileDependency {
     param(
-        [ValidateNotNull()][PSObject][Parameter(Position = 0, Mandatory)]$Dependency,
-        [ValidateNotNullOrEmpty()][String][Parameter(Position = 1, Mandatory)]$WipPath
+        [Parameter(Position = 0, Mandatory)][ValidateNotNull()][PSObject]$Dependency,
+        [Parameter(Position = 1, Mandatory)][ValidateNotNullOrEmpty()][String]$WipPath
     )
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
@@ -19,7 +19,7 @@ function Update-FileDependency {
         try {
             [IO.FileInfo]$File = Get-Item "$WipPath\$FileName" -ErrorAction Stop
 
-            [Version]$FileVersion = $File.VersionInfo.FileVersionRaw
+            [Version]$FileVersion = if ($File.VersionInfo) { $File.VersionInfo.FileVersionRaw } else { $null }
             if ($FileVersion) {
                 $NewVersions.Add($FileVersion)
             }

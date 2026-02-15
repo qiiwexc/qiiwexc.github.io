@@ -1,7 +1,7 @@
 function Import-RegistryConfiguration {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$AppName,
-        [String[]][Parameter(Position = 1, Mandatory)]$Content
+        [Parameter(Position = 0, Mandatory)][String]$AppName,
+        [Parameter(Position = 1, Mandatory)][String[]]$Content
     )
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)

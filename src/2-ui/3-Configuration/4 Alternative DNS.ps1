@@ -12,10 +12,7 @@ New-Card 'Alternative DNS'
 New-Button 'Setup CloudFlare DNS' $BUTTON_FUNCTION
 
 [Windows.Controls.CheckBox]$CHECKBOX_CloudFlareAntiMalware = New-CheckBox 'Malware protection' -Checked
-$CHECKBOX_CloudFlareAntiMalware.Add_Checked( {
-        Set-CheckboxState -Control $CHECKBOX_CloudFlareAntiMalware -Dependant $CHECKBOX_CloudFlareFamilyFriendly
-    } )
-$CHECKBOX_CloudFlareAntiMalware.Add_Unchecked( {
+$CHECKBOX_CloudFlareAntiMalware.Add_Click( {
         Set-CheckboxState -Control $CHECKBOX_CloudFlareAntiMalware -Dependant $CHECKBOX_CloudFlareFamilyFriendly
     } )
 

@@ -44,8 +44,8 @@ BeforeAll {
 
 Describe 'Set-WindowsConfiguration' {
     BeforeEach {
-        Mock Assert-WindowsDebloatIsRunning {}
-        Mock Assert-OOShutUp10IsRunning {}
+        Mock Test-WindowsDebloatIsRunning {}
+        Mock Test-OOShutUp10IsRunning {}
         Mock Write-LogWarning {}
         Mock New-Activity {}
         Mock Write-ActivityProgress {}
@@ -70,8 +70,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxLocalisationChecked `
             $TestCheckboxPersonalisationChecked
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 9
@@ -96,8 +96,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxLocalisationUnchecked `
             $TestCheckboxPersonalisationUnchecked
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 0
@@ -114,7 +114,7 @@ Describe 'Set-WindowsConfiguration' {
     }
 
     It 'Should exit if Windows debloat is running' {
-        Mock Assert-WindowsDebloatIsRunning { return @(@{ ProcessName = 'powershell' }) }
+        Mock Test-WindowsDebloatIsRunning { return @(@{ ProcessName = 'powershell' }) }
 
         Set-WindowsConfiguration $TestCheckboxSecurityChecked `
             $TestCheckboxPerformanceChecked `
@@ -124,8 +124,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxLocalisationChecked `
             $TestCheckboxPersonalisationChecked
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 0
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke New-Activity -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
@@ -142,7 +142,7 @@ Describe 'Set-WindowsConfiguration' {
     }
 
     It 'Should exit if OOShutUp10 is running' {
-        Mock Assert-OOShutUp10IsRunning { return @(@{ ProcessName = 'OOSU10' }) }
+        Mock Test-OOShutUp10IsRunning { return @(@{ ProcessName = 'OOSU10' }) }
 
         Set-WindowsConfiguration $TestCheckboxSecurityChecked `
             $TestCheckboxPerformanceChecked `
@@ -152,8 +152,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxLocalisationChecked `
             $TestCheckboxPersonalisationChecked
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke New-Activity -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
@@ -169,8 +169,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Assert-WindowsDebloatIsRunning failure' {
-        Mock Assert-WindowsDebloatIsRunning { throw $TestException }
+    It 'Should handle Test-WindowsDebloatIsRunning failure' {
+        Mock Test-WindowsDebloatIsRunning { throw $TestException }
 
         { Set-WindowsConfiguration $TestCheckboxSecurityChecked `
                 $TestCheckboxPerformanceUnchecked `
@@ -181,8 +181,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 0
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
@@ -198,8 +198,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Assert-OOShutUp10IsRunning failure' {
-        Mock Assert-OOShutUp10IsRunning { throw $TestException }
+    It 'Should handle Test-OOShutUp10IsRunning failure' {
+        Mock Test-OOShutUp10IsRunning { throw $TestException }
 
         { Set-WindowsConfiguration $TestCheckboxSecurityChecked `
                 $TestCheckboxPerformanceUnchecked `
@@ -210,8 +210,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
         Should -Invoke Write-ActivityProgress -Exactly 0
@@ -239,8 +239,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -268,8 +268,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
@@ -297,8 +297,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -326,8 +326,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 2
@@ -355,8 +355,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -384,8 +384,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -413,8 +413,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -442,8 +442,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationUnchecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1
@@ -471,8 +471,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxPersonalisationChecked
         } | Should -Throw $TestException
 
-        Should -Invoke Assert-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Assert-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 1

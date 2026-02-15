@@ -1,8 +1,9 @@
 function Start-Download {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$URL,
-        [String][Parameter(Position = 1)]$SaveAs,
-        [Switch]$Temp
+        [Parameter(Position = 0, Mandatory)][String]$URL,
+        [Parameter(Position = 1)][String]$SaveAs,
+        [Switch]$Temp,
+        [Switch]$NoBits
     )
 
     Write-ActivityProgress 10 "Downloading from $URL"
@@ -47,28 +48,33 @@ function Start-Download {
                 Start-Sleep -Seconds 2
             }
 
-            $BitsJob = Start-BitsTransfer -Source $URL -Destination $TempPath -Asynchronous -ErrorAction Stop
-
-            while ($BitsJob.JobState -eq 'Transferring' -or $BitsJob.JobState -eq 'Connecting' -or $BitsJob.JobState -eq 'Queued') {
-                if ($BitsJob.BytesTotal -gt 0) {
-                    $DownloadPercent = [Math]::Round(($BitsJob.BytesTransferred / $BitsJob.BytesTotal) * 45 + 10)
-                    Write-ActivityProgress $DownloadPercent
-                }
-                Start-Sleep -Milliseconds 200
-            }
-
-            if ($BitsJob.JobState -eq 'Error') {
-                $ErrorMessage = $BitsJob.ErrorDescription
-                Remove-BitsTransfer $BitsJob -ErrorAction SilentlyContinue
-                throw "BITS transfer error: $ErrorMessage"
-            }
-
-            Complete-BitsTransfer $BitsJob -ErrorAction Stop
-
-            if (-not (Test-Path $TempPath) -or (Get-Item $TempPath).Length -eq 0) {
-                if (Test-Path $TempPath) { Remove-Item $TempPath -Force -ErrorAction SilentlyContinue }
-                Write-LogWarning 'BITS transfer returned empty file, retrying with WebRequest'
+            if ($NoBits) {
                 Invoke-WebRequest -Uri $URL -OutFile $TempPath -UseBasicParsing -ErrorAction Stop
+            } else {
+                $BitsJob = Start-BitsTransfer -Source $URL -Destination $TempPath -Asynchronous -ErrorAction Stop
+
+                while ($BitsJob.JobState -eq 'Transferring' -or $BitsJob.JobState -eq 'Connecting' -or $BitsJob.JobState -eq 'Queued') {
+                    if ($BitsJob.BytesTotal -gt 0) {
+                        $DownloadPercent = [Math]::Round(($BitsJob.BytesTransferred / $BitsJob.BytesTotal) * 45 + 10)
+                        Write-ActivityProgress $DownloadPercent
+                    }
+                    Start-Sleep -Milliseconds 200
+                }
+
+                if ($BitsJob.JobState -eq 'Error') {
+                    $ErrorMessage = $BitsJob.ErrorDescription
+                    Remove-BitsTransfer $BitsJob -ErrorAction SilentlyContinue
+                    if (Test-Path $TempPath) { Remove-Item $TempPath -Force -ErrorAction SilentlyContinue }
+                    throw "BITS transfer error: $ErrorMessage"
+                }
+
+                Complete-BitsTransfer $BitsJob -ErrorAction Stop
+
+                if (-not (Test-Path $TempPath) -or (Get-Item $TempPath).Length -eq 0) {
+                    if (Test-Path $TempPath) { Remove-Item $TempPath -Force -ErrorAction SilentlyContinue }
+                    Write-LogWarning 'BITS transfer returned empty file, retrying with WebRequest'
+                    Invoke-WebRequest -Uri $URL -OutFile $TempPath -UseBasicParsing -ErrorAction Stop
+                }
             }
 
             $DownloadSuccess = $True

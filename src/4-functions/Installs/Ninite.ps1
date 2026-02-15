@@ -5,7 +5,7 @@ function Set-NiniteButtonState {
 
 function Get-NiniteInstaller {
     param(
-        [Object[]][Parameter(Position = 0, Mandatory)]$Checkboxes,
+        [Parameter(Position = 0, Mandatory)][Object[]]$Checkboxes,
         [Switch]$OpenInBrowser,
         [Switch]$Execute
     )
@@ -34,6 +34,6 @@ function Get-NiniteInstaller {
         Set-Variable -Option Constant FileName ([String]"Ninite $($AppNames -Join ' ') Installer.exe")
         Set-Variable -Option Constant DownloadUrl ([String]"{URL_NINITE}/$Query/ninite.exe")
 
-        Start-DownloadUnzipAndRun $DownloadUrl $FileName -Execute:$Execute
+        Start-DownloadUnzipAndRun $DownloadUrl $FileName -Execute:$Execute -NoBits
     }
 }

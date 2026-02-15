@@ -1,7 +1,7 @@
 function New-ButtonBrowser {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Text,
-        [ScriptBlock][Parameter(Position = 1, Mandatory)]$Function
+        [Parameter(Position = 0, Mandatory)][String]$Text,
+        [Parameter(Position = 1, Mandatory)][ScriptBlock]$Function
     )
 
     New-Button $Text $Function

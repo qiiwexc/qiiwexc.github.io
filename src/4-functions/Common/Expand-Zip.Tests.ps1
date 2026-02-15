@@ -257,6 +257,30 @@ Describe 'Expand-Zip' {
         Should -Invoke Out-Success -Exactly 0
     }
 
+    It 'Should throw when Shell.Application returns null NameSpace on Windows 11+' {
+        Mock Test-Path { return $False } -ParameterFilter { $Path -eq $PATH_7ZIP_EXE }
+
+        $MockShell = [PSCustomObject]@{}
+        $MockShell | Add-Member -MemberType ScriptMethod -Name NameSpace -Value { param($p) return $Null }
+
+        Mock New-Object { return $MockShell } -ParameterFilter { $ComObject -eq 'Shell.Application' }
+
+        { Expand-Zip $Test7zFilePath } | Should -Throw 'Unsupported archive format*'
+
+        Should -Invoke Write-ActivityProgress -Exactly 3
+        Should -Invoke Test-Path -Exactly 3
+        Should -Invoke Get-ExecutableName -Exactly 1
+        Should -Invoke Initialize-AppDirectory -Exactly 1
+        Should -Invoke Remove-File -Exactly 1
+        Should -Invoke Remove-Directory -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
+        Should -Invoke Invoke-7Zip -Exactly 0
+        Should -Invoke Expand-Archive -Exactly 0
+        Should -Invoke New-Object -Exactly 1
+        Should -Invoke Move-Item -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+    }
+
     It 'Should return existing file if already downloaded' {
         Set-Variable -Option Constant TestExeFile ([String]"$PATH_WORKING_DIR\$TestExeFileName")
 
@@ -354,7 +378,7 @@ Describe 'Expand-Zip' {
         Should -Invoke Out-Success -Exactly 0
     }
 
-    It 'Should handle Remove-Directory failure' {
+    It 'Should handle New-Directory failure' {
         Mock New-Directory { throw $TestException }
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException

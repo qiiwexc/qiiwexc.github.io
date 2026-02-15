@@ -1,13 +1,14 @@
 function Get-ExecutableName {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$ZipName,
-        [String][Parameter(Position = 1, Mandatory)]$ExtractionDir
+        [Parameter(Position = 0, Mandatory)][String]$ZipName,
+        [Parameter(Position = 1, Mandatory)][String]$ExtractionDir
     )
 
     switch -Wildcard ($ZipName) {
         'Office_Installer.zip' {
+            [String]$Suffix = ''
             if (-not $OS_64_BIT) {
-                Set-Variable -Option Constant Suffix ([String]' x86')
+                $Suffix = ' x86'
             }
             return "Office Installer$Suffix.exe"
         }
@@ -20,8 +21,9 @@ function Get-ExecutableName {
             return "$ExtractionDir\cpuz_x$Suffix.exe"
         }
         'SDI_*' {
+            [String]$Suffix = ''
             if ($OS_64_BIT) {
-                Set-Variable -Option Constant Suffix ([String]'64')
+                $Suffix = '64'
             }
             return "$ExtractionDir\SDI$Suffix-drv.exe"
         }
@@ -32,7 +34,7 @@ function Get-ExecutableName {
             return "$ExtractionDir\$ExtractionDir\Victoria.exe"
         }
         Default {
-            return ($ZipName -replace '\.zip$', '') + '.exe'
+            return ($ZipName -replace '\.[^.]+$', '') + '.exe'
         }
     }
 }

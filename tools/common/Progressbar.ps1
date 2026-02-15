@@ -3,11 +3,11 @@ Set-Variable -Scope Script -Name CURRENT_TASK -Value $Null
 
 function Invoke-WriteProgress {
     param(
-        [Int][Parameter(Position = 0, Mandatory)]$Id,
-        [String][Parameter(Position = 1, Mandatory)]$Activity,
-        [Int][Parameter(Position = 2)]$ParentId,
-        [Int][Parameter(Position = 3)]$PercentComplete,
-        [String][Parameter(Position = 4)]$Status,
+        [Parameter(Position = 0, Mandatory)][Int]$Id,
+        [Parameter(Position = 1, Mandatory)][String]$Activity,
+        [Parameter(Position = 2)][Int]$ParentId,
+        [Parameter(Position = 3)][Int]$PercentComplete,
+        [Parameter(Position = 4)][String]$Status,
         [Switch]$Completed
     )
 
@@ -30,7 +30,7 @@ function Invoke-WriteProgress {
 
 function New-Activity {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Activity
+        [Parameter(Position = 0, Mandatory)][String]$Activity
     )
 
     Write-LogInfo "$Activity..."
@@ -50,8 +50,8 @@ function New-Activity {
 
 function Write-ActivityProgress {
     param(
-        [Int][Parameter(Position = 0, Mandatory)]$PercentComplete,
-        [String][Parameter(Position = 1)]$Task
+        [Parameter(Position = 0, Mandatory)][Int]$PercentComplete,
+        [Parameter(Position = 1)][String]$Task
     )
 
     Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)
@@ -76,7 +76,7 @@ function Write-ActivityProgress {
 
 function Write-ActivityCompleted {
     param(
-        [Bool][Parameter(Position = 0)]$Success = $True
+        [Parameter(Position = 0)][Bool]$Success = $True
     )
 
     Set-Variable -Option Constant TaskLevel ([Int]$ACTIVITIES.Count)

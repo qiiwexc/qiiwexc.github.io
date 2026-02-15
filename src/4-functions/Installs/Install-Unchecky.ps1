@@ -6,6 +6,8 @@ function Install-Unchecky {
 
     Write-LogInfo 'Starting Unchecky installation...'
 
+    [String]$Params = ''
+
     if ($Execute) {
         try {
             Set-Variable -Option Constant RegistryKey ([String]'HKCU:\Software\Unchecky')
@@ -21,7 +23,7 @@ function Install-Unchecky {
         }
 
         if ($Silent) {
-            Set-Variable -Option Constant Params ([String]'-install -no_desktop_icon')
+            $Params = '-install -no_desktop_icon'
         }
     }
 

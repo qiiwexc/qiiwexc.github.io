@@ -1,7 +1,7 @@
 function Update-GitDependency {
     param(
-        [ValidateNotNull()][PSObject][Parameter(Position = 0, Mandatory)]$Dependency,
-        [String][Parameter(Position = 1)]$GitHubToken
+        [Parameter(Position = 0, Mandatory)][ValidateNotNull()][PSObject]$Dependency,
+        [Parameter(Position = 1)][String]$GitHubToken
     )
 
     Set-Variable -Option Constant Mode ([String]$Dependency.mode)

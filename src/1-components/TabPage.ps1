@@ -1,6 +1,6 @@
 function New-TabPage {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Text
+        [Parameter(Position = 0, Mandatory)][String]$Text
     )
 
     Set-Variable -Option Constant TabItem ([Windows.Controls.TabItem](New-Object Windows.Controls.TabItem))

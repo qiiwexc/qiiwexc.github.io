@@ -1,6 +1,6 @@
 function Remove-Directory {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$DirectoryPath,
+        [Parameter(Position = 0, Mandatory)][String]$DirectoryPath,
         [Switch]$Silent
     )
 

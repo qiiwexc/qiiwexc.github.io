@@ -1,12 +1,13 @@
 function Start-DownloadUnzipAndRun {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$URL,
-        [String][Parameter(Position = 1)]$FileName,
-        [String][Parameter(Position = 2)]$Params,
+        [Parameter(Position = 0, Mandatory)][String]$URL,
+        [Parameter(Position = 1)][String]$FileName,
+        [Parameter(Position = 2)][String]$Params,
         [String]$ConfigFile,
         [String]$Configuration,
         [Switch]$Execute,
-        [Switch]$Silent
+        [Switch]$Silent,
+        [Switch]$NoBits
     )
 
     New-Activity 'Download and run'
@@ -14,7 +15,7 @@ function Start-DownloadUnzipAndRun {
     try {
         Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
         Set-Variable -Option Constant IsArchive ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
-        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsArchive)))
+        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Temp:($Execute -or $IsArchive) -NoBits:$NoBits))
     } catch {
         Out-Failure "Download failed: $_"
         Write-ActivityCompleted $False

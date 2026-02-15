@@ -18,5 +18,5 @@ function Exit-App {
 
     Write-LogInfo 'Exiting the app...'
     Reset-State -Update:$Update
-    $FORM.Close()
+    try { $FORM.Close() } catch { $null = $_ }
 }

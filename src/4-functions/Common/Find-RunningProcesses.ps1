@@ -1,7 +1,7 @@
 function Find-RunningProcesses {
     param(
-        [String[]][Parameter(Position = 0, Mandatory)]$ProcessNames
+        [Parameter(Position = 0, Mandatory)][String[]]$ProcessNames
     )
 
-    return Get-Process -ErrorAction Stop | Where-Object { $ProcessNames -contains $_.ProcessName }
+    return Get-Process -Name $ProcessNames -ErrorAction SilentlyContinue
 }

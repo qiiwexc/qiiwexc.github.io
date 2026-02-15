@@ -1,9 +1,9 @@
 function Update-BrowserConfiguration {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$AppName,
-        [String][Parameter(Position = 1, Mandatory)]$ProcessName,
-        [String][Parameter(Position = 2, Mandatory)]$Content,
-        [String][Parameter(Position = 3, Mandatory)]$Path
+        [Parameter(Position = 0, Mandatory)][String]$AppName,
+        [Parameter(Position = 1, Mandatory)][String]$ProcessName,
+        [Parameter(Position = 2, Mandatory)][String]$Content,
+        [Parameter(Position = 3, Mandatory)][String]$Path
     )
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)

@@ -1,6 +1,6 @@
 function Read-JsonFile {
     param(
-        [ValidateNotNullOrEmpty()][String][Parameter(Position = 0, Mandatory)]$Path
+        [Parameter(Position = 0, Mandatory)][ValidateNotNullOrEmpty()][String]$Path
     )
 
     return Read-TextFile $Path | ConvertFrom-Json

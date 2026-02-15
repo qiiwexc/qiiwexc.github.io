@@ -1,6 +1,6 @@
 function Update-WebDependency {
     param(
-        [ValidateNotNull()][PSObject][Parameter(Position = 0, Mandatory)]$Dependency
+        [Parameter(Position = 0, Mandatory)][ValidateNotNull()][PSObject]$Dependency
     )
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
@@ -12,8 +12,9 @@ function Update-WebDependency {
     try {
         Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest $Uri -UseBasicParsing))
     } catch {
-        [String]$Message = if ($_.Exception.Response) {
-            "HTTP $([Int]$_.Exception.Response.StatusCode) $($_.Exception.Response.StatusCode)"
+        $ExceptionResponse = try { $_.Exception.Response } catch { $null }
+        [String]$Message = if ($ExceptionResponse) {
+            "HTTP $([Int]$ExceptionResponse.StatusCode) $($ExceptionResponse.StatusCode)"
         } else {
             $_.Exception.Message
         }
@@ -21,12 +22,13 @@ function Update-WebDependency {
         return
     }
 
-    if (-not $Response.Content) {
+    $ResponseContent = try { $Response.Content } catch { $null }
+    if (-not $ResponseContent) {
         Out-Failure "No data fetched from URL '$Uri'" $LogIndentLevel
         return
     }
 
-    Set-Variable -Option Constant Matches ([regex]::Matches($Response.Content, $Dependency.regex, @('IgnoreCase', 'Multiline')))
+    Set-Variable -Option Constant Matches ([regex]::Matches($ResponseContent, $Dependency.regex, @('IgnoreCase', 'Multiline')))
 
     if ($Matches.Count -eq 0) {
         Out-Failure "Failed to find version number from URL '$Uri'" $LogIndentLevel

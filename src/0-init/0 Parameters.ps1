@@ -1,6 +1,6 @@
 #Requires -Version 5
 
 param(
-    [String][Parameter(Position = 0)]$WorkingDirectory,
+    [Parameter(Position = 0)][String]$WorkingDirectory,
     [Switch]$DevMode
 )

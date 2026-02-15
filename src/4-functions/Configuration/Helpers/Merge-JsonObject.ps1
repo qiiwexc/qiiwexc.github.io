@@ -8,15 +8,17 @@ function Merge-JsonObject {
         $Merged = [Ordered]@{}
 
         foreach ($Property in $Source.PSObject.Properties) {
-            if ($Null -eq $Extend.$($Property.Name)) {
+            $ExtendProp = $Extend.PSObject.Properties[$Property.Name]
+            if (-not $ExtendProp -or $Null -eq $ExtendProp.Value) {
                 $Merged[$Property.Name] = $Property.Value
             } else {
-                $Merged[$Property.Name] = Merge-JsonObject $Property.Value $Extend.$($Property.Name)
+                $Merged[$Property.Name] = Merge-JsonObject $Property.Value $ExtendProp.Value
             }
         }
 
         foreach ($Property in $Extend.PSObject.Properties) {
-            if ($Null -eq $Source.$($Property.Name)) {
+            $SourceProp = $Source.PSObject.Properties[$Property.Name]
+            if (-not $SourceProp -or $Null -eq $SourceProp.Value) {
                 $Merged[$Property.Name] = $Property.Value
             }
         }

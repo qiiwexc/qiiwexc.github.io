@@ -1,8 +1,8 @@
 function New-HtmlFile {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$TemplatesPath,
-        [String][Parameter(Position = 1, Mandatory)]$BuildPath,
-        [PSCustomObject][Parameter(Position = 2, Mandatory)]$Config
+        [Parameter(Position = 0, Mandatory)][String]$TemplatesPath,
+        [Parameter(Position = 1, Mandatory)][String]$BuildPath,
+        [Parameter(Position = 2, Mandatory)][PSCustomObject]$Config
     )
 
     New-Activity 'Building web page'

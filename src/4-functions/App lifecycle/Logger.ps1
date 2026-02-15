@@ -1,7 +1,7 @@
 function Write-LogDebug {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Message,
-        [Int][Parameter(Position = 1)]$Level = 0
+        [Parameter(Position = 0, Mandatory)][String]$Message,
+        [Parameter(Position = 1)][Int]$Level = 0
     )
 
     Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::DEBUG) $Message -IndentLevel $Level))
@@ -10,8 +10,8 @@ function Write-LogDebug {
 
 function Write-LogInfo {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Message,
-        [Int][Parameter(Position = 1)]$Level = 0
+        [Parameter(Position = 0, Mandatory)][String]$Message,
+        [Parameter(Position = 1)][Int]$Level = 0
     )
 
     Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::INFO) $Message -IndentLevel $Level))
@@ -21,8 +21,8 @@ function Write-LogInfo {
 
 function Write-LogWarning {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Message,
-        [Int][Parameter(Position = 1)]$Level = 0
+        [Parameter(Position = 0, Mandatory)][String]$Message,
+        [Parameter(Position = 1)][Int]$Level = 0
     )
 
     Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::WARN) $Message -IndentLevel $Level))
@@ -32,8 +32,8 @@ function Write-LogWarning {
 
 function Write-LogError {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Message,
-        [Int][Parameter(Position = 1)]$Level = 0
+        [Parameter(Position = 0, Mandatory)][String]$Message,
+        [Parameter(Position = 1)][Int]$Level = 0
     )
 
     Set-Variable -Option Constant FormattedMessage ([String](Format-Message ([LogLevel]::ERROR) $Message -IndentLevel $Level))
@@ -43,8 +43,8 @@ function Write-LogError {
 
 function Out-Status {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Status,
-        [Int][Parameter(Position = 1)]$Level = 0
+        [Parameter(Position = 0, Mandatory)][String]$Status,
+        [Parameter(Position = 1)][Int]$Level = 0
     )
 
     Write-LogInfo " > $Status" $Level
@@ -53,25 +53,25 @@ function Out-Status {
 
 function Out-Success {
     param(
-        [Int][Parameter(Position = 0)]$Level = 0
+        [Parameter(Position = 0)][Int]$Level = 0
     )
 
-    Out-Status "Done $(Get-Emoji '2705')" $Level
+    Out-Status "Done $(ConvertTo-Emoji '2705')" $Level
 }
 
 function Out-Failure {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Message,
-        [Int][Parameter(Position = 1)]$Level = 0
+        [Parameter(Position = 0, Mandatory)][String]$Message,
+        [Parameter(Position = 1)][Int]$Level = 0
     )
 
-    Out-Status "$(Get-Emoji '274C') $Message" $Level
+    Out-Status "$(ConvertTo-Emoji '274C') $Message" $Level
 }
 
 
-function Get-Emoji {
+function ConvertTo-Emoji {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$Code
+        [Parameter(Position = 0, Mandatory)][String]$Code
     )
 
     Set-Variable -Option Constant Emoji ([Convert]::ToInt32($Code, 16))
@@ -82,19 +82,20 @@ function Get-Emoji {
 
 function Format-Message {
     param(
-        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
-        [String][Parameter(Position = 1, Mandatory)]$Message,
-        [Int][Parameter(Position = 2)]$IndentLevel = 0
+        [Parameter(Position = 0, Mandatory)][LogLevel]$Level,
+        [Parameter(Position = 1, Mandatory)][String]$Message,
+        [Parameter(Position = 2)][Int]$IndentLevel = 0
     )
+
+    [String]$Emoji = ''
 
     switch ($Level) {
         ([LogLevel]::WARN) {
-            Set-Variable -Option Constant Emoji (Get-Emoji '26A0')
+            $Emoji = ConvertTo-Emoji '26A0'
         }
         ([LogLevel]::ERROR) {
-            Set-Variable -Option Constant Emoji (Get-Emoji '274C')
+            $Emoji = ConvertTo-Emoji '274C'
         }
-        Default {}
     }
 
     if (-not $ACTIVITIES -or $ACTIVITIES.Count -le 0) {
@@ -113,8 +114,8 @@ function Format-Message {
 function Write-FormLog {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
     param(
-        [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
-        [String][Parameter(Position = 1, Mandatory)]$Message,
+        [Parameter(Position = 0, Mandatory)][LogLevel]$Level,
+        [Parameter(Position = 1, Mandatory)][String]$Message,
         [Switch]$NoNewLine
     )
 
@@ -143,10 +144,5 @@ function Write-FormLog {
             $LOG_BOX.ScrollToEnd()
         })
 
-    if ($FORM.Dispatcher.CheckAccess()) {
-        $LogAction.Invoke()
-        [void]$FORM.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Render, [Action] {})
-    } else {
-        [void]$FORM.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Render, $LogAction)
-    }
+    Invoke-OnDispatcher $LogAction -FlushRender
 }

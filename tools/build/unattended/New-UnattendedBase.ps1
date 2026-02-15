@@ -1,7 +1,7 @@
 function New-UnattendedBase {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$TemplatesPath,
-        [String][Parameter(Position = 1, Mandatory)]$BaseFile
+        [Parameter(Position = 0, Mandatory)][String]$TemplatesPath,
+        [Parameter(Position = 1, Mandatory)][String]$BaseFile
     )
 
     Set-Variable -Option Constant TemplateFile ([String]"$TemplatesPath\autounattend.xml")
@@ -25,7 +25,7 @@ function New-UnattendedBase {
     </File>'
     )
 
-    Set-Variable -Option Constant StringReplacementMap ([Hashtable]@{
+    Set-Variable -Option Constant StringReplacementMap ([ordered]@{
             "`t"                                                       = '  '
             '</ExtractScript>'                                         = $ConfigFiles
             'C:\Windows\Setup\Scripts\'                                = 'C:\Windows\Setup\'
@@ -33,7 +33,7 @@ function New-UnattendedBase {
         }
     )
 
-    Set-Variable -Option Constant RegexReplacementMap ([Hashtable]@{
+    Set-Variable -Option Constant RegexReplacementMap ([ordered]@{
             'RemovePackages\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);' = "RemovePackages.ps1`">`n`$selectors = @({APP_REMOVAL_LIST});"
         }
     )

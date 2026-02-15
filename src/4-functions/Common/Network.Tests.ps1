@@ -39,6 +39,7 @@ Describe 'Get-NetworkAdapter' {
 Describe 'Test-NetworkConnection' {
     BeforeEach {
         Mock Get-NetworkAdapter { return $TestNetworkAdapter }
+        Mock Test-Connection { return $True }
         Mock Out-Failure {}
     }
 
@@ -46,6 +47,12 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeTrue
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Test-Connection -Exactly 1
+        Should -Invoke Test-Connection -Exactly 1 -ParameterFilter {
+            $ComputerName -eq '1.1.1.1' -and
+            $Count -eq 1 -and
+            $Quiet -eq $True
+        }
         Should -Invoke Out-Failure -Exactly 0
     }
 
@@ -55,6 +62,17 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Test-Connection -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1
+    }
+
+    It 'Should return false when no Internet connectivity' {
+        Mock Test-Connection { throw 'No response' }
+
+        Test-NetworkConnection | Should -BeFalse
+
+        Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Test-Connection -Exactly 1
         Should -Invoke Out-Failure -Exactly 1
     }
 
@@ -64,6 +82,7 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Test-Connection -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 
@@ -73,6 +92,7 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Test-Connection -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 
@@ -82,6 +102,7 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Test-Connection -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 }

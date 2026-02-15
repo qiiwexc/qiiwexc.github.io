@@ -50,7 +50,7 @@ Describe 'Find-RunningProcesses' {
     }
 
     It 'Should not find any from multiple non-running processes' {
-        Mock Get-Process { return @(@{ ProcessName = 'OTHER_PROCESS' }) }
+        Mock Get-Process { return $null }
 
         Find-RunningProcesses @($TestProcessName, $TestProcessName2) | Should -BeNullOrEmpty
 

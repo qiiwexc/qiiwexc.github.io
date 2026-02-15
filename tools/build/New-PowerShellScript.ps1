@@ -1,8 +1,8 @@
 function New-PowerShellScript {
     param(
-        [String][Parameter(Position = 0, Mandatory)]$SourcePath,
-        [String][Parameter(Position = 1, Mandatory)]$Ps1File,
-        [PSCustomObject][Parameter(Position = 2, Mandatory)]$Config
+        [Parameter(Position = 0, Mandatory)][String]$SourcePath,
+        [Parameter(Position = 1, Mandatory)][String]$Ps1File,
+        [Parameter(Position = 2, Mandatory)][PSCustomObject]$Config
     )
 
     New-Activity 'Building PowerShell script'

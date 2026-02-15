@@ -9,7 +9,7 @@ function Get-SystemTheme {
 
 function Set-ThemeResources {
     param(
-        [Windows.Window][Parameter(Position = 0, Mandatory)]$Window
+        [Parameter(Position = 0, Mandatory)][Windows.Window]$Window
     )
 
     Set-Variable -Option Constant IsLight ([Bool](Get-SystemTheme))
