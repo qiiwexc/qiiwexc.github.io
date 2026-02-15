@@ -12,7 +12,12 @@ function Update-WebDependency {
     try {
         Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest $Uri -UseBasicParsing))
     } catch {
-        Out-Failure "Failed to fetch URL '$Uri': $_" $LogIndentLevel
+        [String]$Message = if ($_.Exception.Response) {
+            "HTTP $([Int]$_.Exception.Response.StatusCode) $($_.Exception.Response.StatusCode)"
+        } else {
+            $_.Exception.Message
+        }
+        Out-Failure "Failed to fetch URL '$Uri': $Message" $LogIndentLevel
         return
     }
 

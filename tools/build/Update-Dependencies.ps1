@@ -80,8 +80,10 @@ function Update-Dependencies {
 
     Write-ActivityProgress 95
 
-    Write-LogInfo "Saving updated dependencies to $DependenciesFile"
-    Write-JsonFile $DependenciesFile $Dependencies
+    if ($UrlsToOpen.Count -gt 0) {
+        Write-LogInfo "Saving updated dependencies to $DependenciesFile"
+        Write-JsonFile $DependenciesFile $Dependencies
+    }
 
     Write-ActivityCompleted
 
