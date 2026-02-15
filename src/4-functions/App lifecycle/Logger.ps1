@@ -111,6 +111,7 @@ function Format-Message {
 
 
 function Write-FormLog {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
     param(
         [LogLevel][Parameter(Position = 0, Mandatory)]$Level,
         [String][Parameter(Position = 1, Mandatory)]$Message,

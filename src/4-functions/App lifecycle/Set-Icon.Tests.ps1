@@ -6,6 +6,7 @@ BeforeAll {
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
     Add-Type -AssemblyName WindowsBase
+    Add-Type -AssemblyName System.Drawing
 
     Set-Variable -Option Constant DefaultIcon ([Drawing.SystemIcons]::Application)
     Set-Variable -Option Constant WorkingIcon ([Drawing.SystemIcons]::Information)

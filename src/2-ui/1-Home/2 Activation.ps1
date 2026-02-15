@@ -4,7 +4,7 @@ New-Card 'Activation'
 [ScriptBlock]$BUTTON_FUNCTION = {
     $ActivateWindows = $CHECKBOX_ActivateWindows.IsChecked
     $ActivateOffice = $CHECKBOX_ActivateOffice.IsChecked
-    Start-AsyncOperation -Sender $this { Start-Activator -ActivateWindows:$ActivateWindows -ActivateOffice:$ActivateOffice } -Variables @{
+    Start-AsyncOperation -Button $this { Start-Activator -ActivateWindows:$ActivateWindows -ActivateOffice:$ActivateOffice } -Variables @{
         ActivateWindows = $ActivateWindows
         ActivateOffice  = $ActivateOffice
     }
