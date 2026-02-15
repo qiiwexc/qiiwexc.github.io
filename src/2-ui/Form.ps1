@@ -353,7 +353,7 @@ $FORM.FindName('MinimizeButton').Add_Click( { $FORM.WindowState = 'Minimized' } 
 $FORM.FindName('CloseButton').Add_Click( { $FORM.Close() } )
 
 $TitleBar.Add_MouseLeftButtonDown( {
-        try { $FORM.DragMove() } catch {}
+        try { $FORM.DragMove() } catch { $null = $_ }
     } )
 
 $FORM.Add_ContentRendered( { Initialize-App } )

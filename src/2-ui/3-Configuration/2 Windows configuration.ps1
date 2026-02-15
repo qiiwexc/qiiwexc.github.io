@@ -27,7 +27,7 @@ Set-Variable -Option Constant WindowsConfigurationParameters (
     foreach ($Entry in $WindowsConfigurationParameters.GetEnumerator()) {
         $CapturedWindowsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $Entry.Value.IsChecked }
     }
-    Start-AsyncOperation -Sender $this { Set-WindowsConfiguration @CapturedWindowsConfig } -Variables @{
+    Start-AsyncOperation -Button $this { Set-WindowsConfiguration @CapturedWindowsConfig } -Variables @{
         CapturedWindowsConfig = $CapturedWindowsConfig
     }
 }

@@ -5,7 +5,7 @@ New-Card 'Debloat Windows'
     $UsePreset = $CHECKBOX_UseDebloatPreset.IsChecked
     $Personalisation = $CHECKBOX_DebloatAndPersonalise.IsChecked
     $Silent = $CHECKBOX_SilentlyRunDebloat.IsChecked
-    Start-AsyncOperation -Sender $this { Start-WindowsDebloat -UsePreset:$UsePreset -Personalisation:$Personalisation -Silent:$Silent } -Variables @{
+    Start-AsyncOperation -Button $this { Start-WindowsDebloat -UsePreset:$UsePreset -Personalisation:$Personalisation -Silent:$Silent } -Variables @{
         UsePreset       = $UsePreset
         Personalisation = $Personalisation
         Silent          = $Silent
@@ -31,7 +31,7 @@ $CHECKBOX_UseDebloatPreset.Add_Unchecked( {
 [ScriptBlock]$BUTTON_FUNCTION = {
     $Execute = $CHECKBOX_StartOoShutUp10.IsChecked
     $Silent = $CHECKBOX_StartOoShutUp10.IsChecked -and $CHECKBOX_SilentlyRunOoShutUp10.IsChecked
-    Start-AsyncOperation -Sender $this { Start-OoShutUp10 -Execute:$Execute -Silent:$Silent } -Variables @{
+    Start-AsyncOperation -Button $this { Start-OoShutUp10 -Execute:$Execute -Silent:$Silent } -Variables @{
         Execute = $Execute
         Silent  = $Silent
     }
@@ -49,5 +49,5 @@ $CHECKBOX_StartOoShutUp10.Add_Unchecked( {
 [Windows.Controls.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-AsyncOperation -Sender $this { Start-WinUtil } }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-AsyncOperation -Button $this { Start-WinUtil } }
 New-Button 'WinUtil' $BUTTON_FUNCTION

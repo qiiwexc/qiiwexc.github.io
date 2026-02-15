@@ -25,7 +25,7 @@ Set-Variable -Option Constant AppsConfigurationParameters (
     foreach ($Entry in $AppsConfigurationParameters.GetEnumerator()) {
         $CapturedAppsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $Entry.Value.IsChecked; Tag = [String]$Entry.Value.Tag }
     }
-    Start-AsyncOperation -Sender $this { Set-AppsConfiguration @CapturedAppsConfig } -Variables @{
+    Start-AsyncOperation -Button $this { Set-AppsConfiguration @CapturedAppsConfig } -Variables @{
         CapturedAppsConfig = $CapturedAppsConfig
     }
 }

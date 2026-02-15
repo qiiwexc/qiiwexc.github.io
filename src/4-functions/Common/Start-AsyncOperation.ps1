@@ -9,12 +9,12 @@ Set-Variable -Scope Script -Name ASYNC_TIMER -Value $Null
 function Start-AsyncOperation {
     param(
         [ScriptBlock][Parameter(Position = 0, Mandatory)]$Operation,
-        [Object]$Sender,
+        [Object]$Button,
         [Hashtable]$Variables = @{}
     )
 
     if ($script:ASYNC_OPERATION_RUNNING) {
-        if ($Sender -eq $script:ASYNC_BUTTON) {
+        if ($Button -eq $script:ASYNC_BUTTON) {
             Stop-AsyncOperation
         } else {
             Write-LogWarning 'An operation is already in progress'
@@ -23,13 +23,13 @@ function Start-AsyncOperation {
     }
 
     $script:ASYNC_OPERATION_RUNNING = $True
-    $script:ASYNC_BUTTON = $Sender
-    $script:ASYNC_ORIGINAL_CONTENT = $Sender.Content
+    $script:ASYNC_BUTTON = $Button
+    $script:ASYNC_ORIGINAL_CONTENT = $Button.Content
 
-    $Sender.Content = "$(Get-Emoji '274C') Cancel"
-    $Sender.Resources['AccentColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(196, 43, 28))
-    $Sender.Resources['AccentHoverColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(218, 59, 43))
-    $Sender.Resources['AccentPressedColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(172, 38, 24))
+    $Button.Content = "$(Get-Emoji '274C') Cancel"
+    $Button.Resources['AccentColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(196, 43, 28))
+    $Button.Resources['AccentHoverColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(218, 59, 43))
+    $Button.Resources['AccentPressedColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(172, 38, 24))
 
     Set-Icon ([IconName]::Working)
 
@@ -58,20 +58,20 @@ function Start-AsyncOperation {
             'PATH_7ZIP_EXE', 'PATH_OFFICE_C2R_CLIENT_EXE', 'PATH_OOSHUTUP10')) {
         try {
             $script:ASYNC_RUNSPACE.SessionStateProxy.SetVariable($PathVar, (Get-Variable $PathVar -ValueOnly -ErrorAction SilentlyContinue))
-        } catch {}
+        } catch { $null = $_ }
     }
 
     foreach ($SysVar in @('OS_VERSION', 'OS_64_BIT', 'OPERATING_SYSTEM', 'IS_LAPTOP', 'SYSTEM_LANGUAGE',
             'ICON_DEFAULT', 'ICON_WORKING', 'VERSION')) {
         try {
             $script:ASYNC_RUNSPACE.SessionStateProxy.SetVariable($SysVar, (Get-Variable $SysVar -ValueOnly -ErrorAction SilentlyContinue))
-        } catch {}
+        } catch { $null = $_ }
     }
 
     Get-Variable -Name 'CONFIG_*' -Scope Script -ErrorAction SilentlyContinue | ForEach-Object {
         try {
             $script:ASYNC_RUNSPACE.SessionStateProxy.SetVariable($_.Name, $_.Value)
-        } catch {}
+        } catch { $null = $_ }
     }
 
     foreach ($Entry in $Variables.GetEnumerator()) {
@@ -113,7 +113,7 @@ function Start-AsyncOperation {
                     Invoke-WriteProgress -Id 1 -Activity 'Cancelled' -Completed
                 }
 
-                try { $script:ASYNC_PS.EndInvoke($script:ASYNC_HANDLE) } catch {}
+                try { $script:ASYNC_PS.EndInvoke($script:ASYNC_HANDLE) } catch { $null = $_ }
 
                 $script:ASYNC_PS.Dispose()
                 $script:ASYNC_RUNSPACE.Dispose()

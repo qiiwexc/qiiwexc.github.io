@@ -14,7 +14,7 @@ New-Card 'Ninite'
     $CapturedCheckboxes = $NINITE_CHECKBOXES | ForEach-Object { [PSCustomObject]@{ IsChecked = $_.IsChecked; Tag = [String]$_.Tag; Content = [String]$_.Content } }
     $Execute = $CHECKBOX_StartNinite.IsChecked
     $OpenInBrowser = -not $CHECKBOX_StartNinite.IsEnabled
-    Start-AsyncOperation -Sender $this { Get-NiniteInstaller $CapturedCheckboxes -OpenInBrowser:$OpenInBrowser -Execute:$Execute } -Variables @{
+    Start-AsyncOperation -Button $this { Get-NiniteInstaller $CapturedCheckboxes -OpenInBrowser:$OpenInBrowser -Execute:$Execute } -Variables @{
         CapturedCheckboxes = $CapturedCheckboxes
         Execute            = $Execute
         OpenInBrowser      = $OpenInBrowser

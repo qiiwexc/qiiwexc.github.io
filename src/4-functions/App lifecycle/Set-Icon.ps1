@@ -1,4 +1,5 @@
 function Set-Icon {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
     param(
         [IconName][Parameter(Position = 0)]$Name
     )

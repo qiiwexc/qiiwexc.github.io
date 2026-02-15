@@ -3,7 +3,7 @@ New-Card 'Essentials'
 
 [ScriptBlock]$BUTTON_FUNCTION = {
     $Execute = $CHECKBOX_StartSDI.IsChecked
-    Start-AsyncOperation -Sender $this { Start-SnappyDriverInstaller -Execute:$Execute } -Variables @{
+    Start-AsyncOperation -Button $this { Start-SnappyDriverInstaller -Execute:$Execute } -Variables @{
         Execute = $Execute
     }
 }
@@ -14,7 +14,7 @@ New-Button 'Snappy Driver Installer' $BUTTON_FUNCTION
 
 [ScriptBlock]$BUTTON_FUNCTION = {
     $Execute = $CHECKBOX_StartOfficeInstaller.IsChecked
-    Start-AsyncOperation -Sender $this { Install-MicrosoftOffice -Execute:$Execute } -Variables @{
+    Start-AsyncOperation -Button $this { Install-MicrosoftOffice -Execute:$Execute } -Variables @{
         Execute = $Execute
     }
 }
@@ -26,7 +26,7 @@ New-Button 'Office Installer' $BUTTON_FUNCTION
 [ScriptBlock]$BUTTON_FUNCTION = {
     $Execute = $CHECKBOX_StartUnchecky.IsChecked
     $Silent = $CHECKBOX_SilentlyInstallUnchecky.IsChecked
-    Start-AsyncOperation -Sender $this { Install-Unchecky -Execute:$Execute -Silent:$Silent } -Variables @{
+    Start-AsyncOperation -Button $this { Install-Unchecky -Execute:$Execute -Silent:$Silent } -Variables @{
         Execute = $Execute
         Silent  = $Silent
     }

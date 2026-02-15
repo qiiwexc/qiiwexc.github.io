@@ -23,7 +23,7 @@ Describe 'Start-AsyncOperation' {
         $script:ASYNC_OPERATION_RUNNING = $True
         $script:ASYNC_BUTTON = 'BUTTON_A'
 
-        Start-AsyncOperation { } -Sender 'BUTTON_A'
+        Start-AsyncOperation { } -Button 'BUTTON_A'
 
         Should -Invoke Stop-AsyncOperation -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -33,7 +33,7 @@ Describe 'Start-AsyncOperation' {
         $script:ASYNC_OPERATION_RUNNING = $True
         $script:ASYNC_BUTTON = 'BUTTON_A'
 
-        Start-AsyncOperation { } -Sender 'BUTTON_B'
+        Start-AsyncOperation { } -Button 'BUTTON_B'
 
         Should -Invoke Stop-AsyncOperation -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
