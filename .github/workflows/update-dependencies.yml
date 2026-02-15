@@ -13,6 +13,7 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
@@ -34,7 +35,7 @@ jobs:
               Write-Host "::warning::Build script error: $_"
           }
 
-          git diff --quiet resources/dependencies.json
+          git diff --quiet --ignore-cr-at-eol resources/dependencies.json
 
           if ($LASTEXITCODE -ne 0) {
               . .\tools\common\types.ps1
@@ -71,30 +72,23 @@ jobs:
               }
           }
 
-      - name: Commit, tag and push
+      - name: Create pull request
         if: steps.update.outputs.has_updates == 'true'
         shell: pwsh
         env:
-          HAS_RELEASE_UPDATE: ${{ steps.update.outputs.has_release_update }}
+          GH_TOKEN: ${{ github.token }}
         run: |
+          $branch = 'update-dependencies'
+
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
+          git checkout -b $branch
           git add resources/dependencies.json
           git commit -m 'Update dependencies'
+          git push origin $branch --force
 
-          if ($env:HAS_RELEASE_UPDATE -eq 'True') {
-              $version = Get-Date -Format 'y.M.d'
-              $tag = "v$version"
-
-              $existingTag = git tag -l $tag
-              if ($existingTag) {
-                  Write-Host "::warning::Tag $tag already exists, skipping tag creation"
-              } else {
-                  git tag -a $tag -m "Release $tag"
-              }
-          } else {
-              Write-Host "::notice::No release-worthy dependency updated, skipping tag creation"
+          $existingPr = gh pr list --head $branch --json number --jq '.[0].number'
+          if (-not $existingPr) {
+              gh pr create --title 'Update dependencies' --body '' --reviewer '${{ github.repository_owner }}'
           }
-
-          git push origin master --tags
