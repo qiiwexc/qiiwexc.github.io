@@ -7,6 +7,7 @@ BeforeAll {
     . '.\src\4-functions\Common\Expand-Zip.ps1'
     . '.\src\4-functions\Common\Start-Download.ps1'
     . '.\src\4-functions\Common\Start-Executable.ps1'
+    . '.\src\4-functions\Common\Test-AntivirusEnabled.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -266,5 +267,56 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1 -ParameterFilter { $Success -eq $False }
+    }
+
+    Context 'AVWarning' {
+        BeforeEach {
+            $script:AV_WARNINGS_SHOWN = [Collections.Generic.HashSet[String]]::new()
+        }
+
+        It 'Should show AV warning and skip download on first call when antivirus is enabled' {
+            Mock Test-AntivirusEnabled { return $True }
+            Mock Write-LogWarning {}
+
+            Start-DownloadUnzipAndRun $TestUrl -AVWarning | Should -BeNullOrEmpty
+
+            Should -Invoke Test-AntivirusEnabled -Exactly 1
+            Should -Invoke Write-LogWarning -Exactly 1
+            Should -Invoke Start-Download -Exactly 0
+            Should -Invoke Write-ActivityCompleted -Exactly 1
+            Should -Invoke Write-ActivityCompleted -Exactly 1 -ParameterFilter { $Success -eq $Null }
+        }
+
+        It 'Should proceed with download on second call for the same URL' {
+            Mock Test-AntivirusEnabled { return $True }
+            Mock Write-LogWarning {}
+
+            Start-DownloadUnzipAndRun $TestUrl -AVWarning | Should -BeNullOrEmpty
+            Start-DownloadUnzipAndRun $TestUrl -AVWarning | Should -BeNullOrEmpty
+
+            Should -Invoke Test-AntivirusEnabled -Exactly 2
+            Should -Invoke Write-LogWarning -Exactly 1
+            Should -Invoke Start-Download -Exactly 1
+        }
+
+        It 'Should not show AV warning when antivirus is disabled' {
+            Mock Test-AntivirusEnabled { return $False }
+            Mock Write-LogWarning {}
+
+            Start-DownloadUnzipAndRun $TestUrl -AVWarning | Should -BeNullOrEmpty
+
+            Should -Invoke Test-AntivirusEnabled -Exactly 1
+            Should -Invoke Write-LogWarning -Exactly 0
+            Should -Invoke Start-Download -Exactly 1
+        }
+
+        It 'Should not check antivirus when AVWarning is not set' {
+            Mock Test-AntivirusEnabled {}
+
+            Start-DownloadUnzipAndRun $TestUrl | Should -BeNullOrEmpty
+
+            Should -Invoke Test-AntivirusEnabled -Exactly 0
+            Should -Invoke Start-Download -Exactly 1
+        }
     }
 }

@@ -33,5 +33,5 @@ function Install-MicrosoftOffice {
         }
     }
 
-    Start-DownloadUnzipAndRun '{URL_OFFICE_INSTALLER}' -Execute:$Execute
+    Start-DownloadUnzipAndRun '{URL_OFFICE_INSTALLER}' -Execute:$Execute -AVWarning
 }

@@ -68,7 +68,7 @@ function Start-AsyncOperation {
     }
 
     foreach ($SysVar in @('OS_VERSION', 'OS_64_BIT', 'OPERATING_SYSTEM', 'IS_LAPTOP', 'SYSTEM_LANGUAGE',
-            'ICON_DEFAULT', 'ICON_WORKING', 'VERSION')) {
+            'ICON_DEFAULT', 'ICON_WORKING', 'VERSION', 'AV_WARNINGS_SHOWN')) {
         try {
             $script:ASYNC.Runspace.SessionStateProxy.SetVariable($SysVar, (Get-Variable $SysVar -ValueOnly -ErrorAction SilentlyContinue))
         } catch { $null = $_ }
@@ -121,8 +121,10 @@ function Start-AsyncOperation {
                     Write-LogError "Operation failed: $($script:ASYNC.PS.InvocationStateInfo.Reason.Message)"
                 }
 
-                try { $script:ASYNC.PS.EndInvoke($script:ASYNC.Handle) } catch {
-                    Write-LogError "Async operation error: $($_.Exception.Message)"
+                if ($script:ASYNC.PS.InvocationStateInfo.State -ne 'Stopped') {
+                    try { $script:ASYNC.PS.EndInvoke($script:ASYNC.Handle) } catch {
+                        Write-LogError "Async operation error: $($_.Exception.Message)"
+                    }
                 }
 
                 $script:ASYNC.PS.Dispose()
