@@ -146,7 +146,7 @@ if ($Lint) {
         try {
             Invoke-ScriptAnalyzer -Path $Ps1File -Settings .\PSScriptAnalyzerSettings.psd1 -ErrorAction Stop
             break
-        } catch [System.IO.IOException] {
+        } catch {
             if ($i -eq $MaxRetries) {
                 throw
             }
