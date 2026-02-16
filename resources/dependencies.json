@@ -67,7 +67,7 @@
         "name":  "Windows",
         "version":  "13 ноября 2025\u0026#8239;г. в 07:02",
         "source":  "URL",
-        "url":  "https://w17.monkrus.ws/search/label/Windows",
+        "url":  "https://w18.monkrus.ws/search/label/Windows",
         "regex":  "^\u003cdiv class=\u0027post-header\u0027[^\u003e]*\u003e\n\u003cdiv class=\u0027post-header-line-1\u0027[^\u003e]*\u003e\u003c/div\u003e\nОпубликовал\n\u003cb style=\u0027color: #999;\u0027[^\u003e]*\u003em0nkrus\u003c/b\u003e\n(.*?)\n\u003c/div\u003e"
     },
     {
