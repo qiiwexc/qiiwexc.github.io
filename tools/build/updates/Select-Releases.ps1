@@ -21,18 +21,12 @@ function Select-Releases {
         if ($LatestVersion -ne '' -and $LatestVersion -ne $CurrentVersion) {
             Set-NewVersion $Dependency $LatestVersion
 
-            if ($LatestVersion.StartsWith('v')) {
-                Set-Variable -Option Constant Prefix ([String]'v')
-            }
-
             Set-Variable -Option Constant AllVersions ([String[]]($FilteredReleases | ForEach-Object { $_.tag_name }))
-            Set-Variable -Option Constant NormalizedVersions ([String[]]($AllVersions | ForEach-Object { $_.TrimStart('v') }))
-            Set-Variable -Option Constant SortedVersions ([String[]]($NormalizedVersions | Sort-Object { [Version]$_ } -Descending))
-            Set-Variable -Option Constant FullVersions ([String[]]($SortedVersions | ForEach-Object { "$Prefix$($_)" }))
-            Set-Variable -Option Constant NewVersionCount ([Int]$FullVersions.IndexOf($CurrentVersion))
+            Set-Variable -Option Constant SortedVersions ([String[]]($AllVersions | Sort-Object { [Version]($_ -replace '^v' -replace '-.*$') } -Descending))
+            Set-Variable -Option Constant NewVersionCount ([Int]$SortedVersions.IndexOf($CurrentVersion))
 
             if ($NewVersionCount -gt 0) {
-                Set-Variable -Option Constant NewVersions ([String[]]$FullVersions[0..($NewVersionCount - 1)])
+                Set-Variable -Option Constant NewVersions ([String[]]$SortedVersions[0..($NewVersionCount - 1)])
 
                 [Collections.Generic.List[String]]$Urls = @()
 
