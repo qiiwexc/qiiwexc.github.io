@@ -1,3 +1,5 @@
+Set-Variable -Scope Script -Name AV_WARNINGS_SHOWN -Value ([Collections.Generic.HashSet[String]]::new())
+
 function Start-DownloadUnzipAndRun {
     param(
         [Parameter(Position = 0, Mandatory)][String]$URL,
@@ -7,10 +9,20 @@ function Start-DownloadUnzipAndRun {
         [String]$Configuration,
         [Switch]$Execute,
         [Switch]$Silent,
-        [Switch]$NoBits
+        [Switch]$NoBits,
+        [Switch]$AVWarning
     )
 
     New-Activity 'Download and run'
+
+    if ($AVWarning -and (Test-AntivirusEnabled)) {
+        if (-not $script:AV_WARNINGS_SHOWN.Contains($URL)) {
+            [void]$script:AV_WARNINGS_SHOWN.Add($URL)
+            Write-LogWarning 'Antivirus software is enabled. This download may cause false-positive detections. Please temporarily disable your antivirus and try again.'
+            Write-ActivityCompleted
+            return
+        }
+    }
 
     try {
         Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())

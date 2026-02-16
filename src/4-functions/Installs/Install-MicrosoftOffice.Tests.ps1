@@ -44,7 +44,8 @@ Describe 'Install-MicrosoftOffice' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestOfficeUrl -and
-            $Execute -eq $False
+            $Execute -eq $False -and
+            $AVWarning -eq $True
         }
     }
 
@@ -67,7 +68,8 @@ Describe 'Install-MicrosoftOffice' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestOfficeUrl -and
-            $Execute -eq $True
+            $Execute -eq $True -and
+            $AVWarning -eq $True
         }
     }
 
