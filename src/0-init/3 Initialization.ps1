@@ -6,7 +6,7 @@ Set-Variable -Option Constant ORIGINAL_WINDOW_TITLE ([String]$HOST.UI.RawUI.Wind
 $HOST.UI.RawUI.WindowTitle = "qiiwexc v$VERSION"
 
 try {
-    Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase, System.Windows.Forms
+    Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase, System.Windows.Forms, System.Drawing
 } catch {
     throw "System not supported: Failed to load WPF assemblies: $_"
 }

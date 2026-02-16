@@ -18,19 +18,24 @@ public class IconExtractor {
 }
 '@
 
-function Get-Shell32Icon {
+function Get-DllIcon {
     param([Int]$Index)
     $large = New-Object IntPtr[] 1
     $small = New-Object IntPtr[] 1
-    [void][IconExtractor]::ExtractIconEx("$PATH_SYSTEM_32\shell32.dll", $Index, $large, $small, 1)
+    [void][IconExtractor]::ExtractIconEx("$PATH_SYSTEM_32\imageres.dll", $Index, $large, $small, 1)
     if ($small[0] -ne [IntPtr]::Zero) { [void][IconExtractor]::DestroyIcon($small[0]) }
     Set-Variable -Option Constant Icon ([Drawing.Icon][Drawing.Icon]::FromHandle($large[0]).Clone())
     [void][IconExtractor]::DestroyIcon($large[0])
     return $Icon
 }
 
-Set-Variable -Option Constant ICON_DEFAULT ([Drawing.Icon](Get-Shell32Icon 314))
-Set-Variable -Option Constant ICON_WORKING ([Drawing.Icon](Get-Shell32Icon 238))
+Set-Variable -Option Constant ICON_DEFAULT ([Drawing.Icon](Get-DllIcon 187))
+
+if ($OS_VERSION -eq 10) {
+    Set-Variable -Option Constant ICON_WORKING ([Drawing.Icon](Get-DllIcon 228))
+} else {
+    Set-Variable -Option Constant ICON_WORKING ([Drawing.Icon](Get-DllIcon 229))
+}
 
 # Mutable layout state — tracks the previous element and current container
 # so component functions (New-Button, New-Card, etc.) can adjust spacing
