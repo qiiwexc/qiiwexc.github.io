@@ -42,7 +42,7 @@ Describe 'Invoke-GitAPI' {
             $Uri -eq $TestUrl -and
             $Method -eq 'Get' -and
             $UseBasicParsing -eq $True -and
-            $Headers.Authorization -eq "token $TestGitHubToken"
+            $Headers.Authorization -eq "Bearer $TestGitHubToken"
         }
         Should -Invoke Out-Failure -Exactly 0
     }
@@ -50,7 +50,7 @@ Describe 'Invoke-GitAPI' {
     It 'Should handle Invoke-WebRequest failure' {
         Mock Invoke-WebRequest { throw $TestException }
 
-        Invoke-GitAPI $TestUrl | Should -BeNullOrEmpty
+        { Invoke-GitAPI $TestUrl } | Should -Throw $TestException
 
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Out-Failure -Exactly 1

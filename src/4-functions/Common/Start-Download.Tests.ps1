@@ -72,7 +72,7 @@ Describe 'Start-Download' {
             $Asynchronous -eq $True
         }
         Should -Invoke Complete-BitsTransfer -Exactly 1
-        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Get-Item -Exactly 2
         Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
@@ -102,7 +102,7 @@ Describe 'Start-Download' {
             $Asynchronous -eq $True
         }
         Should -Invoke Complete-BitsTransfer -Exactly 1
-        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Get-Item -Exactly 2
         Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 1
@@ -127,7 +127,7 @@ Describe 'Start-Download' {
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 1
         Should -Invoke Complete-BitsTransfer -Exactly 1
-        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Get-Item -Exactly 2
         Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Move-Item -Exactly 0
@@ -263,7 +263,7 @@ Describe 'Start-Download' {
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 2
         Should -Invoke Complete-BitsTransfer -Exactly 1
-        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Get-Item -Exactly 2
         Should -Invoke Start-Sleep -Exactly 1
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -315,7 +315,7 @@ Describe 'Start-Download' {
 
         Should -Invoke Start-BitsTransfer -Exactly 1
         Should -Invoke Complete-BitsTransfer -Exactly 1
-        Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Get-Item -Exactly 2
         Should -Invoke Remove-Item -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
@@ -323,7 +323,7 @@ Describe 'Start-Download' {
             $OutFile -eq $TestTempPath -and
             $UseBasicParsing -eq $True
         }
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 1
     }
@@ -340,7 +340,7 @@ Describe 'Start-Download' {
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Start-BitsTransfer -Exactly 0
         Should -Invoke Complete-BitsTransfer -Exactly 0
-        Should -Invoke Get-Item -Exactly 0
+        Should -Invoke Get-Item -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestUrl -and

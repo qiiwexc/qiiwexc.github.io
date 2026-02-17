@@ -11,32 +11,34 @@ BeforeAll {
 
 Describe 'New-Label' {
     BeforeEach {
-        $script:PREVIOUS_LABEL_OR_CHECKBOX = $Null
-        $script:PREVIOUS_BUTTON = $Null
-        $script:CENTERED_CHECKBOX_GROUP = @{}
-
-        $script:CURRENT_GROUP = New-Object Windows.Controls.StackPanel
+        $script:LayoutContext = @{
+            PreviousLabelOrCheckbox = $Null
+            PreviousButton          = $Null
+            CenteredCheckboxGroup   = @{}
+            CurrentGroup            = New-Object Windows.Controls.StackPanel
+            CurrentTab              = $Null
+        }
     }
 
     It 'Should create a new label' {
         New-Label $TestText
 
-        $script:CURRENT_GROUP.Children.Count | Should -BeExactly 1
+        $script:LayoutContext.CurrentGroup.Children.Count | Should -BeExactly 1
 
-        $script:PREVIOUS_LABEL_OR_CHECKBOX | Should -Not -BeNullOrEmpty
-        $script:PREVIOUS_LABEL_OR_CHECKBOX.Text | Should -BeExactly $TestText
-        $script:PREVIOUS_LABEL_OR_CHECKBOX.FontSize | Should -BeExactly $FONT_SIZE_NORMAL
-        $script:PREVIOUS_LABEL_OR_CHECKBOX.Opacity | Should -BeExactly 0.7
-        $script:PREVIOUS_LABEL_OR_CHECKBOX.Margin.Left | Should -BeExactly 20
+        $script:LayoutContext.PreviousLabelOrCheckbox | Should -Not -BeNullOrEmpty
+        $script:LayoutContext.PreviousLabelOrCheckbox.Text | Should -BeExactly $TestText
+        $script:LayoutContext.PreviousLabelOrCheckbox.FontSize | Should -BeExactly $FONT_SIZE_NORMAL
+        $script:LayoutContext.PreviousLabelOrCheckbox.Opacity | Should -BeExactly 0.7
+        $script:LayoutContext.PreviousLabelOrCheckbox.Margin.Left | Should -BeExactly 20
 
-        $script:PREVIOUS_BUTTON | Should -BeNullOrEmpty
-        $script:CENTERED_CHECKBOX_GROUP | Should -BeNullOrEmpty
+        $script:LayoutContext.PreviousButton | Should -BeNullOrEmpty
+        $script:LayoutContext.CenteredCheckboxGroup | Should -BeNullOrEmpty
     }
 
     It 'Should create a centered label' {
         New-Label $TestText -Centered
 
-        $script:PREVIOUS_LABEL_OR_CHECKBOX.HorizontalAlignment | Should -BeExactly ([Windows.HorizontalAlignment]::Center)
-        $script:PREVIOUS_LABEL_OR_CHECKBOX.Margin.Left | Should -BeExactly 0
+        $script:LayoutContext.PreviousLabelOrCheckbox.HorizontalAlignment | Should -BeExactly ([Windows.HorizontalAlignment]::Center)
+        $script:LayoutContext.PreviousLabelOrCheckbox.Margin.Left | Should -BeExactly 0
     }
 }

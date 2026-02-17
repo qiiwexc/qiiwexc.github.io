@@ -24,7 +24,9 @@ function Get-DllIcon {
     $small = New-Object IntPtr[] 1
     [void][IconExtractor]::ExtractIconEx("$PATH_SYSTEM_32\imageres.dll", $Index, $large, $small, 1)
     if ($small[0] -ne [IntPtr]::Zero) { [void][IconExtractor]::DestroyIcon($small[0]) }
-    Set-Variable -Option Constant Icon ([Drawing.Icon][Drawing.Icon]::FromHandle($large[0]).Clone())
+    Set-Variable -Option Constant TempIcon ([Drawing.Icon][Drawing.Icon]::FromHandle($large[0]))
+    Set-Variable -Option Constant Icon ([Drawing.Icon]$TempIcon.Clone())
+    $TempIcon.Dispose()
     [void][IconExtractor]::DestroyIcon($large[0])
     return $Icon
 }
@@ -39,8 +41,10 @@ if ($OS_VERSION -eq 10) {
 
 # Mutable layout state — tracks the previous element and current container
 # so component functions (New-Button, New-Card, etc.) can adjust spacing
-Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
-Set-Variable -Scope Script PREVIOUS_BUTTON $Null
-Set-Variable -Scope Script CURRENT_GROUP $Null
-Set-Variable -Scope Script CURRENT_TAB $Null
-Set-Variable -Scope Script CENTERED_CHECKBOX_GROUP $Null
+Set-Variable -Scope Script LayoutContext ([Hashtable]@{
+        PreviousLabelOrCheckbox = $Null
+        PreviousButton          = $Null
+        CurrentGroup            = $Null
+        CurrentTab              = $Null
+        CenteredCheckboxGroup   = $Null
+    })

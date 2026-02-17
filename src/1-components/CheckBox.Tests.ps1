@@ -11,11 +11,14 @@ BeforeAll {
 
 Describe 'New-CheckBox' {
     BeforeEach {
-        $script:PREVIOUS_BUTTON = $Null
-        $script:PREVIOUS_LABEL_OR_CHECKBOX = $Null
-        $script:CENTERED_CHECKBOX_GROUP = $Null
+        $script:LayoutContext = @{
+            PreviousButton          = $Null
+            PreviousLabelOrCheckbox = $Null
+            CenteredCheckboxGroup   = $Null
+            CurrentGroup            = New-Object Windows.Controls.StackPanel
+            CurrentTab              = $Null
+        }
 
-        $script:CURRENT_GROUP = New-Object Windows.Controls.StackPanel
         $script:FORM = [PSCustomObject]@{}
         $script:FORM | Add-Member -MemberType ScriptMethod -Name FindResource -Value { param($key) return $TestStyle }
     }
@@ -32,9 +35,9 @@ Describe 'New-CheckBox' {
         $Result.Margin.Top | Should -BeExactly 4
         $Result.Margin.Bottom | Should -BeExactly 4
 
-        $script:CURRENT_GROUP.Children.Count | Should -BeExactly 1
-        $script:PREVIOUS_LABEL_OR_CHECKBOX | Should -BeExactly $Result
-        $script:PREVIOUS_BUTTON | Should -BeNullOrEmpty
+        $script:LayoutContext.CurrentGroup.Children.Count | Should -BeExactly 1
+        $script:LayoutContext.PreviousLabelOrCheckbox | Should -BeExactly $Result
+        $script:LayoutContext.PreviousButton | Should -BeNullOrEmpty
     }
 
     It 'Should create a disabled checked checkbox' {
@@ -44,13 +47,13 @@ Describe 'New-CheckBox' {
         $Result.IsEnabled | Should -BeFalse
     }
 
-    It 'Should add to CENTERED_CHECKBOX_GROUP when set' {
-        $script:CENTERED_CHECKBOX_GROUP = New-Object Windows.Controls.StackPanel
+    It 'Should add to CenteredCheckboxGroup when set' {
+        $script:LayoutContext.CenteredCheckboxGroup = New-Object Windows.Controls.StackPanel
 
         Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $TestText $TestName))
 
         $Result.Margin.Left | Should -BeExactly 0
-        $script:CENTERED_CHECKBOX_GROUP.Children.Count | Should -BeExactly 1
-        $script:CURRENT_GROUP.Children.Count | Should -BeExactly 0
+        $script:LayoutContext.CenteredCheckboxGroup.Children.Count | Should -BeExactly 1
+        $script:LayoutContext.CurrentGroup.Children.Count | Should -BeExactly 0
     }
 }

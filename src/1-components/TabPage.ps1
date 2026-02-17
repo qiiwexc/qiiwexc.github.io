@@ -21,7 +21,7 @@ function New-TabPage {
 
     [void]$TAB_CONTROL.Items.Add($TabItem)
 
-    Set-Variable -Scope Script CURRENT_TAB ([Windows.Controls.WrapPanel]$WrapPanel)
+    $script:LayoutContext.CurrentTab = [Windows.Controls.WrapPanel]$WrapPanel
 
     return $TabItem
 }

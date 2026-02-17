@@ -6,7 +6,7 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 }
 
-Describe 'Set-LocalisationConfiguration' {
+Describe 'Set-LocalizationConfiguration' {
     BeforeEach {
         Mock Set-ItemProperty {}
         Mock Out-Failure {}
@@ -21,8 +21,8 @@ Describe 'Set-LocalisationConfiguration' {
         Mock Out-Success {}
     }
 
-    It 'Should apply Windows localisation configuration' {
-        Set-LocalisationConfiguration
+    It 'Should apply Windows localization configuration' {
+        Set-LocalizationConfiguration
 
         Should -Invoke Set-ItemProperty -Exactly 1
         Should -Invoke Set-ItemProperty -Exactly 1 -ParameterFilter {
@@ -45,7 +45,7 @@ Describe 'Set-LocalisationConfiguration' {
             return , $list
         }
 
-        Set-LocalisationConfiguration
+        Set-LocalizationConfiguration
 
         Should -Invoke Set-ItemProperty -Exactly 1
         Should -Invoke Set-WinHomeLocation -Exactly 1
@@ -58,7 +58,7 @@ Describe 'Set-LocalisationConfiguration' {
     It 'Should handle Set-ItemProperty failure' {
         Mock Set-ItemProperty { throw $TestException }
 
-        Set-LocalisationConfiguration
+        Set-LocalizationConfiguration
 
         Should -Invoke Set-ItemProperty -Exactly 1
         Should -Invoke Set-WinHomeLocation -Exactly 1
@@ -71,7 +71,7 @@ Describe 'Set-LocalisationConfiguration' {
     It 'Should handle Set-WinHomeLocation failure' {
         Mock Set-WinHomeLocation { throw $TestException }
 
-        Set-LocalisationConfiguration
+        Set-LocalizationConfiguration
 
         Should -Invoke Set-ItemProperty -Exactly 1
         Should -Invoke Set-WinHomeLocation -Exactly 1
@@ -84,7 +84,7 @@ Describe 'Set-LocalisationConfiguration' {
     It 'Should handle Get-WinUserLanguageList failure' {
         Mock Get-WinUserLanguageList { throw $TestException }
 
-        Set-LocalisationConfiguration
+        Set-LocalizationConfiguration
 
         Should -Invoke Set-ItemProperty -Exactly 1
         Should -Invoke Set-WinHomeLocation -Exactly 1
@@ -97,7 +97,7 @@ Describe 'Set-LocalisationConfiguration' {
     It 'Should handle Set-WinUserLanguageList failure' {
         Mock Set-WinUserLanguageList { throw $TestException }
 
-        Set-LocalisationConfiguration
+        Set-LocalizationConfiguration
 
         Should -Invoke Set-ItemProperty -Exactly 1
         Should -Invoke Set-WinHomeLocation -Exactly 1

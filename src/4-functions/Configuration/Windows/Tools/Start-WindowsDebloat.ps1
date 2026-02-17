@@ -1,7 +1,7 @@
 function Start-WindowsDebloat {
     param(
         [Switch]$UsePreset,
-        [Switch]$Personalisation,
+        [Switch]$Personalization,
         [Switch]$Silent
     )
 
@@ -27,16 +27,10 @@ function Start-WindowsDebloat {
 
         New-Directory $TargetPath
 
-        if ($UsePreset -and $Personalisation) {
-            Set-Variable -Option Constant AppsList ([String]($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive'))
-        } else {
-            Set-Variable -Option Constant AppsList ([String]$CONFIG_DEBLOAT_APP_LIST)
-        }
+        Set-Content "$TargetPath\CustomAppsList" $CONFIG_DEBLOAT_APP_LIST -NoNewline -ErrorAction Stop
 
-        Set-Content "$TargetPath\CustomAppsList" $AppsList -NoNewline -ErrorAction Stop
-
-        if ($UsePreset -and $Personalisation) {
-            Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALISATION))
+        if ($UsePreset -and $Personalization) {
+            Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALIZATION))
         } else {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
         }
@@ -51,7 +45,7 @@ function Start-WindowsDebloat {
         [String]$SilentParam = ''
         [String]$SysprepParam = ''
 
-        if ($UsePreset -or $Personalisation) {
+        if ($UsePreset -or $Personalization) {
             $UsePresetParam = ' -RunSavedSettings -RemoveAppsCustom'
         }
 

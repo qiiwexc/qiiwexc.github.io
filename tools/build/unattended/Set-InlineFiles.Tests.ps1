@@ -10,7 +10,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestConfigsPath ([String]'TEST_SOURCE_PATH')
     Set-Variable -Option Constant TestResourcesPath ([String]'TEST_RESOURCES_PATH')
-    Set-Variable -Option Constant TestTemplateContent ([String]"TEST_TEMPLATE_CONTENT_1`n{CONFIG_APP_ASSOCIATIONS}`n{CONFIG_QBITTORRENT_LOCALIZED}`n{CONFIG_SECURITY}`n{CONFIG_WINDOWS_LOCALISED}`nTEST_TEMPLATE_CONTENT_2")
+    Set-Variable -Option Constant TestTemplateContent ([String]"TEST_TEMPLATE_CONTENT_1`n{CONFIG_APP_ASSOCIATIONS}`n{CONFIG_QBITTORRENT_LOCALIZED}`n{CONFIG_SECURITY}`n{CONFIG_WINDOWS_LOCALIZED}`nTEST_TEMPLATE_CONTENT_2")
 
     Set-Variable -Option Constant TestRegFileContent ([String]"TEST_REG_FILE_CONTENT_1`n[HKEY_CURRENT_USER\Test]`n`"TestValue`"=1`nTEST_REG_FILE_CONTENT_2 ")
     Set-Variable -Option Constant TestGenericFileContent ([String]"TEST_GENERIC_FILE_CONTENT_1`nTEST_GENERIC_FILE_CONTENT_2`t")

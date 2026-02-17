@@ -25,11 +25,11 @@ function New-Card {
 
     $CardBorder.Child = $CardPanel
 
-    [void]$CURRENT_TAB.Children.Add($CardBorder)
+    [void]$script:LayoutContext.CurrentTab.Children.Add($CardBorder)
 
-    Set-Variable -Scope Script PREVIOUS_BUTTON $Null
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX $Null
-    Set-Variable -Scope Script CENTERED_CHECKBOX_GROUP $Null
+    $script:LayoutContext.PreviousButton = $Null
+    $script:LayoutContext.PreviousLabelOrCheckbox = $Null
+    $script:LayoutContext.CenteredCheckboxGroup = $Null
 
-    Set-Variable -Scope Script CURRENT_GROUP $CardPanel
+    $script:LayoutContext.CurrentGroup = $CardPanel
 }

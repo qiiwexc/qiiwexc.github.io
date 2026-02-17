@@ -12,7 +12,13 @@ BeforeAll {
 
 Describe 'New-TabPage' {
     BeforeEach {
-        $script:CURRENT_TAB = $Null
+        $script:LayoutContext = @{
+            CurrentTab              = $Null
+            CurrentGroup            = $Null
+            PreviousButton          = $Null
+            PreviousLabelOrCheckbox = $Null
+            CenteredCheckboxGroup   = $Null
+        }
     }
 
     It 'Should create a new tab' {
@@ -29,6 +35,6 @@ Describe 'New-TabPage' {
         Set-Variable -Option Constant WrapPanel ([Windows.Controls.WrapPanel]$ScrollViewer.Content)
         $WrapPanel.ItemWidth | Should -BeExactly $CARD_COLUMN_WIDTH
 
-        $script:CURRENT_TAB | Should -BeExactly $WrapPanel
+        $script:LayoutContext.CurrentTab | Should -BeExactly $WrapPanel
     }
 }

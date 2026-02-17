@@ -1,5 +1,5 @@
-function Set-PersonalisationConfiguration {
-    [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_PERSONALISATION
+function Set-PersonalizationConfiguration {
+    [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_PERSONALIZATION
 
     try {
         if ($OS_VERSION -ge 11) {
@@ -22,9 +22,9 @@ function Set-PersonalisationConfiguration {
     }
 
     try {
-        Import-RegistryConfiguration 'Windows Personalisation Config' $ConfigLines -ErrorAction Stop
+        Import-RegistryConfiguration 'Windows Personalization Config' $ConfigLines -ErrorAction Stop
         Out-Success
     } catch {
-        Out-Failure "Failed to apply Windows personalisation configuration: $_"
+        Out-Failure "Failed to apply Windows personalization configuration: $_"
     }
 }

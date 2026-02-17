@@ -95,6 +95,10 @@ function Start-Download {
     Write-ActivityProgress 60
 
     if (Test-Path $SavePath) {
+        [Long]$FileSize = (Get-Item $SavePath).Length
+        if ($FileSize -lt 1KB) {
+            Write-LogWarning "Downloaded file is suspiciously small ($FileSize bytes): $SavePath"
+        }
         Out-Success
         return $SavePath
     } else {

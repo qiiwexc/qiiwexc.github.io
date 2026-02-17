@@ -1,4 +1,4 @@
-function Set-LocalisationConfiguration {
+function Set-LocalizationConfiguration {
     try {
         Set-ItemProperty -Path 'HKCU:\Control Panel\International' -Name 'sCurrency' -Value ([Char]0x20AC) -ErrorAction Stop
     } catch {

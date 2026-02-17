@@ -4,7 +4,7 @@ function Set-qBittorrentConfiguration {
     )
 
     try {
-        if ($SYSTEM_LANGUAGE -match 'ru') {
+        if ($SYSTEM_LANGUAGE -match '^ru') {
             Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_RUSSIAN))
         } else {
             Set-Variable -Option Constant Content ([String]($CONFIG_QBITTORRENT_BASE + $CONFIG_QBITTORRENT_ENGLISH))

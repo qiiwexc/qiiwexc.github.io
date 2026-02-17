@@ -5,8 +5,8 @@ function Set-WindowsConfiguration {
         [Parameter(Position = 2, Mandatory)][Object]$Baseline,
         [Parameter(Position = 3, Mandatory)][Object]$Annoyances,
         [Parameter(Position = 4, Mandatory)][Object]$Privacy,
-        [Parameter(Position = 5, Mandatory)][Object]$Localisation,
-        [Parameter(Position = 6, Mandatory)][Object]$Personalisation
+        [Parameter(Position = 5, Mandatory)][Object]$Localization,
+        [Parameter(Position = 6, Mandatory)][Object]$Personalization
     )
 
     if (Test-WindowsDebloatIsRunning) {
@@ -54,14 +54,14 @@ function Set-WindowsConfiguration {
         Set-PrivacyConfiguration
     }
 
-    if ($Localisation.IsChecked) {
-        Write-ActivityProgress 80 'Applying Windows localisation configuration...'
-        Set-LocalisationConfiguration
+    if ($Localization.IsChecked) {
+        Write-ActivityProgress 80 'Applying Windows localization configuration...'
+        Set-LocalizationConfiguration
     }
 
-    if ($Personalisation.IsChecked) {
-        Write-ActivityProgress 90 'Applying Windows personalisation configuration...'
-        Set-PersonalisationConfiguration
+    if ($Personalization.IsChecked) {
+        Write-ActivityProgress 90 'Applying Windows personalization configuration...'
+        Set-PersonalizationConfiguration
     }
 
     Write-ActivityCompleted

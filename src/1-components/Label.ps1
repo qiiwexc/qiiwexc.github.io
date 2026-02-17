@@ -19,9 +19,9 @@ function New-Label {
         $Label.Margin = [Windows.Thickness]::new(20, 0, 0, 4)
     }
 
-    [void]$CURRENT_GROUP.Children.Add($Label)
+    [void]$script:LayoutContext.CurrentGroup.Children.Add($Label)
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Controls.TextBlock]$Label)
-    Set-Variable -Scope Script PREVIOUS_BUTTON $Null
-    Set-Variable -Scope Script CENTERED_CHECKBOX_GROUP $Null
+    $script:LayoutContext.PreviousLabelOrCheckbox = [Windows.Controls.TextBlock]$Label
+    $script:LayoutContext.PreviousButton = $Null
+    $script:LayoutContext.CenteredCheckboxGroup = $Null
 }

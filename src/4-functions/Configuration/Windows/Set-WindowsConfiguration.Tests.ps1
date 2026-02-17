@@ -8,9 +8,9 @@ BeforeAll {
     . '.\src\4-functions\Configuration\Windows\Set-MalwareProtectionConfiguration.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-PowerSchemeConfiguration.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-BaselineConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-LocalisationConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-LocalizationConfiguration.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-PerformanceConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-PersonalisationConfiguration.ps1'
+    . '.\src\4-functions\Configuration\Windows\Set-PersonalizationConfiguration.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-PrivacyConfiguration.ps1'
     . '.\src\4-functions\Configuration\Windows\Set-SecurityConfiguration.ps1'
 
@@ -30,16 +30,16 @@ BeforeAll {
     Set-Variable -Option Constant TestCheckboxBaselineChecked (New-TestCheckBox -IsChecked $True)
     Set-Variable -Option Constant TestCheckboxAnnoyancesChecked (New-TestCheckBox -IsChecked $True)
     Set-Variable -Option Constant TestCheckboxPrivacyChecked (New-TestCheckBox -IsChecked $True)
-    Set-Variable -Option Constant TestCheckboxLocalisationChecked (New-TestCheckBox -IsChecked $True)
-    Set-Variable -Option Constant TestCheckboxPersonalisationChecked (New-TestCheckBox -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxLocalizationChecked (New-TestCheckBox -IsChecked $True)
+    Set-Variable -Option Constant TestCheckboxPersonalizationChecked (New-TestCheckBox -IsChecked $True)
 
     Set-Variable -Option Constant TestCheckboxSecurityUnchecked (New-TestCheckBox -IsChecked $False)
     Set-Variable -Option Constant TestCheckboxPerformanceUnchecked (New-TestCheckBox -IsChecked $False)
     Set-Variable -Option Constant TestCheckboxBaselineUnchecked (New-TestCheckBox -IsChecked $False)
     Set-Variable -Option Constant TestCheckboxAnnoyancesUnchecked (New-TestCheckBox -IsChecked $False)
     Set-Variable -Option Constant TestCheckboxPrivacyUnchecked (New-TestCheckBox -IsChecked $False)
-    Set-Variable -Option Constant TestCheckboxLocalisationUnchecked (New-TestCheckBox -IsChecked $False)
-    Set-Variable -Option Constant TestCheckboxPersonalisationUnchecked (New-TestCheckBox -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxLocalizationUnchecked (New-TestCheckBox -IsChecked $False)
+    Set-Variable -Option Constant TestCheckboxPersonalizationUnchecked (New-TestCheckBox -IsChecked $False)
 }
 
 Describe 'Set-WindowsConfiguration' {
@@ -53,9 +53,9 @@ Describe 'Set-WindowsConfiguration' {
         Mock Set-MalwareProtectionConfiguration {}
         Mock Set-PowerSchemeConfiguration {}
         Mock Set-BaselineConfiguration {}
-        Mock Set-LocalisationConfiguration {}
+        Mock Set-LocalizationConfiguration {}
         Mock Set-PerformanceConfiguration {}
-        Mock Set-PersonalisationConfiguration {}
+        Mock Set-PersonalizationConfiguration {}
         Mock Set-PrivacyConfiguration {}
         Mock Set-SecurityConfiguration {}
         Mock Write-ActivityCompleted {}
@@ -67,8 +67,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxBaselineChecked `
             $TestCheckboxAnnoyancesChecked `
             $TestCheckboxPrivacyChecked `
-            $TestCheckboxLocalisationChecked `
-            $TestCheckboxPersonalisationChecked
+            $TestCheckboxLocalizationChecked `
+            $TestCheckboxPersonalizationChecked
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
@@ -82,8 +82,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 1
         Should -Invoke Remove-Annoyances -Exactly 1
         Should -Invoke Set-PrivacyConfiguration -Exactly 1
-        Should -Invoke Set-LocalisationConfiguration -Exactly 1
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 1
+        Should -Invoke Set-LocalizationConfiguration -Exactly 1
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
@@ -93,8 +93,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxBaselineUnchecked `
             $TestCheckboxAnnoyancesUnchecked `
             $TestCheckboxPrivacyUnchecked `
-            $TestCheckboxLocalisationUnchecked `
-            $TestCheckboxPersonalisationUnchecked
+            $TestCheckboxLocalizationUnchecked `
+            $TestCheckboxPersonalizationUnchecked
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
@@ -108,8 +108,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
@@ -121,8 +121,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxBaselineChecked `
             $TestCheckboxAnnoyancesChecked `
             $TestCheckboxPrivacyChecked `
-            $TestCheckboxLocalisationChecked `
-            $TestCheckboxPersonalisationChecked
+            $TestCheckboxLocalizationChecked `
+            $TestCheckboxPersonalizationChecked
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 0
@@ -136,8 +136,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -149,8 +149,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxBaselineChecked `
             $TestCheckboxAnnoyancesChecked `
             $TestCheckboxPrivacyChecked `
-            $TestCheckboxLocalisationChecked `
-            $TestCheckboxPersonalisationChecked
+            $TestCheckboxLocalizationChecked `
+            $TestCheckboxPersonalizationChecked
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
@@ -164,8 +164,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -177,8 +177,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -193,8 +193,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -206,8 +206,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -222,8 +222,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -235,8 +235,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -251,8 +251,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -264,8 +264,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -280,8 +280,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -293,8 +293,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -309,8 +309,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -322,8 +322,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -338,8 +338,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -351,8 +351,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineChecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -367,8 +367,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 1
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -380,8 +380,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesChecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -396,8 +396,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 1
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
@@ -409,8 +409,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyChecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -425,21 +425,21 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 1
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-LocalisationConfiguration failure' {
-        Mock Set-LocalisationConfiguration { throw $TestException }
+    It 'Should handle Set-LocalizationConfiguration failure' {
+        Mock Set-LocalizationConfiguration { throw $TestException }
 
         { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
                 $TestCheckboxPerformanceUnchecked `
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationChecked `
-                $TestCheckboxPersonalisationUnchecked
+                $TestCheckboxLocalizationChecked `
+                $TestCheckboxPersonalizationUnchecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -454,21 +454,21 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 1
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 1
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
-    It 'Should handle Set-PersonalisationConfiguration failure' {
-        Mock Set-PersonalisationConfiguration { throw $TestException }
+    It 'Should handle Set-PersonalizationConfiguration failure' {
+        Mock Set-PersonalizationConfiguration { throw $TestException }
 
         { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
                 $TestCheckboxPerformanceUnchecked `
                 $TestCheckboxBaselineUnchecked `
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalisationUnchecked `
-                $TestCheckboxPersonalisationChecked
+                $TestCheckboxLocalizationUnchecked `
+                $TestCheckboxPersonalizationChecked
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -483,8 +483,8 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalisationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalisationConfiguration -Exactly 1
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

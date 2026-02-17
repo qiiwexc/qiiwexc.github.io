@@ -33,10 +33,18 @@ function New-PowerShellScript {
 
         [String]$Content = (Read-TextFile $FilePath).TrimEnd()
 
+        if (-not $IsConfigFile) {
+            [Management.Automation.PSParseError[]]$SyntaxErrors = @()
+            [Void][Management.Automation.PSParser]::Tokenize($Content, [Ref]$SyntaxErrors)
+            if ($SyntaxErrors.Count -gt 0) {
+                throw "Syntax error in '$FileName': $($SyntaxErrors[0].Message) (line $($SyntaxErrors[0].Token.StartLine))"
+            }
+        }
+
         if ($IsConfigFile) {
             [String]$NormalizedFileName = $FileName.Replace(' ', '_') -replace '\..{1,}$', ''
             [String]$VariableName = "CONFIG_$($NormalizedFileName.ToUpper())"
-            [String[]]$EscapedContent = $Content.Replace("'", '"')
+            [String[]]$EscapedContent = $Content.Replace("'", "''")
             $EscapedContent[0] = "Set-Variable -Option Constant $VariableName ([String]('$($EscapedContent[0])"
             $OutputLines.Add($EscapedContent)
             $OutputLines.Add("'))")
