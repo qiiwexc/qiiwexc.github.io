@@ -24,14 +24,14 @@ BeforeAll {
     Set-Variable -Option Constant LocaleEnglish ([String]'English')
     Set-Variable -Option Constant LocaleRussian ([String]'Russian')
 
-    Set-Variable -Option Constant NonLocalisedFileName ([String]'autounattend.xml')
+    Set-Variable -Option Constant NonLocalizedFileName ([String]'autounattend.xml')
     Set-Variable -Option Constant TestFileNameRussian ([String]'autounattend-Russian.xml')
     Set-Variable -Option Constant TestFileNameEnglish ([String]'autounattend-English.xml')
 
     Set-Variable -Option Constant TestConfigsPath ([String]"$TestSourcePath\3-configs")
     Set-Variable -Option Constant TestResourcesPath ([String]'TEST_RESOURCES_PATH')
-    Set-Variable -Option Constant TestBaseFilePath ([String]"$TestBuildPath\$NonLocalisedFileName")
-    Set-Variable -Option Constant TestVmFilePath ([String]"$TestVmPath\unattend\$NonLocalisedFileName")
+    Set-Variable -Option Constant TestBaseFilePath ([String]"$TestBuildPath\$NonLocalizedFileName")
+    Set-Variable -Option Constant TestVmFilePath ([String]"$TestVmPath\unattend\$NonLocalizedFileName")
     Set-Variable -Option Constant TestBuildFileNameRussian ([String]"$TestBuildPath\$TestFileNameRussian")
     Set-Variable -Option Constant TestBuildFileNameEnglish ([String]"$TestBuildPath\$TestFileNameEnglish")
 

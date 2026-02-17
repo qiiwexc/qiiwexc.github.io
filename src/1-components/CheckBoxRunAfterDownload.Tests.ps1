@@ -11,11 +11,14 @@ BeforeAll {
 
 Describe 'New-CheckBoxRunAfterDownload' {
     BeforeEach {
-        $script:PREVIOUS_BUTTON = $Null
-        $script:PREVIOUS_LABEL_OR_CHECKBOX = $Null
-        $script:CENTERED_CHECKBOX_GROUP = $Null
+        $script:LayoutContext = @{
+            PreviousButton          = $Null
+            PreviousLabelOrCheckbox = $Null
+            CenteredCheckboxGroup   = $Null
+            CurrentGroup            = New-Object Windows.Controls.StackPanel
+            CurrentTab              = $Null
+        }
 
-        $script:CURRENT_GROUP = New-Object Windows.Controls.StackPanel
         $script:FORM = [PSCustomObject]@{}
         $script:FORM | Add-Member -MemberType ScriptMethod -Name FindResource -Value { param($key) return $TestStyle }
     }
@@ -28,12 +31,12 @@ Describe 'New-CheckBoxRunAfterDownload' {
         $Result.IsChecked | Should -BeFalse
         $Result.Margin.Bottom | Should -BeExactly 2
 
-        $script:CENTERED_CHECKBOX_GROUP | Should -Not -BeNullOrEmpty
-        $script:CENTERED_CHECKBOX_GROUP.HorizontalAlignment | Should -BeExactly ([Windows.HorizontalAlignment]::Center)
-        $script:CENTERED_CHECKBOX_GROUP.Children.Count | Should -BeExactly 1
+        $script:LayoutContext.CenteredCheckboxGroup | Should -Not -BeNullOrEmpty
+        $script:LayoutContext.CenteredCheckboxGroup.HorizontalAlignment | Should -BeExactly ([Windows.HorizontalAlignment]::Center)
+        $script:LayoutContext.CenteredCheckboxGroup.Children.Count | Should -BeExactly 1
 
-        $script:CURRENT_GROUP.Children.Count | Should -BeExactly 1
-        $script:PREVIOUS_LABEL_OR_CHECKBOX | Should -BeExactly $Result
+        $script:LayoutContext.CurrentGroup.Children.Count | Should -BeExactly 1
+        $script:LayoutContext.PreviousLabelOrCheckbox | Should -BeExactly $Result
     }
 
     It 'Should create a checked checkbox' {

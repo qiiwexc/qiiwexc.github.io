@@ -18,11 +18,11 @@ function Set-InlineFiles {
             'CONFIG_SECURITY'               = "$ConfigsPath\Windows\Security.reg"
             'CONFIG_PERFORMANCE'            = "$ConfigsPath\Windows\Performance.reg"
             'CONFIG_BASELINE'               = "$ConfigsPath\Windows\Baseline.reg"
-            'CONFIG_TASK_MANAGER_LOCALISED' = "$ConfigsPath\Windows\Task Manager {LOCALE}.json"
-            'CONFIG_WINDOWS_LOCALISED'      = "$ConfigsPath\Windows\Baseline {LOCALE}.reg"
+            'CONFIG_TASK_MANAGER_LOCALIZED' = "$ConfigsPath\Windows\Task Manager {LOCALE}.json"
+            'CONFIG_WINDOWS_LOCALIZED'      = "$ConfigsPath\Windows\Baseline {LOCALE}.reg"
             'CONFIG_ANNOYANCES'             = "$ConfigsPath\Windows\Annoyances.reg"
             'CONFIG_PRIVACY'                = "$ConfigsPath\Windows\Privacy.reg"
-            'CONFIG_PERSONALISATION'        = "$ConfigsPath\Windows\Personalisation.reg"
+            'CONFIG_PERSONALIZATION'        = "$ConfigsPath\Windows\Personalization.reg"
         }
     )
 

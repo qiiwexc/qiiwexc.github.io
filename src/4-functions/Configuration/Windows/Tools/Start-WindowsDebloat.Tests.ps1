@@ -12,7 +12,7 @@ BeforeAll {
     Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_PATH_TEMP_DIR')
     Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST ([String]"TEST_CONFIG_DEBLOAT_APP_LIST1`nTEST_CONFIG_DEBLOAT_APP_LIST2`n")
     Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE ([String]"TEST_CONFIG_DEBLOAT_PRESET_BASE1`nTEST_CONFIG_DEBLOAT_PRESET_BASE2")
-    Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALISATION ([String]"TEST_CONFIG_DEBLOAT_PRESET_PERSONALISATION1`nTEST_CONFIG_DEBLOAT_PRESET_PERSONALISATION2")
+    Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALIZATION ([String]"TEST_CONFIG_DEBLOAT_PRESET_PERSONALIZATION1`nTEST_CONFIG_DEBLOAT_PRESET_PERSONALIZATION2")
 
     Set-Variable -Option Constant TestTargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
     Set-Variable -Option Constant TestAppsListPath ([String]"$TestTargetPath\CustomAppsList")
@@ -103,8 +103,8 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should start debloat tool with personalisation configuration' {
-        Start-WindowsDebloat -UsePreset -Personalisation
+    It 'Should start debloat tool with personalization configuration' {
+        Start-WindowsDebloat -UsePreset -Personalization
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
@@ -114,12 +114,12 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Set-Content -Exactly 2
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestAppsListPath -and
-            $Value -eq ($CONFIG_DEBLOAT_APP_LIST + 'Microsoft.OneDrive') -and
+            $Value -eq $CONFIG_DEBLOAT_APP_LIST -and
             $NoNewline -eq $True
         }
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
-            $Value -eq $CONFIG_DEBLOAT_PRESET_PERSONALISATION -and
+            $Value -eq $CONFIG_DEBLOAT_PRESET_PERSONALIZATION -and
             $NoNewline -eq $True
         }
         Should -Invoke Invoke-CustomCommand -Exactly 1

@@ -50,7 +50,9 @@ if (navigator.userAgentData) {
     navigator.userAgent.includes(str),
   )
     ? "64-bit"
-    : "32-bit";
+    : navigator.platform === "Win32"
+      ? "64-bit"
+      : "32-bit";
 }
 
 let systemLanguage = navigator.language.split("-").at(0) ?? "en";

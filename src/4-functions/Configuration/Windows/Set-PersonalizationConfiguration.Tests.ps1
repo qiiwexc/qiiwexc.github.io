@@ -8,7 +8,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant CONFIG_PERSONALISATION ([String]'TEST_CONFIG_PERSONALISATION')
+    Set-Variable -Option Constant CONFIG_PERSONALIZATION ([String]'TEST_CONFIG_PERSONALIZATION')
 
     Set-Variable -Option Constant TestSysPrepConfig ([String]'TEST_SYSPREP_CONFIG')
     Set-Variable -Option Constant TestUsers ([String[]]@('TEST_USER_1', 'TEST_USER_2'))
@@ -20,7 +20,7 @@ BeforeAll {
     )
 }
 
-Describe 'Set-PersonalisationConfiguration' {
+Describe 'Set-PersonalizationConfiguration' {
     BeforeEach {
         Mock Add-SysPrepConfig { return $TestSysPrepConfig }
         Mock Get-Item { return $TestNotificationRegistries }
@@ -32,18 +32,18 @@ Describe 'Set-PersonalisationConfiguration' {
         [Int]$OS_VERSION = 11
     }
 
-    It 'Should apply Windows personalisation configuration' {
-        Set-PersonalisationConfiguration
+    It 'Should apply Windows personalization configuration' {
+        Set-PersonalizationConfiguration
 
         Should -Invoke Add-SysPrepConfig -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_PERSONALISATION }
+        Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_PERSONALIZATION }
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq 'HKCU:\Control Panel\NotifyIconSettings\*' }
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
-            $AppName -eq 'Windows Personalisation Config' -and
+            $AppName -eq 'Windows Personalization Config' -and
             $Content -match $TestSysPrepConfig -and
             $Content -match "`n\[$($TestNotificationRegistries[0].Name)\]`n" -and
             $Content -match "`n\[$($TestNotificationRegistries[1].Name)\]`n" -and
@@ -58,7 +58,7 @@ Describe 'Set-PersonalisationConfiguration' {
     It 'Should skip notification configuration on Windows older than 11' {
         [Int]$OS_VERSION = 10
 
-        Set-PersonalisationConfiguration
+        Set-PersonalizationConfiguration
 
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 0
@@ -77,7 +77,7 @@ Describe 'Set-PersonalisationConfiguration' {
     It 'Should skip notification registry keys if none found' {
         Mock Get-Item { return @() }
 
-        Set-PersonalisationConfiguration
+        Set-PersonalizationConfiguration
 
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
@@ -90,7 +90,7 @@ Describe 'Set-PersonalisationConfiguration' {
     It 'Should skip user registry keys if none found' {
         Mock Get-UsersRegistryKeys { return @() }
 
-        Set-PersonalisationConfiguration
+        Set-PersonalizationConfiguration
 
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
@@ -103,7 +103,7 @@ Describe 'Set-PersonalisationConfiguration' {
     It 'Should handle Get-Item failure' {
         Mock Get-Item { throw $TestException }
 
-        Set-PersonalisationConfiguration
+        Set-PersonalizationConfiguration
 
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
@@ -116,7 +116,7 @@ Describe 'Set-PersonalisationConfiguration' {
     It 'Should handle Get-UsersRegistryKeys failure' {
         Mock Get-UsersRegistryKeys { throw $TestException }
 
-        Set-PersonalisationConfiguration
+        Set-PersonalizationConfiguration
 
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
@@ -129,7 +129,7 @@ Describe 'Set-PersonalisationConfiguration' {
     It 'Should handle Import-RegistryConfiguration failure' {
         Mock Import-RegistryConfiguration { throw $TestException }
 
-        Set-PersonalisationConfiguration
+        Set-PersonalizationConfiguration
 
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1

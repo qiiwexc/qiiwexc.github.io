@@ -1,4 +1,5 @@
 function Import-RegistryConfiguration {
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Position = 0, Mandatory)][String]$AppName,
         [Parameter(Position = 1, Mandatory)][String[]]$Content
@@ -15,7 +16,9 @@ function Import-RegistryConfiguration {
 
         "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Set-Content $RegFilePath -NoNewline -ErrorAction Stop
 
-        Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`"" -ErrorAction Stop
+        if ($PSCmdlet.ShouldProcess($AppName, 'Import registry configuration')) {
+            Start-Process -Verb RunAs -Wait 'regedit' "/s `"$RegFilePath`"" -ErrorAction Stop
+        }
 
         Out-Success $LogIndentLevel
     } catch {

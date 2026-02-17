@@ -3,11 +3,11 @@ New-Card 'Debloat Windows'
 
 [ScriptBlock]$BUTTON_FUNCTION = {
     $UsePreset = $CHECKBOX_UseDebloatPreset.IsChecked
-    $Personalisation = $CHECKBOX_DebloatAndPersonalise.IsChecked
+    $Personalization = $CHECKBOX_DebloatAndPersonalise.IsChecked
     $Silent = $CHECKBOX_SilentlyRunDebloat.IsChecked
-    Start-AsyncOperation -Button $this { Start-WindowsDebloat -UsePreset:$UsePreset -Personalisation:$Personalisation -Silent:$Silent } -Variables @{
+    Start-AsyncOperation -Button $this { Start-WindowsDebloat -UsePreset:$UsePreset -Personalization:$Personalization -Silent:$Silent } -Variables @{
         UsePreset       = $UsePreset
-        Personalisation = $Personalisation
+        Personalization = $Personalization
         Silent          = $Silent
     }
 }
@@ -19,7 +19,7 @@ $CHECKBOX_UseDebloatPreset.Add_Click( {
         Set-CheckboxState -Control $CHECKBOX_UseDebloatPreset -Dependant $CHECKBOX_DebloatAndPersonalise
     } )
 
-[Windows.Controls.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalisation settings'
+[Windows.Controls.CheckBox]$CHECKBOX_DebloatAndPersonalise = New-CheckBox '+ Personalization settings'
 
 [Windows.Controls.CheckBox]$CHECKBOX_SilentlyRunDebloat = New-CheckBox 'Silently apply tweaks'
 

@@ -9,6 +9,14 @@ function Read-GitHubToken {
         return $env:GITHUB_TOKEN
     }
 
+    Set-Variable -Option Constant ResolvedPath ([String](Resolve-Path $EnvPath -ErrorAction SilentlyContinue))
+    Set-Variable -Option Constant GitRoot ([String](Resolve-Path (git rev-parse --show-toplevel 2>$Null) -ErrorAction SilentlyContinue))
+
+    if ($ResolvedPath -and $GitRoot -and -not $ResolvedPath.StartsWith($GitRoot)) {
+        Write-LogWarning "Environment file path '$EnvPath' is outside the repository root"
+        return
+    }
+
     if (-not (Test-Path $EnvPath)) {
         Write-LogWarning "Environment file not found at path: $EnvPath"
         return

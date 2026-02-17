@@ -14,16 +14,16 @@ function New-CheckBox {
     $CheckBox.IsEnabled = -not $Disabled
     $CheckBox.Style = $FORM.FindResource('Win11CheckBox')
 
-    if ($CENTERED_CHECKBOX_GROUP) {
+    if ($script:LayoutContext.CenteredCheckboxGroup) {
         $CheckBox.Margin = [Windows.Thickness]::new(0, 4, 0, 4)
-        [void]$CENTERED_CHECKBOX_GROUP.Children.Add($CheckBox)
+        [void]$script:LayoutContext.CenteredCheckboxGroup.Children.Add($CheckBox)
     } else {
         $CheckBox.Margin = [Windows.Thickness]::new(10, 4, 0, 4)
-        [void]$CURRENT_GROUP.Children.Add($CheckBox)
+        [void]$script:LayoutContext.CurrentGroup.Children.Add($CheckBox)
     }
 
-    Set-Variable -Scope Script PREVIOUS_LABEL_OR_CHECKBOX ([Windows.Controls.CheckBox]$CheckBox)
-    Set-Variable -Scope Script PREVIOUS_BUTTON $Null
+    $script:LayoutContext.PreviousLabelOrCheckbox = [Windows.Controls.CheckBox]$CheckBox
+    $script:LayoutContext.PreviousButton = $Null
 
     return $CheckBox
 }

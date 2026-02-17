@@ -8,6 +8,8 @@ Set-Variable -Scope Script -Name ASYNC -Value ([Hashtable]@{
         Timer           = $Null
     })
 
+Set-Variable -Scope Script -Name ASYNC_USER_FUNCTIONS -Value $Null
+
 function Start-AsyncOperation {
     param(
         [Parameter(Position = 0, Mandatory)][ScriptBlock]$Operation,
@@ -37,11 +39,20 @@ function Start-AsyncOperation {
 
     [Management.Automation.Runspaces.InitialSessionState]$ISS = [Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
 
-    # Copy all session functions into the new runspace so async operations can call
+    # Copy user-defined functions into the new runspace so async operations can call
     # any function (logging, downloads, config, etc.) without maintaining a whitelist.
-    # This is intentional: the set of functions an operation needs varies by caller,
-    # and the overhead of copying unused function definitions is negligible.
-    foreach ($Func in (Get-ChildItem Function:)) {
+    # Built-in/default functions are excluded to reduce overhead.
+    if ($Null -eq $script:ASYNC_USER_FUNCTIONS) {
+        Set-Variable -Option Constant DefaultFunctions ([String[]]@(
+                [Management.Automation.Runspaces.InitialSessionState]::CreateDefault().Commands |
+                    Where-Object { $_ -is [Management.Automation.Runspaces.SessionStateFunctionEntry] } |
+                    ForEach-Object { $_.Name }
+            )
+        )
+        Set-Variable -Scope Script ASYNC_USER_FUNCTIONS @(Get-ChildItem Function: | Where-Object { $_.Name -notin $DefaultFunctions })
+    }
+
+    foreach ($Func in $script:ASYNC_USER_FUNCTIONS) {
         $ISS.Commands.Add(
             [Management.Automation.Runspaces.SessionStateFunctionEntry]::new(
                 $Func.Name, $Func.ScriptBlock.ToString()
@@ -91,7 +102,7 @@ function Start-AsyncOperation {
     $script:ASYNC.Handle = $script:ASYNC.PS.BeginInvoke()
 
     $script:ASYNC.Timer = New-Object Windows.Threading.DispatcherTimer
-    $script:ASYNC.Timer.Interval = [TimeSpan]::FromMilliseconds(200)
+    $script:ASYNC.Timer.Interval = [TimeSpan]::FromMilliseconds(100)
     $script:ASYNC.Timer.Add_Tick(
         {
             # Use index-based access — PSDataCollection's foreach enumerator blocks

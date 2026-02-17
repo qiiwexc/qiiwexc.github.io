@@ -24,7 +24,7 @@ BeforeAll {
         )
     )
 
-    Set-Variable -Option Constant TestPs1FileContent ([String]"TEST_PS1_FILE_CONTENT_1 {KEY_1}`n{KEY_2} TEST_PS1_FILE_CONTENT_2 ")
+    Set-Variable -Option Constant TestPs1FileContent ([String]"# TEST_PS1_FILE_CONTENT_1 {KEY_1}`n# {KEY_2} TEST_PS1_FILE_CONTENT_2")
     Set-Variable -Option Constant TestConfigFileContent ([String]"TEST_CONFIG_KEY_1='TEST_CONFIG_VALUE_1'`nTEST_CONFIG_KEY_2=TEST_CONFIG_VALUE_2 ")
 }
 
@@ -56,10 +56,10 @@ Describe 'New-PowerShellScript' {
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildPs1FilePath -and
             $Content -match "^#region code > Test-File`n" -and
-            $Content -match "TEST_PS1_FILE_CONTENT_1 VALUE_1`nVALUE_2 TEST_PS1_FILE_CONTENT_2" -and
+            $Content -match "# TEST_PS1_FILE_CONTENT_1 VALUE_1`n# VALUE_2 TEST_PS1_FILE_CONTENT_2" -and
             $Content -match "`n#endregion code > Test-File`n" -and
             $Content -match "`n#region configs > ConfigFile`n" -and
-            $Content -match "Set-Variable -Option Constant CONFIG_CONFIGFILE \(\[String\]\('TEST_CONFIG_KEY_1=`"TEST_CONFIG_VALUE_1`"`nTEST_CONFIG_KEY_2=TEST_CONFIG_VALUE_2" -and
+            $Content -match "Set-Variable -Option Constant CONFIG_CONFIGFILE \(\[String\]\('TEST_CONFIG_KEY_1=''TEST_CONFIG_VALUE_1''`nTEST_CONFIG_KEY_2=TEST_CONFIG_VALUE_2" -and
             $Content -match "'\)\)" -and
             $Content -match "`n#endregion configs > ConfigFile"
         }

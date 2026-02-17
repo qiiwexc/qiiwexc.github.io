@@ -17,7 +17,7 @@ function New-UnattendedBase {
 {CONFIG_VLC}
     </File>
     <File path="C:\Users\Default\AppData\Local\Microsoft\Windows\TaskManager\settings.json">
-{CONFIG_TASK_MANAGER_LOCALISED}
+{CONFIG_TASK_MANAGER_LOCALIZED}
     </File>
     <File path="C:\Users\Default\AppData\Roaming\qBittorrent\qBittorrent.ini">
 {CONFIG_QBITTORRENT}

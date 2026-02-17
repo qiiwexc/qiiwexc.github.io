@@ -11,19 +11,21 @@ try {
     throw "System not supported: Failed to load WPF assemblies: $_"
 }
 
-Set-Variable -Option Constant OPERATING_SYSTEM ([PSObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
+try {
+    Set-Variable -Option Constant OPERATING_SYSTEM ([PSObject](Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture))
+} catch {
+    throw "Failed to query operating system information: $_"
+}
 Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
 
 Set-Variable -Option Constant OS_64_BIT ([Bool]($env:PROCESSOR_ARCHITECTURE -like '*64'))
 
-if ($OPERATING_SYSTEM.Caption -match 'Windows 11') {
+if ([Int]($WindowsBuild.Split('.')[2]) -ge 22000) {
     Set-Variable -Option Constant OS_VERSION ([Int]11)
-} elseif ($WindowsBuild -match '10.0.*') {
+} elseif ($WindowsBuild -match '^10\.0\.') {
     Set-Variable -Option Constant OS_VERSION ([Int]10)
 } else {
-    Write-Error "Unsupported Operating System: $($OPERATING_SYSTEM.Caption) (Build $WindowsBuild)"
-    Start-Sleep -Seconds 5
-    break
+    throw "Unsupported Operating System: $($OPERATING_SYSTEM.Caption) (Build $WindowsBuild)"
 }
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12

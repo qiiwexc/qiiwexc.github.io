@@ -17,12 +17,12 @@ function New-UnattendedFile {
     Set-Variable -Option Constant UnattendedPath ([String]"$BuilderPath\unattended")
     Set-Variable -Option Constant ConfigsPath ([String]"$SourcePath\3-configs")
 
-    Set-Variable -Option Constant NonLocalisedFileName ([String]'autounattend.xml')
-    Set-Variable -Option Constant LocalisedFileNameTemplate ([String]'autounattend-{LOCALE}.xml')
+    Set-Variable -Option Constant NonLocalizedFileName ([String]'autounattend.xml')
+    Set-Variable -Option Constant LocalizedFileNameTemplate ([String]'autounattend-{LOCALE}.xml')
 
     Set-Variable -Option Constant Locales ([String[]]@('English', 'Russian'))
 
-    Set-Variable -Option Constant BaseFile ([String]"$BuildPath\$NonLocalisedFileName")
+    Set-Variable -Option Constant BaseFile ([String]"$BuildPath\$NonLocalizedFileName")
 
     Write-ActivityProgress 5
 
@@ -47,7 +47,7 @@ function New-UnattendedFile {
     foreach ($Locale in $Locales) {
         [Int]$Percentage = 20 + $Iteration * 15
 
-        [String]$OutputFileName = "$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
+        [String]$OutputFileName = "$BuildPath\" + $LocalizedFileNameTemplate.Replace('{LOCALE}', $Locale)
 
         [String]$UpdatedTemplateContent = Set-LocaleSettings $Locale $TemplateContent
         $Percentage += 2
@@ -81,8 +81,8 @@ function New-UnattendedFile {
     Write-ActivityProgress 80
 
     if (-not $CI) {
-        Set-Variable -Option Constant BuildFile ([String]("$BuildPath\" + $LocalisedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
-        Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalisedFileName"))
+        Set-Variable -Option Constant BuildFile ([String]("$BuildPath\" + $LocalizedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
+        Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalizedFileName"))
         Copy-Item $BuildFile $VmFile
     }
 
@@ -100,8 +100,8 @@ function New-UnattendedFile {
     Write-ActivityProgress 85
 
     foreach ($Locale in $Locales) {
-        [String]$LocalisedFileName = $LocalisedFileNameTemplate.Replace('{LOCALE}', $Locale)
-        [String]$BuildFileName = "$BuildPath\$LocalisedFileName"
+        [String]$LocalizedFileName = $LocalizedFileNameTemplate.Replace('{LOCALE}', $Locale)
+        [String]$BuildFileName = "$BuildPath\$LocalizedFileName"
 
         [String]$FileContent = Read-TextFile $BuildFileName
 

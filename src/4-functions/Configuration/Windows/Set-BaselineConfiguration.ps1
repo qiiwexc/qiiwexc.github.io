@@ -14,16 +14,16 @@ function Set-BaselineConfiguration {
         Out-Failure "Failed to remove unelevated Explorer scheduled task: $_"
     }
 
-    if ($SYSTEM_LANGUAGE -match 'ru') {
-        Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_BASELINE_RUSSIAN)
+    if ($SYSTEM_LANGUAGE -match '^ru') {
+        Set-Variable -Option Constant LocalizedConfig ([String]$CONFIG_BASELINE_RUSSIAN)
     } else {
-        Set-Variable -Option Constant LocalisedConfig ([String]$CONFIG_BASELINE_ENGLISH)
+        Set-Variable -Option Constant LocalizedConfig ([String]$CONFIG_BASELINE_ENGLISH)
     }
 
     if ($OS_VERSION -ge 11) {
         Set-Variable -Option Constant TaskManagerConfig ([String]"$env:LocalAppData\Microsoft\Windows\TaskManager\settings.json")
 
-        if ($SYSTEM_LANGUAGE -match 'ru') {
+        if ($SYSTEM_LANGUAGE -match '^ru') {
             Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_RUSSIAN -NoNewline
         } else {
             Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_ENGLISH -NoNewline
@@ -32,7 +32,7 @@ function Set-BaselineConfiguration {
 
     [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_BASELINE
     $ConfigLines.Add("`n")
-    $ConfigLines.Add((Add-SysPrepConfig $LocalisedConfig))
+    $ConfigLines.Add((Add-SysPrepConfig $LocalizedConfig))
 
     try {
         $VolumeItems = Get-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*' -ErrorAction Stop
