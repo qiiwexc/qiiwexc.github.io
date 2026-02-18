@@ -82,4 +82,10 @@ jobs:
           $existingPr = gh pr list --head $branch --json number --jq '.[0].number'
           if (-not $existingPr) {
               gh pr create --title $title --body $body --reviewer '${{ github.repository_owner }}'
+          } else {
+              if ($body) {
+                  gh pr edit $existingPr --title $title --body $body
+              } else {
+                  gh pr edit $existingPr --title $title
+              }
           }
