@@ -74,8 +74,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $date = Get-Date -Format 'yyyy-MM-dd'
-          $branch = "chore/update-dependencies-$date"
+          $now = Get-Date
+          $branch = "chore/update-dependencies-$($now.ToString('yyyy-MM-dd'))"
 
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
@@ -85,7 +85,7 @@ jobs:
           git commit -m 'Update dependencies'
           git push origin $branch --force
 
-          $title = "Update dependencies ($(Get-Date -Format 'yyyy.MM.dd'))"
+          $title = "Update dependencies ($($now.ToString('yyyy.MM.dd')))"
           $existingPr = gh pr list --head $branch --json number --jq '.[0].number'
           if (-not $existingPr) {
               gh pr create --title $title --body '' --reviewer '${{ github.repository_owner }}'
