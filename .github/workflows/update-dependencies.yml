@@ -26,7 +26,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           try {
-              .\tools\build.ps1 -Update
+              .\tools\build.ps1 -Update -CI
           } catch {
               Write-Host "::warning::Build script error: $_"
           }
@@ -55,24 +55,12 @@ jobs:
               "has_updates=false" >> $env:GITHUB_OUTPUT
           }
 
-      - name: Annotate with changelog URLs
-        if: steps.update.outputs.has_updates == 'true'
-        shell: pwsh
-        env:
-          CHANGELOG_URLS: ${{ steps.update.outputs.changelog_urls }}
-        run: |
-          foreach ($line in ($env:CHANGELOG_URLS -split "`n")) {
-              $trimmed = $line.Trim()
-              if ($trimmed) {
-                  Write-Host "::notice title=Changelog::$trimmed"
-              }
-          }
-
       - name: Create pull request
         if: steps.update.outputs.has_updates == 'true'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
+          CHANGELOG_URLS: ${{ steps.update.outputs.changelog_urls }}
         run: |
           $now = Get-Date
           $branch = "chore/update-dependencies-$($now.ToString('yyyy-MM-dd'))"
@@ -85,8 +73,13 @@ jobs:
           git commit -m 'Update dependencies'
           git push origin $branch --force
 
+          $body = ''
+          if ($env:CHANGELOG_URLS) {
+              $body = ($env:CHANGELOG_URLS -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ } | ForEach-Object { "- $_" }) -join "`n"
+          }
+
           $title = "Update dependencies ($($now.ToString('yyyy.MM.dd')))"
           $existingPr = gh pr list --head $branch --json number --jq '.[0].number'
           if (-not $existingPr) {
-              gh pr create --title $title --body '' --reviewer '${{ github.repository_owner }}'
+              gh pr create --title $title --body $body --reviewer '${{ github.repository_owner }}'
           }
