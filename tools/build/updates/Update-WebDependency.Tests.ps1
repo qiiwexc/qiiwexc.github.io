@@ -96,6 +96,18 @@ Describe 'Update-WebDependency' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
+    It 'Should handle Content property access throwing' {
+        $ThrowingResponse = [PSCustomObject]@{}
+        $ThrowingResponse | Add-Member -MemberType ScriptProperty -Name Content -Value { throw 'Content access failed' }
+        Mock Invoke-WebRequest { return $ThrowingResponse }
+
+        Update-WebDependency $TestDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
     It 'Should report HTTP status code on WebRequest failure with response' {
         $MockResponse = [PSCustomObject]@{ StatusCode = [System.Net.HttpStatusCode]::NotFound }
         $MockException = [System.Net.WebException]::new('The remote server returned an error')

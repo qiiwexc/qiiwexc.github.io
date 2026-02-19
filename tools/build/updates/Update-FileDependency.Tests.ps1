@@ -161,6 +161,17 @@ Describe 'Update-FileDependency' {
         }
     }
 
+    It 'Should handle file with null VersionInfo' {
+        Mock Get-Item { return (New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = $null }) } -ParameterFilter { $Path -match ' x86.exe' }
+        Mock Get-Item { return (New-MockObject -Type IO.FileInfo -Properties @{ VersionInfo = $null }) } -ParameterFilter { $Path -notmatch ' x86.exe' }
+
+        Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
+
+        Should -Invoke Get-Item -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
     It 'Should handle Get-Item failure' {
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -match ' x86.exe' }
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -notmatch ' x86.exe' }

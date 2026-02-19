@@ -123,6 +123,17 @@ Describe 'Read-GitHubToken' {
         Should -Invoke Read-TextFile -Exactly 1
     }
 
+    It 'Should warn when env file path is outside repository root' {
+        Mock git { return 'C:\fake_repo' }
+        Mock Resolve-Path { return 'D:\outside\TEST_ENV_PATH' } -ParameterFilter { $Path -eq $TestEnvPath }
+        Mock Resolve-Path { return 'C:\fake_repo' } -ParameterFilter { $Path -ne $TestEnvPath }
+
+        Read-GitHubToken $TestEnvPath | Should -BeNullOrEmpty
+
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 0
+    }
+
     It 'Should return token from environment variable' {
         $env:GITHUB_TOKEN = 'ENV_TOKEN_VALUE'
         try {

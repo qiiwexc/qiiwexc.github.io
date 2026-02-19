@@ -109,6 +109,15 @@ Describe 'Select-Releases' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
+    It 'Should skip non-parseable version tags' {
+        Mock Invoke-GitAPI { return @( @{ tag_name = $TestNewVersion }, @{ tag_name = 'non-parseable-tag' }, @{ tag_name = $TestCurrentVersion } ) }
+
+        Select-Releases $TestDependency | Should -BeExactly @($TestNewVersionUrl)
+
+        Should -Invoke Invoke-GitAPI -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 1
+    }
+
     It 'Should handle Invoke-GitAPI failure' {
         Mock Invoke-GitAPI { throw $TestException }
 
