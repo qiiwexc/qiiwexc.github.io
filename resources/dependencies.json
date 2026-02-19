@@ -30,14 +30,14 @@
   },
   {
     "name": "WinUtil",
-    "version": "26.02.11",
+    "version": "26.02.18",
     "source": "GitHub",
     "mode": "releases",
     "repository": "ChrisTitusTech/winutil"
   },
   {
     "name": "Win11Debloat",
-    "version": "2026.02.15",
+    "version": "2026.02.18",
     "source": "GitHub",
     "mode": "releases",
     "repository": "Raphire/Win11Debloat"
