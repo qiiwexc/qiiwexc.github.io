@@ -90,6 +90,18 @@ Describe 'New-PowerShellScript' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
+    It 'Should throw on PS1 file with syntax errors' {
+        Mock Read-TextFile { return 'function { @@@invalid syntax' } -ParameterFilter { $Path -eq $TestPs1FilePath }
+
+        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw
+
+        Should -Invoke New-Activity -Exactly 1
+        Should -Invoke Get-ChildItem -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
     It 'Should handle Write-TextFile failure' {
         Mock Write-TextFile { throw $TestException }
 
