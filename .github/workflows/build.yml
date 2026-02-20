@@ -23,7 +23,7 @@ jobs:
 
       - name: Install PSScriptAnalyzer
         if: steps.cache-psmodules.outputs.cache-hit != 'true'
-        shell: pwsh
+        shell: powershell
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -RequiredVersion 1.24.0

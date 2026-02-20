@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Pester
         if: steps.cache-psmodules.outputs.cache-hit != 'true'
-        shell: pwsh
+        shell: powershell
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module -Name Pester -Force -Scope CurrentUser -RequiredVersion 5.7.1
