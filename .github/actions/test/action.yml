@@ -1,0 +1,26 @@
+name: Test
+description: Run Pester tests with coverage
+
+runs:
+  using: composite
+  steps:
+    - name: Check out repository
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+    - name: Cache Pester
+      id: cache-psmodules
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+      with:
+        path: ~/Documents/PowerShell/Modules
+        key: psmodules-Pester-5.7.1
+
+    - name: Install Pester
+      if: steps.cache-psmodules.outputs.cache-hit != 'true'
+      shell: powershell
+      run: |
+        Set-PSRepository PSGallery -InstallationPolicy Trusted
+        Install-Module -Name Pester -Force -Scope CurrentUser -RequiredVersion 5.7.1
+
+    - name: Run tests with coverage
+      shell: pwsh
+      run: .\test-with-coverage.bat
