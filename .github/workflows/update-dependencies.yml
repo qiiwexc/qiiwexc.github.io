@@ -21,7 +21,7 @@ jobs:
 
       - name: Check for dependency updates
         id: update
-        shell: pwsh
+        shell: powershell
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -57,7 +57,7 @@ jobs:
 
       - name: Create pull request
         if: steps.update.outputs.has_updates == 'true'
-        shell: pwsh
+        shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
           CHANGELOG_URLS: ${{ steps.update.outputs.changelog_urls }}
