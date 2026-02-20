@@ -11,11 +11,13 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write
+      actions: write
     steps:
       - name: Check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Create and push tag
+        id: create-tag
         run: |
           version=$(date +'%-y.%-m.%-d')
           tag="v$version"
@@ -30,3 +32,10 @@ jobs:
 
           git tag -a "$tag" -m "Release $tag"
           git push origin "$tag"
+
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+
+      - name: Trigger CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run ci.yml --repo "${{ github.repository }}" --ref "${{ steps.create-tag.outputs.tag }}"

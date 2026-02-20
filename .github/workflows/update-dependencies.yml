@@ -15,6 +15,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     steps:
       - name: Check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -44,7 +45,6 @@ jobs:
               $Result = Compare-Dependencies $OldDeps $NewDeps $UrlsTemplate
 
               "has_updates=true" >> $env:GITHUB_OUTPUT
-              "has_release_update=$($Result.HasReleaseUpdate)" >> $env:GITHUB_OUTPUT
 
               if ($env:CHANGELOG_URLS) {
                   "changelog_urls<<EOF" >> $env:GITHUB_OUTPUT
@@ -57,6 +57,7 @@ jobs:
 
       - name: Create pull request
         if: steps.update.outputs.has_updates == 'true'
+        id: create-pr
         shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
@@ -79,7 +80,7 @@ jobs:
           }
 
           $title = "Update dependencies ($($now.ToString('yyyy.MM.dd')))"
-          $existingPr = gh pr list --head $branch --json number --jq '.[0].number'
+          $existingPr = gh pr list --head $branch --json number --jq 'if length > 0 then .[0].number else empty end'
           if (-not $existingPr) {
               gh pr create --title $title --body $body --reviewer '${{ github.repository_owner }}'
           } else {
@@ -89,3 +90,13 @@ jobs:
                   gh pr edit $existingPr --title $title
               }
           }
+
+          "branch=$branch" >> $env:GITHUB_OUTPUT
+
+      - name: Trigger CI on PR branch
+        if: steps.update.outputs.has_updates == 'true'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run ci.yml --repo "${{ github.repository }}" --ref "${{ steps.create-pr.outputs.branch }}"
