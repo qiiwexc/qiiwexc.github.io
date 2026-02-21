@@ -1,92 +1,92 @@
 [
-  {
-    "name": "SystemRescue",
-    "version": "12.03",
-    "source": "GitLab",
-    "mode": "tags",
-    "repository": "systemrescue/systemrescue-sources",
-    "projectId": "10658830"
-  },
-  {
-    "name": "TronScript",
-    "version": "v12.0.6",
-    "source": "GitHub",
-    "mode": "tags",
-    "repository": "bmrf/tron"
-  },
-  {
-    "name": "Microsoft Activation Scripts",
-    "version": "3.10",
-    "source": "GitHub",
-    "mode": "releases",
-    "repository": "massgravel/Microsoft-Activation-Scripts"
-  },
-  {
-    "name": "Unattend Generator",
-    "version": "2196b2bfabd9ebc4b26969358369fd6912fe8dc7",
-    "source": "GitHub",
-    "mode": "commits",
-    "repository": "cschneegans/unattend-generator"
-  },
-  {
-    "name": "WinUtil",
-    "version": "26.02.18",
-    "source": "GitHub",
-    "mode": "releases",
-    "repository": "ChrisTitusTech/winutil"
-  },
-  {
-    "name": "Win11Debloat",
-    "version": "2026.02.19",
-    "source": "GitHub",
-    "mode": "releases",
-    "repository": "Raphire/Win11Debloat"
-  },
-  {
-    "name": "Ventoy",
-    "version": "v1.1.10",
-    "source": "GitHub",
-    "mode": "releases",
-    "repository": "ventoy/Ventoy"
-  },
-  {
-    "name": "Rufus",
-    "version": "v4.13",
-    "source": "GitHub",
-    "mode": "releases",
-    "repository": "pbatard/rufus"
-  },
-  {
-    "name": "OOShutUp10",
-    "version": "2.2",
-    "source": "URL",
-    "url": "https://www.oo-software.com/en/shutup10/changelog",
-    "regex": "<h4[^>]*>Version (.*?)</h4>"
-  },
-  {
-    "name": "Windows",
-    "version": "13 ноября 2025&#8239;г. в 07:02",
-    "source": "URL",
-    "url": "https://w18.monkrus.ws/search/label/Windows",
-    "regex": "^<div class='post-header'[^>]*>\n<div class='post-header-line-1'[^>]*></div>\nОпубликовал\n<b style='color: #999;'[^>]*>m0nkrus</b>\n(.*?)\n</div>"
-  },
-  {
-    "name": "SDI",
-    "version": "1.26.1",
-    "source": "URL",
-    "url": "https://driveroff.net/dp/",
-    "regex": "<tr><td>Snappy Driver Installer</td><td>(.*?) \\((?:\\d{2}\\.\\d{2}\\.\\d{4})\\)</td>"
-  },
-  {
-    "name": "CPU-Z",
-    "version": "2.18",
-    "source": "URL",
-    "url": "https://cpuid.com/softwares/cpu-z.html",
-    "regex": "<div class=\"version\"[^>]*><span[^>]*>CPU-Z (.*?)</span></div>"
-  },
-  {
-    "name": "Office Installer",
-    "version": "1.2.8.0",
-    "source": "File"
-  }
+    {
+        "name":  "SystemRescue",
+        "version":  "12.03",
+        "source":  "GitLab",
+        "mode":  "tags",
+        "repository":  "systemrescue/systemrescue-sources",
+        "projectId":  "10658830"
+    },
+    {
+        "name":  "TronScript",
+        "version":  "v12.0.6",
+        "source":  "GitHub",
+        "mode":  "tags",
+        "repository":  "bmrf/tron"
+    },
+    {
+        "name":  "Microsoft Activation Scripts",
+        "version":  "3.10",
+        "source":  "GitHub",
+        "mode":  "releases",
+        "repository":  "massgravel/Microsoft-Activation-Scripts"
+    },
+    {
+        "name":  "Unattend Generator",
+        "version":  "ce3f48daf2b9053668b64bd8477983981816c9e0",
+        "source":  "GitHub",
+        "mode":  "commits",
+        "repository":  "cschneegans/unattend-generator"
+    },
+    {
+        "name":  "WinUtil",
+        "version":  "26.02.18",
+        "source":  "GitHub",
+        "mode":  "releases",
+        "repository":  "ChrisTitusTech/winutil"
+    },
+    {
+        "name":  "Win11Debloat",
+        "version":  "2026.02.19",
+        "source":  "GitHub",
+        "mode":  "releases",
+        "repository":  "Raphire/Win11Debloat"
+    },
+    {
+        "name":  "Ventoy",
+        "version":  "v1.1.10",
+        "source":  "GitHub",
+        "mode":  "releases",
+        "repository":  "ventoy/Ventoy"
+    },
+    {
+        "name":  "Rufus",
+        "version":  "v4.13",
+        "source":  "GitHub",
+        "mode":  "releases",
+        "repository":  "pbatard/rufus"
+    },
+    {
+        "name":  "OOShutUp10",
+        "version":  "2.2",
+        "source":  "URL",
+        "url":  "https://www.oo-software.com/en/shutup10/changelog",
+        "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
+    },
+    {
+        "name":  "Windows",
+        "version":  "13 ноября 2025\u0026#8239;г. в 07:02",
+        "source":  "URL",
+        "url":  "https://w18.monkrus.ws/search/label/Windows",
+        "regex":  "^\u003cdiv class=\u0027post-header\u0027[^\u003e]*\u003e\n\u003cdiv class=\u0027post-header-line-1\u0027[^\u003e]*\u003e\u003c/div\u003e\nОпубликовал\n\u003cb style=\u0027color: #999;\u0027[^\u003e]*\u003em0nkrus\u003c/b\u003e\n(.*?)\n\u003c/div\u003e"
+    },
+    {
+        "name":  "SDI",
+        "version":  "1.26.1",
+        "source":  "URL",
+        "url":  "https://driveroff.net/dp/",
+        "regex":  "\u003ctr\u003e\u003ctd\u003eSnappy Driver Installer\u003c/td\u003e\u003ctd\u003e(.*?) \\((?:\\d{2}\\.\\d{2}\\.\\d{4})\\)\u003c/td\u003e"
+    },
+    {
+        "name":  "CPU-Z",
+        "version":  "2.18",
+        "source":  "URL",
+        "url":  "https://cpuid.com/softwares/cpu-z.html",
+        "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
+    },
+    {
+        "name":  "Office Installer",
+        "version":  "1.2.8.0",
+        "source":  "File"
+    }
 ]
