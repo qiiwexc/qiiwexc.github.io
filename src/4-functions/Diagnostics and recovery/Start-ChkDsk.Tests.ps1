@@ -46,7 +46,7 @@ Describe 'Start-ChkDsk' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should filter out Progress lines and update progress bar from Total percentage' {
+    It 'Should filter out progress lines and update progress bar from total percentage' {
         Mock chkdsk {
             return @(
                 'The type of the file system is NTFS.',
@@ -66,10 +66,35 @@ Describe 'Start-ChkDsk' {
         Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 99 }
 
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
-            $Value -notmatch 'Progress:' -and
+            $Value -notmatch '\d+\s*%.*\d+\s*%' -and
             $Value -match 'The type of the file system is NTFS\.' -and
             $Value -match '2264064 file records processed\.'
         }
+    }
+
+    It 'Should handle non-English chkdsk progress output' {
+        Mock chkdsk {
+            return @(
+                'Тип файловой системы: NTFS.',
+                'Выполнено: 0 из 2264064; Этап:  0%; Всего:  0%; Осталось:   1:48:50    ',
+                'Выполнено: 500000 из 2264064; Этап: 22%; Всего: 50%; Осталось:   0:01:00    ',
+                '2264064 записей файлов обработано.',
+                'Windows проверила файловую систему и не нашла проблем.'
+            )
+        }
+
+        Start-ChkDsk
+
+        Should -Invoke Write-ActivityProgress -Exactly 2
+        Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 0 }
+        Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 50 }
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            $Value -notmatch '\d+\s*%.*\d+\s*%' -and
+            $Value -match 'Тип файловой системы: NTFS\.' -and
+            $Value -match '2264064 записей файлов обработано\.' -and
+            $Value -match 'Windows проверила файловую систему'
+        }
+        Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should schedule full scan via cmd when ScheduleFullScan is specified' {

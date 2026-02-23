@@ -16,20 +16,26 @@ function Start-ChkDsk {
             Set-Variable -Option Constant LogPath ([String]"$PATH_APP_DIR\chkdsk.log")
 
             [Collections.Generic.List[String]]$LogLines = @()
-            $Null = & 'chkdsk' '/scan' '/perf' 2>&1 |
-            ForEach-Object {
-                [String]$Line = $_.TrimEnd()
-                if ($Line -match '^Progress:') {
-                    if ($Line -match 'Total:\s*(\d+)%') {
-                        Write-ActivityProgress ([Int]$Matches[1])
-                    }
-                } elseif ($Line -ne '') {
-                    if (($Line -match '^Stage') -or ($Line -match '^Windows')) {
-                        $LogLines.Add("`n$Line")
-                    } else {
-                        $LogLines.Add($Line)
+            $PreviousEncoding = [Console]::OutputEncoding
+            try {
+                [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding([System.Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage)
+                $Null = & 'chkdsk' '/scan' '/perf' 2>&1 |
+                ForEach-Object {
+                    [String]$Line = $_.TrimEnd()
+                    if ($Line -match '\d+\s*%.*\d+\s*%') {
+                        if ($Line -match '.*(\d+)\s*%') {
+                            Write-ActivityProgress ([Int]$Matches[1])
+                        }
+                    } elseif ($Line -ne '') {
+                        if (($Line -match '^\S+\s+\d') -or ($Line -match '^Windows')) {
+                            $LogLines.Add("`n$Line")
+                        } else {
+                            $LogLines.Add($Line)
+                        }
                     }
                 }
+            } finally {
+                [Console]::OutputEncoding = $PreviousEncoding
             }
 
             Set-Content -Path $LogPath -Value ($LogLines -join "`r`n") -Encoding UTF8 -Force -ErrorAction Stop
