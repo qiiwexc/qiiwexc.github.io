@@ -38,7 +38,8 @@ Describe 'New-BatchScript' {
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBatchFilePath -and
             $Content -match '@echo off' -and
-            $Content -match "%LOCALAPPDATA%\\$TestProjectName\\$TestProjectName\.ps1" -and
+            $Content -match "appdir=%LOCALAPPDATA%\\$TestProjectName" -and
+            $Content -match "psfile=%appdir%\\$TestProjectName\.ps1" -and
             $Content -match 'if not exist' -and
             $Content -match '  powershell -ExecutionPolicy Bypass -Command ' -and
             $Content -match '::TEST_PS1_FILE_CONTENT_1' -and
