@@ -13,7 +13,9 @@ function New-BatchScript {
     Set-Variable -Option Constant BatchLines (
         [String]("@echo off
 
-set `"psfile=%temp%\$ProjectName.ps1`"
+set `"appdir=%LOCALAPPDATA%\$ProjectName`"
+if not exist `"%appdir%`" mkdir `"%appdir%`"
+set `"psfile=%appdir%\$ProjectName.ps1`"
 
 > `"%psfile%`" (
     for /f `"delims=`" %%A in ('findstr `"^::`" `"%~f0`"') do (
