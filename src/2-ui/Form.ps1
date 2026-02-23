@@ -44,6 +44,7 @@
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonDisabledColor}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ButtonDisabledColor}" />
                                 <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabledColor}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
