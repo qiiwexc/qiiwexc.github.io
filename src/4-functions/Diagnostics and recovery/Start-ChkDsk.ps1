@@ -22,10 +22,8 @@ function Start-ChkDsk {
                 $Null = & 'chkdsk' '/scan' '/perf' 2>&1 |
                 ForEach-Object {
                     [String]$Line = $_.TrimEnd()
-                    if ($Line -match '\d+\s*%.*\d+\s*%') {
-                        if ($Line -match '.*(\d+)\s*%') {
-                            Write-ActivityProgress ([Int]$Matches[1])
-                        }
+                    if ($Line -match '\d+\s*%.*?(\d+)\s*%') {
+                        Write-ActivityProgress ([Int]$Matches[1])
                     } elseif ($Line -ne '') {
                         if (($Line -match '^\S+\s+\d') -or ($Line -match '^Windows')) {
                             $LogLines.Add("`n$Line")

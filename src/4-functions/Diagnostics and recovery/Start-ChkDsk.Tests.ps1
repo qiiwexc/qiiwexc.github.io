@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\types.ps1'
