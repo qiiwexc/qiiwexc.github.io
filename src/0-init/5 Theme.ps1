@@ -7,6 +7,25 @@ function Get-SystemTheme {
     }
 }
 
+function Get-SystemAccentColors {
+    [Hashtable]$Defaults = @{
+        Accent        = '#0067c0'
+        AccentHover   = '#1975c9'
+        AccentPressed = '#3284cc'
+    }
+    try {
+        [Byte[]]$Palette = Get-ItemPropertyValue 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Accent' -Name 'AccentPalette'
+        if ($Palette.Length -lt 20) { return $Defaults }
+        return @{
+            Accent        = '#{0:X2}{1:X2}{2:X2}' -f $Palette[12], $Palette[13], $Palette[14]
+            AccentHover   = '#{0:X2}{1:X2}{2:X2}' -f $Palette[8], $Palette[9], $Palette[10]
+            AccentPressed = '#{0:X2}{1:X2}{2:X2}' -f $Palette[16], $Palette[17], $Palette[18]
+        }
+    } catch {
+        return $Defaults
+    }
+}
+
 function Set-ThemeResources {
     param(
         [Parameter(Position = 0, Mandatory)][Windows.Window]$Window
@@ -71,12 +90,14 @@ function Set-ThemeResources {
         )
     }
 
-    $Colors['AccentColor'] = '#0067c0'
-    $Colors['AccentHoverColor'] = '#1E88E5'
-    $Colors['AccentPressedColor'] = '#3284cc'
+    Set-Variable -Option Constant AccentColors ([Hashtable](Get-SystemAccentColors))
+    $Colors['AccentColor'] = $AccentColors.Accent
+    $Colors['AccentHoverColor'] = $AccentColors.AccentHover
+    $Colors['AccentPressedColor'] = $AccentColors.AccentPressed
     $Colors['CloseHoverColor'] = '#c42b1c'
 
+    Set-Variable -Option Constant Converter ([Windows.Media.BrushConverter]::new())
     foreach ($Entry in $Colors.GetEnumerator()) {
-        $Window.Resources[$Entry.Key] = [Windows.Media.BrushConverter]::new().ConvertFromString($Entry.Value)
+        $Window.Resources[$Entry.Key] = $Converter.ConvertFromString($Entry.Value)
     }
 }
