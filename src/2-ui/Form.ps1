@@ -359,3 +359,12 @@ $TitleBar.Add_MouseLeftButtonDown( {
 
 $FORM.Add_ContentRendered( { Initialize-App } )
 $FORM.Add_Closing( { Reset-State } )
+
+Set-Variable -Option Constant ThemeChangeHandler ([Microsoft.Win32.UserPreferenceChangedEventHandler] {
+        param($Sender, $EventArgs)
+        if ($EventArgs.Category -eq [Microsoft.Win32.UserPreferenceCategory]::General) {
+            Invoke-OnDispatcher { Set-ThemeResources $FORM }
+        }
+    })
+[Microsoft.Win32.SystemEvents]::add_UserPreferenceChanged($ThemeChangeHandler)
+$FORM.Add_Closing( { [Microsoft.Win32.SystemEvents]::remove_UserPreferenceChanged($ThemeChangeHandler) } )
