@@ -42,5 +42,5 @@ $CHECKBOX_StartOoShutUp10.Add_Click( {
 [Windows.Controls.CheckBox]$CHECKBOX_SilentlyRunOoShutUp10 = New-CheckBox 'Silently apply tweaks'
 
 
-[ScriptBlock]$BUTTON_FUNCTION = { Start-AsyncOperation -Button $this { Start-WinUtil } }
+[ScriptBlock]$BUTTON_FUNCTION = { Start-WinUtil }
 New-Button 'WinUtil' $BUTTON_FUNCTION
