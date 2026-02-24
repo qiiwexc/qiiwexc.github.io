@@ -32,7 +32,7 @@ function Test-UpdateAvailability {
             return $False
         }
 
-        Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}'))
+        Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}' -Headers @{ 'User-Agent' = 'qiiwexc-updater' }))
         Set-Variable -Option Constant Release ([PSObject[]]($Response.Content | ConvertFrom-Json))
         Set-Variable -Option Constant AvailableVersion ([Version]$Release[0].tag_name.TrimStart('v'))
 
