@@ -65,13 +65,14 @@ jobs:
         run: |
           $now = Get-Date
           $branch = "chore/update-dependencies-$($now.ToString('yyyy-MM-dd'))"
+          $title = "Update dependencies ($($now.ToString('yyyy.MM.dd')))"
 
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
           git checkout -b $branch
           git add resources/dependencies.json
-          git commit -m 'Update dependencies'
+          git commit -m $title
           git push origin $branch --force
 
           $body = ''
@@ -79,7 +80,6 @@ jobs:
               $body = ($env:CHANGELOG_URLS -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ } | ForEach-Object { "- $_" }) -join "`n"
           }
 
-          $title = "Update dependencies ($($now.ToString('yyyy.MM.dd')))"
           $existingPr = gh pr list --head $branch --json number --jq 'if length > 0 then .[0].number else empty end'
           if (-not $existingPr) {
               gh pr create --title $title --body $body --reviewer '${{ github.repository_owner }}'
