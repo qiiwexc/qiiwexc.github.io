@@ -2,8 +2,9 @@ if (-not (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
     Write-Host 'Restarting elevated...'
 
     try {
-        Set-Variable -Option Constant EncodedCommand ([String][Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($MyInvocation.Line)))
-        Start-Process PowerShell -Verb RunAs "-ExecutionPolicy Bypass -EncodedCommand $EncodedCommand"
+        [String[]]$ElevationArgs = @('-ExecutionPolicy', 'Bypass', '-File', $PSCommandPath, '-WorkingDirectory', $WorkingDirectory)
+        if ($DevMode) { $ElevationArgs += '-DevMode' }
+        Start-Process PowerShell -Verb RunAs -ArgumentList $ElevationArgs
     } catch {
         Write-Error "Failed to restart elevated: $_"
         Start-Sleep -Seconds 5

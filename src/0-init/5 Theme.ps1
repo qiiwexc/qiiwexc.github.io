@@ -33,7 +33,6 @@ function Set-ThemeResources {
 
     Set-Variable -Option Constant IsLight ([Bool](Get-SystemTheme))
 
-
     if ($IsLight) {
         Set-Variable -Option Constant Colors (
             [Hashtable]@{
