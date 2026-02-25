@@ -30,7 +30,7 @@
     },
     {
         "name":  "WinUtil",
-        "version":  "26.02.18",
+        "version":  "26.02.24",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
