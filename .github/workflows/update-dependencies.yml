@@ -28,35 +28,7 @@ jobs:
         shell: powershell
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          try {
-              .\tools\build.ps1 -Update -CI
-          } catch {
-              Write-Host "::warning::Build script error: $_"
-          }
-
-          $diff = git diff --name-only --ignore-cr-at-eol resources/dependencies.json
-
-          if ($diff) {
-              . .\tools\common\types.ps1
-              . .\tools\build\Compare-Dependencies.ps1
-
-              [Dependency[]]$OldDeps = git show HEAD:resources/dependencies.json | ConvertFrom-Json
-              [Dependency[]]$NewDeps = Get-Content resources/dependencies.json -Raw | ConvertFrom-Json
-              $UrlsTemplate = Get-Content resources/urls.json -Raw | ConvertFrom-Json
-
-              $Result = Compare-Dependencies $OldDeps $NewDeps $UrlsTemplate
-
-              "has_updates=true" >> $env:GITHUB_OUTPUT
-
-              if ($env:CHANGELOG_URLS) {
-                  "changelog_urls<<EOF" >> $env:GITHUB_OUTPUT
-                  $env:CHANGELOG_URLS >> $env:GITHUB_OUTPUT
-                  "EOF" >> $env:GITHUB_OUTPUT
-              }
-          } else {
-              "has_updates=false" >> $env:GITHUB_OUTPUT
-          }
+        run: .\tools\Invoke-DependencyUpdate.ps1
 
       - name: Create pull request
         if: steps.update.outputs.has_updates == 'true'
