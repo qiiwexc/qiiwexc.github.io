@@ -7,7 +7,7 @@ function Compare-Dependencies {
 
     [String[]]$UpdatedNames = @()
     [String[]]$UpdateDetails = @()
-    [Bool]$HasReleaseUpdate = $False
+    [Bool]$HasUrlChange = $False
 
     foreach ($NewDep in $NewDependencies) {
         $OldDep = $OldDependencies | Where-Object { $_.name -eq $NewDep.name } | Select-Object -First 1
@@ -21,13 +21,17 @@ function Compare-Dependencies {
 
         [String]$UrlKey = "URL_$($NewDep.name.ToUpper().Replace(' ', '_').Replace('-', '_'))"
         if ($UrlsTemplate.PSObject.Properties[$UrlKey]) {
-            $HasReleaseUpdate = $True
+            [String]$OldUrl = $UrlsTemplate.$UrlKey.Replace('{VERSION}', $OldDep.version.TrimStart('v'))
+            [String]$NewUrl = $UrlsTemplate.$UrlKey.Replace('{VERSION}', $NewDep.version.TrimStart('v'))
+            if ($OldUrl -ne $NewUrl) {
+                $HasUrlChange = $True
+            }
         }
     }
 
     return [PSCustomObject]@{
-        UpdatedNames     = $UpdatedNames
-        UpdateDetails    = $UpdateDetails
-        HasReleaseUpdate = $HasReleaseUpdate
+        UpdatedNames  = $UpdatedNames
+        UpdateDetails = $UpdateDetails
+        HasUrlChange  = $HasUrlChange
     }
 }
