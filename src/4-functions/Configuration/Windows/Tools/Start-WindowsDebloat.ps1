@@ -23,7 +23,7 @@ function Start-WindowsDebloat {
     }
 
     try {
-        Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat")
+        Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat\Config")
 
         New-Directory $TargetPath
 
