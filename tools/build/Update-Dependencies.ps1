@@ -75,7 +75,7 @@ function Update-Dependencies {
 
     Write-ActivityProgress 90
 
-    Set-Variable -Option Constant UrlsToOpen ([String[]]@($ChangeLogs | Select-Object -Unique | Where-Object { $_ }))
+    Set-Variable -Option Constant UrlsToOpen ([String[]]@($ChangeLogs | ForEach-Object { $_ } | Where-Object { $_ } | Select-Object -Unique | Sort-Object))
     Write-LogInfo "$($UrlsToOpen.Count) update(s) found"
 
     Write-ActivityProgress 95

@@ -124,6 +124,40 @@ Describe 'Update-Dependencies' {
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
+    It 'Should flatten and sort multiple changelog URLs from a single dependency' {
+        Mock Update-GitDependency { return @('TEST_URL_B', 'TEST_URL_A') } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+
+        $Result = Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+
+        $Result | Should -HaveCount 2
+        $Result[0] | Should -BeExactly 'TEST_URL_A'
+        $Result[1] | Should -BeExactly 'TEST_URL_B'
+
+        Should -Invoke Write-JsonFile -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
+    It 'Should deduplicate changelog URLs across multiple dependencies' {
+        Mock Read-JsonFile {
+            return [Dependency[]]@(
+                @{source = $SourceGitHub; name = 'dep1'; version = $TestDependencyVersion },
+                @{source = $SourceURL; name = 'dep2'; version = $TestDependencyVersion }
+            )
+        }
+        Mock Update-GitDependency { return @('TEST_URL_A') } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+        Mock Update-WebDependency { return @('TEST_URL_A') }
+
+        $Result = Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+
+        $Result | Should -HaveCount 1
+        $Result | Should -BeExactly 'TEST_URL_A'
+
+        Should -Invoke Update-GitDependency -Exactly 1
+        Should -Invoke Update-WebDependency -Exactly 1
+        Should -Invoke Write-JsonFile -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
     It 'Should update GitLab dependencies' {
         Mock Read-JsonFile { return $TestGitLabDependency }
 
