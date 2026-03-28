@@ -4,19 +4,27 @@ description: Build the project and upload artifacts for tagged commits
 runs:
   using: composite
   steps:
+    - name: Read PSScriptAnalyzer version
+      id: versions
+      shell: powershell
+      run: |
+        $deps = Get-Content 'resources/dependencies.json' | ConvertFrom-Json
+        $version = ($deps | Where-Object { $_.name -eq 'PSScriptAnalyzer' }).version
+        "psscriptanalyzer=$version" >> $env:GITHUB_OUTPUT
+
     - name: Cache PSScriptAnalyzer
       id: cache-psmodules
       uses: actions/cache@v5.0.3
       with:
         path: ~/Documents/PowerShell/Modules
-        key: psmodules-PSScriptAnalyzer-1.24.0
+        key: psmodules-PSScriptAnalyzer-${{ steps.versions.outputs.psscriptanalyzer }}
 
     - name: Install PSScriptAnalyzer
       if: steps.cache-psmodules.outputs.cache-hit != 'true'
       shell: powershell
       run: |
         Set-PSRepository PSGallery -InstallationPolicy Trusted
-        Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -RequiredVersion 1.24.0
+        Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -RequiredVersion ${{ steps.versions.outputs.psscriptanalyzer }}
 
     - name: Run build
       shell: pwsh

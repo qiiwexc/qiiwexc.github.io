@@ -39,7 +39,7 @@ if ($OS_VERSION -eq 10) {
     Set-Variable -Option Constant ICON_WORKING ([Drawing.Icon](Get-DllIcon 229))
 }
 
-# Mutable layout state — tracks the previous element and current container
+# Mutable layout state - tracks the previous element and current container
 # so component functions (New-Button, New-Card, etc.) can adjust spacing
 Set-Variable -Scope Script LayoutContext ([Hashtable]@{
         PreviousLabelOrCheckbox = $Null

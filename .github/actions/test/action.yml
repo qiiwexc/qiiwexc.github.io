@@ -4,19 +4,27 @@ description: Run Pester tests with coverage
 runs:
   using: composite
   steps:
+    - name: Read Pester version
+      id: versions
+      shell: powershell
+      run: |
+        $deps = Get-Content 'resources/dependencies.json' | ConvertFrom-Json
+        $version = ($deps | Where-Object { $_.name -eq 'Pester' }).version
+        "pester=$version" >> $env:GITHUB_OUTPUT
+
     - name: Cache Pester
       id: cache-psmodules
       uses: actions/cache@v5.0.3
       with:
         path: ~/Documents/PowerShell/Modules
-        key: psmodules-Pester-5.7.1
+        key: psmodules-Pester-${{ steps.versions.outputs.pester }}
 
     - name: Install Pester
       if: steps.cache-psmodules.outputs.cache-hit != 'true'
       shell: powershell
       run: |
         Set-PSRepository PSGallery -InstallationPolicy Trusted
-        Install-Module -Name Pester -Force -Scope CurrentUser -RequiredVersion 5.7.1
+        Install-Module -Name Pester -Force -Scope CurrentUser -RequiredVersion ${{ steps.versions.outputs.pester }}
 
     - name: Run tests with coverage
       shell: pwsh

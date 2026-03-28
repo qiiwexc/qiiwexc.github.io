@@ -45,7 +45,6 @@ Set-Variable -Option Constant ProjectRoot ([String](Split-Path -Parent $PSScript
 Set-Variable -Option Constant ProjectName ([String]'qiiwexc')
 
 Set-Variable -Option Constant BuildPath ([String]"$ProjectRoot\build")
-Set-Variable -Option Constant DistPath ([String]"$ProjectRoot\d")
 Set-Variable -Option Constant SourcePath ([String]"$ProjectRoot\src")
 Set-Variable -Option Constant ResourcesPath ([String]"$ProjectRoot\resources")
 Set-Variable -Option Constant TemplatesPath ([String]"$ProjectRoot\templates")
@@ -90,7 +89,6 @@ Write-LogInfo "Run in dev mode          : $Run"
 New-Activity 'Building'
 
 $Null = New-Item -Force -ItemType Directory $BuildPath
-$Null = New-Item -Force -ItemType Directory $DistPath
 
 if ($Test) {
     Write-ActivityProgress 10 'Running unit tests...'
