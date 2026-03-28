@@ -23,7 +23,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "89f4d2da7e2f36b2f4038ba2e32135f7d83a95ec",
+        "version":  "99629e463f5d01ca09e632b1833e4c213f370d2b",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
@@ -37,7 +37,7 @@
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.03.09",
+        "version":  "2026.03.15",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
