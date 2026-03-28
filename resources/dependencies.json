@@ -93,14 +93,14 @@
         "name":  "Pester",
         "version":  "5.7.1",
         "source":  "GitHub",
-        "mode":  "tags",
+        "mode":  "releases",
         "repository":  "pester/Pester"
     },
     {
         "name":  "PSScriptAnalyzer",
         "version":  "1.24.0",
         "source":  "GitHub",
-        "mode":  "tags",
+        "mode":  "releases",
         "repository":  "PowerShell/PSScriptAnalyzer"
     }
 ]

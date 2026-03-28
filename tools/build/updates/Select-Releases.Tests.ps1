@@ -82,6 +82,15 @@ Describe 'Select-Releases' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
+    It 'Should skip alpha versions' {
+        Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-alpha" }, @{ tag_name = $TestCurrentVersion } ) }
+
+        Select-Releases $TestDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-GitAPI -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
     It 'Should not update if version is the same' {
         Mock Invoke-GitAPI { return @( @{ tag_name = $TestCurrentVersion }, @{ tag_name = $TestCurrentVersion } ) }
 
