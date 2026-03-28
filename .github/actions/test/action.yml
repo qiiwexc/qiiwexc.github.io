@@ -27,5 +27,5 @@ runs:
         Install-Module -Name Pester -Force -Scope CurrentUser -RequiredVersion ${{ steps.versions.outputs.pester }}
 
     - name: Run tests with coverage
-      shell: pwsh
+      shell: powershell
       run: .\test-with-coverage.bat
