@@ -16,7 +16,7 @@ runs:
       id: cache-psmodules
       uses: actions/cache@v5.0.3
       with:
-        path: ~/Documents/PowerShell/Modules
+        path: ~/Documents/WindowsPowerShell/Modules
         key: psmodules-PSScriptAnalyzer-${{ steps.versions.outputs.psscriptanalyzer }}
 
     - name: Install PSScriptAnalyzer
