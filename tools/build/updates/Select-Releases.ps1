@@ -13,7 +13,7 @@ function Select-Releases {
         return
     }
 
-    Set-Variable -Option Constant FilteredReleases ([GitRelease[]]@($Releases | Where-Object { $_.PSObject.Properties['tag_name'] -and $_.tag_name -inotmatch 'beta' }))
+    Set-Variable -Option Constant FilteredReleases ([GitRelease[]]@($Releases | Where-Object { $_.PSObject.Properties['tag_name'] -and $_.tag_name -inotmatch 'beta' -and $_.tag_name -inotmatch 'alpha' }))
 
     if ($FilteredReleases -and $FilteredReleases.Count -gt 0) {
         Set-Variable -Option Constant LatestVersion ([String]($FilteredReleases[0].tag_name))
