@@ -27,7 +27,7 @@ runs:
         Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -RequiredVersion ${{ steps.versions.outputs.psscriptanalyzer }}
 
     - name: Run build
-      shell: pwsh
+      shell: powershell
       run: .\build-ci.bat
 
     - name: Upload build artifacts
