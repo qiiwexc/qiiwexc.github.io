@@ -15,6 +15,7 @@
 
 Describe 'Start-ChkDsk' {
     BeforeEach {
+        $script:OS_VERSION = 10
         Mock Write-LogInfo {}
         Mock Write-LogWarning {}
         Mock Initialize-AppDirectory {}
@@ -133,5 +134,48 @@ Describe 'Start-ChkDsk' {
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
+    }
+
+    It 'Should use OEM code page on Windows 10' {
+        $script:OS_VERSION = 10
+        Mock chkdsk {
+            $global:TestCapturedCodePage = [Console]::OutputEncoding.CodePage
+            return @('test')
+        }
+
+        Start-ChkDsk
+
+        $global:TestCapturedCodePage | Should -Be ([System.Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage)
+        Remove-Variable TestCapturedCodePage -Scope Global
+    }
+
+    It 'Should use ANSI code page on Windows 11' {
+        $script:OS_VERSION = 11
+        Mock chkdsk {
+            $global:TestCapturedCodePage = [Console]::OutputEncoding.CodePage
+            return @('test')
+        }
+
+        Start-ChkDsk
+
+        $global:TestCapturedCodePage | Should -Be ([System.Globalization.CultureInfo]::CurrentCulture.TextInfo.ANSICodePage)
+        Remove-Variable TestCapturedCodePage -Scope Global
+    }
+
+    It 'Should restore console encoding after scan' {
+        $OriginalEncoding = [Console]::OutputEncoding
+
+        Start-ChkDsk
+
+        [Console]::OutputEncoding | Should -Be $OriginalEncoding
+    }
+
+    It 'Should restore console encoding after scan failure' {
+        $OriginalEncoding = [Console]::OutputEncoding
+        Mock chkdsk { throw $TestException }
+
+        Start-ChkDsk
+
+        [Console]::OutputEncoding | Should -Be $OriginalEncoding
     }
 }

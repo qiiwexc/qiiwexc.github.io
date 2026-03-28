@@ -18,7 +18,12 @@ function Start-ChkDsk {
             [Collections.Generic.List[String]]$LogLines = @()
             $PreviousEncoding = [Console]::OutputEncoding
             try {
-                [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding([System.Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage)
+                if ($OS_VERSION -ge 11) {
+                    Set-Variable -Option Constant CodePage ([Int][System.Globalization.CultureInfo]::CurrentCulture.TextInfo.ANSICodePage)
+                } else {
+                    Set-Variable -Option Constant CodePage ([Int][System.Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage)
+                }
+                [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding($CodePage)
                 $Null = & 'chkdsk' '/scan' '/perf' 2>&1 |
                 ForEach-Object {
                     [String]$Line = $_.TrimEnd()
