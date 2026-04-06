@@ -1,7 +1,7 @@
 [
     {
         "name":  "SystemRescue",
-        "version":  "12.03",
+        "version":  "13.00",
         "source":  "GitLab",
         "mode":  "tags",
         "repository":  "systemrescue/systemrescue-sources",
@@ -23,28 +23,28 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "99629e463f5d01ca09e632b1833e4c213f370d2b",
+        "version":  "71eb74c1f603598dbec2b6aa03cd24803e00ad20",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "26.03.13",
+        "version":  "26.04.02",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.03.15",
+        "version":  "2026.04.05",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
     },
     {
         "name":  "Ventoy",
-        "version":  "v1.1.10",
+        "version":  "v1.1.11",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ventoy/Ventoy"
@@ -98,7 +98,7 @@
     },
     {
         "name":  "PSScriptAnalyzer",
-        "version":  "1.24.0",
+        "version":  "1.25.0",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "PowerShell/PSScriptAnalyzer"
