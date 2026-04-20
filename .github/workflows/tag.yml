@@ -14,7 +14,7 @@ jobs:
       actions: write
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Create and push tag
         id: create-tag
@@ -38,4 +38,5 @@ jobs:
       - name: Trigger CI
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run ci.yml --repo "${{ github.repository }}" --ref "${{ steps.create-tag.outputs.tag }}"
+        run: gh workflow run ci.yml --repo "${{ github.repository }}" --ref "${{
+          steps.create-tag.outputs.tag }}"

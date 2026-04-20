@@ -14,7 +14,7 @@ runs:
 
     - name: Cache PSScriptAnalyzer
       id: cache-psmodules
-      uses: actions/cache@v5.0.3
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
       with:
         path: ~/Documents/WindowsPowerShell/Modules
         key: psmodules-PSScriptAnalyzer-${{ steps.versions.outputs.psscriptanalyzer }}
@@ -32,7 +32,7 @@ runs:
 
     - name: Upload build artifacts
       if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-artifact@v6.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
         name: build-output
         path: |
