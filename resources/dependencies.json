@@ -23,14 +23,14 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "71eb74c1f603598dbec2b6aa03cd24803e00ad20",
+        "version":  "b5944ad0b8d26588e78d963562e0f80ee2e33aeb",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "26.04.02",
+        "version":  "26.04.14",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
@@ -72,7 +72,7 @@
     },
     {
         "name":  "SDI",
-        "version":  "1.26.1",
+        "version":  "2.26.4",
         "source":  "URL",
         "url":  "https://driveroff.net/dp/",
         "regex":  "\u003ctr\u003e\u003ctd\u003eSnappy Driver Installer\u003c/td\u003e\u003ctd\u003e(.*?) \\((?:\\d{2}\\.\\d{2}\\.\\d{4})\\)\u003c/td\u003e"
