@@ -21,7 +21,7 @@ jobs:
       sha: ${{ steps.create-pr.outputs.sha }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Check for dependency updates
         id: update
@@ -79,7 +79,7 @@ jobs:
       statuses: write
     steps:
       - name: Check out PR branch
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ needs.update-dependencies.outputs.branch }}
 
@@ -97,7 +97,7 @@ jobs:
               -f state=$state -f context=test -f description="Tests $state"
 
   build:
-    needs: [update-dependencies, test]
+    needs: [ update-dependencies, test ]
     if: needs.update-dependencies.outputs.has_updates == 'true'
     runs-on: windows-latest
     timeout-minutes: 15
@@ -106,7 +106,7 @@ jobs:
       statuses: write
     steps:
       - name: Check out PR branch
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ needs.update-dependencies.outputs.branch }}
 

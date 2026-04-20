@@ -5,8 +5,8 @@ permissions: {}
 
 on:
   push:
-    branches: [master]
-    tags: ["*"]
+    branches: [ master ]
+    tags: [ "*" ]
   pull_request:
   workflow_dispatch:
 
@@ -18,7 +18,7 @@ jobs:
       contents: read
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Test
         uses: ./.github/actions/test
 
@@ -30,7 +30,7 @@ jobs:
       contents: read
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Build
         uses: ./.github/actions/build
 
@@ -54,7 +54,7 @@ jobs:
       should_release: ${{ steps.deploy.outputs.should_release }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Deploy
         id: deploy
         uses: ./.github/actions/deploy
@@ -68,7 +68,7 @@ jobs:
       contents: write
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Release
         uses: ./.github/actions/release
         with:
