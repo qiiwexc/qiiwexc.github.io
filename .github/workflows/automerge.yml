@@ -3,7 +3,8 @@ name: Dependabot auto-merge
 permissions: {}
 
 on:
-  pull_request
+  pull_request:
+    types: [ opened, reopened ]
 
 jobs:
   automerge:
