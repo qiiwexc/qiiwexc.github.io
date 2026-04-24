@@ -30,7 +30,7 @@
     },
     {
         "name":  "WinUtil",
-        "version":  "26.04.14",
+        "version":  "26.04.21",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
@@ -44,7 +44,7 @@
     },
     {
         "name":  "Ventoy",
-        "version":  "v1.1.11",
+        "version":  "v1.1.12",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ventoy/Ventoy"
