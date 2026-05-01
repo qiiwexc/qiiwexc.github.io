@@ -23,21 +23,21 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "b5944ad0b8d26588e78d963562e0f80ee2e33aeb",
+        "version":  "ac01d8acdb769b86decbb4b0b80726aed546fd25",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "26.04.21",
+        "version":  "26.04.30",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.04.05",
+        "version":  "2026.04.26",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
@@ -51,7 +51,7 @@
     },
     {
         "name":  "Rufus",
-        "version":  "v4.13",
+        "version":  "v4.14",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "pbatard/rufus"
@@ -72,7 +72,7 @@
     },
     {
         "name":  "SDI",
-        "version":  "2.26.4",
+        "version":  "2.26.5",
         "source":  "URL",
         "url":  "https://driveroff.net/dp/",
         "regex":  "\u003ctr\u003e\u003ctd\u003eSnappy Driver Installer\u003c/td\u003e\u003ctd\u003e(.*?) \\((?:\\d{2}\\.\\d{2}\\.\\d{4})\\)\u003c/td\u003e"
