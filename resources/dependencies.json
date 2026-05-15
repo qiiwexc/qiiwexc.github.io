@@ -58,7 +58,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "1.2",
+        "version":  "2.2",
         "source":  "URL",
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
