@@ -16,28 +16,28 @@
     },
     {
         "name":  "Microsoft Activation Scripts",
-        "version":  "3.10",
+        "version":  "3.11",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "massgravel/Microsoft-Activation-Scripts"
     },
     {
         "name":  "Unattend Generator",
-        "version":  "ac01d8acdb769b86decbb4b0b80726aed546fd25",
+        "version":  "d16425a4c5f8fa7c7d18bfc2198fdc9aa189aec1",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "26.04.30",
+        "version":  "26.05.12",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.04.26",
+        "version":  "2026.05.11",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
@@ -79,7 +79,7 @@
     },
     {
         "name":  "CPU-Z",
-        "version":  "2.19",
+        "version":  "2.20",
         "source":  "URL",
         "url":  "https://cpuid.com/softwares/cpu-z.html",
         "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
