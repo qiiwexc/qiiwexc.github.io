@@ -23,21 +23,21 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "d16425a4c5f8fa7c7d18bfc2198fdc9aa189aec1",
+        "version":  "bf1399141716a23e95ff2aa36a3e9ced61279ac7",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "26.05.12",
+        "version":  "26.05.19",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.05.11",
+        "version":  "2026.05.20",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
@@ -58,7 +58,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "2.2",
+        "version":  "3.0",
         "source":  "URL",
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
@@ -79,7 +79,7 @@
     },
     {
         "name":  "CPU-Z",
-        "version":  "2.20",
+        "version":  "2.20.1",
         "source":  "URL",
         "url":  "https://cpuid.com/softwares/cpu-z.html",
         "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
