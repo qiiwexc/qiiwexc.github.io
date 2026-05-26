@@ -163,8 +163,8 @@
 	<Extensions xmlns="https://schneegans.de/windows/unattend-generator/">
 		<Build>
 			<Commit>
-				<Hash>d16425a4c5f8fa7c7d18bfc2198fdc9aa189aec1</Hash>
-				<GitHubUrl>https://github.com/cschneegans/unattend-generator/commit/d16425a4c5f8fa7c7d18bfc2198fdc9aa189aec1</GitHubUrl>
+				<Hash>bf1399141716a23e95ff2aa36a3e9ced61279ac7</Hash>
+				<GitHubUrl>https://github.com/cschneegans/unattend-generator/commit/bf1399141716a23e95ff2aa36a3e9ced61279ac7</GitHubUrl>
 			</Commit>
 		</Build>
 		<ExtractScript>
