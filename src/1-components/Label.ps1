@@ -4,6 +4,10 @@ function New-Label {
         [Switch]$Centered
     )
 
+    if (-not $script:LayoutContext.CurrentGroup) {
+        throw 'New-Label must be called after New-Card (no current group in LayoutContext)'
+    }
+
     Set-Variable -Option Constant Label ([Windows.Controls.TextBlock](New-Object Windows.Controls.TextBlock))
 
     $Label.Text = $Text

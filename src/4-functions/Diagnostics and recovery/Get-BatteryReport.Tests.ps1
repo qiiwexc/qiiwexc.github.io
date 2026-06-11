@@ -1,4 +1,8 @@
 BeforeAll {
+    # Untyped stubs so Pester can mock Windows-only commands on any host —
+    # mocks and ParameterFilters bind against these simple parameters on every platform
+    function powercfg { }
+
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\Open-InBrowser.ps1'

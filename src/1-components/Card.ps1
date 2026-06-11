@@ -3,6 +3,10 @@ function New-Card {
         [Parameter(Position = 0, Mandatory)][String]$Text
     )
 
+    if (-not $script:LayoutContext.CurrentTab) {
+        throw 'New-Card must be called after New-TabPage (no current tab in LayoutContext)'
+    }
+
     Set-Variable -Option Constant CardBorder ([Windows.Controls.Border](New-Object Windows.Controls.Border))
     $CardBorder.SetResourceReference([Windows.Controls.Border]::BorderBrushProperty, 'BorderColor')
     $CardBorder.SetResourceReference([Windows.Controls.Border]::BackgroundProperty, 'CardBgColor')
