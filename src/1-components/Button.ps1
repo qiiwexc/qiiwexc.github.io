@@ -5,6 +5,10 @@ function New-Button {
         [Switch]$Disabled
     )
 
+    if (-not $script:LayoutContext.CurrentGroup) {
+        throw 'New-Button must be called after New-Card (no current group in LayoutContext)'
+    }
+
     Set-Variable -Option Constant Button ([Windows.Controls.Button](New-Object Windows.Controls.Button))
 
     $Button.Content = $Text

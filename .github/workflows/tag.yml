@@ -11,6 +11,9 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write
+      # 'actions: write' is required by the explicit CI trigger below — tags pushed
+      # with GITHUB_TOKEN do not fire 'on: push' workflows (recursion protection),
+      # so CI must be dispatched manually for the new tag
       actions: write
     steps:
       - name: Check out repository
@@ -35,6 +38,8 @@ jobs:
 
           echo "tag=$tag" >> $GITHUB_OUTPUT
 
+      # The tag push above uses GITHUB_TOKEN, which never triggers other workflows —
+      # without this explicit dispatch the release CI run would not start
       - name: Trigger CI
         env:
           GH_TOKEN: ${{ github.token }}

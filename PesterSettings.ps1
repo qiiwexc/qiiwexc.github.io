@@ -7,10 +7,10 @@ param(
     Run          = @{
         Exit = $True
         Path = @(
-            'tools\common',
-            'tools\build',
-            'src\1-components',
-            'src\4-functions'
+            'tools/common',
+            'tools/build',
+            'src/1-components',
+            'src/4-functions'
         )
     }
     Filter       = @{

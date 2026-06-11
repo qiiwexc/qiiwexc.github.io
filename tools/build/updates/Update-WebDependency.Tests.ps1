@@ -40,7 +40,8 @@ Describe 'Update-WebDependency' {
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestDependency.url -and
-            $UseBasicParsing -eq $True
+            $UseBasicParsing -eq $True -and
+            $TimeoutSec -eq 30
         }
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 1
@@ -105,6 +106,47 @@ Describe 'Update-WebDependency' {
 
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
+    It 'Should refuse to fetch non-HTTPS URLs' {
+        Set-Variable -Option Constant HttpDependency (
+            [PSObject]@{
+                name    = $TestDependencyName
+                url     = 'http://example.com/test-dependency'
+                regex   = $TestDependencyRegex
+                version = $TestDependencyVersion
+            }
+        )
+
+        Update-WebDependency $HttpDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-WebRequest -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -like '*only HTTPS is allowed*' }
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
+    It 'Should reject scraped versions with unsafe characters' {
+        Mock Invoke-WebRequest {
+            return @{
+                Content = "Some content... Latest Version: 2.0.0'); Invoke-Expression 'calc' #..."
+            }
+        }
+        Set-Variable -Option Constant LooseDependency (
+            [PSObject]@{
+                name    = $TestDependencyName
+                url     = $TestDependencyUrl
+                regex   = 'Latest Version:\s*(.{1,80})\.\.\.'
+                version = $TestDependencyVersion
+            }
+        )
+
+        Update-WebDependency $LooseDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -like '*looks unsafe*' }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 

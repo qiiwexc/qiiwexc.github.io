@@ -103,62 +103,68 @@ function Start-AsyncOperation {
 
     $script:ASYNC.Timer = New-Object Windows.Threading.DispatcherTimer
     $script:ASYNC.Timer.Interval = [TimeSpan]::FromMilliseconds(100)
-    $script:ASYNC.Timer.Add_Tick(
-        {
-            # Use index-based access — PSDataCollection's foreach enumerator blocks
-            # waiting for new items while the collection is open, which freezes the UI
-            for ($i = 0; $i -lt $script:ASYNC.PS.Streams.Information.Count; $i++) {
-                Write-Host $script:ASYNC.PS.Streams.Information[$i].MessageData
-            }
-            if ($script:ASYNC.PS.Streams.Information.Count -gt 0) { $script:ASYNC.PS.Streams.Information.Clear() }
-
-            for ($i = 0; $i -lt $script:ASYNC.PS.Streams.Warning.Count; $i++) {
-                Write-Host "WARNING: $($script:ASYNC.PS.Streams.Warning[$i].Message)" -ForegroundColor Yellow
-            }
-            if ($script:ASYNC.PS.Streams.Warning.Count -gt 0) { $script:ASYNC.PS.Streams.Warning.Clear() }
-
-            for ($i = 0; $i -lt $script:ASYNC.PS.Streams.Error.Count; $i++) {
-                Write-Host "ERROR: $($script:ASYNC.PS.Streams.Error[$i].Exception.Message)" -ForegroundColor Red
-            }
-            if ($script:ASYNC.PS.Streams.Error.Count -gt 0) { $script:ASYNC.PS.Streams.Error.Clear() }
-
-            if ($script:ASYNC.Handle.IsCompleted) {
-                $script:ASYNC.Timer.Stop()
-
-                if ($script:ASYNC.PS.InvocationStateInfo.State -eq 'Stopped') {
-                    Write-LogInfo 'Operation cancelled'
-                    Invoke-WriteProgress -Id 1 -Activity 'Cancelled' -Completed
-                } elseif ($script:ASYNC.PS.InvocationStateInfo.State -eq 'Failed') {
-                    Write-LogError "Operation failed: $($script:ASYNC.PS.InvocationStateInfo.Reason.Message)"
-                }
-
-                if ($script:ASYNC.PS.InvocationStateInfo.State -ne 'Stopped') {
-                    try { $script:ASYNC.PS.EndInvoke($script:ASYNC.Handle) } catch {
-                        Write-LogError "Async operation error: $($_.Exception.Message)"
-                    }
-                }
-
-                $script:ASYNC.PS.Dispose()
-                $script:ASYNC.Runspace.Dispose()
-
-                $script:ASYNC.Button.Content = $script:ASYNC.OriginalContent
-                $script:ASYNC.Button.Resources.Remove('AccentColor')
-                $script:ASYNC.Button.Resources.Remove('AccentHoverColor')
-                $script:ASYNC.Button.Resources.Remove('AccentPressedColor')
-
-                Set-Icon ([IconName]::Default)
-
-                $script:ASYNC.Running = $False
-                $script:ASYNC.Button = $Null
-                $script:ASYNC.OriginalContent = $Null
-                $script:ASYNC.PS = $Null
-                $script:ASYNC.Handle = $Null
-                $script:ASYNC.Runspace = $Null
-                $script:ASYNC.Timer = $Null
-            }
-        }
-    )
+    $script:ASYNC.Timer.Add_Tick({ Update-AsyncOperationState })
     $script:ASYNC.Timer.Start()
+}
+
+
+function Update-AsyncOperationState {
+    # Use index-based access — PSDataCollection's foreach enumerator blocks
+    # waiting for new items while the collection is open, which freezes the UI
+    for ($i = 0; $i -lt $script:ASYNC.PS.Streams.Information.Count; $i++) {
+        Write-Host $script:ASYNC.PS.Streams.Information[$i].MessageData
+    }
+    if ($script:ASYNC.PS.Streams.Information.Count -gt 0) { $script:ASYNC.PS.Streams.Information.Clear() }
+
+    for ($i = 0; $i -lt $script:ASYNC.PS.Streams.Warning.Count; $i++) {
+        Write-Host "WARNING: $($script:ASYNC.PS.Streams.Warning[$i].Message)" -ForegroundColor Yellow
+    }
+    if ($script:ASYNC.PS.Streams.Warning.Count -gt 0) { $script:ASYNC.PS.Streams.Warning.Clear() }
+
+    for ($i = 0; $i -lt $script:ASYNC.PS.Streams.Error.Count; $i++) {
+        Write-Host "ERROR: $($script:ASYNC.PS.Streams.Error[$i].Exception.Message)" -ForegroundColor Red
+    }
+    if ($script:ASYNC.PS.Streams.Error.Count -gt 0) { $script:ASYNC.PS.Streams.Error.Clear() }
+
+    if ($script:ASYNC.Handle.IsCompleted) {
+        Complete-AsyncOperation
+    }
+}
+
+
+function Complete-AsyncOperation {
+    $script:ASYNC.Timer.Stop()
+
+    if ($script:ASYNC.PS.InvocationStateInfo.State -eq 'Stopped') {
+        Write-LogInfo 'Operation cancelled'
+        Invoke-WriteProgress -Id 1 -Activity 'Cancelled' -Completed
+    } elseif ($script:ASYNC.PS.InvocationStateInfo.State -eq 'Failed') {
+        Write-LogError "Operation failed: $($script:ASYNC.PS.InvocationStateInfo.Reason.Message)"
+    }
+
+    if ($script:ASYNC.PS.InvocationStateInfo.State -ne 'Stopped') {
+        try { $script:ASYNC.PS.EndInvoke($script:ASYNC.Handle) } catch {
+            Write-LogError "Async operation error: $($_.Exception.Message)"
+        }
+    }
+
+    $script:ASYNC.PS.Dispose()
+    $script:ASYNC.Runspace.Dispose()
+
+    $script:ASYNC.Button.Content = $script:ASYNC.OriginalContent
+    $script:ASYNC.Button.Resources.Remove('AccentColor')
+    $script:ASYNC.Button.Resources.Remove('AccentHoverColor')
+    $script:ASYNC.Button.Resources.Remove('AccentPressedColor')
+
+    Set-Icon ([IconName]::Default)
+
+    $script:ASYNC.Running = $False
+    $script:ASYNC.Button = $Null
+    $script:ASYNC.OriginalContent = $Null
+    $script:ASYNC.PS = $Null
+    $script:ASYNC.Handle = $Null
+    $script:ASYNC.Runspace = $Null
+    $script:ASYNC.Timer = $Null
 }
 
 

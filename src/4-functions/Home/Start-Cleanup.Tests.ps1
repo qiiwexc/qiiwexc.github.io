@@ -1,4 +1,11 @@
 BeforeAll {
+    # Untyped stubs so Pester can mock Windows-only commands on any host —
+    # mocks and ParameterFilters bind against these simple parameters on every platform
+    function Delete-DeliveryOptimizationCache { [CmdletBinding()] param([Switch]$Force) }
+
+    # $env:SystemRoot only exists on Windows — pin it so the hardcoded path expectations hold everywhere
+    if (-not $env:SystemRoot) { $env:SystemRoot = 'C:\Windows' }
+
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\Common\types.ps1'

@@ -4,6 +4,10 @@ function New-CheckBoxRunAfterDownload {
         [Switch]$Checked
     )
 
+    if (-not $script:LayoutContext.CurrentGroup) {
+        throw 'New-CheckBoxRunAfterDownload must be called after New-Card (no current group in LayoutContext)'
+    }
+
     [Windows.Controls.CheckBox]$CheckBox = New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
 
     [void]$script:LayoutContext.CurrentGroup.Children.Remove($CheckBox)

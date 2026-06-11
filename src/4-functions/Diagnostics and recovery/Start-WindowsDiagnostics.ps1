@@ -65,8 +65,9 @@ function Start-WindowsDiagnostics {
     try {
         Set-Variable -Option Constant CbsLogPath ([String]"$env:SystemRoot\Logs\CBS\CBS.log")
         if (Test-Path $CbsLogPath) {
-            Set-Variable -Option Constant CbsContent ([String[]](Get-Content $CbsLogPath -ErrorAction Stop))
-            Set-Variable -Option Constant SfcEntries ([String[]]($CbsContent | Where-Object { $_ -match '\[SR\]' }))
+            # CBS.log can exceed 100 MB — read in chunks instead of loading it whole.
+            # @($_) keeps array semantics for -match, which filters instead of returning a Bool
+            Set-Variable -Option Constant SfcEntries ([String[]](Get-Content $CbsLogPath -ReadCount 1000 -ErrorAction Stop | ForEach-Object { @($_) -match '\[SR\]' }))
             if ($SfcEntries.Count -gt 0) {
                 $LogLines.Add("Found $($SfcEntries.Count) SFC log entry/entries:")
                 foreach ($Entry in $SfcEntries) {

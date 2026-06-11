@@ -1,7 +1,23 @@
+function Test-FileChecksum {
+    param(
+        [Parameter(Position = 0, Mandatory)][String]$Path,
+        [Parameter(Position = 1, Mandatory)][String]$Sha256
+    )
+
+    Set-Variable -Option Constant ActualHash ([String](Get-FileHash $Path -Algorithm SHA256 -ErrorAction Stop).Hash)
+
+    if ($ActualHash -ne $Sha256.ToUpper()) {
+        Remove-Item $Path -Force -ErrorAction SilentlyContinue
+        throw "Checksum mismatch for '$Path': expected $($Sha256.ToUpper()), got $ActualHash"
+    }
+}
+
+
 function Start-Download {
     param(
         [Parameter(Position = 0, Mandatory)][String]$URL,
         [Parameter(Position = 1)][String]$SaveAs,
+        [String]$Sha256,
         [Switch]$Temp,
         [Switch]$NoBits
     )
@@ -26,6 +42,9 @@ function Start-Download {
 
     if (Test-Path $SavePath) {
         Write-LogWarning 'Previous download found, returning it'
+        if ($Sha256) {
+            Test-FileChecksum $SavePath $Sha256
+        }
         return $SavePath
     }
 
@@ -98,6 +117,9 @@ function Start-Download {
         [Long]$FileSize = (Get-Item $SavePath).Length
         if ($FileSize -lt 1KB) {
             Write-LogWarning "Downloaded file is suspiciously small ($FileSize bytes): $SavePath"
+        }
+        if ($Sha256) {
+            Test-FileChecksum $SavePath $Sha256
         }
         Out-Success
         return $SavePath

@@ -29,6 +29,8 @@ if ([Int]($WindowsBuild.Split('.')[2]) -ge 22000) {
 }
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+# TLS 1.3 is only defined on newer Windows / .NET builds; keep TLS 1.2 as the floor
+try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls13 } catch { $Null = $_ }
 
 if (-not $DevMode) {
     Add-Type -Namespace Console -Name Window -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();

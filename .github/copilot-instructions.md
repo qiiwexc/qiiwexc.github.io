@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-`qiiwexc` is a Windows utility toolkit that builds three artifacts from PowerShell source:
+`qiiwexc` is a Windows utility toolkit that builds these artifacts from PowerShell source:
 
 - `build/qiiwexc.ps1` — a WPF GUI PowerShell app for Windows configuration and diagnostics
 - `build/qiiwexc.bat` — a batch launcher that wraps the PS1
@@ -11,13 +11,14 @@
 
 ## Developer Workflows
 
-| Task                  | Command                                             |
-| --------------------- | --------------------------------------------------- |
-| Dev build + run       | `.\build-dev.bat` (runs `tools\build.ps1 -Dev`)     |
-| Run tests             | `.\test.bat` (Pester)                               |
-| Full build (CI-style) | `.\build-ci.bat` (runs `tools\build.ps1 -Full -CI`) |
-| Tests with coverage   | `.\test-with-coverage.bat`                          |
-| Update external deps  | `.\update-dependencies.bat`                         |
+| Task                   | Command                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| Dev build + run        | `.\build-dev.bat` (runs `tools\build.ps1 -Dev`)                                |
+| Run tests              | `.\test.bat` (Pester via `tools\test.ps1`)                                     |
+| Full build (CI-style)  | `.\build-ci.bat` (runs `tools\build.ps1 -Full -CI`)                            |
+| Tests with coverage    | `.\test-with-coverage.bat` (fails when coverage is below the target)           |
+| Run a single test file | `Invoke-Pester -Path 'src\4-functions\Common\Start-Download.Tests.ps1'`        |
+| Update external deps   | `tools\build.ps1 -Update` (or the nightly `update-dependencies.yml` workflow)  |
 
 `-Full` implies: tests, dependency update check, HTML, autounattend, PS1, lint, and batch.
 **Always pass `-CI` in CI/CD** — without it, `Update-Dependencies` opens browser tabs instead of writing to `$env:CHANGELOG_URLS`.
@@ -28,7 +29,7 @@
 
 ### Source-to-Script Bundling
 
-`tools/build/New-PowerShellScript.ps1` concatenates all files under `src/` recursively (sorted, `*.Tests.ps1` excluded) into a single `build/qiiwexc.ps1`. File ordering is controlled by numeric prefixes on filenames and directories (e.g., `0-init/`, `1-components/`, `0 Parameters.ps1`). These prefixes are stripped from `#region` names in the output.
+`tools/build/New-PowerShellScript.ps1` concatenates all files under `src/` recursively (in `Get-ChildItem` enumeration order — alphabetical per directory — with `*.Tests.ps1` excluded) into a single `build/qiiwexc.ps1`. File ordering is controlled by numeric prefixes on filenames and directories (e.g., `0-init/`, `1-components/`, `0 Parameters.ps1`). Leading numeric prefixes on each path segment are stripped from `#region` names in the output. The build fails if any `{KEY}` placeholder is left unresolved or if the bundled script does not parse.
 
 Non-PS1 files in `src/3-configs/` (`.reg`, `.json`, `.conf`, `.ini`, `.xml`) are embedded as string constants named `CONFIG_<UPPERCASED_FILENAME>` using `Set-Variable -Option Constant`.
 
@@ -38,7 +39,7 @@ Non-PS1 files in `src/3-configs/` (`.reg`, `.json`, `.conf`, `.ini`, `.xml`) are
 
 ### Versioning
 
-Locally: `YY.M.D` (from current date). In CI on a tag push: parsed from `$Env:GITHUB_REF_NAME` (e.g., `v26.2.18` → `26.2.18`).
+Locally: `YY.M.D` (from current date). In CI on a tag push: parsed from `$Env:GITHUB_REF_NAME` (e.g., `v26.2.18` → `26.2.18`). For reproducible output, pin it explicitly: `tools\build.ps1 -Version 26.2.18`.
 
 ## Source Structure (`src/`)
 
@@ -61,6 +62,24 @@ All component functions (`New-Button`, `New-CheckBox`, etc.) read and mutate `$s
 - `BeforeAll` dot-sources the production file: `. $PSCommandPath.Replace('.Tests.ps1', '.ps1')`
 - Pester runs cover `tools/common`, `tools/build`, `src/1-components`, `src/4-functions`
 - Tag tests `WIP` to run them in isolation via `.\test-wip.bat`
+- Windows-only commands (BITS, CIM, `chkdsk`, `DISM`, `powercfg`, scheduled tasks, Defender) are
+  stubbed at the top of `BeforeAll` with simple `function` declarations so Pester can mock them on
+  any host — follow that pattern when a test needs to mock a new Windows-only command
+
+## Platform Constraints
+
+The app and the full build are **Windows-only** (WPF, BITS, registry, Windows PowerShell 5.1).
+CI runs on `windows-latest`. On non-Windows hosts most of the Pester suite runs, but tests that
+load WPF assemblies (`src/1-components`, `Add-Type -AssemblyName PresentationFramework`) or
+construct CIM types fail — treat those failures as environmental, not regressions.
+
+## Never Do
+
+- Never edit anything under `build/` — it is generated output
+- `d/` and `public/` are live GitHub Pages payloads that end users download and execute — treat
+  any change there as a release
+- Do not renumber the numeric filename prefixes casually: they define the bundle order of the
+  built script
 
 ## Linting
 

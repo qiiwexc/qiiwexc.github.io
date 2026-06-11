@@ -20,7 +20,14 @@ function New-PowerShellScript {
 
         [Switch]$IsConfigFile = -not ($FileName -match '\.ps1$')
 
-        [String]$CurrentRegion = $FilePath.Replace('\src\', '|').Split('|')[1].Replace('\', ' > ') -replace '\..{1,}$', '' -replace '\d{1,2}(-|\s)', ''
+        # Normalize separators so the split works with both Windows and Unix paths
+        [String]$NormalizedPath = $FilePath.Replace('\', '/')
+        if ($NormalizedPath -notmatch '/src/') {
+            throw "Source file is not under a 'src' directory: $FilePath"
+        }
+
+        # Numeric ordering prefixes are stripped only at the start of each path segment
+        [String]$CurrentRegion = $NormalizedPath.Replace('/src/', '|').Split('|')[1].Replace('/', ' > ') -replace '\..{1,}$', '' -replace '(?<=^|> )\d{1,2}(-|\s)', ''
 
         if ($CurrentFileNum -eq 1) {
             $OutputLines.Add("#region $CurrentRegion`n")
@@ -62,6 +69,22 @@ function New-PowerShellScript {
     $Config.PSObject.Properties | ForEach-Object {
         [String]$Placeholder = "{$($_.Name)}"
         $OutputLines = $OutputLines.Replace($Placeholder, $_.Value)
+    }
+
+    [String]$BundledScript = $OutputLines -join "`n"
+
+    # Fail the build instead of shipping a script with unresolved '{KEY}' placeholders
+    [String[]]$ResidualPlaceholders = @([regex]::Matches($BundledScript, '\{[A-Z][A-Z0-9_]*\}') | ForEach-Object { $_.Value } | Select-Object -Unique)
+    if ($ResidualPlaceholders.Count -gt 0) {
+        throw "Unresolved placeholders in bundled script: $($ResidualPlaceholders -join ', ')"
+    }
+
+    # Per-file checks cannot catch cross-file problems (for example a broken config
+    # embedding) — verify the assembled script parses before writing it
+    try {
+        [Void][ScriptBlock]::Create($BundledScript)
+    } catch {
+        throw "Bundled script has syntax errors: $_"
     }
 
     Write-LogInfo "Writing output file $Ps1File"

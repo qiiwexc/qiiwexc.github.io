@@ -90,4 +90,23 @@ Describe 'Get-NiniteInstaller' {
             $Execute -eq $True
         }
     }
+
+    It 'Should build the URL and file name from whichever checkboxes are checked' {
+        Set-Variable -Option Constant VariantCheckboxes (
+            [Windows.Controls.CheckBox[]]@(
+                (New-TestCheckBox -IsChecked $False -Tag 'TEST_CHECKBOX_1_NAME' -Content 'APP_NAME_1'),
+                (New-TestCheckBox -IsChecked $True -Tag 'TEST_CHECKBOX_2_NAME' -Content 'APP_NAME_2')
+            )
+        )
+
+        Get-NiniteInstaller $VariantCheckboxes
+
+        Should -Invoke Open-InBrowser -Exactly 0
+        Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
+        Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
+            $URL -eq '{URL_NINITE}/TEST_CHECKBOX_2_NAME/ninite.exe' -and
+            $FileName -eq 'Ninite APP_NAME_2 Installer.exe' -and
+            $Execute -eq $False
+        }
+    }
 }

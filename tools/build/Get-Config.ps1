@@ -24,6 +24,16 @@ function Get-Config {
 
     $Config | Add-Member -NotePropertyName 'PROJECT_VERSION' -NotePropertyValue $Version -Force
 
+    # Config values are substituted verbatim into PowerShell source, HTML and XML.
+    # Reject characters that could break out of those contexts, and leftover braces,
+    # which mean a '{VERSION}' placeholder was never resolved (renamed dependency)
+    foreach ($Property in $Config.PSObject.Properties) {
+        [String]$Value = $Property.Value
+        if ($Value -match '[''"`$<>{}]' -or $Value -match '\r|\n') {
+            throw "Config value '$($Property.Name)' contains unsafe or unresolved characters: $Value"
+        }
+    }
+
     Write-ActivityCompleted
 
     return $Config

@@ -1,4 +1,8 @@
 BeforeAll {
+    # Untyped stubs so Pester can mock Windows-only commands on any host —
+    # mocks and ParameterFilters bind against these simple parameters on every platform
+    function Get-CimInstance { [CmdletBinding()] param([Parameter(Position = 0)][String]$ClassName, [String]$Namespace, [String]$Filter, [Int]$OperationTimeoutSec) }
+
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
