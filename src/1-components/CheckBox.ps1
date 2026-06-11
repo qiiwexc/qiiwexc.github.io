@@ -6,6 +6,10 @@ function New-CheckBox {
         [Switch]$Checked
     )
 
+    if (-not ($script:LayoutContext.CenteredCheckboxGroup -or $script:LayoutContext.CurrentGroup)) {
+        throw 'New-CheckBox must be called after New-Card (no current group in LayoutContext)'
+    }
+
     Set-Variable -Option Constant CheckBox ([Windows.Controls.CheckBox](New-Object Windows.Controls.CheckBox))
 
     $CheckBox.Content = $Text

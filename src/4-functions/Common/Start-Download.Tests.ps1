@@ -1,6 +1,8 @@
 BeforeAll {
     # Define untyped stubs before BitsTransfer module auto-loads,
     # so Pester mocks use simple parameters instead of the module's typed [BitsJob[]] constraint
+    # (this also lets the suite run on hosts without the BitsTransfer module)
+    function Start-BitsTransfer { [CmdletBinding()] param([String]$Source, [String]$Destination, [Switch]$Asynchronous) }
     function Complete-BitsTransfer { param($BitsJob) }
     function Remove-BitsTransfer { param($BitsJob) }
 
@@ -388,6 +390,43 @@ Describe 'Start-Download' {
         Should -Invoke Complete-BitsTransfer -Exactly 1
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should verify checksum when Sha256 is provided' {
+        [Int]$FileAppearsAtCall = 2
+        Mock Get-FileHash { return [PSCustomObject]@{ Hash = 'ABC123' } }
+
+        Start-Download $TestUrl -Sha256 'abc123' | Should -BeExactly $TestSavePath
+
+        Should -Invoke Get-FileHash -Exactly 1
+        Should -Invoke Get-FileHash -Exactly 1 -ParameterFilter {
+            $Path -eq $TestSavePath -and
+            $Algorithm -eq 'SHA256'
+        }
+        Should -Invoke Remove-Item -Exactly 0
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should throw and delete the file on checksum mismatch' {
+        [Int]$FileAppearsAtCall = 2
+        Mock Get-FileHash { return [PSCustomObject]@{ Hash = 'SOMETHING_ELSE' } }
+
+        { Start-Download $TestUrl -Sha256 'abc123' } | Should -Throw '*Checksum mismatch*'
+
+        Should -Invoke Get-FileHash -Exactly 1
+        Should -Invoke Remove-Item -Exactly 1
+        Should -Invoke Remove-Item -Exactly 1 -ParameterFilter { $Path -eq $TestSavePath }
+        Should -Invoke Out-Success -Exactly 0
+    }
+
+    It 'Should verify checksum of a previously downloaded file' {
+        Mock Get-FileHash { return [PSCustomObject]@{ Hash = 'ABC123' } }
+
+        Start-Download $TestUrl -Sha256 'abc123' | Should -BeExactly $TestSavePath
+
+        Should -Invoke Get-FileHash -Exactly 1
+        Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
     }
 
     It 'Should handle Invoke-WebRequest failure when NoBits is specified' {

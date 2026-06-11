@@ -1,4 +1,10 @@
 BeforeAll {
+    # Untyped stubs so Pester can mock Windows-only commands on any host —
+    # mocks and ParameterFilters bind against these simple parameters on every platform
+    function Set-WinHomeLocation { [CmdletBinding()] param([Int]$GeoId) }
+    function Get-WinUserLanguageList { [CmdletBinding()] param() }
+    function Set-WinUserLanguageList { [CmdletBinding()] param([Parameter(Position = 0)]$LanguageList, [Switch]$Force) }
+
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'

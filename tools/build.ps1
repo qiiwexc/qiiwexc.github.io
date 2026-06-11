@@ -11,7 +11,8 @@ param(
     [Switch]$Autounattend,
     [Switch]$Ps1,
     [Switch]$Lint,
-    [Switch]$Bat
+    [Switch]$Bat,
+    [String]$Version
 )
 
 Set-StrictMode -Version Latest
@@ -59,10 +60,14 @@ Set-Variable -Option Constant TestsFile ([String]"$ToolsPath\test.ps1")
 Set-Variable -Option Constant Ps1File ([String]"$BuildPath\$ProjectName.ps1")
 Set-Variable -Option Constant BatchFile ([String]"$BuildPath\$ProjectName.bat")
 
-if ($CI -and $Env:GITHUB_REF -match '^refs/tags/') {
-    Set-Variable -Option Constant Version ([Version]($Env:GITHUB_REF_NAME -replace '^v'))
+# Version resolution order: explicit -Version parameter (reproducible builds),
+# then the tag name in CI, then the current date
+if ($Version) {
+    Set-Variable -Option Constant BuildVersion ([Version]($Version -replace '^v'))
+} elseif ($CI -and $Env:GITHUB_REF -match '^refs/tags/') {
+    Set-Variable -Option Constant BuildVersion ([Version]($Env:GITHUB_REF_NAME -replace '^v'))
 } else {
-    Set-Variable -Option Constant Version ([Version]"$((Get-Date).Year % 100).$((Get-Date).Month).$((Get-Date).Day)")
+    Set-Variable -Option Constant BuildVersion ([Version]"$((Get-Date).Year % 100).$((Get-Date).Month).$((Get-Date).Day)")
 }
 
 . "$CommonPath\types.ps1"
@@ -74,7 +79,7 @@ if ($CI -and $Env:GITHUB_REF -match '^refs/tags/') {
 . "$CommonPath\Write-TextFile.ps1"
 
 Write-LogInfo 'Build task started'
-Write-LogInfo "Version                  : $Version"
+Write-LogInfo "Version                  : $BuildVersion"
 Write-LogInfo "Full build               : $Full"
 Write-LogInfo "CI                       : $CI"
 Write-LogInfo "Run tests                : $Test"
@@ -92,7 +97,10 @@ $Null = New-Item -Force -ItemType Directory $BuildPath
 
 if ($Test) {
     Write-ActivityProgress 10 'Running unit tests...'
-    Invoke-Pester -Configuration (. '.\PesterSettings.ps1' -Coverage)
+    & $TestsFile -Coverage
+    if ($LASTEXITCODE) {
+        throw "Tests failed (exit code $LASTEXITCODE)"
+    }
     Out-Success
 }
 
@@ -114,7 +122,7 @@ if ($Update) {
 if ($Html -or $Ps1) {
     Write-ActivityProgress 30
     . "$BuilderPath\Get-Config.ps1"
-    Set-Variable -Option Constant Config (Get-Config $ResourcesPath $Version)
+    Set-Variable -Option Constant Config (Get-Config $ResourcesPath $BuildVersion)
 }
 
 if ($Html) {
@@ -126,7 +134,7 @@ if ($Html) {
 if ($Autounattend) {
     Write-ActivityProgress 50
     . "$BuilderPath\New-UnattendedFile.ps1"
-    New-UnattendedFile $Version $BuilderPath $SourcePath $ResourcesPath $TemplatesPath $BuildPath $VmPath -CI:$CI
+    New-UnattendedFile $BuildVersion $BuilderPath $SourcePath $ResourcesPath $TemplatesPath $BuildPath $VmPath -CI:$CI
 }
 
 if ($Ps1) {

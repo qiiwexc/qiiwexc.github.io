@@ -102,6 +102,28 @@ Describe 'New-PowerShellScript' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
+    It 'Should throw on unresolved placeholders' {
+        Mock Read-TextFile { return '# {MISSING_KEY}' } -ParameterFilter { $Path -eq $TestPs1FilePath }
+
+        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw '*Unresolved placeholders*MISSING_KEY*'
+
+        Should -Invoke Write-TextFile -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should throw when a file is not under a src directory' {
+        Mock Get-ChildItem {
+            return [IO.FileInfo[]]@(
+                New-MockObject -Type IO.FileInfo -Properties @{ Name = 'Test-File.ps1'; FullName = '\other\Test-File.ps1' }
+            )
+        }
+
+        { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw "*not under a 'src' directory*"
+
+        Should -Invoke Write-TextFile -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
     It 'Should handle Write-TextFile failure' {
         Mock Write-TextFile { throw $TestException }
 

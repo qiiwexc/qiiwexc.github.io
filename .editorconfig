@@ -7,3 +7,8 @@ end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+# PowerShell files are linted with PSUseConsistentIndentation (4 spaces),
+# see PSScriptAnalyzerSettings.psd1
+[*.{ps1,psm1,psd1}]
+indent_size = 4

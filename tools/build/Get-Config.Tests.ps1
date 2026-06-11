@@ -72,6 +72,7 @@ Describe 'Get-Config' {
         Set-Variable -Option Constant DepsWithNoUrl (
             [Dependency[]]@(
                 @{name = 'test dependency-name 1'; version = 'v1.0.0' },
+                @{name = 'test dependency-name 2'; version = '2.0.0' },
                 @{name = 'no url dependency'; version = '3.0.0' }
             )
         )
@@ -87,5 +88,40 @@ Describe 'Get-Config' {
         $Result.URL_STATIC | Should -BeExactly 'https://example.com/static'
         $Result.PROJECT_VERSION | Should -BeExactly $TestVersion
         $Result.PSObject.Properties['URL_NO_URL_DEPENDENCY'] | Should -BeNullOrEmpty
+    }
+
+    It 'Should throw when a URL has an unresolved VERSION placeholder' {
+        Set-Variable -Option Constant DepsMissingOne (
+            [Dependency[]]@(
+                @{name = 'test dependency-name 1'; version = 'v1.0.0' }
+            )
+        )
+        Mock Read-JsonFile { return $DepsMissingOne } -ParameterFilter { $Path -match 'dependencies' }
+        # Fresh urls object: the shared $TestUrlsTemplate fixture is mutated by Get-Config in other tests
+        Mock Read-JsonFile {
+            return [PSCustomObject]@{
+                URL_TEST_DEPENDENCY_NAME_1 = 'https://example.com/{VERSION}/download'
+                URL_TEST_DEPENDENCY_NAME_2 = 'https://example.com/file-{VERSION}.zip'
+            }
+        } -ParameterFilter { $Path -match 'urls' }
+
+        { Get-Config $TestResourcesPath $TestVersion } | Should -Throw '*URL_TEST_DEPENDENCY_NAME_2*'
+
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
+    It 'Should throw on config values with unsafe characters' {
+        Set-Variable -Option Constant UnsafeUrls (
+            [PSCustomObject]@{
+                URL_TEST_DEPENDENCY_NAME_1 = 'https://example.com/{VERSION}/download'
+                URL_TEST_DEPENDENCY_NAME_2 = 'https://example.com/file-{VERSION}.zip'
+                URL_EVIL = "https://example.com/')); Invoke-Expression 'calc'; (('"
+            }
+        )
+        Mock Read-JsonFile { return $UnsafeUrls } -ParameterFilter { $Path -match 'urls' }
+
+        { Get-Config $TestResourcesPath $TestVersion } | Should -Throw '*URL_EVIL*'
+
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

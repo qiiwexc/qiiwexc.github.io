@@ -1,4 +1,9 @@
 BeforeAll {
+    # Untyped stubs so Pester can mock Windows-only commands on any host —
+    # mocks and ParameterFilters bind against these simple parameters on every platform
+    function Get-ScheduledTask { [CmdletBinding()] param([String[]]$TaskName, [String[]]$TaskPath) }
+    function Unregister-ScheduledTask { [CmdletBinding(SupportsShouldProcess)] param([String[]]$TaskName, [String[]]$TaskPath) }
+
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'
