@@ -31,22 +31,26 @@ Describe 'Set-PrivacyConfiguration' {
     It 'Should apply Windows privacy configuration' {
         Set-PrivacyConfiguration
 
-        Should -Invoke Disable-ScheduledTask -Exactly 10
-        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
-            $TaskName -eq 'Consolidator' -and
-            $TaskPath -eq 'Microsoft\Windows\Customer Experience Improvement Program'
-        }
+        Should -Invoke Disable-ScheduledTask -Exactly 5
         Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
             $TaskName -eq 'DmClient' -and
             $TaskPath -eq 'Microsoft\Windows\Feedback\Siuf'
         }
         Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
-            $TaskName -eq 'StartupAppTask' -and
+            $TaskName -eq 'DmClientOnScenarioDownload' -and
+            $TaskPath -eq 'Microsoft\Windows\Feedback\Siuf'
+        }
+        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
+            $TaskName -eq 'PcaPatchDbTask' -and
             $TaskPath -eq 'Microsoft\Windows\Application Experience'
         }
         Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
-            $TaskName -eq 'Microsoft-Windows-DiskDiagnosticDataCollector' -and
-            $TaskPath -eq 'Microsoft\Windows\DiskDiagnostic'
+            $TaskName -eq 'MareBackup' -and
+            $TaskPath -eq 'Microsoft\Windows\Application Experience'
+        }
+        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
+            $TaskName -eq 'MareBackup' -and
+            $TaskPath -eq 'Microsoft\Windows\Application Experience'
         }
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Add-SysPrepConfig -Exactly 1
@@ -68,7 +72,7 @@ Describe 'Set-PrivacyConfiguration' {
 
         Set-PrivacyConfiguration
 
-        Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Disable-ScheduledTask -Exactly 5
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
@@ -100,7 +104,7 @@ Describe 'Set-PrivacyConfiguration' {
 
         Set-PrivacyConfiguration
 
-        Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Disable-ScheduledTask -Exactly 5
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
@@ -113,7 +117,7 @@ Describe 'Set-PrivacyConfiguration' {
 
         Set-PrivacyConfiguration
 
-        Should -Invoke Disable-ScheduledTask -Exactly 10
+        Should -Invoke Disable-ScheduledTask -Exactly 5
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1

@@ -2,15 +2,10 @@ function Set-PrivacyConfiguration {
     try {
         Set-Variable -Option Constant TelemetryTaskList (
             [Hashtable[]]@(
-                @{Name = 'Consolidator'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' },
                 @{Name = 'DmClient'; Path = 'Microsoft\Windows\Feedback\Siuf' },
                 @{Name = 'DmClientOnScenarioDownload'; Path = 'Microsoft\Windows\Feedback\Siuf' },
-                @{Name = 'Microsoft-Windows-DiskDiagnosticDataCollector'; Path = 'Microsoft\Windows\DiskDiagnostic' },
                 @{Name = 'PcaPatchDbTask'; Path = 'Microsoft\Windows\Application Experience' },
-                @{Name = 'Proxy'; Path = 'Microsoft\Windows\Autochk' },
                 @{Name = 'QueueReporting'; Path = 'Microsoft\Windows\Windows Error Reporting' },
-                @{Name = 'StartupAppTask'; Path = 'Microsoft\Windows\Application Experience' },
-                @{Name = 'UsbCeip'; Path = 'Microsoft\Windows\Customer Experience Improvement Program' },
                 @{Name = 'MareBackup'; Path = 'Microsoft\Windows\Application Experience' }
             )
         )
