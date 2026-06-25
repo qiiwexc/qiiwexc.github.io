@@ -1,7 +1,7 @@
 [
     {
         "name":  "SystemRescue",
-        "version":  "13.00",
+        "version":  "13.01",
         "source":  "GitLab",
         "mode":  "tags",
         "repository":  "systemrescue/systemrescue-sources",
@@ -23,28 +23,28 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "bf1399141716a23e95ff2aa36a3e9ced61279ac7",
+        "version":  "3de37dc6bc9bb1f63aeac7aa137c84c1b30b3b28",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "26.06.04",
+        "version":  "26.06.23",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.05.20",
+        "version":  "2026.06.24",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
     },
     {
         "name":  "Ventoy",
-        "version":  "v1.1.12",
+        "version":  "v1.1.15",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ventoy/Ventoy"
@@ -58,7 +58,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "3.0",
+        "version":  "3.1",
         "source":  "URL",
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
