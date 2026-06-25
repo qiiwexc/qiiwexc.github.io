@@ -1,0 +1,414 @@
+[
+  {
+    "AppId": "4DF9E0F8.Netflix",
+    "Description": "Netflix streaming service app"
+  },
+  {
+    "AppId": "ACGMediaPlayer",
+    "Description": "Media player app"
+  },
+  {
+    "AppId": "ActiproSoftwareLLC",
+    "Description": "Potentially UI controls or software components, often bundled by OEMs"
+  },
+  {
+    "AppId": "AD2F1837.HPAIExperienceCenter",
+    "Description": "HP OEM software, AI-enhanced features and support"
+  },
+  {
+    "AppId": "AD2F1837.HPConnectedMusic",
+    "Description": "HP OEM software for music (Potentially discontinued)"
+  },
+  {
+    "AppId": "AD2F1837.HPConnectedPhotopoweredbySnapfish",
+    "Description": "HP OEM software for photos, integrated with Snapfish (Potentially discontinued)"
+  },
+  {
+    "AppId": "AD2F1837.HPDesktopSupportUtilities",
+    "Description": "HP OEM software providing desktop support tools"
+  },
+  {
+    "AppId": "AD2F1837.HPEasyClean",
+    "Description": "HP OEM software for system cleaning or optimization"
+  },
+  {
+    "AppId": "AD2F1837.HPFileViewer",
+    "Description": "HP OEM software for viewing specific file types"
+  },
+  {
+    "AppId": "AD2F1837.HPJumpStarts",
+    "Description": "HP OEM software for tutorials, app discovery, or quick access to HP features"
+  },
+  {
+    "AppId": "AD2F1837.HPPCHardwareDiagnosticsWindows",
+    "Description": "HP OEM software for PC hardware diagnostics"
+  },
+  {
+    "AppId": "AD2F1837.HPPowerManager",
+    "Description": "HP OEM software for managing power settings and battery"
+  },
+  {
+    "AppId": "AD2F1837.HPPrinterControl",
+    "Description": "HP OEM software for managing HP printers"
+  },
+  {
+    "AppId": "AD2F1837.HPPrivacySettings",
+    "Description": "HP OEM software for managing privacy settings"
+  },
+  {
+    "AppId": "AD2F1837.HPQuickDrop",
+    "Description": "HP OEM software for quick file transfer between devices"
+  },
+  {
+    "AppId": "AD2F1837.HPQuickTouch",
+    "Description": "HP OEM software, possibly for touch-specific shortcuts or controls"
+  },
+  {
+    "AppId": "AD2F1837.HPRegistration",
+    "Description": "HP OEM software for product registration"
+  },
+  {
+    "AppId": "AD2F1837.HPSupportAssistant",
+    "Description": "HP OEM software for support, updates, and troubleshooting"
+  },
+  {
+    "AppId": "AD2F1837.HPSureShieldAI",
+    "Description": "HP OEM security software, likely AI-based threat protection"
+  },
+  {
+    "AppId": "AD2F1837.HPSystemInformation",
+    "Description": "HP OEM software for displaying system information"
+  },
+  {
+    "AppId": "AD2F1837.HPWelcome",
+    "Description": "HP OEM software providing a welcome experience or initial setup help"
+  },
+  {
+    "AppId": "AD2F1837.HPWorkWell",
+    "Description": "HP OEM software focused on well-being, possibly with break reminders or ergonomic tips"
+  },
+  {
+    "AppId": "AD2F1837.myHP",
+    "Description": "HP OEM central hub app for device info, support, and services"
+  },
+  {
+    "AppId": "AdobeSystemsIncorporated.AdobePhotoshopExpress",
+    "Description": "Basic photo editing app from Adobe"
+  },
+  {
+    "AppId": "Amazon.com.Amazon",
+    "Description": "Amazon shopping app"
+  },
+  {
+    "AppId": "AmazonVideo.PrimeVideo",
+    "Description": "Amazon Prime Video streaming service app"
+  },
+  {
+    "AppId": "Asphalt8Airborne",
+    "Description": "Racing game"
+  },
+  {
+    "AppId": "AutodeskSketchBook",
+    "Description": "Digital drawing and sketching app"
+  },
+  {
+    "AppId": "BytedancePte.Ltd.TikTok",
+    "Description": "TikTok short-form video app"
+  },
+  {
+    "AppId": "CaesarsSlotsFreeCasino",
+    "Description": "Casino slot machine game"
+  },
+  {
+    "AppId": "COOKINGFEVER",
+    "Description": "Restaurant simulation game"
+  },
+  {
+    "AppId": "CyberLinkMediaSuiteEssentials",
+    "Description": "Multimedia software suite (often preinstalled by OEMs)"
+  },
+  {
+    "AppId": "Disney.37853FC22B2CE",
+    "Description": "Disney+ streaming service app"
+  },
+  {
+    "AppId": "DisneyMagicKingdoms",
+    "Description": "Disney theme park building game"
+  },
+  {
+    "AppId": "DrawboardPDF",
+    "Description": "PDF viewing and annotation app, often focused on pen input"
+  },
+  {
+    "AppId": "Duolingo-LearnLanguagesforFree",
+    "Description": "Language learning app"
+  },
+  {
+    "AppId": "EclipseManager",
+    "Description": "Often related to specific OEM software or utilities (e.g. for managing screen settings)"
+  },
+  {
+    "AppId": "FACEBOOK.FACEBOOK",
+    "Description": "Facebook social media app"
+  },
+  {
+    "AppId": "Facebook.Instagram",
+    "Description": "Instagram social media app"
+  },
+  {
+    "AppId": "FarmVille2CountryEscape",
+    "Description": "Farming simulation game"
+  },
+  {
+    "AppId": "flaregamesGmbH.RoyalRevolt",
+    "Description": "Tower defense / strategy game"
+  },
+  {
+    "AppId": "Flipboard",
+    "Description": "News and social network aggregator styled as a magazine"
+  },
+  {
+    "AppId": "HiddenCity",
+    "Description": "Hidden object puzzle adventure game"
+  },
+  {
+    "AppId": "HULULLC.HULUPLUS",
+    "Description": "Hulu streaming service app"
+  },
+  {
+    "AppId": "iHeartRadio",
+    "Description": "Internet radio streaming app"
+  },
+  {
+    "AppId": "king.com.BubbleWitch3Saga",
+    "Description": "Puzzle game from King"
+  },
+  {
+    "AppId": "king.com.CandyCrushSaga",
+    "Description": "Puzzle game from King"
+  },
+  {
+    "AppId": "king.com.CandyCrushSodaSaga",
+    "Description": "Puzzle game from King"
+  },
+  {
+    "AppId": "LinkedInforWindows",
+    "Description": "LinkedIn professional networking app"
+  },
+  {
+    "AppId": "MarchofEmpires",
+    "Description": "Strategy game"
+  },
+  {
+    "AppId": "Microsoft.3DBuilder",
+    "Description": "Basic 3D modeling software"
+  },
+  {
+    "AppId": "Microsoft.BingFinance",
+    "Description": "Finance news and tracking via Bing (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.BingFoodAndDrink",
+    "Description": "Recipes and food news via Bing (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.BingHealthAndFitness",
+    "Description": "Health and fitness tracking/news via Bing (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.BingNews",
+    "Description": "News aggregator via Bing (Replaced by Microsoft News/Start)"
+  },
+  {
+    "AppId": "Microsoft.BingSearch",
+    "Description": "Web Search from Microsoft Bing (Integrates into Windows Search)"
+  },
+  {
+    "AppId": "Microsoft.BingSports",
+    "Description": "Sports news and scores via Bing (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.BingTranslator",
+    "Description": "Translation service via Bing"
+  },
+  {
+    "AppId": "Microsoft.BingTravel",
+    "Description": "Travel planning and news via Bing (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.GamingApp",
+    "Description": "Modern Xbox Gaming App, required for installing some PC games"
+  },
+  {
+    "AppId": "Microsoft.Getstarted",
+    "Description": "Tips and introductory guide for Windows (Cannot be uninstalled in Windows 11)"
+  },
+  {
+    "AppId": "Microsoft.M365Companions",
+    "Description": "Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin"
+  },
+  {
+    "AppId": "Microsoft.Messaging",
+    "Description": "Messaging app, often integrates with Skype (Largely discontinued)"
+  },
+  {
+    "AppId": "Microsoft.Microsoft3DViewer",
+    "Description": "Viewer for 3D models"
+  },
+  {
+    "AppId": "Microsoft.MicrosoftJournal",
+    "Description": "Digital note-taking app optimized for pen input"
+  },
+  {
+    "AppId": "Microsoft.MicrosoftOfficeHub",
+    "Description": "Hub to access Microsoft Office apps and documents (Precursor to Microsoft 365 app)"
+  },
+  {
+    "AppId": "Microsoft.MicrosoftPowerBIForWindows",
+    "Description": "Business analytics service client"
+  },
+  {
+    "AppId": "Microsoft.MixedReality.Portal",
+    "Description": "Portal for Windows Mixed Reality headsets"
+  },
+  {
+    "AppId": "Microsoft.MSPaint",
+    "Description": "Paint 3D (Modern paint application with 3D features)"
+  },
+  {
+    "AppId": "Microsoft.NetworkSpeedTest",
+    "Description": "Internet connection speed test utility"
+  },
+  {
+    "AppId": "Microsoft.News",
+    "Description": "News aggregator (Replaced Bing News, now part of Microsoft Start)"
+  },
+  {
+    "AppId": "Microsoft.Office.OneNote",
+    "Description": "Digital note-taking app (Universal Windows Platform version)"
+  },
+  {
+    "AppId": "Microsoft.Office.Sway",
+    "Description": "Presentation and storytelling app"
+  },
+  {
+    "AppId": "Microsoft.OneConnect",
+    "Description": "Mobile Operator management app (Replaced by Mobile Plans)"
+  },
+  {
+    "AppId": "Microsoft.OutlookForWindows",
+    "Description": "New Outlook for Windows mail client"
+  },
+  {
+    "AppId": "Microsoft.People",
+    "Description": "Required for & included with Mail & Calendar (discontinued)"
+  },
+  {
+    "AppId": "Microsoft.PowerAutomateDesktop",
+    "Description": "Desktop automation tool (RPA)"
+  },
+  {
+    "AppId": "Microsoft.Print3D",
+    "Description": "3D printing preparation software"
+  },
+  {
+    "AppId": "Microsoft.SkypeApp",
+    "Description": "Skype communication app, Universal Windows Platform version (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.StartExperiencesApp",
+    "Description": "This app powers Windows Widgets My Feed"
+  },
+  {
+    "AppId": "Microsoft.Todos",
+    "Description": "To-do list and task management app"
+  },
+  {
+    "AppId": "Microsoft.Whiteboard",
+    "Description": "Digital collaborative whiteboard app"
+  },
+  {
+    "AppId": "Microsoft.Windows.DevHome",
+    "Description": "Developer dashboard and tool configuration utility (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.WindowsAlarms",
+    "Description": "Alarms & Clock app"
+  },
+  {
+    "AppId": "Microsoft.windowscommunicationsapps",
+    "Description": "Mail & Calendar app suite (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.WindowsFeedbackHub",
+    "Description": "App for providing feedback to Microsoft on Windows"
+  },
+  {
+    "AppId": "Microsoft.WindowsMaps",
+    "Description": "Mapping and navigation app"
+  },
+  {
+    "AppId": "Microsoft.XboxApp",
+    "Description": "Old Xbox Console Companion App (Discontinued)"
+  },
+  {
+    "AppId": "Microsoft.ZuneMusic",
+    "Description": "Modern Media Player (Replaced Groove Music, plays local audio/video)"
+  },
+  {
+    "AppId": "Microsoft.ZuneVideo",
+    "Description": "Movies & TV app for renting/buying/playing video content (Rebranded as \"Films & TV\")"
+  },
+  {
+    "AppId": "MicrosoftCorporationII.MicrosoftFamily",
+    "Description": "Family Safety App for managing family accounts and settings"
+  },
+  {
+    "AppId": "MicrosoftCorporationII.QuickAssist",
+    "Description": "Remote assistance tool"
+  },
+  {
+    "AppId": "NYTCrossword",
+    "Description": "New York Times crossword puzzle app"
+  },
+  {
+    "AppId": "OneCalendar",
+    "Description": "Calendar aggregation app"
+  },
+  {
+    "AppId": "PandoraMediaInc",
+    "Description": "Pandora music streaming app"
+  },
+  {
+    "AppId": "PhototasticCollage",
+    "Description": "Photo collage creation app"
+  },
+  {
+    "AppId": "PicsArt-PhotoStudio",
+    "Description": "Photo editing and creative app"
+  },
+  {
+    "AppId": "PolarrPhotoEditorAcademicEdition",
+    "Description": "Photo editing app (Academic Edition)"
+  },
+  {
+    "AppId": "Sidia.LiveWallpaper",
+    "Description": "Live wallpaper app"
+  },
+  {
+    "AppId": "SlingTV",
+    "Description": "Live TV streaming service app"
+  },
+  {
+    "AppId": "SpotifyAB.SpotifyMusic",
+    "Description": "Spotify music streaming app"
+  },
+  {
+    "AppId": "TuneInRadio",
+    "Description": "Internet radio streaming app"
+  },
+  {
+    "AppId": "WinZipUniversal",
+    "Description": "File compression and extraction utility (Universal Windows Platform version)"
+  }
+]

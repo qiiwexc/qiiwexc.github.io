@@ -10,14 +10,14 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_PATH_TEMP_DIR')
-    Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST ([String]"TEST_CONFIG_DEBLOAT_APP_LIST1`nTEST_CONFIG_DEBLOAT_APP_LIST2`n")
+    Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST_BASE ([String]'[{"AppId":"TestApp1"},{"AppId":"TestApp2"}]')
     Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE ([String]"TEST_CONFIG_DEBLOAT_PRESET_BASE1`nTEST_CONFIG_DEBLOAT_PRESET_BASE2")
     Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALIZATION ([String]"TEST_CONFIG_DEBLOAT_PRESET_PERSONALIZATION1`nTEST_CONFIG_DEBLOAT_PRESET_PERSONALIZATION2")
 
     Set-Variable -Option Constant TestTargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat\Config")
-    Set-Variable -Option Constant TestAppsListPath ([String]"$TestTargetPath\CustomAppsList")
     Set-Variable -Option Constant TestSettingsPath ([String]"$TestTargetPath\LastUsedSettings.json")
     Set-Variable -Option Constant TestCommand ([String]"& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) -NoRestartExplorer")
+    Set-Variable -Option Constant TestPresetParams ([String]"-RunSavedSettings -RemoveApps -Apps 'TestApp1,TestApp2'")
 }
 
 Describe 'Start-WindowsDebloat' {
@@ -45,12 +45,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestTargetPath }
-        Should -Invoke Set-Content -Exactly 2
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestAppsListPath -and
-            $Value -eq $CONFIG_DEBLOAT_APP_LIST -and
-            $NoNewline -eq $True
-        }
+        Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
             $Value -eq $CONFIG_DEBLOAT_PRESET_BASE -and
@@ -59,7 +54,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep"
+            $Command -eq $TestCommand
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -75,7 +70,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Set-Content -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
@@ -93,11 +88,36 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            $Path -eq $TestSettingsPath -and
+            $Value -eq $CONFIG_DEBLOAT_PRESET_BASE -and
+            $NoNewline -eq $True
+        }
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep -RunSavedSettings -RemoveAppsCustom"
+            $Command -eq "$TestCommand -Sysprep $TestPresetParams"
+        }
+        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
+    It 'Should start debloat tool with custom preset on Windows versions older than 11' {
+        [Int]$OS_VERSION = 10
+
+        Start-WindowsDebloat -UsePreset
+
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Test-NetworkConnection -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
+            $HideWindow -eq $True -and
+            $Command -eq "$TestCommand  $TestPresetParams"
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -111,12 +131,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 2
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
-            $Path -eq $TestAppsListPath -and
-            $Value -eq $CONFIG_DEBLOAT_APP_LIST -and
-            $NoNewline -eq $True
-        }
+        Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
             $Value -eq $CONFIG_DEBLOAT_PRESET_PERSONALIZATION -and
@@ -125,7 +140,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep -RunSavedSettings -RemoveAppsCustom"
+            $Command -eq "$TestCommand -Sysprep $TestPresetParams"
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -139,11 +154,29 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Set-Content -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
             $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep -Silent"
+            $Command -eq "$TestCommand   -Silent"
+        }
+        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
+    It 'Should start debloat tool with custom preset and automatically apply' {
+        Start-WindowsDebloat -UsePreset -Silent
+
+        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
+        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Test-NetworkConnection -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
+            $HideWindow -eq $True -and
+            $Command -eq "$TestCommand -Sysprep $TestPresetParams -Silent"
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
@@ -287,7 +320,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 2
+        Should -Invoke Set-Content -Exactly 1
         Should -Invoke Invoke-CustomCommand -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
