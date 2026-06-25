@@ -27,8 +27,6 @@ function Start-WindowsDebloat {
 
         New-Directory $TargetPath
 
-        Set-Content "$TargetPath\CustomAppsList" $CONFIG_DEBLOAT_APP_LIST -NoNewline -ErrorAction Stop
-
         if ($UsePreset -and $Personalization) {
             Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALIZATION))
         } else {
@@ -46,18 +44,19 @@ function Start-WindowsDebloat {
         [String]$SysprepParam = ''
 
         if ($UsePreset -or $Personalization) {
-            $UsePresetParam = ' -RunSavedSettings -RemoveAppsCustom'
+            Set-Variable -Option Constant CustomAppsList ([String[]]($CONFIG_DEBLOAT_APP_LIST_BASE | ConvertFrom-Json | ForEach-Object { $_.AppId }))
+            $UsePresetParam = "-RunSavedSettings -RemoveApps -Apps '$($CustomAppsList -join ',')'"
         }
 
         if ($Silent) {
-            $SilentParam = ' -Silent'
+            $SilentParam = '-Silent'
         }
 
-        if ($OS_VERSION -ge 11) {
-            $SysprepParam = ' -Sysprep'
+        if ($UsePreset -and $OS_VERSION -ge 11) {
+            $SysprepParam = '-Sysprep'
         }
 
-        Set-Variable -Option Constant Params ([String]"-NoRestartExplorer$SysprepParam$UsePresetParam$SilentParam")
+        Set-Variable -Option Constant Params ([String]"-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam".TrimEnd())
 
         Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 
