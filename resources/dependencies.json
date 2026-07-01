@@ -51,7 +51,7 @@
     },
     {
         "name":  "Rufus",
-        "version":  "v4.14",
+        "version":  "v4.15",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "pbatard/rufus"
@@ -91,7 +91,7 @@
     },
     {
         "name":  "Pester",
-        "version":  "5.7.1",
+        "version":  "6.0.0-rc3",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "pester/Pester"
