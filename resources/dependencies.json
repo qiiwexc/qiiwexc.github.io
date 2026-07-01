@@ -91,7 +91,7 @@
     },
     {
         "name":  "Pester",
-        "version":  "6.0.0-rc3",
+        "version":  "5.8.0",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "pester/Pester"
