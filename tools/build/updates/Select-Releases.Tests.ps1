@@ -73,6 +73,15 @@ Describe 'Select-Releases' {
         }
     }
 
+    It 'Should skip rc versions' {
+        Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-rc" }, @{ tag_name = $TestCurrentVersion } ) }
+
+        Select-Releases $TestDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Invoke-GitAPI -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
     It 'Should skip beta versions' {
         Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-beta" }, @{ tag_name = $TestCurrentVersion } ) }
 
