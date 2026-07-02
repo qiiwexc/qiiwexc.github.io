@@ -39,9 +39,12 @@ Describe 'New-BatchScript' {
             $Path -eq $TestBatchFilePath -and
             $Content -match '@echo off' -and
             $Content -match "%temp%\\$TestProjectName\.ps1" -and
+            $Content -match "Get-Content -LiteralPath '%~f0' -Encoding UTF8 \| Where-Object \{ \`$_\.StartsWith\('::'\) \}" -and
+            $Content -match "Set-Content -LiteralPath '%psfile%' -Encoding UTF8" -and
             $Content -match '  powershell -ExecutionPolicy Bypass -Command ' -and
             $Content -match '::TEST_PS1_FILE_CONTENT_1' -and
-            $Content -match '::TEST_PS1_FILE_CONTENT_2'
+            $Content -match '::TEST_PS1_FILE_CONTENT_2' -and
+            $Content -notmatch 'enabledelayedexpansion'
         }
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Copy-Item -Exactly 1 -ParameterFilter {
@@ -49,6 +52,17 @@ Describe 'New-BatchScript' {
             $Destination -eq $TestVmBatchFilePath
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
+    It 'Should preserve exclamation marks in the bundled content without corruption' {
+        Mock Read-TextFile { return "Write-Host 'oops!'" }
+
+        New-BatchScript $TestProjectName $TestPs1FilePath $TestBatchFilePath $TestVmPath
+
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
+            $Content -match "::Write-Host 'oops!'" -and
+            $Content -notmatch 'enabledelayedexpansion'
+        }
     }
 
     It 'Should handle Read-TextFile failure' {

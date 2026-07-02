@@ -15,14 +15,7 @@ function New-BatchScript {
 
 set `"psfile=%temp%\$ProjectName.ps1`"
 
-> `"%psfile%`" (
-    for /f `"delims=`" %%A in ('findstr `"^::`" `"%~f0`"') do (
-        set `"line=%%A`"
-        setlocal enabledelayedexpansion
-        echo(!line:~2!
-        endlocal
-    )
-)
+powershell -NoProfile -ExecutionPolicy Bypass -Command `"Get-Content -LiteralPath '%~f0' -Encoding UTF8 | Where-Object { `$_.StartsWith('::') } | ForEach-Object { `$_.Substring(2) } | Set-Content -LiteralPath '%psfile%' -Encoding UTF8`"
 
 if `"%~1`"==`"Debug`" (
     powershell -ExecutionPolicy Bypass -Command `"& '%psfile%' -WorkingDirectory '%cd%' -DevMode`"
