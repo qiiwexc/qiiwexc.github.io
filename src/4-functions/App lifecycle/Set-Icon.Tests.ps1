@@ -72,4 +72,13 @@ Describe 'Set-Icon' {
         $FORM.Icon | Should -Not -BeNullOrEmpty
         $FORM.Icon | Should -BeOfType [Windows.Media.Imaging.BitmapSource]
     }
+
+    It 'Should initialize cache under strict mode when the variable was never set (async runspace scenario)' {
+        Remove-Variable -Scope Script -Name IconCache -ErrorAction SilentlyContinue
+
+        { Set-StrictMode -Version Latest; Set-Icon ([IconName]::Default) } | Should -Not -Throw
+
+        $FORM.Icon | Should -Not -BeNullOrEmpty
+        $FORM.Icon | Should -BeOfType [Windows.Media.Imaging.BitmapSource]
+    }
 }

@@ -71,6 +71,10 @@ function Start-AsyncOperation {
     $script:ASYNC.Runspace.SessionStateProxy.SetVariable('ACTIVITIES', [Collections.Stack]@())
     $script:ASYNC.Runspace.SessionStateProxy.SetVariable('CURRENT_TASK', $Null)
 
+    # Propagate the UI thread's error preference so async operations fail the same way
+    # synchronous code would; strict mode is enforced separately below.
+    $script:ASYNC.Runspace.SessionStateProxy.SetVariable('ErrorActionPreference', $ErrorActionPreference)
+
     foreach ($PathVar in @('PATH_WORKING_DIR', 'PATH_TEMP_DIR', 'PATH_SYSTEM_32', 'PATH_APP_DIR',
             'PATH_7ZIP_EXE', 'PATH_OFFICE_C2R_CLIENT_EXE', 'PATH_OOSHUTUP10')) {
         try {
@@ -97,7 +101,11 @@ function Start-AsyncOperation {
 
     $script:ASYNC.PS = [PowerShell]::Create()
     $script:ASYNC.PS.Runspace = $script:ASYNC.Runspace
-    [void]$script:ASYNC.PS.AddScript($Operation)
+
+    # Enforce the same strict mode as the UI thread as its own statement, so a mistyped
+    # variable or property fails loudly in async operations instead of passing silently.
+    [void]$script:ASYNC.PS.AddScript({ Set-StrictMode -Version Latest })
+    [void]$script:ASYNC.PS.AddStatement().AddScript($Operation)
 
     $script:ASYNC.Handle = $script:ASYNC.PS.BeginInvoke()
 

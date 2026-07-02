@@ -288,10 +288,12 @@
 
                 <Button x:Name="MinimizeButton" Grid.Column="1"
                         Content="&#xE949;"
+                        AutomationProperties.Name="Minimize"
                         Style="{StaticResource TitleBarButton}" />
 
                 <Button x:Name="CloseButton" Grid.Column="2"
                         Content="&#xE8BB;"
+                        AutomationProperties.Name="Close"
                         Style="{StaticResource CloseButton}" />
             </Grid>
 
