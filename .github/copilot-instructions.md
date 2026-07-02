@@ -11,14 +11,14 @@
 
 ## Developer Workflows
 
-| Task                   | Command                                                                        |
-| ---------------------- | ------------------------------------------------------------------------------ |
-| Dev build + run        | `.\build-dev.bat` (runs `tools\build.ps1 -Dev`)                                |
-| Run tests              | `.\test.bat` (Pester via `tools\test.ps1`)                                     |
-| Full build (CI-style)  | `.\build-ci.bat` (runs `tools\build.ps1 -Full -CI`)                            |
-| Tests with coverage    | `.\test-with-coverage.bat` (fails when coverage is below the target)           |
-| Run a single test file | `Invoke-Pester -Path 'src\4-functions\Common\Start-Download.Tests.ps1'`        |
-| Update external deps   | `tools\build.ps1 -Update` (or the nightly `update-dependencies.yml` workflow)  |
+| Task                   | Command                                                                       |
+| ---------------------- | ----------------------------------------------------------------------------- |
+| Dev build + run        | `.\build-dev.bat` (runs `tools\build.ps1 -Dev`)                               |
+| Run tests              | `.\test.bat` (Pester via `tools\test.ps1`)                                    |
+| Full build (CI-style)  | `.\build-ci.bat` (runs `tools\build.ps1 -Full -CI`)                           |
+| Tests with coverage    | `.\test-with-coverage.bat` (fails when coverage is below the target)          |
+| Run a single test file | `Invoke-Pester -Path 'src\4-functions\Common\Start-Download.Tests.ps1'`       |
+| Update external deps   | `tools\build.ps1 -Update` (or the nightly `update-dependencies.yml` workflow) |
 
 `-Full` implies: tests, dependency update check, HTML, autounattend, PS1, lint, and batch.
 **Always pass `-CI` in CI/CD** — without it, `Update-Dependencies` opens browser tabs instead of writing to `$env:CHANGELOG_URLS`.
@@ -69,9 +69,12 @@ All component functions (`New-Button`, `New-CheckBox`, etc.) read and mutate `$s
 ## Platform Constraints
 
 The app and the full build are **Windows-only** (WPF, BITS, registry, Windows PowerShell 5.1).
-CI runs on `windows-latest`. On non-Windows hosts most of the Pester suite runs, but tests that
-load WPF assemblies (`src/1-components`, `Add-Type -AssemblyName PresentationFramework`) or
-construct CIM types fail — treat those failures as environmental, not regressions.
+CI runs on `windows-latest`. Source under `src/` and `tools/` targets **Windows PowerShell 5.1**,
+not PowerShell 7 — avoid PS7-only syntax such as `&&`/`||` chaining, the ternary operator (`?:`),
+the null-coalescing operators (`??`, `??=`), and `Get-Error`. On non-Windows hosts most of the
+Pester suite runs, but tests that load WPF assemblies (`src/1-components`,
+`Add-Type -AssemblyName PresentationFramework`) or construct CIM types fail — treat those
+failures as environmental, not regressions.
 
 ## Never Do
 
