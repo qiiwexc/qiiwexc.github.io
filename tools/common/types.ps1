@@ -16,6 +16,7 @@ class GitTag: PSObject {
 
 class GitRelease: PSObject {
     [ValidateNotNullOrEmpty()][String]$tag_name
+    [Bool]$prerelease
 }
 
 class GitCommit: PSObject {

@@ -13,7 +13,9 @@ function Select-Releases {
         return
     }
 
-    Set-Variable -Option Constant FilteredReleases ([GitRelease[]]@($Releases | Where-Object { $_.PSObject.Properties['tag_name'] -and $_.tag_name -inotmatch 'rc' -and $_.tag_name -inotmatch 'beta' -and $_.tag_name -inotmatch 'alpha' }))
+    # Rely exclusively on the GitHub API's authoritative 'prerelease' flag — a missing
+    # flag (e.g. a malformed or truncated response) is treated as not-a-prerelease
+    Set-Variable -Option Constant FilteredReleases ([GitRelease[]]@($Releases | Where-Object { $_.PSObject.Properties['tag_name'] -and (-not $_.PSObject.Properties['prerelease'] -or $_.prerelease -ne $true) }))
 
     if ($FilteredReleases -and $FilteredReleases.Count -gt 0) {
         Set-Variable -Option Constant LatestVersion ([String]($FilteredReleases[0].tag_name))

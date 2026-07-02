@@ -73,8 +73,8 @@ Describe 'Select-Releases' {
         }
     }
 
-    It 'Should skip rc versions' {
-        Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-rc" }, @{ tag_name = $TestCurrentVersion } ) }
+    It 'Should skip releases flagged as prerelease by the GitHub API' {
+        Mock Invoke-GitAPI { return @( @{ tag_name = $TestNewVersion; prerelease = $True }, @{ tag_name = $TestCurrentVersion; prerelease = $False } ) }
 
         Select-Releases $TestDependency | Should -BeNullOrEmpty
 
@@ -82,22 +82,13 @@ Describe 'Select-Releases' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should skip beta versions' {
-        Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-beta" }, @{ tag_name = $TestCurrentVersion } ) }
+    It 'Should accept a clean-looking tag that is not flagged as prerelease, even if it contains rc/beta/alpha substrings' {
+        Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-albeatric"; prerelease = $False }, @{ tag_name = $TestCurrentVersion; prerelease = $False } ) }
 
-        Select-Releases $TestDependency | Should -BeNullOrEmpty
-
-        Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Set-NewVersion -Exactly 0
-    }
-
-    It 'Should skip alpha versions' {
-        Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-alpha" }, @{ tag_name = $TestCurrentVersion } ) }
-
-        Select-Releases $TestDependency | Should -BeNullOrEmpty
+        Select-Releases $TestDependency | Should -BeExactly @("https://github.com/$TestRepositoryName/releases/$TestNewVersion-albeatric")
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Set-NewVersion -Exactly 0
+        Should -Invoke Set-NewVersion -Exactly 1
     }
 
     It 'Should not update if version is the same' {
