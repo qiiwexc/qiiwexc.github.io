@@ -192,6 +192,10 @@
     "Description": "Puzzle game from King"
   },
   {
+    "AppId": "LGElectronics.LGMonitorApp",
+    "Description": "LG OEM software for controlling your LG monitor, Windows Update may silently reinstall this app if you have an LG monitor connected"
+  },
+  {
     "AppId": "LinkedInforWindows",
     "Description": "LinkedIn professional networking app"
   },
