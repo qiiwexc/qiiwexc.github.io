@@ -16,35 +16,35 @@
     },
     {
         "name":  "Microsoft Activation Scripts",
-        "version":  "3.11",
+        "version":  "3.12",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "massgravel/Microsoft-Activation-Scripts"
     },
     {
         "name":  "Unattend Generator",
-        "version":  "3de37dc6bc9bb1f63aeac7aa137c84c1b30b3b28",
+        "version":  "6311d3d4781dba85f94f5f77dc3919d24e2980b7",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "26.06.23",
+        "version":  "26.07.17",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.06.24",
+        "version":  "2026.07.11",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
     },
     {
         "name":  "Ventoy",
-        "version":  "v1.1.16",
+        "version":  "v1.1.17",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ventoy/Ventoy"
@@ -58,7 +58,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "3.1",
+        "version":  "3.2",
         "source":  "URL",
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
@@ -91,7 +91,7 @@
     },
     {
         "name":  "Pester",
-        "version":  "5.8.0",
+        "version":  "6.0.0",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "pester/Pester"
