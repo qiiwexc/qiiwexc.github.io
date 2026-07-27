@@ -23,7 +23,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "6311d3d4781dba85f94f5f77dc3919d24e2980b7",
+        "version":  "662d88d15a50a4a28cccd648f24c3bd52ba56882",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
@@ -72,7 +72,7 @@
     },
     {
         "name":  "SDI",
-        "version":  "2.26.5",
+        "version":  "2.26.7",
         "source":  "URL",
         "url":  "https://driveroff.net/dp/",
         "regex":  "\u003ctr\u003e\u003ctd\u003eSnappy Driver Installer\u003c/td\u003e\u003ctd\u003e(.*?) \\((?:\\d{2}\\.\\d{2}\\.\\d{4})\\)\u003c/td\u003e"
