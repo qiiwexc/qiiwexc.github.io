@@ -43,24 +43,20 @@ function Expand-Zip {
 
     Write-ActivityProgress 75
 
-    if (Test-Path $PATH_7ZIP_EXE) {
-        Invoke-7Zip $ExtractionPath $ZipPath
-    } else {
-        if ([IO.Path]::GetExtension($ZipPath).ToLower() -eq '.zip') {
-            Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
-        } elseif ($OS_VERSION -ge 11) {
-            Set-Variable -Option Constant SHELL (New-Object -ComObject Shell.Application)
+    if ([IO.Path]::GetExtension($ZipPath).ToLower() -eq '.zip') {
+        Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
+    } elseif ($OS_VERSION -ge 11) {
+        Set-Variable -Option Constant SHELL (New-Object -ComObject Shell.Application)
 
-            Set-Variable -Option Constant ArchiveNamespace ($SHELL.NameSpace($ZipPath))
-            if (-not $ArchiveNamespace) {
-                throw "Unsupported archive format: '$ZipPath'. Install 7-Zip to extract this file."
-            }
-            foreach ($Item in $ArchiveNamespace.Items()) {
-                $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
-            }
-        } else {
-            throw "7-Zip not found at '$PATH_7ZIP_EXE'"
+        Set-Variable -Option Constant ArchiveNamespace ($SHELL.NameSpace($ZipPath))
+        if (-not $ArchiveNamespace) {
+            throw "Unsupported archive format: '$ZipPath'."
         }
+        foreach ($Item in $ArchiveNamespace.Items()) {
+            $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
+        }
+    } else {
+        throw 'Could not extract archive'
     }
 
     Write-ActivityProgress 80

@@ -27,7 +27,7 @@ function Start-DownloadUnzipAndRun {
 
     try {
         Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
-        Set-Variable -Option Constant IsArchive ([Bool]($UrlEnding -eq 'zip' -or $UrlEnding -eq '7z'))
+        Set-Variable -Option Constant IsArchive ([Bool]($UrlEnding -eq 'zip'))
         Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Sha256 $Sha256 -Temp:($Execute -or $IsArchive) -NoBits:$NoBits))
     } catch {
         Out-Failure "Download failed: $_"

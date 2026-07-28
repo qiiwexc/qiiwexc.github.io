@@ -76,7 +76,7 @@ function Start-AsyncOperation {
     $script:ASYNC.Runspace.SessionStateProxy.SetVariable('ErrorActionPreference', $ErrorActionPreference)
 
     foreach ($PathVar in @('PATH_WORKING_DIR', 'PATH_TEMP_DIR', 'PATH_SYSTEM_32', 'PATH_APP_DIR',
-            'PATH_7ZIP_EXE', 'PATH_OFFICE_C2R_CLIENT_EXE', 'PATH_OOSHUTUP10')) {
+            'PATH_OFFICE_C2R_CLIENT_EXE', 'PATH_OOSHUTUP10')) {
         try {
             $script:ASYNC.Runspace.SessionStateProxy.SetVariable($PathVar, (Get-Variable $PathVar -ValueOnly -ErrorAction SilentlyContinue))
         } catch { $null = $_ }

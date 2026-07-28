@@ -20,12 +20,8 @@ function Get-ExecutableName {
             }
             return "$ExtractionDir\cpuz_x$Suffix.exe"
         }
-        'SDI_*' {
-            [String]$Suffix = ''
-            if ($OS_64_BIT) {
-                $Suffix = '64'
-            }
-            return "$ExtractionDir\SDI$Suffix-drv.exe"
+        'sdi.zip' {
+            return "$ExtractionDir\SDI_auto.bat"
         }
         'ventoy*' {
             return "$ExtractionDir\$ExtractionDir\Ventoy2Disk.exe"

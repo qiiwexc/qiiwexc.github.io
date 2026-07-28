@@ -29,13 +29,8 @@ Describe 'Get-ExecutableName' {
         Get-ExecutableName 'cpu-z_1.2.3.zip' 'cpu-z_1.2.3' | Should -BeExactly 'cpu-z_1.2.3\cpuz_x32.exe'
     }
 
-    It 'Should return SDI64-drv executable on 64-bit OS' {
-        Get-ExecutableName 'SDI_1.2.3.zip' 'SDI_1.2.3' | Should -BeExactly 'SDI_1.2.3\SDI64-drv.exe'
-    }
-
-    It 'Should return SDI-drv executable on 32-bit OS' {
-        [Bool]$OS_64_BIT = $False
-        Get-ExecutableName 'SDI_1.2.3.zip' 'SDI_1.2.3' | Should -BeExactly 'SDI_1.2.3\SDI-drv.exe'
+    It 'Should return SDI_auto executable' {
+        Get-ExecutableName 'sdi.zip' 'sdi' | Should -BeExactly 'sdi\SDI_auto.bat'
     }
 
     It 'Should return Ventoy2Disk executable' {

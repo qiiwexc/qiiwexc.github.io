@@ -13,7 +13,6 @@ BeforeAll {
 
     Set-Variable -Option Constant TestUrl ([String]'TEST_URL.ext')
     Set-Variable -Option Constant TestUrlZip ([String]'TEST_URL.zip')
-    Set-Variable -Option Constant TestUrl7z ([String]'TEST_URL.7z')
     Set-Variable -Option Constant TestFileName ([String]'TEST_FILE_NAME')
     Set-Variable -Option Constant TestParams ([String]'TEST_PARAMS')
     Set-Variable -Option Constant TestConfigFile ([String]'TEST_CONFIG_FILE')
@@ -97,28 +96,6 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Start-Download -Exactly 1 -ParameterFilter {
             $URL -eq $TestUrlZip -and
-            $FileName -eq $Null -and
-            $Temp -eq $True
-        }
-        Should -Invoke Expand-Zip -Exactly 1
-        Should -Invoke Expand-Zip -Exactly 1 -ParameterFilter {
-            $ZipPath -eq $TestDownloadedFile -and
-            $Temp -eq $False
-        }
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Start-Executable -Exactly 0
-        Should -Invoke Out-Failure -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 1
-        Should -Invoke Write-ActivityCompleted -Exactly 1 -ParameterFilter { $Success -eq $Null }
-    }
-
-    It 'Should download and unzip a 7z file' {
-        Start-DownloadUnzipAndRun $TestUrl7z | Should -BeNullOrEmpty
-
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Start-Download -Exactly 1
-        Should -Invoke Start-Download -Exactly 1 -ParameterFilter {
-            $URL -eq $TestUrl7z -and
             $FileName -eq $Null -and
             $Temp -eq $True
         }
