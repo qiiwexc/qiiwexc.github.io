@@ -1,7 +1,7 @@
 [
     {
         "name":  "SystemRescue",
-        "version":  "13.01",
+        "version":  "13.02",
         "source":  "GitLab",
         "mode":  "tags",
         "repository":  "systemrescue/systemrescue-sources",
@@ -23,14 +23,14 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "662d88d15a50a4a28cccd648f24c3bd52ba56882",
+        "version":  "781fde52797f736de9b0426bb4a5c6048a1ae075",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },
     {
         "name":  "WinUtil",
-        "version":  "26.07.17",
+        "version":  "26.08.04",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
@@ -58,7 +58,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "3.2",
+        "version":  "3.3",
         "source":  "URL",
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
@@ -79,7 +79,7 @@
     },
     {
         "name":  "CPU-Z",
-        "version":  "2.20.2",
+        "version":  "2.21",
         "source":  "URL",
         "url":  "https://cpuid.com/softwares/cpu-z.html",
         "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
@@ -91,7 +91,7 @@
     },
     {
         "name":  "Pester",
-        "version":  "6.0.0",
+        "version":  "6.1.0",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "pester/Pester"
