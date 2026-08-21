@@ -30,7 +30,7 @@
     },
     {
         "name":  "WinUtil",
-        "version":  "26.08.04",
+        "version":  "26.08.19",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil"
@@ -58,7 +58,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "3.3",
+        "version":  "3.4",
         "source":  "URL",
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
@@ -79,7 +79,7 @@
     },
     {
         "name":  "CPU-Z",
-        "version":  "2.21",
+        "version":  "3.01",
         "source":  "URL",
         "url":  "https://cpuid.com/softwares/cpu-z.html",
         "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
