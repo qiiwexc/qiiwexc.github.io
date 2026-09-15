@@ -16,8 +16,8 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 15
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # Required to push the update branch
+      pull-requests: write # Required to create and edit the update pull request
     outputs:
       has_updates: ${{ steps.update.outputs.has_updates }}
       branch: ${{ steps.create-pr.outputs.branch }}
@@ -25,6 +25,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Credentials are needed for the 'git push' of the update branch
+          persist-credentials: true
 
       - name: Check for dependency updates
         id: update
@@ -60,7 +63,7 @@ jobs:
 
           $existingPr = gh pr list --head $branch --json number --jq 'if length > 0 then .[0].number else empty end'
           if (-not $existingPr) {
-              gh pr create --title $title --body $body --reviewer '${{ github.repository_owner }}'
+              gh pr create --title $title --body $body --reviewer $env:GITHUB_REPOSITORY_OWNER
           } else {
               if ($body) {
                   gh pr edit $existingPr --title $title --body $body
@@ -79,24 +82,27 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
-      statuses: write
+      statuses: write # Required to report the commit status on the update pull request
     steps:
       - name: Check out PR branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ needs.update-dependencies.outputs.branch }}
+          persist-credentials: false
 
       - name: Test
-        uses: ./.github/actions/test
+        uses: $/.github/actions/test
 
       - name: Report status
         if: always()
         shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          SHA: ${{ needs.update-dependencies.outputs.sha }}
         run: |
-          $state = if ('${{ job.status }}' -eq 'success') { 'success' } else { 'failure' }
-          gh api "repos/${{ github.repository }}/statuses/${{ needs.update-dependencies.outputs.sha }}" `
+          $state = if ($env:JOB_STATUS -eq 'success') { 'success' } else { 'failure' }
+          gh api "repos/$env:GITHUB_REPOSITORY/statuses/$env:SHA" `
               -f state=$state -f context=test -f description="Tests $state"
 
   build:
@@ -106,22 +112,25 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
-      statuses: write
+      statuses: write # Required to report the commit status on the update pull request
     steps:
       - name: Check out PR branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ needs.update-dependencies.outputs.branch }}
+          persist-credentials: false
 
       - name: Build
-        uses: ./.github/actions/build
+        uses: $/.github/actions/build
 
       - name: Report status
         if: always()
         shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          SHA: ${{ needs.update-dependencies.outputs.sha }}
         run: |
-          $state = if ('${{ job.status }}' -eq 'success') { 'success' } else { 'failure' }
-          gh api "repos/${{ github.repository }}/statuses/${{ needs.update-dependencies.outputs.sha }}" `
+          $state = if ($env:JOB_STATUS -eq 'success') { 'success' } else { 'failure' }
+          gh api "repos/$env:GITHUB_REPOSITORY/statuses/$env:SHA" `
               -f state=$state -f context=build -f description="Build $state"

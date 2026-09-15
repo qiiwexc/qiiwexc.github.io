@@ -13,14 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: write
+      contents: write # Required to push the new tag
       # 'actions: write' is required by the explicit CI trigger below — tags pushed
       # with GITHUB_TOKEN do not fire 'on: push' workflows (recursion protection),
       # so CI must be dispatched manually for the new tag
-      actions: write
+      actions: write # Required to dispatch the CI workflow for the new tag
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Credentials are needed for the 'git push' below
+          persist-credentials: true
 
       - name: Create and push tag
         id: create-tag
@@ -46,5 +49,5 @@ jobs:
       - name: Trigger CI
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run ci.yml --repo "${{ github.repository }}" --ref "${{
-          steps.create-tag.outputs.tag }}"
+          TAG: ${{ steps.create-tag.outputs.tag }}
+        run: gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$TAG"

@@ -21,14 +21,12 @@ runs:
       run: sha256sum qiiwexc.bat qiiwexc.ps1 autounattend-*.xml > SHA256SUMS.txt
 
     - name: Create release
-      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
-      with:
-        tag_name: ${{ inputs.tag }}
-        name: ${{ inputs.tag }}
-        generate_release_notes: true
-        body: 'SHA-256 checksums for the release assets are attached as `SHA256SUMS.txt`.'
-        files: |
-          artifacts/build/qiiwexc.bat
-          artifacts/build/qiiwexc.ps1
-          artifacts/build/autounattend-*.xml
-          artifacts/build/SHA256SUMS.txt
+      shell: bash
+      working-directory: artifacts/build
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TAG: ${{ inputs.tag }}
+      run: |
+        gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag --title "$TAG" --generate-notes \
+          --notes 'SHA-256 checksums for the release assets are attached as `SHA256SUMS.txt`.' \
+          qiiwexc.bat qiiwexc.ps1 autounattend-*.xml SHA256SUMS.txt

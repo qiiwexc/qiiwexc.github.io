@@ -22,9 +22,11 @@ runs:
     - name: Install Pester
       if: steps.cache-psmodules.outputs.cache-hit != 'true'
       shell: powershell
+      env:
+        VERSION: ${{ steps.versions.outputs.pester }}
       run: |
         Set-PSRepository PSGallery -InstallationPolicy Trusted
-        Install-Module -Name Pester -Force -Scope CurrentUser -RequiredVersion ${{ steps.versions.outputs.pester }}
+        Install-Module -Name Pester -Force -Scope CurrentUser -RequiredVersion $env:VERSION
 
     - name: Run tests with coverage
       shell: powershell

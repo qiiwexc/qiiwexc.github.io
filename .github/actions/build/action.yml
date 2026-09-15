@@ -22,9 +22,11 @@ runs:
     - name: Install PSScriptAnalyzer
       if: steps.cache-psmodules.outputs.cache-hit != 'true'
       shell: powershell
+      env:
+        VERSION: ${{ steps.versions.outputs.psscriptanalyzer }}
       run: |
         Set-PSRepository PSGallery -InstallationPolicy Trusted
-        Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -RequiredVersion ${{ steps.versions.outputs.psscriptanalyzer }}
+        Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -RequiredVersion $env:VERSION
 
     - name: Run build
       shell: powershell
