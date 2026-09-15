@@ -90,4 +90,4 @@ PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1`, not on source files.
 
 ## CI/CD Workflows
 
-Reusable workflows in `.github/workflows/`. `ci.yml` chains: `test → build → deploy (tags only) → release`. Permissions follow least-privilege: empty `{}` at workflow level, specific grants per job. The `deploy` job publishes to GitHub Pages; `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, and `autounattend-*.xml` as assets.
+Reusable workflows in `.github/workflows/`. `ci.yml` chains: `test → build → deploy (tags only) → release`. Permissions follow least-privilege: empty `{}` at workflow level, specific grants per job. The `deploy` job publishes to GitHub Pages; `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, and `autounattend-*.xml` as assets (via `gh release create`). `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.
