@@ -22,6 +22,8 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read # Required to check out the repository and by zizmor's online audits
+      actions: read # Required by upload-sarif to read workflow run metadata
+      security-events: write # Required by upload-sarif to publish findings to code scanning
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -31,7 +33,6 @@ jobs:
       - name: Run zizmor
         uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
         with:
-          # Report findings as inline annotations and fail the job,
-          # instead of uploading SARIF to code scanning
-          advanced-security: false
-          annotations: true
+          # Upload findings as SARIF to code scanning instead of reporting
+          # them as inline annotations; the job does not fail on findings
+          advanced-security: true
