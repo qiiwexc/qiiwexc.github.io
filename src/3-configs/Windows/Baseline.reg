@@ -132,12 +132,6 @@
 "FilterAdministratorToken"=dword:00000001
 "PromptOnSecureDesktop"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update]
-"AUOptions"=dword:00000004
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\AU]
-"AUOptions"=dword:00000004
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services]
 "DefaultService"="7971f918-a847-4430-9279-4a52d1efe18d"
 

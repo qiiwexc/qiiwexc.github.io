@@ -6,6 +6,7 @@ BeforeAll {
     . '.\tools\common\Progressbar.ps1'
     . '.\tools\common\Read-TextFile.ps1'
     . '.\tools\common\Write-TextFile.ps1'
+    . "$BuilderPath\unattended\Assert-UnattendedFile.ps1"
     . "$BuilderPath\unattended\New-UnattendedBase.ps1"
     . "$BuilderPath\unattended\Set-AppRemovalList.ps1"
     . "$BuilderPath\unattended\Set-InlineFiles.ps1"
@@ -88,7 +89,31 @@ Describe 'New-UnattendedFile' {
         Mock Read-TextFile { return $TestBuildFileContent } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
         Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
         Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+        Mock Assert-UnattendedFile {}
         Mock Write-ActivityCompleted {}
+    }
+
+    It 'Should check each published file after removing the development-only sections' {
+        New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath
+
+        Should -Invoke Assert-UnattendedFile -Exactly 2
+        Should -Invoke Assert-UnattendedFile -Exactly 1 -ParameterFilter {
+            $FileName -eq $TestFileNameEnglish -and
+            $Content -eq $TestDistFileContent
+        }
+        Should -Invoke Assert-UnattendedFile -Exactly 1 -ParameterFilter {
+            $FileName -eq $TestFileNameRussian -and
+            $Content -eq $TestDistFileContent
+        }
+    }
+
+    It 'Should not publish a file that fails the check' {
+        Mock Assert-UnattendedFile { throw $TestException }
+
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+
+        Should -Invoke Write-TextFile -Exactly 0 -ParameterFilter { $Content -eq $TestDistFileContent }
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should create unattended files' {

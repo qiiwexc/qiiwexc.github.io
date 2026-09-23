@@ -45,44 +45,58 @@ function Update-Dependencies {
     Set-Variable -Option Constant DependencyStep ([Math]::Floor(75 / $Dependencies.Count))
     Write-ActivityProgress 15
 
-    $ErrorActionPreference = 'Continue'
+    [Int]$FailedCount = 0
     [Int]$Iteration = 1
     foreach ($Dependency in $Dependencies) {
         [String]$Source = $Dependency.source
         [String]$Name = $Dependency.name
         [String]$PreviousVersion = $Dependency.version
+        [Int]$ChangeLogCount = $ChangeLogs.Count
 
         [Int]$Percentage = 15 + $Iteration * $DependencyStep
         Write-ActivityProgress $Percentage
 
         Write-LogInfo "Checking for updates for '$Name' (current version: $($Dependency.version))"
 
-        switch ($Source) {
-            ('GitHub') {
-                $ChangeLogs.Add((Update-GitDependency $Dependency $GitHubToken))
+        # One unreachable source must not lose the updates found for all the others
+        try {
+            switch ($Source) {
+                ('GitHub') {
+                    $ChangeLogs.Add((Update-GitDependency $Dependency $GitHubToken))
+                }
+                ('GitLab') {
+                    $ChangeLogs.Add((Update-GitDependency $Dependency))
+                }
+                ('URL') {
+                    $ChangeLogs.Add((Update-WebDependency $Dependency))
+                }
+                ('File') {
+                    $ChangeLogs.Add((Update-FileDependency $Dependency $WipPath))
+                }
             }
-            ('GitLab') {
-                $ChangeLogs.Add((Update-GitDependency $Dependency))
-            }
-            ('URL') {
-                $ChangeLogs.Add((Update-WebDependency $Dependency))
-            }
-            ('File') {
-                $ChangeLogs.Add((Update-FileDependency $Dependency $WipPath))
-            }
-        }
 
-        # The app verifies versioned downloads against the recorded checksum, so a new version
-        # is only kept once its checksum is known — otherwise the build would ship a stale one
-        if ($Dependency.version -ne $PreviousVersion -and -not (Update-DependencyChecksum $Dependency $UrlsFile)) {
-            Write-LogWarning "Keeping '$Name' at version $PreviousVersion"
+            # The app verifies versioned downloads against the recorded checksum, so a new version
+            # is only kept once its checksum is known — otherwise the build would ship a stale one
+            if ($Dependency.version -ne $PreviousVersion -and -not (Update-DependencyChecksum $Dependency $UrlsFile)) {
+                Write-LogWarning "Keeping '$Name' at version $PreviousVersion"
+                $Dependency.version = $PreviousVersion
+                $ChangeLogs.RemoveAt($ChangeLogs.Count - 1)
+            }
+        } catch {
+            $FailedCount++
+            Write-LogWarning "Failed to check '$Name' for updates: $_"
             $Dependency.version = $PreviousVersion
-            $ChangeLogs.RemoveAt($ChangeLogs.Count - 1)
+            while ($ChangeLogs.Count -gt $ChangeLogCount) {
+                $ChangeLogs.RemoveAt($ChangeLogs.Count - 1)
+            }
         }
 
         $Iteration++
     }
-    $ErrorActionPreference = 'Stop'
+
+    if ($FailedCount -eq $Dependencies.Count) {
+        throw 'Failed to check any dependency for updates'
+    }
 
     Write-ActivityProgress 90
 

@@ -30,7 +30,7 @@ function Set-InlineFiles {
         [String]$FileName = $_.Value.Replace('{LOCALE}', $Locale)
         [String]$FileContent = (Read-TextFile $FileName).Trim()
 
-        if ($FileName -match '.reg$') {
+        if ($FileName -match '\.reg$') {
             [String]$FullContent = $FileContent.Replace('HKEY_CURRENT_USER', 'HKEY_USERS\DefaultUser')
         } else {
             [String]$FullContent = $FileContent

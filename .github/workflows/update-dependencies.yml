@@ -75,8 +75,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           CHANGELOG_URLS: ${{ needs.check-for-updates.outputs.changelog_urls }}
         run: |
+          # One standing branch: each night's run starts from master and force-pushes over it,
+          # so a single open pull request always shows every pending update instead of one per day
           $now = Get-Date
-          $branch = "chore/update-dependencies-$($now.ToString('yyyy-MM-dd'))"
+          $branch = 'chore/update-dependencies'
           $title = "Update dependencies ($($now.ToString('yyyy.MM.dd')))"
 
           git config user.name 'github-actions[bot]'

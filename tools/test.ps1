@@ -8,10 +8,16 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# Load Pester before the [PesterConfiguration] type is referenced
-Import-Module Pester -MinimumVersion 5.0
-
 Set-Variable -Option Constant ProjectRoot ([String](Split-Path -Parent $PSScriptRoot))
+
+# Load the Pester version pinned in dependencies.json — the one CI installs — rather than whichever
+# is newest locally, and before the [PesterConfiguration] type is referenced
+Set-Variable -Option Constant PesterVersion ([String]((Get-Content "$ProjectRoot\resources\dependencies.json" -Raw | ConvertFrom-Json) | Where-Object { $_.name -eq 'Pester' }).version)
+try {
+    Import-Module Pester -RequiredVersion $PesterVersion
+} catch {
+    throw "Pester $PesterVersion is not installed, run install-dependencies.bat: $_"
+}
 
 Set-Variable -Option Constant Configuration ([PesterConfiguration](New-PesterConfiguration -Hashtable (. "$ProjectRoot/PesterSettings.ps1" -Coverage:$Coverage -Wip:$Wip)))
 $Configuration.Run.PassThru = $True

@@ -136,7 +136,6 @@
 "VerifiedAndReputablePolicyState"=dword:00000002
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA]
-"LmCompatibilityLevel"=dword:00000005
 "NoLMHash"=dword:00000001
 "restrictanonymous"=dword:00000001
 "RestrictRemoteSAM"="O:BAG:BAD:(A;;RC;;;BA)"
@@ -145,8 +144,6 @@
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA\MSV1_0]
 "allownullsessionfallback"=dword:00000000
-"NtlmMinClientSec"=dword:20080000
-"NtlmMinServerSec"=dword:20080000
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56]
 "Enabled"=dword:00000000
@@ -181,22 +178,6 @@
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5]
 "Enabled"=dword:00000000
 
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client]
-"DisabledByDefault"=dword:00000001
-"Enabled"=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server]
-"DisabledByDefault"=dword:00000001
-"Enabled"=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client]
-"DisabledByDefault"=dword:00000001
-"Enabled"=dword:00000000
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server]
-"DisabledByDefault"=dword:00000001
-"Enabled"=dword:00000000
-
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager]
 "CWDIllegalInDLLSearch"=dword:ffffffff
 
@@ -209,9 +190,3 @@
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
 "IRPStackSize"=dword:0000001E
 "requiresecuritysignature"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters]
-"RequireSecuritySignature"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration]
-"Status"=dword:00000000

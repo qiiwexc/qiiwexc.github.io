@@ -48,7 +48,13 @@ function New-UnattendedBase {
         $Content = $Content -replace $_.Key, $_.Value
     }
 
-    $Content = "<!-- Version: {VERSION} -->`n" + $Content
+    # The XML declaration must be the very first thing in the document, so the version comment follows it
+    Set-Variable -Option Constant VersionComment ([String]'<!-- Version: {VERSION} -->')
+    if ($Content -match '^<\?xml[^>]*\?>') {
+        $Content = $Content.Insert($Matches[0].Length, "`n$VersionComment")
+    } else {
+        $Content = "$VersionComment`n$Content"
+    }
 
     Write-TextFile $BaseFile $Content -Normalize
 }

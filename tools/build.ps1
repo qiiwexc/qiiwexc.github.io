@@ -146,6 +146,14 @@ if ($Ps1) {
 if ($Lint) {
     Write-ActivityProgress 80 'Running linter...'
 
+    # The version pinned in dependencies.json — the one CI installs — rather than whichever is newest locally
+    Set-Variable -Option Constant AnalyzerVersion ([String]((Read-JsonFile "$ResourcesPath\dependencies.json") | Where-Object { $_.name -eq 'PSScriptAnalyzer' }).version)
+    try {
+        Import-Module PSScriptAnalyzer -RequiredVersion $AnalyzerVersion
+    } catch {
+        throw "PSScriptAnalyzer $AnalyzerVersion is not installed, run install-dependencies.bat: $_"
+    }
+
     Set-Variable -Option Constant MaxRetries ([int]3)
 
     for ($i = 1; $i -le $MaxRetries; $i++) {

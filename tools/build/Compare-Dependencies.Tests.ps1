@@ -130,6 +130,34 @@ Describe 'Compare-Dependencies' {
         $Result.HasUrlChange | Should -Be $True
     }
 
+    It 'Should flag updates of the tools the CI runs: <Name>' -ForEach @(
+        @{ Name = 'Pester' }
+        @{ Name = 'PSScriptAnalyzer' }
+    ) {
+        $OldDeps = [Dependency[]]@(@{ name = $Name; version = '1.0.0'; source = 'GitHub'; repository = "test/$Name" })
+        $NewDeps = [Dependency[]]@(@{ name = $Name; version = '1.1.0'; source = 'GitHub'; repository = "test/$Name" })
+
+        $Result = Compare-Dependencies $OldDeps $NewDeps $TestUrlsTemplate
+
+        $Result.UpdatedNames | Should -BeExactly @($Name)
+        $Result.HasUrlChange | Should -Be $False
+        $Result.HasToolChange | Should -Be $True
+    }
+
+    It 'Should not flag tool changes for other dependencies' {
+        $NewDeps = [Dependency[]]@(
+            @{ name = 'Rufus'; version = 'v4.12'; source = 'GitHub'; repository = 'pbatard/rufus' }
+            @{ name = 'WinUtil'; version = '26.02.01'; source = 'GitHub'; repository = 'ChrisTitusTech/winutil' }
+            @{ name = 'SystemRescue'; version = '12.03'; source = 'GitLab'; repository = 'systemrescue/systemrescue-sources' }
+            @{ name = 'SDI'; version = '1.26.0'; source = 'URL' }
+            @{ name = 'TronScript'; version = 'v12.0.6'; source = 'GitHub'; repository = 'bmrf/tron' }
+        )
+
+        $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
+
+        $Result.HasToolChange | Should -Be $False
+    }
+
     It 'Should skip new dependencies not in old list' {
         $NewDeps = [Dependency[]]@(
             @{ name = 'Rufus'; version = 'v4.11'; source = 'GitHub'; repository = 'pbatard/rufus' }

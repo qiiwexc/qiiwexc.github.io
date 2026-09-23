@@ -24,9 +24,9 @@ set `"workdir=%~dp0`"
 powershell -NoProfile -ExecutionPolicy Bypass -Command `"Get-Content -LiteralPath `$env:batfile -Encoding UTF8 | Where-Object { `$_.StartsWith('::') } | ForEach-Object { `$_.Substring(2) } | Set-Content -LiteralPath `$env:psfile -Encoding UTF8`"
 
 if `"%~1`"==`"Debug`" (
-    powershell -ExecutionPolicy Bypass -Command `"& `$env:psfile -WorkingDirectory `$env:workdir.TrimEnd('\') -DevMode`"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command `"& `$env:psfile -WorkingDirectory `$env:workdir.TrimEnd('\') -DevMode`"
 ) else (
-    powershell -ExecutionPolicy Bypass -Command `"& `$env:psfile -WorkingDirectory `$env:workdir.TrimEnd('\')`"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command `"& `$env:psfile -WorkingDirectory `$env:workdir.TrimEnd('\')`"
 )
 
 ::$($PowerShellLines.Replace("`n", "`n::"))"

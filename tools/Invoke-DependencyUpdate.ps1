@@ -8,10 +8,13 @@ $ErrorActionPreference = 'Stop'
 Set-Variable -Option Constant ProjectRoot ([String](Split-Path -Parent $PSScriptRoot))
 Set-Variable -Option Constant ResourcesPath ([String]"$ProjectRoot\resources")
 
+# Individual dependencies that cannot be checked are skipped with a warning — an error here
+# means nothing could be checked at all, which must fail the workflow rather than look like "no updates"
 try {
     & "$PSScriptRoot\build.ps1" -Update -CI
 } catch {
-    Write-Host "::warning::Build script error: $_"
+    Write-Host "::error::Dependency update failed: $_"
+    exit 1
 }
 
 [String]$Diff = git diff --name-only --ignore-cr-at-eol -- resources/dependencies.json
@@ -30,7 +33,8 @@ if (-not $Diff) {
 
 [PSCustomObject]$Result = Compare-Dependencies $OldDeps $NewDeps $UrlsTemplate
 
-[String]$HasUpdates = $Result.HasUrlChange.ToString().ToLower()
+# A pull request is opened when the built artifacts change (a new download URL) or the CI tools change
+[String]$HasUpdates = ($Result.HasUrlChange -or $Result.HasToolChange).ToString().ToLower()
 "has_updates=$HasUpdates" >> $env:GITHUB_OUTPUT
 
 if ($env:CHANGELOG_URLS) {

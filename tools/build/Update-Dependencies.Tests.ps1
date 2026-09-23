@@ -363,16 +363,53 @@ Describe 'Update-Dependencies' {
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
+    It 'Should keep the updates of the other dependencies when one cannot be checked' {
+        Mock Read-JsonFile {
+            return [Dependency[]]@(
+                @{ source = $SourceGitHub; name = 'dep1'; version = $TestDependencyVersion },
+                @{ source = $SourceURL; name = 'dep2'; version = $TestDependencyVersion }
+            )
+        }
+        Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestWebChangelogUrl
+
+        Should -Invoke Update-GitDependency -Exactly 1
+        Should -Invoke Update-WebDependency -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -match "Failed to check 'dep1' for updates" }
+        Should -Invoke Write-JsonFile -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
+    It 'Should restore the version of a dependency whose check fails midway' {
+        Mock Read-JsonFile {
+            return [Dependency[]]@(
+                @{ source = $SourceGitHub; name = 'dep1'; version = $TestDependencyVersion },
+                @{ source = $SourceURL; name = 'dep2'; version = $TestDependencyVersion }
+            )
+        }
+        Mock Update-GitDependency {
+            $Dependency.version = '2.0.0'
+            return $TestGitHubChangelogUrl
+        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+        Mock Update-DependencyChecksum { throw $TestException }
+
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestWebChangelogUrl
+
+        Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter { $Content[0].version -eq $TestDependencyVersion }
+    }
+
     It 'Should handle Update-GitDependency failure with a GitHub source' {
         Mock Read-JsonFile { return $TestGitHubDependency }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
 
-        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw 'Failed to check any dependency for updates'
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Read-GitHubToken -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1
         Should -Invoke Update-WebDependency -Exactly 0
@@ -385,12 +422,12 @@ Describe 'Update-Dependencies' {
         Mock Read-JsonFile { return $TestGitLabDependency }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitLab }
 
-        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw 'Failed to check any dependency for updates'
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Read-GitHubToken -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1
         Should -Invoke Update-WebDependency -Exactly 0
@@ -403,12 +440,12 @@ Describe 'Update-Dependencies' {
         Mock Read-JsonFile { return $TestWebDependency }
         Mock Update-WebDependency { throw $TestException }
 
-        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw 'Failed to check any dependency for updates'
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Read-GitHubToken -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 1
@@ -421,12 +458,12 @@ Describe 'Update-Dependencies' {
         Mock Read-JsonFile { return $TestFileDependency }
         Mock Update-FileDependency { throw $TestException }
 
-        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
+        { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw 'Failed to check any dependency for updates'
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Read-GitHubToken -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 0

@@ -43,7 +43,8 @@ Describe 'New-BatchScript' {
             $Content -match 'set "workdir=%~dp0"' -and
             $Content -match "Get-Content -LiteralPath \`$env:batfile -Encoding UTF8 \| Where-Object \{ \`$_\.StartsWith\('::'\) \}" -and
             $Content -match "Set-Content -LiteralPath \`$env:psfile -Encoding UTF8" -and
-            $Content -match '  powershell -ExecutionPolicy Bypass -Command ' -and
+            $Content -match '  powershell -NoProfile -ExecutionPolicy Bypass -Command ' -and
+            $Content -notmatch 'powershell -ExecutionPolicy' -and
             $Content -match "-WorkingDirectory \`$env:workdir\.TrimEnd\('\\'\)" -and
             $Content -notmatch '%cd%' -and
             $Content -notmatch "'%" -and

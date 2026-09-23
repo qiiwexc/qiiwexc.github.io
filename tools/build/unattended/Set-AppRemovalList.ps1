@@ -9,7 +9,8 @@ function Set-AppRemovalList {
 
     [Collections.Generic.List[String]]$FormattedAppList = @("`n")
     $AppList | ForEach-Object {
-        [String]$App = $_.Split('#')[0].trim()
+        # Each ID becomes a single-quoted PowerShell string in the answer file
+        [String]$App = $_.Split('#')[0].trim().Replace("'", "''")
         $FormattedAppList.Add("  '$App';`n")
     }
 

@@ -21,6 +21,7 @@
 | Update external deps   | `tools\build.ps1 -Update` (or the nightly `update-dependencies.yml` workflow) |
 
 `-Full` implies: tests, dependency update check, HTML, autounattend, PS1, lint, and batch.
+`tools\test.ps1` and the linter load the exact Pester and PSScriptAnalyzer versions pinned in `resources/dependencies.json` — install them with `install-dependencies.bat`.
 **Always pass `-CI` in CI/CD** — without it, `Update-Dependencies` opens browser tabs instead of writing to `$env:CHANGELOG_URLS`.
 
 ## Build Architecture
@@ -30,6 +31,8 @@
 ### Source-to-Script Bundling
 
 `tools/build/New-PowerShellScript.ps1` concatenates all files under `src/` recursively (in `Get-ChildItem` enumeration order — alphabetical per directory — with `*.Tests.ps1` excluded) into a single `build/qiiwexc.ps1`. File ordering is controlled by numeric prefixes on filenames and directories (e.g., `0-init/`, `1-components/`, `0 Parameters.ps1`). Leading numeric prefixes on each path segment are stripped from `#region` names in the output. The build fails if any `{KEY}` placeholder is left unresolved or if the bundled script does not parse.
+
+The answer files are built from `templates/autounattend.xml`, which also carries sections for the development VM only (disk 0 partitioning, a local auto-logon account). `tools/build/New-UnattendedFile.ps1` strips them from the published files, and `tools/build/unattended/Assert-UnattendedFile.ps1` fails the build if any remain, a `{KEY}` placeholder is unresolved, or the XML is not well-formed.
 
 Non-PS1 files in `src/3-configs/` (`.reg`, `.json`, `.conf`, `.ini`, `.xml`) are embedded as string constants named `CONFIG_<UPPERCASED_FILENAME>` using `Set-Variable -Option Constant`.
 
@@ -92,4 +95,4 @@ PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1`, not on source files.
 
 ## CI/CD Workflows
 
-Reusable workflows in `.github/workflows/`. `ci.yml` chains: `test → build → deploy (tags only) → release`. Permissions follow least-privilege: empty `{}` at workflow level, specific grants per job. The `deploy` job publishes an explicit file list (assembled in `.github/actions/deploy/action.yml`) to GitHub Pages — add new site files there; `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, `autounattend-*.xml` and `SHA256SUMS.txt` as assets (via `gh release create`). `update-dependencies.yml` checks for updates in a read-only job and hands the changed `dependencies.json` to a separate job that pushes the branch and opens the PR. `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.
+Reusable workflows in `.github/workflows/`. `ci.yml` chains: `test → build → deploy (tags only) → release`. Permissions follow least-privilege: empty `{}` at workflow level, specific grants per job. The `deploy` job publishes an explicit file list (assembled in `.github/actions/deploy/action.yml`) to GitHub Pages — add new site files there; `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, `autounattend-*.xml` and `SHA256SUMS.txt` as assets (via `gh release create`). `update-dependencies.yml` checks for updates in a read-only job and hands the changed `dependencies.json` to a separate job that force-pushes the `chore/update-dependencies` branch and opens or updates its PR — only when a versioned download URL, Pester or PSScriptAnalyzer changes. `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.

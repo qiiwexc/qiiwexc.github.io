@@ -42,6 +42,16 @@ Describe 'New-UnattendedBase' {
         }
     }
 
+    It 'Should put the version comment after the XML declaration' {
+        Mock Read-TextFile { return "<?xml version=`"1.0`" encoding=`"utf-8`"?>`n<unattend></unattend>`n" }
+
+        New-UnattendedBase $TestTemplatesPath $TestBaseFilePath
+
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
+            $Content -match "^<\?xml version=`"1\.0`" encoding=`"utf-8`"\?>`n<!-- Version: {VERSION} -->`n<unattend>"
+        }
+    }
+
     It 'Should handle Read-TextFile failure' {
         Mock Read-TextFile { throw $TestException }
 

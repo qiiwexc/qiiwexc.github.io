@@ -26,6 +26,7 @@ function New-UnattendedFile {
 
     Write-ActivityProgress 5
 
+    . "$UnattendedPath\Assert-UnattendedFile.ps1"
     . "$UnattendedPath\New-UnattendedBase.ps1"
     . "$UnattendedPath\Set-AppRemovalList.ps1"
     . "$UnattendedPath\Set-InlineFiles.ps1"
@@ -108,6 +109,8 @@ function New-UnattendedFile {
         foreach ($Regex in $DevRegexRemovals) {
             $FileContent = $FileContent -replace $Regex, ''
         }
+
+        Assert-UnattendedFile $LocalizedFileName $FileContent
 
         Write-TextFile $BuildFileName $FileContent -NoNewline
     }

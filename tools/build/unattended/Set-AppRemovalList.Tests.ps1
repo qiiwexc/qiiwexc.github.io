@@ -42,6 +42,14 @@ Describe 'Set-AppRemovalList' -Tag 'WIP' {
         }
     }
 
+    It 'Should escape single quotes in app IDs' {
+        Mock Read-JsonFile { return @([PSCustomObject]@{ AppId = "Test.O'App # comment" }) }
+
+        Set-Variable -Option Constant Result (Set-AppRemovalList $ConfigsPath $TestTemplateContent)
+
+        $Result | Should -MatchExactly "  'Test\.O''App';"
+    }
+
     It 'Should handle Read-JsonFile failure' {
         Mock Read-JsonFile { throw $TestException }
 

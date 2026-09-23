@@ -19,7 +19,7 @@ BeforeAll {
 Describe 'Set-InlineFiles' {
     BeforeEach {
         Mock Read-TextFile { return $TestGenericFileContent }
-        Mock Read-TextFile { return $TestRegFileContent } -ParameterFilter { $Path -match '.reg$' }
+        Mock Read-TextFile { return $TestRegFileContent } -ParameterFilter { $Path -match '\.reg$' }
     }
 
     It 'Should inline English configuration files correctly' {
