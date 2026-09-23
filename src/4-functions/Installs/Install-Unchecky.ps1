@@ -27,5 +27,5 @@ function Install-Unchecky {
         }
     }
 
-    Start-DownloadUnzipAndRun '{URL_UNCHECKY}' -Execute:$Execute -Params $Params -Silent:$Silent
+    Start-DownloadUnzipAndRun '{URL_UNCHECKY}' -Sha256 '{SHA256_UNCHECKY}' -Execute:$Execute -Params $Params -Silent:$Silent
 }

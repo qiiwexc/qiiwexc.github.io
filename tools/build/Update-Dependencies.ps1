@@ -13,6 +13,7 @@ function Update-Dependencies {
 
     Set-Variable -Option Constant EnvFile ([String]'.env')
     Set-Variable -Option Constant DependenciesFile ([String]"$ResourcesPath\dependencies.json")
+    Set-Variable -Option Constant UrlsFile ([String]"$ResourcesPath\urls.json")
 
     . "$UpdatesPath\Compare-Commits.ps1"
     . "$UpdatesPath\Compare-Tags.ps1"
@@ -20,6 +21,7 @@ function Update-Dependencies {
     . "$UpdatesPath\Read-GitHubToken.ps1"
     . "$UpdatesPath\Select-Releases.ps1"
     . "$UpdatesPath\Set-NewVersion.ps1"
+    . "$UpdatesPath\Update-DependencyChecksum.ps1"
     . "$UpdatesPath\Update-FileDependency.ps1"
     . "$UpdatesPath\Update-GitDependency.ps1"
     . "$UpdatesPath\Update-WebDependency.ps1"
@@ -48,6 +50,7 @@ function Update-Dependencies {
     foreach ($Dependency in $Dependencies) {
         [String]$Source = $Dependency.source
         [String]$Name = $Dependency.name
+        [String]$PreviousVersion = $Dependency.version
 
         [Int]$Percentage = 15 + $Iteration * $DependencyStep
         Write-ActivityProgress $Percentage
@@ -67,6 +70,14 @@ function Update-Dependencies {
             ('File') {
                 $ChangeLogs.Add((Update-FileDependency $Dependency $WipPath))
             }
+        }
+
+        # The app verifies versioned downloads against the recorded checksum, so a new version
+        # is only kept once its checksum is known — otherwise the build would ship a stale one
+        if ($Dependency.version -ne $PreviousVersion -and -not (Update-DependencyChecksum $Dependency $UrlsFile)) {
+            Write-LogWarning "Keeping '$Name' at version $PreviousVersion"
+            $Dependency.version = $PreviousVersion
+            $ChangeLogs.RemoveAt($ChangeLogs.Count - 1)
         }
 
         $Iteration++

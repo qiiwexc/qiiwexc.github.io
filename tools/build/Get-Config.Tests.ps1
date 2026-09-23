@@ -90,6 +90,21 @@ Describe 'Get-Config' {
         $Result.PSObject.Properties['URL_NO_URL_DEPENDENCY'] | Should -BeNullOrEmpty
     }
 
+    It 'Should expose dependency checksums as SHA256 keys' {
+        Set-Variable -Option Constant DepsWithChecksum (
+            [Dependency[]]@(
+                @{name = 'test dependency-name 1'; version = 'v1.0.0'; sha256 = 'abc123' },
+                @{name = 'test dependency-name 2'; version = '2.0.0' }
+            )
+        )
+        Mock Read-JsonFile { return $DepsWithChecksum } -ParameterFilter { $Path -match 'dependencies' }
+
+        Set-Variable -Option Constant Result (Get-Config $TestResourcesPath $TestVersion)
+
+        $Result.SHA256_TEST_DEPENDENCY_NAME_1 | Should -BeExactly 'abc123'
+        $Result.PSObject.Properties['SHA256_TEST_DEPENDENCY_NAME_2'] | Should -BeNullOrEmpty
+    }
+
     It 'Should throw when a URL has an unresolved VERSION placeholder' {
         Set-Variable -Option Constant DepsMissingOne (
             [Dependency[]]@(

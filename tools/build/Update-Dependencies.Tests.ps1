@@ -7,6 +7,7 @@ BeforeAll {
     . '.\tools\common\Read-JsonFile.ps1'
     . '.\tools\common\Write-JsonFile.ps1'
     . '.\tools\build\updates\Read-GitHubToken.ps1'
+    . '.\tools\build\updates\Update-DependencyChecksum.ps1'
     . '.\tools\build\updates\Update-FileDependency.ps1'
     . '.\tools\build\updates\Update-GitDependency.ps1'
     . '.\tools\build\updates\Update-WebDependency.ps1'
@@ -20,6 +21,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestGitHubToken ([String]'TEST_GITHUB_TOKEN')
     Set-Variable -Option Constant TestDependenciesFile ([String]"$TestResourcesPath\dependencies.json")
+    Set-Variable -Option Constant TestUrlsFile ([String]"$TestResourcesPath\urls.json")
 
     Set-Variable -Option Constant SourceGitHub ([String]'GitHub')
     Set-Variable -Option Constant SourceGitLab ([String]'GitLab')
@@ -67,8 +69,52 @@ Describe 'Update-Dependencies' {
         Mock Update-GitDependency { return $TestGitLabChangelogUrl } -ParameterFilter { $Dependency.source -eq $SourceGitLab }
         Mock Update-WebDependency { return $TestWebChangelogUrl }
         Mock Update-FileDependency { return $TestFileChangelogUrl }
+        Mock Update-DependencyChecksum { return $True }
         Mock Write-JsonFile {}
         Mock Write-ActivityCompleted {}
+    }
+
+    It 'Should not update checksums when no version changes' {
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+
+        Should -Invoke Update-DependencyChecksum -Exactly 0
+    }
+
+    It 'Should update the checksum of a dependency whose version changes' {
+        Mock Read-JsonFile { return [Dependency[]]@(@{ source = $SourceGitHub; name = $TestDependencyName; version = $TestDependencyVersion }) }
+        Mock Update-GitDependency {
+            $Dependency.version = '2.0.0'
+            return $TestGitHubChangelogUrl
+        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestGitHubChangelogUrl
+
+        Should -Invoke Update-DependencyChecksum -Exactly 1
+        Should -Invoke Update-DependencyChecksum -Exactly 1 -ParameterFilter {
+            $Dependency.name -eq $TestDependencyName -and
+            $Dependency.version -eq '2.0.0' -and
+            $UrlsFile -eq $TestUrlsFile
+        }
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-JsonFile -Exactly 1
+        Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter { $Content[0].version -eq '2.0.0' }
+    }
+
+    It 'Should keep the previous version when the checksum of the new one cannot be computed' {
+        Mock Read-JsonFile { return [Dependency[]]@(@{ source = $SourceGitHub; name = $TestDependencyName; version = $TestDependencyVersion }) }
+        Mock Update-GitDependency {
+            $Dependency.version = '2.0.0'
+            return $TestGitHubChangelogUrl
+        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+        Mock Update-DependencyChecksum { return $False }
+
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeNullOrEmpty
+
+        Should -Invoke Update-DependencyChecksum -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -eq "Keeping '$TestDependencyName' at version $TestDependencyVersion" }
+        Should -Invoke Write-JsonFile -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should update GitHub dependencies successfully when GitHub token is provided' {

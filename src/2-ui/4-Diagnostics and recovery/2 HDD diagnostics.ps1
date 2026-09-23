@@ -14,7 +14,7 @@ New-Button 'Check Disk' $BUTTON_FUNCTION
 
 [ScriptBlock]$BUTTON_FUNCTION = {
     $Execute = $CHECKBOX_StartVictoria.IsChecked
-    Start-AsyncOperation -Button $this { Start-DownloadUnzipAndRun '{URL_VICTORIA}' -Execute:$Execute } -Variables @{
+    Start-AsyncOperation -Button $this { Start-DownloadUnzipAndRun '{URL_VICTORIA}' -Sha256 '{SHA256_VICTORIA}' -Execute:$Execute } -Variables @{
         Execute = $Execute
     }
 }

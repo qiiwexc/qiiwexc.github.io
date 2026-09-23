@@ -8,6 +8,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestRegistryKey ([String]'HKCU:\Software\Unchecky')
     Set-Variable -Option Constant TestUncheckyUrl ([String]'{URL_UNCHECKY}')
+    Set-Variable -Option Constant TestUncheckySha256 ([String]'{SHA256_UNCHECKY}')
 }
 
 Describe 'Install-Unchecky' {
@@ -32,6 +33,7 @@ Describe 'Install-Unchecky' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestUncheckyUrl -and
+            $Sha256 -eq $TestUncheckySha256 -and
             $Execute -eq $False -and
             $Silent -eq $False -and
             $Params -eq ''
@@ -73,6 +75,7 @@ Describe 'Install-Unchecky' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestUncheckyUrl -and
+            $Sha256 -eq $TestUncheckySha256 -and
             $Execute -eq $True -and
             $Silent -eq $True -and
             $Params -eq '-install -no_desktop_icon'

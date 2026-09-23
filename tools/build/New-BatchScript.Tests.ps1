@@ -38,10 +38,15 @@ Describe 'New-BatchScript' {
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBatchFilePath -and
             $Content -match '@echo off' -and
-            $Content -match "%temp%\\$TestProjectName\.ps1" -and
-            $Content -match "Get-Content -LiteralPath '%~f0' -Encoding UTF8 \| Where-Object \{ \`$_\.StartsWith\('::'\) \}" -and
-            $Content -match "Set-Content -LiteralPath '%psfile%' -Encoding UTF8" -and
+            $Content -match "set `"psfile=%temp%\\$TestProjectName\.ps1`"" -and
+            $Content -match 'set "batfile=%~f0"' -and
+            $Content -match 'set "workdir=%~dp0"' -and
+            $Content -match "Get-Content -LiteralPath \`$env:batfile -Encoding UTF8 \| Where-Object \{ \`$_\.StartsWith\('::'\) \}" -and
+            $Content -match "Set-Content -LiteralPath \`$env:psfile -Encoding UTF8" -and
             $Content -match '  powershell -ExecutionPolicy Bypass -Command ' -and
+            $Content -match "-WorkingDirectory \`$env:workdir\.TrimEnd\('\\'\)" -and
+            $Content -notmatch '%cd%' -and
+            $Content -notmatch "'%" -and
             $Content -match '::TEST_PS1_FILE_CONTENT_1' -and
             $Content -match '::TEST_PS1_FILE_CONTENT_2' -and
             $Content -notmatch 'enabledelayedexpansion'

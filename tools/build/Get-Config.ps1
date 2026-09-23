@@ -20,6 +20,11 @@ function Get-Config {
         if ($Config.PSObject.Properties[$Key]) {
             $Config.$Key = $Config.$Key.Replace('{VERSION}', $DepVersion)
         }
+
+        # Checksums of versioned downloads are recorded by the dependency update next to the version
+        if ($Dependency.PSObject.Properties['sha256']) {
+            $Config | Add-Member -NotePropertyName "SHA256_$Name" -NotePropertyValue $Dependency.sha256 -Force
+        }
     }
 
     $Config | Add-Member -NotePropertyName 'PROJECT_VERSION' -NotePropertyValue $Version -Force

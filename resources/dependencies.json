@@ -47,14 +47,16 @@
         "version":  "v1.1.17",
         "source":  "GitHub",
         "mode":  "releases",
-        "repository":  "ventoy/Ventoy"
+        "repository":  "ventoy/Ventoy",
+        "sha256":  "d250e97a7595fdac4f97debc630d7a8da942319274a76cb32384596b659dbaeb"
     },
     {
         "name":  "Rufus",
         "version":  "v4.15",
         "source":  "GitHub",
         "mode":  "releases",
-        "repository":  "pbatard/rufus"
+        "repository":  "pbatard/rufus",
+        "sha256":  "84c8a437f8af89257524478489e5c85f1edf25f761d299e2bcde46ac0afbe106"
     },
     {
         "name":  "OOShutUp10",
@@ -82,7 +84,8 @@
         "version":  "3.01",
         "source":  "URL",
         "url":  "https://cpuid.com/softwares/cpu-z.html",
-        "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e"
+        "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e",
+        "sha256":  "8ae3b45d43d97e6ce19535c045cd1e5394c7a3a5334dc01f63edd760ace40827"
     },
     {
         "name":  "Office Installer",

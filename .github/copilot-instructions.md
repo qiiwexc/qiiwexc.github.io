@@ -37,6 +37,8 @@ Non-PS1 files in `src/3-configs/` (`.reg`, `.json`, `.conf`, `.ini`, `.xml`) are
 
 `resources/urls.json` and `resources/dependencies.json` feed into `tools/build/Get-Config.ps1` to produce a `$Config` PSCustomObject. Templates (`templates/home.html`, `templates/autounattend.xml`) use `{KEY}` placeholders replaced at build time. `src/0-init/1 Version.ps1` uses `{PROJECT_VERSION}` which is injected this way.
 
+Downloads are verified by SHA-256 (`Start-DownloadUnzipAndRun -Sha256`). Fixed-version downloads keep a `SHA256_<NAME>` key in `urls.json`; a dependency whose `URL_<NAME>` contains `{VERSION}` keeps a `sha256` field in `dependencies.json`, exposed as `SHA256_<NAME>` and recomputed by the dependency update whenever the version changes (the version bump is dropped if the checksum cannot be computed). The self-updater verifies `qiiwexc.bat` against the release's `SHA256SUMS.txt`.
+
 ### Versioning
 
 Locally: `YY.M.D` (from current date). In CI on a tag push: parsed from `$Env:GITHUB_REF_NAME` (e.g., `v26.2.18` → `26.2.18`). For reproducible output, pin it explicitly: `tools\build.ps1 -Version 26.2.18`.
@@ -90,4 +92,4 @@ PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1`, not on source files.
 
 ## CI/CD Workflows
 
-Reusable workflows in `.github/workflows/`. `ci.yml` chains: `test → build → deploy (tags only) → release`. Permissions follow least-privilege: empty `{}` at workflow level, specific grants per job. The `deploy` job publishes to GitHub Pages; `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, and `autounattend-*.xml` as assets (via `gh release create`). `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.
+Reusable workflows in `.github/workflows/`. `ci.yml` chains: `test → build → deploy (tags only) → release`. Permissions follow least-privilege: empty `{}` at workflow level, specific grants per job. The `deploy` job publishes an explicit file list (assembled in `.github/actions/deploy/action.yml`) to GitHub Pages — add new site files there; `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, `autounattend-*.xml` and `SHA256SUMS.txt` as assets (via `gh release create`). `update-dependencies.yml` checks for updates in a read-only job and hands the changed `dependencies.json` to a separate job that pushes the branch and opens the PR. `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.
