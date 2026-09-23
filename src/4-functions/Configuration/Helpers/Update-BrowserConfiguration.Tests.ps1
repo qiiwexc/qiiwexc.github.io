@@ -76,8 +76,9 @@ Describe 'Update-BrowserConfiguration' {
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
-        Should -Invoke Stop-ProcessIfRunning -Exactly 1
-        Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestProcessName }
+        # Once before launching the browser to create the profile, and again before writing to it
+        Should -Invoke Stop-ProcessIfRunning -Exactly 2
+        Should -Invoke Stop-ProcessIfRunning -Exactly 2 -ParameterFilter { $ProcessName -eq $TestProcessName }
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestPath }
         Should -Invoke Start-Process -Exactly 1

@@ -3,8 +3,9 @@ if (-not (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIden
 
     try {
         # Quote path arguments explicitly: Start-Process joins the argument array with
-        # spaces without quoting, so paths containing spaces would be split apart
-        [String[]]$ElevationArgs = @('-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"", '-WorkingDirectory', "`"$WorkingDirectory`"")
+        # spaces without quoting, so paths containing spaces would be split apart.
+        # A trailing backslash (a drive root such as 'E:\') would escape the closing quote
+        [String[]]$ElevationArgs = @('-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"", '-WorkingDirectory', "`"$($WorkingDirectory.TrimEnd('\'))`"")
         if ($DevMode) { $ElevationArgs += '-DevMode' }
         Start-Process PowerShell -Verb RunAs -ArgumentList $ElevationArgs
     } catch {

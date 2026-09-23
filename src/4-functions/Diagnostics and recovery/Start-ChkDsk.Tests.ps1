@@ -110,7 +110,7 @@ Describe 'Start-ChkDsk' {
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq 'cmd' -and
-            $ArgumentList -eq '/c "echo y | chkdsk /f /r"' -and
+            $ArgumentList -eq '/c "echo y | chkdsk %SystemDrive% /f /r"' -and
             $NoNewWindow -eq $True -and
             $Wait -eq $True
         }

@@ -22,11 +22,18 @@ function Test-NetworkConnection {
         return $False
     }
 
+    # Probe over HTTP rather than ICMP, which many networks filter: the request goes through the
+    # system proxy like the downloads themselves, and a captive portal shows up as unexpected content.
+    # This is the endpoint Windows itself uses for its network connectivity indicator.
     try {
-        Set-Variable -Option Constant Target ([String]'1.1.1.1')
-        $null = Test-Connection -ComputerName $Target -Count 1 -Quiet -ErrorAction Stop
+        Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest -Uri 'http://www.msftconnecttest.com/connecttest.txt' -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop))
     } catch {
         Out-Failure 'No Internet connectivity'
+        return $False
+    }
+
+    if ($Response.Content -ne 'Microsoft Connect Test') {
+        Out-Failure 'Internet access is restricted, a sign-in page may need to be completed first'
         return $False
     }
 

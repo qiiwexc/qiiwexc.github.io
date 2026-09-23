@@ -6,7 +6,8 @@ function Start-ChkDsk {
     try {
         if ($ScheduleFullScan) {
             Write-LogInfo 'Scheduling full Check Disk scan...'
-            Start-Process 'cmd' -ArgumentList '/c "echo y | chkdsk /f /r"' -NoNewWindow -Wait -ErrorAction Stop
+            # Name the system drive explicitly — without it chkdsk targets the drive of the current directory
+            Start-Process 'cmd' -ArgumentList '/c "echo y | chkdsk %SystemDrive% /f /r"' -NoNewWindow -Wait -ErrorAction Stop
             Write-LogWarning 'Full disc scan scheduled. Please restart your computer to allow Check Disk to run before Windows starts.'
             Out-Success
         } else {

@@ -58,7 +58,6 @@ function Start-Cleanup {
             'Temporary Setup Files',
             'Thumbnail Cache',
             'Update Cleanup',
-            'User file versions',
             'Windows Defender',
             'Windows Error Reporting Files',
             'Windows ESD installation files',

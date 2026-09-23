@@ -34,11 +34,18 @@ runs:
       uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
       with:
         name: build-output
-        path: .
+        path: artifacts
 
-    - name: Move build artifacts
+    # Publish an explicit list of files rather than the working directory, so nothing else
+    # from the repository ends up on the site, where end users download and run it
+    - name: Assemble site
       shell: bash
-      run: mv public/favicon.ico ./ && mv build/* ./ && rm -r build
+      run: |
+        mkdir -p _site/d _site/public
+        cp artifacts/build/index.html artifacts/build/qiiwexc.bat artifacts/build/qiiwexc.ps1 artifacts/build/autounattend-*.xml _site/
+        cp artifacts/public/favicon.ico _site/
+        cp artifacts/public/scripts.js artifacts/public/Office_Installer.zip _site/public/
+        cp artifacts/d/qiiwexc.bat artifacts/d/stylesheet.css _site/d/
 
     - name: Setup Pages
       uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
@@ -46,7 +53,7 @@ runs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
       with:
-        path: .
+        path: _site
 
     - name: Deploy to GitHub Pages
       id: deployment

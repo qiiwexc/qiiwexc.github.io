@@ -39,19 +39,19 @@ Describe 'Get-NetworkAdapter' {
 Describe 'Test-NetworkConnection' {
     BeforeEach {
         Mock Get-NetworkAdapter { return $TestNetworkAdapter }
-        Mock Test-Connection { return $True }
+        Mock Invoke-WebRequest { return @{ Content = 'Microsoft Connect Test' } }
         Mock Out-Failure {}
     }
 
-    It 'Should return true when connected to network' {
+    It 'Should return true when connected to the Internet' {
         Test-NetworkConnection | Should -BeTrue
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Test-Connection -Exactly 1
-        Should -Invoke Test-Connection -Exactly 1 -ParameterFilter {
-            $ComputerName -eq '1.1.1.1' -and
-            $Count -eq 1 -and
-            $Quiet -eq $True
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
+            $Uri -eq 'http://www.msftconnecttest.com/connecttest.txt' -and
+            $UseBasicParsing -eq $True -and
+            $TimeoutSec -eq 10
         }
         Should -Invoke Out-Failure -Exactly 0
     }
@@ -62,18 +62,30 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Test-Connection -Exactly 0
+        Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 
     It 'Should return false when no Internet connectivity' {
-        Mock Test-Connection { throw 'No response' }
+        Mock Invoke-WebRequest { throw 'No response' }
 
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Test-Connection -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -eq 'No Internet connectivity' }
+    }
+
+    It 'Should return false when the connectivity probe is intercepted' {
+        Mock Invoke-WebRequest { return @{ Content = '<html>Sign in to continue</html>' } }
+
+        Test-NetworkConnection | Should -BeFalse
+
+        Should -Invoke Get-NetworkAdapter -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -match 'sign-in page' }
     }
 
     It 'Should return false and report error on timeout exception' {
@@ -82,7 +94,7 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Test-Connection -Exactly 0
+        Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 
@@ -92,7 +104,7 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Test-Connection -Exactly 0
+        Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 
@@ -102,7 +114,7 @@ Describe 'Test-NetworkConnection' {
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Test-Connection -Exactly 0
+        Should -Invoke Invoke-WebRequest -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }
 }

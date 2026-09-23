@@ -1,20 +1,22 @@
 function Set-PrivacyConfiguration {
-    try {
-        Set-Variable -Option Constant TelemetryTaskList (
-            [Hashtable[]]@(
-                @{Name = 'DmClient'; Path = 'Microsoft\Windows\Feedback\Siuf' },
-                @{Name = 'DmClientOnScenarioDownload'; Path = 'Microsoft\Windows\Feedback\Siuf' },
-                @{Name = 'PcaPatchDbTask'; Path = 'Microsoft\Windows\Application Experience' },
-                @{Name = 'QueueReporting'; Path = 'Microsoft\Windows\Windows Error Reporting' },
-                @{Name = 'MareBackup'; Path = 'Microsoft\Windows\Application Experience' }
-            )
+    # Task paths must start and end with a backslash, otherwise no task matches
+    Set-Variable -Option Constant TelemetryTaskList (
+        [Hashtable[]]@(
+            @{Name = 'DmClient'; Path = '\Microsoft\Windows\Feedback\Siuf\' },
+            @{Name = 'DmClientOnScenarioDownload'; Path = '\Microsoft\Windows\Feedback\Siuf\' },
+            @{Name = 'PcaPatchDbTask'; Path = '\Microsoft\Windows\Application Experience\' },
+            @{Name = 'QueueReporting'; Path = '\Microsoft\Windows\Windows Error Reporting\' },
+            @{Name = 'MareBackup'; Path = '\Microsoft\Windows\Application Experience\' }
         )
+    )
 
-        foreach ($Task in $TelemetryTaskList) {
+    # Not every task exists on every Windows build — a missing one must not stop the rest
+    foreach ($Task in $TelemetryTaskList) {
+        try {
             Disable-ScheduledTask -TaskName $Task.Name -TaskPath $Task.Path -ErrorAction Stop
+        } catch {
+            Out-Failure "Failed to disable telemetry task $($Task.Name): $_"
         }
-    } catch {
-        Out-Failure "Failed to disable telemetry task $($Task.Name): $_"
     }
 
     [Collections.Generic.List[String]]$ConfigLines = Add-SysPrepConfig $CONFIG_PRIVACY

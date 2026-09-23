@@ -7,6 +7,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . '.\src\4-functions\Common\New-Directory.ps1'
     . '.\src\4-functions\Configuration\Helpers\Add-SysPrepConfig.ps1'
     . '.\src\4-functions\Configuration\Helpers\Import-RegistryConfiguration.ps1'
 
@@ -43,6 +44,7 @@ Describe 'Set-BaselineConfiguration' {
         Mock Add-SysPrepConfig { return $TestSysPrepConfig }
         Mock Get-Item { return $TestVolumes }
         Mock Import-RegistryConfiguration {}
+        Mock New-Directory {}
         Mock Set-Content {}
 
         [String]$SYSTEM_LANGUAGE = 'en-GB'
@@ -108,6 +110,8 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
+        Should -Invoke New-Directory -Exactly 1
+        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq (Split-Path -Parent $TestTaskManagerConfig) }
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestTaskManagerConfig -and
@@ -138,6 +142,19 @@ Describe 'Set-BaselineConfiguration' {
         }
         Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Import-RegistryConfiguration -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should continue when the Task Manager settings cannot be written' {
+        [Int]$OS_VERSION = 11
+
+        Mock Set-Content { throw $TestException }
+
+        Set-BaselineConfiguration
+
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
     }

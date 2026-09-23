@@ -34,23 +34,23 @@ Describe 'Set-PrivacyConfiguration' {
         Should -Invoke Disable-ScheduledTask -Exactly 5
         Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
             $TaskName -eq 'DmClient' -and
-            $TaskPath -eq 'Microsoft\Windows\Feedback\Siuf'
+            $TaskPath -eq '\Microsoft\Windows\Feedback\Siuf\'
         }
         Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
             $TaskName -eq 'DmClientOnScenarioDownload' -and
-            $TaskPath -eq 'Microsoft\Windows\Feedback\Siuf'
+            $TaskPath -eq '\Microsoft\Windows\Feedback\Siuf\'
         }
         Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
             $TaskName -eq 'PcaPatchDbTask' -and
-            $TaskPath -eq 'Microsoft\Windows\Application Experience'
+            $TaskPath -eq '\Microsoft\Windows\Application Experience\'
+        }
+        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
+            $TaskName -eq 'QueueReporting' -and
+            $TaskPath -eq '\Microsoft\Windows\Windows Error Reporting\'
         }
         Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
             $TaskName -eq 'MareBackup' -and
-            $TaskPath -eq 'Microsoft\Windows\Application Experience'
-        }
-        Should -Invoke Disable-ScheduledTask -Exactly 1 -ParameterFilter {
-            $TaskName -eq 'MareBackup' -and
-            $TaskPath -eq 'Microsoft\Windows\Application Experience'
+            $TaskPath -eq '\Microsoft\Windows\Application Experience\'
         }
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Add-SysPrepConfig -Exactly 1
@@ -86,13 +86,25 @@ Describe 'Set-PrivacyConfiguration' {
         Should -Invoke Out-Success -Exactly 1
     }
 
+    It 'Should continue with the remaining tasks when one cannot be disabled' {
+        Mock Disable-ScheduledTask { throw $TestException } -ParameterFilter { $TaskName -eq 'PcaPatchDbTask' }
+
+        Set-PrivacyConfiguration
+
+        Should -Invoke Disable-ScheduledTask -Exactly 5
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -match 'PcaPatchDbTask' }
+        Should -Invoke Import-RegistryConfiguration -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
     It 'Should handle Disable-ScheduledTask failure' {
         Mock Disable-ScheduledTask { throw $TestException }
 
         Set-PrivacyConfiguration
 
-        Should -Invoke Disable-ScheduledTask -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Disable-ScheduledTask -Exactly 5
+        Should -Invoke Out-Failure -Exactly 5
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1

@@ -29,6 +29,9 @@ function Update-BrowserConfiguration {
                     break
                 }
             }
+
+            # The browser rewrites its profile files on exit, which would discard the changes below
+            Stop-ProcessIfRunning $ProcessName
         }
 
         Set-Variable -Option Constant CurrentConfig ([PSCustomObject](Get-Content $Path -Raw -Encoding UTF8 -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop))

@@ -115,9 +115,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup]
 "StateFlags"=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\User file versions]
-"StateFlags"=dword:00000001
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender]
 "StateFlags"=dword:00000001
 
@@ -131,7 +128,6 @@
 "StateFlags"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
-"ConsentPromptBehaviorUser"=dword:00000000
 "DisableAutomaticRestartSignOn"=dword:00000001
 "FilterAdministratorToken"=dword:00000001
 "PromptOnSecureDesktop"=dword:00000000
@@ -162,7 +158,6 @@
 "AllowMUUpdateService"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\System]
-"ConsentPromptBehaviorUser"=dword:00000000
 "FilterAdministratorToken"=dword:00000001
 "PromptOnSecureDesktop"=dword:00000000
 

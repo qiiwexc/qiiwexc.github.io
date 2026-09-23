@@ -39,8 +39,7 @@ runs:
         name: build-output
         path: |
           public
-          d/version
-          d/*.css
+          d
           build/index.html
           build/qiiwexc.bat
           build/qiiwexc.ps1

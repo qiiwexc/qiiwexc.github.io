@@ -21,12 +21,19 @@ function Set-BaselineConfiguration {
     }
 
     if ($OS_VERSION -ge 11) {
-        Set-Variable -Option Constant TaskManagerConfig ([String]"$env:LocalAppData\Microsoft\Windows\TaskManager\settings.json")
+        try {
+            Set-Variable -Option Constant TaskManagerConfig ([String]"$env:LocalAppData\Microsoft\Windows\TaskManager\settings.json")
 
-        if ($SYSTEM_LANGUAGE -match '^ru') {
-            Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_RUSSIAN -NoNewline
-        } else {
-            Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_ENGLISH -NoNewline
+            # The directory only exists once Task Manager has been opened
+            New-Directory (Split-Path -Parent $TaskManagerConfig)
+
+            if ($SYSTEM_LANGUAGE -match '^ru') {
+                Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_RUSSIAN -NoNewline -ErrorAction Stop
+            } else {
+                Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_ENGLISH -NoNewline -ErrorAction Stop
+            }
+        } catch {
+            Out-Failure "Failed to apply Task Manager settings: $_"
         }
     }
 
