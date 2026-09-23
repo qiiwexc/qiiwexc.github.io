@@ -3,7 +3,7 @@ New-Card 'Hardware info'
 
 [ScriptBlock]$BUTTON_FUNCTION = {
     $Execute = $CHECKBOX_StartCpuZ.IsChecked
-    Start-AsyncOperation -Button $this { Start-DownloadUnzipAndRun '{URL_CPU_Z}' -Execute:$Execute } -Variables @{
+    Start-AsyncOperation -Button $this { Start-DownloadUnzipAndRun '{URL_CPU_Z}' -Sha256 '{SHA256_CPU_Z}' -Execute:$Execute } -Variables @{
         Execute = $Execute
     }
 }

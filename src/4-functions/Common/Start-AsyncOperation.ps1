@@ -2,6 +2,7 @@ Set-Variable -Scope Script -Name ASYNC -Value ([Hashtable]@{
         Running         = $False
         Button          = $Null
         OriginalContent = $Null
+        OnComplete      = $Null
         PS              = $Null
         Handle          = $Null
         Runspace        = $Null
@@ -10,15 +11,19 @@ Set-Variable -Scope Script -Name ASYNC -Value ([Hashtable]@{
 
 Set-Variable -Scope Script -Name ASYNC_USER_FUNCTIONS -Value $Null
 
+# Operations without a button (such as the startup update check) cannot be cancelled.
+# OnComplete runs on the UI thread with the operation's output once it completes successfully —
+# use it for anything that must touch the window, which the async runspace cannot do safely.
 function Start-AsyncOperation {
     param(
         [Parameter(Position = 0, Mandatory)][ScriptBlock]$Operation,
         [Object]$Button,
-        [Hashtable]$Variables = @{}
+        [Hashtable]$Variables = @{},
+        [ScriptBlock]$OnComplete
     )
 
     if ($script:ASYNC.Running) {
-        if ($Button -eq $script:ASYNC.Button) {
+        if ($Button -and $Button -eq $script:ASYNC.Button) {
             Stop-AsyncOperation
         } else {
             Write-LogWarning 'An operation is already in progress'
@@ -28,12 +33,16 @@ function Start-AsyncOperation {
 
     $script:ASYNC.Running = $True
     $script:ASYNC.Button = $Button
-    $script:ASYNC.OriginalContent = $Button.Content
+    $script:ASYNC.OnComplete = $OnComplete
 
-    $Button.Content = "$(ConvertTo-Emoji '274C') Cancel"
-    $Button.Resources['AccentColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(196, 43, 28))
-    $Button.Resources['AccentHoverColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(218, 59, 43))
-    $Button.Resources['AccentPressedColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(172, 38, 24))
+    if ($Button) {
+        $script:ASYNC.OriginalContent = $Button.Content
+
+        $Button.Content = "$(ConvertTo-Emoji '274C') Cancel"
+        $Button.Resources['AccentColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(196, 43, 28))
+        $Button.Resources['AccentHoverColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(218, 59, 43))
+        $Button.Resources['AccentPressedColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(172, 38, 24))
+    }
 
     Set-Icon ([IconName]::Working)
 
@@ -124,13 +133,28 @@ function Update-AsyncOperationState {
     }
     if ($script:ASYNC.PS.Streams.Information.Count -gt 0) { $script:ASYNC.PS.Streams.Information.Clear() }
 
+    # Write-LogWarning and Write-LogError already write to the form log — forward only records from
+    # other sources, which would otherwise reach nothing but the console hidden outside dev mode
     for ($i = 0; $i -lt $script:ASYNC.PS.Streams.Warning.Count; $i++) {
-        Write-Host "WARNING: $($script:ASYNC.PS.Streams.Warning[$i].Message)" -ForegroundColor Yellow
+        [Management.Automation.WarningRecord]$WarningRecord = $script:ASYNC.PS.Streams.Warning[$i]
+        Write-Host "WARNING: $($WarningRecord.Message)" -ForegroundColor Yellow
+        if (-not (Test-LoggerRecord $WarningRecord)) {
+            Write-FormLog ([LogLevel]::WARN) (Format-Message ([LogLevel]::WARN) $WarningRecord.Message)
+        }
     }
     if ($script:ASYNC.PS.Streams.Warning.Count -gt 0) { $script:ASYNC.PS.Streams.Warning.Clear() }
 
+    # A failing operation also writes its terminating error to the error stream —
+    # Complete-AsyncOperation reports that one, so it is not forwarded here
+    Set-Variable -Option Constant FailureReason ([Exception]$script:ASYNC.PS.InvocationStateInfo.Reason)
+
     for ($i = 0; $i -lt $script:ASYNC.PS.Streams.Error.Count; $i++) {
-        Write-Host "ERROR: $($script:ASYNC.PS.Streams.Error[$i].Exception.Message)" -ForegroundColor Red
+        [Management.Automation.ErrorRecord]$ErrorRecord = $script:ASYNC.PS.Streams.Error[$i]
+        Write-Host "ERROR: $($ErrorRecord.Exception.Message)" -ForegroundColor Red
+        [Bool]$IsFailureReason = $FailureReason -is [Management.Automation.IContainsErrorRecord] -and [Object]::ReferenceEquals($ErrorRecord, $FailureReason.ErrorRecord)
+        if (-not $IsFailureReason -and -not (Test-LoggerRecord $ErrorRecord)) {
+            Write-FormLog ([LogLevel]::ERROR) (Format-Message ([LogLevel]::ERROR) $ErrorRecord.Exception.Message)
+        }
     }
     if ($script:ASYNC.PS.Streams.Error.Count -gt 0) { $script:ASYNC.PS.Streams.Error.Clear() }
 
@@ -140,18 +164,32 @@ function Update-AsyncOperationState {
 }
 
 
+function Test-LoggerRecord {
+    param(
+        [Parameter(Position = 0, Mandatory)][Object]$Record
+    )
+
+    Set-Variable -Option Constant Invocation ([Management.Automation.InvocationInfo]$Record.InvocationInfo)
+
+    return [Bool]($Invocation -and $Invocation.MyCommand -and $Invocation.MyCommand.Name -in @('Write-LogWarning', 'Write-LogError'))
+}
+
+
 function Complete-AsyncOperation {
     $script:ASYNC.Timer.Stop()
 
-    if ($script:ASYNC.PS.InvocationStateInfo.State -eq 'Stopped') {
+    Set-Variable -Option Constant State ([Management.Automation.PSInvocationState]$script:ASYNC.PS.InvocationStateInfo.State)
+
+    if ($State -eq 'Stopped') {
         Write-LogInfo 'Operation cancelled'
         Invoke-WriteProgress -Id 1 -Activity 'Cancelled' -Completed
-    } elseif ($script:ASYNC.PS.InvocationStateInfo.State -eq 'Failed') {
+    } elseif ($State -eq 'Failed') {
         Write-LogError "Operation failed: $($script:ASYNC.PS.InvocationStateInfo.Reason.Message)"
     }
 
-    if ($script:ASYNC.PS.InvocationStateInfo.State -ne 'Stopped') {
-        try { $script:ASYNC.PS.EndInvoke($script:ASYNC.Handle) } catch {
+    [PSObject[]]$Output = @()
+    if ($State -ne 'Stopped') {
+        try { $Output = @($script:ASYNC.PS.EndInvoke($script:ASYNC.Handle)) } catch {
             Write-LogError "Async operation error: $($_.Exception.Message)"
         }
     }
@@ -159,20 +197,29 @@ function Complete-AsyncOperation {
     $script:ASYNC.PS.Dispose()
     $script:ASYNC.Runspace.Dispose()
 
-    $script:ASYNC.Button.Content = $script:ASYNC.OriginalContent
-    $script:ASYNC.Button.Resources.Remove('AccentColor')
-    $script:ASYNC.Button.Resources.Remove('AccentHoverColor')
-    $script:ASYNC.Button.Resources.Remove('AccentPressedColor')
+    if ($script:ASYNC.Button) {
+        $script:ASYNC.Button.Content = $script:ASYNC.OriginalContent
+        $script:ASYNC.Button.Resources.Remove('AccentColor')
+        $script:ASYNC.Button.Resources.Remove('AccentHoverColor')
+        $script:ASYNC.Button.Resources.Remove('AccentPressedColor')
+    }
 
     Set-Icon ([IconName]::Default)
+
+    Set-Variable -Option Constant OnComplete ([ScriptBlock]$script:ASYNC.OnComplete)
 
     $script:ASYNC.Running = $False
     $script:ASYNC.Button = $Null
     $script:ASYNC.OriginalContent = $Null
+    $script:ASYNC.OnComplete = $Null
     $script:ASYNC.PS = $Null
     $script:ASYNC.Handle = $Null
     $script:ASYNC.Runspace = $Null
     $script:ASYNC.Timer = $Null
+
+    if ($OnComplete -and $State -eq 'Completed') {
+        & $OnComplete $Output
+    }
 }
 
 

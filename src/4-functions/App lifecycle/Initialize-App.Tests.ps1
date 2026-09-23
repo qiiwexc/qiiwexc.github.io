@@ -6,10 +6,10 @@ BeforeAll {
 
     . '.\src\4-functions\Common\types.ps1'
     . '.\src\4-functions\Common\Remove-Directory.ps1'
-    . '.\src\4-functions\App lifecycle\Get-SystemInformation.ps1'
+    . '.\src\4-functions\Common\Start-AsyncOperation.ps1'
+    . '.\src\4-functions\App lifecycle\Exit.ps1'
     . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
     . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Updater.ps1'
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -30,12 +30,14 @@ Describe 'Initialize-App' {
         Mock ToString { return $TestDate }
         Mock Get-Date { return ToString }
         Mock Write-FormLog {}
-        Mock Get-SystemInformation {}
         Mock Remove-Directory {}
         Mock Initialize-AppDirectory {}
-        Mock Update-App {}
+        Mock Start-AsyncOperation {}
+        Mock Exit-App {}
 
         [Windows.Window]$FORM = New-MockObject -Type Windows.Window -Methods @{ Activate = { Activate } }
+
+        [Bool]$DevMode = $False
     }
 
     It 'Should initialize the application' {
@@ -45,7 +47,6 @@ Describe 'Initialize-App' {
         Should -Invoke Get-Date -Exactly 1
         Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Remove-Directory -Exactly 1 -ParameterFilter {
             $DirectoryPath -eq $PATH_OOSHUTUP10 -and
@@ -56,22 +57,32 @@ Describe 'Initialize-App' {
             $Silent -eq $True
         }
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Update-App -Exactly 1
+        Should -Invoke Start-AsyncOperation -Exactly 1
+        Should -Invoke Start-AsyncOperation -Exactly 1 -ParameterFilter {
+            $Operation.ToString() -match 'Get-SystemInformation' -and
+            $Operation.ToString() -match 'Update-App' -and
+            $Variables.DevMode -eq $False -and
+            $OnComplete -and
+            -not $Button
+        }
+        Should -Invoke Exit-App -Exactly 0
     }
 
-    It 'Should handle Get-SystemInformation failure' {
-        Mock Get-SystemInformation { throw $TestException }
+    It 'Should exit once the new version has been started' {
+        Mock Start-AsyncOperation { & $OnComplete @($True) }
 
-        { Initialize-App } | Should -Throw $TestException
+        Initialize-App
 
-        Should -Invoke Activate -Exactly 1
-        Should -Invoke Get-Date -Exactly 1
-        Should -Invoke ToString -Exactly 1
-        Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Get-SystemInformation -Exactly 1
-        Should -Invoke Remove-Directory -Exactly 0
-        Should -Invoke Initialize-AppDirectory -Exactly 0
-        Should -Invoke Update-App -Exactly 0
+        Should -Invoke Exit-App -Exactly 1
+        Should -Invoke Exit-App -Exactly 1 -ParameterFilter { $Update -eq $True }
+    }
+
+    It 'Should keep running when no new version has been started' {
+        Mock Start-AsyncOperation { & $OnComplete @($False) }
+
+        Initialize-App
+
+        Should -Invoke Exit-App -Exactly 0
     }
 
     It 'Should handle Remove-Directory failure' {
@@ -80,13 +91,10 @@ Describe 'Initialize-App' {
         { Initialize-App } | Should -Throw $TestException
 
         Should -Invoke Activate -Exactly 1
-        Should -Invoke Get-Date -Exactly 1
-        Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 0
-        Should -Invoke Update-App -Exactly 0
+        Should -Invoke Start-AsyncOperation -Exactly 0
     }
 
     It 'Should handle Initialize-AppDirectory failure' {
@@ -95,27 +103,19 @@ Describe 'Initialize-App' {
         { Initialize-App } | Should -Throw $TestException
 
         Should -Invoke Activate -Exactly 1
-        Should -Invoke Get-Date -Exactly 1
-        Should -Invoke ToString -Exactly 1
         Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Get-SystemInformation -Exactly 1
         Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Update-App -Exactly 0
+        Should -Invoke Start-AsyncOperation -Exactly 0
     }
 
-    It 'Should handle Update-App failure' {
-        Mock Update-App { throw $TestException }
+    It 'Should handle Start-AsyncOperation failure' {
+        Mock Start-AsyncOperation { throw $TestException }
 
         { Initialize-App } | Should -Throw $TestException
 
-        Should -Invoke Activate -Exactly 1
-        Should -Invoke Get-Date -Exactly 1
-        Should -Invoke ToString -Exactly 1
-        Should -Invoke Write-FormLog -Exactly 1
-        Should -Invoke Get-SystemInformation -Exactly 1
-        Should -Invoke Remove-Directory -Exactly 2
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Update-App -Exactly 1
+        Should -Invoke Start-AsyncOperation -Exactly 1
+        Should -Invoke Exit-App -Exactly 0
     }
 }

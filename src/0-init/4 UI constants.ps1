@@ -7,27 +7,16 @@ Set-Variable -Option Constant CARD_COLUMN_WIDTH ([Int]230)
 Set-Variable -Option Constant FORM_MIN_WIDTH ([Int]725)
 Set-Variable -Option Constant FORM_MIN_HEIGHT ([Int]765)
 
-Add-Type -TypeDefinition @'
-using System;
-using System.Runtime.InteropServices;
-public class IconExtractor {
-    [DllImport("shell32.dll", CharSet = CharSet.Auto)]
-    public static extern int ExtractIconEx(string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, int nIcons);
-    [DllImport("user32.dll")]
-    public static extern bool DestroyIcon(IntPtr hIcon);
-}
-'@
-
 function Get-DllIcon {
     param([Int]$Index)
     $large = New-Object IntPtr[] 1
     $small = New-Object IntPtr[] 1
-    [void][IconExtractor]::ExtractIconEx("$PATH_SYSTEM_32\imageres.dll", $Index, $large, $small, 1)
-    if ($small[0] -ne [IntPtr]::Zero) { [void][IconExtractor]::DestroyIcon($small[0]) }
+    [void][Qiiwexc.NativeMethods]::ExtractIconEx("$PATH_SYSTEM_32\imageres.dll", $Index, $large, $small, 1)
+    if ($small[0] -ne [IntPtr]::Zero) { [void][Qiiwexc.NativeMethods]::DestroyIcon($small[0]) }
     Set-Variable -Option Constant TempIcon ([Drawing.Icon][Drawing.Icon]::FromHandle($large[0]))
     Set-Variable -Option Constant Icon ([Drawing.Icon]$TempIcon.Clone())
     $TempIcon.Dispose()
-    [void][IconExtractor]::DestroyIcon($large[0])
+    [void][Qiiwexc.NativeMethods]::DestroyIcon($large[0])
     return $Icon
 }
 

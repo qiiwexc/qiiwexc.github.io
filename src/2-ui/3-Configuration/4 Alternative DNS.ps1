@@ -4,7 +4,10 @@ New-Card 'Alternative DNS'
 [ScriptBlock]$BUTTON_FUNCTION = {
     $MalwareProtection = $CHECKBOX_CloudFlareAntiMalware.IsChecked
     $FamilyFriendly = $CHECKBOX_CloudFlareFamilyFriendly.IsChecked
-    Set-CloudFlareDNS -MalwareProtection:$MalwareProtection -FamilyFriendly:$FamilyFriendly
+    Start-AsyncOperation -Button $this { Set-CloudFlareDNS -MalwareProtection:$MalwareProtection -FamilyFriendly:$FamilyFriendly } -Variables @{
+        MalwareProtection = $MalwareProtection
+        FamilyFriendly    = $FamilyFriendly
+    }
 }
 New-Button 'Setup CloudFlare DNS' $BUTTON_FUNCTION
 

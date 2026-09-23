@@ -32,10 +32,30 @@ if ([Int]($WindowsBuild.Split('.')[2]) -ge 22000) {
 # TLS 1.3 is only defined on newer Windows / .NET builds; keep TLS 1.2 as the floor
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls13 } catch { $Null = $_ }
 
+# All native calls in one type: every Add-Type with C# source starts the compiler, which costs startup time
+Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+
+namespace Qiiwexc {
+    public static class NativeMethods {
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern int ExtractIconEx(string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, int nIcons);
+
+        [DllImport("user32.dll")]
+        public static extern bool DestroyIcon(IntPtr hIcon);
+    }
+}
+'@
+
 if (-not $DevMode) {
-    Add-Type -Namespace Console -Name Window -MemberDefinition '[DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
-                                                                [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
-    [Void][Console.Window]::ShowWindow([Console.Window]::GetConsoleWindow(), 0)
+    [Void][Qiiwexc.NativeMethods]::ShowWindow([Qiiwexc.NativeMethods]::GetConsoleWindow(), 0)
 }
 
 Set-Variable -Option Constant PATH_WORKING_DIR ([String]$WorkingDirectory)
