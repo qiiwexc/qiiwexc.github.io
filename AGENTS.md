@@ -74,10 +74,11 @@ failures as environmental, not regressions.
 GitHub Copilot included - has no such mechanism, so read the file directly before starting the
 matching task.** Each of these is the authority on its procedure; this file does not restate them.
 
-| procedure                                                              | read it before                                                                    |
-| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| [`repository-review`](.claude/skills/repository-review/SKILL.md)       | reviewing the repository, or one of its areas, end to end                         |
-| [`memory-consolidation`](.claude/skills/memory-consolidation/SKILL.md) | auditing the agent memory directory (Claude Code only; no other platform has one) |
+| procedure                                                                      | read it before                                                                    |
+| ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| [`repository-review`](.claude/skills/repository-review/SKILL.md)               | reviewing the repository, or one of its areas, end to end                         |
+| [`dependency-update-triage`](.claude/skills/dependency-update-triage/SKILL.md) | triaging the nightly dependency update PR or a Dependabot PR, or judging a bump   |
+| [`memory-consolidation`](.claude/skills/memory-consolidation/SKILL.md)         | auditing the agent memory directory (Claude Code only; no other platform has one) |
 
 ## Build Architecture
 
