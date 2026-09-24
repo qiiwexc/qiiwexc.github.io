@@ -26,6 +26,10 @@ Describe 'Get-BatteryReport' {
         Mock Out-Failure {}
     }
 
+    BeforeEach {
+        $global:LASTEXITCODE = 0
+    }
+
     It 'Should export and open battery report' {
         Get-BatteryReport
 
@@ -40,6 +44,17 @@ Describe 'Get-BatteryReport' {
         Should -Invoke Open-InBrowser -Exactly 1 -ParameterFilter { $URL -eq $TestReportPath }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
+    }
+
+    It 'Should fail when powercfg exits with an error' {
+        Mock powercfg { $global:LASTEXITCODE = 1 }
+
+        Get-BatteryReport
+
+        Should -Invoke powercfg -Exactly 1
+        Should -Invoke Open-InBrowser -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -like '*exited with code 1*' }
     }
 
     It 'Should handle Initialize-AppDirectory failure' {

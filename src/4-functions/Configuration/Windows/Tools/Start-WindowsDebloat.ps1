@@ -56,7 +56,7 @@ function Start-WindowsDebloat {
             $SysprepParam = '-Sysprep'
         }
 
-        Set-Variable -Option Constant Params ([String]"-NoRestartExplorer $SysprepParam $UsePresetParam $SilentParam".TrimEnd())
+        Set-Variable -Option Constant Params ([String]"-SkipExplorerRestart $SysprepParam $UsePresetParam $SilentParam".TrimEnd())
 
         Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 

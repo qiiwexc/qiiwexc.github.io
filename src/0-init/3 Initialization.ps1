@@ -18,7 +18,9 @@ try {
 }
 Set-Variable -Option Constant WindowsBuild ([String]$OPERATING_SYSTEM.Version)
 
-Set-Variable -Option Constant OS_64_BIT ([Bool]($env:PROCESSOR_ARCHITECTURE -like '*64'))
+# The system's bitness rather than the process's: a 32-bit PowerShell on 64-bit Windows reports 'x86'
+# in PROCESSOR_ARCHITECTURE, and would pick 32-bit downloads and write to the 32-bit registry view
+Set-Variable -Option Constant OS_64_BIT ([Bool][Environment]::Is64BitOperatingSystem)
 
 if ([Int]($WindowsBuild.Split('.')[2]) -ge 22000) {
     Set-Variable -Option Constant OS_VERSION ([Int]11)

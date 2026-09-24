@@ -1,3 +1,31 @@
+function Invoke-SystemRepairTool {
+    param(
+        [Parameter(Position = 0, Mandatory)][String]$Name,
+        [Parameter(Position = 1, Mandatory)][String]$FilePath,
+        [Parameter(Position = 2, Mandatory)][String[]]$Arguments,
+        [Parameter(Position = 3, Mandatory)][Int]$ProgressFrom,
+        [Parameter(Position = 4, Mandatory)][Double]$ProgressShare
+    )
+
+    Write-ActivityProgress $ProgressFrom "Running $Name..."
+    try {
+        $Null = & $FilePath @Arguments 2>&1 | ForEach-Object {
+            if ("$_" -match '(\d+\.?\d*)%') {
+                Write-ActivityProgress ([Int]($ProgressFrom + [Double]$Matches[1] * $ProgressShare))
+            }
+        }
+
+        # Output alone does not tell a failed run apart, as these tools print progress up to the end either way
+        if ($LASTEXITCODE -ne 0) {
+            throw "exit code $LASTEXITCODE"
+        }
+
+        Out-Success
+    } catch {
+        Out-Failure "$Name failed: $_"
+    }
+}
+
 function Start-WindowsDiagnostics {
     New-Activity 'Running Windows diagnostics'
 
@@ -5,57 +33,10 @@ function Start-WindowsDiagnostics {
 
     Initialize-AppDirectory
 
-    Write-ActivityProgress 5 'Running DISM CheckHealth...'
-    try {
-        $Null = & 'DISM' '/Online' '/Cleanup-Image' '/CheckHealth' 2>&1 |
-        ForEach-Object {
-            if ("$_" -match '(\d+\.?\d*)%') {
-                Write-ActivityProgress ([Int](5 + [Double]$Matches[1] * 0.1))
-            }
-        }
-        Out-Success
-    } catch {
-        Out-Failure "DISM CheckHealth failed: $_"
-    }
-
-    Write-ActivityProgress 15 'Running DISM ScanHealth...'
-    try {
-        $Null = & 'DISM' '/Online' '/Cleanup-Image' '/ScanHealth' 2>&1 |
-        ForEach-Object {
-            if ("$_" -match '(\d+\.?\d*)%') {
-                Write-ActivityProgress ([Int](15 + [Double]$Matches[1] * 0.2))
-            }
-        }
-        Out-Success
-    } catch {
-        Out-Failure "DISM ScanHealth failed: $_"
-    }
-
-    Write-ActivityProgress 35 'Running DISM RestoreHealth...'
-    try {
-        $Null = & 'DISM' '/Online' '/Cleanup-Image' '/RestoreHealth' 2>&1 |
-        ForEach-Object {
-            if ("$_" -match '(\d+\.?\d*)%') {
-                Write-ActivityProgress ([Int](35 + [Double]$Matches[1] * 0.25))
-            }
-        }
-        Out-Success
-    } catch {
-        Out-Failure "DISM RestoreHealth failed: $_"
-    }
-
-    Write-ActivityProgress 60 'Running SFC scannow...'
-    try {
-        $Null = & 'sfc' '/scannow' 2>&1 |
-        ForEach-Object {
-            if ("$_" -match '(\d+)%') {
-                Write-ActivityProgress ([Int](60 + [Double]$Matches[1] * 0.3))
-            }
-        }
-        Out-Success
-    } catch {
-        Out-Failure "SFC scannow failed: $_"
-    }
+    Invoke-SystemRepairTool 'DISM CheckHealth' 'DISM' @('/Online', '/Cleanup-Image', '/CheckHealth') 5 0.1
+    Invoke-SystemRepairTool 'DISM ScanHealth' 'DISM' @('/Online', '/Cleanup-Image', '/ScanHealth') 15 0.2
+    Invoke-SystemRepairTool 'DISM RestoreHealth' 'DISM' @('/Online', '/Cleanup-Image', '/RestoreHealth') 35 0.25
+    Invoke-SystemRepairTool 'SFC scannow' 'sfc' @('/scannow') 60 0.3
 
     Write-ActivityProgress 90 'Parsing SFC logs...'
     [Collections.Generic.List[String]]$LogLines = @()

@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     # Untyped stubs so Pester can mock Windows-only commands on any host —
     # mocks and ParameterFilters bind against these simple parameters on every platform
     function chkdsk { }
@@ -34,6 +34,7 @@ Describe 'Start-ChkDsk' {
 
     BeforeEach {
         $script:OS_VERSION = 10
+        $global:LASTEXITCODE = 0
     }
 
     It 'Should run immediate scan, write filtered log and open Notepad' {
@@ -100,6 +101,18 @@ Describe 'Start-ChkDsk' {
             $Value -match '2264064 записей файлов обработано\.' -and
             $Value -match 'Windows проверила файловую систему'
         }
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
+    It 'Should warn when the scan reports problems' {
+        Mock chkdsk { $global:LASTEXITCODE = 1; return @('Windows has found problems that must be fixed offline.') }
+
+        Start-ChkDsk
+
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -like '*exit code 1*' }
+        Should -Invoke Write-ActivityCompleted -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 

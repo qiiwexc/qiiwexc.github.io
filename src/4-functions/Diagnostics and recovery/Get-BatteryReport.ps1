@@ -8,6 +8,10 @@ function Get-BatteryReport {
 
         powercfg /BatteryReport /Output $ReportPath
 
+        if ($LASTEXITCODE -ne 0) {
+            throw "powercfg exited with code $LASTEXITCODE"
+        }
+
         Open-InBrowser $ReportPath
 
         Out-Success

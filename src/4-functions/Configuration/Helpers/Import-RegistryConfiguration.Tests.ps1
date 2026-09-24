@@ -12,6 +12,8 @@ BeforeAll {
     Set-Variable -Option Constant TestContent ([String[]]@("TEST_CONTENT1`n", 'TEST_CONTENT2'))
 
     Set-Variable -Option Constant TestRegFilePath ([String]"$PATH_APP_DIR\$TestAppName.reg")
+
+    [Bool]$OS_64_BIT = $True
 }
 
 Describe 'Import-RegistryConfiguration' {
@@ -19,7 +21,7 @@ Describe 'Import-RegistryConfiguration' {
         Mock Write-LogInfo {}
         Mock Initialize-AppDirectory {}
         Mock Set-Content {}
-        Mock Start-Process {}
+        Mock Start-Process { return [PSCustomObject]@{ ExitCode = 0 } }
         Mock Write-LogWarning {}
         Mock Out-Success {}
         Mock Split-Path {}
@@ -37,13 +39,31 @@ Describe 'Import-RegistryConfiguration' {
         }
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
-            $FilePath -eq 'regedit' -and
-            $ArgumentList -eq "/s `"$TestRegFilePath`"" -and
-            $Verb -eq 'RunAs' -and
-            $Wait -eq $True
+            $FilePath -eq 'reg' -and
+            ($ArgumentList -join ' ') -eq "import `"$TestRegFilePath`" /reg:64" -and
+            $Wait -eq $True -and
+            $PassThru -eq $True
         }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should use the default registry view on a 32-bit system' {
+        [Bool]$OS_64_BIT = $False
+
+        Import-RegistryConfiguration $TestAppName $TestContent
+
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { ($ArgumentList -join ' ') -eq "import `"$TestRegFilePath`"" }
+    }
+
+    It 'Should fail when the import fails' {
+        Mock Start-Process { return [PSCustomObject]@{ ExitCode = 1 } }
+
+        { Import-RegistryConfiguration $TestAppName $TestContent } | Should -Throw '*exit code 1*'
+
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Out-Success -Exactly 0
     }
 
     It 'Should handle Initialize-AppDirectory failure' {

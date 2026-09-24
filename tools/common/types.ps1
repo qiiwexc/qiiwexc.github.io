@@ -1,9 +1,3 @@
-enum DevLogLevel {
-    ERROR
-    WARN
-    INFO
-}
-
 class Dependency: PSObject {
     [ValidateNotNullOrEmpty()][String]$name
     [ValidateNotNullOrEmpty()][String]$version

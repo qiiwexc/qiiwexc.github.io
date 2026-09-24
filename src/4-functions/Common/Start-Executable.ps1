@@ -7,10 +7,15 @@ function Start-Executable {
 
     Write-ActivityProgress 85
 
-    Set-Variable -Option Constant ProcessName ([String](Split-Path -Leaf $Executable -ErrorAction Stop) -replace '\.exe$', '')
-    if (Find-RunningProcesses $ProcessName) {
-        Write-LogWarning "Process '$ProcessName' is already running"
-        return
+    # An executable runs as a process of its own name; a batch file runs as cmd, so its caller checks
+    # for whatever it starts instead
+    Set-Variable -Option Constant FileName ([String](Split-Path -Leaf $Executable -ErrorAction Stop))
+    if ($FileName -match '\.exe$') {
+        Set-Variable -Option Constant ProcessName ([String]($FileName -replace '\.exe$', ''))
+        if (Find-RunningProcesses $ProcessName) {
+            Write-LogWarning "Process '$ProcessName' is already running"
+            return
+        }
     }
 
     if ($Switches -and $Silent) {

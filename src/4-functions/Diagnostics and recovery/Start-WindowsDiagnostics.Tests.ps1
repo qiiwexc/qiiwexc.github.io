@@ -38,6 +38,10 @@ Describe 'Start-WindowsDiagnostics' {
         Mock sfc { return @('Windows Resource Protection did not find any integrity violations.') }
     }
 
+    BeforeEach {
+        $global:LASTEXITCODE = 0
+    }
+
     It 'Should run all diagnostics and open log' {
         Start-WindowsDiagnostics
 
@@ -52,6 +56,28 @@ Describe 'Start-WindowsDiagnostics' {
             $ArgumentList -eq $TestLogPath
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
+    It 'Should report a tool that exits with an error, and carry on with the rest' {
+        Mock DISM { $global:LASTEXITCODE = 0x800f081f; return @('Error: 0x800f081f') } -ParameterFilter { $args -contains '/RestoreHealth' }
+        Mock sfc { $global:LASTEXITCODE = 0; return @() }
+
+        Start-WindowsDiagnostics
+
+        Should -Invoke DISM -Exactly 3
+        Should -Invoke sfc -Exactly 1
+        Should -Invoke Out-Success -Exactly 3
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -like 'DISM RestoreHealth failed: exit code *' }
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
+    It 'Should update progress from the percentage a tool prints' {
+        Mock DISM { return @('[==========                 20.0%                          ]') } -ParameterFilter { $args -contains '/ScanHealth' }
+
+        Start-WindowsDiagnostics
+
+        Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 19 }
     }
 
     It 'Should handle DISM CheckHealth failure' {

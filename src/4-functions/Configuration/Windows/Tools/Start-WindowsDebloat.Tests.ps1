@@ -16,7 +16,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestTargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat\Config")
     Set-Variable -Option Constant TestSettingsPath ([String]"$TestTargetPath\LastUsedSettings.json")
-    Set-Variable -Option Constant TestCommand ([String]"& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) -NoRestartExplorer")
+    Set-Variable -Option Constant TestCommand ([String]"& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) -SkipExplorerRestart")
     Set-Variable -Option Constant TestPresetParams ([String]"-RunSavedSettings -RemoveApps -Apps 'TestApp1,TestApp2'")
 }
 

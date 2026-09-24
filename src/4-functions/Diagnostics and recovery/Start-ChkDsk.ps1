@@ -44,6 +44,11 @@ function Start-ChkDsk {
 
             Set-Content -Path $LogPath -Value ($LogLines -join "`r`n") -Encoding UTF8 -Force -ErrorAction Stop
             Start-Process 'notepad.exe' -ArgumentList $LogPath -ErrorAction Stop
+
+            # The scan itself ran, but a non-zero exit code means it found problems or could not finish
+            if ($ExitCode -ne 0) {
+                Write-LogWarning "Check Disk reported problems (exit code $ExitCode), see the log"
+            }
             Write-ActivityCompleted
         }
     } catch {

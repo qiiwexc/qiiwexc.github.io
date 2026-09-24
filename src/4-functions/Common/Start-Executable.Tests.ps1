@@ -10,7 +10,8 @@ BeforeAll {
 
     Set-Variable -Option Constant TestParentPath ([String]'TEST_PARENT_PATH')
 
-    Set-Variable -Option Constant TestExecutableName ([String]'TEST_EXECUTABLE')
+    Set-Variable -Option Constant TestProcessName ([String]'TEST_EXECUTABLE')
+    Set-Variable -Option Constant TestExecutableName ([String]"$TestProcessName.exe")
     Set-Variable -Option Constant TestExecutable ([String]"$TestParentPath\$TestExecutableName")
     Set-Variable -Option Constant TestSwitches ([String]'TEST_SWITCHES')
 }
@@ -29,7 +30,7 @@ Describe 'Start-Executable' {
         Start-Executable $TestExecutable
 
         Should -Invoke Find-RunningProcesses -Exactly 1
-        Should -Invoke Find-RunningProcesses -Exactly 1 -ParameterFilter { $ProcessNames -eq $TestExecutableName }
+        Should -Invoke Find-RunningProcesses -Exactly 1 -ParameterFilter { $ProcessNames -eq $TestProcessName }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
@@ -87,6 +88,13 @@ Describe 'Start-Executable' {
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
+    }
+
+    It 'Should not look for a process named after a batch file' {
+        Start-Executable "$TestParentPath\TEST_SCRIPT.bat"
+
+        Should -Invoke Find-RunningProcesses -Exactly 0
+        Should -Invoke Start-Process -Exactly 1
     }
 
     It 'Should handle Find-RunningProcesses failure' {
