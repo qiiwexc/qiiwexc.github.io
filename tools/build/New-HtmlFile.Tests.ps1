@@ -96,16 +96,12 @@ Describe 'New-HtmlFile' {
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
-    It 'Should leave unknown placeholders unchanged' {
+    It 'Should fail on placeholders without a config value' {
         Mock Read-TextFile { return '<html>{UNKNOWN_KEY} ../d/stylesheet.css</html>' }
 
-        New-HtmlFile $TestTemplatesPath $TestBuildPath $TestConfig
+        { New-HtmlFile $TestTemplatesPath $TestBuildPath $TestConfig } | Should -Throw 'Unresolved placeholders in the web page: {UNKNOWN_KEY}'
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Read-TextFile -Exactly 1
-        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
-            $Content -eq '<html>{UNKNOWN_KEY} https://bit.ly/stylesheet_web</html>'
-        }
-        Should -Invoke Write-ActivityCompleted -Exactly 1
+        Should -Invoke Write-TextFile -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }

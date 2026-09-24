@@ -46,6 +46,7 @@ function Update-Dependencies {
     Write-ActivityProgress 15
 
     [Int]$FailedCount = 0
+    [Bool]$HasVersionChanges = $False
     [Int]$Iteration = 1
     foreach ($Dependency in $Dependencies) {
         [String]$Source = $Dependency.source
@@ -82,6 +83,10 @@ function Update-Dependencies {
                 $Dependency.version = $PreviousVersion
                 $ChangeLogs.RemoveAt($ChangeLogs.Count - 1)
             }
+
+            if ($Dependency.version -ne $PreviousVersion) {
+                $HasVersionChanges = $True
+            }
         } catch {
             $FailedCount++
             Write-LogWarning "Failed to check '$Name' for updates: $_"
@@ -105,7 +110,9 @@ function Update-Dependencies {
 
     Write-ActivityProgress 95
 
-    if ($UrlsToOpen.Count -gt 0) {
+    # Saved whenever a version changed, not only when there are changelog links: file dependencies
+    # never produce any, and neither does a release further back than the recent ones listed
+    if ($HasVersionChanges) {
         Write-LogInfo "Saving updated dependencies to $DependenciesFile"
         Write-JsonFile $DependenciesFile $Dependencies
     }

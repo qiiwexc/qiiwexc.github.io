@@ -26,6 +26,26 @@ function Get-SystemAccentColors {
     }
 }
 
+function Get-ContrastingTextColor {
+    param(
+        [Parameter(Position = 0, Mandatory)][String]$BackgroundColor
+    )
+
+    # WCAG relative luminance of a '#RRGGBB' colour: above ~0.18, black text has the higher contrast,
+    # so light accents (yellow, light green) get dark text, as Windows itself does
+    [Double[]]$Channels = @(1, 3, 5) | ForEach-Object {
+        [Double]$Value = [Convert]::ToInt32($BackgroundColor.Substring($_, 2), 16) / 255
+        if ($Value -le 0.03928) { $Value / 12.92 } else { [Math]::Pow(($Value + 0.055) / 1.055, 2.4) }
+    }
+    Set-Variable -Option Constant Luminance ([Double](0.2126 * $Channels[0] + 0.7152 * $Channels[1] + 0.0722 * $Channels[2]))
+
+    if ($Luminance -gt 0.179) {
+        return '#000000'
+    } else {
+        return '#ffffff'
+    }
+}
+
 function Set-ThemeResources {
     param(
         [Parameter(Position = 0, Mandatory)][Windows.Window]$Window
@@ -93,6 +113,7 @@ function Set-ThemeResources {
     $Colors['AccentColor'] = $AccentColors.Accent
     $Colors['AccentHoverColor'] = $AccentColors.AccentHover
     $Colors['AccentPressedColor'] = $AccentColors.AccentPressed
+    $Colors['AccentTextColor'] = Get-ContrastingTextColor $AccentColors.Accent
     $Colors['CloseHoverColor'] = '#c42b1c'
 
     Set-Variable -Option Constant Converter ([Windows.Media.BrushConverter]::new())

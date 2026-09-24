@@ -1,3 +1,3 @@
 @echo off
 
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\test.ps1 -Wip
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\test.ps1" -Wip

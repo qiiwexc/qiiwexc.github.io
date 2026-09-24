@@ -105,20 +105,33 @@
       <section class="content">
         <article>
           <details>
-            <summary>Launching MAS activator (Windows 7+, Office)</summary>
+            <summary>Launching MAS activator (Windows, Office)</summary>
             <ol>
               <li>
-                Open <code>Run</code> window by pressing <kbd>Win + R</kbd>
+                Open PowerShell: click the <code>Start</code> menu, type
+                <code>PowerShell</code> and open it
               </li>
               <li>
-                Copy and paste the following command:<br />
-                <code
-                  >powershell "iex ((New-Object
-                  Net.WebClient).DownloadString('https://get.activated.win'))"</code
-                >
+                Copy and paste the following command and press
+                <kbd>Enter</kbd>:<br />
+                <code>irm https://get.activated.win | iex</code>
               </li>
-              <li>Click <code>OK</code></li>
             </ol>
+            <p>
+              On older Windows 8.1 or 10 builds that report a TLS error, run
+              <code
+                >[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12</code
+              >
+              first. On Windows 7 or Vista, download and run
+              <code>MAS_AIO.cmd</code> instead, as described under
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://massgrave.dev/#activation-methods"
+                >Method 2</a
+              >
+              on the MAS website.
+            </p>
           </details>
         </article>
 

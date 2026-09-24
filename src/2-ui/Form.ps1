@@ -7,14 +7,14 @@
     Width="$FORM_MIN_WIDTH" Height="$FORM_MIN_HEIGHT"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None" AllowsTransparency="True" Background="Transparent"
-    ResizeMode="NoResize">
+    ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
 
         <!-- Primary Button -->
         <Style x:Key="Win11Button" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource AccentColor}" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentTextColor}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
@@ -120,7 +120,7 @@
                                            Text="&#xE73E;"
                                            FontFamily="Segoe MDL2 Assets"
                                            FontSize="12"
-                                           Foreground="White"
+                                           Foreground="{DynamicResource AccentTextColor}"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
                                            Visibility="Collapsed" />
@@ -337,6 +337,14 @@
 "@
 
 Set-Variable -Option Constant FORM ([Windows.Window]([Windows.Markup.XamlReader]::Parse($XAML_FORM)))
+
+# Never larger than the screen (a 1366x768 laptop, or 150% scaling on 1080p): the log and progress bar
+# at the bottom must stay reachable. The tab pages scroll, and the window can be resized from its grip
+Set-Variable -Option Constant WorkArea ([Windows.Rect][Windows.SystemParameters]::WorkArea)
+$FORM.MinWidth = [Math]::Min($FORM.MinWidth, $WorkArea.Width)
+$FORM.MinHeight = [Math]::Min($FORM.MinHeight, $WorkArea.Height)
+$FORM.Width = [Math]::Min($FORM.Width, $WorkArea.Width)
+$FORM.Height = [Math]::Min($FORM.Height, $WorkArea.Height)
 
 Set-ThemeResources $FORM
 

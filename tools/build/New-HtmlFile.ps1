@@ -18,6 +18,12 @@ function New-HtmlFile {
         $TemplateContent = $TemplateContent.Replace($Placeholder, $_.Value)
     }
 
+    # Same guard as for the script and the answer files: a renamed or missing key must fail the build
+    Set-Variable -Option Constant Placeholders ([String[]]@([Regex]::Matches($TemplateContent, '\{[A-Z][A-Z0-9_]*\}') | ForEach-Object { $_.Value } | Select-Object -Unique))
+    if ($Placeholders.Count -gt 0) {
+        throw "Unresolved placeholders in the web page: $($Placeholders -join ', ')"
+    }
+
     Write-TextFile $OutputFile $TemplateContent -NoNewline
 
     Write-ActivityCompleted
