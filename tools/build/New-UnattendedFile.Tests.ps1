@@ -84,6 +84,7 @@ Describe 'New-UnattendedFile' {
         Mock Set-InlineFiles { return $TestSetInlineFilesResult }
         Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
         Mock Write-TextFile {} -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
+        Mock New-Item {}
         Mock Copy-Item {}
         Mock Read-TextFile { return $TestBuildFileContent } -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
         Mock Read-TextFile { return $TestBuildFileContent } -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
@@ -175,6 +176,11 @@ Describe 'New-UnattendedFile' {
             $Content -eq $TestSetInlineFilesResult -and
             $NoNewline -eq $True
         }
+        Should -Invoke New-Item -Exactly 1
+        Should -Invoke New-Item -Exactly 1 -ParameterFilter {
+            $Path -eq "$TestVmPath\unattend" -and
+            $ItemType -eq 'Directory'
+        }
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Copy-Item -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildFileNameEnglish -and
@@ -207,6 +213,7 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 2
         Should -Invoke Set-InlineFiles -Exactly 2
         Should -Invoke Write-TextFile -Exactly 4
+        Should -Invoke New-Item -Exactly 0
         Should -Invoke Copy-Item -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
@@ -376,6 +383,18 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
+    It 'Should handle New-Item failure' {
+        Mock New-Item { throw $TestException }
+
+        { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
+
+        Should -Invoke Set-InlineFiles -Exactly 2
+        Should -Invoke Write-TextFile -Exactly 2
+        Should -Invoke New-Item -Exactly 1
+        Should -Invoke Copy-Item -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+
     It 'Should handle Copy-Item failure' {
         Mock Copy-Item { throw $TestException }
 
@@ -432,5 +451,53 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Write-TextFile -Exactly 2 -ParameterFilter { $Path -eq $TestBuildFileNameEnglish }
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBuildFileNameRussian }
         Should -Invoke Write-ActivityCompleted -Exactly 0
+    }
+}
+
+Describe 'New-UnattendedFile with the real template' {
+    BeforeAll {
+        . "$PSScriptRoot\..\common\Read-JsonFile.ps1"
+
+        Mock New-Activity {}
+        Mock Write-ActivityProgress {}
+        Mock Write-ActivityCompleted {}
+
+        Set-Variable -Option Constant ProjectRoot ([String][IO.Path]::GetFullPath("$PSScriptRoot\..\.."))
+        Set-Variable -Option Constant OutputPath ([String]"$TestDrive\build")
+        Set-Variable -Option Constant OutputVmPath ([String]"$TestDrive\vm")
+
+        Set-Variable -Option Constant ExpectedApps ([String[]]@(
+                (Read-JsonFile "$ProjectRoot\src\3-configs\Windows\Tools\Debloat app list base.json").AppId | ForEach-Object { $_.Split('#')[0].Trim() }
+                'Microsoft.OneDrive'
+            ))
+
+        # The whole build, from the template and configs as they are in the repository: a template
+        # regenerated with a newer unattend generator must still come out with every setting in place
+        $Null = New-Item -ItemType Directory $OutputPath
+        New-UnattendedFile $TestVersion $BuilderPath "$ProjectRoot\src" "$ProjectRoot\resources" "$ProjectRoot\templates" $OutputPath $OutputVmPath
+    }
+
+    It 'Should publish <FileName> with every setting filled in' -ForEach @(
+        @{ FileName = 'autounattend-English.xml'; UiLanguage = 'en-US' }
+        @{ FileName = 'autounattend-Russian.xml'; UiLanguage = 'ru-RU' }
+    ) {
+        Set-Variable -Option Constant Content ([String](Read-TextFile "$OutputPath\$FileName"))
+        Set-Variable -Option Constant PackageList ([String][Regex]::Match($Content, 'RemovePackage\.ps1">\s*\$selectors = @\(([\s\S]*?)\);').Groups[1].Value)
+
+        { Assert-UnattendedFile $FileName $Content } | Should -Not -Throw
+        $Content | Should -Match "<!-- Version: $([Regex]::Escape($TestVersion)) -->"
+        $Content | Should -Match "<UILanguage>$UiLanguage</UILanguage>"
+        [Regex]::Matches($PackageList, "'((?:[^']|'')*)';") | ForEach-Object { $_.Groups[1].Value.Replace("''", "'") } | Should -Be $ExpectedApps
+        $Content | Should -Match 'Set-MpPreference -'
+        $Content | Should -Match 'powercfg /OverlaySetActive'
+        $Content | Should -Match 'C:\\Windows\\Setup\\AppAssociations\.xml'
+        $Content | Should -Not -Match 'C:\\Windows\\Setup\\Scripts\\'
+    }
+
+    It 'Should keep the development-only sections in the VM copy' {
+        Set-Variable -Option Constant Content ([String](Read-TextFile "$OutputVmPath\unattend\autounattend.xml"))
+
+        $Content | Should -Match '<AutoLogon>'
+        $Content | Should -Match 'VBoxGuestAdditions\.ps1'
     }
 }

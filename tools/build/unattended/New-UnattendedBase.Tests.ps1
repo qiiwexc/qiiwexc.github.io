@@ -11,7 +11,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestTemplateFileFilePath ([String]"$TestTemplatesPath\autounattend.xml")
 
-    Set-Variable -Option Constant TestTemplateFileContent ([String]"Windows Registry Editor Version 5.00`r`n`r`n<ExtractScript><HideOnlineAccountScreens>false</HideOnlineAccountScreens></ExtractScript>`n`t`t<File path=`"C:\Windows\Setup\Scripts\RemovePackages.ps1`">`n`$selectors = @(`n`t'Test1'`n`t'Test2'`n);`n`t`t</File>`n")
+    Set-Variable -Option Constant TestTemplateFileContent ([String]"Windows Registry Editor Version 5.00`r`n`r`n<ExtractScript><HideOnlineAccountScreens>false</HideOnlineAccountScreens></ExtractScript>`n`t`t<File path=`"C:\Windows\Setup\Scripts\RemovePackage.ps1`">`n`$selectors = @(`n`t'Test1'`n`t'Test2'`n);`n`t`t</File>`n")
 }
 
 Describe 'New-UnattendedBase' {
@@ -43,13 +43,42 @@ Describe 'New-UnattendedBase' {
     }
 
     It 'Should put the version comment after the XML declaration' {
-        Mock Read-TextFile { return "<?xml version=`"1.0`" encoding=`"utf-8`"?>`n<unattend></unattend>`n" }
+        Mock Read-TextFile { return "<?xml version=`"1.0`" encoding=`"utf-8`"?>`n<unattend>$TestTemplateFileContent</unattend>`n" }
 
         New-UnattendedBase $TestTemplatesPath $TestBaseFilePath
 
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Content -match "^<\?xml version=`"1\.0`" encoding=`"utf-8`"\?>`n<!-- Version: {VERSION} -->`n<unattend>"
         }
+    }
+
+    It 'Should fail when the template no longer contains <Anchor>' -ForEach @(
+        @{ Anchor = '</ExtractScript>' }
+        @{ Anchor = 'C:\Windows\Setup\Scripts\' }
+        @{ Anchor = 'HideOnlineAccountScreens>false</HideOnlineAccountScreens' }
+    ) {
+        Mock Read-TextFile { return $TestTemplateFileContent.Replace($Anchor, 'TEST_RENAMED') }
+
+        { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw "*no longer contains '$Anchor'*"
+
+        Should -Invoke Write-TextFile -Exactly 0
+    }
+
+    It 'Should fail when the package list to replace is missing' {
+        # Older generator versions named the script RemovePackages.ps1
+        Mock Read-TextFile { return $TestTemplateFileContent.Replace('RemovePackage.ps1', 'RemovePackages.ps1') }
+
+        { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw '*no longer matches*exactly once*'
+
+        Should -Invoke Write-TextFile -Exactly 0
+    }
+
+    It 'Should fail when there is more than one package list to replace' {
+        Mock Read-TextFile { return $TestTemplateFileContent + $TestTemplateFileContent.Substring($TestTemplateFileContent.IndexOf('<File')) }
+
+        { New-UnattendedBase $TestTemplatesPath $TestBaseFilePath } | Should -Throw '*no longer matches*exactly once*'
+
+        Should -Invoke Write-TextFile -Exactly 0
     }
 
     It 'Should handle Read-TextFile failure' {

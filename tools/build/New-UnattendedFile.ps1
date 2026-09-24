@@ -84,6 +84,8 @@ function New-UnattendedFile {
     if (-not $CI) {
         Set-Variable -Option Constant BuildFile ([String]("$BuildPath\" + $LocalizedFileNameTemplate.Replace('{LOCALE}', $TestLocale)))
         Set-Variable -Option Constant VmFile ([String]("$VmPath\unattend\$NonLocalizedFileName"))
+        # The folder is git-ignored, so a fresh checkout doesn't have it
+        $Null = New-Item -Force -ItemType Directory "$VmPath\unattend"
         Copy-Item $BuildFile $VmFile
     }
 

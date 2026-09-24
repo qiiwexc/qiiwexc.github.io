@@ -34,18 +34,27 @@ function New-UnattendedBase {
     )
 
     Set-Variable -Option Constant RegexReplacementMap ([ordered]@{
-            'RemovePackages\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);' = "RemovePackages.ps1`">`n`$selectors = @({APP_REMOVAL_LIST});"
+            'RemovePackage\.ps1">\s*\$selectors\s*=\s*@\(\s*([\s\S]*?)\s*\);' = "RemovePackage.ps1`">`n`$selectors = @({APP_REMOVAL_LIST});"
         }
     )
 
     [String]$Content = Read-TextFile $TemplateFile
 
-    $StringReplacementMap.GetEnumerator() | ForEach-Object {
-        $Content = $Content.Replace($_.Key, $_.Value)
+    # Every replacement but the tab one must find its anchor: a template regenerated with a newer unattend
+    # generator can rename what they match, and one that silently stops matching ships the generator's
+    # defaults instead of these settings
+    foreach ($Replacement in $StringReplacementMap.GetEnumerator()) {
+        if ($Replacement.Key -ne "`t" -and -not $Content.Contains($Replacement.Key)) {
+            throw "$TemplateFile no longer contains '$($Replacement.Key)' - update New-UnattendedBase to match the template"
+        }
+        $Content = $Content.Replace($Replacement.Key, $Replacement.Value)
     }
 
-    $RegexReplacementMap.GetEnumerator() | ForEach-Object {
-        $Content = $Content -replace $_.Key, $_.Value
+    foreach ($Replacement in $RegexReplacementMap.GetEnumerator()) {
+        if ([Regex]::Matches($Content, $Replacement.Key).Count -ne 1) {
+            throw "$TemplateFile no longer matches '$($Replacement.Key)' exactly once - update New-UnattendedBase to match the template"
+        }
+        $Content = $Content -replace $Replacement.Key, $Replacement.Value
     }
 
     # The XML declaration must be the very first thing in the document, so the version comment follows it
