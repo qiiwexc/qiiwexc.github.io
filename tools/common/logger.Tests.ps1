@@ -1,6 +1,9 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    # Declared by the progress bar, which the logger reads for the indentation
+    Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
+
     Set-Variable -Option Constant TestMessage ([String]'TEST_MESSAGE')
 }
 
