@@ -34,9 +34,10 @@ rest - not a different standard of evidence, just more of the budget.
 
 ## Step 2 - read the standard before judging against it
 
-Read `AGENTS.md` and `.github/copilot-instructions.md` in full first. They are
-what the code is measured against, and they are themselves under review: a rule
-nothing follows is either a finding about the code or a finding about the rule.
+Read `AGENTS.md` in full first - `.github/copilot-instructions.md` only points
+to it. It is what the code is measured against, and it is itself under review: a
+rule nothing follows is either a finding about the code or a finding about the
+rule.
 
 ## Ground rules
 
@@ -99,8 +100,9 @@ ceiling.
   `tools/common/`.
 - **Tests** - the `*.Tests.ps1` suites next to each source file, the stubs for
   Windows-only commands, `PesterSettings.ps1`, `tools/test.ps1`, what is and is
-  not covered (the Pester run skips `src/0-init`, `src/2-ui`, `src/3-configs`
-  and `src/5-interface` entirely - is that right?).
+  not covered (the Pester run skips `src/2-ui` and `src/5-interface` entirely,
+  and measures no coverage for `src/0-init` and `src/3-configs` - is that
+  right?).
 - **CI/CD** - `.github/workflows/`, `.github/actions/`, `.github/dependabot.yml`,
   the tag, deploy and release paths, and the nightly dependency update.
 - **Configuration** - `PSScriptAnalyzerSettings.psd1`, `PesterSettings.ps1`,
@@ -167,7 +169,8 @@ Also a floor, not a ceiling:
 - **Tooling** - the development and build toolchain: what is missing, what is
   redundant, what could be replaced by something better.
 - **Best practices** - for Windows PowerShell 5.1 (including PS7-only syntax
-  that slipped in), Pester 5, PSScriptAnalyzer, WPF from PowerShell, BITS,
+  that slipped in), Pester (the version pinned in
+  `resources/dependencies.json`), PSScriptAnalyzer, WPF from PowerShell, BITS,
   Windows unattended setup, batch scripting, GitHub Actions and GitHub Pages.
 - **Accessibility** - the WPF window and the landing page are real UI: keyboard
   paths, focus order, `AutomationProperties` names for screen readers,
@@ -180,8 +183,8 @@ Also a floor, not a ceiling:
   then completeness, then length. Check specifically that the documentation
   describes the repository as it is now rather than as it was - commands that
   no longer exist, directories that moved, workflows that were renamed - and
-  that `AGENTS.md` and `.github/copilot-instructions.md` have not drifted apart
-  where they repeat each other.
+  that `.github/copilot-instructions.md` still only points to `AGENTS.md`
+  rather than repeating it.
 - **Agent efficiency** - the instruction files are loaded in full every session,
   so staleness, verbosity and redundancy between them cost real tokens on every
   request. Which parts are load-bearing - things an agent would get wrong
