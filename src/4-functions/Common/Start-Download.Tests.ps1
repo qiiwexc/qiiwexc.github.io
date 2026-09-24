@@ -418,6 +418,23 @@ Describe 'Start-Download' {
         Should -Invoke Write-LogWarning -Exactly 1
     }
 
+    It 'Should download again when a previous download no longer matches the checksum' {
+        [Int]$script:HashCalls = 0
+        Mock Get-FileHash {
+            $script:HashCalls++
+            return [PSCustomObject]@{ Hash = $(if ($script:HashCalls -eq 1) { 'PREVIOUS_VERSION' } else { 'ABC123' }) }
+        }
+
+        Start-Download $TestUrl -Sha256 'abc123' | Should -BeExactly $TestSavePath
+
+        Should -Invoke Get-FileHash -Exactly 2
+        Should -Invoke Remove-Item -Exactly 1 -ParameterFilter { $Path -eq $TestSavePath }
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -like '*does not match*' }
+        Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
     It 'Should handle Invoke-WebRequest failure when NoBits is specified' {
         Mock Invoke-WebRequest { throw $TestException }
 

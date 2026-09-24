@@ -41,11 +41,22 @@ function Start-Download {
     }
 
     if (Test-Path $SavePath) {
-        Write-LogWarning 'Previous download found, returning it'
+        # A pinned download whose URL does not name the version keeps its file name when the pin moves
+        # on, so a previous copy that no longer matches is replaced (the check deletes it) rather than refused
+        [Bool]$IsCurrent = $True
         if ($Sha256) {
-            Test-FileChecksum $SavePath $Sha256
+            try {
+                Test-FileChecksum $SavePath $Sha256
+            } catch {
+                $IsCurrent = $False
+                Write-LogWarning 'Previous download does not match the expected checksum, downloading it again'
+            }
         }
-        return $SavePath
+
+        if ($IsCurrent) {
+            Write-LogWarning 'Previous download found, returning it'
+            return $SavePath
+        }
     }
 
     if (-not (Test-NetworkConnection)) {

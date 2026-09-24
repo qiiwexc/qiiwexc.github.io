@@ -22,5 +22,6 @@
   "URL_TRONSCRIPT": "https://github.com/bmrf/tron/blob/master/README.md#use",
   "URL_SYSTEM_RESCUE": "https://www.system-rescue.org/",
   "URL_OOSHUTUP10": "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe",
+  "URL_WINUTIL": "https://github.com/ChrisTitusTech/winutil/releases/download/{VERSION}/winutil.ps1",
   "URL_STYLESHEET_WEB": "https://bit.ly/stylesheet_web"
 }
