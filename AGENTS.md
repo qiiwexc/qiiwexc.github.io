@@ -52,8 +52,13 @@ failures as environmental, not regressions.
   `build-and-run.bat`); `-Full -CI` skips both, because CI runs the tests in their own job and
   the update nightly.
 - The dependency update rewrites `resources/dependencies.json`. Without `-CI` it opens each
-  changelog URL in the browser; with `-CI` it writes them to `$env:CHANGELOG_URLS`, which
-  `tools\Invoke-DependencyUpdate.ps1` hands to the nightly workflow.
+  changelog URL in the browser; with `-CI` it writes them to `$env:CHANGELOG_URLS`, from which
+  `tools\Invoke-DependencyUpdate.ps1` writes the nightly pull request's description to
+  `build/dependency-update.md`: a table of the versions that moved, the changelog links grouped
+  as other sites, GitHub commit comparisons and GitHub releases and tags, and the release notes
+  of every release or tag crossed. The notes are third-party text, so `Format-ReleaseNotes`
+  defuses mentions and issue references before quoting them, and the workflow hands the file to
+  `gh` as `--body-file`.
 - `build-dev.bat`, `build-and-run.bat` and `tools\build.ps1 -Run` start the built app, which
   relaunches itself elevated — don't run them unless asked. `build-ci.bat` and the test scripts
   write only to the git-ignored outputs in `build/` and `vm/`.
@@ -76,7 +81,7 @@ matching task.** Each of these is the authority on its procedure; this file does
 
 ## Build Architecture
 
-`tools/build.ps1` orchestrates the build. `tools/build/` contains individual build step functions. `tools/common/` contains shared utilities (logger, progress bar, file I/O) used by both build and test.
+`tools/build.ps1` orchestrates the build. `tools/build/` contains individual build step functions. `tools/common/` contains shared utilities (logger, progress bar, file I/O) used by both build and test. The logger and the progress bar there are the app's own (`src/4-functions/App lifecycle`), dot-sourced with no-op stand-ins for the window they would otherwise write to, so the two cannot drift apart.
 
 ### Source-to-Script Bundling
 
@@ -136,7 +141,7 @@ All component functions (`New-Button`, `New-CheckBox`, etc.) read and mutate `$s
 
 ## Linting
 
-PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1` only — `tools/` is not linted — with the settings in `PSScriptAnalyzerSettings.psd1`. Findings are printed but do not fail the build, so read the output. Notable rules: single quotes for constant strings, aligned assignment statements (hashtables included), `-not` instead of `!`, no semicolons as line terminators, opening braces on the same line, 4-space indentation, correct casing, and cmdlets and syntax that Windows PowerShell 5.1 supports.
+PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1` and on every script under `tools/` (tests included), with the settings in `PSScriptAnalyzerSettings.psd1`. Any finding fails the build, after all of them are printed; `src/` is covered through the bundle, so its findings point at lines of `build/qiiwexc.ps1`. The analyzer sometimes fails with a rule error of its own (`The term 'Get-Command' is not recognized`) rather than a finding, which the build retries. Notable rules: single quotes for constant strings, aligned assignment statements (hashtables included), `-not` instead of `!`, no semicolons as line terminators, opening braces on the same line, 4-space indentation, correct casing, and cmdlets and syntax that Windows PowerShell 5.1 supports.
 
 ## CI/CD Workflows
 
@@ -144,7 +149,7 @@ The workflows in `.github/workflows/` share composite actions from `.github/acti
 
 - `ci.yml` chains `test → build → deploy → release`; `deploy` and `release` run for tags only. `test` runs `test-with-coverage.bat` and `build` runs `build-ci.bat`. `deploy` publishes an explicit file list (assembled in `.github/actions/deploy/action.yml`) to GitHub Pages — add new site files there — and `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, `autounattend-*.xml` and `SHA256SUMS.txt` as assets (via `gh release create`), unless one already exists for the tag.
 - A release is cut by pushing a `vYY.M.D` tag: `release.bat` tags `origin/master` from a local checkout (it refuses if `HEAD` differs), and the manual `tag.yml` workflow tags on GitHub and then dispatches `ci.yml` for the tag, since a tag pushed with `GITHUB_TOKEN` triggers no workflows.
-- `update-dependencies.yml` checks for updates nightly in a read-only job and hands the changed `dependencies.json` to a separate job that force-pushes the `chore/update-dependencies` branch and opens or updates its PR — only when a versioned download URL, Pester or PSScriptAnalyzer changes — then runs the `test` and `build` actions on it and reports both as commit statuses.
+- `update-dependencies.yml` checks for updates nightly in a read-only job and hands the changed `dependencies.json`, with the pull request description it wrote, to a separate job that force-pushes the `chore/update-dependencies` branch and opens or updates its PR — only when a versioned download URL, Pester or PSScriptAnalyzer changes — then runs the `test` and `build` actions on it and reports both as commit statuses.
 - `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.
 
 ## Workflow Notes
