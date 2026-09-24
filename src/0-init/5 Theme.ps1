@@ -46,14 +46,69 @@ function Get-ContrastingTextColor {
     }
 }
 
-function Set-ThemeResources {
+function ConvertTo-HexColor {
     param(
-        [Parameter(Position = 0, Mandatory)][Windows.Window]$Window
+        [Parameter(Position = 0, Mandatory)][Windows.Media.Color]$Color
     )
 
-    Set-Variable -Option Constant IsLight ([Bool](Get-SystemTheme))
+    return '#{0:X2}{1:X2}{2:X2}' -f $Color.R, $Color.G, $Color.B
+}
 
-    if ($IsLight) {
+function Get-HighContrastColors {
+    # A high contrast theme is a set of system colours meant to be used in fixed pairs: text colours
+    # only on the background they belong with, so hover effects that would break a pair are dropped
+    Set-Variable -Option Constant Window ([String](ConvertTo-HexColor ([Windows.SystemColors]::WindowColor)))
+    Set-Variable -Option Constant WindowText ([String](ConvertTo-HexColor ([Windows.SystemColors]::WindowTextColor)))
+    Set-Variable -Option Constant Highlight ([String](ConvertTo-HexColor ([Windows.SystemColors]::HighlightColor)))
+    Set-Variable -Option Constant HighlightText ([String](ConvertTo-HexColor ([Windows.SystemColors]::HighlightTextColor)))
+    Set-Variable -Option Constant ButtonFace ([String](ConvertTo-HexColor ([Windows.SystemColors]::ControlColor)))
+    Set-Variable -Option Constant GrayText ([String](ConvertTo-HexColor ([Windows.SystemColors]::GrayTextColor)))
+
+    return [Hashtable]@{
+        BgColor                  = $Window
+        FgColor                  = $WindowText
+        CardBgColor              = $Window
+        BorderColor              = $WindowText
+        ButtonBorderColor        = $WindowText
+        CheckBoxBgColor          = $Window
+        CheckBoxBorderColor      = $WindowText
+        CheckBoxHoverColor       = $Window
+        SecondaryBgColor         = $ButtonFace
+        SecondaryHoverColor      = $ButtonFace
+        SecondaryPressedColor    = $ButtonFace
+        ButtonDisabledColor      = $ButtonFace
+        ButtonTextDisabledColor  = $GrayText
+        ScrollBarThumbColor      = $WindowText
+        ScrollBarThumbHoverColor = $Highlight
+        TabBgColor               = $Window
+        TabHoverColor            = $Window
+        TitleBarHoverColor       = $Highlight
+        TitleBarHoverTextColor   = $HighlightText
+        LogBgColor               = $Window
+        LogFgColor               = $WindowText
+        LogInfoColor             = $WindowText
+        LogWarnColor             = $WindowText
+        LogErrorColor            = $WindowText
+        AccentColor              = $Highlight
+        AccentHoverColor         = $Highlight
+        AccentPressedColor       = $Highlight
+        AccentTextColor          = $HighlightText
+        CloseHoverColor          = $Highlight
+        CloseHoverTextColor      = $HighlightText
+    }
+}
+
+function Get-ThemeColors {
+    param(
+        [Switch]$Light,
+        [Switch]$HighContrast
+    )
+
+    if ($HighContrast) {
+        return Get-HighContrastColors
+    }
+
+    if ($Light) {
         Set-Variable -Option Constant Colors (
             [Hashtable]@{
                 BgColor                  = '#f3f3f3'
@@ -73,10 +128,13 @@ function Set-ThemeResources {
                 ScrollBarThumbHoverColor = '#8b8b8b'
                 TabBgColor               = '#e8e8e8'
                 TabHoverColor            = '#d8d8d8'
+                TitleBarHoverColor       = '#ededed'
+                TitleBarHoverTextColor   = '#000000'
                 LogBgColor               = '#ffffff'
                 LogFgColor               = '#000000'
                 LogInfoColor             = '#0067c0'
-                LogWarnColor             = '#d4760a'
+                # Windows' own caution colour for text on a light background, 5.2:1 on white
+                LogWarnColor             = '#9d5d00'
                 LogErrorColor            = '#c42b1c'
             }
         )
@@ -100,6 +158,8 @@ function Set-ThemeResources {
                 ScrollBarThumbHoverColor = '#4b4b4b'
                 TabBgColor               = '#2b2b2b'
                 TabHoverColor            = '#383838'
+                TitleBarHoverColor       = '#404040'
+                TitleBarHoverTextColor   = '#ffffff'
                 LogBgColor               = '#0c0c0c'
                 LogFgColor               = '#cccccc'
                 LogInfoColor             = '#4fc3f7'
@@ -115,6 +175,17 @@ function Set-ThemeResources {
     $Colors['AccentPressedColor'] = $AccentColors.AccentPressed
     $Colors['AccentTextColor'] = Get-ContrastingTextColor $AccentColors.Accent
     $Colors['CloseHoverColor'] = '#c42b1c'
+    $Colors['CloseHoverTextColor'] = '#ffffff'
+
+    return $Colors
+}
+
+function Set-ThemeResources {
+    param(
+        [Parameter(Position = 0, Mandatory)][Windows.Window]$Window
+    )
+
+    Set-Variable -Option Constant Colors ([Hashtable](Get-ThemeColors -Light:(Get-SystemTheme) -HighContrast:([Windows.SystemParameters]::HighContrast)))
 
     Set-Variable -Option Constant Converter ([Windows.Media.BrushConverter]::new())
     foreach ($Entry in $Colors.GetEnumerator()) {

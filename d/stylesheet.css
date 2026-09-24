@@ -18,12 +18,14 @@ body {
   text-align: center;
 }
 
-h2 {
+h1 {
+  font-size: 1.5em;
   font-weight: normal;
+  margin: 0.83em 0;
 }
 
 header {
-  background: #00af85;
+  background: #008060;
   color: white;
   display: block;
   padding: 0.5rem 0 2.5rem 0;

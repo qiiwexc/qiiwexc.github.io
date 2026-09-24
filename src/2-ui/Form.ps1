@@ -71,7 +71,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource BorderColor}" />
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource TitleBarHoverColor}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TitleBarHoverTextColor}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -90,7 +91,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource CloseHoverColor}" />
-                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Foreground" Value="{DynamicResource CloseHoverTextColor}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -370,8 +371,9 @@ $TitleBar.Add_MouseLeftButtonDown( {
 $FORM.Add_ContentRendered( { Initialize-App } )
 $FORM.Add_Closing( { Reset-State } )
 
+# Light and dark mode arrive as a General change, a high contrast theme as Accessibility and Color
 Set-Variable -Option Constant ThemeChangeHandler ([Microsoft.Win32.UserPreferenceChangedEventHandler] {
-        if ($args[1].Category -eq [Microsoft.Win32.UserPreferenceCategory]::General) {
+        if ($args[1].Category -in @('General', 'Accessibility', 'Color')) {
             Invoke-OnDispatcher { Set-ThemeResources $FORM }
         }
     })
