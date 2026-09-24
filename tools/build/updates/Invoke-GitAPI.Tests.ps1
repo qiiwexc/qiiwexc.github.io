@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
+    . "$PSScriptRoot\..\..\common\logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -10,7 +10,7 @@ BeforeAll {
 }
 
 Describe 'Invoke-GitAPI' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Out-Failure {}
         Mock Invoke-WebRequest { return @{Content = '[{"key1": "value1", "key2": "value2"}]' } }

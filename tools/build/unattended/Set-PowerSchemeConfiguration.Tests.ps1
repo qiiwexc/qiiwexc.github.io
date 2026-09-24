@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Set-Variable -Option Constant ConfigsPath ([String]'.\src\3-configs')
+    Set-Variable -Option Constant ConfigsPath ([String][IO.Path]::GetFullPath("$PSScriptRoot\..\..\..\src\3-configs"))
     Set-Variable -Option Constant TestTemplateContent ([String]"TEST_TEMPLATE_CONTENT_1`n{POWER_SCHEME_CONFIGURATION}`nTEST_TEMPLATE_CONTENT_2")
 
     Set-Variable -Option Constant TestFilePath ([String]"$ConfigsPath\Windows\Power settings.ps1")

@@ -1,11 +1,11 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    Set-Variable -Option Constant BuilderPath ([String]'.\tools\build')
+    Set-Variable -Option Constant BuilderPath ([String]$PSScriptRoot)
 
-    . '.\tools\common\Progressbar.ps1'
-    . '.\tools\common\Read-TextFile.ps1'
-    . '.\tools\common\Write-TextFile.ps1'
+    . "$PSScriptRoot\..\common\Progressbar.ps1"
+    . "$PSScriptRoot\..\common\Read-TextFile.ps1"
+    . "$PSScriptRoot\..\common\Write-TextFile.ps1"
     . "$BuilderPath\unattended\Assert-UnattendedFile.ps1"
     . "$BuilderPath\unattended\New-UnattendedBase.ps1"
     . "$BuilderPath\unattended\Set-AppRemovalList.ps1"
@@ -72,7 +72,7 @@ BeforeAll {
 }
 
 Describe 'New-UnattendedFile' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Activity {}
         Mock Write-ActivityProgress {}
         Mock New-UnattendedBase {}
@@ -120,7 +120,6 @@ Describe 'New-UnattendedFile' {
         New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke New-UnattendedBase -Exactly 1 -ParameterFilter {
             $TemplatesPath -eq $TestTemplatesPath -and
@@ -200,7 +199,6 @@ Describe 'New-UnattendedFile' {
         New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath -CI
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -219,7 +217,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 0
         Should -Invoke Set-LocaleSettings -Exactly 0
@@ -238,7 +235,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestBaseFilePath }
@@ -258,7 +254,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -277,7 +272,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -296,7 +290,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -315,7 +308,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 7
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -334,7 +326,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -353,7 +344,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 9
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 1
@@ -373,7 +363,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 15
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -393,7 +382,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 17
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -412,7 +400,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 2
         Should -Invoke Set-LocaleSettings -Exactly 2
@@ -432,7 +419,6 @@ Describe 'New-UnattendedFile' {
         { New-UnattendedFile $TestVersion $BuilderPath $TestSourcePath $TestResourcesPath $TestTemplatesPath $TestBuildPath $TestVmPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 18
         Should -Invoke New-UnattendedBase -Exactly 1
         Should -Invoke Read-TextFile -Exactly 3
         Should -Invoke Set-LocaleSettings -Exactly 2

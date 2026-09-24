@@ -8,10 +8,10 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\Configuration\Windows\Tools\Assertions.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
+    . "$PSScriptRoot\..\Common\types.ps1"
+    . "$PSScriptRoot\..\Configuration\Windows\Tools\Assertions.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -22,7 +22,7 @@ BeforeAll {
 }
 
 Describe 'Start-Cleanup' {
-    BeforeEach {
+    BeforeAll {
         Mock Test-SdiIsRunning {}
         Mock Test-DownloadingWindowsUpdates {}
         Mock Test-InstallingWindowsUpdates {}
@@ -49,7 +49,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 8
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1 -ParameterFilter { $Force -eq $True }
         Should -Invoke Out-Success -Exactly 5
@@ -129,7 +128,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Remove-Item -Exactly 0
@@ -151,7 +149,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Remove-Item -Exactly 0
@@ -173,7 +170,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Remove-Item -Exactly 0
@@ -195,7 +191,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Remove-Item -Exactly 0
@@ -217,7 +212,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Remove-Item -Exactly 0
@@ -239,7 +233,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Remove-Item -Exactly 0
@@ -261,7 +254,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Remove-Item -Exactly 0
@@ -283,7 +275,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Remove-Item -Exactly 1
@@ -305,7 +296,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
         Should -Invoke Remove-Item -Exactly 3
@@ -327,7 +317,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 5
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
         Should -Invoke Remove-Item -Exactly 3
@@ -349,7 +338,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
         Should -Invoke Remove-Item -Exactly 3
@@ -371,7 +359,6 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 7
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Out-Success -Exactly 4
         Should -Invoke Remove-Item -Exactly 3

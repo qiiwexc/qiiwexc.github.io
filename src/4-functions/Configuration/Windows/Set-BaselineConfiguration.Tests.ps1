@@ -6,10 +6,10 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Common\New-Directory.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Add-SysPrepConfig.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Import-RegistryConfiguration.ps1'
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\..\Common\New-Directory.ps1"
+    . "$PSScriptRoot\..\Helpers\Add-SysPrepConfig.ps1"
+    . "$PSScriptRoot\..\Helpers\Import-RegistryConfiguration.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -35,7 +35,7 @@ BeforeAll {
 }
 
 Describe 'Set-BaselineConfiguration' {
-    BeforeEach {
+    BeforeAll {
         Mock Set-ItemProperty {}
         Mock Out-Success {}
         Mock Out-Failure {}
@@ -46,7 +46,9 @@ Describe 'Set-BaselineConfiguration' {
         Mock Import-RegistryConfiguration {}
         Mock New-Directory {}
         Mock Set-Content {}
+    }
 
+    BeforeEach {
         [String]$SYSTEM_LANGUAGE = 'en-GB'
         [Int]$OS_VERSION = 10
     }

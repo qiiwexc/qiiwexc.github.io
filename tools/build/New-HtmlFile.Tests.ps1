@@ -1,10 +1,10 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\types.ps1'
-    . '.\tools\common\Progressbar.ps1'
-    . '.\tools\common\Read-TextFile.ps1'
-    . '.\tools\common\Write-TextFile.ps1'
+    . "$PSScriptRoot\..\common\types.ps1"
+    . "$PSScriptRoot\..\common\Progressbar.ps1"
+    . "$PSScriptRoot\..\common\Read-TextFile.ps1"
+    . "$PSScriptRoot\..\common\Write-TextFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -24,7 +24,7 @@ BeforeAll {
 }
 
 Describe 'New-HtmlFile' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Activity {}
         Mock Read-TextFile { return $TestTemplateContent }
         Mock Write-TextFile {}

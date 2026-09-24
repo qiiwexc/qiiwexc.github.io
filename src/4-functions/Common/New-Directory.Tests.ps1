@@ -7,7 +7,7 @@ BeforeAll {
 }
 
 Describe 'New-Directory' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Item {}
     }
 

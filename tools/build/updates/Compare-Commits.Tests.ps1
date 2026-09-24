@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\types.ps1'
+    . "$PSScriptRoot\..\..\common\types.ps1"
 
     . "$(Split-Path $PSCommandPath -Parent)\Invoke-GitAPI.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
@@ -26,7 +26,7 @@ BeforeAll {
 }
 
 Describe 'Compare-Commits' {
-    BeforeEach {
+    BeforeAll {
         Mock Invoke-GitAPI { return @( @{ sha = $TestLatestVersion }, @{ sha = $TestCurrentVersion } ) }
         Mock Set-NewVersion {}
     }

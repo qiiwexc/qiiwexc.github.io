@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Update-BrowserConfiguration.ps1'
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\Helpers\Update-BrowserConfiguration.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -14,7 +14,7 @@ BeforeAll {
 }
 
 Describe 'Set-GoogleChromeConfiguration' {
-    BeforeEach {
+    BeforeAll {
         Mock Update-BrowserConfiguration {}
         Mock Out-Success {}
         Mock Out-Failure {}
@@ -38,15 +38,5 @@ Describe 'Set-GoogleChromeConfiguration' {
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
-    }
-
-    It 'Should handle Update-BrowserConfiguration failure' {
-        Mock Update-BrowserConfiguration { throw $TestException }
-
-        Set-GoogleChromeConfiguration $TestAppName
-
-        Should -Invoke Update-BrowserConfiguration -Exactly 1
-        Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
     }
 }

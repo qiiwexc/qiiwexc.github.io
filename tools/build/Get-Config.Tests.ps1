@@ -1,9 +1,9 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\types.ps1'
-    . '.\tools\common\Progressbar.ps1'
-    . '.\tools\common\Read-JsonFile.ps1'
+    . "$PSScriptRoot\..\common\types.ps1"
+    . "$PSScriptRoot\..\common\Progressbar.ps1"
+    . "$PSScriptRoot\..\common\Read-JsonFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -26,7 +26,7 @@ BeforeAll {
 }
 
 Describe 'Get-Config' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Activity {}
         Mock Read-JsonFile { return $TestDependencies } -ParameterFilter { $Path -match 'dependencies' }
         Mock Read-JsonFile { return $TestUrlsTemplate } -ParameterFilter { $Path -match 'urls' }

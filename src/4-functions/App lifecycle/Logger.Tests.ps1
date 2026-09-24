@@ -1,8 +1,8 @@
 ﻿BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\App lifecycle\Invoke-OnDispatcher.ps1'
+    . "$PSScriptRoot\..\Common\types.ps1"
+    . "$PSScriptRoot\Invoke-OnDispatcher.ps1"
 
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
@@ -39,9 +39,7 @@ Describe 'Format-Message' {
         function ToString {}
 
         Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
-    }
 
-    BeforeEach {
         Mock ToString { return $TestDate }
         Mock Get-Date { return ToString }
         Mock ConvertTo-Emoji { return $TestEmoji }
@@ -150,7 +148,7 @@ Describe 'Write-FormLog' {
 }
 
 Describe 'Write-LogDebug' {
-    BeforeEach {
+    BeforeAll {
         Mock Format-Message { return $FormattedMessage }
         Mock Write-Host {}
         Mock Write-Warning {}
@@ -179,7 +177,7 @@ Describe 'Write-LogDebug' {
 }
 
 Describe 'Write-LogInfo' {
-    BeforeEach {
+    BeforeAll {
         Mock Format-Message { return $FormattedMessage }
         Mock Write-Host {}
         Mock Write-Warning {}
@@ -212,7 +210,7 @@ Describe 'Write-LogInfo' {
 }
 
 Describe 'Write-LogWarning' {
-    BeforeEach {
+    BeforeAll {
         Mock Format-Message { return $FormattedMessage }
         Mock Write-Host {}
         Mock Write-Warning {}
@@ -245,7 +243,7 @@ Describe 'Write-LogWarning' {
 }
 
 Describe 'Write-LogError' {
-    BeforeEach {
+    BeforeAll {
         Mock Format-Message { return $FormattedMessage }
         Mock Write-Host {}
         Mock Write-Warning {}
@@ -278,7 +276,7 @@ Describe 'Write-LogError' {
 }
 
 Describe 'Out-Status' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
     }
 
@@ -297,7 +295,7 @@ Describe 'Out-Status' {
 }
 
 Describe 'Out-Success' {
-    BeforeEach {
+    BeforeAll {
         Mock ConvertTo-Emoji { return $TestEmoji }
         Mock Out-Status {}
     }
@@ -317,7 +315,7 @@ Describe 'Out-Success' {
 }
 
 Describe 'Out-Failure' {
-    BeforeEach {
+    BeforeAll {
         Mock ConvertTo-Emoji { return $TestEmoji }
         Mock Out-Status {}
     }

@@ -8,7 +8,7 @@ BeforeAll {
 }
 
 Describe 'Read-TextFile' {
-    BeforeEach {
+    BeforeAll {
         Mock Get-Content { return $TestContent }
     }
 

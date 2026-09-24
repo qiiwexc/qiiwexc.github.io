@@ -5,8 +5,8 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Find-RunningProcesses.ps1'
-    . '.\src\4-functions\Common\Find-RunningScript.ps1'
+    . "$PSScriptRoot\..\..\..\Common\Find-RunningProcesses.ps1"
+    . "$PSScriptRoot\..\..\..\Common\Find-RunningScript.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -15,7 +15,7 @@ BeforeAll {
 }
 
 Describe 'Test-WindowsDebloatIsRunning' {
-    BeforeEach {
+    BeforeAll {
         Mock Find-RunningScript {}
     }
 
@@ -46,7 +46,7 @@ Describe 'Test-WindowsDebloatIsRunning' {
 }
 
 Describe 'Test-OOShutUp10IsRunning' {
-    BeforeEach {
+    BeforeAll {
         Mock Find-RunningProcesses {}
     }
 
@@ -77,7 +77,7 @@ Describe 'Test-OOShutUp10IsRunning' {
 }
 
 Describe 'Test-SdiIsRunning' {
-    BeforeEach {
+    BeforeAll {
         Mock Find-RunningProcesses {}
     }
 
@@ -112,7 +112,7 @@ Describe 'Test-SdiIsRunning' {
 }
 
 Describe 'Test-DownloadingWindowsUpdates' {
-    BeforeEach {
+    BeforeAll {
         Mock Get-BitsTransfer {}
     }
 
@@ -151,7 +151,7 @@ Describe 'Test-DownloadingWindowsUpdates' {
 }
 
 Describe 'Test-InstallingWindowsUpdates' {
-    BeforeEach {
+    BeforeAll {
         Mock Find-RunningProcesses {}
     }
 

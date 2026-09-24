@@ -7,7 +7,7 @@ BeforeAll {
 }
 
 Describe 'Remove-File' {
-    BeforeEach {
+    BeforeAll {
         Mock Test-Path { return $True }
         Mock Remove-Item {}
     }

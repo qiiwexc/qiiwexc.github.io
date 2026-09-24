@@ -4,8 +4,8 @@ BeforeAll {
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
 
-    . '.\src\4-functions\Common\Remove-File.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . "$PSScriptRoot\..\Common\Remove-File.ps1"
+    . "$PSScriptRoot\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -20,7 +20,7 @@ AfterAll {
 }
 
 Describe 'Reset-State' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Remove-File {}
         Mock Write-Host {}
@@ -57,13 +57,13 @@ Describe 'Reset-State' {
 Describe 'Exit-App' {
     BeforeAll {
         function Close {}
-    }
 
-    BeforeEach {
         Mock Write-LogInfo {}
         Mock Reset-State {}
         Mock Close {}
+    }
 
+    BeforeEach {
         [Windows.Window]$FORM = New-MockObject -Type Windows.Window -Methods @{ Close = { Close } }
     }
 

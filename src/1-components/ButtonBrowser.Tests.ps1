@@ -11,7 +11,7 @@ BeforeAll {
 }
 
 Describe 'New-ButtonBrowser' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Button {}
         Mock New-Label {}
     }

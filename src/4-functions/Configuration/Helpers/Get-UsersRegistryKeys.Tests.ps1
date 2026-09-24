@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -16,7 +16,7 @@ BeforeAll {
 }
 
 Describe 'Get-UsersRegistryKeys' {
-    BeforeEach {
+    BeforeAll {
         Mock Get-Item { return $TestUserRegistryKeys }
         Mock Write-LogWarning {}
     }

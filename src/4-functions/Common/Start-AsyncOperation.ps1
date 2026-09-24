@@ -42,6 +42,8 @@ function Start-AsyncOperation {
         $Button.Resources['AccentColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(196, 43, 28))
         $Button.Resources['AccentHoverColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(218, 59, 43))
         $Button.Resources['AccentPressedColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(172, 38, 24))
+        # The red cancel state always takes white text, whatever the accent colour calls for
+        $Button.Resources['AccentTextColor'] = [Windows.Media.Brushes]::White
     }
 
     Set-Icon ([IconName]::Working)
@@ -202,6 +204,7 @@ function Complete-AsyncOperation {
         $script:ASYNC.Button.Resources.Remove('AccentColor')
         $script:ASYNC.Button.Resources.Remove('AccentHoverColor')
         $script:ASYNC.Button.Resources.Remove('AccentPressedColor')
+        $script:ASYNC.Button.Resources.Remove('AccentTextColor')
     }
 
     Set-Icon ([IconName]::Default)

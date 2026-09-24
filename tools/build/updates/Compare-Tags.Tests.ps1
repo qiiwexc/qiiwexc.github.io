@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\types.ps1'
+    . "$PSScriptRoot\..\..\common\types.ps1"
 
     . "$(Split-Path $PSCommandPath -Parent)\Invoke-GitAPI.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
@@ -15,7 +15,7 @@ BeforeAll {
     Set-Variable -Option Constant TestCurrentVersion ([String]'TEST_CURRENT_VERSION')
     Set-Variable -Option Constant TestLatestVersion ([String]'TEST_LATEST_VERSION')
 
-    Set-Variable -Option Constant TestGitHubTagsUrl ([String]"https://api.github.com/repos/$TestRepositoryName/tags")
+    Set-Variable -Option Constant TestGitHubTagsUrl ([String]"https://api.github.com/repos/$TestRepositoryName/tags?per_page=100")
     Set-Variable -Option Constant TestDependency (
         [PSObject]@{
             projectId  = $TestProjectId
@@ -29,10 +29,12 @@ BeforeAll {
 }
 
 Describe 'Compare-Tags' {
-    BeforeEach {
+    BeforeAll {
         Mock Invoke-GitAPI { return @( @{ Name = $TestLatestVersion }, @{ Name = $TestCurrentVersion } ) }
         Mock Set-NewVersion {}
+    }
 
+    BeforeEach {
         $TestDependency.source = 'GitHub'
     }
 
@@ -42,7 +44,7 @@ Describe 'Compare-Tags' {
         Compare-Tags $TestDependency | Should -BeExactly @("https://gitlab.com/$TestRepositoryName/compare/$TestCurrentVersion...$TestLatestVersion")
 
         Should -Invoke Invoke-GitAPI -Exactly 1
-        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq "https://gitlab.com/api/v4/projects/$TestProjectId/repository/tags" }
+        Should -Invoke Invoke-GitAPI -Exactly 1 -ParameterFilter { $Uri -eq "https://gitlab.com/api/v4/projects/$TestProjectId/repository/tags?per_page=100" }
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
             $Dependency.projectId -eq $TestProjectId -and
@@ -82,6 +84,31 @@ Describe 'Compare-Tags' {
             $Dependency.version -eq $TestCurrentVersion -and
             $LatestVersion -eq $TestLatestVersion
         }
+    }
+
+    It 'Should pick the highest version whatever order the tags come in' {
+        Mock Invoke-GitAPI { return @( @{ Name = 'v9.0.1' }, @{ Name = 'v12.0.6' }, @{ Name = 'v12.0.10' }, @{ Name = 'v2.1' } ) }
+
+        Compare-Tags $TestDependency | Should -BeExactly @("https://github.com/$TestRepositoryName/compare/$TestCurrentVersion...v12.0.10")
+
+        Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter { $LatestVersion -eq 'v12.0.10' }
+    }
+
+    It 'Should ignore pre-release tags' {
+        Mock Invoke-GitAPI { return @( @{ Name = '13.03-beta1' }, @{ Name = '13.02' }, @{ Name = '13.01' } ) }
+
+        Compare-Tags $TestDependency
+
+        Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter { $LatestVersion -eq '13.02' }
+    }
+
+    It 'Should not update when the highest version is the current one' {
+        Mock Invoke-GitAPI { return @( @{ Name = 'v1.0.0' }, @{ Name = 'v1.2.0' }, @{ Name = 'v1.1.0' } ) }
+        [PSObject]$CurrentDependency = @{ repository = $TestRepositoryName; source = 'GitHub'; version = 'v1.2.0' }
+
+        Compare-Tags $CurrentDependency | Should -BeNullOrEmpty
+
+        Should -Invoke Set-NewVersion -Exactly 0
     }
 
     It 'Should not update if version is the same' {

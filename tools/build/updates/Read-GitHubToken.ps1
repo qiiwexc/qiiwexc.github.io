@@ -10,7 +10,9 @@ function Read-GitHubToken {
     }
 
     Set-Variable -Option Constant ResolvedPath ([String](Resolve-Path $EnvPath -ErrorAction SilentlyContinue))
-    Set-Variable -Option Constant GitRoot ([String](Resolve-Path (git rev-parse --show-toplevel 2>$Null) -ErrorAction SilentlyContinue))
+    # Outside a git checkout (or without git) there is no root to compare against — under
+    # $ErrorActionPreference = 'Stop' git's error output would otherwise throw here
+    Set-Variable -Option Constant GitRoot ([String]$(try { Resolve-Path (git rev-parse --show-toplevel 2>$Null) -ErrorAction SilentlyContinue } catch { $Null }))
 
     if ($ResolvedPath -and $GitRoot -and -not $ResolvedPath.StartsWith($GitRoot)) {
         Write-LogWarning "Environment file path '$EnvPath' is outside the repository root"

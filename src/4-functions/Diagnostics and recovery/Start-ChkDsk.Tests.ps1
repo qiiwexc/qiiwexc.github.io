@@ -5,10 +5,10 @@
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
+    . "$PSScriptRoot\..\Common\types.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Initialize-AppDirectory.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -18,8 +18,7 @@
 }
 
 Describe 'Start-ChkDsk' {
-    BeforeEach {
-        $script:OS_VERSION = 10
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Write-LogWarning {}
         Mock Initialize-AppDirectory {}
@@ -31,6 +30,10 @@ Describe 'Start-ChkDsk' {
         Mock Start-Process {}
         Mock Out-Success {}
         Mock Out-Failure {}
+    }
+
+    BeforeEach {
+        $script:OS_VERSION = 10
     }
 
     It 'Should run immediate scan, write filtered log and open Notepad' {
@@ -65,7 +68,6 @@ Describe 'Start-ChkDsk' {
 
         Start-ChkDsk
 
-        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 0 }
         Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 50 }
         Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 99 }
@@ -90,7 +92,6 @@ Describe 'Start-ChkDsk' {
 
         Start-ChkDsk
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 0 }
         Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 50 }
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {

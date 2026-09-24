@@ -1,10 +1,10 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Start-DownloadUnzipAndRun.ps1'
-    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Import-RegistryConfiguration.ps1'
+    . "$PSScriptRoot\..\Common\Start-DownloadUnzipAndRun.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Initialize-AppDirectory.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\Configuration\Helpers\Import-RegistryConfiguration.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -19,14 +19,16 @@ BeforeAll {
 }
 
 Describe 'Install-MicrosoftOffice' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Initialize-AppDirectory {}
         Mock Set-Content {}
         Mock Import-RegistryConfiguration {}
         Mock Start-DownloadUnzipAndRun {}
         Mock Write-LogWarning {}
+    }
 
+    BeforeEach {
         [String]$SYSTEM_LANGUAGE = 'en-GB'
     }
 

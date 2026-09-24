@@ -1,9 +1,9 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Merge-JsonObject.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Stop-ProcessIfRunning.ps1'
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\Merge-JsonObject.ps1"
+    . "$PSScriptRoot\Stop-ProcessIfRunning.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -21,10 +21,7 @@ BeforeAll {
 }
 
 Describe 'Update-BrowserConfiguration' {
-    BeforeEach {
-        [Int]$script:TestPathCounter = 0
-        [Int]$TestPathSuccessIteration = 0
-
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Stop-ProcessIfRunning {}
         Mock Test-Path {
@@ -38,6 +35,11 @@ Describe 'Update-BrowserConfiguration' {
         Mock Merge-JsonObject { return $TestUpdatedConfigObject }
         Mock Set-Content {}
         Mock Out-Success {}
+    }
+
+    BeforeEach {
+        [Int]$script:TestPathCounter = 0
+        [Int]$TestPathSuccessIteration = 0
     }
 
     It 'Should update browser configuration file if profile exists' {

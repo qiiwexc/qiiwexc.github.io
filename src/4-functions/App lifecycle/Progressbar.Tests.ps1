@@ -1,10 +1,10 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\App lifecycle\Invoke-OnDispatcher.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Set-Icon.ps1'
+    . "$PSScriptRoot\..\Common\types.ps1"
+    . "$PSScriptRoot\Invoke-OnDispatcher.ps1"
+    . "$PSScriptRoot\Logger.ps1"
+    . "$PSScriptRoot\Set-Icon.ps1"
 
     Set-Variable -Option Constant TestActivity1 ([String]'TEST_ACTIVITY_1')
     Set-Variable -Option Constant TestActivity2 ([String]'TEST_ACTIVITY_2')
@@ -13,6 +13,10 @@ BeforeAll {
 }
 
 Describe 'Invoke-WriteProgress' {
+    BeforeAll {
+        Mock Write-Progress {}
+    }
+
     BeforeEach {
         $PROGRESSBAR = [PSCustomObject]@{ Value = 0 }
         $FORM = [PSCustomObject]@{
@@ -20,7 +24,6 @@ Describe 'Invoke-WriteProgress' {
         }
         $FORM.Dispatcher | Add-Member -MemberType ScriptMethod -Name CheckAccess -Value { return $true }
         $FORM.Dispatcher | Add-Member -MemberType ScriptMethod -Name Invoke -Value { param($priority, $action) }
-        Mock Write-Progress {}
     }
 
     It 'Should call Write-Progress with basic parameters' {
@@ -108,7 +111,7 @@ Describe 'Invoke-WriteProgress' {
 }
 
 Describe 'New-Activity' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Set-Icon {}
         Mock Invoke-WriteProgress {}
@@ -157,12 +160,12 @@ Describe 'New-Activity' {
 Describe 'Write-ActivityProgress' {
     BeforeAll {
         Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
+
+        Mock Write-LogInfo {}
+        Mock Invoke-WriteProgress {}
     }
 
     BeforeEach {
-        Mock Write-LogInfo {}
-        Mock Invoke-WriteProgress {}
-
         [String]$script:CURRENT_TASK = $Null
     }
 
@@ -248,14 +251,14 @@ Describe 'Write-ActivityProgress' {
 Describe 'Write-ActivityCompleted' {
     BeforeAll {
         Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
-    }
 
-    BeforeEach {
         Mock Out-Success {}
         Mock Out-Failure {}
         Mock Invoke-WriteProgress {}
         Mock Set-Icon {}
+    }
 
+    BeforeEach {
         [String]$script:CURRENT_TASK = $TestTask
     }
 

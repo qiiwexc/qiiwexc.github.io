@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
-    . '.\tools\common\Read-TextFile.ps1'
+    . "$PSScriptRoot\..\..\common\logger.ps1"
+    . "$PSScriptRoot\..\..\common\Read-TextFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -10,7 +10,9 @@ BeforeAll {
 }
 
 Describe 'Read-GitHubToken' {
-    BeforeEach {
+    BeforeAll {
+        # Keep the tests independent of the git checkout they run in, if any
+        Mock git {}
         Mock Write-LogInfo {}
         Mock Test-Path { return $True }
         Mock Write-LogWarning {}
@@ -121,6 +123,15 @@ Describe 'Read-GitHubToken' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-TextFile -Exactly 1
+    }
+
+    It 'Should skip the repository check when git fails' {
+        Mock git { throw $TestException }
+        Mock Read-TextFile { return @('GITHUB_TOKEN=TEST_GITHUB_TOKEN_CONTENT') }
+
+        Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
+
+        Should -Invoke Write-LogWarning -Exactly 0
     }
 
     It 'Should warn when env file path is outside repository root' {

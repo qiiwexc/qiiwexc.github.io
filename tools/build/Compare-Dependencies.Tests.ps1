@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\types.ps1'
+    . "$PSScriptRoot\..\common\types.ps1"
 
     Set-Variable -Option Constant TestUrlsTemplate ([PSCustomObject]@{
             URL_RUFUS      = 'https://example.com/rufus-{VERSION}.exe'

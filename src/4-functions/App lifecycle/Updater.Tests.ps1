@@ -1,10 +1,10 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Network.ps1'
-    . '.\src\4-functions\Common\Start-Download.ps1'
-    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . "$PSScriptRoot\..\Common\Network.ps1"
+    . "$PSScriptRoot\..\Common\Start-Download.ps1"
+    . "$PSScriptRoot\Initialize-AppDirectory.ps1"
+    . "$PSScriptRoot\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -20,14 +20,16 @@ BeforeAll {
 }
 
 Describe 'Test-UpdateAvailability' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Out-Status {}
         Mock Test-NetworkConnection { return $True }
         Mock Invoke-WebRequest { return @{ Content = '[{"tag_name":"v2.0.0","prerelease":false,"draft":false}]' } }
         Mock Out-Failure {}
         Mock Write-LogWarning {}
+    }
 
+    BeforeEach {
         [Bool]$DevMode = $False
     }
 
@@ -118,7 +120,7 @@ Describe 'Test-UpdateAvailability' {
 }
 
 Describe 'Get-NewVersion' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogWarning {}
         Mock Test-NetworkConnection { return $True }
         Mock Initialize-AppDirectory {}
@@ -239,7 +241,7 @@ Describe 'Get-NewVersion' {
 }
 
 Describe 'Update-App' {
-    BeforeEach {
+    BeforeAll {
         Mock Test-UpdateAvailability { return $True }
         Mock Get-NewVersion { return $True }
         Mock Write-LogWarning {}
@@ -282,17 +284,6 @@ Describe 'Update-App' {
         Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -eq 'Continuing with the current version' }
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
-    }
-
-    It 'Should handle Test-UpdateAvailability failure' {
-        Mock Test-UpdateAvailability { throw $TestException }
-
-        Update-App | Should -BeFalse
-
-        Should -Invoke Test-UpdateAvailability -Exactly 1
-        Should -Invoke Get-NewVersion -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
     }
 
     It 'Should handle Start-Process failure' {

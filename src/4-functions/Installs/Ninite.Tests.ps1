@@ -4,8 +4,8 @@ BeforeAll {
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
 
-    . '.\src\4-functions\Common\Open-InBrowser.ps1'
-    . '.\src\4-functions\Common\Start-DownloadUnzipAndRun.ps1'
+    . "$PSScriptRoot\..\Common\Open-InBrowser.ps1"
+    . "$PSScriptRoot\..\Common\Start-DownloadUnzipAndRun.ps1"
 
     function New-TestCheckBox([Bool]$IsChecked, [String]$Tag, [String]$Content) {
         $cb = New-Object Windows.Controls.CheckBox
@@ -62,7 +62,7 @@ Describe 'Set-NiniteButtonState' {
 }
 
 Describe 'Get-NiniteInstaller' {
-    BeforeEach {
+    BeforeAll {
         Mock Open-InBrowser {}
         Mock Start-DownloadUnzipAndRun {}
     }

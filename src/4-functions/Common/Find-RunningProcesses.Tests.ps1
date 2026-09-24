@@ -9,7 +9,7 @@ BeforeAll {
 }
 
 Describe 'Find-RunningProcesses' {
-    BeforeEach {
+    BeforeAll {
         Mock Get-Process { return @(@{ ProcessName = $TestProcessName }) }
     }
 

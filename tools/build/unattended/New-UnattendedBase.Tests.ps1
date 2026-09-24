@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\Read-TextFile.ps1'
-    . '.\tools\common\Write-TextFile.ps1'
+    . "$PSScriptRoot\..\..\common\Read-TextFile.ps1"
+    . "$PSScriptRoot\..\..\common\Write-TextFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -15,7 +15,7 @@ BeforeAll {
 }
 
 Describe 'New-UnattendedBase' {
-    BeforeEach {
+    BeforeAll {
         Mock Read-TextFile { return $TestTemplateFileContent }
         Mock Write-TextFile {}
     }

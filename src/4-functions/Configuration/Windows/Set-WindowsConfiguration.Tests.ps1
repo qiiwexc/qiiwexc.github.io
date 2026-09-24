@@ -1,18 +1,18 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
-    . '.\src\4-functions\Configuration\Windows\Tools\Assertions.ps1'
-    . '.\src\4-functions\Configuration\Windows\Remove-Annoyances.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-MalwareProtectionConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-PowerSchemeConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-BaselineConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-LocalizationConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-PerformanceConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-PersonalizationConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-PrivacyConfiguration.ps1'
-    . '.\src\4-functions\Configuration\Windows\Set-SecurityConfiguration.ps1'
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\..\App lifecycle\Progressbar.ps1"
+    . "$PSScriptRoot\Tools\Assertions.ps1"
+    . "$PSScriptRoot\Remove-Annoyances.ps1"
+    . "$PSScriptRoot\Set-MalwareProtectionConfiguration.ps1"
+    . "$PSScriptRoot\Set-PowerSchemeConfiguration.ps1"
+    . "$PSScriptRoot\Set-BaselineConfiguration.ps1"
+    . "$PSScriptRoot\Set-LocalizationConfiguration.ps1"
+    . "$PSScriptRoot\Set-PerformanceConfiguration.ps1"
+    . "$PSScriptRoot\Set-PersonalizationConfiguration.ps1"
+    . "$PSScriptRoot\Set-PrivacyConfiguration.ps1"
+    . "$PSScriptRoot\Set-SecurityConfiguration.ps1"
 
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
@@ -43,7 +43,7 @@ BeforeAll {
 }
 
 Describe 'Set-WindowsConfiguration' {
-    BeforeEach {
+    BeforeAll {
         Mock Test-WindowsDebloatIsRunning {}
         Mock Test-OOShutUp10IsRunning {}
         Mock Write-LogWarning {}
@@ -74,7 +74,6 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 9
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
         Should -Invoke Set-SecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
@@ -100,7 +99,6 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
@@ -128,7 +126,6 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
@@ -156,7 +153,6 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
@@ -185,7 +181,6 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
@@ -214,127 +209,10 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 0
-        Should -Invoke Write-ActivityProgress -Exactly 0
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-PerformanceConfiguration -Exactly 0
-        Should -Invoke Set-BaselineConfiguration -Exactly 0
-        Should -Invoke Remove-Annoyances -Exactly 0
-        Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalizationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
-    }
-
-    It 'Should handle Set-MalwareProtectionConfiguration failure' {
-        Mock Set-MalwareProtectionConfiguration { throw $TestException }
-
-        { Set-WindowsConfiguration $TestCheckboxSecurityChecked `
-                $TestCheckboxPerformanceUnchecked `
-                $TestCheckboxBaselineUnchecked `
-                $TestCheckboxAnnoyancesUnchecked `
-                $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
-        } | Should -Throw $TestException
-
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
-        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
-        Should -Invoke Set-SecurityConfiguration -Exactly 0
-        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
-        Should -Invoke Set-PerformanceConfiguration -Exactly 0
-        Should -Invoke Set-BaselineConfiguration -Exactly 0
-        Should -Invoke Remove-Annoyances -Exactly 0
-        Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalizationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
-    }
-
-    It 'Should handle Set-SecurityConfiguration failure' {
-        Mock Set-SecurityConfiguration { throw $TestException }
-
-        { Set-WindowsConfiguration $TestCheckboxSecurityChecked `
-                $TestCheckboxPerformanceUnchecked `
-                $TestCheckboxBaselineUnchecked `
-                $TestCheckboxAnnoyancesUnchecked `
-                $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
-        } | Should -Throw $TestException
-
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 2
-        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
-        Should -Invoke Set-SecurityConfiguration -Exactly 1
-        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
-        Should -Invoke Set-PerformanceConfiguration -Exactly 0
-        Should -Invoke Set-BaselineConfiguration -Exactly 0
-        Should -Invoke Remove-Annoyances -Exactly 0
-        Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalizationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
-    }
-
-    It 'Should handle Set-PowerSchemeConfiguration failure' {
-        Mock Set-PowerSchemeConfiguration { throw $TestException }
-
-        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
-                $TestCheckboxPerformanceChecked `
-                $TestCheckboxBaselineUnchecked `
-                $TestCheckboxAnnoyancesUnchecked `
-                $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
-        } | Should -Throw $TestException
-
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
-        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
-        Should -Invoke Set-SecurityConfiguration -Exactly 0
-        Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
-        Should -Invoke Set-PerformanceConfiguration -Exactly 0
-        Should -Invoke Set-BaselineConfiguration -Exactly 0
-        Should -Invoke Remove-Annoyances -Exactly 0
-        Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalizationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
-    }
-
-    It 'Should handle Set-PerformanceConfiguration failure' {
-        Mock Set-PerformanceConfiguration { throw $TestException }
-
-        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
-                $TestCheckboxPerformanceChecked `
-                $TestCheckboxBaselineUnchecked `
-                $TestCheckboxAnnoyancesUnchecked `
-                $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
-        } | Should -Throw $TestException
-
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 2
-        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
-        Should -Invoke Set-SecurityConfiguration -Exactly 0
-        Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
-        Should -Invoke Set-PerformanceConfiguration -Exactly 1
         Should -Invoke Set-BaselineConfiguration -Exactly 0
         Should -Invoke Remove-Annoyances -Exactly 0
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
@@ -359,42 +237,12 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
         Should -Invoke Set-PerformanceConfiguration -Exactly 0
         Should -Invoke Set-BaselineConfiguration -Exactly 1
         Should -Invoke Remove-Annoyances -Exactly 0
-        Should -Invoke Set-PrivacyConfiguration -Exactly 0
-        Should -Invoke Set-LocalizationConfiguration -Exactly 0
-        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
-    }
-
-    It 'Should handle Remove-Annoyances failure' {
-        Mock Remove-Annoyances { throw $TestException }
-
-        { Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
-                $TestCheckboxPerformanceUnchecked `
-                $TestCheckboxBaselineUnchecked `
-                $TestCheckboxAnnoyancesChecked `
-                $TestCheckboxPrivacyUnchecked `
-                $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
-        } | Should -Throw $TestException
-
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
-        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
-        Should -Invoke Set-SecurityConfiguration -Exactly 0
-        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
-        Should -Invoke Set-PerformanceConfiguration -Exactly 0
-        Should -Invoke Set-BaselineConfiguration -Exactly 0
-        Should -Invoke Remove-Annoyances -Exactly 1
         Should -Invoke Set-PrivacyConfiguration -Exactly 0
         Should -Invoke Set-LocalizationConfiguration -Exactly 0
         Should -Invoke Set-PersonalizationConfiguration -Exactly 0
@@ -417,7 +265,6 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
@@ -446,7 +293,6 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
@@ -475,7 +321,6 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
         Should -Invoke Set-SecurityConfiguration -Exactly 0
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 0

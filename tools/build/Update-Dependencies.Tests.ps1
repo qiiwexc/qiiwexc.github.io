@@ -1,20 +1,20 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
-    . '.\tools\common\types.ps1'
-    . '.\tools\common\Progressbar.ps1'
-    . '.\tools\common\Read-JsonFile.ps1'
-    . '.\tools\common\Write-JsonFile.ps1'
-    . '.\tools\build\updates\Read-GitHubToken.ps1'
-    . '.\tools\build\updates\Update-DependencyChecksum.ps1'
-    . '.\tools\build\updates\Update-FileDependency.ps1'
-    . '.\tools\build\updates\Update-GitDependency.ps1'
-    . '.\tools\build\updates\Update-WebDependency.ps1'
+    . "$PSScriptRoot\..\common\logger.ps1"
+    . "$PSScriptRoot\..\common\types.ps1"
+    . "$PSScriptRoot\..\common\Progressbar.ps1"
+    . "$PSScriptRoot\..\common\Read-JsonFile.ps1"
+    . "$PSScriptRoot\..\common\Write-JsonFile.ps1"
+    . "$PSScriptRoot\updates\Read-GitHubToken.ps1"
+    . "$PSScriptRoot\updates\Update-DependencyChecksum.ps1"
+    . "$PSScriptRoot\updates\Update-FileDependency.ps1"
+    . "$PSScriptRoot\updates\Update-GitDependency.ps1"
+    . "$PSScriptRoot\updates\Update-WebDependency.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant BuilderPath ([String]'.\tools\build')
+    Set-Variable -Option Constant BuilderPath ([String]$PSScriptRoot)
 
     Set-Variable -Option Constant TestResourcesPath ([String]'TEST_RESOURCES_PATH')
     Set-Variable -Option Constant TestWipPath ([String]'TEST_WIP_PATH')
@@ -30,82 +30,76 @@ BeforeAll {
     Set-Variable -Option Constant TestDependencyName ([String]'TEST_DEPENDENCY_NAME')
 
     Set-Variable -Option Constant TestDependencyVersion ([String]'1.0.0')
-    Set-Variable -Option Constant TestGitHubDependency (
-        [Dependency[]]@(
-            @{source = $SourceGitHub; name = $TestDependencyName; version = $TestDependencyVersion }
-        )
-    )
-    Set-Variable -Option Constant TestGitLabDependency (
-        [Dependency[]]@(
-            @{source = $SourceGitLab; name = $TestDependencyName; version = $TestDependencyVersion }
-        )
-    )
-    Set-Variable -Option Constant TestWebDependency (
-        [Dependency[]]@(
-            @{source = $SourceURL; name = $TestDependencyName; version = $TestDependencyVersion }
-        )
-    )
-    Set-Variable -Option Constant TestFileDependency (
-        [Dependency[]]@(
-            @{source = $SourceFile; name = $TestDependencyName; version = $TestDependencyVersion }
-        )
-    )
+    Set-Variable -Option Constant TestNewVersion ([String]'2.0.0')
 
     Set-Variable -Option Constant TestGitHubChangelogUrl ([String[]]@('TEST_GITHUB_CHANGELOG_URL'))
     Set-Variable -Option Constant TestGitLabChangelogUrl ([String[]]@('TEST_GITLAB_CHANGELOG_URL'))
     Set-Variable -Option Constant TestWebChangelogUrl ([String[]]@('TEST_WEB_CHANGELOG_URL'))
-    Set-Variable -Option Constant TestFileChangelogUrl ([String[]]@('TEST_FILE_CHANGELOG_URL'))
+
+    # A fresh object for every read — the updaters change the version of the dependency they are given
+    function New-TestDependency {
+        param(
+            [Parameter(Position = 0, Mandatory)][String]$Source,
+            [Parameter(Position = 1)][String]$Name = $TestDependencyName
+        )
+
+        return [Dependency]@{ source = $Source; name = $Name; version = $TestDependencyVersion }
+    }
 }
 
 Describe 'Update-Dependencies' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Activity {}
         Mock Write-ActivityProgress {}
         Mock Write-LogInfo {}
         Mock Write-LogWarning {}
         Mock Read-GitHubToken { return $TestGitHubToken }
-        Mock Read-JsonFile { return $TestGitHubDependency }
-        Mock Update-GitDependency { return $TestGitHubChangelogUrl } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
-        Mock Update-GitDependency { return $TestGitLabChangelogUrl } -ParameterFilter { $Dependency.source -eq $SourceGitLab }
-        Mock Update-WebDependency { return $TestWebChangelogUrl }
-        Mock Update-FileDependency { return $TestFileChangelogUrl }
+        Mock Read-JsonFile { return @(New-TestDependency $SourceGitHub) }
+        # Like the real updaters: changelog links come only with a new version...
+        Mock Update-GitDependency {
+            $Dependency.version = $TestNewVersion
+            return $TestGitHubChangelogUrl
+        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+        Mock Update-GitDependency {
+            $Dependency.version = $TestNewVersion
+            return $TestGitLabChangelogUrl
+        } -ParameterFilter { $Dependency.source -eq $SourceGitLab }
+        Mock Update-WebDependency {
+            $Dependency.version = $TestNewVersion
+            return $TestWebChangelogUrl
+        }
+        # ...and a new file dependency version comes with none at all
+        Mock Update-FileDependency { $Dependency.version = $TestNewVersion }
         Mock Update-DependencyChecksum { return $True }
         Mock Write-JsonFile {}
         Mock Write-ActivityCompleted {}
     }
 
-    It 'Should not update checksums when no version changes' {
-        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+    It 'Should not save anything when no version changes' {
+        Mock Update-GitDependency {} -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeNullOrEmpty
 
         Should -Invoke Update-DependencyChecksum -Exactly 0
+        Should -Invoke Write-JsonFile -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should update the checksum of a dependency whose version changes' {
-        Mock Read-JsonFile { return [Dependency[]]@(@{ source = $SourceGitHub; name = $TestDependencyName; version = $TestDependencyVersion }) }
-        Mock Update-GitDependency {
-            $Dependency.version = '2.0.0'
-            return $TestGitHubChangelogUrl
-        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
-
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestGitHubChangelogUrl
 
         Should -Invoke Update-DependencyChecksum -Exactly 1
         Should -Invoke Update-DependencyChecksum -Exactly 1 -ParameterFilter {
             $Dependency.name -eq $TestDependencyName -and
-            $Dependency.version -eq '2.0.0' -and
+            $Dependency.version -eq $TestNewVersion -and
             $UrlsFile -eq $TestUrlsFile
         }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 1
-        Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter { $Content[0].version -eq '2.0.0' }
+        Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter { $Content[0].version -eq $TestNewVersion }
     }
 
     It 'Should keep the previous version when the checksum of the new one cannot be computed' {
-        Mock Read-JsonFile { return [Dependency[]]@(@{ source = $SourceGitHub; name = $TestDependencyName; version = $TestDependencyVersion }) }
-        Mock Update-GitDependency {
-            $Dependency.version = '2.0.0'
-            return $TestGitHubChangelogUrl
-        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
         Mock Update-DependencyChecksum { return $False }
 
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeNullOrEmpty
@@ -121,7 +115,6 @@ Describe 'Update-Dependencies' {
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestGitHubChangelogUrl
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Read-GitHubToken -Exactly 1 -ParameterFilter { $EnvPath -eq '.env' }
         Should -Invoke Write-LogWarning -Exactly 0
@@ -131,8 +124,7 @@ Describe 'Update-Dependencies' {
         Should -Invoke Update-GitDependency -Exactly 1 -ParameterFilter {
             $GitHubToken -eq $TestGitHubToken -and
             $Dependency.source -eq $SourceGitHub -and
-            $Dependency.name -eq $TestDependencyName -and
-            $Dependency.version -eq $TestDependencyVersion
+            $Dependency.name -eq $TestDependencyName
         }
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
@@ -142,7 +134,7 @@ Describe 'Update-Dependencies' {
             $Content.Count -eq 1 -and
             $Content[0].source -eq $SourceGitHub -and
             $Content[0].name -eq $TestDependencyName -and
-            $Content[0].version -eq $TestDependencyVersion
+            $Content[0].version -eq $TestNewVersion
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
@@ -152,26 +144,22 @@ Describe 'Update-Dependencies' {
 
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestGitHubChangelogUrl
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1 -ParameterFilter {
             $GitHubToken -eq '' -and
-            $Dependency.source -eq $SourceGitHub -and
-            $Dependency.name -eq $TestDependencyName -and
-            $Dependency.version -eq $TestDependencyVersion
+            $Dependency.source -eq $SourceGitHub
         }
-        Should -Invoke Update-WebDependency -Exactly 0
-        Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should flatten and sort multiple changelog URLs from a single dependency' {
-        Mock Update-GitDependency { return @('TEST_URL_B', 'TEST_URL_A') } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+        Mock Update-GitDependency {
+            $Dependency.version = $TestNewVersion
+            return @('TEST_URL_B', 'TEST_URL_A')
+        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
 
         $Result = Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
@@ -184,14 +172,15 @@ Describe 'Update-Dependencies' {
     }
 
     It 'Should deduplicate changelog URLs across multiple dependencies' {
-        Mock Read-JsonFile {
-            return [Dependency[]]@(
-                @{source = $SourceGitHub; name = 'dep1'; version = $TestDependencyVersion },
-                @{source = $SourceURL; name = 'dep2'; version = $TestDependencyVersion }
-            )
+        Mock Read-JsonFile { return @((New-TestDependency $SourceGitHub 'dep1'), (New-TestDependency $SourceURL 'dep2')) }
+        Mock Update-GitDependency {
+            $Dependency.version = $TestNewVersion
+            return @('TEST_URL_A')
+        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+        Mock Update-WebDependency {
+            $Dependency.version = $TestNewVersion
+            return @('TEST_URL_A')
         }
-        Mock Update-GitDependency { return @('TEST_URL_A') } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
-        Mock Update-WebDependency { return @('TEST_URL_A') }
 
         $Result = Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
@@ -205,21 +194,16 @@ Describe 'Update-Dependencies' {
     }
 
     It 'Should update GitLab dependencies' {
-        Mock Read-JsonFile { return $TestGitLabDependency }
+        Mock Read-JsonFile { return @(New-TestDependency $SourceGitLab) }
 
-        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestGitLabChangelogUrl
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
-        Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1 -ParameterFilter {
             $GitHubToken -eq $Null -and
             $Dependency.source -eq $SourceGitLab -and
-            $Dependency.name -eq $TestDependencyName -and
-            $Dependency.version -eq $TestDependencyVersion
+            $Dependency.name -eq $TestDependencyName
         }
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 0
@@ -228,28 +212,22 @@ Describe 'Update-Dependencies' {
             $Path -eq $TestDependenciesFile -and
             $Content.Count -eq 1 -and
             $Content[0].source -eq $SourceGitLab -and
-            $Content[0].name -eq $TestDependencyName -and
-            $Content[0].version -eq $TestDependencyVersion
+            $Content[0].version -eq $TestNewVersion
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should update web dependencies' {
-        Mock Read-JsonFile { return $TestWebDependency }
+        Mock Read-JsonFile { return @(New-TestDependency $SourceURL) }
 
-        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestWebChangelogUrl
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
-        Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 1
         Should -Invoke Update-WebDependency -Exactly 1 -ParameterFilter {
             $Dependency.source -eq $SourceURL -and
-            $Dependency.name -eq $TestDependencyName -and
-            $Dependency.version -eq $TestDependencyVersion
+            $Dependency.name -eq $TestDependencyName
         }
         Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 1
@@ -257,38 +235,31 @@ Describe 'Update-Dependencies' {
             $Path -eq $TestDependenciesFile -and
             $Content.Count -eq 1 -and
             $Content[0].source -eq $SourceURL -and
-            $Content[0].name -eq $TestDependencyName -and
-            $Content[0].version -eq $TestDependencyVersion
+            $Content[0].version -eq $TestNewVersion
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
-    It 'Should update file dependencies' {
-        Mock Read-JsonFile { return $TestFileDependency }
+    It 'Should save a new file dependency version, which comes without changelog links' {
+        Mock Read-JsonFile { return @(New-TestDependency $SourceFile) }
 
-        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeNullOrEmpty
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
-        Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 1
         Should -Invoke Update-FileDependency -Exactly 1 -ParameterFilter {
             $WipPath -eq $TestWipPath -and
             $Dependency.source -eq $SourceFile -and
-            $Dependency.name -eq $TestDependencyName -and
-            $Dependency.version -eq $TestDependencyVersion
+            $Dependency.name -eq $TestDependencyName
         }
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestDependenciesFile -and
             $Content.Count -eq 1 -and
             $Content[0].source -eq $SourceFile -and
-            $Content[0].name -eq $TestDependencyName -and
-            $Content[0].version -eq $TestDependencyVersion
+            $Content[0].version -eq $TestNewVersion
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
@@ -299,7 +270,6 @@ Describe 'Update-Dependencies' {
         { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-JsonFile -Exactly 0
@@ -316,7 +286,6 @@ Describe 'Update-Dependencies' {
         { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-JsonFile -Exactly 1
@@ -333,7 +302,6 @@ Describe 'Update-Dependencies' {
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -351,7 +319,6 @@ Describe 'Update-Dependencies' {
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
@@ -364,12 +331,7 @@ Describe 'Update-Dependencies' {
     }
 
     It 'Should keep the updates of the other dependencies when one cannot be checked' {
-        Mock Read-JsonFile {
-            return [Dependency[]]@(
-                @{ source = $SourceGitHub; name = 'dep1'; version = $TestDependencyVersion },
-                @{ source = $SourceURL; name = 'dep2'; version = $TestDependencyVersion }
-            )
-        }
+        Mock Read-JsonFile { return @((New-TestDependency $SourceGitHub 'dep1'), (New-TestDependency $SourceURL 'dep2')) }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
 
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestWebChangelogUrl
@@ -379,94 +341,68 @@ Describe 'Update-Dependencies' {
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -match "Failed to check 'dep1' for updates" }
         Should -Invoke Write-JsonFile -Exactly 1
+        Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
+            $Content[0].version -eq $TestDependencyVersion -and
+            $Content[1].version -eq $TestNewVersion
+        }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
     It 'Should restore the version of a dependency whose check fails midway' {
-        Mock Read-JsonFile {
-            return [Dependency[]]@(
-                @{ source = $SourceGitHub; name = 'dep1'; version = $TestDependencyVersion },
-                @{ source = $SourceURL; name = 'dep2'; version = $TestDependencyVersion }
-            )
-        }
-        Mock Update-GitDependency {
-            $Dependency.version = '2.0.0'
-            return $TestGitHubChangelogUrl
-        } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
-        Mock Update-DependencyChecksum { throw $TestException }
+        Mock Read-JsonFile { return @((New-TestDependency $SourceGitHub 'dep1'), (New-TestDependency $SourceURL 'dep2')) }
+        Mock Update-DependencyChecksum { throw $TestException } -ParameterFilter { $Dependency.name -eq 'dep1' }
 
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath | Should -BeExactly $TestWebChangelogUrl
 
-        Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter { $Content[0].version -eq $TestDependencyVersion }
+        Should -Invoke Write-JsonFile -Exactly 1
+        Should -Invoke Write-JsonFile -Exactly 1 -ParameterFilter {
+            $Content[0].version -eq $TestDependencyVersion -and
+            $Content[1].version -eq $TestNewVersion
+        }
     }
 
     It 'Should handle Update-GitDependency failure with a GitHub source' {
-        Mock Read-JsonFile { return $TestGitHubDependency }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
 
         { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw 'Failed to check any dependency for updates'
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1
-        Should -Invoke Update-WebDependency -Exactly 0
-        Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Update-GitDependency failure with a GitLab source' {
-        Mock Read-JsonFile { return $TestGitLabDependency }
+        Mock Read-JsonFile { return @(New-TestDependency $SourceGitLab) }
         Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitLab }
 
         { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw 'Failed to check any dependency for updates'
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1
-        Should -Invoke Update-WebDependency -Exactly 0
-        Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Update-WebDependency failure' {
-        Mock Read-JsonFile { return $TestWebDependency }
+        Mock Read-JsonFile { return @(New-TestDependency $SourceURL) }
         Mock Update-WebDependency { throw $TestException }
 
         { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw 'Failed to check any dependency for updates'
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Read-JsonFile -Exactly 1
-        Should -Invoke Update-GitDependency -Exactly 0
         Should -Invoke Update-WebDependency -Exactly 1
-        Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
     It 'Should handle Update-FileDependency failure' {
-        Mock Read-JsonFile { return $TestFileDependency }
+        Mock Read-JsonFile { return @(New-TestDependency $SourceFile) }
         Mock Update-FileDependency { throw $TestException }
 
         { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw 'Failed to check any dependency for updates'
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 4
-        Should -Invoke Read-GitHubToken -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Read-JsonFile -Exactly 1
-        Should -Invoke Update-GitDependency -Exactly 0
-        Should -Invoke Update-WebDependency -Exactly 0
         Should -Invoke Update-FileDependency -Exactly 1
         Should -Invoke Write-JsonFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
@@ -477,14 +413,7 @@ Describe 'Update-Dependencies' {
 
         { Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath } | Should -Throw $TestException
 
-        Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Write-ActivityProgress -Exactly 6
-        Should -Invoke Read-GitHubToken -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Update-GitDependency -Exactly 1
-        Should -Invoke Update-WebDependency -Exactly 0
-        Should -Invoke Update-FileDependency -Exactly 0
         Should -Invoke Write-JsonFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }

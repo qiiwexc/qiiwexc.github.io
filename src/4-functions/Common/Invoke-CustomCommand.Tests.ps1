@@ -7,7 +7,7 @@ BeforeAll {
 }
 
 Describe 'Invoke-CustomCommand' {
-    BeforeEach {
+    BeforeAll {
         Mock Start-Process {}
     }
 

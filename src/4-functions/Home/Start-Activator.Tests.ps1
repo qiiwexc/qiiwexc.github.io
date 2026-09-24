@@ -1,16 +1,16 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Find-RunningScript.ps1'
-    . '.\src\4-functions\Common\Invoke-CustomCommand.ps1'
-    . '.\src\4-functions\Common\Network.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . "$PSScriptRoot\..\Common\Find-RunningScript.ps1"
+    . "$PSScriptRoot\..\Common\Invoke-CustomCommand.ps1"
+    . "$PSScriptRoot\..\Common\Network.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 }
 
 Describe 'Start-Activator' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Find-RunningScript {}
         Mock Write-LogWarning {}

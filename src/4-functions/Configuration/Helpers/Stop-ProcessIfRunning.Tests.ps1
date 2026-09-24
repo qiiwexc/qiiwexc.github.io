@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Common\Find-RunningProcesses.ps1'
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\..\Common\Find-RunningProcesses.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -10,7 +10,7 @@ BeforeAll {
 }
 
 Describe 'Stop-ProcessIfRunning' {
-    BeforeEach {
+    BeforeAll {
         Mock Find-RunningProcesses { return @(@{ ProcessName = $TestProcessName }) }
         Mock Write-LogInfo {}
         Mock Stop-Process {}

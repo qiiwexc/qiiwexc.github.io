@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
+    . "$PSScriptRoot\logger.ps1"
 
     Set-Variable -Option Constant TestActivity1 ([String]'TEST_ACTIVITY_1')
     Set-Variable -Option Constant TestActivity2 ([String]'TEST_ACTIVITY_2')
@@ -10,7 +10,7 @@ BeforeAll {
 }
 
 Describe 'Invoke-WriteProgress' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-Progress {}
     }
 
@@ -87,7 +87,7 @@ Describe 'Invoke-WriteProgress' {
 }
 
 Describe 'New-Activity' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Invoke-WriteProgress {}
     }
@@ -131,12 +131,12 @@ Describe 'New-Activity' {
 Describe 'Write-ActivityProgress' {
     BeforeAll {
         Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
+
+        Mock Write-LogInfo {}
+        Mock Invoke-WriteProgress {}
     }
 
     BeforeEach {
-        Mock Write-LogInfo {}
-        Mock Invoke-WriteProgress {}
-
         [String]$script:CURRENT_TASK = $Null
     }
 
@@ -222,13 +222,13 @@ Describe 'Write-ActivityProgress' {
 Describe 'Write-ActivityCompleted' {
     BeforeAll {
         Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
-    }
 
-    BeforeEach {
         Mock Out-Success {}
         Mock Out-Failure {}
         Mock Invoke-WriteProgress {}
+    }
 
+    BeforeEach {
         [String]$script:CURRENT_TASK = $TestTask
     }
 

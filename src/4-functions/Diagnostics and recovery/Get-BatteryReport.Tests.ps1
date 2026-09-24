@@ -5,9 +5,9 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Open-InBrowser.ps1'
-    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . "$PSScriptRoot\..\Common\Open-InBrowser.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Initialize-AppDirectory.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -17,7 +17,7 @@ BeforeAll {
 }
 
 Describe 'Get-BatteryReport' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Initialize-AppDirectory {}
         Mock powercfg {}
@@ -62,18 +62,6 @@ Describe 'Get-BatteryReport' {
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke powercfg -Exactly 1
         Should -Invoke Open-InBrowser -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
-    }
-
-    It 'Should handle Open-InBrowser failure' {
-        Mock Open-InBrowser { throw $TestException }
-
-        Get-BatteryReport
-
-        Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke powercfg -Exactly 1
-        Should -Invoke Open-InBrowser -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }

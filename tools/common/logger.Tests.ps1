@@ -1,7 +1,7 @@
 ﻿BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\types.ps1'
+    . "$PSScriptRoot\types.ps1"
 
     Set-Variable -Option Constant EmojiCodeDone ([String]'2705')
     Set-Variable -Option Constant EmojiCodeWarning ([String]'26A0')
@@ -33,9 +33,7 @@ Describe 'Format-Message' {
         function ToString {}
 
         Set-Variable -Option Constant ACTIVITIES ([Collections.Stack]@())
-    }
 
-    BeforeEach {
         Mock ToString { return $TestDate }
         Mock Get-Date { return ToString }
         Mock ConvertTo-Emoji { return $TestEmoji }
@@ -99,7 +97,7 @@ Describe 'Format-Message' {
 }
 
 Describe 'Write-LogInfo' {
-    BeforeEach {
+    BeforeAll {
         Mock Format-Message { return $FormattedMessage }
         Mock Write-Host {}
         Mock Write-Warning {}
@@ -126,7 +124,7 @@ Describe 'Write-LogInfo' {
 }
 
 Describe 'Write-LogWarning' {
-    BeforeEach {
+    BeforeAll {
         Mock Format-Message { return $FormattedMessage }
         Mock Write-Host {}
         Mock Write-Warning {}
@@ -153,7 +151,7 @@ Describe 'Write-LogWarning' {
 }
 
 Describe 'Write-LogError' {
-    BeforeEach {
+    BeforeAll {
         Mock Format-Message { return $FormattedMessage }
         Mock Write-Host {}
         Mock Write-Warning {}
@@ -180,7 +178,7 @@ Describe 'Write-LogError' {
 }
 
 Describe 'Out-Status' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
     }
 
@@ -199,7 +197,7 @@ Describe 'Out-Status' {
 }
 
 Describe 'Out-Success' {
-    BeforeEach {
+    BeforeAll {
         Mock ConvertTo-Emoji { return $TestEmoji }
         Mock Out-Status {}
     }
@@ -219,7 +217,7 @@ Describe 'Out-Success' {
 }
 
 Describe 'Out-Failure' {
-    BeforeEach {
+    BeforeAll {
         Mock ConvertTo-Emoji { return $TestEmoji }
         Mock Out-Status {}
     }

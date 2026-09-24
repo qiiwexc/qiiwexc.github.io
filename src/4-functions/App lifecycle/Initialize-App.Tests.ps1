@@ -4,12 +4,12 @@ BeforeAll {
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\Common\Remove-Directory.ps1'
-    . '.\src\4-functions\Common\Start-AsyncOperation.ps1'
-    . '.\src\4-functions\App lifecycle\Exit.ps1'
-    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . "$PSScriptRoot\..\Common\types.ps1"
+    . "$PSScriptRoot\..\Common\Remove-Directory.ps1"
+    . "$PSScriptRoot\..\Common\Start-AsyncOperation.ps1"
+    . "$PSScriptRoot\Exit.ps1"
+    . "$PSScriptRoot\Initialize-AppDirectory.ps1"
+    . "$PSScriptRoot\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -23,9 +23,7 @@ Describe 'Initialize-App' {
     BeforeAll {
         function Activate {}
         function ToString {}
-    }
 
-    BeforeEach {
         Mock Activate {}
         Mock ToString { return $TestDate }
         Mock Get-Date { return ToString }
@@ -34,7 +32,9 @@ Describe 'Initialize-App' {
         Mock Initialize-AppDirectory {}
         Mock Start-AsyncOperation {}
         Mock Exit-App {}
+    }
 
+    BeforeEach {
         [Windows.Window]$FORM = New-MockObject -Type Windows.Window -Methods @{ Activate = { Activate } }
 
         [Bool]$DevMode = $False

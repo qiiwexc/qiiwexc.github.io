@@ -1,11 +1,11 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
-    . '.\tools\common\types.ps1'
-    . '.\tools\common\Progressbar.ps1'
-    . '.\tools\common\Read-TextFile.ps1'
-    . '.\tools\common\Write-TextFile.ps1'
+    . "$PSScriptRoot\..\common\logger.ps1"
+    . "$PSScriptRoot\..\common\types.ps1"
+    . "$PSScriptRoot\..\common\Progressbar.ps1"
+    . "$PSScriptRoot\..\common\Read-TextFile.ps1"
+    . "$PSScriptRoot\..\common\Write-TextFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -29,7 +29,7 @@ BeforeAll {
 }
 
 Describe 'New-PowerShellScript' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Activity {}
         Mock Get-ChildItem { return $TestSourceFileList }
         Mock Read-TextFile { return $TestPs1FileContent } -ParameterFilter { $Path -eq $TestPs1FilePath }

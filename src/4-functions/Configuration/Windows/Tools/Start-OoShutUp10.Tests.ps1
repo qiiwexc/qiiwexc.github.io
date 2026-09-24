@@ -1,11 +1,11 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Network.ps1'
-    . '.\src\4-functions\Common\New-Directory.ps1'
-    . '.\src\4-functions\Common\Start-DownloadUnzipAndRun.ps1'
-    . '.\src\4-functions\Configuration\Windows\Tools\Assertions.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . "$PSScriptRoot\..\..\..\Common\Network.ps1"
+    . "$PSScriptRoot\..\..\..\Common\New-Directory.ps1"
+    . "$PSScriptRoot\..\..\..\Common\Start-DownloadUnzipAndRun.ps1"
+    . "$PSScriptRoot\Assertions.ps1"
+    . "$PSScriptRoot\..\..\..\App lifecycle\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -18,7 +18,7 @@ BeforeAll {
 }
 
 Describe 'Start-OoShutUp10' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Test-WindowsDebloatIsRunning {}
         Mock New-Directory {}

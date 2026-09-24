@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\types.ps1'
+    . "$PSScriptRoot\..\..\common\types.ps1"
 
     . "$(Split-Path $PSCommandPath -Parent)\Invoke-GitAPI.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
@@ -30,7 +30,7 @@ BeforeAll {
 }
 
 Describe 'Select-Releases' {
-    BeforeEach {
+    BeforeAll {
         Mock Invoke-GitAPI { return @( @{ tag_name = $TestNewVersion }, @{ tag_name = $TestCurrentVersion } ) }
         Mock Set-NewVersion {}
     }

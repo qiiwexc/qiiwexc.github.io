@@ -8,7 +8,7 @@ BeforeAll {
 }
 
 Describe 'Write-TextFile' {
-    BeforeEach {
+    BeforeAll {
         Mock Set-Content {}
         Mock New-Item {}
     }

@@ -1,13 +1,13 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
-    . '.\src\4-functions\Common\Expand-Zip.ps1'
-    . '.\src\4-functions\Common\Start-Download.ps1'
-    . '.\src\4-functions\Common\Start-Executable.ps1'
-    . '.\src\4-functions\Common\Test-AntivirusEnabled.ps1'
+    . "$PSScriptRoot\types.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
+    . "$PSScriptRoot\Expand-Zip.ps1"
+    . "$PSScriptRoot\Start-Download.ps1"
+    . "$PSScriptRoot\Start-Executable.ps1"
+    . "$PSScriptRoot\Test-AntivirusEnabled.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -25,7 +25,7 @@ BeforeAll {
 }
 
 Describe 'Start-DownloadUnzipAndRun' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Activity {}
         Mock Start-Download { return $TestDownloadedFile }
         Mock Out-Failure {}

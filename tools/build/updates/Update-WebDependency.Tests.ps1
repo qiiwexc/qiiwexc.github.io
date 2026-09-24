@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
-    . '.\tools\common\types.ps1'
+    . "$PSScriptRoot\..\..\common\logger.ps1"
+    . "$PSScriptRoot\..\..\common\types.ps1"
 
     . "$(Split-Path $PSCommandPath -Parent)\Set-NewVersion.ps1"
 
@@ -23,7 +23,7 @@ BeforeAll {
 }
 
 Describe 'Update-WebDependency' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-LogInfo {}
         Mock Out-Failure {}
         Mock Set-NewVersion {}

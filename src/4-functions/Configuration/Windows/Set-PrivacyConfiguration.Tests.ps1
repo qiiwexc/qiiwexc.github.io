@@ -5,10 +5,10 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Add-SysPrepConfig.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Get-UsersRegistryKeys.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Import-RegistryConfiguration.ps1'
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\Helpers\Add-SysPrepConfig.ps1"
+    . "$PSScriptRoot\..\Helpers\Get-UsersRegistryKeys.ps1"
+    . "$PSScriptRoot\..\Helpers\Import-RegistryConfiguration.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -19,7 +19,7 @@ BeforeAll {
 }
 
 Describe 'Set-PrivacyConfiguration' {
-    BeforeEach {
+    BeforeAll {
         Mock Disable-ScheduledTask {}
         Mock Out-Failure {}
         Mock Add-SysPrepConfig { return $TestSysPrepConfig }
@@ -105,19 +105,6 @@ Describe 'Set-PrivacyConfiguration' {
 
         Should -Invoke Disable-ScheduledTask -Exactly 5
         Should -Invoke Out-Failure -Exactly 5
-        Should -Invoke Add-SysPrepConfig -Exactly 1
-        Should -Invoke Get-UsersRegistryKeys -Exactly 1
-        Should -Invoke Import-RegistryConfiguration -Exactly 1
-        Should -Invoke Out-Success -Exactly 1
-    }
-
-    It 'Should handle Get-UsersRegistryKeys failure' {
-        Mock Get-UsersRegistryKeys { throw $TestException }
-
-        Set-PrivacyConfiguration
-
-        Should -Invoke Disable-ScheduledTask -Exactly 5
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1

@@ -1,10 +1,10 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
-    . '.\src\4-functions\App lifecycle\Set-Icon.ps1'
+    . "$PSScriptRoot\types.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Set-Icon.ps1"
 
     # Real stream records, as an async runspace produces them — from the logger and from elsewhere
     Set-Variable -Option Constant TestStreams ([PowerShell]::Create())
@@ -40,6 +40,11 @@ BeforeAll {
 }
 
 Describe 'Start-AsyncOperation' {
+    BeforeAll {
+        Mock Write-LogWarning {}
+        Mock Stop-AsyncOperation {}
+    }
+
     BeforeEach {
         $script:ASYNC = @{
             Running         = $False
@@ -50,9 +55,6 @@ Describe 'Start-AsyncOperation' {
             Runspace        = $Null
             Timer           = $Null
         }
-
-        Mock Write-LogWarning {}
-        Mock Stop-AsyncOperation {}
     }
 
     It 'Should cancel when same button clicked while operation is running' {
@@ -112,16 +114,18 @@ Describe 'Test-LoggerRecord' {
 }
 
 Describe 'Update-AsyncOperationState' {
+    BeforeAll {
+        Mock Write-Host {}
+        Mock Write-FormLog {}
+        Mock Complete-AsyncOperation {}
+    }
+
     BeforeEach {
         $script:ASYNC = @{
             Running = $True
             PS      = (New-TestAsyncPS)
             Handle  = [PSCustomObject]@{ IsCompleted = $False }
         }
-
-        Mock Write-Host {}
-        Mock Write-FormLog {}
-        Mock Complete-AsyncOperation {}
     }
 
     It 'Should forward warnings and errors that did not come from the logger to the form log' {
@@ -155,6 +159,13 @@ Describe 'Update-AsyncOperationState' {
 }
 
 Describe 'Complete-AsyncOperation' {
+    BeforeAll {
+        Mock Set-Icon {}
+        Mock Write-LogInfo {}
+        Mock Write-LogError {}
+        Mock Invoke-WriteProgress {}
+    }
+
     BeforeEach {
         Set-Variable -Option Constant MockTimer ([PSCustomObject]@{})
         $MockTimer | Add-Member -MemberType ScriptMethod -Name Stop -Value {}
@@ -171,11 +182,6 @@ Describe 'Complete-AsyncOperation' {
             Runspace        = $MockRunspace
             Timer           = $MockTimer
         }
-
-        Mock Set-Icon {}
-        Mock Write-LogInfo {}
-        Mock Write-LogError {}
-        Mock Invoke-WriteProgress {}
 
         [Collections.Generic.List[Object]]$script:CompletionOutput = @()
     }
@@ -217,6 +223,10 @@ Describe 'Complete-AsyncOperation' {
 }
 
 Describe 'Stop-AsyncOperation' {
+    BeforeAll {
+        Mock Write-LogWarning {}
+    }
+
     BeforeEach {
         $script:ASYNC = @{
             Running         = $False
@@ -227,8 +237,6 @@ Describe 'Stop-AsyncOperation' {
             Runspace        = $Null
             Timer           = $Null
         }
-
-        Mock Write-LogWarning {}
     }
 
     It 'Should stop operation when running' {

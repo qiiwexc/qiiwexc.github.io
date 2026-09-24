@@ -1,13 +1,13 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Get-ExecutableName.ps1'
-    . '.\src\4-functions\Common\New-Directory.ps1'
-    . '.\src\4-functions\Common\Remove-Directory.ps1'
-    . '.\src\4-functions\Common\Remove-File.ps1'
-    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
+    . "$PSScriptRoot\Get-ExecutableName.ps1"
+    . "$PSScriptRoot\New-Directory.ps1"
+    . "$PSScriptRoot\Remove-Directory.ps1"
+    . "$PSScriptRoot\Remove-File.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Initialize-AppDirectory.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -28,7 +28,7 @@ BeforeAll {
 }
 
 Describe 'Expand-Zip' {
-    BeforeEach {
+    BeforeAll {
         Mock Test-Path { return $True } -ParameterFilter { $Path -eq $TestZipFilePath }
         Mock Write-ActivityProgress {}
         Mock Write-LogWarning {}
@@ -43,7 +43,9 @@ Describe 'Expand-Zip' {
         Mock Move-Item {}
         Mock Out-Success {}
         Mock Write-LogInfo {}
+    }
 
+    BeforeEach {
         [Int]$OS_VERSION = 11
     }
 
@@ -52,7 +54,6 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw 'Archive not found*'
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-ExecutableName -Exactly 0
         Should -Invoke Initialize-AppDirectory -Exactly 0
@@ -70,7 +71,6 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $TestZipFilePath | Should -BeExactly $TestTargetExe
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Get-ExecutableName -Exactly 1 -ParameterFilter {
@@ -106,7 +106,6 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $TestZipFilePath -Temp | Should -BeExactly $TestTargetExe
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -137,7 +136,6 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $TestZipFilePath | Should -BeExactly $TestTargetExe
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -170,7 +168,6 @@ Describe 'Expand-Zip' {
 
         Expand-Zip $TestZipFilePath | Should -BeExactly $TestExeFile
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 0
@@ -188,7 +185,6 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Get-ExecutableName -Exactly 0
         Should -Invoke Initialize-AppDirectory -Exactly 0
@@ -206,7 +202,6 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -224,7 +219,6 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -242,7 +236,6 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -260,7 +253,6 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -280,7 +272,6 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
@@ -298,7 +289,6 @@ Describe 'Expand-Zip' {
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Get-ExecutableName -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1

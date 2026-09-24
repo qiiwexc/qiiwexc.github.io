@@ -1,10 +1,10 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
-    . '.\tools\common\Progressbar.ps1'
-    . '.\tools\common\Read-TextFile.ps1'
-    . '.\tools\common\Write-TextFile.ps1'
+    . "$PSScriptRoot\..\common\logger.ps1"
+    . "$PSScriptRoot\..\common\Progressbar.ps1"
+    . "$PSScriptRoot\..\common\Read-TextFile.ps1"
+    . "$PSScriptRoot\..\common\Write-TextFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -19,7 +19,7 @@ BeforeAll {
 }
 
 Describe 'New-BatchScript' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Activity {}
         Mock Write-LogInfo {}
         Mock Read-TextFile { return $TestPs1FileContent }
@@ -114,5 +114,53 @@ Describe 'New-BatchScript' {
 
         Should -Invoke Write-TextFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+}
+
+# Runs a generated launcher for real: cmd parses it, then PowerShell extracts and starts the embedded script.
+# The launcher folder and %TEMP% carry the characters that used to break the quoting
+Describe 'New-BatchScript launcher' -Skip:([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
+    BeforeAll {
+        Mock New-Activity {}
+        Mock Write-LogInfo {}
+        Mock Write-ActivityCompleted {}
+
+        Set-Variable -Option Constant LauncherDir ([String]"$TestDrive\O'Brien (Home) dir")
+        Set-Variable -Option Constant TempDir ([String]"$TestDrive\temp O'Hara")
+        Set-Variable -Option Constant MarkerFile ([String]"$TestDrive\marker.txt")
+        Set-Variable -Option Constant PayloadFile ([String]"$TestDrive\payload.ps1")
+
+        $Null = New-Item -ItemType Directory $LauncherDir, $TempDir, "$TestDrive\vm"
+
+        # Stands in for the app: records the arguments the launcher started it with
+        Set-Content -LiteralPath $PayloadFile -Encoding UTF8 -Value @(
+            'param([String]$WorkingDirectory, [Switch]$DevMode)'
+            "Add-Content -LiteralPath '$MarkerFile' `"`$WorkingDirectory|`$DevMode`""
+        )
+
+        New-BatchScript 'qiiwexc' $PayloadFile "$LauncherDir\qiiwexc.bat" "$TestDrive\vm"
+
+        Set-Variable -Option Constant OriginalTemp ([String]$env:TEMP)
+        Set-Variable -Option Constant OriginalTmp ([String]$env:TMP)
+        $env:TEMP = $TempDir
+        $env:TMP = $TempDir
+    }
+
+    AfterAll {
+        $env:TEMP = $OriginalTemp
+        $env:TMP = $OriginalTmp
+    }
+
+    It 'Should extract the script to %TEMP% and start it in the launcher folder' {
+        Start-Process cmd.exe -ArgumentList '/c', "`"$LauncherDir\qiiwexc.bat`"" -WorkingDirectory $TestDrive -Wait -WindowStyle Hidden
+
+        Test-Path -LiteralPath "$TempDir\qiiwexc.ps1" | Should -BeTrue
+        Get-Content -LiteralPath $MarkerFile -Tail 1 | Should -BeExactly "$LauncherDir|False"
+    }
+
+    It 'Should start the script in dev mode' {
+        Start-Process cmd.exe -ArgumentList '/c', "`"$LauncherDir\qiiwexc.bat`" Debug" -WorkingDirectory $TestDrive -Wait -WindowStyle Hidden
+
+        Get-Content -LiteralPath $MarkerFile -Tail 1 | Should -BeExactly "$LauncherDir|True"
     }
 }

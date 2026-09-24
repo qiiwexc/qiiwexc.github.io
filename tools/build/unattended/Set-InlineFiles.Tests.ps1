@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\Read-TextFile.ps1'
+    . "$PSScriptRoot\..\..\common\Read-TextFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -17,7 +17,7 @@ BeforeAll {
 }
 
 Describe 'Set-InlineFiles' {
-    BeforeEach {
+    BeforeAll {
         Mock Read-TextFile { return $TestGenericFileContent }
         Mock Read-TextFile { return $TestRegFileContent } -ParameterFilter { $Path -match '\.reg$' }
     }

@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
-    . '.\tools\common\types.ps1'
+    . "$PSScriptRoot\..\..\common\logger.ps1"
+    . "$PSScriptRoot\..\..\common\types.ps1"
 
     . "$(Split-Path $PSCommandPath -Parent)\Compare-Tags.ps1"
     . "$(Split-Path $PSCommandPath -Parent)\Select-Releases.ps1"
@@ -24,7 +24,7 @@ BeforeAll {
 }
 
 Describe 'Update-GitDependency' {
-    BeforeEach {
+    BeforeAll {
         Mock Compare-Tags {
             return $TestCompareTagsResult
         }

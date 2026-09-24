@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\Write-TextFile.ps1'
+    . "$PSScriptRoot\Write-TextFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -11,7 +11,7 @@ BeforeAll {
 }
 
 Describe 'Write-JsonFile' {
-    BeforeEach {
+    BeforeAll {
         Mock Write-TextFile {}
     }
 

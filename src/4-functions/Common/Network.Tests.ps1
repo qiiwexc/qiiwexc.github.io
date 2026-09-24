@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
     Set-Variable -Option Constant TestTimeoutException ([Microsoft.Management.Infrastructure.CimException]::new('The operation timed out'))
@@ -12,7 +12,7 @@ BeforeAll {
 }
 
 Describe 'Get-NetworkAdapter' {
-    BeforeEach {
+    BeforeAll {
         Mock Get-CimInstance { return $TestNetworkAdapter }
     }
 
@@ -37,7 +37,7 @@ Describe 'Get-NetworkAdapter' {
 }
 
 Describe 'Test-NetworkConnection' {
-    BeforeEach {
+    BeforeAll {
         Mock Get-NetworkAdapter { return $TestNetworkAdapter }
         Mock Invoke-WebRequest { return @{ Content = 'Microsoft Connect Test' } }
         Mock Out-Failure {}

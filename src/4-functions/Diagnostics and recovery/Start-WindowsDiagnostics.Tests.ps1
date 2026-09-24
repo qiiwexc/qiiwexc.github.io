@@ -6,10 +6,10 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
+    . "$PSScriptRoot\..\Common\types.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Initialize-AppDirectory.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -21,7 +21,7 @@ BeforeAll {
 }
 
 Describe 'Start-WindowsDiagnostics' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Activity {}
         Mock Write-ActivityProgress {}
         Mock Write-ActivityCompleted {}

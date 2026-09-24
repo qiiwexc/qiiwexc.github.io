@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\types.ps1'
-    . '.\src\4-functions\App lifecycle\Invoke-OnDispatcher.ps1'
+    . "$PSScriptRoot\..\Common\types.ps1"
+    . "$PSScriptRoot\Invoke-OnDispatcher.ps1"
 
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore

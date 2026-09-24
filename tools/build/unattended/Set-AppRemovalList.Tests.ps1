@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\Read-JsonFile.ps1'
+    . "$PSScriptRoot\..\..\common\Read-JsonFile.ps1"
 
     Set-Variable -Option Constant ConfigsPath ([String]'.\src\3-configs')
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -18,8 +18,8 @@ BeforeAll {
     )
 }
 
-Describe 'Set-AppRemovalList' -Tag 'WIP' {
-    BeforeEach {
+Describe 'Set-AppRemovalList' {
+    BeforeAll {
         Mock Read-JsonFile { return $TestFileContent }
     }
 

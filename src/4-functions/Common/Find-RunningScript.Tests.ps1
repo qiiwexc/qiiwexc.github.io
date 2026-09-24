@@ -14,7 +14,7 @@ BeforeAll {
 }
 
 Describe 'Find-RunningScript' {
-    BeforeEach {
+    BeforeAll {
         Mock Get-CimInstance { return @($TestCimInstance) }
     }
 

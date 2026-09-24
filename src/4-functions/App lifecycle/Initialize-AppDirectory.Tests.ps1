@@ -1,7 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\New-Directory.ps1'
+    . "$PSScriptRoot\..\Common\New-Directory.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -9,7 +9,7 @@ BeforeAll {
 }
 
 Describe 'Initialize-AppDirectory' {
-    BeforeEach {
+    BeforeAll {
         Mock New-Directory {}
     }
 

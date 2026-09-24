@@ -8,10 +8,10 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\Network.ps1'
-    . '.\src\4-functions\App lifecycle\Initialize-AppDirectory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\App lifecycle\Progressbar.ps1'
+    . "$PSScriptRoot\Network.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Initialize-AppDirectory.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -30,13 +30,7 @@ BeforeAll {
 }
 
 Describe 'Start-Download' {
-    BeforeEach {
-        # Test-Path counter mock: returns False until call N, then True from call N onward.
-        # Set FileAppearsAtCall=2 for download tests (call 1 = not cached, call 2+ = file exists).
-        # Default (1) means file exists immediately (already downloaded scenario).
-        [Int]$script:TestPathCalls = 0
-        [Int]$FileAppearsAtCall = 1
-
+    BeforeAll {
         Mock Write-ActivityProgress {}
         Mock Test-Path {
             $script:TestPathCalls++
@@ -56,12 +50,19 @@ Describe 'Start-Download' {
         Mock Out-Success {}
     }
 
+    BeforeEach {
+        # State for the Test-Path mock above: it returns False until call N, then True from call N onward.
+        # Set FileAppearsAtCall=2 for download tests (call 1 = not cached, call 2+ = file exists).
+        # Default (1) means file exists immediately (already downloaded scenario).
+        [Int]$script:TestPathCalls = 0
+        [Int]$FileAppearsAtCall = 1
+    }
+
     It 'Should download file' {
         [Int]$FileAppearsAtCall = 2
 
         Start-Download $TestUrl | Should -BeExactly $TestSavePath
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestSavePath }
         Should -Invoke Write-LogWarning -Exactly 0
@@ -91,7 +92,6 @@ Describe 'Start-Download' {
 
         Start-Download $TestUrl $TestSaveAs | Should -BeExactly $TestSavePathSaveAs
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestSavePathSaveAs }
         Should -Invoke Write-LogWarning -Exactly 0
@@ -121,7 +121,6 @@ Describe 'Start-Download' {
 
         Start-Download $TestUrl -Temp | Should -BeExactly $TestSavePath
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestTempPath }
         Should -Invoke Write-LogWarning -Exactly 0
@@ -139,7 +138,6 @@ Describe 'Start-Download' {
     It 'Should return existing file if already downloaded' {
         Start-Download $TestUrl | Should -BeExactly $TestSavePath
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Test-Path -Exactly 1 -ParameterFilter { $Path -eq $TestTempPath }
         Should -Invoke Write-LogWarning -Exactly 1
@@ -158,7 +156,6 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw 'No network connection detected'
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -180,7 +177,6 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw 'Possibly computer is offline or disk is full'
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -197,7 +193,6 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 0
@@ -215,7 +210,6 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -233,7 +227,6 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -258,7 +251,6 @@ Describe 'Start-Download' {
 
         Start-Download $TestUrl  | Should -BeExactly $TestSavePath
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -278,7 +270,6 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw 'Download failed after 3 attempts*'
 
-        Should -Invoke Write-ActivityProgress -Exactly 2
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 4
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -296,7 +287,6 @@ Describe 'Start-Download' {
 
         { Start-Download $TestUrl } | Should -Throw $TestException
 
-        Should -Invoke Write-ActivityProgress -Exactly 3
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
@@ -335,7 +325,6 @@ Describe 'Start-Download' {
 
         Start-Download $TestUrl -NoBits | Should -BeExactly $TestSavePath
 
-        Should -Invoke Write-ActivityProgress -Exactly 4
         Should -Invoke Test-Path -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1

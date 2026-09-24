@@ -1,9 +1,9 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\Common\New-Directory.ps1'
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Stop-ProcessIfRunning.ps1'
+    . "$PSScriptRoot\..\..\Common\New-Directory.ps1"
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\Stop-ProcessIfRunning.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -15,7 +15,7 @@ BeforeAll {
 }
 
 Describe 'Write-ConfigurationFile' {
-    BeforeEach {
+    BeforeAll {
         Mock Stop-ProcessIfRunning {}
         Mock Write-LogInfo {}
         Mock Split-Path { return $TestParentPath }

@@ -1,9 +1,9 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\tools\common\logger.ps1'
-    . '.\tools\common\types.ps1'
-    . '.\tools\common\Read-JsonFile.ps1'
+    . "$PSScriptRoot\..\..\common\logger.ps1"
+    . "$PSScriptRoot\..\..\common\types.ps1"
+    . "$PSScriptRoot\..\..\common\Read-JsonFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -20,13 +20,15 @@ BeforeAll {
 }
 
 Describe 'Update-DependencyChecksum' {
-    BeforeEach {
+    BeforeAll {
         Mock Read-JsonFile { return $TestUrlsTemplate }
         Mock Write-LogInfo {}
         Mock Out-Failure {}
         Mock Invoke-WebRequest {}
         Mock Get-FileHash { return @{ Hash = $TestChecksum } }
+    }
 
+    BeforeEach {
         [Dependency]$TestDependency = @{ name = 'test dependency-name'; version = 'v2.0.0'; source = 'GitHub' }
     }
 

@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . '.\src\4-functions\App lifecycle\Logger.ps1'
-    . '.\src\4-functions\Configuration\Helpers\Write-ConfigurationFile.ps1'
+    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\Helpers\Write-ConfigurationFile.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -14,7 +14,7 @@ BeforeAll {
 }
 
 Describe 'Set-AnyDeskConfiguration' {
-    BeforeEach {
+    BeforeAll {
         Mock Test-Path { return $False }
         Mock Get-Content { return $TestExistingConfig }
         Mock Write-ConfigurationFile {}
