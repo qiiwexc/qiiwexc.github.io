@@ -1,5 +1,12 @@
 # Agent Instructions
 
+This is the single canonical source of guidance for every AI agent working in this repository,
+regardless of the platform it runs on - GitHub Copilot (in Visual Studio Code or on GitHub.com)
+and Claude Code (in Visual Studio Code or on the web) all follow these same instructions. The
+platform-specific entry files (`CLAUDE.md`, `.github/copilot-instructions.md`) only point here.
+Apply this guidance on every request - large or small - even when the user does not explicitly
+ask for it.
+
 ## Project Overview
 
 `qiiwexc` is a Windows utility toolkit that builds these artifacts from PowerShell source:
@@ -52,6 +59,20 @@ failures as environmental, not regressions.
   write only to the git-ignored outputs in `build/` and `vm/`.
 - `tools\test.ps1` and the linter load the exact Pester and PSScriptAnalyzer versions pinned in
   `resources/dependencies.json` — install them with `install-dependencies.bat`.
+- Long command output wastes context: pipe verbose commands through `Select-Object -Last 30`, or
+  filter a Pester run down to its failures (`[-]` lines and the summary) when only those matter.
+
+## Skills
+
+`.claude/skills/` holds this repository's procedures, one directory per procedure with a
+`SKILL.md` inside. Claude Code discovers and loads them on its own. **Every other platform -
+GitHub Copilot included - has no such mechanism, so read the file directly before starting the
+matching task.** Each of these is the authority on its procedure; this file does not restate them.
+
+| procedure                                                              | read it before                                                                    |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [`repository-review`](.claude/skills/repository-review/SKILL.md)       | reviewing the repository, or one of its areas, end to end                         |
+| [`memory-consolidation`](.claude/skills/memory-consolidation/SKILL.md) | auditing the agent memory directory (Claude Code only; no other platform has one) |
 
 ## Build Architecture
 
@@ -125,3 +146,98 @@ The workflows in `.github/workflows/` share composite actions from `.github/acti
 - A release is cut by pushing a `vYY.M.D` tag: `release.bat` tags `origin/master` from a local checkout (it refuses if `HEAD` differs), and the manual `tag.yml` workflow tags on GitHub and then dispatches `ci.yml` for the tag, since a tag pushed with `GITHUB_TOKEN` triggers no workflows.
 - `update-dependencies.yml` checks for updates nightly in a read-only job and hands the changed `dependencies.json` to a separate job that force-pushes the `chore/update-dependencies` branch and opens or updates its PR — only when a versioned download URL, Pester or PSScriptAnalyzer changes — then runs the `test` and `build` actions on it and reports both as commit statuses.
 - `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.
+
+## Workflow Notes
+
+- **After making code changes, run the tests before handing work off** - the single test files
+  that cover the change while iterating, then `.\test.bat` - and `.\build-ci.bat` whenever the
+  change reaches the bundle, the page, the answer files or `tools/`. The task is complete only
+  when both pass. A dependency or CI change is always the full run.
+- After making changes, update any documentation they affect (this `AGENTS.md`, the platform
+  entry files, the skills, and inline comments) so the docs stay in sync with the code.
+- **Documentation describes the repository as it is now, never as it was.** Do not write - and
+  remove where you find - lines whose subject is a past state: "this used to live in X",
+  "renamed from Y", "the old behaviour was Z". Git holds the history. Where a past decision still
+  constrains the code, state the constraint rather than the change. The one exception is a
+  migration that is genuinely still in flight, which the next rule covers.
+- **Compatibility shims are temporary, and it is your job to make sure they are.** When a file
+  format, registry value, stored setting or path the app reads changes and the code keeps
+  reading the old shape - a fallback branch, a legacy key, a clean-up of what an older version
+  left behind - mark it in the source with a `MIGRATION:` comment saying what it accepts and what
+  has to happen before it can go (usually "every installed copy has self-updated past version
+  X"), and then **save a memory recording it**. At the start of a later session, ask the user
+  whether that migration can be removed yet. Remove one as soon as the user confirms.
+- Never run `git checkout -- <path>` or `git restore <path>` to "tidy up" - it restores the
+  working tree from the index and silently destroys every uncommitted edit under that path,
+  including ones made earlier in the session. Run `git status`/`git diff` on the path first and
+  confirm it holds only changes that should be discarded.
+- When moving source files, move their `.Tests.ps1` files with them, and update every
+  dot-source path that pointed at the old location.
+- `wip/` holds work in progress that is never committed (it is git-ignored): drafts, notes,
+  review reports, and the Office Installer executables `Update-FileDependency` reads. Nothing in
+  it is part of the codebase and it is outside every check. Do not read through the directory to
+  build context; open only the files a task points at by name. It is also where output a task
+  asks you to produce belongs (review artifacts, reworked text) unless the user names another
+  location.
+- **Prose is British English, identifiers are whatever the platform calls them.** Comments,
+  documentation and commit messages say "behaviour", "colour", "initialise"; code says `Color`,
+  `Foreground`, `Initialize-AppDirectory`, because those are the names WPF and PowerShell use
+  (or the `Verb-Noun` convention requires), and a renamed identifier is a bug rather than a style.
+
+## General Guidelines
+
+- Ask before assuming: when there is not enough context to complete a task - missing
+  requirements, ambiguous intent, or several viable interpretations - ask the user BEFORE
+  starting the implementation instead of guessing.
+- Be proactive with suggestions: surface relevant actions, follow-ups or improvements the user
+  may not have asked for.
+- Be proactive with code quality: when you spot an opportunity to improve the codebase - security
+  hardening, structure, naming, performance - make the improvement even if it was not requested.
+  Keep such improvements low-risk and scoped to what you are already touching; raise larger or
+  riskier refactors with the user first.
+- Delegate research-heavy or exploration tasks to subagents where the platform supports them, and
+  save useful findings to memory.
+- Treat generated artifacts (`build/`, `build/coverage.xml`, the `vm/` images) and everything in
+  `.gitignore` as out of scope for reviews, refactors and searches unless explicitly asked.
+- When asked to create a file unrelated to the changed files (a summary, a report), save it to
+  `wip/` under its own name.
+
+## Implementation Considerations
+
+- When implementing a change, account for security, performance, edge cases and likely failure
+  modes. The app runs elevated on other people's machines, so a mistake there is an
+  administrator-level mistake.
+- Fix minor nearby issues when doing so is low risk and clearly improves the codebase.
+- The full test suite and the linter take minutes; if they appear slow, give them time rather
+  than cutting them short, or ask the user whether to skip them.
+- When a solution behaves unreliably, add logging (`Write-LogDebug` in the app, `Write-LogInfo`
+  in `tools/`) before retrying, and analyse the resulting logs to understand the failure before
+  attempting further fixes.
+
+## Coding Style
+
+- Follow the conventions of the code around you: one function per file, named after it
+  (`Verb-Noun.ps1` with an approved verb); typed variables and parameters; values that do not
+  change declared with `Set-Variable -Option Constant Name ([Type]value)`.
+- Keep functions small and single-purpose, and prefer an existing helper in
+  `src/4-functions/Common` or `tools/common` over a new local one.
+- Do not reference external sources in code comments - issue trackers, screenshots, files in
+  `wip/`, or other artifacts that live outside the codebase. They go stale and mean nothing to
+  readers without access to them; describe the behaviour or constraint in the comment itself.
+- Pin GitHub Actions by full commit SHA with the version in a trailing comment
+  (`uses: owner/action@<sha> # vX.Y.Z`); Dependabot keeps them current.
+- Apply OWASP-minded security practices, and prefer writing the test first when practical.
+
+## Request Assessment
+
+Where a request would cause a real problem - a security hole, a download the app runs without
+verifying it, a system change applied without the user's consent - name the problem
+specifically, propose the safer approach, and wait for the user's decision rather than
+implementing it silently. Minor concerns and style preferences do not warrant blocking.
+
+## Planning Workflow
+
+Skip planning for trivial changes and implement directly. For anything else, use the platform's
+plan mode, researching the codebase first - delegating to parallel subagents where the platform
+supports them - and ask the blocking questions during planning rather than leaving them at the
+end of the plan.
