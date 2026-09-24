@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     # Untyped stubs so Pester can mock Windows-only commands on any host —
     # mocks and ParameterFilters bind against these simple parameters on every platform
     function chkdsk { }

@@ -33,10 +33,10 @@ function Start-WindowsDiagnostics {
 
     Initialize-AppDirectory
 
-    Invoke-SystemRepairTool 'DISM CheckHealth' 'DISM' @('/Online', '/Cleanup-Image', '/CheckHealth') 5 0.1
-    Invoke-SystemRepairTool 'DISM ScanHealth' 'DISM' @('/Online', '/Cleanup-Image', '/ScanHealth') 15 0.2
-    Invoke-SystemRepairTool 'DISM RestoreHealth' 'DISM' @('/Online', '/Cleanup-Image', '/RestoreHealth') 35 0.25
-    Invoke-SystemRepairTool 'SFC scannow' 'sfc' @('/scannow') 60 0.3
+    Invoke-SystemRepairTool -Name 'DISM CheckHealth' -FilePath 'DISM' -Arguments @('/Online', '/Cleanup-Image', '/CheckHealth') -ProgressFrom 5 -ProgressShare 0.1
+    Invoke-SystemRepairTool -Name 'DISM ScanHealth' -FilePath 'DISM' -Arguments @('/Online', '/Cleanup-Image', '/ScanHealth') -ProgressFrom 15 -ProgressShare 0.2
+    Invoke-SystemRepairTool -Name 'DISM RestoreHealth' -FilePath 'DISM' -Arguments @('/Online', '/Cleanup-Image', '/RestoreHealth') -ProgressFrom 35 -ProgressShare 0.25
+    Invoke-SystemRepairTool -Name 'SFC scannow' -FilePath 'sfc' -Arguments @('/scannow') -ProgressFrom 60 -ProgressShare 0.3
 
     Write-ActivityProgress 90 'Parsing SFC logs...'
     [Collections.Generic.List[String]]$LogLines = @()
