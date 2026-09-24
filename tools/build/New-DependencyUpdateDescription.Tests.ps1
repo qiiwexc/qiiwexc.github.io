@@ -78,14 +78,24 @@ Describe 'New-DependencyUpdateDescription' {
         [String]$Description = New-DependencyUpdateDescription @($TestRufus, $TestGenerator, $TestRescue, $TestShutUp) $TestChangelogUrls $TestGitHubToken
 
         [String]$Links = ($Description -split '## Release notes')[0]
-        $Links | Should -MatchExactly ([Regex]::Escape("## Links`n`n" +
-            "### Other sites`n`n" +
-            "- SystemRescue: [``13.02...13.03``](https://gitlab.com/systemrescue/systemrescue-sources/-/compare/13.02...13.03)`n" +
-            "- OOShutUp10: <https://www.oo-software.com/en/shutup10/changelog>`n`n" +
-            "### GitHub commits`n`n" +
-            "- Unattend Generator: [``781fde5...538f930``](https://github.com/cschneegans/unattend-generator/compare/781fde52797f736de9b0426bb4a5c6048a1ae075...538f930aeea9c3d51fdd0b4822e2d076fef999e8)`n`n" +
-            "### GitHub releases and tags`n`n" +
-            "- Rufus: [v4.16](https://github.com/pbatard/rufus/releases/tag/v4.16), [v4.15.1](https://github.com/pbatard/rufus/releases/tag/v4.15.1)`n"))
+        [String]$Expected = @(
+            '## Links'
+            ''
+            '### Other sites'
+            ''
+            '- SystemRescue: [`13.02...13.03`](https://gitlab.com/systemrescue/systemrescue-sources/-/compare/13.02...13.03)'
+            '- OOShutUp10: <https://www.oo-software.com/en/shutup10/changelog>'
+            ''
+            '### GitHub commits'
+            ''
+            '- Unattend Generator: [`781fde5...538f930`](https://github.com/cschneegans/unattend-generator/compare/781fde52797f736de9b0426bb4a5c6048a1ae075...538f930aeea9c3d51fdd0b4822e2d076fef999e8)'
+            ''
+            '### GitHub releases and tags'
+            ''
+            '- Rufus: [v4.16](https://github.com/pbatard/rufus/releases/tag/v4.16), [v4.15.1](https://github.com/pbatard/rufus/releases/tag/v4.15.1)'
+        ) -join "`n"
+
+        $Links | Should -MatchExactly ([Regex]::Escape($Expected))
     }
 
     It 'Should list a link no dependency claims without a name' {
@@ -135,9 +145,16 @@ Describe 'New-DependencyUpdateDescription' {
         )
 
         $Description.Length | Should -BeLessThan 65536
-        $Description | Should -MatchExactly ([Regex]::Escape("</details>`n`nThe notes for these versions did not fit in the description:`n`n" +
-            "- Rufus [v4.15.1](https://github.com/pbatard/rufus/releases/tag/v4.15.1)`n" +
-            '- Pester [6.2.0](https://github.com/pester/Pester/releases/tag/6.2.0)') + '$')
+        [String]$Expected = @(
+            '</details>'
+            ''
+            'The notes for these versions did not fit in the description:'
+            ''
+            '- Rufus [v4.15.1](https://github.com/pbatard/rufus/releases/tag/v4.15.1)'
+            '- Pester [6.2.0](https://github.com/pester/Pester/releases/tag/6.2.0)'
+        ) -join "`n"
+
+        $Description | Should -MatchExactly ([Regex]::Escape($Expected) + '$')
 
         Should -Invoke Get-ReleaseNotes -Exactly 2
     }

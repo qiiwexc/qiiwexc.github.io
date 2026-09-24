@@ -27,6 +27,7 @@ if (-not $Diff) {
 
 . "$PSScriptRoot\common\types.ps1"
 . "$PSScriptRoot\common\logger.ps1"
+. "$PSScriptRoot\common\Progressbar.ps1"
 . "$PSScriptRoot\common\Write-TextFile.ps1"
 . "$PSScriptRoot\build\Compare-Dependencies.ps1"
 . "$PSScriptRoot\build\New-DependencyUpdateDescription.ps1"
