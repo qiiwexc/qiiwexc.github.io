@@ -11,8 +11,8 @@ BeforeAll {
     Set-Variable -Option Constant TestTemplatesPath ([String]'TEST_TEMPLATES_PATH')
     Set-Variable -Option Constant TestBuildPath ([String]'TEST_BUILD_PATH')
     Set-Variable -Option Constant TestConfig ([PSCustomObject]@{
-            KEY_1             = 'VALUE_1'
-            KEY_2             = 'VALUE_2'
+            KEY_1              = 'VALUE_1'
+            KEY_2              = 'VALUE_2'
             URL_STYLESHEET_WEB = 'https://bit.ly/stylesheet_web'
         })
 
