@@ -23,7 +23,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "781fde52797f736de9b0426bb4a5c6048a1ae075",
+        "version":  "538f930aeea9c3d51fdd0b4822e2d076fef999e8",
         "source":  "GitHub",
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
@@ -38,7 +38,7 @@
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.07.11",
+        "version":  "2026.08.24",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat"
@@ -61,7 +61,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "3.4",
+        "version":  "3.5",
         "source":  "URL",
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
         "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
@@ -95,7 +95,7 @@
     },
     {
         "name":  "Pester",
-        "version":  "6.1.0",
+        "version":  "6.2.0",
         "source":  "GitHub",
         "mode":  "releases",
         "repository":  "pester/Pester"
