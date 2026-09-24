@@ -18,8 +18,8 @@ BeforeAll {
 
     Set-Variable -Option Constant TestGitHubReleasesUrl ([String]"https://api.github.com/repos/$TestRepositoryName/releases?per_page=5")
 
-    Set-Variable -Option Constant TestNewVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/$TestNewVersion")
-    Set-Variable -Option Constant TestLatestVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/$TestLatestVersion")
+    Set-Variable -Option Constant TestNewVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/tag/$TestNewVersion")
+    Set-Variable -Option Constant TestLatestVersionUrl ([String]"https://github.com/$TestRepositoryName/releases/tag/$TestLatestVersion")
 
     Set-Variable -Option Constant TestDependency (
         [PSObject]@{
@@ -73,6 +73,14 @@ Describe 'Select-Releases' {
         }
     }
 
+    It 'Should link the latest release when the current one is further back than those listed' {
+        Mock Invoke-GitAPI { return @( @{ tag_name = $TestLatestVersion }, @{ tag_name = $TestNewVersion } ) }
+
+        Select-Releases $TestDependency | Should -BeExactly @($TestLatestVersionUrl)
+
+        Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter { $LatestVersion -eq $TestLatestVersion }
+    }
+
     It 'Should skip releases flagged as prerelease by the GitHub API' {
         Mock Invoke-GitAPI { return @( @{ tag_name = $TestNewVersion; prerelease = $True }, @{ tag_name = $TestCurrentVersion; prerelease = $False } ) }
 
@@ -85,7 +93,7 @@ Describe 'Select-Releases' {
     It 'Should accept a clean-looking tag that is not flagged as prerelease, even if it contains rc/beta/alpha substrings' {
         Mock Invoke-GitAPI { return @( @{ tag_name = "$TestNewVersion-albeatric"; prerelease = $False }, @{ tag_name = $TestCurrentVersion; prerelease = $False } ) }
 
-        Select-Releases $TestDependency | Should -BeExactly @("https://github.com/$TestRepositoryName/releases/$TestNewVersion-albeatric")
+        Select-Releases $TestDependency | Should -BeExactly @("https://github.com/$TestRepositoryName/releases/tag/$TestNewVersion-albeatric")
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1

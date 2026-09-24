@@ -8,10 +8,7 @@ function Compare-Dependencies {
     # Tools the CI itself runs — a new version changes what the tests and the linter check
     Set-Variable -Option Constant ToolNames ([String[]]@('Pester', 'PSScriptAnalyzer'))
 
-    [String[]]$UpdatedNames = @()
-    [String[]]$UpdateDetails = @()
-    [Bool]$HasUrlChange = $False
-    [Bool]$HasToolChange = $False
+    [Collections.Generic.List[PSObject]]$Updates = @()
 
     foreach ($NewDep in $NewDependencies) {
         $OldDep = $OldDependencies | Where-Object { $_.name -eq $NewDep.name } | Select-Object -First 1
@@ -20,27 +17,27 @@ function Compare-Dependencies {
             continue
         }
 
-        $UpdatedNames += $NewDep.name
-        $UpdateDetails += "$($NewDep.name): $($OldDep.version) -> $($NewDep.version)"
-
-        if ($NewDep.name -in $ToolNames) {
-            $HasToolChange = $True
-        }
-
+        [Bool]$UrlChange = $False
         [String]$UrlKey = "URL_$($NewDep.name.ToUpper().Replace(' ', '_').Replace('-', '_'))"
         if ($UrlsTemplate.PSObject.Properties[$UrlKey]) {
             [String]$OldUrl = $UrlsTemplate.$UrlKey.Replace('{VERSION}', $OldDep.version.TrimStart('v'))
             [String]$NewUrl = $UrlsTemplate.$UrlKey.Replace('{VERSION}', $NewDep.version.TrimStart('v'))
-            if ($OldUrl -ne $NewUrl) {
-                $HasUrlChange = $True
-            }
+            $UrlChange = $OldUrl -ne $NewUrl
         }
+
+        $Updates.Add([PSCustomObject]@{
+                Name       = $NewDep.name
+                From       = $OldDep.version
+                To         = $NewDep.version
+                Dependency = $NewDep
+                UrlChange  = $UrlChange
+                ToolChange = $NewDep.name -in $ToolNames
+            })
     }
 
     return [PSCustomObject]@{
-        UpdatedNames  = $UpdatedNames
-        UpdateDetails = $UpdateDetails
-        HasUrlChange  = $HasUrlChange
-        HasToolChange = $HasToolChange
+        Updates       = $Updates.ToArray()
+        HasUrlChange  = [Bool]@($Updates | Where-Object { $_.UrlChange }).Count
+        HasToolChange = [Bool]@($Updates | Where-Object { $_.ToolChange }).Count
     }
 }

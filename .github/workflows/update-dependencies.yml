@@ -21,7 +21,6 @@ jobs:
       contents: read
     outputs:
       has_updates: ${{ steps.update.outputs.has_updates }}
-      changelog_urls: ${{ steps.update.outputs.changelog_urls }}
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -35,12 +34,16 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: .\tools\Invoke-DependencyUpdate.ps1
 
+      # The pull request description quotes third-party release notes, so it travels as a file
+      # and reaches the next job's 'gh' as --body-file, never through an expression or a variable
       - name: Upload updated dependencies
         if: steps.update.outputs.has_updates == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: updated-dependencies
-          path: resources/dependencies.json
+          path: |
+            resources/dependencies.json
+            build/dependency-update.md
           if-no-files-found: error
           retention-days: 1
 
@@ -62,24 +65,25 @@ jobs:
           # Credentials are needed for the 'git push' of the update branch
           persist-credentials: true
 
+      # Both files keep their paths relative to the repository root, the artifact's common root
       - name: Download updated dependencies
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: updated-dependencies
-          path: resources
 
       - name: Create pull request
         id: create-pr
         shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
-          CHANGELOG_URLS: ${{ needs.check-for-updates.outputs.changelog_urls }}
         run: |
           # One standing branch: each night's run starts from master and force-pushes over it,
           # so a single open pull request always shows every pending update instead of one per day
           $now = Get-Date
           $branch = 'chore/update-dependencies'
           $title = "Update dependencies ($($now.ToString('yyyy.MM.dd')))"
+          # Written by tools\Invoke-DependencyUpdate.ps1: the version table, the changelog links and the release notes
+          $bodyFile = 'build/dependency-update.md'
 
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
@@ -89,20 +93,11 @@ jobs:
           git commit -m $title
           git push origin $branch --force
 
-          $body = ''
-          if ($env:CHANGELOG_URLS) {
-              $body = ($env:CHANGELOG_URLS -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ } | ForEach-Object { "- $_" }) -join "`n"
-          }
-
           $existingPr = gh pr list --head $branch --json number --jq 'if length > 0 then .[0].number else empty end'
           if (-not $existingPr) {
-              gh pr create --title $title --body $body --reviewer $env:GITHUB_REPOSITORY_OWNER
+              gh pr create --title $title --body-file $bodyFile --reviewer $env:GITHUB_REPOSITORY_OWNER
           } else {
-              if ($body) {
-                  gh pr edit $existingPr --title $title --body $body
-              } else {
-                  gh pr edit $existingPr --title $title
-              }
+              gh pr edit $existingPr --title $title --body-file $bodyFile
           }
 
           "branch=$branch" >> $env:GITHUB_OUTPUT

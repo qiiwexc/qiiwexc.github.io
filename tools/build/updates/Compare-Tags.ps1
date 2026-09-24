@@ -33,6 +33,28 @@ function Compare-Tags {
 
     if ($LatestVersion -ne '' -and $LatestVersion -ne $CurrentVersion) {
         Set-NewVersion $Dependency $LatestVersion
-        return @("https://$($Source.ToLower()).com/$Repository/compare/$CurrentVersion...$LatestVersion")
+
+        if ($Source -eq 'GitLab') {
+            return @("https://gitlab.com/$Repository/-/compare/$CurrentVersion...$LatestVersion")
+        }
+
+        # A page per tag the update crosses, newest first, where a release, if any, carries its notes
+        Set-Variable -Option Constant CurrentParsed ([Version]$(try { [Version]($CurrentVersion -replace '^v') } catch { $Null }))
+        if ($CurrentParsed -and $ReleaseTags.Count -gt 0) {
+            Set-Variable -Option Constant CrossedTags ([String[]]@($ReleaseTags |
+                        Where-Object { [Version]($_.name -replace '^v') -gt $CurrentParsed } |
+                        Sort-Object { [Version]($_.name -replace '^v') } -Descending |
+                        ForEach-Object { $_.name }))
+        } else {
+            Set-Variable -Option Constant CrossedTags ([String[]]@($LatestVersion))
+        }
+
+        [Collections.Generic.List[String]]$Urls = @()
+        foreach ($Tag in $CrossedTags) {
+            $Urls.Add("https://github.com/$Repository/releases/tag/$Tag")
+        }
+        $Urls.Add("https://github.com/$Repository/compare/$CurrentVersion...$LatestVersion")
+
+        return $Urls
     }
 }

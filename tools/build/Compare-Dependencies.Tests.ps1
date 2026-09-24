@@ -24,8 +24,7 @@ Describe 'Compare-Dependencies' {
     It 'Should detect no changes when versions are identical' {
         $Result = Compare-Dependencies $TestOldDeps $TestOldDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames.Count | Should -Be 0
-        $Result.UpdateDetails.Count | Should -Be 0
+        $Result.Updates.Count | Should -Be 0
         $Result.HasUrlChange | Should -Be $False
     }
 
@@ -40,8 +39,12 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames | Should -BeExactly @('Rufus')
-        $Result.UpdateDetails | Should -BeExactly @('Rufus: v4.11 -> v4.12')
+        $Result.Updates.Name | Should -BeExactly @('Rufus')
+        $Result.Updates.From | Should -BeExactly @('v4.11')
+        $Result.Updates.To | Should -BeExactly @('v4.12')
+        $Result.Updates[0].UrlChange | Should -Be $True
+        $Result.Updates[0].ToolChange | Should -Be $False
+        $Result.Updates[0].Dependency.repository | Should -BeExactly 'pbatard/rufus'
         $Result.HasUrlChange | Should -Be $True
     }
 
@@ -56,8 +59,9 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames | Should -BeExactly @('SystemRescue')
-        $Result.UpdateDetails | Should -BeExactly @('SystemRescue: 12.02 -> 12.03')
+        $Result.Updates.Name | Should -BeExactly @('SystemRescue')
+        $Result.Updates.From | Should -BeExactly @('12.02')
+        $Result.Updates.To | Should -BeExactly @('12.03')
         $Result.HasUrlChange | Should -Be $False
     }
 
@@ -72,8 +76,9 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames | Should -BeExactly @('SDI')
-        $Result.UpdateDetails | Should -BeExactly @('SDI: 1.25.0 -> 1.26.0')
+        $Result.Updates.Name | Should -BeExactly @('SDI')
+        $Result.Updates.From | Should -BeExactly @('1.25.0')
+        $Result.Updates.To | Should -BeExactly @('1.26.0')
         $Result.HasUrlChange | Should -Be $True
     }
 
@@ -88,8 +93,9 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames | Should -BeExactly @('WinUtil')
-        $Result.UpdateDetails | Should -BeExactly @('WinUtil: 26.01.01 -> 26.02.01')
+        $Result.Updates.Name | Should -BeExactly @('WinUtil')
+        $Result.Updates.From | Should -BeExactly @('26.01.01')
+        $Result.Updates.To | Should -BeExactly @('26.02.01')
         $Result.HasUrlChange | Should -Be $False
     }
 
@@ -104,8 +110,9 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames | Should -BeExactly @('TronScript')
-        $Result.UpdateDetails | Should -BeExactly @('TronScript: v12.0.5 -> v12.0.6')
+        $Result.Updates.Name | Should -BeExactly @('TronScript')
+        $Result.Updates.From | Should -BeExactly @('v12.0.5')
+        $Result.Updates.To | Should -BeExactly @('v12.0.6')
         $Result.HasUrlChange | Should -Be $False
     }
 
@@ -120,13 +127,12 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames.Count | Should -Be 5
-        $Result.UpdatedNames | Should -Contain 'Rufus'
-        $Result.UpdatedNames | Should -Contain 'WinUtil'
-        $Result.UpdatedNames | Should -Contain 'SystemRescue'
-        $Result.UpdatedNames | Should -Contain 'SDI'
-        $Result.UpdatedNames | Should -Contain 'TronScript'
-        $Result.UpdateDetails.Count | Should -Be 5
+        $Result.Updates.Count | Should -Be 5
+        $Result.Updates.Name | Should -Contain 'Rufus'
+        $Result.Updates.Name | Should -Contain 'WinUtil'
+        $Result.Updates.Name | Should -Contain 'SystemRescue'
+        $Result.Updates.Name | Should -Contain 'SDI'
+        $Result.Updates.Name | Should -Contain 'TronScript'
         $Result.HasUrlChange | Should -Be $True
     }
 
@@ -139,7 +145,8 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $OldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames | Should -BeExactly @($Name)
+        $Result.Updates.Name | Should -BeExactly @($Name)
+        $Result.Updates[0].ToolChange | Should -Be $True
         $Result.HasUrlChange | Should -Be $False
         $Result.HasToolChange | Should -Be $True
     }
@@ -170,7 +177,7 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.UpdatedNames.Count | Should -Be 0
+        $Result.Updates.Count | Should -Be 0
         $Result.HasUrlChange | Should -Be $False
     }
 }

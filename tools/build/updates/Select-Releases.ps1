@@ -36,10 +36,15 @@ function Select-Releases {
                 [Collections.Generic.List[String]]$Urls = @()
 
                 foreach ($Version in $NewVersions) {
-                    $Urls.Add("https://github.com/$Repository/releases/$Version")
+                    $Urls.Add("https://github.com/$Repository/releases/tag/$Version")
                 }
 
                 return $Urls
+            }
+
+            # The current version is further back than the releases listed, so the latest is all there is to link
+            if ($NewVersionCount -lt 0) {
+                return @("https://github.com/$Repository/releases/tag/$LatestVersion")
             }
         }
     }
