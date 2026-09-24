@@ -26,18 +26,19 @@ function Start-ChkDsk {
                 }
                 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding($CodePage)
                 $Null = & 'chkdsk' '/scan' '/perf' 2>&1 |
-                ForEach-Object {
-                    [String]$Line = $_.TrimEnd()
-                    if ($Line -match '\d+\s*%.*?(\d+)\s*%') {
-                        Write-ActivityProgress ([Int]$Matches[1])
-                    } elseif ($Line -ne '') {
-                        if (($Line -match '^\S+\s+\d') -or ($Line -match '^Windows')) {
-                            $LogLines.Add("`n$Line")
-                        } else {
-                            $LogLines.Add($Line)
+                    ForEach-Object {
+                        [String]$Line = $_.TrimEnd()
+                        if ($Line -match '\d+\s*%.*?(\d+)\s*%') {
+                            Write-ActivityProgress ([Int]$Matches[1])
+                        } elseif ($Line -ne '') {
+                            if (($Line -match '^\S+\s+\d') -or ($Line -match '^Windows')) {
+                                $LogLines.Add("`n$Line")
+                            } else {
+                                $LogLines.Add($Line)
+                            }
                         }
                     }
-                }
+                [Int]$ExitCode = $LASTEXITCODE
             } finally {
                 [Console]::OutputEncoding = $PreviousEncoding
             }
