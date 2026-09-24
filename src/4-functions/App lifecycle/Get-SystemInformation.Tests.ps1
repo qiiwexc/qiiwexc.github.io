@@ -1,9 +1,12 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . "$PSScriptRoot\Get-SignedInUser.ps1"
     . "$PSScriptRoot\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
+
+    Set-Variable -Option Constant TestAppUser ([String][Security.Principal.WindowsIdentity]::GetCurrent().Name)
 
     Set-Variable -Option Constant TestBaseBoardClassName ([String]'Win32_BaseBoard')
     Set-Variable -Option Constant TestBaseBoard ([CimInstance]::new($TestBaseBoardClassName))
@@ -30,6 +33,8 @@ BeforeAll {
 Describe 'Get-SystemInformation' {
     BeforeAll {
         Mock Write-LogInfo {}
+        Mock Write-LogWarning {}
+        Mock Get-SignedInUser { return $TestAppUser }
         Mock Get-CimInstance { return $TestBaseBoard } -ParameterFilter { $ClassName -eq $TestBaseBoardClassName }
         Mock Get-CimInstance { return $TestBiosElement } -ParameterFilter { $ClassName -eq $TestBiosElementClassName }
         Mock Get-ItemProperty { return @{ DisplayVersion = $TestDisplayVersion } } -ParameterFilter { $Path -eq $TestWindowsNtPath }
@@ -41,12 +46,36 @@ Describe 'Get-SystemInformation' {
     It 'Should get system information with Office 2016/2019/2021/2024 C2R' {
         Get-SystemInformation
 
-        Should -Invoke Write-LogInfo -Exactly 10
+        Should -Invoke Write-LogInfo -Exactly 11
         Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter { $ClassName -eq $TestBaseBoardClassName }
         Should -Invoke Get-CimInstance -Exactly 1 -ParameterFilter { $ClassName -eq $TestBiosElementClassName }
         Should -Invoke Get-ItemProperty -Exactly 2
         Should -Invoke Test-Path -Exactly 2
+        Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq "User: $TestAppUser" }
+        Should -Invoke Get-SignedInUser -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
+    }
+
+    It 'Should warn when the app runs as another user than the signed-in one' {
+        Mock Get-SignedInUser { return 'TEST_DOMAIN\TEST_SIGNED_IN_USER' }
+
+        Get-SystemInformation
+
+        Should -Invoke Write-LogWarning -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter {
+            $Message -eq "The app runs as '$TestAppUser', not as the signed-in user 'TEST_DOMAIN\TEST_SIGNED_IN_USER'"
+        }
+        Should -Invoke Write-LogInfo -Exactly 11
+    }
+
+    It 'Should not warn when the signed-in user is unknown' {
+        Mock Get-SignedInUser { return '' }
+
+        Get-SystemInformation
+
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogInfo -Exactly 11
     }
 
     It 'Should get system information with Office 2016/2019/2021/2024 MSI' {
@@ -54,7 +83,7 @@ Describe 'Get-SystemInformation' {
 
         Get-SystemInformation
 
-        Should -Invoke Write-LogInfo -Exactly 10
+        Should -Invoke Write-LogInfo -Exactly 11
         Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-ItemProperty -Exactly 2
         Should -Invoke Test-Path -Exactly 2
@@ -65,7 +94,7 @@ Describe 'Get-SystemInformation' {
 
         Get-SystemInformation
 
-        Should -Invoke Write-LogInfo -Exactly 10
+        Should -Invoke Write-LogInfo -Exactly 11
         Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-ItemProperty -Exactly 2
     }
@@ -75,7 +104,7 @@ Describe 'Get-SystemInformation' {
 
         Get-SystemInformation
 
-        Should -Invoke Write-LogInfo -Exactly 10
+        Should -Invoke Write-LogInfo -Exactly 11
         Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-ItemProperty -Exactly 2
     }
@@ -85,7 +114,7 @@ Describe 'Get-SystemInformation' {
 
         Get-SystemInformation
 
-        Should -Invoke Write-LogInfo -Exactly 10
+        Should -Invoke Write-LogInfo -Exactly 11
         Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-ItemProperty -Exactly 2
     }
@@ -95,7 +124,7 @@ Describe 'Get-SystemInformation' {
 
         Get-SystemInformation
 
-        Should -Invoke Write-LogInfo -Exactly 10
+        Should -Invoke Write-LogInfo -Exactly 11
         Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-ItemProperty -Exactly 2
     }
@@ -105,7 +134,7 @@ Describe 'Get-SystemInformation' {
 
         Get-SystemInformation
 
-        Should -Invoke Write-LogInfo -Exactly 9
+        Should -Invoke Write-LogInfo -Exactly 10
         Should -Invoke Get-CimInstance -Exactly 2
         Should -Invoke Get-ItemProperty -Exactly 1
         Should -Invoke Test-Path -Exactly 1

@@ -58,6 +58,8 @@ function Start-WindowsDebloat {
 
         Set-Variable -Option Constant Params ([String]"-SkipExplorerRestart $SysprepParam $UsePresetParam $SilentParam".TrimEnd())
 
+        # Only the launcher is hidden: it starts Win11Debloat in a visible window of its own and waits for
+        # it to close, which is what keeps Test-WindowsDebloatIsRunning finding it until then
         Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
 
         Out-Success

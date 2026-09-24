@@ -18,6 +18,17 @@ function Get-SystemInformation {
     Write-LogInfo "OS architecture: $($OPERATING_SYSTEM.OSArchitecture)" $LogIndentLevel
     Write-LogInfo "OS language: $SYSTEM_LANGUAGE" $LogIndentLevel
 
+    Set-Variable -Option Constant AppUser ([String][Security.Principal.WindowsIdentity]::GetCurrent().Name)
+    Write-LogInfo "User: $AppUser" $LogIndentLevel
+
+    # Everything written for the current user (HKCU, AppData, app configurations) goes to the account the
+    # app runs as, so an elevation with another account's credentials leaves the signed-in user untouched
+    Set-Variable -Option Constant SignedInUser ([String](Get-SignedInUser))
+    if ($SignedInUser -and $SignedInUser -ne $AppUser) {
+        Write-LogWarning "The app runs as '$AppUser', not as the signed-in user '$SignedInUser'"
+        Write-LogWarning "Per-user settings and app configurations will be applied to '$AppUser' instead"
+    }
+
     [String]$OfficeVersion = ''
     [String]$OfficeInstallType = ''
 
