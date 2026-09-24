@@ -1,4 +1,6 @@
 function Format-ReleaseNotes {
+    # Read by the match evaluator below, which the analyzer does not look into
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'Repository')]
     param(
         [Parameter(Position = 0, Mandatory)][AllowEmptyString()][String]$Notes,
         [Parameter(Position = 1, Mandatory)][ValidateNotNullOrEmpty()][String]$Repository,

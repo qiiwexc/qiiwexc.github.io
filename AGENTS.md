@@ -226,6 +226,11 @@ The workflows in `.github/workflows/` share composite actions from `.github/acti
   readers without access to them; describe the behaviour or constraint in the comment itself.
 - Pin GitHub Actions by full commit SHA with the version in a trailing comment
   (`uses: owner/action@<sha> # vX.Y.Z`); Dependabot keeps them current.
+- A `.ps1` file with non-ASCII characters outside comments (Cyrillic strings, emoji) must be
+  saved as UTF-8 **with** a byte order mark. Windows PowerShell 5.1 reads a file without one as
+  ANSI, where a mangled character such as `’` can end a string early and break the whole file.
+  Rewriting a file through an API that writes UTF-8 without a BOM drops it silently, so check the
+  first three bytes after editing such a file.
 - Apply OWASP-minded security practices, and prefer writing the test first when practical.
 
 ## Request Assessment

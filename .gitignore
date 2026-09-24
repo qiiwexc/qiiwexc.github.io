@@ -1,5 +1,6 @@
 .env
 build/*
+wip/
 vm/*.iso
 vm/*.vdi
 vm/unattend
