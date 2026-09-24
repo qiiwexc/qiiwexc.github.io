@@ -29,7 +29,7 @@ Describe 'Update-DependencyChecksum' {
     }
 
     BeforeEach {
-        [Dependency]$TestDependency = @{ name = 'test dependency-name'; version = 'v2.0.0'; source = 'GitHub' }
+        [Dependency]$script:TestDependency = @{ name = 'test dependency-name'; version = 'v2.0.0'; source = 'GitHub' }
     }
 
     It 'Should record the checksum of the new version download' {

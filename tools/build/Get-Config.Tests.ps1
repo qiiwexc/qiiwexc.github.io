@@ -20,7 +20,7 @@ BeforeAll {
         [PSCustomObject]@{
             URL_TEST_DEPENDENCY_NAME_1 = 'https://example.com/{VERSION}/download'
             URL_TEST_DEPENDENCY_NAME_2 = 'https://example.com/file-{VERSION}.zip'
-            URL_STATIC = 'https://example.com/static'
+            URL_STATIC                 = 'https://example.com/static'
         }
     )
 }
@@ -130,7 +130,7 @@ Describe 'Get-Config' {
             [PSCustomObject]@{
                 URL_TEST_DEPENDENCY_NAME_1 = 'https://example.com/{VERSION}/download'
                 URL_TEST_DEPENDENCY_NAME_2 = 'https://example.com/file-{VERSION}.zip'
-                URL_EVIL = "https://example.com/')); Invoke-Expression 'calc'; (('"
+                URL_EVIL                   = "https://example.com/')); Invoke-Expression 'calc'; (('"
             }
         )
         Mock Read-JsonFile { return $UnsafeUrls } -ParameterFilter { $Path -match 'urls' }
