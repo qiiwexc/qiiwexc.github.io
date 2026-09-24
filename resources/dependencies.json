@@ -19,7 +19,8 @@
         "version":  "3.12",
         "source":  "GitHub",
         "mode":  "releases",
-        "repository":  "massgravel/Microsoft-Activation-Scripts"
+        "repository":  "massgravel/Microsoft-Activation-Scripts",
+        "sha256":  "850f979665fb93999acae93f4790c1ff8ed2041532060b7966a121c2d29a0bfa"
     },
     {
         "name":  "Unattend Generator",
