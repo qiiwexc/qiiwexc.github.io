@@ -25,7 +25,6 @@ Describe 'Compare-Dependencies' {
         $Result = Compare-Dependencies $TestOldDeps $TestOldDeps $TestUrlsTemplate
 
         $Result.Updates.Count | Should -Be 0
-        $Result.HasUrlChange | Should -Be $False
     }
 
     It 'Should detect GitHub dependency update with URL change' {
@@ -45,7 +44,6 @@ Describe 'Compare-Dependencies' {
         $Result.Updates[0].UrlChange | Should -Be $True
         $Result.Updates[0].ToolChange | Should -Be $False
         $Result.Updates[0].Dependency.repository | Should -BeExactly 'pbatard/rufus'
-        $Result.HasUrlChange | Should -Be $True
     }
 
     It 'Should detect GitLab dependency update without URL change' {
@@ -62,7 +60,7 @@ Describe 'Compare-Dependencies' {
         $Result.Updates.Name | Should -BeExactly @('SystemRescue')
         $Result.Updates.From | Should -BeExactly @('12.02')
         $Result.Updates.To | Should -BeExactly @('12.03')
-        $Result.HasUrlChange | Should -Be $False
+        $Result.Updates[0].UrlChange | Should -Be $False
     }
 
     It 'Should detect URL dependency update with URL change' {
@@ -79,10 +77,10 @@ Describe 'Compare-Dependencies' {
         $Result.Updates.Name | Should -BeExactly @('SDI')
         $Result.Updates.From | Should -BeExactly @('1.25.0')
         $Result.Updates.To | Should -BeExactly @('1.26.0')
-        $Result.HasUrlChange | Should -Be $True
+        $Result.Updates[0].UrlChange | Should -Be $True
     }
 
-    It 'Should set HasUrlChange to false for dependency without URL key' {
+    It 'Should not flag a URL change for a dependency without a URL key' {
         $NewDeps = [Dependency[]]@(
             @{ name = 'Rufus'; version = 'v4.11'; source = 'GitHub'; repository = 'pbatard/rufus' }
             @{ name = 'WinUtil'; version = '26.02.01'; source = 'GitHub'; repository = 'ChrisTitusTech/winutil' }
@@ -96,10 +94,10 @@ Describe 'Compare-Dependencies' {
         $Result.Updates.Name | Should -BeExactly @('WinUtil')
         $Result.Updates.From | Should -BeExactly @('26.01.01')
         $Result.Updates.To | Should -BeExactly @('26.02.01')
-        $Result.HasUrlChange | Should -Be $False
+        $Result.Updates[0].UrlChange | Should -Be $False
     }
 
-    It 'Should set HasUrlChange to false when URL has no version placeholder' {
+    It 'Should not flag a URL change when the URL has no version placeholder' {
         $NewDeps = [Dependency[]]@(
             @{ name = 'Rufus'; version = 'v4.11'; source = 'GitHub'; repository = 'pbatard/rufus' }
             @{ name = 'WinUtil'; version = '26.01.01'; source = 'GitHub'; repository = 'ChrisTitusTech/winutil' }
@@ -113,7 +111,7 @@ Describe 'Compare-Dependencies' {
         $Result.Updates.Name | Should -BeExactly @('TronScript')
         $Result.Updates.From | Should -BeExactly @('v12.0.5')
         $Result.Updates.To | Should -BeExactly @('v12.0.6')
-        $Result.HasUrlChange | Should -Be $False
+        $Result.Updates[0].UrlChange | Should -Be $False
     }
 
     It 'Should detect multiple dependency updates' {
@@ -133,7 +131,7 @@ Describe 'Compare-Dependencies' {
         $Result.Updates.Name | Should -Contain 'SystemRescue'
         $Result.Updates.Name | Should -Contain 'SDI'
         $Result.Updates.Name | Should -Contain 'TronScript'
-        $Result.HasUrlChange | Should -Be $True
+        @($Result.Updates | Where-Object { $_.UrlChange }).Name | Should -BeExactly @('Rufus', 'SDI')
     }
 
     It 'Should flag updates of the tools the CI runs: <Name>' -ForEach @(
@@ -147,8 +145,7 @@ Describe 'Compare-Dependencies' {
 
         $Result.Updates.Name | Should -BeExactly @($Name)
         $Result.Updates[0].ToolChange | Should -Be $True
-        $Result.HasUrlChange | Should -Be $False
-        $Result.HasToolChange | Should -Be $True
+        $Result.Updates[0].UrlChange | Should -Be $False
     }
 
     It 'Should not flag tool changes for other dependencies' {
@@ -162,7 +159,7 @@ Describe 'Compare-Dependencies' {
 
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
-        $Result.HasToolChange | Should -Be $False
+        @($Result.Updates | Where-Object { $_.ToolChange }).Count | Should -Be 0
     }
 
     It 'Should skip new dependencies not in old list' {
@@ -178,6 +175,5 @@ Describe 'Compare-Dependencies' {
         $Result = Compare-Dependencies $TestOldDeps $NewDeps $TestUrlsTemplate
 
         $Result.Updates.Count | Should -Be 0
-        $Result.HasUrlChange | Should -Be $False
     }
 }

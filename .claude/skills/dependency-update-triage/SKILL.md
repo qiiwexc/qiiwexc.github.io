@@ -23,9 +23,9 @@ that ends without one of those has not finished.
 
 **The nightly PR.** `.github/workflows/update-dependencies.yml` runs
 `tools\Invoke-DependencyUpdate.ps1`, which checks every entry in
-`resources/dependencies.json`. It opens or updates a pull request only when a versioned
-download URL, Pester or PSScriptAnalyzer moved - but the PR then carries every other
-version that moved too. There is one standing PR from `chore/update-dependencies`, titled
+`resources/dependencies.json`. It opens or updates a pull request whenever any version
+moved, including those that change nothing built (`Version record only`). There is one
+standing PR from `chore/update-dependencies`, titled
 `Update dependencies (yyyy.MM.dd)`. Each night's run starts from master and force-pushes
 over it. The PR changes `resources/dependencies.json` and nothing else. The `test` and
 `build` jobs report back as commit statuses.

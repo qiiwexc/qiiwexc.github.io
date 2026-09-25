@@ -36,8 +36,6 @@ function Compare-Dependencies {
     }
 
     return [PSCustomObject]@{
-        Updates       = $Updates.ToArray()
-        HasUrlChange  = [Bool]@($Updates | Where-Object { $_.UrlChange }).Count
-        HasToolChange = [Bool]@($Updates | Where-Object { $_.ToolChange }).Count
+        Updates = $Updates.ToArray()
     }
 }
