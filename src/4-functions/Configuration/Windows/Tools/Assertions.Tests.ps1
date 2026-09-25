@@ -27,7 +27,7 @@ Describe 'Test-WindowsDebloatIsRunning' {
         $Result.ProcessName | Should -BeExactly $TestProcess.ProcessName
 
         Should -Invoke Find-RunningScript -Exactly 1
-        Should -Invoke Find-RunningScript -Exactly 1 -ParameterFilter { $CommandLinePart -eq 'debloat.raphi.re' }
+        Should -Invoke Find-RunningScript -Exactly 1 -ParameterFilter { $CommandLinePart -eq 'Win11Debloat.ps1' }
     }
 
     It 'Should return false if debloat is not running' {

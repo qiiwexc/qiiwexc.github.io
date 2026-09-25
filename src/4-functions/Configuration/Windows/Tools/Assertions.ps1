@@ -1,5 +1,7 @@
 function Test-WindowsDebloatIsRunning {
-    return Find-RunningScript 'debloat.raphi.re'
+    # The script's path stays in the command line of the process it runs in, whether this app or the
+    # project's own launcher started it
+    return Find-RunningScript 'Win11Debloat.ps1'
 }
 
 

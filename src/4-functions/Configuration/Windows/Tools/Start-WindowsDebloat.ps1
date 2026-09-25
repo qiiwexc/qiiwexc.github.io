@@ -22,10 +22,25 @@ function Start-WindowsDebloat {
         return
     }
 
-    try {
-        Set-Variable -Option Constant TargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat\Config")
+    # Where the project's own launcher puts it too, so the registry backups of earlier runs stay where
+    # the tool's window looks for them
+    Set-Variable -Option Constant ToolPath ([String]"$($PATH_TEMP_DIR)Win11Debloat")
 
-        New-Directory $TargetPath
+    try {
+        # The release pinned in dependencies.json, checked against its recorded checksum, rather than
+        # whatever the project's launcher fetches at the moment of the click. GitHub builds the archive
+        # on request and sends no length for it, which BITS needs
+        Set-Variable -Option Constant ZipPath ([String](Start-Download '{URL_WIN11DEBLOAT}' 'Win11Debloat.zip' -Sha256 '{SHA256_WIN11DEBLOAT}' -Temp -NoBits))
+        Set-Variable -Option Constant ScriptPath ([String](Expand-WindowsDebloat $ZipPath $ToolPath))
+    } catch {
+        Out-Failure "Failed to prepare Windows debloat utility: $_"
+        return
+    }
+
+    try {
+        Set-Variable -Option Constant ConfigPath ([String]"$ToolPath\Config")
+
+        New-Directory $ConfigPath
 
         if ($UsePreset -and $Personalization) {
             Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALIZATION))
@@ -33,7 +48,7 @@ function Start-WindowsDebloat {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
         }
 
-        Set-Content "$TargetPath\LastUsedSettings.json" $Configuration -NoNewline -ErrorAction Stop
+        Set-Content "$ConfigPath\LastUsedSettings.json" $Configuration -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize Windows debloat utility configuration: $_"
     }
@@ -45,7 +60,8 @@ function Start-WindowsDebloat {
 
         if ($UsePreset -or $Personalization) {
             Set-Variable -Option Constant CustomAppsList ([String[]]($CONFIG_DEBLOAT_APP_LIST_BASE | ConvertFrom-Json | ForEach-Object { $_.AppId }))
-            $UsePresetParam = "-RunSavedSettings -RemoveApps -Apps '$($CustomAppsList -join ',')'"
+            # Double quotes: PowerShell's -File passes single quotes on as part of the value
+            $UsePresetParam = "-RunSavedSettings -RemoveApps -Apps `"$($CustomAppsList -join ',')`""
         }
 
         if ($Silent) {
@@ -58,9 +74,9 @@ function Start-WindowsDebloat {
 
         Set-Variable -Option Constant Params ([String]"-SkipExplorerRestart $SysprepParam $UsePresetParam $SilentParam".TrimEnd())
 
-        # Only the launcher is hidden: it starts Win11Debloat in a visible window of its own and waits for
-        # it to close, which is what keeps Test-WindowsDebloatIsRunning finding it until then
-        Invoke-CustomCommand -HideWindow "& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) $Params"
+        # A window of its own, as it can ask for input. The app is elevated, so Win11Debloat runs in this
+        # process rather than relaunching itself, and Test-WindowsDebloatIsRunning finds it by its path
+        Start-Process "$PATH_SYSTEM_32\WindowsPowerShell\v1.0\powershell.exe" "-NoProfile -ExecutionPolicy Bypass -File `"$ScriptPath`" $Params" -ErrorAction Stop
 
         Out-Success
     } catch {

@@ -1,23 +1,29 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . "$PSScriptRoot\..\..\..\Common\Invoke-CustomCommand.ps1"
     . "$PSScriptRoot\..\..\..\Common\Network.ps1"
     . "$PSScriptRoot\..\..\..\Common\New-Directory.ps1"
+    . "$PSScriptRoot\..\..\..\Common\Start-Download.ps1"
     . "$PSScriptRoot\Assertions.ps1"
+    . "$PSScriptRoot\Expand-WindowsDebloat.ps1"
     . "$PSScriptRoot\..\..\..\App lifecycle\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_PATH_TEMP_DIR')
+    Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_PATH_TEMP_DIR\')
+    Set-Variable -Option Constant PATH_SYSTEM_32 ([String]'TEST_PATH_SYSTEM_32')
     Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST_BASE ([String]'[{"AppId":"TestApp1"},{"AppId":"TestApp2"}]')
     Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE ([String]"TEST_CONFIG_DEBLOAT_PRESET_BASE1`nTEST_CONFIG_DEBLOAT_PRESET_BASE2")
     Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALIZATION ([String]"TEST_CONFIG_DEBLOAT_PRESET_PERSONALIZATION1`nTEST_CONFIG_DEBLOAT_PRESET_PERSONALIZATION2")
 
-    Set-Variable -Option Constant TestTargetPath ([String]"$PATH_TEMP_DIR\Win11Debloat\Config")
-    Set-Variable -Option Constant TestSettingsPath ([String]"$TestTargetPath\LastUsedSettings.json")
-    Set-Variable -Option Constant TestCommand ([String]"& ([ScriptBlock]::Create((irm 'https://debloat.raphi.re/'))) -SkipExplorerRestart")
-    Set-Variable -Option Constant TestPresetParams ([String]"-RunSavedSettings -RemoveApps -Apps 'TestApp1,TestApp2'")
+    Set-Variable -Option Constant TestZipPath ([String]'TEST_PATH_APP_DIR\Win11Debloat.zip')
+    Set-Variable -Option Constant TestToolPath ([String]'TEST_PATH_TEMP_DIR\Win11Debloat')
+    Set-Variable -Option Constant TestScriptPath ([String]"$TestToolPath\Win11Debloat.ps1")
+    Set-Variable -Option Constant TestConfigPath ([String]"$TestToolPath\Config")
+    Set-Variable -Option Constant TestSettingsPath ([String]"$TestConfigPath\LastUsedSettings.json")
+    Set-Variable -Option Constant TestPowerShell ([String]'TEST_PATH_SYSTEM_32\WindowsPowerShell\v1.0\powershell.exe')
+    Set-Variable -Option Constant TestArguments ([String]"-NoProfile -ExecutionPolicy Bypass -File `"$TestScriptPath`" -SkipExplorerRestart")
+    Set-Variable -Option Constant TestPresetParams ([String]'-RunSavedSettings -RemoveApps -Apps "TestApp1,TestApp2"')
 }
 
 Describe 'Start-WindowsDebloat' {
@@ -27,9 +33,11 @@ Describe 'Start-WindowsDebloat' {
         Mock Test-OOShutUp10IsRunning {}
         Mock Write-LogWarning {}
         Mock Test-NetworkConnection { return $True }
+        Mock Start-Download { return $TestZipPath }
+        Mock Expand-WindowsDebloat { return $TestScriptPath }
         Mock New-Directory {}
         Mock Set-Content {}
-        Mock Invoke-CustomCommand {}
+        Mock Start-Process {}
         Mock Out-Success {}
         Mock Out-Failure {}
     }
@@ -38,148 +46,108 @@ Describe 'Start-WindowsDebloat' {
         [Int]$OS_VERSION = 11
     }
 
-    It 'Should start debloat tool with configuration' {
+    It 'Should run the pinned release with the base configuration' {
         Start-WindowsDebloat
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
+        Should -Invoke Start-Download -Exactly 1
+        Should -Invoke Start-Download -Exactly 1 -ParameterFilter {
+            $URL -eq '{URL_WIN11DEBLOAT}' -and
+            $SaveAs -eq 'Win11Debloat.zip' -and
+            $Sha256 -eq '{SHA256_WIN11DEBLOAT}' -and
+            $Temp -eq $True -and
+            $NoBits -eq $True
+        }
+        Should -Invoke Expand-WindowsDebloat -Exactly 1
+        Should -Invoke Expand-WindowsDebloat -Exactly 1 -ParameterFilter {
+            $ZipPath -eq $TestZipPath -and
+            $ToolPath -eq $TestToolPath
+        }
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestTargetPath }
+        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestConfigPath }
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
             $Value -eq $CONFIG_DEBLOAT_PRESET_BASE -and
             $NoNewline -eq $True
         }
-        Should -Invoke Invoke-CustomCommand -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $HideWindow -eq $True -and
-            $Command -eq $TestCommand
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
+            $FilePath -eq $TestPowerShell -and
+            $ArgumentList -eq $TestArguments
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should start debloat tool with configuration on Windows versions older than 11' {
+    It 'Should run the pinned release on Windows versions older than 11' {
         [Int]$OS_VERSION = 10
 
         Start-WindowsDebloat
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $HideWindow -eq $True -and
-            $Command -eq $TestCommand
-        }
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq $TestArguments }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should start debloat tool with custom preset' {
+    It 'Should run with the custom preset' {
         Start-WindowsDebloat -UsePreset
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
-            $Value -eq $CONFIG_DEBLOAT_PRESET_BASE -and
-            $NoNewline -eq $True
+            $Value -eq $CONFIG_DEBLOAT_PRESET_BASE
         }
-        Should -Invoke Invoke-CustomCommand -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep $TestPresetParams"
-        }
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments -Sysprep $TestPresetParams" }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should start debloat tool with custom preset on Windows versions older than 11' {
+    It 'Should run with the custom preset on Windows versions older than 11' {
         [Int]$OS_VERSION = 10
 
         Start-WindowsDebloat -UsePreset
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $HideWindow -eq $True -and
-            $Command -eq "$TestCommand  $TestPresetParams"
-        }
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments  $TestPresetParams" }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should start debloat tool with personalization configuration' {
+    It 'Should run with the personalization configuration' {
         Start-WindowsDebloat -UsePreset -Personalization
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
             $Value -eq $CONFIG_DEBLOAT_PRESET_PERSONALIZATION -and
             $NoNewline -eq $True
         }
-        Should -Invoke Invoke-CustomCommand -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep $TestPresetParams"
-        }
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments -Sysprep $TestPresetParams" }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should start debloat tool and automatically apply' {
+    It 'Should run and apply automatically' {
         Start-WindowsDebloat -Silent
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $HideWindow -eq $True -and
-            $Command -eq "$TestCommand   -Silent"
-        }
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments   -Silent" }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should start debloat tool with custom preset and automatically apply' {
+    It 'Should run with the custom preset and apply automatically' {
         Start-WindowsDebloat -UsePreset -Silent
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1 -ParameterFilter {
-            $HideWindow -eq $True -and
-            $Command -eq "$TestCommand -Sysprep $TestPresetParams -Silent"
-        }
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments -Sysprep $TestPresetParams -Silent" }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
@@ -193,9 +161,8 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Test-NetworkConnection -Exactly 0
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
+        Should -Invoke Start-Download -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
     }
@@ -205,13 +172,11 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Test-NetworkConnection -Exactly 0
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
+        Should -Invoke Start-Download -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
     }
@@ -221,13 +186,9 @@ Describe 'Start-WindowsDebloat' {
 
         Start-WindowsDebloat
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
+        Should -Invoke Start-Download -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
     }
@@ -237,15 +198,9 @@ Describe 'Start-WindowsDebloat' {
 
         { Start-WindowsDebloat } | Should -Throw $TestException
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 0
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Start-Download -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
     }
 
     It 'Should handle Test-OOShutUp10IsRunning failure' {
@@ -253,15 +208,9 @@ Describe 'Start-WindowsDebloat' {
 
         { Start-WindowsDebloat } | Should -Throw $TestException
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Test-NetworkConnection -Exactly 0
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Start-Download -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
     }
 
     It 'Should handle Test-NetworkConnection failure' {
@@ -269,61 +218,65 @@ Describe 'Start-WindowsDebloat' {
 
         { Start-WindowsDebloat } | Should -Throw $TestException
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Start-Download -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
     }
 
-    It 'Should handle New-Directory failure' {
+    It 'Should not run anything if the download fails' {
+        Mock Start-Download { throw $TestException }
+
+        Start-WindowsDebloat
+
+        Should -Invoke Start-Download -Exactly 1
+        Should -Invoke Expand-WindowsDebloat -Exactly 0
+        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1
+    }
+
+    It 'Should not run anything if the extraction fails' {
+        Mock Expand-WindowsDebloat { throw $TestException }
+
+        Start-WindowsDebloat
+
+        Should -Invoke Expand-WindowsDebloat -Exactly 1
+        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1
+    }
+
+    It 'Should still run if the configuration folder cannot be created' {
         Mock New-Directory { throw $TestException }
 
         Start-WindowsDebloat
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
-        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should handle Set-Content failure' {
+    It 'Should still run if the configuration cannot be written' {
         Mock Set-Content { throw $TestException }
 
         Start-WindowsDebloat
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should handle Invoke-CustomCommand failure' {
-        Mock Invoke-CustomCommand { throw $TestException }
+    It 'Should handle Start-Process failure' {
+        Mock Start-Process { throw $TestException }
 
         Start-WindowsDebloat
 
-        Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
-        Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
-        Should -Invoke Test-NetworkConnection -Exactly 1
-        Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Invoke-CustomCommand -Exactly 1
+        Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
     }

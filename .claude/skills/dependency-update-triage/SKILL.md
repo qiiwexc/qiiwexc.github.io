@@ -103,7 +103,7 @@ column decides how hard to look, and it is not the same question as how big the 
 | ----------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------ |
 | a **pinned download** (below)                                     | run elevated on users' machines, from the next release on        | hardest: every check in Step 5's first bullet                |
 | a **CI tool**: Pester, PSScriptAnalyzer                           | the gate itself                                                  | the gate will tell you; read for new rules and mock changes  |
-| a **live tool**: Win11Debloat, O&O ShutUp10, SDI                  | users already have the new version, whatever this PR does        | the PR is a notice, not a gate: check what the app passes it |
+| a **live tool**: O&O ShutUp10, SDI                                | users already have the new version, whatever this PR does        | the PR is a notice, not a gate: check what the app passes it |
 | a **generator**: Unattend Generator                               | `templates/autounattend.xml`, once it is regenerated             | whether to regenerate                                        |
 | a **record**: SystemRescue, TronScript, Windows, Office Installer | a link, or a file updated by hand                                | a glance                                                     |
 | a **GitHub Action**                                               | CI, and for the deploy and release actions only the next release | Step 5's SHA rule                                            |
@@ -189,26 +189,27 @@ Generic advice misses all of these. Check each one that applies.
   - An executable was signed by the same publisher as before. Run
     `Get-AuthenticodeSignature` on the new file and on the previous version's, and treat a
     new or missing signer where there was one as a hold until explained.
-  - A script (WinUtil's `winutil.ps1`, MAS's `MAS_AIO.cmd`) is read in the notes for new
-    downloads, and checked against what the app hands it. `Start-Activator.ps1` passes MAS
-    `-el`, `/HWID` and `/Ohook`, and fetches it from
+  - A script (WinUtil's `winutil.ps1`, MAS's `MAS_AIO.cmd`, Win11Debloat's source archive)
+    is read in the notes for new downloads, and checked against what the app hands it.
+    `Start-Activator.ps1` passes MAS `-el`, `/HWID` and `/Ohook`, and fetches it from
     `MAS/All-In-One-Version-KL/MAS_AIO.cmd` at the release tag. `Start-WinUtil.ps1` relies
-    on WinUtil not relaunching itself when already elevated.
+    on WinUtil not relaunching itself when already elevated. `Start-WindowsDebloat.ps1`
+    runs `Win11Debloat.ps1` from the archive's single top folder with `-SkipExplorerRestart`,
+    `-Sysprep`, `-RunSavedSettings`, `-RemoveApps`, `-Apps` and `-Silent`, and writes its
+    `Config\LastUsedSettings.json` from `src/3-configs/Windows/Tools/Debloat preset *.json`
+    and `Debloat app list base.json`: a renamed parameter, or a setting or app ID the tool
+    no longer knows (it skips those silently), is a change needed first.
 
   A pinned file that moves inside its upstream repository fails the checksum download.
   The nightly then keeps the old version with a warning in the workflow log, so **a
   pinned dependency that has stopped updating is itself a finding** - compare its version
   with the upstream's latest release.
 
-- **A live tool has already changed under the app.** Win11Debloat is fetched from
-  `debloat.raphi.re` at click time. `Start-WindowsDebloat.ps1` passes it
-  `-SkipExplorerRestart`, `-Sysprep`, `-RunSavedSettings`, `-RemoveApps`, `-Apps` and
-  `-Silent`, and writes its `LastUsedSettings.json` from
-  `src/3-configs/Windows/Tools/Debloat preset *.json` and `Debloat app list base.json`. A
-  renamed parameter or setting ID is in effect for users the day it is released, so the
-  fix goes to master at once, whatever happens to the PR. O&O ShutUp10 is live in the
-  same way: `OOShutUp10.cfg` names the version that exported it in its header (`V3.5.1130`),
-  and a new release may need it exported again.
+- **A live tool has already changed under the app.** O&O ShutUp10 is fetched from a URL
+  without a version at click time, so a new release is in effect for users the day it is
+  published, and a fix it needs goes to master at once, whatever happens to the PR.
+  `OOShutUp10.cfg` names the version that exported it in its header (`V3.5.1130`), and a
+  new release may need it exported again.
 - **The CI tools are loaded at their exact pinned versions.** `tools\test.ps1` and the
   linter load the versions in `dependencies.json`, so on the PR head run
   `install-dependencies.bat` before the gate, or it fails to load them. A PSScriptAnalyzer
@@ -293,19 +294,20 @@ table, and `changed_files: 1` - `resources/dependencies.json`, four lines each w
 | dependency         | from → to               | changes             | what it is                                    |
 | ------------------ | ----------------------- | ------------------- | --------------------------------------------- |
 | Unattend Generator | `781fde5` → `538f930`   | Version record only | the generator of `templates/autounattend.xml` |
-| Win11Debloat       | 2026.07.11 → 2026.08.24 | Version record only | a live tool                                   |
+| Win11Debloat       | 2026.07.11 → 2026.08.24 | Version record only | a live tool at the time (pinned since)        |
 | OOShutUp10         | 3.4 → 3.5               | Version record only | a live tool with an embedded config           |
 | Pester             | 6.1.0 → 6.2.0           | CI tool             | a CI tool                                     |
 
-Pester is why the PR opened; the gate is its whole test, and `ci.yml`'s `test` and `build`
+Pester is the only row that changes what CI checks; the gate is its whole test, and `ci.yml`'s `test` and `build`
 check runs were green. The other three rows say "Version record only", yet two of them
 needed work:
 
 - **Win11Debloat 2026.08.24** deprecated `NoRestartExplorer` in favour of
   `SkipExplorerRestart`, in a note at the top of its release. `Start-WindowsDebloat.ps1`
-  passed `-NoRestartExplorer`. Win11Debloat is live, so users already had the new
-  version, and the fix could not wait for the merge: it went to master as part of
-  `01379ab`.
+  passed `-NoRestartExplorer`. Win11Debloat was fetched live then, so users already had
+  the new version, and the fix could not wait for the merge: it went to master as part of
+  `01379ab`. Pinned, the same release would arrive as a `Download URL` row, and the rename
+  would be a change needed before merging.
 - **O&O ShutUp10 3.5** has no notes in the body (its changelog is on another site, in the
   links). The embedded `OOShutUp10.cfg` had been exported by V3.4.1124, and was exported
   again with V3.5.1130 in `e0b4cea`.

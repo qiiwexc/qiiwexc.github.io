@@ -42,7 +42,8 @@
         "version":  "2026.08.24",
         "source":  "GitHub",
         "mode":  "releases",
-        "repository":  "Raphire/Win11Debloat"
+        "repository":  "Raphire/Win11Debloat",
+        "sha256":  "00d1487b2e9b9691653774cc781ed3844e4b2fd5b0d91c32f6f78aa8c7892bd4"
     },
     {
         "name":  "Ventoy",
