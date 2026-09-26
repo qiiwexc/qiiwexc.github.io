@@ -2,7 +2,8 @@
 
 param(
     [Switch]$Coverage,
-    [Switch]$Wip
+    [Switch]$Wip,
+    [Switch]$Visual
 )
 
 Set-StrictMode -Version Latest
@@ -19,7 +20,7 @@ try {
     throw "Pester $PesterVersion is not installed, run install-dependencies.bat: $_"
 }
 
-Set-Variable -Option Constant Configuration ([PesterConfiguration](New-PesterConfiguration -Hashtable (. "$ProjectRoot/PesterSettings.ps1" -Coverage:$Coverage -Wip:$Wip)))
+Set-Variable -Option Constant Configuration ([PesterConfiguration](New-PesterConfiguration -Hashtable (. "$ProjectRoot/PesterSettings.ps1" -Coverage:$Coverage -Wip:$Wip -Visual:$Visual)))
 $Configuration.Run.PassThru = $True
 
 Set-Variable -Option Constant Result ([PSObject](Invoke-Pester -Configuration $Configuration))

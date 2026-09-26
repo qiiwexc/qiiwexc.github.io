@@ -41,6 +41,7 @@ failures as environmental, not regressions.
 | Run tests              | `.\test.bat` (Pester via `tools\test.ps1`)                               |
 | Tests with coverage    | `.\test-with-coverage.bat` (what CI runs; fails below the target)        |
 | Tests tagged `WIP`     | `.\test-wip.bat`                                                         |
+| Visual comparison      | `.\test-visual.bat` (tabs rendered from `HEAD` and the working tree)     |
 | Run a single test file | `Invoke-Pester -Path 'src\4-functions\Common\Start-Download.Tests.ps1'`  |
 | Full build, as CI does | `.\build-ci.bat` (runs `tools\build.ps1 -Full -CI`)                      |
 | Dev build + run        | `.\build-dev.bat` (runs `tools\build.ps1 -Dev`)                          |
@@ -139,11 +140,20 @@ Each tab is data: `src/2-ui/<Tab>.ps1` defines a `TAB_<NAME>` hashtable of cards
 - Some `src/0-init` scripts run as soon as they are loaded (`2 Start elevated.ps1` relaunches
   PowerShell elevated), so their tests pull the functions out through the parser instead of
   dot-sourcing the script
-- Pester runs `tools/`, `src/0-init`, `src/1-components`, `src/3-configs` and `src/4-functions`;
-  `src/3-configs/Configs.Tests.ps1` checks every JSON and `.reg` config, and that each
-  `$CONFIG_*` the code uses is embedded. Coverage is measured on `tools/common`, `tools/build`,
-  `src/1-components` and `src/4-functions`
-- Tag tests `WIP` to run them in isolation via `.\test-wip.bat`
+- Pester runs `tools/`, `src/0-init`, `src/1-components`, `src/2-ui`, `src/3-configs` and
+  `src/4-functions`; `src/3-configs/Configs.Tests.ps1` checks every JSON and `.reg` config, and
+  that each `$CONFIG_*` the code uses is embedded. Coverage is measured on `tools/common`,
+  `tools/build`, `src/1-components` and `src/4-functions`
+- Tag tests `WIP` to run them in isolation via `.\test-wip.bat`. Tests tagged `Visual` (the
+  rendering comparison in `tools/ui`) run only with `-Visual`, via `.\test-visual.bat`, never in
+  CI
+- Test files run in parallel (`Run.Parallel` in `PesterSettings.ps1`), each in a runspace of its
+  own on an MTA thread — except with coverage, which is several times slower in parallel, so CI's
+  run stays sequential. A file that builds WPF controls (they need STA) or changes process-wide
+  state (environment variables, the current directory, the console encoding) starts with a
+  `#pester:no-parallel` comment saying why, and runs in the calling session after the parallel
+  batch. The root `Pester.BeforeContainer.ps1` gives every file the strict mode and `Stop` error
+  preference of `tools\test.ps1`, which a fresh runspace would not have
 - Windows-only commands (BITS, CIM, `chkdsk`, `DISM`, `powercfg`, scheduled tasks, Defender) are
   stubbed at the top of `BeforeAll` with simple `function` declarations so Pester can mock them on
   any host — follow that pattern when a test needs to mock a new Windows-only command

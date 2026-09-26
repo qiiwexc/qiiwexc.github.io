@@ -101,9 +101,9 @@ ceiling.
   `tools/common/`.
 - **Tests** - the `*.Tests.ps1` suites next to each source file, the stubs for
   Windows-only commands, `PesterSettings.ps1`, `tools/test.ps1`, what is and is
-  not covered (the Pester run skips `src/2-ui` and `src/5-interface` entirely,
-  and measures no coverage for `src/0-init` and `src/3-configs` - is that
-  right?).
+  not covered (the Pester run skips `src/5-interface` entirely, and measures no
+  coverage for `src/0-init`, `src/2-ui` and `src/3-configs` - is that right?),
+  and the opt-in `Visual` rendering comparison in `tools/ui`.
 - **CI/CD** - `.github/workflows/`, `.github/actions/`, `.github/dependabot.yml`,
   the tag, deploy and release paths, and the nightly dependency update.
 - **Configuration** - `PSScriptAnalyzerSettings.psd1`, `PesterSettings.ps1`,

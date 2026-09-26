@@ -1,6 +1,7 @@
 param(
     [Switch]$Coverage,
-    [Switch]$Wip
+    [Switch]$Wip,
+    [Switch]$Visual
 )
 
 # Paths are absolute, so the suite behaves the same whatever the current directory is
@@ -20,12 +21,16 @@ param(
             "$PSScriptRoot\tools",
             "$PSScriptRoot\src\0-init",
             "$PSScriptRoot\src\1-components",
+            "$PSScriptRoot\src\2-ui",
             "$PSScriptRoot\src\3-configs",
             "$PSScriptRoot\src\4-functions"
         )
     }
     Filter       = @{
-        Tag = $(if ($Wip) { 'WIP' } else { $Null })
+        Tag        = $(if ($Wip) { 'WIP' } elseif ($Visual) { 'Visual' } else { $Null })
+        # The visual comparison renders the window twice, from the committed source and the working
+        # tree, so it runs only when asked for (-Visual, test-visual.bat)
+        ExcludeTag = $(if ($Visual) { $Null } else { 'Visual' })
     }
     CodeCoverage = @{
         Enabled    = $Coverage.ToBool()
