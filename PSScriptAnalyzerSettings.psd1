@@ -6,34 +6,34 @@
         'PSUseSingularNouns'
     )
     Rules        = @{
-        PSAlignAssignmentStatement                 = @{
+        PSAlignAssignmentStatement                = @{
             Enable         = $True
             CheckHashtable = $True
         }
-        PSAvoidExclaimOperator                     = @{
+        PSAvoidExclaimOperator                    = @{
             Enable = $True
         }
-        PSAvoidSemicolonsAsLineTerminators         = @{
+        PSAvoidSemicolonsAsLineTerminators        = @{
             Enable = $True
         }
-        PSAvoidUsingDoubleQuotesForConstantStrings = @{
+        PSAvoidUsingDoubleQuotesForConstantString = @{
             Enable = $True
         }
-        PSPlaceCloseBrace                          = @{
+        PSPlaceCloseBrace                         = @{
             Enable             = $True
             IgnoreOneLineBlock = $True
             NewLineAfter       = $False
         }
-        PSPlaceOpenBrace                           = @{
+        PSPlaceOpenBrace                          = @{
             Enable             = $True
             OnSameLine         = $True
             NewLineAfter       = $True
             IgnoreOneLineBlock = $True
         }
-        PSUseCompatibleCmdlets                     = @{
+        PSUseCompatibleCmdlets                    = @{
             compatibility = @('desktop-5.1.14393.206-windows')
         }
-        PSUseCompatibleSyntax                      = @{
+        PSUseCompatibleSyntax                     = @{
             Enable         = $True
             TargetVersions = @(
                 '7.6',
@@ -49,13 +49,13 @@
                 '5.1'
             )
         }
-        PSUseConsistentIndentation                 = @{
+        PSUseConsistentIndentation                = @{
             Enable              = $True
             IndentationSize     = 4
             PipelineIndentation = 'IncreaseIndentationForFirstPipeline'
             Kind                = 'space'
         }
-        PSUseCorrectCasing                         = @{
+        PSUseCorrectCasing                        = @{
             Enable        = $True
             CheckCommands = $True
             CheckKeyword  = $True

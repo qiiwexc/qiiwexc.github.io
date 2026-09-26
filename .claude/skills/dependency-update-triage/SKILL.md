@@ -217,6 +217,11 @@ Generic advice misses all of these. Check each one that applies.
   prints every finding before failing. The answer is to fix the code, or to add a
   documented exclusion in `PSScriptAnalyzerSettings.psd1` where the rule is wrong for this
   codebase. Never quietly pin the tool back.
+- **A PSScriptAnalyzer release can end the one-rule-per-call linting.** `Invoke-Linter` runs
+  each rule on its own because concurrent command lookups race on Windows PowerShell 5.1
+  (upstream: PowerShell/PSScriptAnalyzer#2206, open as of 2026-09-26). When a release's notes
+  say the lookups are serialised, name it as something to adopt: one call per path again,
+  verified by linting in ten fresh processes without a single rule error.
 - **Actions are pinned by full SHA**, as `uses: owner/action@<sha> # vX.Y.Z`. Check that
   the trailing comment moved with the SHA, and that the SHA is the tag's commit:
 

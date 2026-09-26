@@ -155,26 +155,9 @@ if ($Lint) {
         throw "PSScriptAnalyzer $AnalyzerVersion is not installed, run install-dependencies.bat: $_"
     }
 
-    Set-Variable -Option Constant MaxRetries ([Int]3)
-    Set-Variable -Option Constant AnalyzerSettings ([String]"$ProjectRoot\PSScriptAnalyzerSettings.psd1")
-
-    # The bundle, as that is what ships, and the build tooling, whose files stand alone and are linted in place.
-    # The analyzer intermittently fails with a rule error of its own rather than a finding, hence the retries
-    [Collections.Generic.List[PSObject]]$Findings = @()
-    foreach ($LintTarget in @($Ps1File, $ToolsPath)) {
-        for ($i = 1; $i -le $MaxRetries; $i++) {
-            try {
-                $Findings.AddRange([PSObject[]]@(Invoke-ScriptAnalyzer -Path $LintTarget -Recurse -Settings $AnalyzerSettings -ErrorAction Stop))
-                break
-            } catch {
-                if ($i -eq $MaxRetries) {
-                    throw
-                }
-                Write-LogInfo "Linter failed (attempt $i/$MaxRetries), retrying..."
-                Start-Sleep -Seconds 1
-            }
-        }
-    }
+    # The bundle, as that is what ships, and the build tooling, whose files stand alone and are linted in place
+    . "$BuilderPath\Invoke-Linter.ps1"
+    Set-Variable -Option Constant Findings ([PSObject[]]@(Invoke-Linter @($Ps1File, $ToolsPath) "$ProjectRoot\PSScriptAnalyzerSettings.psd1"))
 
     if ($Findings.Count -gt 0) {
         $Findings | Format-Table -AutoSize -Wrap ScriptName, Line, RuleName, Message | Out-String -Width 200 | Write-Host
