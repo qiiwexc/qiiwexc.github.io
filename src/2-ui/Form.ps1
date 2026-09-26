@@ -3,8 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="$($HOST.UI.RawUI.WindowTitle)"
-    MinWidth="$FORM_MIN_WIDTH" MinHeight="$FORM_MIN_HEIGHT"
-    Width="$FORM_MIN_WIDTH" Height="$FORM_MIN_HEIGHT"
+    MinWidth="$FORM_MIN_WIDTH" Width="$FORM_MIN_WIDTH"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None" AllowsTransparency="True" Background="Transparent"
     ResizeMode="CanResizeWithGrip">
@@ -342,12 +341,12 @@
 Set-Variable -Option Constant FORM ([Windows.Window]([Windows.Markup.XamlReader]::Parse($XAML_FORM)))
 
 # Never larger than the screen (a 1366x768 laptop, or 150% scaling on 1080p): the log and progress bar
-# at the bottom must stay reachable. The tab pages scroll, and the window can be resized from its grip
+# at the bottom must stay reachable. The tab pages scroll, and the window can be resized from its grip.
+# It starts as tall as the screen allows and, once laid out, shrinks to fit its tallest tab
 Set-Variable -Option Constant WorkArea ([Windows.Rect][Windows.SystemParameters]::WorkArea)
 $FORM.MinWidth = [Math]::Min($FORM.MinWidth, $WorkArea.Width)
-$FORM.MinHeight = [Math]::Min($FORM.MinHeight, $WorkArea.Height)
 $FORM.Width = [Math]::Min($FORM.Width, $WorkArea.Width)
-$FORM.Height = [Math]::Min($FORM.Height, $WorkArea.Height)
+$FORM.Height = $WorkArea.Height
 
 Set-ThemeResources $FORM
 
@@ -370,6 +369,14 @@ $TitleBar.Add_MouseLeftButtonDown( {
         try { $FORM.DragMove() } catch { $null = $_ }
     } )
 
+# A window that cannot be fitted to its tabs stays as tall as the screen, which still shows everything
+$FORM.Add_Loaded( {
+        try {
+            Set-WindowHeight -Window $FORM -TabControl $TAB_CONTROL -MaxHeight $WorkArea.Height
+        } catch {
+            Write-LogWarning "Failed to fit the window to its tabs: $_"
+        }
+    } )
 $FORM.Add_ContentRendered( { Initialize-App } )
 $FORM.Add_Closing( { Reset-State } )
 

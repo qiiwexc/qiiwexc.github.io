@@ -5,7 +5,6 @@ Set-Variable -Option Constant FONT_SIZE_HEADER ([Int]16)
 
 Set-Variable -Option Constant CARD_COLUMN_WIDTH ([Int]230)
 Set-Variable -Option Constant FORM_MIN_WIDTH ([Int]725)
-Set-Variable -Option Constant FORM_MIN_HEIGHT ([Int]765)
 
 function Get-DllIcon {
     param([Int]$Index)

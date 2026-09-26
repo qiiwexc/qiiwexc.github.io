@@ -59,8 +59,9 @@ $SnapshotFrame.SetResourceReference([Windows.Controls.Border]::BackgroundPropert
 ([Windows.Controls.Panel]$TAB_CONTROL.Parent).Children.Remove($TAB_CONTROL)
 $SnapshotFrame.Child = $TAB_CONTROL
 
-# The width the tabs have in the window: its 1-pixel border and the tab control's margins taken off
-Set-Variable -Option Constant SnapshotWidth ([Int]($FORM_MIN_WIDTH - 2 - 16))
+# The width inside the window's 1-pixel border; the tab control keeps its own margins in the frame, so the cards wrap
+# in as many columns as they do in the window
+Set-Variable -Option Constant SnapshotWidth ([Int]($FORM_MIN_WIDTH - 2))
 
 Set-Variable -Option Constant SnapshotThemes ([Ordered]@{
         Light        = Get-ThemeColors -Light
