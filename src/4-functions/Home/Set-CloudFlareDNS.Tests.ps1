@@ -1,8 +1,8 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
-    . "$PSScriptRoot\..\..\Common\Network.ps1"
-    . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\Common\Network.ps1"
+    . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 

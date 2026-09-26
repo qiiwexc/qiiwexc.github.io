@@ -10,9 +10,10 @@ Set-Variable -Option Constant TAB_HOME ([Hashtable]@{
                 )
             }
             @{
-                Card  = 'Cleanup'
+                Card  = 'Optimization'
                 Items = @(
                     @{ Button = 'Run cleanup'; Action = { Start-AsyncOperation -Button $this { Start-Cleanup } } }
+                    @{ Button = 'Defragment drives'; Action = { Start-Defragmentation } }
                 )
             }
             @{
@@ -36,9 +37,28 @@ Set-Variable -Option Constant TAB_HOME ([Hashtable]@{
                 )
             }
             @{
-                Card  = 'Defragmentation'
+                Card  = 'Alternative DNS'
                 Items = @(
-                    @{ Button = 'Defragment drives'; Action = { Start-Defragmentation } }
+                    @{
+                        Button  = 'Setup CloudFlare DNS'
+                        Action  = {
+                            $MalwareProtection = $CHECKBOXES.CloudFlareAntiMalware.IsChecked
+                            $FamilyFriendly = $CHECKBOXES.CloudFlareFamilyFriendly.IsChecked
+                            Start-AsyncOperation -Button $this { Set-CloudFlareDNS -MalwareProtection:$MalwareProtection -FamilyFriendly:$FamilyFriendly } -Variables @{
+                                MalwareProtection = $MalwareProtection
+                                FamilyFriendly    = $FamilyFriendly
+                            }
+                        }
+                        Options = @(
+                            @{
+                                CheckBox = 'Malware protection'
+                                Name     = 'CloudFlareAntiMalware'
+                                Checked  = $True
+                                OnClick  = { Set-CheckboxState -Control $this -Dependant $CHECKBOXES.CloudFlareFamilyFriendly }
+                            }
+                            @{ CheckBox = 'Adult content filtering'; Name = 'CloudFlareFamilyFriendly' }
+                        )
+                    }
                 )
             }
             @{

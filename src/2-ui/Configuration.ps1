@@ -32,56 +32,6 @@ Set-Variable -Option Constant TAB_CONFIGURATION ([Hashtable]@{
         Tab   = 'Configuration'
         Cards = @(
             @{
-                Card  = 'Apps configuration'
-                Items = @(
-                    @{ CheckBox = '7-Zip'; Name = 'Config_7zip'; Tag = '7-Zip'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'VLC'; Name = 'Config_VLC'; Tag = 'VLC'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'AnyDesk'; Name = 'Config_AnyDesk'; Tag = 'AnyDesk'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'qBittorrent'; Name = 'Config_qBittorrent'; Tag = 'qBittorrent'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'Microsoft Edge'; Name = 'Config_Edge'; Tag = 'Microsoft Edge'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'Google Chrome'; Name = 'Config_Chrome'; Tag = 'Google Chrome'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
-                    @{
-                        Button = 'Apply configuration'
-                        Name   = 'ApplyAppsConfiguration'
-                        Action = {
-                            $CapturedAppsConfig = @{}
-                            foreach ($Entry in $APPS_CONFIGURATION_CHECKBOXES.GetEnumerator()) {
-                                $CheckBox = $CHECKBOXES[$Entry.Value]
-                                $CapturedAppsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $CheckBox.IsChecked; Tag = [String]$CheckBox.Tag }
-                            }
-                            Start-AsyncOperation -Button $this { Set-AppsConfiguration @CapturedAppsConfig } -Variables @{
-                                CapturedAppsConfig = $CapturedAppsConfig
-                            }
-                        }
-                    }
-                )
-            }
-            @{
-                Card  = 'Windows configuration'
-                Items = @(
-                    @{ CheckBox = 'Improve security'; Name = 'Config_WindowsSecurity'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'Improve performance'; Name = 'Config_WindowsPerformance'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'Baseline configuration'; Name = 'Config_WindowsBaseline'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'Remove ads and annoyances'; Name = 'Config_WindowsAnnoyances'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'Telemetry and privacy'; Name = 'Config_WindowsPrivacy'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'Keyboard layout; location'; Name = 'Config_WindowsLocalization'; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
-                    @{ CheckBox = 'Personalization'; Name = 'Config_WindowsPersonalization'; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
-                    @{
-                        Button = 'Apply configuration'
-                        Name   = 'ApplyWindowsConfiguration'
-                        Action = {
-                            $CapturedWindowsConfig = @{}
-                            foreach ($Entry in $WINDOWS_CONFIGURATION_CHECKBOXES.GetEnumerator()) {
-                                $CapturedWindowsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $CHECKBOXES[$Entry.Value].IsChecked }
-                            }
-                            Start-AsyncOperation -Button $this { Set-WindowsConfiguration @CapturedWindowsConfig } -Variables @{
-                                CapturedWindowsConfig = $CapturedWindowsConfig
-                            }
-                        }
-                    }
-                )
-            }
-            @{
                 Card  = 'Debloat Windows'
                 Items = @(
                     @{
@@ -132,27 +82,52 @@ Set-Variable -Option Constant TAB_CONFIGURATION ([Hashtable]@{
                 )
             }
             @{
-                Card  = 'Alternative DNS'
+                Card  = 'Windows configuration'
                 Items = @(
+                    @{ CheckBox = 'Improve security'; Name = 'Config_WindowsSecurity'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Improve performance'; Name = 'Config_WindowsPerformance'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Baseline configuration'; Name = 'Config_WindowsBaseline'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Remove ads and annoyances'; Name = 'Config_WindowsAnnoyances'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Telemetry and privacy'; Name = 'Config_WindowsPrivacy'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Keyboard layout; location'; Name = 'Config_WindowsLocalization'; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Personalization'; Name = 'Config_WindowsPersonalization'; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
                     @{
-                        Button  = 'Setup CloudFlare DNS'
-                        Action  = {
-                            $MalwareProtection = $CHECKBOXES.CloudFlareAntiMalware.IsChecked
-                            $FamilyFriendly = $CHECKBOXES.CloudFlareFamilyFriendly.IsChecked
-                            Start-AsyncOperation -Button $this { Set-CloudFlareDNS -MalwareProtection:$MalwareProtection -FamilyFriendly:$FamilyFriendly } -Variables @{
-                                MalwareProtection = $MalwareProtection
-                                FamilyFriendly    = $FamilyFriendly
+                        Button = 'Apply configuration'
+                        Name   = 'ApplyWindowsConfiguration'
+                        Action = {
+                            $CapturedWindowsConfig = @{}
+                            foreach ($Entry in $WINDOWS_CONFIGURATION_CHECKBOXES.GetEnumerator()) {
+                                $CapturedWindowsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $CHECKBOXES[$Entry.Value].IsChecked }
+                            }
+                            Start-AsyncOperation -Button $this { Set-WindowsConfiguration @CapturedWindowsConfig } -Variables @{
+                                CapturedWindowsConfig = $CapturedWindowsConfig
                             }
                         }
-                        Options = @(
-                            @{
-                                CheckBox = 'Malware protection'
-                                Name     = 'CloudFlareAntiMalware'
-                                Checked  = $True
-                                OnClick  = { Set-CheckboxState -Control $this -Dependant $CHECKBOXES.CloudFlareFamilyFriendly }
+                    }
+                )
+            }
+            @{
+                Card  = 'Apps configuration'
+                Items = @(
+                    @{ CheckBox = '7-Zip'; Name = 'Config_7zip'; Tag = '7-Zip'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'VLC'; Name = 'Config_VLC'; Tag = 'VLC'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'AnyDesk'; Name = 'Config_AnyDesk'; Tag = 'AnyDesk'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'qBittorrent'; Name = 'Config_qBittorrent'; Tag = 'qBittorrent'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Microsoft Edge'; Name = 'Config_Edge'; Tag = 'Microsoft Edge'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Google Chrome'; Name = 'Config_Chrome'; Tag = 'Google Chrome'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{
+                        Button = 'Apply configuration'
+                        Name   = 'ApplyAppsConfiguration'
+                        Action = {
+                            $CapturedAppsConfig = @{}
+                            foreach ($Entry in $APPS_CONFIGURATION_CHECKBOXES.GetEnumerator()) {
+                                $CheckBox = $CHECKBOXES[$Entry.Value]
+                                $CapturedAppsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $CheckBox.IsChecked; Tag = [String]$CheckBox.Tag }
                             }
-                            @{ CheckBox = 'Adult content filtering'; Name = 'CloudFlareFamilyFriendly' }
-                        )
+                            Start-AsyncOperation -Button $this { Set-AppsConfiguration @CapturedAppsConfig } -Variables @{
+                                CapturedAppsConfig = $CapturedAppsConfig
+                            }
+                        }
                     }
                 )
             }
