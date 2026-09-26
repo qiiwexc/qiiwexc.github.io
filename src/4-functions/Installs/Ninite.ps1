@@ -1,5 +1,11 @@
 function Set-NiniteButtonState {
-    $CHECKBOX_StartNinite.IsEnabled = $NINITE_CHECKBOXES.Where({ $_.IsChecked }, 'First', 1)
+    param(
+        [Parameter(Position = 0, Mandatory)][Windows.Controls.CheckBox[]]$Checkboxes,
+        [Parameter(Position = 1, Mandatory)][Windows.Controls.CheckBox]$StartCheckbox
+    )
+
+    # There is nothing to start without an app to install
+    $StartCheckbox.IsEnabled = [Bool]$Checkboxes.Where({ $_.IsChecked }, 'First', 1).Count
 }
 
 

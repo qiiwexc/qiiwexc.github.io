@@ -1,3 +1,5 @@
+#pester:no-parallel - builds WPF controls, which need an STA thread, and parallel workers are MTA
+
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
@@ -11,41 +13,29 @@ BeforeAll {
 
 Describe 'New-Card' {
     BeforeEach {
-        $script:LayoutContext = @{
-            CurrentGroup            = $Null
-            PreviousButton          = @{}
-            PreviousLabelOrCheckbox = @{}
-            CenteredCheckboxGroup   = @{}
-            CurrentTab              = New-Object Windows.Controls.WrapPanel
-        }
+        Set-Variable -Option Constant Parent ([Windows.Controls.WrapPanel]::new())
     }
 
-    It 'Should create a new card' {
-        New-Card $TestText
+    It 'Should add a card to its parent, and return the panel for its items' {
+        Set-Variable -Option Constant Result ([Windows.Controls.StackPanel](New-Card $Parent $TestText))
 
-        $script:LayoutContext.CurrentTab.Children.Count | Should -BeExactly 1
+        $Parent.Children.Count | Should -BeExactly 1
 
-        $script:LayoutContext.PreviousButton | Should -BeNullOrEmpty
-        $script:LayoutContext.PreviousLabelOrCheckbox | Should -BeNullOrEmpty
-        $script:LayoutContext.CenteredCheckboxGroup | Should -BeNullOrEmpty
-
-        $script:LayoutContext.CurrentGroup | Should -Not -BeNullOrEmpty
-        $script:LayoutContext.CurrentGroup | Should -BeOfType [Windows.Controls.StackPanel]
-
-        Set-Variable -Option Constant CardBorder ([Windows.Controls.Border]$script:LayoutContext.CurrentTab.Children[0])
+        Set-Variable -Option Constant CardBorder ([Windows.Controls.Border]$Parent.Children[0])
         $CardBorder.CornerRadius.TopLeft | Should -BeExactly 4
         $CardBorder.Padding.Left | Should -BeExactly 16
+        $CardBorder.Child | Should -BeExactly $Result
 
-        Set-Variable -Option Constant HeaderText ([Windows.Controls.TextBlock]$script:LayoutContext.CurrentGroup.Children[0])
+        Set-Variable -Option Constant HeaderText ([Windows.Controls.TextBlock]$Result.Children[0])
         $HeaderText.Text | Should -BeExactly $TestText
         $HeaderText.FontWeight | Should -BeExactly ([Windows.FontWeights]::Bold)
         $HeaderText.FontSize | Should -BeExactly $FONT_SIZE_HEADER
     }
 
     It 'Should add multiple cards' {
-        New-Card 'First'
-        New-Card 'Second'
+        [Void](New-Card $Parent 'First')
+        [Void](New-Card $Parent 'Second')
 
-        $script:LayoutContext.CurrentTab.Children.Count | Should -BeExactly 2
+        $Parent.Children.Count | Should -BeExactly 2
     }
 }

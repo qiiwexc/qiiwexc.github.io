@@ -34,32 +34,21 @@ BeforeAll {
 
 Describe 'Set-NiniteButtonState' {
     BeforeEach {
-        Set-Variable -Option Constant CHECKBOX_StartNinite (& { $cb = New-Object Windows.Controls.CheckBox; $cb.IsEnabled = $False; $cb })
+        Set-Variable -Option Constant StartCheckbox ([Windows.Controls.CheckBox]::new())
     }
 
-    It 'Should enable the Ninite button when at least one checkbox is checked' {
-        [Windows.Controls.CheckBox[]]$NINITE_CHECKBOXES =
-        @(
-            $TEST_CHECKBOX_1,
-            $TEST_CHECKBOX_2,
-            $TEST_CHECKBOX_3
-        )
+    It 'Should enable the start checkbox when at least one app is checked' {
+        $StartCheckbox.IsEnabled = $False
 
-        Set-NiniteButtonState
+        Set-NiniteButtonState @($TEST_CHECKBOX_1, $TEST_CHECKBOX_2, $TEST_CHECKBOX_3) $StartCheckbox
 
-        $CHECKBOX_StartNinite.IsEnabled | Should -BeTrue
+        $StartCheckbox.IsEnabled | Should -BeTrue
     }
 
-    It 'Should disable the Ninite button when no checkboxes are checked' {
-        [Windows.Controls.CheckBox[]]$NINITE_CHECKBOXES =
-        @(
-            $TEST_CHECKBOX_2,
-            $TEST_CHECKBOX_2
-        )
+    It 'Should disable the start checkbox when no app is checked' {
+        Set-NiniteButtonState @($TEST_CHECKBOX_2, $TEST_CHECKBOX_2) $StartCheckbox
 
-        Set-NiniteButtonState
-
-        $CHECKBOX_StartNinite.IsEnabled | Should -BeFalse
+        $StartCheckbox.IsEnabled | Should -BeFalse
     }
 }
 

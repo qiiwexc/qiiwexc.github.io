@@ -21,8 +21,8 @@ ask for it.
 - Never edit anything under `build/` — it is generated output.
 - `d/` and `public/` are live GitHub Pages payloads that end users download and execute — treat
   any change there as a release.
-- Do not renumber the numeric filename prefixes casually: they define the bundle order of the
-  built script.
+- Do not renumber the numeric prefixes of the `src/` directories or the `src/0-init` files
+  casually: they define the order the built script runs in.
 
 ## Platform Constraints
 
@@ -86,7 +86,7 @@ matching task.** Each of these is the authority on its procedure; this file does
 
 ### Source-to-Script Bundling
 
-`tools/build/New-PowerShellScript.ps1` concatenates all files under `src/` except `*.Tests.ps1` into a single `build/qiiwexc.ps1`, in `Get-ChildItem -Recurse` order: a directory's own files first, in name order, then its subdirectories, in name order — so `2-ui/Form.ps1` precedes everything in `2-ui/1-Home/`. File ordering is controlled by numeric prefixes on filenames and directories (e.g., `0-init/`, `1-components/`, `0 Parameters.ps1`). Leading numeric prefixes on each path segment are stripped from `#region` names in the output. The build fails if any `{KEY}` placeholder is left unresolved or if the bundled script does not parse.
+`tools/build/New-PowerShellScript.ps1` concatenates all files under `src/` except `*.Tests.ps1` into a single `build/qiiwexc.ps1`, in the order `tools/build/Get-SourceFiles.ps1` spells out: a directory's own files first, then its subdirectories, each level in name order (ordinal, ignoring case, as NTFS lists them). The order matters only where code runs as it loads, so the numeric prefixes that control it are on the top-level directories (`0-init/` … `5-interface/`) and on the files in `0-init/` (`0 Parameters.ps1`, …); everything else defines functions, constants or tab definitions. Leading numeric prefixes on each path segment are stripped from `#region` names in the output. The build fails if any `{KEY}` placeholder is left unresolved or if the bundled script does not parse.
 
 The answer files are built from `templates/autounattend.xml`, which also carries sections for the development VM only (disk 0 partitioning, a local auto-logon account). `tools/build/New-UnattendedFile.ps1` strips them from the published files, and `tools/build/unattended/Assert-UnattendedFile.ps1` fails the build if any remain, a `{KEY}` placeholder is unresolved, or the XML is not well-formed. The template is the output of the [unattend generator](https://schneegans.de/windows/unattend-generator/); the URL in its first comment reproduces it. After regenerating it, run the tests: `New-UnattendedBase` fails if something it rewrites (such as the `RemovePackage.ps1` package list) is gone, and `New-UnattendedFile.Tests.ps1` builds the real template end to end.
 
@@ -106,16 +106,21 @@ Locally: `YY.M.D` (from current date). In CI on a tag: parsed from `$Env:GITHUB_
 
 ```text
 0-init/          # App parameters, version, elevation, initialization, UI constants, theme
-1-components/    # Reusable WPF controls: New-Button, New-CheckBox, New-Label, New-Card, etc.
-2-ui/            # Form XAML + tab page layouts (Form.ps1 is the main WPF window)
+1-components/    # WPF controls (New-Button, New-CheckBox, New-Card, ...) and New-Tab, which renders a tab
+2-ui/            # The window's XAML (Form.ps1) and one definition per tab (Home.ps1, Installs.ps1, ...)
 3-configs/       # Embedded config files (app settings, registry exports, ini files)
 4-functions/     # Feature logic organized by tab (App lifecycle, Installs, Configuration, etc.)
-5-interface/     # Entry point: Show window.ps1
+5-interface/     # Entry point: Show window.ps1 renders the tabs, in order, and shows the window
 ```
 
-## UI Pattern (`$script:LayoutContext`)
+## UI Pattern (tab definitions)
 
-All component functions (`New-Button`, `New-CheckBox`, etc.) read and mutate `$script:LayoutContext` — a hashtable tracking `CurrentGroup`, `CurrentTab`, `PreviousButton`, `PreviousLabelOrCheckbox`, and `CenteredCheckboxGroup`. Adding a UI element appends it to `$script:LayoutContext.CurrentGroup.Children`. Tests must initialize this context in `BeforeEach`.
+Each tab is data: `src/2-ui/<Tab>.ps1` defines a `TAB_<NAME>` hashtable of cards, and each card lists its items — buttons with their `Action`, their options and an optional centred "Start after download" checkbox (`StartAfterDownload`), and standalone checkboxes. `New-Tab` (`src/1-components/Tab.ps1`) renders a definition through the component functions, which add to the panel they are given and return what they made. It rejects unknown keys, a missing `Action` or `Name` and duplicate names, and puts every checkbox into `$CHECKBOXES` under its `Name`.
+
+- Placement follows from the definition: a button's options join its "Start after download" group when it has one and sit in the card otherwise, and every button after a card's first item is spaced from what comes before it.
+- Handlers read checkboxes at click time (`$CHECKBOXES.StartVentoy.IsChecked`). A checkbox that enables others has `OnClick = { Set-CheckboxState -Control $this -Dependant $CHECKBOXES.<Name> }`.
+- `Start-AsyncOperation` copies function bodies into its runspace, not the handler's scope, so an operation gets only what is passed with `-Variables` (and the app-wide variables it injects). `src/2-ui/Tabs.Tests.ps1` fails on a variable that is not passed, and on a checkbox that is read but not defined, or defined but never read.
+- A change to the components, the renderer, the definitions' layout or `Form.ps1` that should not change how the window looks is checked with `.\test-visual.bat`: it renders every tab in the light, dark and high contrast themes from `HEAD` and from the working tree, and compares them pixel for pixel (differences land in `build/ui-snapshots/diff`).
 
 ## Testing Conventions
 
@@ -128,6 +133,9 @@ All component functions (`New-Button`, `New-CheckBox`, etc.) read and mutate `$s
   overrides it for that test only; keep `BeforeEach` for per-test state
 - A mock should behave like the function it replaces: never make a function throw when its whole
   body is a catch-all `try` that doesn't rethrow — `tools/Mocks.Tests.ps1` fails on it
+- To check in a `ParameterFilter` that a parameter was not passed, use
+  `-not $PesterBoundParameters.ContainsKey('Name')`: `$Name -eq $Null` reads any variable of that
+  name in an outer scope instead, and a parallel worker defines `$WorkingDirectory`
 - Some `src/0-init` scripts run as soon as they are loaded (`2 Start elevated.ps1` relaunches
   PowerShell elevated), so their tests pull the functions out through the parser instead of
   dot-sourcing the script

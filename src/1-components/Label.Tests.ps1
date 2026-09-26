@@ -1,3 +1,5 @@
+#pester:no-parallel - builds WPF controls, which need an STA thread, and parallel workers are MTA
+
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
@@ -11,34 +13,24 @@ BeforeAll {
 
 Describe 'New-Label' {
     BeforeEach {
-        $script:LayoutContext = @{
-            PreviousLabelOrCheckbox = $Null
-            PreviousButton          = $Null
-            CenteredCheckboxGroup   = @{}
-            CurrentGroup            = New-Object Windows.Controls.StackPanel
-            CurrentTab              = $Null
-        }
+        Set-Variable -Option Constant Parent ([Windows.Controls.StackPanel]::new())
     }
 
-    It 'Should create a new label' {
-        New-Label $TestText
+    It 'Should add a label to its parent' {
+        Set-Variable -Option Constant Result ([Windows.Controls.TextBlock](New-Label $Parent $TestText))
 
-        $script:LayoutContext.CurrentGroup.Children.Count | Should -BeExactly 1
-
-        $script:LayoutContext.PreviousLabelOrCheckbox | Should -Not -BeNullOrEmpty
-        $script:LayoutContext.PreviousLabelOrCheckbox.Text | Should -BeExactly $TestText
-        $script:LayoutContext.PreviousLabelOrCheckbox.FontSize | Should -BeExactly $FONT_SIZE_NORMAL
-        $script:LayoutContext.PreviousLabelOrCheckbox.Opacity | Should -BeExactly 0.7
-        $script:LayoutContext.PreviousLabelOrCheckbox.Margin.Left | Should -BeExactly 20
-
-        $script:LayoutContext.PreviousButton | Should -BeNullOrEmpty
-        $script:LayoutContext.CenteredCheckboxGroup | Should -BeNullOrEmpty
+        $Parent.Children.Count | Should -BeExactly 1
+        $Parent.Children[0] | Should -BeExactly $Result
+        $Result.Text | Should -BeExactly $TestText
+        $Result.FontSize | Should -BeExactly $FONT_SIZE_NORMAL
+        $Result.Opacity | Should -BeExactly 0.7
+        $Result.Margin | Should -Be ([Windows.Thickness]::new(20, 0, 0, 4))
     }
 
     It 'Should create a centered label' {
-        New-Label $TestText -Centered
+        Set-Variable -Option Constant Result ([Windows.Controls.TextBlock](New-Label $Parent $TestText -Centered))
 
-        $script:LayoutContext.PreviousLabelOrCheckbox.HorizontalAlignment | Should -BeExactly ([Windows.HorizontalAlignment]::Center)
-        $script:LayoutContext.PreviousLabelOrCheckbox.Margin.Left | Should -BeExactly 0
+        $Result.HorizontalAlignment | Should -BeExactly ([Windows.HorizontalAlignment]::Center)
+        $Result.Margin | Should -Be ([Windows.Thickness]::new(0, 0, 0, 4))
     }
 }

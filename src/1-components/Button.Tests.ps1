@@ -1,3 +1,5 @@
+#pester:no-parallel - builds WPF controls, which need an STA thread, and parallel workers are MTA
+
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
@@ -5,67 +7,44 @@ BeforeAll {
     Add-Type -AssemblyName PresentationCore
 
     Set-Variable -Option Constant TestText ([String]'TEST_TEXT')
-    Set-Variable -Option Constant TestFunction ([ScriptBlock] { Test = 'Function' })
     Set-Variable -Option Constant TestStyle ([Windows.Style](New-Object Windows.Style))
+
+    Set-Variable -Option Constant FORM ([PSCustomObject]@{})
+    $FORM | Add-Member -MemberType ScriptMethod -Name FindResource -Value { param($Key) return $TestStyle }
 }
 
 Describe 'New-Button' {
     BeforeEach {
-        $script:LayoutContext = @{
-            PreviousButton          = $Null
-            PreviousLabelOrCheckbox = $Null
-            CenteredCheckboxGroup   = $Null
-            CurrentGroup            = New-Object Windows.Controls.StackPanel
-            CurrentTab              = $Null
-        }
-
-        $script:FORM = [PSCustomObject]@{}
-        $script:FORM | Add-Member -MemberType ScriptMethod -Name FindResource -Value { param($key) return $TestStyle }
+        Set-Variable -Option Constant Parent ([Windows.Controls.StackPanel]::new())
+        $script:Clicked = $False
     }
 
-    It 'Should create a new button' {
-        New-Button $TestText $TestFunction
+    It 'Should add a button to its parent' {
+        Set-Variable -Option Constant Result ([Windows.Controls.Button](New-Button $Parent $TestText { $script:Clicked = $True }))
 
-        $script:LayoutContext.CurrentGroup.Children.Count | Should -BeExactly 1
+        $Parent.Children.Count | Should -BeExactly 1
+        $Parent.Children[0] | Should -BeExactly $Result
+        $Result.Content | Should -BeExactly $TestText
+        $Result.IsEnabled | Should -BeTrue
+        $Result.Style | Should -BeExactly $TestStyle
+        $Result.Margin | Should -Be ([Windows.Thickness]::new(0))
+    }
 
-        $script:LayoutContext.PreviousButton | Should -Not -BeNullOrEmpty
-        $script:LayoutContext.PreviousButton.Content | Should -BeExactly $TestText
-        $script:LayoutContext.PreviousButton.IsEnabled | Should -BeTrue
-        $script:LayoutContext.PreviousButton.Style | Should -BeExactly $TestStyle
+    It 'Should run its function when clicked' {
+        Set-Variable -Option Constant Result ([Windows.Controls.Button](New-Button $Parent $TestText { $script:Clicked = $True }))
 
-        $script:LayoutContext.PreviousLabelOrCheckbox | Should -BeNullOrEmpty
-        $script:LayoutContext.CenteredCheckboxGroup | Should -BeNullOrEmpty
+        $Result.RaiseEvent([Windows.RoutedEventArgs]::new([Windows.Controls.Primitives.ButtonBase]::ClickEvent))
+
+        $script:Clicked | Should -BeTrue
     }
 
     It 'Should create a disabled button' {
-        New-Button $TestText $TestFunction -Disabled
-
-        $script:LayoutContext.PreviousButton.IsEnabled | Should -BeFalse
+        (New-Button $Parent $TestText -Disabled).IsEnabled | Should -BeFalse
     }
 
-    It 'Should add margin when previous button exists' {
-        $script:LayoutContext.PreviousButton = New-Object Windows.Controls.Button
+    It 'Should set a spaced button apart from what comes before it' {
+        Set-Variable -Option Constant Result ([Windows.Controls.Button](New-Button $Parent $TestText -Spaced))
 
-        New-Button $TestText
-
-        $script:LayoutContext.PreviousButton.Margin.Top | Should -BeExactly 14
-        $script:LayoutContext.PreviousButton.Margin.Bottom | Should -BeExactly 4
-    }
-
-    It 'Should add margin when previous label/checkbox exists' {
-        $script:LayoutContext.PreviousLabelOrCheckbox = New-Object Windows.Controls.TextBlock
-
-        New-Button $TestText
-
-        $script:LayoutContext.PreviousButton.Margin.Top | Should -BeExactly 14
-        $script:LayoutContext.PreviousButton.Margin.Bottom | Should -BeExactly 4
-    }
-
-    It 'Should clear CenteredCheckboxGroup' {
-        $script:LayoutContext.CenteredCheckboxGroup = New-Object Windows.Controls.StackPanel
-
-        New-Button $TestText
-
-        $script:LayoutContext.CenteredCheckboxGroup | Should -BeNullOrEmpty
+        $Result.Margin | Should -Be ([Windows.Thickness]::new(0, 14, 0, 4))
     }
 }

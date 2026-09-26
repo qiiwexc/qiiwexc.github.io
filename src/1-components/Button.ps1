@@ -1,13 +1,11 @@
 function New-Button {
     param(
-        [Parameter(Position = 0, Mandatory)][String]$Text,
-        [Parameter(Position = 1)][ScriptBlock]$Function,
-        [Switch]$Disabled
+        [Parameter(Position = 0, Mandatory)][Windows.Controls.Panel]$Parent,
+        [Parameter(Position = 1, Mandatory)][String]$Text,
+        [Parameter(Position = 2)][ScriptBlock]$Function,
+        [Switch]$Disabled,
+        [Switch]$Spaced
     )
-
-    if (-not $script:LayoutContext.CurrentGroup) {
-        throw 'New-Button must be called after New-Card (no current group in LayoutContext)'
-    }
 
     Set-Variable -Option Constant Button ([Windows.Controls.Button](New-Object Windows.Controls.Button))
 
@@ -19,13 +17,12 @@ function New-Button {
         $Button.Add_Click($Function)
     }
 
-    if ($script:LayoutContext.PreviousLabelOrCheckbox -or $script:LayoutContext.PreviousButton) {
+    # Set apart from whatever comes before it in the card
+    if ($Spaced) {
         $Button.Margin = [Windows.Thickness]::new(0, 14, 0, 4)
     }
 
-    [void]$script:LayoutContext.CurrentGroup.Children.Add($Button)
+    [void]$Parent.Children.Add($Button)
 
-    $script:LayoutContext.PreviousLabelOrCheckbox = $Null
-    $script:LayoutContext.PreviousButton = [Windows.Controls.Button]$Button
-    $script:LayoutContext.CenteredCheckboxGroup = $Null
+    return $Button
 }

@@ -1,12 +1,9 @@
 function New-Label {
     param(
-        [Parameter(Position = 0, Mandatory)][String]$Text,
+        [Parameter(Position = 0, Mandatory)][Windows.Controls.Panel]$Parent,
+        [Parameter(Position = 1, Mandatory)][String]$Text,
         [Switch]$Centered
     )
-
-    if (-not $script:LayoutContext.CurrentGroup) {
-        throw 'New-Label must be called after New-Card (no current group in LayoutContext)'
-    }
 
     Set-Variable -Option Constant Label ([Windows.Controls.TextBlock](New-Object Windows.Controls.TextBlock))
 
@@ -23,9 +20,7 @@ function New-Label {
         $Label.Margin = [Windows.Thickness]::new(20, 0, 0, 4)
     }
 
-    [void]$script:LayoutContext.CurrentGroup.Children.Add($Label)
+    [void]$Parent.Children.Add($Label)
 
-    $script:LayoutContext.PreviousLabelOrCheckbox = [Windows.Controls.TextBlock]$Label
-    $script:LayoutContext.PreviousButton = $Null
-    $script:LayoutContext.CenteredCheckboxGroup = $Null
+    return $Label
 }

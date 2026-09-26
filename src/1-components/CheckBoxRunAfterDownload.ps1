@@ -1,26 +1,18 @@
 function New-CheckBoxRunAfterDownload {
     param(
+        [Parameter(Position = 0, Mandatory)][Windows.Controls.Panel]$Parent,
         [Switch]$Disabled,
         [Switch]$Checked
     )
 
-    if (-not $script:LayoutContext.CurrentGroup) {
-        throw 'New-CheckBoxRunAfterDownload must be called after New-Card (no current group in LayoutContext)'
-    }
-
-    [Windows.Controls.CheckBox]$CheckBox = New-CheckBox 'Start after download' -Disabled:$Disabled -Checked:$Checked
-
-    [void]$script:LayoutContext.CurrentGroup.Children.Remove($CheckBox)
-    $CheckBox.Margin = [Windows.Thickness]::new(0, 0, 0, 2)
-
+    # A centred group of its own, which the options of the same button join: the checkbox's Parent
     Set-Variable -Option Constant Panel ([Windows.Controls.StackPanel](New-Object Windows.Controls.StackPanel))
     $Panel.HorizontalAlignment = [Windows.HorizontalAlignment]::Center
     $Panel.Margin = [Windows.Thickness]::new(0, 3, 0, 3)
-    [void]$Panel.Children.Add($CheckBox)
-    [void]$script:LayoutContext.CurrentGroup.Children.Add($Panel)
+    [void]$Parent.Children.Add($Panel)
 
-    $script:LayoutContext.CenteredCheckboxGroup = $Panel
-    $script:LayoutContext.PreviousLabelOrCheckbox = [Windows.Controls.CheckBox]$CheckBox
+    Set-Variable -Option Constant CheckBox ([Windows.Controls.CheckBox](New-CheckBox $Panel 'Start after download' -Disabled:$Disabled -Checked:$Checked))
+    $CheckBox.Margin = [Windows.Thickness]::new(0, 0, 0, 2)
 
     return $CheckBox
 }

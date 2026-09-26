@@ -1,6 +1,7 @@
 function New-TabPage {
     param(
-        [Parameter(Position = 0, Mandatory)][String]$Text
+        [Parameter(Position = 0, Mandatory)][Windows.Controls.TabControl]$TabControl,
+        [Parameter(Position = 1, Mandatory)][String]$Text
     )
 
     Set-Variable -Option Constant TabItem ([Windows.Controls.TabItem](New-Object Windows.Controls.TabItem))
@@ -19,9 +20,8 @@ function New-TabPage {
     $ScrollViewer.Content = $WrapPanel
     $TabItem.Content = $ScrollViewer
 
-    [void]$TAB_CONTROL.Items.Add($TabItem)
+    [void]$TabControl.Items.Add($TabItem)
 
-    $script:LayoutContext.CurrentTab = [Windows.Controls.WrapPanel]$WrapPanel
-
-    return $TabItem
+    # The panel the page's cards go into
+    return $WrapPanel
 }

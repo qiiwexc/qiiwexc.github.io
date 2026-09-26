@@ -1,3 +1,5 @@
+#pester:no-parallel - builds WPF controls, which need an STA thread, and parallel workers are MTA
+
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
@@ -5,55 +7,41 @@ BeforeAll {
     Add-Type -AssemblyName PresentationCore
 
     Set-Variable -Option Constant TestText ([String]'TEST_TEXT')
-    Set-Variable -Option Constant TestName ([String]'TEST_NAME')
+    Set-Variable -Option Constant TestTag ([String]'TEST_TAG')
     Set-Variable -Option Constant TestStyle ([Windows.Style](New-Object Windows.Style))
+
+    Set-Variable -Option Constant FORM ([PSCustomObject]@{})
+    $FORM | Add-Member -MemberType ScriptMethod -Name FindResource -Value { param($Key) return $TestStyle }
 }
 
 Describe 'New-CheckBox' {
     BeforeEach {
-        $script:LayoutContext = @{
-            PreviousButton          = $Null
-            PreviousLabelOrCheckbox = $Null
-            CenteredCheckboxGroup   = $Null
-            CurrentGroup            = New-Object Windows.Controls.StackPanel
-            CurrentTab              = $Null
-        }
-
-        $script:FORM = [PSCustomObject]@{}
-        $script:FORM | Add-Member -MemberType ScriptMethod -Name FindResource -Value { param($key) return $TestStyle }
+        Set-Variable -Option Constant Parent ([Windows.Controls.StackPanel]::new())
     }
 
-    It 'Should create a new checkbox' {
-        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $TestText $TestName))
+    It 'Should add a checkbox to its parent' {
+        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $Parent $TestText -Tag $TestTag))
 
+        $Parent.Children.Count | Should -BeExactly 1
+        $Parent.Children[0] | Should -BeExactly $Result
         $Result.Content | Should -BeExactly $TestText
-        $Result.Tag | Should -BeExactly $TestName
+        $Result.Tag | Should -BeExactly $TestTag
         $Result.IsChecked | Should -BeFalse
         $Result.IsEnabled | Should -BeTrue
         $Result.Style | Should -BeExactly $TestStyle
-        $Result.Margin.Left | Should -BeExactly 10
-        $Result.Margin.Top | Should -BeExactly 4
-        $Result.Margin.Bottom | Should -BeExactly 4
-
-        $script:LayoutContext.CurrentGroup.Children.Count | Should -BeExactly 1
-        $script:LayoutContext.PreviousLabelOrCheckbox | Should -BeExactly $Result
-        $script:LayoutContext.PreviousButton | Should -BeNullOrEmpty
+        $Result.Margin | Should -Be ([Windows.Thickness]::new(10, 4, 0, 4))
     }
 
     It 'Should create a disabled checked checkbox' {
-        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $TestText $TestName -Disabled -Checked))
+        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $Parent $TestText -Disabled -Checked))
 
         $Result.IsChecked | Should -BeTrue
         $Result.IsEnabled | Should -BeFalse
     }
 
-    It 'Should add to CenteredCheckboxGroup when set' {
-        $script:LayoutContext.CenteredCheckboxGroup = New-Object Windows.Controls.StackPanel
+    It 'Should line up with a centred group' {
+        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $Parent $TestText -Centered))
 
-        Set-Variable -Option Constant Result ([Windows.Controls.CheckBox](New-CheckBox $TestText $TestName))
-
-        $Result.Margin.Left | Should -BeExactly 0
-        $script:LayoutContext.CenteredCheckboxGroup.Children.Count | Should -BeExactly 1
-        $script:LayoutContext.CurrentGroup.Children.Count | Should -BeExactly 0
+        $Result.Margin | Should -Be ([Windows.Thickness]::new(0, 4, 0, 4))
     }
 }

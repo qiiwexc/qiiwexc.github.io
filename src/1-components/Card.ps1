@@ -1,11 +1,8 @@
 function New-Card {
     param(
-        [Parameter(Position = 0, Mandatory)][String]$Text
+        [Parameter(Position = 0, Mandatory)][Windows.Controls.Panel]$Parent,
+        [Parameter(Position = 1, Mandatory)][String]$Text
     )
-
-    if (-not $script:LayoutContext.CurrentTab) {
-        throw 'New-Card must be called after New-TabPage (no current tab in LayoutContext)'
-    }
 
     Set-Variable -Option Constant CardBorder ([Windows.Controls.Border](New-Object Windows.Controls.Border))
     $CardBorder.SetResourceReference([Windows.Controls.Border]::BorderBrushProperty, 'BorderColor')
@@ -29,11 +26,8 @@ function New-Card {
 
     $CardBorder.Child = $CardPanel
 
-    [void]$script:LayoutContext.CurrentTab.Children.Add($CardBorder)
+    [void]$Parent.Children.Add($CardBorder)
 
-    $script:LayoutContext.PreviousButton = $Null
-    $script:LayoutContext.PreviousLabelOrCheckbox = $Null
-    $script:LayoutContext.CenteredCheckboxGroup = $Null
-
-    $script:LayoutContext.CurrentGroup = $CardPanel
+    # The panel the card's items go into, below its header
+    return $CardPanel
 }

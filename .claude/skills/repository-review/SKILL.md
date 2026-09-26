@@ -89,12 +89,13 @@ Every one of these, and anything else you notice - the list is a floor, not a
 ceiling.
 
 - **App source** - everything under `src/`: `0-init` (parameters, elevation,
-  theme), the WPF components in `1-components`, the XAML form and tab layouts
-  in `2-ui`, the embedded configs in `3-configs` (registry exports, browser
-  preferences, ini files - these are applied to users' machines), the feature
-  logic in `4-functions`, and the entry point in `5-interface`. Read the
-  numeric-prefix bundle order as part of the code: a function used before the
-  file that defines it is bundled is a bug.
+  theme), the WPF components and the tab renderer in `1-components`, the
+  window's XAML and the tab definitions in `2-ui`, the embedded configs in
+  `3-configs` (registry exports, browser preferences, ini files - these are
+  applied to users' machines), the feature logic in `4-functions`, and the
+  entry point in `5-interface`, which renders the tabs. Read the bundle order
+  as part of the code: a function used before the file that defines it is
+  bundled is a bug.
 - **Build tooling** - `tools/build.ps1`, `tools/build/` (bundling, template
   substitution, autounattend generation, dependency updates) and
   `tools/common/`.
@@ -143,8 +144,8 @@ Also a floor, not a ceiling:
   third parties that is intentionally dual-use (activators, debloaters) is part
   of the product - report on how it is fetched and run, not on whether it
   should exist.
-- **Architecture** - module boundaries, the global `$script:LayoutContext`
-  pattern, the concatenation-by-filename bundle, whether the split between
+- **Architecture** - module boundaries, the tab definitions and their renderer
+  (`New-Tab`, the `$CHECKBOXES` lookup), the concatenation-by-filename bundle, whether the split between
   `src/` and `tools/` (and the near-duplicates between them, such as the two
   `Logger`/`Progressbar` implementations) still earns its keep.
 - **Reliability** - failure modes on a real user's machine: no network, slow
