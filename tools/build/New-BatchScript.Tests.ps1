@@ -140,26 +140,20 @@ Describe 'New-BatchScript launcher' -Skip:([Environment]::OSVersion.Platform -ne
 
         New-BatchScript 'qiiwexc' $PayloadFile "$LauncherDir\qiiwexc.bat" "$TestDrive\vm"
 
-        Set-Variable -Option Constant OriginalTemp ([String]$env:TEMP)
-        Set-Variable -Option Constant OriginalTmp ([String]$env:TMP)
-        $env:TEMP = $TempDir
-        $env:TMP = $TempDir
-    }
-
-    AfterAll {
-        $env:TEMP = $OriginalTemp
-        $env:TMP = $OriginalTmp
+        # %TEMP% is changed in the launcher's own cmd only: changed here, it would be changed for the whole
+        # process, and so for every test file running in parallel, whose TestDrive Pester puts in %TEMP%
+        Set-Variable -Option Constant SetTempDir ([String]"set `"TEMP=$TempDir`" && set `"TMP=$TempDir`" &&")
     }
 
     It 'Should extract the script to %TEMP% and start it in the launcher folder' {
-        Start-Process cmd.exe -ArgumentList '/c', "`"$LauncherDir\qiiwexc.bat`"" -WorkingDirectory $TestDrive -Wait -WindowStyle Hidden
+        Start-Process cmd.exe -ArgumentList '/c', "$SetTempDir `"$LauncherDir\qiiwexc.bat`"" -WorkingDirectory $TestDrive -Wait -WindowStyle Hidden
 
         Test-Path -LiteralPath "$TempDir\qiiwexc.ps1" | Should -BeTrue
         Get-Content -LiteralPath $MarkerFile -Tail 1 | Should -BeExactly "$LauncherDir|False"
     }
 
     It 'Should start the script in dev mode' {
-        Start-Process cmd.exe -ArgumentList '/c', "`"$LauncherDir\qiiwexc.bat`" Debug" -WorkingDirectory $TestDrive -Wait -WindowStyle Hidden
+        Start-Process cmd.exe -ArgumentList '/c', "$SetTempDir `"$LauncherDir\qiiwexc.bat`" Debug" -WorkingDirectory $TestDrive -Wait -WindowStyle Hidden
 
         Get-Content -LiteralPath $MarkerFile -Tail 1 | Should -BeExactly "$LauncherDir|True"
     }

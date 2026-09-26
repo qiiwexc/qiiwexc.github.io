@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . "$PSScriptRoot\Get-SourceFiles.ps1"
     . "$PSScriptRoot\..\common\logger.ps1"
     . "$PSScriptRoot\..\common\types.ps1"
     . "$PSScriptRoot\..\common\Progressbar.ps1"
@@ -19,7 +20,6 @@ BeforeAll {
     Set-Variable -Option Constant TestSourceFileList (
         [IO.FileInfo[]]@(
             New-MockObject -Type IO.FileInfo -Properties @{ Name = 'Test-File.ps1'; FullName = $TestPs1FilePath }
-            New-MockObject -Type IO.FileInfo -Properties @{ Name = 'Test-File.Tests.ps1'; FullName = '\src\code\Test-File.Tests.ps1' }
             New-MockObject -Type IO.FileInfo -Properties @{ Name = 'ConfigFile.ini'; FullName = $TestConfigFilePath }
         )
     )
@@ -31,7 +31,7 @@ BeforeAll {
 Describe 'New-PowerShellScript' {
     BeforeAll {
         Mock New-Activity {}
-        Mock Get-ChildItem { return $TestSourceFileList }
+        Mock Get-SourceFiles { return $TestSourceFileList }
         Mock Read-TextFile { return $TestPs1FileContent } -ParameterFilter { $Path -eq $TestPs1FilePath }
         Mock Read-TextFile { return $TestConfigFileContent } -ParameterFilter { $Path -eq $TestConfigFilePath }
         Mock Write-LogInfo {}
@@ -43,12 +43,8 @@ Describe 'New-PowerShellScript' {
         New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-ChildItem -Exactly 1
-        Should -Invoke Get-ChildItem -Exactly 1 -ParameterFilter {
-            $Path -eq $TestSourcePathPath -and
-            $Recurse -eq $True -and
-            $File -eq $True
-        }
+        Should -Invoke Get-SourceFiles -Exactly 1
+        Should -Invoke Get-SourceFiles -Exactly 1 -ParameterFilter { $SourcePath -eq $TestSourcePathPath }
         Should -Invoke Read-TextFile -Exactly 2
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestPs1FilePath }
         Should -Invoke Read-TextFile -Exactly 1 -ParameterFilter { $Path -eq $TestConfigFilePath }
@@ -66,13 +62,13 @@ Describe 'New-PowerShellScript' {
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
-    It 'Should handle Get-ChildItem failure' {
-        Mock Get-ChildItem { throw $TestException }
+    It 'Should handle Get-SourceFiles failure' {
+        Mock Get-SourceFiles { throw $TestException }
 
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-ChildItem -Exactly 1
+        Should -Invoke Get-SourceFiles -Exactly 1
         Should -Invoke Read-TextFile -Exactly 0
         Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
@@ -84,7 +80,7 @@ Describe 'New-PowerShellScript' {
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-ChildItem -Exactly 1
+        Should -Invoke Get-SourceFiles -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
@@ -96,7 +92,7 @@ Describe 'New-PowerShellScript' {
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-ChildItem -Exactly 1
+        Should -Invoke Get-SourceFiles -Exactly 1
         Should -Invoke Read-TextFile -Exactly 1
         Should -Invoke Write-TextFile -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 0
@@ -112,7 +108,7 @@ Describe 'New-PowerShellScript' {
     }
 
     It 'Should throw when a file is not under a src directory' {
-        Mock Get-ChildItem {
+        Mock Get-SourceFiles {
             return [IO.FileInfo[]]@(
                 New-MockObject -Type IO.FileInfo -Properties @{ Name = 'Test-File.ps1'; FullName = '\other\Test-File.ps1' }
             )
@@ -130,7 +126,7 @@ Describe 'New-PowerShellScript' {
         { New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig } | Should -Throw $TestException
 
         Should -Invoke New-Activity -Exactly 1
-        Should -Invoke Get-ChildItem -Exactly 1
+        Should -Invoke Get-SourceFiles -Exactly 1
         Should -Invoke Read-TextFile -Exactly 2
         Should -Invoke Write-TextFile -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 0

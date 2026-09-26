@@ -7,7 +7,7 @@ function New-PowerShellScript {
 
     New-Activity 'Building PowerShell script'
 
-    Set-Variable -Option Constant ProjectFiles ([IO.FileInfo[]](Get-ChildItem $SourcePath -Recurse -File | Where-Object { $_.Name -notmatch '.\.Tests\.ps1$' }))
+    Set-Variable -Option Constant ProjectFiles ([IO.FileInfo[]]@(Get-SourceFiles $SourcePath))
     Set-Variable -Option Constant FileCount ([Int]$ProjectFiles.Count)
 
     [Collections.Generic.List[String]]$OutputLines = @()

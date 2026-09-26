@@ -139,6 +139,7 @@ if ($Autounattend) {
 
 if ($Ps1) {
     Write-ActivityProgress 70
+    . "$BuilderPath\Get-SourceFiles.ps1"
     . "$BuilderPath\New-PowerShellScript.ps1"
     New-PowerShellScript $SourcePath $Ps1File -Config $Config
 }
