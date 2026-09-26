@@ -200,13 +200,14 @@
             </Setter>
         </Style>
 
-        <!-- ScrollBar Thumb -->
+        <!-- ScrollBar Thumb: as wide as the scroll bar, less its padding -->
         <Style TargetType="ScrollBar">
             <Setter Property="Width" Value="8" />
+            <Setter Property="Padding" Value="1,0" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ScrollBar">
-                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                        <Track x:Name="PART_Track" IsDirectionReversed="True" Margin="{TemplateBinding Padding}">
                             <Track.Thumb>
                                 <Thumb>
                                     <Thumb.Style>
@@ -216,8 +217,7 @@
                                                     <ControlTemplate TargetType="Thumb">
                                                         <Border x:Name="thumbBorder"
                                                                 CornerRadius="4"
-                                                                Background="{DynamicResource ScrollBarThumbColor}"
-                                                                Margin="1,0,1,0" />
+                                                                Background="{DynamicResource ScrollBarThumbColor}" />
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter TargetName="thumbBorder" Property="Background" Value="{DynamicResource ScrollBarThumbHoverColor}" />
@@ -241,15 +241,15 @@
             <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
             <Setter Property="Background" Value="{DynamicResource BorderColor}" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Height" Value="4" />
+            <Setter Property="Height" Value="8" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ProgressBar">
                         <Grid>
-                            <Border x:Name="PART_Track" Background="{TemplateBinding Background}" CornerRadius="2" />
+                            <Border x:Name="PART_Track" Background="{TemplateBinding Background}" CornerRadius="4" />
                             <Border x:Name="PART_Indicator"
                                     Background="{TemplateBinding Foreground}"
-                                    CornerRadius="2"
+                                    CornerRadius="4"
                                     HorizontalAlignment="Left" />
                         </Grid>
                     </ControlTemplate>
@@ -327,6 +327,13 @@
                                  FontSize="11"
                                  Padding="0"
                                  VerticalScrollBarVisibility="Auto">
+                        <RichTextBox.Resources>
+                            <!-- Half the width of the tabs' scroll bars -->
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
+                                <Setter Property="Width" Value="4" />
+                                <Setter Property="Padding" Value="0.5,0" />
+                            </Style>
+                        </RichTextBox.Resources>
                         <FlowDocument PagePadding="0">
                             <Paragraph Margin="0" />
                         </FlowDocument>

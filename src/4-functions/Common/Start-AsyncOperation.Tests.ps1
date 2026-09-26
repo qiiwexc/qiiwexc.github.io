@@ -174,6 +174,7 @@ Describe 'Complete-AsyncOperation' {
         Mock Write-LogInfo {}
         Mock Write-LogError {}
         Mock Invoke-WriteProgress {}
+        Mock Start-ProgressBarReset {}
     }
 
     BeforeEach {
@@ -216,6 +217,18 @@ Describe 'Complete-AsyncOperation' {
         $Available.IsEnabled | Should -BeTrue
         $Unavailable.IsEnabled | Should -BeFalse
         $script:ASYNC.Cancelling | Should -BeFalse
+    }
+
+    It 'Should empty the progress bar a moment after a <State> operation' -ForEach @(
+        @{ State = 'Completed' }
+        @{ State = 'Failed' }
+        @{ State = 'Stopped' }
+    ) {
+        $script:ASYNC.PS = New-TestAsyncPS -State $State -Reason ([Exception]::new('TEST_FAILURE'))
+
+        Complete-AsyncOperation
+
+        Should -Invoke Start-ProgressBarReset -Exactly 1
     }
 
     It 'Should restore the buttons before the completion handler runs' {

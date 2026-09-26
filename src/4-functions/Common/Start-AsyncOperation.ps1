@@ -41,6 +41,9 @@ function Start-AsyncOperation {
 
     Update-AsyncButtonState
 
+    # From an empty progress bar, which a reset still pending from the last operation must not empty midway
+    Reset-ProgressBar
+
     if ($Button) {
         $script:ASYNC.OriginalContent = $Button.Content
 
@@ -217,6 +220,9 @@ function Complete-AsyncOperation {
     }
 
     Set-Icon ([IconName]::Default)
+
+    # Completed, failed or cancelled, the progress bar shows how it ended for a moment, then empties
+    Start-ProgressBarReset
 
     Set-Variable -Option Constant OnComplete ([ScriptBlock]$script:ASYNC.OnComplete)
 

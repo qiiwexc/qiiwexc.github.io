@@ -1,4 +1,7 @@
 BeforeAll {
+    # The dispatcher priority Invoke-OnDispatcher flushes rendering at, and the reset timer
+    Add-Type -AssemblyName WindowsBase
+
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . "$PSScriptRoot\..\Common\types.ps1"
@@ -107,6 +110,62 @@ Describe 'Invoke-WriteProgress' {
             $PercentComplete -eq 75 -and
             $Status -eq $TestTask
         }
+    }
+}
+
+Describe 'Progress bar reset' {
+    BeforeEach {
+        $PROGRESSBAR = [PSCustomObject]@{ Value = 100 }
+        $FORM = [PSCustomObject]@{
+            Dispatcher = [PSCustomObject]@{}
+        }
+        $FORM.Dispatcher | Add-Member -MemberType ScriptMethod -Name CheckAccess -Value { return $true }
+        $FORM.Dispatcher | Add-Member -MemberType ScriptMethod -Name Invoke -Value { param($priority, $action) }
+
+        Set-Variable -Scope Script PROGRESSBAR_RESET_TIMER $Null
+    }
+
+    AfterEach {
+        if ($script:PROGRESSBAR_RESET_TIMER) {
+            $script:PROGRESSBAR_RESET_TIMER.Stop()
+        }
+    }
+
+    It 'Should empty the progress bar at once when no reset is pending' {
+        Reset-ProgressBar
+
+        $PROGRESSBAR.Value | Should -Be 0
+        $script:PROGRESSBAR_RESET_TIMER | Should -BeNullOrEmpty
+    }
+
+    It 'Should empty the progress bar at once and drop a pending reset' {
+        Start-ProgressBarReset
+        Set-Variable -Option Constant Pending ([Windows.Threading.DispatcherTimer]$script:PROGRESSBAR_RESET_TIMER)
+
+        Reset-ProgressBar
+
+        $PROGRESSBAR.Value | Should -Be 0
+        $Pending.IsEnabled | Should -BeFalse
+        $script:PROGRESSBAR_RESET_TIMER | Should -BeNullOrEmpty
+    }
+
+    It 'Should leave the progress bar as it is for 3 seconds' {
+        Start-ProgressBarReset
+
+        $PROGRESSBAR.Value | Should -Be 100
+        $script:PROGRESSBAR_RESET_TIMER.IsEnabled | Should -BeTrue
+        $script:PROGRESSBAR_RESET_TIMER.Interval | Should -Be ([TimeSpan]::FromSeconds(3))
+    }
+
+    It 'Should replace a reset still pending, rather than add another' {
+        Start-ProgressBarReset
+        Set-Variable -Option Constant Pending ([Windows.Threading.DispatcherTimer]$script:PROGRESSBAR_RESET_TIMER)
+
+        Start-ProgressBarReset
+
+        $Pending.IsEnabled | Should -BeFalse
+        $script:PROGRESSBAR_RESET_TIMER | Should -Not -Be $Pending
+        $script:PROGRESSBAR_RESET_TIMER.IsEnabled | Should -BeTrue
     }
 }
 

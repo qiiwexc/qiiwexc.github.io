@@ -1,5 +1,6 @@
 Set-Variable -Scope Script -Name ACTIVITIES -Value ([Collections.Stack]@())
 Set-Variable -Scope Script -Name CURRENT_TASK -Value $Null
+Set-Variable -Scope Script -Name PROGRESSBAR_RESET_TIMER -Value $Null
 
 function Invoke-WriteProgress {
     param(
@@ -50,6 +51,29 @@ function Set-ProgressBarValue {
     )
 
     $PROGRESSBAR.Value = $Value
+}
+
+# Empties the progress bar, and drops a reset still waiting to. Runs on the UI thread, which the timer belongs to
+function Reset-ProgressBar {
+    if ($script:PROGRESSBAR_RESET_TIMER) {
+        $script:PROGRESSBAR_RESET_TIMER.Stop()
+        Set-Variable -Scope Script PROGRESSBAR_RESET_TIMER $Null
+    }
+
+    Invoke-OnDispatcher 'Set-ProgressBarValue' @{ Value = 0 }
+}
+
+# Empties the progress bar once how an operation ended has been on it for a few seconds. Runs on the UI thread,
+# whose dispatcher the timer ticks on
+function Start-ProgressBarReset {
+    if ($script:PROGRESSBAR_RESET_TIMER) {
+        $script:PROGRESSBAR_RESET_TIMER.Stop()
+    }
+
+    Set-Variable -Scope Script PROGRESSBAR_RESET_TIMER ([Windows.Threading.DispatcherTimer]::new())
+    $script:PROGRESSBAR_RESET_TIMER.Interval = [TimeSpan]::FromSeconds(3)
+    $script:PROGRESSBAR_RESET_TIMER.Add_Tick( { Reset-ProgressBar } )
+    $script:PROGRESSBAR_RESET_TIMER.Start()
 }
 
 function New-Activity {
