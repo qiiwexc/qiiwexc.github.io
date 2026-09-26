@@ -15,6 +15,17 @@ Set-Variable -Scope Script -Name ASYNC_USER_FUNCTIONS -Value $Null
 # Every button that starts an operation, with whether it is enabled when no operation is running
 Set-Variable -Scope Script -Name ASYNC_BUTTONS -Value ([Collections.Generic.Dictionary[Object, Bool]]::new())
 
+# The colours of the running operation's button, which cancels it: red with white text, whatever the theme
+Set-Variable -Scope Script -Name CANCEL_BUTTON_COLORS -Value ([Hashtable]@{
+        ButtonBgColor           = '#C42B1C'
+        ButtonHoverColor        = '#DA3B2B'
+        ButtonPressedColor      = '#AC2618'
+        ButtonBorderColor       = '#C42B1C'
+        ButtonBorderBottomColor = '#00000000'
+        ButtonTextColor         = '#FFFFFF'
+        ButtonPressedTextColor  = '#FFFFFF'
+    })
+
 # Operations without a button (such as the startup update check) cannot be cancelled.
 # OnComplete runs on the UI thread with the operation's output once it completes successfully —
 # use it for anything that must touch the window, which the async runspace cannot do safely.
@@ -48,11 +59,10 @@ function Start-AsyncOperation {
         $script:ASYNC.OriginalContent = $Button.Content
 
         $Button.Content = "$(ConvertTo-Emoji '274C') Cancel"
-        $Button.Resources['AccentColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(196, 43, 28))
-        $Button.Resources['AccentHoverColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(218, 59, 43))
-        $Button.Resources['AccentPressedColor'] = [Windows.Media.SolidColorBrush]::new([Windows.Media.Color]::FromRgb(172, 38, 24))
-        # The red cancel state always takes white text, whatever the accent colour calls for
-        $Button.Resources['AccentTextColor'] = [Windows.Media.Brushes]::White
+        Set-Variable -Option Constant Converter ([Windows.Media.BrushConverter]::new())
+        foreach ($Entry in $script:CANCEL_BUTTON_COLORS.GetEnumerator()) {
+            $Button.Resources[$Entry.Key] = $Converter.ConvertFromString($Entry.Value)
+        }
     }
 
     Set-Icon ([IconName]::Working)
@@ -213,10 +223,9 @@ function Complete-AsyncOperation {
 
     if ($script:ASYNC.Button) {
         $script:ASYNC.Button.Content = $script:ASYNC.OriginalContent
-        $script:ASYNC.Button.Resources.Remove('AccentColor')
-        $script:ASYNC.Button.Resources.Remove('AccentHoverColor')
-        $script:ASYNC.Button.Resources.Remove('AccentPressedColor')
-        $script:ASYNC.Button.Resources.Remove('AccentTextColor')
+        foreach ($Key in $script:CANCEL_BUTTON_COLORS.Keys) {
+            $script:ASYNC.Button.Resources.Remove($Key)
+        }
     }
 
     Set-Icon ([IconName]::Default)

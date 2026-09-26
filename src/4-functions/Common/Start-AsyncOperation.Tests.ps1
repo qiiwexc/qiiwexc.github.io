@@ -48,6 +48,19 @@ BeforeAll {
     }
 }
 
+Describe 'Cancel button colours' {
+    BeforeAll {
+        . "$PSScriptRoot\..\..\0-init\5 Theme.ps1"
+    }
+
+    It 'Should override only resources that the theme gives buttons, so none is left in the theme colour' {
+        [String[]]$ThemeKeys = @((Get-ThemeColors -Light).Keys)
+
+        @($CANCEL_BUTTON_COLORS.Keys | Where-Object { $_ -notin $ThemeKeys }) | Should -BeNullOrEmpty
+        @($ThemeKeys | Where-Object { $_ -like 'Button*' -and $_ -notlike '*Disabled*' -and $_ -notin $CANCEL_BUTTON_COLORS.Keys }) | Should -BeNullOrEmpty
+    }
+}
+
 Describe 'Start-AsyncOperation' {
     BeforeAll {
         Mock Write-LogWarning {}
@@ -217,6 +230,21 @@ Describe 'Complete-AsyncOperation' {
         $Available.IsEnabled | Should -BeTrue
         $Unavailable.IsEnabled | Should -BeFalse
         $script:ASYNC.Cancelling | Should -BeFalse
+    }
+
+    It 'Should turn the button that cancels the operation back into the one that started it' {
+        [Hashtable]$Resources = @{ UNRELATED_RESOURCE = 'KEPT' }
+        foreach ($Key in $CANCEL_BUTTON_COLORS.Keys) {
+            $Resources[$Key] = 'CANCEL_COLOR'
+        }
+        $script:ASYNC.Button = [PSCustomObject]@{ Content = 'CANCEL'; Resources = $Resources }
+        $script:ASYNC.OriginalContent = 'ORIGINAL_CONTENT'
+        Set-Variable -Option Constant Button ([PSCustomObject]$script:ASYNC.Button)
+
+        Complete-AsyncOperation
+
+        $Button.Content | Should -BeExactly 'ORIGINAL_CONTENT'
+        @($Button.Resources.Keys) | Should -BeExactly @('UNRELATED_RESOURCE')
     }
 
     It 'Should empty the progress bar a moment after a <State> operation' -ForEach @(

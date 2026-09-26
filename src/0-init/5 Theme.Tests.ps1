@@ -105,12 +105,14 @@ Describe 'Get-ThemeColors' {
     It 'Should use only the system colours in high contrast, whatever the light setting' {
         [Hashtable]$Colors = Get-ThemeColors -Light -HighContrast
 
-        [String[]]$SystemColors = @('WindowColor', 'WindowTextColor', 'HighlightColor', 'HighlightTextColor', 'ControlColor', 'GrayTextColor') |
+        [String[]]$SystemColors = @('WindowColor', 'WindowTextColor', 'HighlightColor', 'HighlightTextColor', 'ControlColor', 'ControlTextColor', 'GrayTextColor') |
             ForEach-Object { ConvertTo-HexColor ([Windows.SystemColors]::$_) }
 
         $Colors.Values | ForEach-Object { $_ | Should -BeIn $SystemColors }
         $Colors['FgColor'] | Should -BeExactly (ConvertTo-HexColor ([Windows.SystemColors]::WindowTextColor))
         $Colors['AccentTextColor'] | Should -BeExactly (ConvertTo-HexColor ([Windows.SystemColors]::HighlightTextColor))
+        $Colors['ButtonBgColor'] | Should -BeExactly (ConvertTo-HexColor ([Windows.SystemColors]::ControlColor))
+        $Colors['ButtonTextColor'] | Should -BeExactly (ConvertTo-HexColor ([Windows.SystemColors]::ControlTextColor))
     }
 }
 

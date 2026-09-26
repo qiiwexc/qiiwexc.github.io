@@ -78,6 +78,7 @@ function Get-HighContrastColors {
     Set-Variable -Option Constant Highlight ([String](ConvertTo-HexColor ([Windows.SystemColors]::HighlightColor)))
     Set-Variable -Option Constant HighlightText ([String](ConvertTo-HexColor ([Windows.SystemColors]::HighlightTextColor)))
     Set-Variable -Option Constant ButtonFace ([String](ConvertTo-HexColor ([Windows.SystemColors]::ControlColor)))
+    Set-Variable -Option Constant ButtonText ([String](ConvertTo-HexColor ([Windows.SystemColors]::ControlTextColor)))
     Set-Variable -Option Constant GrayText ([String](ConvertTo-HexColor ([Windows.SystemColors]::GrayTextColor)))
 
     return [Hashtable]@{
@@ -85,14 +86,17 @@ function Get-HighContrastColors {
         FgColor                  = $WindowText
         CardBgColor              = $Window
         BorderColor              = $WindowText
-        ButtonBorderColor        = $WindowText
         CheckBoxBgColor          = $Window
         CheckBoxBorderColor      = $WindowText
         CheckBoxHoverColor       = $Window
-        SecondaryBgColor         = $ButtonFace
-        SecondaryHoverColor      = $ButtonFace
-        SecondaryPressedColor    = $ButtonFace
+        ButtonBgColor            = $ButtonFace
+        ButtonHoverColor         = $ButtonFace
+        ButtonPressedColor       = $ButtonFace
         ButtonDisabledColor      = $ButtonFace
+        ButtonBorderColor        = $ButtonText
+        ButtonBorderBottomColor  = $ButtonText
+        ButtonTextColor          = $ButtonText
+        ButtonPressedTextColor   = $ButtonText
         ButtonTextDisabledColor  = $GrayText
         ScrollBarThumbColor      = $WindowText
         ScrollBarThumbHoverColor = $Highlight
@@ -131,15 +135,20 @@ function Get-ThemeColors {
                 FgColor                  = '#000000'
                 CardBgColor              = '#fbfbfb'
                 BorderColor              = '#ededed'
-                ButtonBorderColor        = '#d3d3d3'
                 CheckBoxBgColor          = '#f5f5f5'
                 CheckBoxBorderColor      = '#898989'
                 CheckBoxHoverColor       = '#ececec'
-                SecondaryBgColor         = '#fbfbfb'
-                SecondaryHoverColor      = '#f6f6f6'
-                SecondaryPressedColor    = '#f0f0f0'
-                ButtonDisabledColor      = '#bfbfbf'
-                ButtonTextDisabledColor  = '#ffffff'
+                # Windows 11's own button colours, translucent over the card as they are there
+                ButtonBgColor            = '#B3FFFFFF'
+                ButtonHoverColor         = '#80F9F9F9'
+                ButtonPressedColor       = '#4DF9F9F9'
+                ButtonDisabledColor      = '#4DF9F9F9'
+                ButtonBorderColor        = '#0F000000'
+                # Over the border it makes Windows' #29000000 bottom edge
+                ButtonBorderBottomColor  = '#1C000000'
+                ButtonTextColor          = '#E4000000'
+                ButtonPressedTextColor   = '#9E000000'
+                ButtonTextDisabledColor  = '#5C000000'
                 ScrollBarThumbColor      = '#b9b9b9'
                 ScrollBarThumbHoverColor = '#8b8b8b'
                 TabBgColor               = '#e8e8e8'
@@ -161,15 +170,20 @@ function Get-ThemeColors {
                 FgColor                  = '#ffffff'
                 CardBgColor              = '#2b2b2b'
                 BorderColor              = '#404040'
-                ButtonBorderColor        = '#404040'
                 CheckBoxBgColor          = '#272727'
                 CheckBoxBorderColor      = '#808080'
                 CheckBoxHoverColor       = '#343434'
-                SecondaryBgColor         = '#393939'
-                SecondaryHoverColor      = '#2a2a2a'
-                SecondaryPressedColor    = '#1e1e1e'
-                ButtonDisabledColor      = '#434343'
-                ButtonTextDisabledColor  = '#989898'
+                # Windows 11's own button colours, translucent over the card as they are there
+                ButtonBgColor            = '#0FFFFFFF'
+                ButtonHoverColor         = '#15FFFFFF'
+                ButtonPressedColor       = '#08FFFFFF'
+                ButtonDisabledColor      = '#0BFFFFFF'
+                ButtonBorderColor        = '#12FFFFFF'
+                # Over the border it makes Windows' #18FFFFFF bottom edge
+                ButtonBorderBottomColor  = '#06FFFFFF'
+                ButtonTextColor          = '#FFFFFF'
+                ButtonPressedTextColor   = '#C5FFFFFF'
+                ButtonTextDisabledColor  = '#5DFFFFFF'
                 ScrollBarThumbColor      = '#3d3d3d'
                 ScrollBarThumbHoverColor = '#4b4b4b'
                 TabBgColor               = '#2b2b2b'

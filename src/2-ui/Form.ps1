@@ -10,12 +10,12 @@
 
     <Window.Resources>
 
-        <!-- Primary Button -->
+        <!-- Button: Windows 11's standard, neutral button; the accent colour is left to the checkboxes and the like -->
         <Style x:Key="Win11Button" TargetType="Button">
-            <Setter Property="Background" Value="{DynamicResource AccentColor}" />
-            <Setter Property="Foreground" Value="{DynamicResource AccentTextColor}" />
+            <Setter Property="Background" Value="{DynamicResource ButtonBgColor}" />
+            <Setter Property="Foreground" Value="{DynamicResource ButtonTextColor}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderColor}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontSize" Value="$FONT_SIZE_BUTTON" />
             <Setter Property="Padding" Value="16,4" />
@@ -26,26 +26,34 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
+                        <Grid>
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="4"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <!-- The darker bottom edge of a raised control, over the border; gone while pressed -->
+                            <Border x:Name="elevation"
+                                    BorderBrush="{DynamicResource ButtonBorderBottomColor}"
+                                    BorderThickness="0,0,0,1"
+                                    CornerRadius="4"
+                                    IsHitTestVisible="False" />
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource AccentHoverColor}" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentHoverColor}" />
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonHoverColor}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource AccentPressedColor}" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentPressedColor}" />
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonPressedColor}" />
+                                <Setter TargetName="elevation" Property="Visibility" Value="Collapsed" />
+                                <Setter Property="Foreground" Value="{DynamicResource ButtonPressedTextColor}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonDisabledColor}" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ButtonDisabledColor}" />
+                                <Setter TargetName="elevation" Property="Visibility" Value="Collapsed" />
                                 <Setter Property="Foreground" Value="{DynamicResource ButtonTextDisabledColor}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -200,10 +208,13 @@
             </Setter>
         </Style>
 
-        <!-- ScrollBar Thumb: as wide as the scroll bar, less its padding -->
+        <!-- ScrollBar: half as wide as a standard one, which Windows' own style holds every scroll bar to through
+             MinWidth, whatever Width says. The thumb is as wide as the scroll bar less its padding, 1 pixel apart from
+             what it scrolls -->
         <Style TargetType="ScrollBar">
+            <Setter Property="MinWidth" Value="0" />
             <Setter Property="Width" Value="8" />
-            <Setter Property="Padding" Value="1,0" />
+            <Setter Property="Padding" Value="1,0,0,0" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ScrollBar">
@@ -327,13 +338,6 @@
                                  FontSize="11"
                                  Padding="0"
                                  VerticalScrollBarVisibility="Auto">
-                        <RichTextBox.Resources>
-                            <!-- Half the width of the tabs' scroll bars -->
-                            <Style TargetType="ScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
-                                <Setter Property="Width" Value="4" />
-                                <Setter Property="Padding" Value="0.5,0" />
-                            </Style>
-                        </RichTextBox.Resources>
                         <FlowDocument PagePadding="0">
                             <Paragraph Margin="0" />
                         </FlowDocument>
