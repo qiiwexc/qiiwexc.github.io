@@ -30,19 +30,26 @@ function Invoke-WriteProgress {
         $Params.Completed = $True
 
         if ($ParentId -eq 0) {
-            Set-Variable -Option Constant ProgressValue ([Int]100)
-            Invoke-OnDispatcher ([Action] { $PROGRESSBAR.Value = $ProgressValue }) -FlushRender
+            Invoke-OnDispatcher 'Set-ProgressBarValue' @{ Value = 100 } -FlushRender
         }
     } else {
         $Params.PercentComplete = $PercentComplete
 
         if ($ParentId -eq 0) {
-            Set-Variable -Option Constant ProgressValue ([Int]$PercentComplete)
-            Invoke-OnDispatcher ([Action] { $PROGRESSBAR.Value = $ProgressValue }) -FlushRender
+            Invoke-OnDispatcher 'Set-ProgressBarValue' @{ Value = $PercentComplete } -FlushRender
         }
     }
 
     Write-Progress @Params
+}
+
+# Touches the window, so it runs on the UI thread only, through Invoke-OnDispatcher
+function Set-ProgressBarValue {
+    param(
+        [Parameter(Position = 0, Mandatory)][Int]$Value
+    )
+
+    $PROGRESSBAR.Value = $Value
 }
 
 function New-Activity {

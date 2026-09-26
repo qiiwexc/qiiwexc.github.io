@@ -11,6 +11,8 @@ BeforeAll {
     . "$PSScriptRoot\Label.ps1"
     . "$PSScriptRoot\TabPage.ps1"
 
+    . "$PSScriptRoot\..\4-functions\Common\Start-AsyncOperation.ps1"
+
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
 
@@ -45,9 +47,14 @@ BeforeAll {
 }
 
 Describe 'New-Tab' {
+    BeforeAll {
+        Mock Register-AsyncButton {}
+    }
+
     BeforeEach {
         Set-Variable -Option Constant TabControl ([Windows.Controls.TabControl]::new())
         Set-Variable -Option Constant Checkboxes ([Hashtable]@{})
+        Set-Variable -Option Constant Buttons ([Hashtable]@{})
         $script:Clicked = [Collections.Generic.List[String]]::new()
     }
 
@@ -58,7 +65,7 @@ Describe 'New-Tab' {
                 @{ Card = 'FIRST'; Items = @(@{ Button = 'A'; Action = {} }) }
                 @{ Card = 'SECOND'; Items = @(@{ Button = 'B'; Action = {} }) }
             )
-        } $Checkboxes
+        } $Checkboxes $Buttons
 
         $TabControl.Items.Count | Should -BeExactly 1
         $TabControl.Items[0].Header | Should -BeExactly 'TEST_TAB'
@@ -72,7 +79,7 @@ Describe 'New-Tab' {
                 @{ Button = 'BROWSER'; Action = {}; Browser = $True }
                 @{ CheckBox = 'STANDALONE'; Name = 'Standalone' }
                 @{ Button = 'LAST'; Action = {} }
-            )) $Checkboxes
+            )) $Checkboxes $Buttons
 
         [Object[]]$Items = Get-CardItem $TabControl
         $Items.Count | Should -BeExactly 5
@@ -90,7 +97,7 @@ Describe 'New-Tab' {
     It 'Should put the options of a button with a Start after download checkbox in its centred group' {
         New-Tab $TabControl (New-TestTab @(
                 @{ Button = 'BUTTON'; Action = {}; StartAfterDownload = @{ Name = 'Start' }; Options = @(@{ CheckBox = 'OPTION'; Name = 'Option' }) }
-            )) $Checkboxes
+            )) $Checkboxes $Buttons
 
         [Object[]]$Items = Get-CardItem $TabControl
         $Items.Count | Should -BeExactly 2
@@ -106,7 +113,7 @@ Describe 'New-Tab' {
     It 'Should put the options of any other button in the card' {
         New-Tab $TabControl (New-TestTab @(
                 @{ Button = 'BUTTON'; Action = {}; Options = @(@{ CheckBox = 'OPTION'; Name = 'Option' }) }
-            )) $Checkboxes
+            )) $Checkboxes $Buttons
 
         [Object[]]$Items = Get-CardItem $TabControl
         $Items[1] | Should -BeExactly $Checkboxes['Option']
@@ -117,7 +124,7 @@ Describe 'New-Tab' {
         New-Tab $TabControl (New-TestTab @(
                 @{ CheckBox = 'FIRST'; Name = 'First'; Tag = 'TAG'; Checked = $True; Disabled = $True }
                 @{ CheckBox = 'SECOND'; Name = 'Second' }
-            )) $Checkboxes
+            )) $Checkboxes $Buttons
 
         $Checkboxes.Keys | Sort-Object | Should -BeExactly @('First', 'Second')
         $Checkboxes['First'].Tag | Should -BeExactly 'TAG'
@@ -129,9 +136,35 @@ Describe 'New-Tab' {
     }
 
     It 'Should disable a button' {
-        New-Tab $TabControl (New-TestTab @(@{ Button = 'BUTTON'; Action = {}; Disabled = $True })) $Checkboxes
+        New-Tab $TabControl (New-TestTab @(@{ Button = 'BUTTON'; Action = {}; Disabled = $True })) $Checkboxes $Buttons
 
         (Get-CardItem $TabControl)[0].IsEnabled | Should -BeFalse
+    }
+
+    It 'Should register every named button by name' {
+        New-Tab $TabControl (New-TestTab @(
+                @{ Button = 'NAMED'; Name = 'Named'; Action = {} }
+                @{ Button = 'BROWSER'; Name = 'Browser'; Action = {}; Browser = $True }
+                @{ Button = 'UNNAMED'; Action = {} }
+            )) $Checkboxes $Buttons
+
+        [Object[]]$Items = Get-CardItem $TabControl
+        $Buttons.Keys | Sort-Object | Should -BeExactly @('Browser', 'Named')
+        $Buttons['Named'] | Should -BeExactly $Items[0]
+        $Buttons['Browser'] | Should -BeExactly $Items[1]
+    }
+
+    It 'Should register every button whose action starts an operation' {
+        New-Tab $TabControl (New-TestTab @(
+                @{ Button = 'OPERATION'; Action = { Start-AsyncOperation -Button $this { Update-Windows } } }
+                @{ Button = 'CAPTURED'; Action = { $Value = 1; Start-AsyncOperation -Button $this { $Value } -Variables @{ Value = $Value } } }
+                @{ Button = 'IMMEDIATE'; Action = { Update-Windows } }
+            )) $Checkboxes $Buttons
+
+        [Object[]]$Items = Get-CardItem $TabControl
+        Should -Invoke Register-AsyncButton -Exactly 2
+        Should -Invoke Register-AsyncButton -Exactly 1 -ParameterFilter { $Button -eq $Items[0] }
+        Should -Invoke Register-AsyncButton -Exactly 1 -ParameterFilter { $Button -eq $Items[1] }
     }
 
     It 'Should run the action of a button and the OnClick of a checkbox when clicked' {
@@ -142,7 +175,7 @@ Describe 'New-Tab' {
                     StartAfterDownload = @{ Name = 'Start'; OnClick = { $script:Clicked.Add('Start') } }
                     Options            = @(@{ CheckBox = 'OPTION'; Name = 'Option'; OnClick = { $script:Clicked.Add('Option') } })
                 }
-            )) $Checkboxes
+            )) $Checkboxes $Buttons
 
         Set-Variable -Option Constant ClickEvent ([Windows.RoutedEvent][Windows.Controls.Primitives.ButtonBase]::ClickEvent)
         (Get-CardItem $TabControl)[0].RaiseEvent([Windows.RoutedEventArgs]::new($ClickEvent))
@@ -161,7 +194,8 @@ Describe 'New-Tab' {
         @{ Case = 'a checkbox without a name'; Definition = @{ Tab = 'T'; Cards = @(@{ Card = 'C'; Items = @(@{ CheckBox = 'X' }) }) }; Message = "Card 'C': 'Name' is missing" }
         @{ Case = 'an OnClick that is not a script block'; Definition = @{ Tab = 'T'; Cards = @(@{ Card = 'C'; Items = @(@{ CheckBox = 'X'; Name = 'X'; OnClick = 'Set-CheckboxState' }) }) }; Message = "Card 'C', checkbox 'X': 'OnClick' must be a script block" }
         @{ Case = 'two checkboxes with one name'; Definition = @{ Tab = 'T'; Cards = @(@{ Card = 'C'; Items = @(@{ CheckBox = 'X'; Name = 'X' }, @{ CheckBox = 'Y'; Name = 'X' }) }) }; Message = "Card 'C', checkbox 'Y': a checkbox named 'X' already exists" }
+        @{ Case = 'two buttons with one name'; Definition = @{ Tab = 'T'; Cards = @(@{ Card = 'C'; Items = @(@{ Button = 'X'; Name = 'X'; Action = {} }, @{ Button = 'Y'; Name = 'X'; Action = {} }) }) }; Message = "Card 'C', button 'Y': a button named 'X' already exists" }
     ) {
-        { New-Tab $TabControl $Definition $Checkboxes } | Should -Throw -ExpectedMessage $Message
+        { New-Tab $TabControl $Definition $Checkboxes $Buttons } | Should -Throw -ExpectedMessage $Message
     }
 }

@@ -64,21 +64,11 @@ Describe 'Set-Icon' {
         $FORM.Icon | Should -BeExactly $FirstCallIcon
     }
 
-    It 'Should reinitialize cache when cache is null' {
-        $script:IconCache = $Null
+    It 'Should set the icon through the UI thread' {
+        Mock Invoke-OnDispatcher {}
 
-        Set-Icon ([IconName]::Default)
+        Set-Icon ([IconName]::Working)
 
-        $FORM.Icon | Should -Not -BeNullOrEmpty
-        $FORM.Icon | Should -BeOfType [Windows.Media.Imaging.BitmapSource]
-    }
-
-    It 'Should initialize cache under strict mode when the variable was never set (async runspace scenario)' {
-        Remove-Variable -Scope Script -Name IconCache -ErrorAction SilentlyContinue
-
-        { Set-StrictMode -Version Latest; Set-Icon ([IconName]::Default) } | Should -Not -Throw
-
-        $FORM.Icon | Should -Not -BeNullOrEmpty
-        $FORM.Icon | Should -BeOfType [Windows.Media.Imaging.BitmapSource]
+        Should -Invoke Invoke-OnDispatcher -Exactly 1 -ParameterFilter { $Command -eq 'Set-FormIcon' -and $Parameters.Name -eq [IconName]::Working }
     }
 }

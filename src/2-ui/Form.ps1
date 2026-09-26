@@ -374,7 +374,7 @@ $FORM.Add_Closing( { Reset-State } )
 # Light and dark mode arrive as a General change, a high contrast theme as Accessibility and Color
 Set-Variable -Option Constant ThemeChangeHandler ([Microsoft.Win32.UserPreferenceChangedEventHandler] {
         if ($args[1].Category -in @('General', 'Accessibility', 'Color')) {
-            Invoke-OnDispatcher { Set-ThemeResources $FORM }
+            Invoke-OnDispatcher 'Set-ThemeResources' @{ Window = $FORM }
         }
     })
 [Microsoft.Win32.SystemEvents]::add_UserPreferenceChanged($ThemeChangeHandler)

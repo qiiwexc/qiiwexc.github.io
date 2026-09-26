@@ -26,6 +26,6 @@ Describe 'Progressbar' {
 
     It 'Should change nothing in a window' {
         Set-Icon ([IconName]::Working) | Should -BeNullOrEmpty
-        Invoke-OnDispatcher ([Action] { throw 'The build has no window to dispatch to' }) -FlushRender | Should -BeNullOrEmpty
+        Invoke-OnDispatcher 'Set-ProgressBarValue' @{ Value = 50 } -FlushRender | Should -BeNullOrEmpty
     }
 }

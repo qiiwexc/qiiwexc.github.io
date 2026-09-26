@@ -1,5 +1,6 @@
 Set-Variable -Scope Script -Name ASYNC -Value ([Hashtable]@{
         Running         = $False
+        Cancelling      = $False
         Button          = $Null
         OriginalContent = $Null
         OnComplete      = $Null
@@ -10,6 +11,9 @@ Set-Variable -Scope Script -Name ASYNC -Value ([Hashtable]@{
     })
 
 Set-Variable -Scope Script -Name ASYNC_USER_FUNCTIONS -Value $Null
+
+# Every button that starts an operation, with whether it is enabled when no operation is running
+Set-Variable -Scope Script -Name ASYNC_BUTTONS -Value ([Collections.Generic.Dictionary[Object, Bool]]::new())
 
 # Operations without a button (such as the startup update check) cannot be cancelled.
 # OnComplete runs on the UI thread with the operation's output once it completes successfully —
@@ -34,6 +38,8 @@ function Start-AsyncOperation {
     $script:ASYNC.Running = $True
     $script:ASYNC.Button = $Button
     $script:ASYNC.OnComplete = $OnComplete
+
+    Update-AsyncButtonState
 
     if ($Button) {
         $script:ASYNC.OriginalContent = $Button.Content
@@ -81,6 +87,9 @@ function Start-AsyncOperation {
     $script:ASYNC.Runspace.SessionStateProxy.SetVariable('LOG_BOX', $LOG_BOX)
     $script:ASYNC.Runspace.SessionStateProxy.SetVariable('ACTIVITIES', [Collections.Stack]@())
     $script:ASYNC.Runspace.SessionStateProxy.SetVariable('CURRENT_TASK', $Null)
+
+    # The operation reaches the window only through this delegate, which this runspace created (Invoke-OnDispatcher)
+    $script:ASYNC.Runspace.SessionStateProxy.SetVariable('UI_THREAD_COMMAND', $UI_THREAD_COMMAND)
 
     # Propagate the UI thread's error preference so async operations fail the same way
     # synchronous code would; strict mode is enforced separately below.
@@ -212,6 +221,7 @@ function Complete-AsyncOperation {
     Set-Variable -Option Constant OnComplete ([ScriptBlock]$script:ASYNC.OnComplete)
 
     $script:ASYNC.Running = $False
+    $script:ASYNC.Cancelling = $False
     $script:ASYNC.Button = $Null
     $script:ASYNC.OriginalContent = $Null
     $script:ASYNC.OnComplete = $Null
@@ -220,6 +230,8 @@ function Complete-AsyncOperation {
     $script:ASYNC.Runspace = $Null
     $script:ASYNC.Timer = $Null
 
+    Update-AsyncButtonState
+
     if ($OnComplete -and $State -eq 'Completed') {
         & $OnComplete $Output
     }
@@ -227,8 +239,53 @@ function Complete-AsyncOperation {
 
 
 function Stop-AsyncOperation {
-    if ($script:ASYNC.Running -and $script:ASYNC.PS) {
+    if ($script:ASYNC.Running -and $script:ASYNC.PS -and -not $script:ASYNC.Cancelling) {
         Write-LogWarning 'Cancelling operation...'
-        $script:ASYNC.PS.Stop()
+
+        $script:ASYNC.Cancelling = $True
+        Update-AsyncButtonState
+
+        # Without waiting: the operation may itself be waiting for the UI thread (Invoke-OnDispatcher), or be in a call
+        # it cannot be stopped in. The timer completes it once it has stopped
+        [Void]$script:ASYNC.PS.BeginStop($Null, $Null)
+    }
+}
+
+
+# A button that starts an operation is disabled while another one runs, so a click is never turned away. The
+# running operation's own button stays enabled, as the one that cancels it, until it is cancelling
+function Register-AsyncButton {
+    param(
+        [Parameter(Position = 0, Mandatory)][Object]$Button
+    )
+
+    $script:ASYNC_BUTTONS[$Button] = $Button.IsEnabled
+}
+
+
+# Enables or disables a button for a reason of its own, such as having nothing selected to apply. A button
+# that starts an operation keeps the state for when no operation is running, and takes it then
+function Set-ButtonEnabled {
+    param(
+        [Parameter(Position = 0, Mandatory)][Object]$Button,
+        [Parameter(Position = 1, Mandatory)][Bool]$Enabled
+    )
+
+    if ($script:ASYNC_BUTTONS.ContainsKey($Button)) {
+        $script:ASYNC_BUTTONS[$Button] = $Enabled
+        Update-AsyncButtonState
+    } else {
+        $Button.IsEnabled = $Enabled
+    }
+}
+
+
+function Update-AsyncButtonState {
+    foreach ($Entry in $script:ASYNC_BUTTONS.GetEnumerator()) {
+        if ($script:ASYNC.Running) {
+            $Entry.Key.IsEnabled = $Entry.Key -eq $script:ASYNC.Button -and -not $script:ASYNC.Cancelling
+        } else {
+            $Entry.Key.IsEnabled = $Entry.Value
+        }
     }
 }

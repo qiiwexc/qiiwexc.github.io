@@ -112,37 +112,43 @@ function Format-Message {
 
 
 function Write-FormLog {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
     param(
         [Parameter(Position = 0, Mandatory)][LogLevel]$Level,
         [Parameter(Position = 1, Mandatory)][String]$Message,
         [Switch]$NoNewLine
     )
 
-    Set-Variable -Option Constant LogAction ([Action] {
-            Set-Variable -Option Constant Run ([Windows.Documents.Run](New-Object Windows.Documents.Run))
+    Invoke-OnDispatcher 'Add-FormLogEntry' @{ Level = $Level; Message = $Message; NoNewLine = $NoNewLine } -FlushRender
+}
 
-            switch ($Level) {
-                ([LogLevel]::WARN) {
-                    $Run.Foreground = $FORM.Resources['LogWarnColor']
-                }
-                ([LogLevel]::ERROR) {
-                    $Run.Foreground = $FORM.Resources['LogErrorColor']
-                }
-                Default {
-                    $Run.Foreground = $FORM.Resources['LogFgColor']
-                }
-            }
+# Touches the window, so it runs on the UI thread only, through Invoke-OnDispatcher
+function Add-FormLogEntry {
+    param(
+        [Parameter(Position = 0, Mandatory)][LogLevel]$Level,
+        [Parameter(Position = 1, Mandatory)][String]$Message,
+        [Switch]$NoNewLine
+    )
 
-            if ($NoNewLine) {
-                $Run.Text = $Message
-            } else {
-                $Run.Text = "`n$Message"
-            }
+    Set-Variable -Option Constant Run ([Windows.Documents.Run](New-Object Windows.Documents.Run))
 
-            $LOG.Inlines.Add($Run)
-            $LOG_BOX.ScrollToEnd()
-        })
+    switch ($Level) {
+        ([LogLevel]::WARN) {
+            $Run.Foreground = $FORM.Resources['LogWarnColor']
+        }
+        ([LogLevel]::ERROR) {
+            $Run.Foreground = $FORM.Resources['LogErrorColor']
+        }
+        Default {
+            $Run.Foreground = $FORM.Resources['LogFgColor']
+        }
+    }
 
-    Invoke-OnDispatcher $LogAction -FlushRender
+    if ($NoNewLine) {
+        $Run.Text = $Message
+    } else {
+        $Run.Text = "`n$Message"
+    }
+
+    $LOG.Inlines.Add($Run)
+    $LOG_BOX.ScrollToEnd()
 }

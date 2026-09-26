@@ -37,6 +37,15 @@ BeforeAll {
         $MockPS | Add-Member -MemberType ScriptMethod -Name Dispose -Value {}
         return $MockPS
     }
+
+    # Stands in for a button, whose IsEnabled is all the button state reads and writes
+    function New-TestButton {
+        param(
+            [Bool]$Enabled = $True
+        )
+
+        return [PSCustomObject]@{ IsEnabled = $Enabled }
+    }
 }
 
 Describe 'Start-AsyncOperation' {
@@ -48,6 +57,7 @@ Describe 'Start-AsyncOperation' {
     BeforeEach {
         $script:ASYNC = @{
             Running         = $False
+            Cancelling      = $False
             Button          = $Null
             OriginalContent = $Null
             PS              = $Null
@@ -174,6 +184,7 @@ Describe 'Complete-AsyncOperation' {
 
         $script:ASYNC = @{
             Running         = $True
+            Cancelling      = $False
             Button          = $Null
             OriginalContent = $Null
             OnComplete      = $Null
@@ -183,7 +194,38 @@ Describe 'Complete-AsyncOperation' {
             Timer           = $MockTimer
         }
 
+        $script:ASYNC_BUTTONS = [Collections.Generic.Dictionary[Object, Bool]]::new()
+
         [Collections.Generic.List[Object]]$script:CompletionOutput = @()
+    }
+
+    It 'Should restore every button to its own state for a <State> operation' -ForEach @(
+        @{ State = 'Completed' }
+        @{ State = 'Failed' }
+        @{ State = 'Stopped' }
+    ) {
+        $script:ASYNC.PS = New-TestAsyncPS -State $State -Reason ([Exception]::new('TEST_FAILURE'))
+        $script:ASYNC.Cancelling = $State -eq 'Stopped'
+        Set-Variable -Option Constant Available (New-TestButton -Enabled $False)
+        Set-Variable -Option Constant Unavailable (New-TestButton -Enabled $False)
+        $script:ASYNC_BUTTONS[$Available] = $True
+        $script:ASYNC_BUTTONS[$Unavailable] = $False
+
+        Complete-AsyncOperation
+
+        $Available.IsEnabled | Should -BeTrue
+        $Unavailable.IsEnabled | Should -BeFalse
+        $script:ASYNC.Cancelling | Should -BeFalse
+    }
+
+    It 'Should restore the buttons before the completion handler runs' {
+        Set-Variable -Option Constant Button (New-TestButton -Enabled $False)
+        $script:ASYNC_BUTTONS[$Button] = $True
+        $script:ASYNC.OnComplete = { param($Output) $script:CompletionOutput.Add($Button.IsEnabled) }
+
+        Complete-AsyncOperation
+
+        $script:CompletionOutput | Should -BeExactly @($True)
     }
 
     It 'Should pass the operation output to the completion handler and reset the state' {
@@ -228,8 +270,14 @@ Describe 'Stop-AsyncOperation' {
     }
 
     BeforeEach {
+        # Records each stop request, and fails a synchronous Stop(), which would block the UI thread
+        Set-Variable -Option Constant MockPS ([PSCustomObject]@{ StopRequests = 0 })
+        $MockPS | Add-Member -MemberType ScriptMethod -Name BeginStop -Value { param($Callback, $State) $this.StopRequests++ }
+        $MockPS | Add-Member -MemberType ScriptMethod -Name Stop -Value { throw 'Stop() waits for the operation' }
+
         $script:ASYNC = @{
             Running         = $False
+            Cancelling      = $False
             Button          = $Null
             OriginalContent = $Null
             PS              = $Null
@@ -237,25 +285,43 @@ Describe 'Stop-AsyncOperation' {
             Runspace        = $Null
             Timer           = $Null
         }
+
+        $script:ASYNC_BUTTONS = [Collections.Generic.Dictionary[Object, Bool]]::new()
     }
 
     It 'Should stop operation when running' {
-        $MockPS = [PSCustomObject]@{}
-        $MockPS | Add-Member -MemberType ScriptMethod -Name Stop -Value {}
+        Set-Variable -Option Constant Button (New-TestButton)
+        $script:ASYNC_BUTTONS[$Button] = $True
         $script:ASYNC.Running = $True
+        $script:ASYNC.Button = $Button
         $script:ASYNC.PS = $MockPS
 
         Stop-AsyncOperation
 
+        $MockPS.StopRequests | Should -BeExactly 1
+        $script:ASYNC.Cancelling | Should -BeTrue
+        $Button.IsEnabled | Should -BeFalse
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter {
             $Message -eq 'Cancelling operation...'
         }
     }
 
+    It 'Should not stop an operation that is already cancelling' {
+        $script:ASYNC.Running = $True
+        $script:ASYNC.Cancelling = $True
+        $script:ASYNC.PS = $MockPS
+
+        Stop-AsyncOperation
+
+        $MockPS.StopRequests | Should -BeExactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
+    }
+
     It 'Should not stop when no operation is running' {
         Stop-AsyncOperation
 
+        $script:ASYNC.Cancelling | Should -BeFalse
         Should -Invoke Write-LogWarning -Exactly 0
     }
 
@@ -265,6 +331,144 @@ Describe 'Stop-AsyncOperation' {
 
         Stop-AsyncOperation
 
+        $script:ASYNC.Cancelling | Should -BeFalse
         Should -Invoke Write-LogWarning -Exactly 0
+    }
+}
+
+Describe 'Register-AsyncButton' {
+    BeforeEach {
+        $script:ASYNC_BUTTONS = [Collections.Generic.Dictionary[Object, Bool]]::new()
+    }
+
+    It 'Should keep the state a button is rendered with' {
+        Set-Variable -Option Constant Enabled (New-TestButton)
+        Set-Variable -Option Constant Disabled (New-TestButton -Enabled $False)
+
+        Register-AsyncButton $Enabled
+        Register-AsyncButton $Disabled
+
+        $script:ASYNC_BUTTONS.Count | Should -BeExactly 2
+        $script:ASYNC_BUTTONS[$Enabled] | Should -BeTrue
+        $script:ASYNC_BUTTONS[$Disabled] | Should -BeFalse
+    }
+}
+
+Describe 'Set-ButtonEnabled' {
+    BeforeEach {
+        $script:ASYNC = @{
+            Running    = $False
+            Cancelling = $False
+            Button     = $Null
+        }
+
+        $script:ASYNC_BUTTONS = [Collections.Generic.Dictionary[Object, Bool]]::new()
+    }
+
+    It 'Should set a button that starts no operation at once, whatever is running' {
+        Set-Variable -Option Constant Button (New-TestButton)
+        $script:ASYNC.Running = $True
+
+        Set-ButtonEnabled $Button $False
+
+        $Button.IsEnabled | Should -BeFalse
+
+        Set-ButtonEnabled $Button $True
+
+        $Button.IsEnabled | Should -BeTrue
+        $script:ASYNC_BUTTONS.Count | Should -BeExactly 0
+    }
+
+    It 'Should set a button that starts an operation at once when no operation is running' {
+        Set-Variable -Option Constant Button (New-TestButton)
+        $script:ASYNC_BUTTONS[$Button] = $True
+
+        Set-ButtonEnabled $Button $False
+
+        $Button.IsEnabled | Should -BeFalse
+        $script:ASYNC_BUTTONS[$Button] | Should -BeFalse
+    }
+
+    It 'Should keep a button that starts an operation disabled until no operation is running' {
+        Set-Variable -Option Constant Button (New-TestButton -Enabled $False)
+        $script:ASYNC_BUTTONS[$Button] = $False
+        $script:ASYNC.Running = $True
+
+        Set-ButtonEnabled $Button $True
+
+        $Button.IsEnabled | Should -BeFalse
+        $script:ASYNC_BUTTONS[$Button] | Should -BeTrue
+    }
+
+    It 'Should keep the running button enabled, to cancel its operation' {
+        Set-Variable -Option Constant Button (New-TestButton)
+        $script:ASYNC_BUTTONS[$Button] = $True
+        $script:ASYNC.Running = $True
+        $script:ASYNC.Button = $Button
+
+        Set-ButtonEnabled $Button $False
+
+        $Button.IsEnabled | Should -BeTrue
+        $script:ASYNC_BUTTONS[$Button] | Should -BeFalse
+    }
+}
+
+Describe 'Update-AsyncButtonState' {
+    BeforeEach {
+        $script:ASYNC = @{
+            Running    = $True
+            Cancelling = $False
+            Button     = $Null
+        }
+
+        $script:ASYNC_BUTTONS = [Collections.Generic.Dictionary[Object, Bool]]::new()
+
+        Set-Variable -Option Constant Running (New-TestButton)
+        Set-Variable -Option Constant Available (New-TestButton)
+        Set-Variable -Option Constant Unavailable (New-TestButton -Enabled $False)
+        $script:ASYNC_BUTTONS[$Running] = $True
+        $script:ASYNC_BUTTONS[$Available] = $True
+        $script:ASYNC_BUTTONS[$Unavailable] = $False
+    }
+
+    It 'Should disable every button but the one that cancels the running operation' {
+        $script:ASYNC.Button = $Running
+
+        Update-AsyncButtonState
+
+        $Running.IsEnabled | Should -BeTrue
+        $Available.IsEnabled | Should -BeFalse
+        $Unavailable.IsEnabled | Should -BeFalse
+    }
+
+    It 'Should disable every button while an operation without a button runs' {
+        Update-AsyncButtonState
+
+        $Running.IsEnabled | Should -BeFalse
+        $Available.IsEnabled | Should -BeFalse
+        $Unavailable.IsEnabled | Should -BeFalse
+    }
+
+    It 'Should disable every button while the running operation is cancelling' {
+        $script:ASYNC.Button = $Running
+        $script:ASYNC.Cancelling = $True
+
+        Update-AsyncButtonState
+
+        $Running.IsEnabled | Should -BeFalse
+        $Available.IsEnabled | Should -BeFalse
+    }
+
+    It 'Should restore every button to its own state when no operation is running' {
+        $script:ASYNC.Running = $False
+        $Running.IsEnabled = $False
+        $Available.IsEnabled = $False
+        $Unavailable.IsEnabled = $True
+
+        Update-AsyncButtonState
+
+        $Running.IsEnabled | Should -BeTrue
+        $Available.IsEnabled | Should -BeTrue
+        $Unavailable.IsEnabled | Should -BeFalse
     }
 }

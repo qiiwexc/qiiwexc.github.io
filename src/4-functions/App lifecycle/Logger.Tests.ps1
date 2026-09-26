@@ -145,6 +145,23 @@ Describe 'Write-FormLog' {
             $LOG.Inlines[0].Text | Should -BeExactly $TestMessage
         }
     }
+
+    Context 'Thread' {
+        It 'Should write the entry through the UI thread and let it render' {
+            Mock Invoke-OnDispatcher {}
+
+            Write-FormLog $LogLevelWarning $TestMessage -NoNewLine
+
+            Should -Invoke Invoke-OnDispatcher -Exactly 1 -ParameterFilter {
+                $Command -eq 'Add-FormLogEntry' -and
+                $Parameters.Level -eq $LogLevelWarning -and
+                $Parameters.Message -eq $TestMessage -and
+                $Parameters.NoNewLine -and
+                $FlushRender
+            }
+            $LOG.Inlines.Count | Should -BeExactly 0
+        }
+    }
 }
 
 Describe 'Write-LogDebug' {

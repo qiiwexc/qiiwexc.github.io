@@ -11,22 +11,22 @@ function Import-RegistryConfiguration {
         Write-LogInfo "Importing $AppName configuration into registry..." $LogIndentLevel
 
         Set-Variable -Option Constant RegFilePath ([String]"$PATH_APP_DIR\$AppName.reg")
+        Set-Variable -Option Constant Keys ([String](-join $Content))
 
         Initialize-AppDirectory
 
-        "Windows Registry Editor Version 5.00`n`n" + (-join $Content) | Set-Content $RegFilePath -NoNewline -ErrorAction Stop
+        "Windows Registry Editor Version 5.00`n`n$Keys" | Set-Content $RegFilePath -NoNewline -ErrorAction Stop
 
         if ($PSCmdlet.ShouldProcess($AppName, 'Import registry configuration')) {
-            # Unlike 'regedit /s', reg.exe reports a failed import through its exit code. '/reg:64' keeps
-            # the 64-bit view regedit writes to, even from a 32-bit PowerShell on a 64-bit system
-            [String[]]$Arguments = @('import', "`"$RegFilePath`"")
-            if ($OS_64_BIT) {
-                $Arguments += '/reg:64'
-            }
+            Set-Variable -Option Constant ExitCode ([Int](Invoke-RegistryImport $RegFilePath))
 
-            Set-Variable -Option Constant RegProcess ([PSObject](Start-Process 'reg' $Arguments -Wait -PassThru -WindowStyle Hidden -ErrorAction Stop))
-            if ($RegProcess.ExitCode -ne 0) {
-                throw "Registry import failed with exit code $($RegProcess.ExitCode)"
+            if ($ExitCode -ne 0) {
+                Set-Variable -Option Constant RefusedKeys ([String[]]@(Get-RefusedRegistryKey $Keys "$PATH_APP_DIR\$AppName (one key).reg"))
+                if ($RefusedKeys.Count -gt 0) {
+                    throw "Could not write $($RefusedKeys -join ', '), every other key was written"
+                }
+
+                Write-LogDebug "Registry import failed with exit code $ExitCode, but every key was written when imported on its own" $LogIndentLevel
             }
         }
 

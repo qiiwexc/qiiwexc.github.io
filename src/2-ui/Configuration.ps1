@@ -19,20 +19,30 @@ Set-Variable -Option Constant WINDOWS_CONFIGURATION_CHECKBOXES ([Hashtable]@{
         Personalization = 'Config_WindowsPersonalization'
     })
 
+# There is nothing to apply without at least one configuration selected
+Set-Variable -Option Constant APPS_CONFIGURATION_ON_CLICK ([ScriptBlock] {
+        Set-ButtonEnabled $BUTTONS.ApplyAppsConfiguration ([Bool]@($APPS_CONFIGURATION_CHECKBOXES.Values | Where-Object { $CHECKBOXES[$_].IsChecked }).Count)
+    })
+
+Set-Variable -Option Constant WINDOWS_CONFIGURATION_ON_CLICK ([ScriptBlock] {
+        Set-ButtonEnabled $BUTTONS.ApplyWindowsConfiguration ([Bool]@($WINDOWS_CONFIGURATION_CHECKBOXES.Values | Where-Object { $CHECKBOXES[$_].IsChecked }).Count)
+    })
+
 Set-Variable -Option Constant TAB_CONFIGURATION ([Hashtable]@{
         Tab   = 'Configuration'
         Cards = @(
             @{
                 Card  = 'Apps configuration'
                 Items = @(
-                    @{ CheckBox = '7-Zip'; Name = 'Config_7zip'; Tag = '7-Zip'; Checked = $True }
-                    @{ CheckBox = 'VLC'; Name = 'Config_VLC'; Tag = 'VLC'; Checked = $True }
-                    @{ CheckBox = 'AnyDesk'; Name = 'Config_AnyDesk'; Tag = 'AnyDesk'; Checked = $True }
-                    @{ CheckBox = 'qBittorrent'; Name = 'Config_qBittorrent'; Tag = 'qBittorrent'; Checked = $True }
-                    @{ CheckBox = 'Microsoft Edge'; Name = 'Config_Edge'; Tag = 'Microsoft Edge'; Checked = $True }
-                    @{ CheckBox = 'Google Chrome'; Name = 'Config_Chrome'; Tag = 'Google Chrome'; Checked = $True }
+                    @{ CheckBox = '7-Zip'; Name = 'Config_7zip'; Tag = '7-Zip'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'VLC'; Name = 'Config_VLC'; Tag = 'VLC'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'AnyDesk'; Name = 'Config_AnyDesk'; Tag = 'AnyDesk'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'qBittorrent'; Name = 'Config_qBittorrent'; Tag = 'qBittorrent'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Microsoft Edge'; Name = 'Config_Edge'; Tag = 'Microsoft Edge'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Google Chrome'; Name = 'Config_Chrome'; Tag = 'Google Chrome'; Checked = $True; OnClick = $APPS_CONFIGURATION_ON_CLICK }
                     @{
                         Button = 'Apply configuration'
+                        Name   = 'ApplyAppsConfiguration'
                         Action = {
                             $CapturedAppsConfig = @{}
                             foreach ($Entry in $APPS_CONFIGURATION_CHECKBOXES.GetEnumerator()) {
@@ -49,15 +59,16 @@ Set-Variable -Option Constant TAB_CONFIGURATION ([Hashtable]@{
             @{
                 Card  = 'Windows configuration'
                 Items = @(
-                    @{ CheckBox = 'Improve security'; Name = 'Config_WindowsSecurity'; Checked = $True }
-                    @{ CheckBox = 'Improve performance'; Name = 'Config_WindowsPerformance'; Checked = $True }
-                    @{ CheckBox = 'Baseline configuration'; Name = 'Config_WindowsBaseline'; Checked = $True }
-                    @{ CheckBox = 'Remove ads and annoyances'; Name = 'Config_WindowsAnnoyances'; Checked = $True }
-                    @{ CheckBox = 'Telemetry and privacy'; Name = 'Config_WindowsPrivacy'; Checked = $True }
-                    @{ CheckBox = 'Keyboard layout; location'; Name = 'Config_WindowsLocalization' }
-                    @{ CheckBox = 'Personalization'; Name = 'Config_WindowsPersonalization' }
+                    @{ CheckBox = 'Improve security'; Name = 'Config_WindowsSecurity'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Improve performance'; Name = 'Config_WindowsPerformance'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Baseline configuration'; Name = 'Config_WindowsBaseline'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Remove ads and annoyances'; Name = 'Config_WindowsAnnoyances'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Telemetry and privacy'; Name = 'Config_WindowsPrivacy'; Checked = $True; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Keyboard layout; location'; Name = 'Config_WindowsLocalization'; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
+                    @{ CheckBox = 'Personalization'; Name = 'Config_WindowsPersonalization'; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
                     @{
                         Button = 'Apply configuration'
+                        Name   = 'ApplyWindowsConfiguration'
                         Action = {
                             $CapturedWindowsConfig = @{}
                             foreach ($Entry in $WINDOWS_CONFIGURATION_CHECKBOXES.GetEnumerator()) {

@@ -47,11 +47,34 @@ function Add-LayoutCheckBox {
 }
 
 
+function Add-LayoutButton {
+    param(
+        [Parameter(Position = 0, Mandatory)][Windows.Controls.Button]$Button,
+        [Parameter(Position = 1, Mandatory)][Hashtable]$Definition,
+        [Parameter(Position = 2, Mandatory)][Hashtable]$Buttons,
+        [Parameter(Position = 3, Mandatory)][String]$Where
+    )
+
+    if ($Definition['Name']) {
+        if ($Buttons.ContainsKey($Definition['Name'])) {
+            throw "${Where}: a button named '$($Definition['Name'])' already exists"
+        }
+        $Buttons[$Definition['Name']] = $Button
+    }
+
+    # Read from the action itself, so that no button that starts an operation can be left out
+    if ($Definition['Action'].Ast.Find({ $args[0] -is [Management.Automation.Language.CommandAst] -and $args[0].GetCommandName() -eq 'Start-AsyncOperation' }, $True)) {
+        Register-AsyncButton $Button
+    }
+}
+
+
 function New-Tab {
     param(
         [Parameter(Position = 0, Mandatory)][Windows.Controls.TabControl]$TabControl,
         [Parameter(Position = 1, Mandatory)][Hashtable]$Definition,
-        [Parameter(Position = 2, Mandatory)][Hashtable]$Checkboxes
+        [Parameter(Position = 2, Mandatory)][Hashtable]$Checkboxes,
+        [Parameter(Position = 3, Mandatory)][Hashtable]$Buttons
     )
 
     Assert-LayoutDefinition -Definition $Definition -Required @('Tab', 'Cards') -Allowed @() -Where 'Tab'
@@ -74,18 +97,19 @@ function New-Tab {
                 [Windows.Controls.CheckBox]$CheckBox = New-CheckBox $Card $Item['CheckBox'] -Tag ([String]$Item['Tag']) -Checked:([Bool]$Item['Checked']) -Disabled:([Bool]$Item['Disabled'])
                 Add-LayoutCheckBox -CheckBox $CheckBox -Definition $Item -Checkboxes $Checkboxes -Where "$CardWhere, checkbox '$($Item['CheckBox'])'"
             } else {
-                Assert-LayoutDefinition -Definition $Item -Required @('Button', 'Action') -Allowed @('Disabled', 'Browser', 'StartAfterDownload', 'Options') -Where $CardWhere
+                Assert-LayoutDefinition -Definition $Item -Required @('Button', 'Action') -Allowed @('Name', 'Disabled', 'Browser', 'StartAfterDownload', 'Options') -Where $CardWhere
 
                 [String]$ButtonWhere = "$CardWhere, button '$($Item['Button'])'"
                 if ($Item['Action'] -isnot [ScriptBlock]) {
                     throw "${ButtonWhere}: 'Action' must be a script block"
                 }
 
-                if ($Item['Browser']) {
-                    [Void](New-ButtonBrowser -Parent $Card -Text $Item['Button'] -Function $Item['Action'] -Spaced:(-not $IsFirst))
+                [Windows.Controls.Button]$Button = if ($Item['Browser']) {
+                    New-ButtonBrowser -Parent $Card -Text $Item['Button'] -Function $Item['Action'] -Spaced:(-not $IsFirst)
                 } else {
-                    [Void](New-Button -Parent $Card -Text $Item['Button'] -Function $Item['Action'] -Disabled:([Bool]$Item['Disabled']) -Spaced:(-not $IsFirst))
+                    New-Button -Parent $Card -Text $Item['Button'] -Function $Item['Action'] -Disabled:([Bool]$Item['Disabled']) -Spaced:(-not $IsFirst)
                 }
+                Add-LayoutButton -Button $Button -Definition $Item -Buttons $Buttons -Where $ButtonWhere
 
                 # A button's options join its 'Start after download' checkbox's centred group, if it has one
                 [Windows.Controls.Panel]$OptionsPanel = $Card
