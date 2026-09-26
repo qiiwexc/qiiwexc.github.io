@@ -8,21 +8,37 @@ function Get-SystemTheme {
 }
 
 function Get-SystemAccentColors {
-    [Hashtable]$Defaults = @{
-        Accent        = '#0067c0'
-        AccentHover   = '#1975c9'
-        AccentPressed = '#3284cc'
+    param(
+        [Switch]$Light
+    )
+
+    # Windows 11 fills its controls not with the accent colour itself but with a shade of it that suits the
+    # theme: a darker one on light backgrounds, a lighter one on dark. AccentPalette holds the shades as RGBA,
+    # lightest first: Light3, Light2, Light1, the accent colour, Dark1, Dark2, Dark3 and one more
+    if ($Light) {
+        Set-Variable -Option Constant ShadeIndex ([Int]4)
+        Set-Variable -Option Constant DefaultShade ([String]'0067C0')
+    } else {
+        Set-Variable -Option Constant ShadeIndex ([Int]1)
+        Set-Variable -Option Constant DefaultShade ([String]'4CC2FF')
     }
+
+    [String]$Shade = $DefaultShade
     try {
         [Byte[]]$Palette = Get-ItemPropertyValue 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Accent' -Name 'AccentPalette'
-        if ($Palette.Length -lt 20) { return $Defaults }
-        return @{
-            Accent        = '#{0:X2}{1:X2}{2:X2}' -f $Palette[12], $Palette[13], $Palette[14]
-            AccentHover   = '#{0:X2}{1:X2}{2:X2}' -f $Palette[8], $Palette[9], $Palette[10]
-            AccentPressed = '#{0:X2}{1:X2}{2:X2}' -f $Palette[16], $Palette[17], $Palette[18]
+        if ($Palette.Length -ge 32) {
+            [Int]$Offset = $ShadeIndex * 4
+            $Shade = '{0:X2}{1:X2}{2:X2}' -f $Palette[$Offset], $Palette[$Offset + 1], $Palette[$Offset + 2]
         }
     } catch {
-        return $Defaults
+        $Shade = $DefaultShade
+    }
+
+    # Hovered and pressed, a control shows the same shade at 90% and 80% opacity over whatever is behind it
+    return @{
+        Accent        = "#$Shade"
+        AccentHover   = "#E6$Shade"
+        AccentPressed = "#CC$Shade"
     }
 }
 
@@ -169,7 +185,7 @@ function Get-ThemeColors {
         )
     }
 
-    Set-Variable -Option Constant AccentColors ([Hashtable](Get-SystemAccentColors))
+    Set-Variable -Option Constant AccentColors ([Hashtable](Get-SystemAccentColors -Light:$Light))
     $Colors['AccentColor'] = $AccentColors.Accent
     $Colors['AccentHoverColor'] = $AccentColors.AccentHover
     $Colors['AccentPressedColor'] = $AccentColors.AccentPressed

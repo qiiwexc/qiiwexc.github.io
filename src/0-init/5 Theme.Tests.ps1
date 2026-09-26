@@ -22,9 +22,52 @@ BeforeAll {
     }
 }
 
+Describe 'Get-SystemAccentColors' {
+    BeforeAll {
+        # The default blue accent's palette, as Windows writes it: Light3 to Dark3 and one more, as RGBA
+        Set-Variable -Option Constant TestPalette ([Byte[]]@(
+                0x99, 0xEB, 0xFF, 0x00, 0x4C, 0xC2, 0xFF, 0x00, 0x00, 0x91, 0xF8, 0x00, 0x00, 0x78, 0xD4, 0x00,
+                0x00, 0x67, 0xC0, 0x00, 0x00, 0x3E, 0x92, 0x00, 0x00, 0x1A, 0x68, 0x00, 0xF7, 0x63, 0x0C, 0x00
+            ))
+    }
+
+    It 'Should use the <Shade> shade of the accent colour in the <Theme> theme' -ForEach @(
+        @{ Theme = 'light'; Shade = 'Dark1'; Expected = '0067C0' }
+        @{ Theme = 'dark'; Shade = 'Light2'; Expected = '4CC2FF' }
+    ) {
+        Mock Get-ItemPropertyValue { return $TestPalette }
+
+        [Hashtable]$Colors = Get-SystemAccentColors -Light:($Theme -eq 'light')
+
+        $Colors.Accent | Should -BeExactly "#$Expected"
+        $Colors.AccentHover | Should -BeExactly "#E6$Expected"
+        $Colors.AccentPressed | Should -BeExactly "#CC$Expected"
+    }
+
+    It 'Should fall back to the default blue in the <Theme> theme when the palette is <Case>' -ForEach @(
+        @{ Theme = 'light'; Case = 'too short'; Palette = [Byte[]]@(0x00, 0x78, 0xD4, 0x00); Expected = '0067C0' }
+        @{ Theme = 'dark'; Case = 'too short'; Palette = [Byte[]]@(0x00, 0x78, 0xD4, 0x00); Expected = '4CC2FF' }
+        @{ Theme = 'light'; Case = 'missing'; Palette = $Null; Expected = '0067C0' }
+        @{ Theme = 'dark'; Case = 'missing'; Palette = $Null; Expected = '4CC2FF' }
+    ) {
+        if ($Palette) {
+            Mock Get-ItemPropertyValue { return $Palette }
+        } else {
+            Mock Get-ItemPropertyValue { throw 'Property AccentPalette does not exist' }
+        }
+
+        [Hashtable]$Colors = Get-SystemAccentColors -Light:($Theme -eq 'light')
+
+        $Colors.Accent | Should -BeExactly "#$Expected"
+        $Colors.AccentHover | Should -BeExactly "#E6$Expected"
+        $Colors.AccentPressed | Should -BeExactly "#CC$Expected"
+    }
+}
+
 Describe 'Get-ContrastingTextColor' {
     It 'Should pick <Expected> text on <Background>' -ForEach @(
-        @{ Background = '#0067c0'; Expected = '#ffffff' } # Default Windows blue
+        @{ Background = '#0067c0'; Expected = '#ffffff' } # Default Windows blue, light theme shade
+        @{ Background = '#4CC2FF'; Expected = '#000000' } # Default Windows blue, dark theme shade
         @{ Background = '#FFB900'; Expected = '#000000' } # Windows yellow accent
         @{ Background = '#00CC6A'; Expected = '#000000' } # Windows light green accent
         @{ Background = '#C42B1C'; Expected = '#ffffff' } # Red

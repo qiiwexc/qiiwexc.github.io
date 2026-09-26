@@ -38,9 +38,11 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource AccentHoverColor}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentHoverColor}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource AccentPressedColor}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentPressedColor}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonDisabledColor}" />
