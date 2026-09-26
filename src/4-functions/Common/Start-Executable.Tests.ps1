@@ -35,9 +35,9 @@ Describe 'Start-Executable' {
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq $TestExecutable -and
-            $ArgumentList -eq $Null -and
+            -not $PesterBoundParameters.ContainsKey('ArgumentList') -and
             $WorkingDirectory -eq $TestParentPath -and
-            $Wait -eq $Null
+            -not $PesterBoundParameters.ContainsKey('Wait')
         }
         Should -Invoke Remove-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -53,7 +53,7 @@ Describe 'Start-Executable' {
             $FilePath -eq $TestExecutable -and
             $ArgumentList -eq $TestSwitches -and
             $WorkingDirectory -eq $TestParentPath -and
-            $Wait -eq $Null
+            -not $PesterBoundParameters.ContainsKey('Wait')
         }
         Should -Invoke Remove-File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -68,7 +68,7 @@ Describe 'Start-Executable' {
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq $TestExecutable -and
             $ArgumentList -eq $TestSwitches -and
-            $WorkingDirectory -eq $Null -and
+            -not $PesterBoundParameters.ContainsKey('WorkingDirectory') -and
             $Wait -eq $True
         }
         Should -Invoke Remove-File -Exactly 1

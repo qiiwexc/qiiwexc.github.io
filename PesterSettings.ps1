@@ -6,8 +6,17 @@ param(
 # Paths are absolute, so the suite behaves the same whatever the current directory is
 @{
     Run          = @{
-        Exit = $True
-        Path = @(
+        Exit     = $True
+        # Test files run in parallel, each in a runspace of its own. A file that builds WPF controls (they
+        # need an STA thread, and the workers' are MTA) or changes process-wide state (environment
+        # variables, the current directory, the console encoding) carries '#pester:no-parallel', and runs
+        # in this session once the parallel batch is done. Not with coverage: every worker then sets
+        # breakpoints on all the measured files, which made a 108-second run take 658
+        Parallel = -not $Coverage.ToBool()
+        # Where Pester starts looking for Pester.BeforeContainer.ps1, which gives the workers the strict
+        # mode and error preference of tools\test.ps1
+        RepoRoot = $PSScriptRoot
+        Path     = @(
             "$PSScriptRoot\tools",
             "$PSScriptRoot\src\0-init",
             "$PSScriptRoot\src\1-components",

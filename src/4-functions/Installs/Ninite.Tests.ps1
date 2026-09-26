@@ -1,3 +1,5 @@
+#pester:no-parallel - builds WPF controls, which need an STA thread, and parallel workers are MTA
+
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
