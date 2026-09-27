@@ -36,17 +36,17 @@ failures as environmental, not regressions.
 
 ## Developer Workflows
 
-| Task                   | Command                                                                  |
-| ---------------------- | ------------------------------------------------------------------------ |
-| Run tests              | `.\test.bat` (Pester via `tools\test.ps1`)                               |
-| Tests with coverage    | `.\test-with-coverage.bat` (what CI runs; fails below the target)        |
-| Tests tagged `WIP`     | `.\test-wip.bat`                                                         |
-| Visual comparison      | `.\test-visual.bat` (tabs rendered from `HEAD` and the working tree)     |
-| Run a single test file | `Invoke-Pester -Path 'src\4-functions\Common\Start-Download.Tests.ps1'`  |
-| Full build, as CI does | `.\build-ci.bat` (runs `tools\build.ps1 -Full -CI`)                      |
-| Dev build + run        | `.\build-dev.bat` (runs `tools\build.ps1 -Dev`)                          |
-| Update external deps   | `tools\build.ps1 -Update` (or the nightly `update-dependencies.yml`)     |
-| Release                | `.\release.bat` (or the manual `tag.yml` workflow)                       |
+| Task                   | Command                                                                 |
+| ---------------------- | ----------------------------------------------------------------------- |
+| Run tests              | `.\test.bat` (Pester via `tools\test.ps1`)                              |
+| Tests with coverage    | `.\test-with-coverage.bat` (what CI runs; fails below the target)       |
+| Tests tagged `WIP`     | `.\test-wip.bat`                                                        |
+| Visual comparison      | `.\test-visual.bat` (tabs rendered from `HEAD` and the working tree)    |
+| Run a single test file | `Invoke-Pester -Path 'src\4-functions\Common\Start-Download.Tests.ps1'` |
+| Full build, as CI does | `.\build-ci.bat` (runs `tools\build.ps1 -Full -CI`)                     |
+| Dev build + run        | `.\build-dev.bat` (runs `tools\build.ps1 -Dev`)                         |
+| Update external deps   | `tools\build.ps1 -Update` (or the nightly `update-dependencies.yml`)    |
+| Release                | `.\release.bat` (or the manual `tag.yml` workflow)                      |
 
 - `-Full` builds the HTML page, the answer files, the PS1 and the launcher, and runs the linter.
   Without `-CI` it also runs the tests and the dependency update (`build.bat`,
@@ -60,6 +60,15 @@ failures as environmental, not regressions.
   of every release or tag crossed. The notes are third-party text, so `Format-ReleaseNotes`
   defuses mentions and issue references before quoting them, and the workflow hands the file to
   `gh` as `--body-file`.
+- Every entry in `dependencies.json` sets `opensPullRequest`, and the nightly opens its pull
+  request only when a dependency set to `true` moved; other bumps ride along in it. It is `true`
+  where a new version can need a change here: a `{VERSION}` download with its `sha256`, a CI
+  tool, the Windows links in `urls.json`, and O&O ShutUp10, whose exported config the app embeds.
+  It is `false` for the `File` dependencies, which only a local run with their files in `wip/`
+  updates, for what the app only links to or fetches unversioned (SystemRescue, TronScript,
+  SDI), and for the Unattend Generator, which `templates/autounattend.xml` is regenerated from
+  by hand. `Compare-Dependencies` fails on a dependency that moved without a boolean there, and
+  a test checks every entry.
 - `build-dev.bat`, `build-and-run.bat` and `tools\build.ps1 -Run` start the built app, which
   relaunches itself elevated — don't run them unless asked. `build-ci.bat` and the test scripts
   write only to the git-ignored outputs in `build/` and `vm/`.

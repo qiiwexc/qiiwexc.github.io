@@ -23,8 +23,11 @@ that ends without one of those has not finished.
 
 **The nightly PR.** `.github/workflows/update-dependencies.yml` runs
 `tools\Invoke-DependencyUpdate.ps1`, which checks every entry in
-`resources/dependencies.json`. It opens or updates a pull request whenever any version
-moved, including those that change nothing built (`Version record only`). There is one
+`resources/dependencies.json`. It opens or updates a pull request when a dependency whose
+`opensPullRequest` is `true` moved: one this repository pins by version, links to specific
+builds of or embeds a config for, so the bump may need a change here even when it changes
+nothing built (`Version record only`). Every other bump rides along, so a PR can carry rows that
+did not open it, and a SystemRescue or TronScript bump never arrives on its own. There is one
 standing PR from `chore/update-dependencies`, titled
 `Update dependencies (yyyy.MM.dd)`. Each night's run starts from master and force-pushes
 over it. The PR changes `resources/dependencies.json` and nothing else. The `test` and

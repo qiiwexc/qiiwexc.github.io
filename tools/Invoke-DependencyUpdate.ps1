@@ -1,7 +1,8 @@
 #Requires -Version 5
 
 # Orchestrates the dependency update check for the nightly workflow: writes to GITHUB_OUTPUT whether a
-# version moved, which opens or updates the pull request, and its description to build\dependency-update.md
+# dependency marked 'opensPullRequest' moved, which opens or updates the pull request, and its description
+# to build\dependency-update.md
 
 $ErrorActionPreference = 'Stop'
 
@@ -44,9 +45,10 @@ if (-not $Diff) {
 
 [PSCustomObject]$Result = Compare-Dependencies $OldDeps $NewDeps $UrlsTemplate
 
-# A pull request is opened for every version that moved: one that changes nothing built is still how a
-# change needed here (a renamed parameter, a config to export again) gets noticed and reviewed
-[Bool]$HasUpdates = $Result.Updates.Count -gt 0
+# The pull request is opened only when a dependency marked 'opensPullRequest' moved, as that bump may need a
+# change here (a pinned download, a renamed parameter, a config to export again). Other bumps ride along in
+# it, and without one are found again the next night
+[Bool]$HasUpdates = [Bool]@($Result.Updates | Where-Object { $_.OpensPullRequest }).Count
 "has_updates=$($HasUpdates.ToString().ToLower())" >> $env:GITHUB_OUTPUT
 
 if ($HasUpdates) {

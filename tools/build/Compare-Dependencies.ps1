@@ -17,6 +17,13 @@ function Compare-Dependencies {
             continue
         }
 
+        # Whether this bump opens the pull request or only rides along in one. It must be a JSON boolean:
+        # the nightly runs without strict mode, where a missing flag would read as $Null and a quoted
+        # "false" would count as true
+        if (-not $NewDep.PSObject.Properties['opensPullRequest'] -or $NewDep.opensPullRequest -isnot [Bool]) {
+            throw "Dependency '$($NewDep.name)' must set 'opensPullRequest' to true or false"
+        }
+
         [Bool]$UrlChange = $False
         [String]$UrlKey = "URL_$($NewDep.name.ToUpper().Replace(' ', '_').Replace('-', '_'))"
         if ($UrlsTemplate.PSObject.Properties[$UrlKey]) {
@@ -26,12 +33,13 @@ function Compare-Dependencies {
         }
 
         $Updates.Add([PSCustomObject]@{
-                Name       = $NewDep.name
-                From       = $OldDep.version
-                To         = $NewDep.version
-                Dependency = $NewDep
-                UrlChange  = $UrlChange
-                ToolChange = $NewDep.name -in $ToolNames
+                Name             = $NewDep.name
+                From             = $OldDep.version
+                To               = $NewDep.version
+                Dependency       = $NewDep
+                UrlChange        = $UrlChange
+                ToolChange       = $NewDep.name -in $ToolNames
+                OpensPullRequest = $NewDep.opensPullRequest
             })
     }
 
