@@ -30,8 +30,9 @@ nothing built (`Version record only`). Every other bump rides along, so a PR can
 did not open it, and a SystemRescue or TronScript bump never arrives on its own. There is one
 standing PR from `chore/update-dependencies`, titled
 `Update dependencies (yyyy.MM.dd)`. Each night's run starts from master and force-pushes
-over it. The PR changes `resources/dependencies.json` and nothing else. The `test` and
-`build` jobs report back as commit statuses.
+over it. The PR changes `resources/dependencies.json` and nothing else, and that is how
+`ci.yml` knows to skip it: the nightly workflow's own `test` and `build` jobs check it and
+report back as commit statuses.
 
 **Dependabot.** `.github/dependabot.yml` watches GitHub Actions only. It has one entry
 per directory: the root, for the workflows, and each composite action under
@@ -154,7 +155,10 @@ trustworthy (Step 5). Say which, and why.
 **Needs a change first** - it works, but something here is now wrong: a deprecated
 parameter still passed, a setting ID the preset still uses, an embedded config exported by
 an older version. Name the file. On the nightly PR that change goes to master as its own
-commit, never onto `chore/update-dependencies`, which the next run force-pushes away.
+commit, never onto `chore/update-dependencies`, which the next run force-pushes away. That
+run rebuilds the PR on top of the fix, and starting the workflow by hand does the same at
+once. Updating the branch from the PR page does not: `ci.yml` skips the nightly PR, so the
+new head is left unchecked.
 
 **Worth adopting** - the release brought something this repository has an actual use
 for. Two rules keep this honest:
@@ -252,10 +256,13 @@ Generic advice misses all of these. Check each one that applies.
 Invoke-RestMethod "$Api/check-runs/<id>/annotations" -Headers $H | Select-Object path, start_line, message
 ```
 
-The statuses are the nightly workflow's `test` and `build`. The check runs are `ci.yml`
-on the pull request (`deploy` and `release` are skipped there, as they run for tags only),
-CodeQL, and zizmor when `.github/` changed. A combined state of `pending` with an empty
-`statuses` list means nothing reported, not that something is still running.
+On the nightly PR, the statuses are the nightly workflow's `test` and `build`, and the only
+check runs are CodeQL's, as `ci.yml` skips a pull request that changes nothing but
+`dependencies.json`. On a Dependabot PR, the check runs are `ci.yml` (`deploy` and
+`release` are skipped there, as they run for tags only), CodeQL and zizmor. A combined
+state of `pending` with an empty `statuses` list means nothing reported, not that something
+is still running. On the nightly PR it is either a run still under way (each job reports as
+it ends) or a head the nightly run did not push, which nothing will check.
 
 **To run the gate yourself**, the PR has to be in the working tree:
 
@@ -306,9 +313,9 @@ table, and `changed_files: 1` - `resources/dependencies.json`, four lines each w
 | OOShutUp10         | 3.4 → 3.5               | Version record only | a live tool with an embedded config           |
 | Pester             | 6.1.0 → 6.2.0           | CI tool             | a CI tool                                     |
 
-Pester is the only row that changes what CI checks; the gate is its whole test, and `ci.yml`'s `test` and `build`
-check runs were green. The other three rows say "Version record only", yet two of them
-needed work:
+Pester is the only row that changes what CI checks; the gate is its whole test, and the
+`test` and `build` checks were green. The other three rows say "Version record only", yet
+two of them needed work:
 
 - **Win11Debloat 2026.08.24** deprecated `NoRestartExplorer` in favour of
   `SkipExplorerRestart`, in a note at the top of its release. `Start-WindowsDebloat.ps1`

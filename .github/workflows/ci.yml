@@ -8,6 +8,12 @@ on:
     branches: [master]
     tags: ["*"]
   pull_request:
+    # Skips a pull request that changes nothing but the file below, as the nightly dependency
+    # update does: github-actions[bot] pushes that one, so a run here would wait for approval,
+    # and update-dependencies.yml tests and builds it itself. On pull_request a branch filter
+    # matches the base branch, not the head, so it cannot single the update branch out
+    paths-ignore:
+      - "resources/dependencies.json"
   workflow_dispatch:
 
 concurrency:

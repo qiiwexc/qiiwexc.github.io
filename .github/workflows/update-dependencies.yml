@@ -103,6 +103,9 @@ jobs:
           "branch=$branch" >> $env:GITHUB_OUTPUT
           "sha=$(git rev-parse HEAD)" >> $env:GITHUB_OUTPUT
 
+  # ci.yml skips this pull request, as it changes only resources/dependencies.json, because a run
+  # it started for the bot's push would wait for approval; these two jobs check it instead, and
+  # their commit statuses stand in for ci.yml's checks of the same names
   test:
     needs: create-pull-request
     runs-on: windows-latest
