@@ -51,7 +51,9 @@ function New-PowerShellScript {
         if ($IsConfigFile) {
             [String]$NormalizedFileName = $FileName.Replace(' ', '_') -replace '\..{1,}$', ''
             [String]$VariableName = "CONFIG_$($NormalizedFileName.ToUpper())"
-            [String[]]$EscapedContent = $Content.Replace("'", "''")
+            # PowerShell ends a single-quoted string at any of its four single quotation marks, not only the
+            # ASCII one, so all of them are doubled: an exported config can spell "browser's" typographically
+            [String[]]$EscapedContent = $Content -replace "['$([Char]0x2018)-$([Char]0x201B)]", '$0$0'
             $EscapedContent[0] = "Set-Variable -Option Constant $VariableName ([String]('$($EscapedContent[0])"
             $OutputLines.Add($EscapedContent)
             $OutputLines.Add("'))")

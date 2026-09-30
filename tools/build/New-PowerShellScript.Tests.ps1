@@ -98,6 +98,19 @@ Describe 'New-PowerShellScript' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 
+    It 'Should escape typographic single quotation marks in a config file' {
+        # Built from character codes: Windows PowerShell 5.1 reads a script without a byte order mark as ANSI
+        Set-Variable -Option Constant Quotes ([Char[]]@(0x2018, 0x2019, 0x201A, 0x201B))
+        Set-Variable -Option Constant ConfigContent ([String]"KEY='$($Quotes -join '')'")
+        Set-Variable -Option Constant Expected ([String]"CONFIG_CONFIGFILE ([String]('KEY=''$(($Quotes | ForEach-Object { "$_$_" }) -join '')''`n'))")
+        Mock Read-TextFile { return $ConfigContent } -ParameterFilter { $Path -eq $TestConfigFilePath }
+
+        New-PowerShellScript $TestSourcePathPath $TestBuildPs1FilePath $TestConfig
+
+        Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter { ($Content -join "`n").Contains($Expected) }
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
     It 'Should throw on unresolved placeholders' {
         Mock Read-TextFile { return '# {MISSING_KEY}' } -ParameterFilter { $Path -eq $TestPs1FilePath }
 
