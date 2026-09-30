@@ -27,7 +27,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "538f930aeea9c3d51fdd0b4822e2d076fef999e8",
+        "version":  "97c1141d51a9cdae6831107cb3311c2f9eb8121b",
         "source":  "GitHub",
         "opensPullRequest":  false,
         "mode":  "commits",
@@ -71,11 +71,12 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "3.5",
+        "version":  "3.6.1135",
         "source":  "URL",
         "opensPullRequest":  true,
-        "url":  "https://www.oo-software.com/en/shutup10/changelog",
-        "regex":  "\u003ch4[^\u003e]*\u003eVersion (.*?)\u003c/h4\u003e"
+        "url":  "https://www.oo-software.com/en/shutup10",
+        "regex":  "Version:?\\s*(\\d+\\.\\d+\\.\\d+)",
+        "sha256":  "925ccd8164a90f6a1c8d907415f38df353a4ff00db73f07598a29b8f7928bb52"
     },
     {
         "name":  "Windows",

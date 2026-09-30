@@ -37,5 +37,6 @@ function Start-OoShutUp10 {
         Write-LogWarning "Failed to initialize OOShutUp10++ configuration: $_"
     }
 
-    Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -Execute:$Execute -Params $Params
+    # Saved under the name the unversioned download has, which is the process name Test-OOShutUp10IsRunning looks for
+    Start-DownloadUnzipAndRun '{URL_OOSHUTUP10}' -FileName 'OOSU10.exe' -Sha256 '{SHA256_OOSHUTUP10}' -Execute:$Execute -Params $Params
 }
