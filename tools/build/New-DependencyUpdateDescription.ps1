@@ -75,11 +75,26 @@ function Get-VersionSortKey {
 }
 
 
+function Format-PendingVersions {
+    param(
+        [Parameter(Position = 0, Mandatory)][PSObject[]]$Versions
+    )
+
+    # Each with the date its quarantine ends, newest first as given
+    return (@($Versions | ForEach-Object {
+                [String]$Version = (Format-DependencyVersion $_.Version).Replace('|', '\|')
+                "``$Version`` ($($_.EligibleOn.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)))"
+            }) -join ', ')
+}
+
+
 function New-DependencyUpdateDescription {
     param(
         [Parameter(Position = 0, Mandatory)][PSObject[]]$Updates,
         [Parameter(Position = 1)][AllowEmptyCollection()][String[]]$ChangelogUrls = @(),
-        [Parameter(Position = 2)][String]$GitHubToken
+        [Parameter(Position = 2)][String]$GitHubToken,
+        # Newer versions still in quarantine, by dependency: its Name, Dependency and Versions
+        [Parameter(Position = 3)][AllowEmptyCollection()][PSObject[]]$Pending = @()
     )
 
     # GitHub rejects a pull request body over 65,536 characters; the rest is headroom for the list
@@ -89,9 +104,24 @@ function New-DependencyUpdateDescription {
 
     [Text.StringBuilder]$Text = [Text.StringBuilder]::new()
 
+    [Hashtable]$PendingByName = @{}
+    foreach ($Entry in $Pending) {
+        $PendingByName[$Entry.Name] = $Entry
+    }
+
+    Set-Variable -Option Constant UpdateNames ([String[]]@($Updates | ForEach-Object { $_.Name }))
+    Set-Variable -Option Constant WaitingOnly ([PSObject[]]@($Pending | Where-Object { $_.Name -notin $UpdateNames }))
+
+    # Like Renovate's: the column is there only when a dependency this updates has a newer version waiting
+    Set-Variable -Option Constant HasPendingColumn ([Bool](@($UpdateNames | Where-Object { $PendingByName.ContainsKey($_) }).Count -gt 0))
+
     Set-Variable -Option Constant Noun ([String]$(if ($Updates.Count -eq 1) { 'dependency' } else { 'dependencies' }))
     [Void]$Text.Append("Bumps $($Updates.Count) $Noun.`n`n")
-    [Void]$Text.Append("| Dependency | From | To | Changes |`n| --- | --- | --- | --- |`n")
+    if ($HasPendingColumn) {
+        [Void]$Text.Append("| Dependency | From | To | Pending | Changes |`n| --- | --- | --- | --- | --- |`n")
+    } else {
+        [Void]$Text.Append("| Dependency | From | To | Changes |`n| --- | --- | --- | --- |`n")
+    }
 
     foreach ($Update in $Updates) {
         [String]$DependencyHome = Get-DependencyHome $Update.Dependency
@@ -100,7 +130,25 @@ function New-DependencyUpdateDescription {
         [String]$From = (Format-DependencyVersion $Update.From).Replace('|', '\|')
         [String]$To = (Format-DependencyVersion $Update.To).Replace('|', '\|')
 
-        [Void]$Text.Append("| $Name | ``$From`` | ``$To`` | $Change |`n")
+        if ($HasPendingColumn) {
+            [String]$PendingVersions = if ($PendingByName.ContainsKey($Update.Name)) { Format-PendingVersions $PendingByName[$Update.Name].Versions } else { '' }
+            [Void]$Text.Append("| $Name | ``$From`` | ``$To`` | $PendingVersions | $Change |`n")
+        } else {
+            [Void]$Text.Append("| $Name | ``$From`` | ``$To`` | $Change |`n")
+        }
+    }
+
+    if ($WaitingOnly.Count -gt 0) {
+        [Void]$Text.Append("`nIn quarantine, with no version to apply yet:`n`n")
+        foreach ($Entry in $WaitingOnly) {
+            [String]$DependencyHome = Get-DependencyHome $Entry.Dependency
+            [String]$Name = if ($DependencyHome) { "[$($Entry.Name)]($DependencyHome)" } else { $Entry.Name }
+            [Void]$Text.Append("- ${Name}: $(Format-PendingVersions $Entry.Versions)`n")
+        }
+    }
+
+    if ($HasPendingColumn -or $WaitingOnly.Count -gt 0) {
+        [Void]$Text.Append("`nA pending version is a newer release still in quarantine, which ends on the date shown.`n")
     }
 
     # Newest version first within each dependency, like a releases page

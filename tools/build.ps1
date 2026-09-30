@@ -107,7 +107,8 @@ if ($Test) {
 if ($Update) {
     Write-ActivityProgress 20
     . "$BuilderPath\Update-Dependencies.ps1"
-    [String[]]$ChangelogUrls = Update-Dependencies $ResourcesPath $BuilderPath $WipPath
+    # When each pending version was first seen: local runs keep their own, the nightly restores the previous run's
+    [String[]]$ChangelogUrls = Update-Dependencies $ResourcesPath $BuilderPath $WipPath "$BuildPath\dependency-quarantine.json"
 
     if ($CI) {
         $env:CHANGELOG_URLS = $ChangelogUrls -join "`n"

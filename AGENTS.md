@@ -69,6 +69,15 @@ failures as environmental, not regressions.
   SDI), and for the Unattend Generator, which `templates/autounattend.xml` is regenerated from
   by hand. `Compare-Dependencies` fails on a dependency that moved without a boolean there, and
   a test checks every entry.
+- A dependency set to `true` also waits out a 7-day quarantine: a new version is applied only 7
+  days after the update first saw it (`Get-QuarantineEnd`), and until then the recorded version
+  stays. `build/dependency-quarantine.json` keeps, per dependency, the versions seen since the
+  recorded one, each with the time it was first seen; `Resolve-QuarantinedVersion` applies the
+  newest one out of quarantine and cuts the changelog links to it. A local run keeps its own
+  copy there, and the nightly restores the previous run's from a workflow artifact. Losing the
+  file only restarts the waits. The pull request's table gains a Pending column when a dependency
+  it updates has a newer version still waiting, and a dependency with only waiting versions is
+  listed under it, each version with the date its quarantine ends.
 - `build-dev.bat`, `build-and-run.bat` and `tools\build.ps1 -Run` start the built app, which
   relaunches itself elevated — don't run them unless asked. `build-ci.bat` and the test scripts
   write only to the git-ignored outputs in `build/` and `vm/`.
@@ -180,7 +189,7 @@ The workflows in `.github/workflows/` share composite actions from `.github/acti
 
 - `ci.yml` chains `test → build → deploy → release`; `deploy` and `release` run for tags only. `test` runs `test-with-coverage.bat` and `build` runs `build-ci.bat`. `deploy` publishes an explicit file list (assembled in `.github/actions/deploy/action.yml`) to GitHub Pages — add new site files there — and `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, `autounattend-*.xml` and `SHA256SUMS.txt` as assets (via `gh release create`), unless one already exists for the tag.
 - A release is cut by pushing a `vYY.M.D` tag: `release.bat` tags `origin/master` from a local checkout (it refuses if `HEAD` differs), and the manual `tag.yml` workflow tags on GitHub and then dispatches `ci.yml` for the tag, since a tag pushed with `GITHUB_TOKEN` triggers no workflows.
-- `update-dependencies.yml` checks for updates nightly in a read-only job and hands the changed `dependencies.json`, with the pull request description it wrote, to a separate job that force-pushes the `chore/update-dependencies` branch and opens or updates its PR whenever a dependency whose `opensPullRequest` is `true` moved, then runs the `test` and `build` actions on it and reports both as commit statuses, which stand in for `ci.yml`'s checks of those names. `ci.yml` skips any pull request that changes only `dependencies.json`, because GitHub holds the runs that `github-actions[bot]` triggers until someone approves them, and on `pull_request` a branch filter matches the base branch, not the head. Only the nightly workflow checks that PR, so after a fix on master, run it again rather than updating the branch from the PR page, which leaves a head nothing has checked.
+- `update-dependencies.yml` checks for updates nightly in a read-only job, which first restores the quarantine state from this workflow's previous run on master (the only runs it trusts for it) and afterwards keeps the new one as the `dependency-quarantine` artifact for 30 days, and hands the changed `dependencies.json`, with the pull request description it wrote, to a separate job that force-pushes the `chore/update-dependencies` branch and opens or updates its PR whenever a dependency whose `opensPullRequest` is `true` moved, then runs the `test` and `build` actions on it and reports both as commit statuses, which stand in for `ci.yml`'s checks of those names. `ci.yml` skips any pull request that changes only `dependencies.json`, because GitHub holds the runs that `github-actions[bot]` triggers until someone approves them, and on `pull_request` a branch filter matches the base branch, not the head. Only the nightly workflow checks that PR, so after a fix on master, run it again rather than updating the branch from the PR page, which leaves a head nothing has checked.
 - `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.
 
 ## Workflow Notes
