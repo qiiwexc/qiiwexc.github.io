@@ -12,13 +12,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  # Fetches and parses third-party pages and downloads, so it runs with a read-only token
-  # and no stored git credentials — only the updated dependencies file leaves this job
+  # Fetches and parses third-party pages and downloads, so it runs with a read-only token and no
+  # stored git credentials — only the updated dependencies file and the quarantine state leave this job
   check-for-updates:
     runs-on: windows-latest
     timeout-minutes: 15
     permissions:
       contents: read
+      actions: read # Required to download the quarantine state of the previous run
     outputs:
       has_updates: ${{ steps.update.outputs.has_updates }}
     steps:
@@ -27,12 +28,45 @@ jobs:
         with:
           persist-credentials: false
 
+      # When each version newer than the recorded one was first seen, which holds it back until its quarantine
+      # ends. Only this workflow's own runs on master are asked for it, so a pull request, a fork's included,
+      # can never hand the check a state that makes a version look older than it is
+      - name: Restore quarantine state
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # gh reports a run without the artifact on stderr, which 'Stop' would turn into a terminating error
+          $ErrorActionPreference = 'Continue'
+          $runs = gh run list --repo $env:GITHUB_REPOSITORY --workflow update-dependencies.yml --branch master --limit 30 --json databaseId --jq '.[].databaseId'
+          foreach ($run in $runs) {
+              if ($run -eq $env:GITHUB_RUN_ID) {
+                  continue
+              }
+              gh run download $run --repo $env:GITHUB_REPOSITORY --name dependency-quarantine --dir build 2>&1 | Out-Null
+              if ($LASTEXITCODE -eq 0) {
+                  Write-Host "Restored the quarantine state of run $run"
+                  exit 0
+              }
+          }
+          Write-Host '::warning::No quarantine state found, so every new version starts its wait now'
+          exit 0
+
       - name: Check for dependency updates
         id: update
         shell: powershell
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: .\tools\Invoke-DependencyUpdate.ps1
+
+      # Every run, with updates or without, so the next one knows when each waiting version was first seen
+      - name: Save quarantine state
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dependency-quarantine
+          path: build/dependency-quarantine.json
+          if-no-files-found: error
+          retention-days: 30
 
       # The pull request description quotes third-party release notes, so it travels as a file
       # and reaches the next job's 'gh' as --body-file, never through an expression or a variable

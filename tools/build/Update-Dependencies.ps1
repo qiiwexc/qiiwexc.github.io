@@ -2,7 +2,8 @@ function Update-Dependencies {
     param(
         [Parameter(Position = 0, Mandatory)][String]$ResourcesPath,
         [Parameter(Position = 1, Mandatory)][String]$BuilderPath,
-        [Parameter(Position = 2, Mandatory)][String]$WipPath
+        [Parameter(Position = 2, Mandatory)][String]$WipPath,
+        [Parameter(Position = 3, Mandatory)][String]$QuarantineFile
     )
 
     New-Activity 'Checking for dependency updates'
@@ -17,14 +18,19 @@ function Update-Dependencies {
 
     . "$UpdatesPath\Compare-Commits.ps1"
     . "$UpdatesPath\Compare-Tags.ps1"
+    . "$UpdatesPath\Get-QuarantineEnd.ps1"
     . "$UpdatesPath\Invoke-GitAPI.ps1"
     . "$UpdatesPath\Read-GitHubToken.ps1"
+    . "$UpdatesPath\Read-QuarantineState.ps1"
+    . "$UpdatesPath\Resolve-QuarantinedVersion.ps1"
+    . "$UpdatesPath\Select-ChangelogUrls.ps1"
     . "$UpdatesPath\Select-Releases.ps1"
     . "$UpdatesPath\Set-NewVersion.ps1"
     . "$UpdatesPath\Update-DependencyChecksum.ps1"
     . "$UpdatesPath\Update-FileDependency.ps1"
     . "$UpdatesPath\Update-GitDependency.ps1"
     . "$UpdatesPath\Update-WebDependency.ps1"
+    . "$UpdatesPath\Write-QuarantineState.ps1"
 
     Set-Variable -Option Constant GitHubToken ([String](Read-GitHubToken $EnvFile))
     if (-not $GitHubToken) {
@@ -39,6 +45,16 @@ function Update-Dependencies {
         Write-ActivityCompleted
         return
     }
+
+    # The dependencies that open the pull request wait out a quarantine before a new version is applied; the
+    # others ride along in it, and a file dependency is updated by hand from files already downloaded
+    Set-Variable -Option Constant QuarantinedNames ([String[]]@($Dependencies | Where-Object {
+                $_.source -ne 'File' -and $_.PSObject.Properties['opensPullRequest'] -and $_.opensPullRequest -eq $True
+            } | ForEach-Object { $_.name }))
+
+    # When each version newer than the recorded one was first seen, kept between runs
+    Set-Variable -Option Constant Now ([DateTime]::UtcNow)
+    [Collections.Specialized.OrderedDictionary]$QuarantineState = Read-QuarantineState $QuarantineFile $Now
 
     [Collections.Generic.List[Collections.Generic.List[String]]]$ChangeLogs = @()
 
@@ -76,6 +92,22 @@ function Update-Dependencies {
                 }
             }
 
+            # Held back to the newest version out of quarantine, which may be the recorded one: its links then
+            # go only as far as that version, or there are none to follow
+            if ($Name -in $QuarantinedNames) {
+                [String]$LatestVersion = $Dependency.version
+                $Dependency.version = Resolve-QuarantinedVersion $QuarantineState $Name $PreviousVersion $LatestVersion $Now
+
+                if ($Dependency.version -ne $LatestVersion -and $ChangeLogs.Count -gt $ChangeLogCount) {
+                    if ($Dependency.version -eq $PreviousVersion) {
+                        $ChangeLogs.RemoveAt($ChangeLogCount)
+                    } else {
+                        [String[]]$LatestUrls = @($ChangeLogs[$ChangeLogCount] | Where-Object { $_ })
+                        $ChangeLogs[$ChangeLogCount] = [Collections.Generic.List[String]]@(Select-ChangelogUrls $LatestUrls $LatestVersion $Dependency.version)
+                    }
+                }
+            }
+
             # The app verifies versioned downloads against the recorded checksum, so a new version
             # is only kept once its checksum is known — otherwise the build would ship a stale one
             if ($Dependency.version -ne $PreviousVersion -and -not (Update-DependencyChecksum $Dependency $UrlsFile)) {
@@ -102,6 +134,14 @@ function Update-Dependencies {
     if ($FailedCount -eq $Dependencies.Count) {
         throw 'Failed to check any dependency for updates'
     }
+
+    # A dependency removed, or no longer opening the pull request, leaves nothing behind
+    foreach ($StateName in @($QuarantineState.Keys)) {
+        if ($StateName -notin $QuarantinedNames) {
+            $QuarantineState.Remove($StateName)
+        }
+    }
+    Write-QuarantineState $QuarantineFile $QuarantineState
 
     Write-ActivityProgress 90
 

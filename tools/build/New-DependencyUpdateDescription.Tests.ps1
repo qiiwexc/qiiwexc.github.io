@@ -65,6 +65,56 @@ Describe 'New-DependencyUpdateDescription' {
         Should -Invoke Get-ReleaseNotes -Exactly 0
     }
 
+    It 'Should add a Pending column for the newer versions still in quarantine, and list the ones with nothing to apply' {
+        [PSObject[]]$Pending = @(
+            [PSCustomObject]@{
+                Name       = 'Rufus'
+                Dependency = $TestRufus.Dependency
+                Versions   = @(
+                    [PSCustomObject]@{ Version = 'v4.18'; EligibleOn = [DateTime]::new(2026, 10, 9, 3, 0, 0, [DateTimeKind]::Utc) }
+                    [PSCustomObject]@{ Version = 'v4.17'; EligibleOn = [DateTime]::new(2026, 10, 7, 3, 0, 0, [DateTimeKind]::Utc) }
+                )
+            }
+            [PSCustomObject]@{
+                Name       = 'Ventoy'
+                Dependency = [PSCustomObject]@{ name = 'Ventoy'; version = 'v1.1.17'; source = 'GitHub'; repository = 'ventoy/Ventoy' }
+                Versions   = @([PSCustomObject]@{ Version = 'v1.1.18'; EligibleOn = [DateTime]::new(2026, 10, 8, 3, 0, 0, [DateTimeKind]::Utc) })
+            }
+        )
+
+        [String]$Description = New-DependencyUpdateDescription @($TestRufus, $TestPester) @() '' $Pending
+
+        [String[]]$Lines = $Description -split "`n"
+        $Lines[2..11] | Should -BeExactly @(
+            '| Dependency | From | To | Pending | Changes |'
+            '| --- | --- | --- | --- | --- |'
+            '| [Rufus](https://github.com/pbatard/rufus) | `v4.15` | `v4.16` | `v4.18` (2026-10-09), `v4.17` (2026-10-07) | Download URL |'
+            '| [Pester](https://github.com/pester/Pester) | `6.1.0` | `6.2.0` |  | CI tool |'
+            ''
+            'In quarantine, with no version to apply yet:'
+            ''
+            '- [Ventoy](https://github.com/ventoy/Ventoy): `v1.1.18` (2026-10-08)'
+            ''
+            'A pending version is a newer release still in quarantine, which ends on the date shown.'
+        )
+        $Lines.Count | Should -Be 12
+    }
+
+    It 'Should list the dependencies with nothing to apply without adding the column' {
+        [PSObject[]]$Pending = @([PSCustomObject]@{
+                Name       = 'Ventoy'
+                Dependency = [PSCustomObject]@{ name = 'Ventoy'; version = 'v1.1.17'; source = 'GitHub'; repository = 'ventoy/Ventoy' }
+                Versions   = @([PSCustomObject]@{ Version = 'v1.1.18'; EligibleOn = [DateTime]::new(2026, 10, 8, 3, 0, 0, [DateTimeKind]::Utc) })
+            })
+
+        [String]$Description = New-DependencyUpdateDescription @($TestPester) @() '' $Pending
+
+        [String[]]$Lines = $Description -split "`n"
+        $Lines[2] | Should -BeExactly '| Dependency | From | To | Changes |'
+        $Lines[4] | Should -BeExactly '| [Pester](https://github.com/pester/Pester) | `6.1.0` | `6.2.0` | CI tool |'
+        $Lines[8] | Should -BeExactly '- [Ventoy](https://github.com/ventoy/Ventoy): `v1.1.18` (2026-10-08)'
+    }
+
     It 'Should say dependency for a single one, and escape a pipe in a version' {
         [PSObject]$Update = New-TestUpdate @{ name = 'Windows'; version = 'a|b'; source = 'URL'; url = 'https://example.com' } 'a'
 

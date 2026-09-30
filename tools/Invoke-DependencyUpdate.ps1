@@ -9,6 +9,8 @@ $ErrorActionPreference = 'Stop'
 Set-Variable -Option Constant ProjectRoot ([String](Split-Path -Parent $PSScriptRoot))
 Set-Variable -Option Constant ResourcesPath ([String]"$ProjectRoot\resources")
 Set-Variable -Option Constant DescriptionFile ([String]"$ProjectRoot\build\dependency-update.md")
+# Written by build.ps1 -Update; the workflow restores it from the previous run and keeps it as an artifact
+Set-Variable -Option Constant QuarantineFile ([String]"$ProjectRoot\build\dependency-quarantine.json")
 
 # Individual dependencies that cannot be checked are skipped with a warning — an error here
 # means nothing could be checked at all, which must fail the workflow rather than look like "no updates"
@@ -29,12 +31,17 @@ if (-not $Diff) {
 . "$PSScriptRoot\common\types.ps1"
 . "$PSScriptRoot\common\logger.ps1"
 . "$PSScriptRoot\common\Progressbar.ps1"
+. "$PSScriptRoot\common\Read-JsonFile.ps1"
+. "$PSScriptRoot\common\Read-TextFile.ps1"
 . "$PSScriptRoot\common\Write-TextFile.ps1"
 . "$PSScriptRoot\build\Compare-Dependencies.ps1"
 . "$PSScriptRoot\build\New-DependencyUpdateDescription.ps1"
 . "$PSScriptRoot\build\updates\Format-ReleaseNotes.ps1"
+. "$PSScriptRoot\build\updates\Get-PendingVersions.ps1"
+. "$PSScriptRoot\build\updates\Get-QuarantineEnd.ps1"
 . "$PSScriptRoot\build\updates\Get-ReleaseNotes.ps1"
 . "$PSScriptRoot\build\updates\Invoke-GitAPI.ps1"
+. "$PSScriptRoot\build\updates\Read-QuarantineState.ps1"
 
 # git writes UTF-8, and a scraped version such as the Windows one is not ASCII: decoded with the
 # console's code page it would differ from the file and show up as a change that never happened
@@ -55,6 +62,15 @@ if ($HasUpdates) {
     # build.ps1 -CI leaves the changelog links of every version it moved in this variable
     [String[]]$ChangelogUrls = @("$env:CHANGELOG_URLS" -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 
-    [String]$Description = New-DependencyUpdateDescription $Result.Updates $ChangelogUrls $env:GITHUB_TOKEN
+    # The newer versions still in quarantine, which the description names beside the ones this update applies
+    [Collections.Specialized.OrderedDictionary]$QuarantineState = Read-QuarantineState $QuarantineFile ([DateTime]::UtcNow)
+    [PSObject[]]$Pending = @($NewDeps | ForEach-Object {
+            [PSObject[]]$Versions = @(Get-PendingVersions $QuarantineState $_.name $_.version)
+            if ($Versions.Count -gt 0) {
+                [PSCustomObject]@{ Name = $_.name; Dependency = $_; Versions = $Versions }
+            }
+        })
+
+    [String]$Description = New-DependencyUpdateDescription $Result.Updates $ChangelogUrls $env:GITHUB_TOKEN $Pending
     Write-TextFile $DescriptionFile $Description -Normalize
 }
