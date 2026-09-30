@@ -119,7 +119,7 @@ Describe 'Update-Dependencies' {
 
     It 'Should apply a version once it is out of quarantine' {
         Mock Read-JsonFile { return @(New-TestDependency $SourceGitHub -OpensPullRequest) }
-        Mock Read-QuarantineState { return New-TestQuarantineState $TestDependencyName $TestNewVersion 8 }
+        Mock Read-QuarantineState { return New-TestQuarantineState -Name $TestDependencyName -Version $TestNewVersion -DaysAgo 8 }
 
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath $TestQuarantineFile | Should -BeExactly $TestGitHubChangelogUrl
 
@@ -130,7 +130,7 @@ Describe 'Update-Dependencies' {
 
     It 'Should apply the newest version out of quarantine, linking only as far as it' {
         Mock Read-JsonFile { return @(New-TestDependency $SourceGitHub -OpensPullRequest) }
-        Mock Read-QuarantineState { return New-TestQuarantineState $TestDependencyName $TestNewVersion 8 }
+        Mock Read-QuarantineState { return New-TestQuarantineState -Name $TestDependencyName -Version $TestNewVersion -DaysAgo 8 }
         Mock Update-GitDependency {
             $Dependency.version = '3.0.0'
             return @(
@@ -162,7 +162,7 @@ Describe 'Update-Dependencies' {
     }
 
     It 'Should drop the quarantine state of a dependency that no longer waits' {
-        Mock Read-QuarantineState { return New-TestQuarantineState 'REMOVED_DEPENDENCY' $TestNewVersion 1 }
+        Mock Read-QuarantineState { return New-TestQuarantineState -Name 'REMOVED_DEPENDENCY' -Version $TestNewVersion -DaysAgo 1 }
 
         Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath $TestQuarantineFile
 
