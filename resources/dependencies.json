@@ -27,7 +27,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "538f930aeea9c3d51fdd0b4822e2d076fef999e8",
+        "version":  "97c1141d51a9cdae6831107cb3311c2f9eb8121b",
         "source":  "GitHub",
         "opensPullRequest":  false,
         "mode":  "commits",
@@ -71,7 +71,7 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "3.5",
+        "version":  "3.6",
         "source":  "URL",
         "opensPullRequest":  true,
         "url":  "https://www.oo-software.com/en/shutup10/changelog",
