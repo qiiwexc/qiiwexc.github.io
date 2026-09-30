@@ -16,6 +16,8 @@ BeforeAll {
     Set-Variable -Option Constant TestConfigBytes ([Byte[]](0x54, 0x45, 0x53, 0x54, 0x5F, 0x4C, 0x49, 0x4E, 0x45, 0x5F, 0x31, 0x0D, 0x0A, 0x54, 0x45, 0x53, 0x54, 0x5F, 0x4C, 0x49, 0x4E, 0x45, 0x5F, 0x32, 0x20, 0xC2, 0xA9, 0x0D, 0x0A))
 
     Set-Variable -Option Constant TestDownloadUrl ([String]'{URL_OOSHUTUP10}')
+    Set-Variable -Option Constant TestFileName ([String]'OOSU10.exe')
+    Set-Variable -Option Constant TestSha256 ([String]'{SHA256_OOSHUTUP10}')
     Set-Variable -Option Constant TestConfigFileName ([String]'ooshutup10.cfg')
 }
 
@@ -45,6 +47,8 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
+            $FileName -eq $TestFileName -and
+            $Sha256 -eq $TestSha256 -and
             $Execute -eq $False -and
             $Params -eq ''
         }
@@ -66,6 +70,8 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
+            $FileName -eq $TestFileName -and
+            $Sha256 -eq $TestSha256 -and
             $Execute -eq $True -and
             $Params -eq ''
         }
@@ -81,6 +87,8 @@ Describe 'Start-OoShutUp10' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq $TestDownloadUrl -and
+            $FileName -eq $TestFileName -and
+            $Sha256 -eq $TestSha256 -and
             $Execute -eq $True -and
             $Params -eq "$PATH_OOSHUTUP10\$TestConfigFileName"
         }

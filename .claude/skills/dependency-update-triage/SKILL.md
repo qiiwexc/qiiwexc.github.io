@@ -107,7 +107,7 @@ column decides how hard to look, and it is not the same question as how big the 
 | ----------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------ |
 | a **pinned download** (below)                                     | run elevated on users' machines, from the next release on        | hardest: every check in Step 5's first bullet                |
 | a **CI tool**: Pester, PSScriptAnalyzer                           | the gate itself                                                  | the gate will tell you; read for new rules and mock changes  |
-| a **live tool**: O&O ShutUp10, SDI                                | users already have the new version, whatever this PR does        | the PR is a notice, not a gate: check what the app passes it |
+| a **live tool**: SDI                                              | users already have the new version, whatever this PR does        | the PR is a notice, not a gate: check what the app passes it |
 | a **generator**: Unattend Generator                               | `templates/autounattend.xml`, once it is regenerated             | whether to regenerate                                        |
 | a **record**: SystemRescue, TronScript, Windows, Office Installer | a link, or a file updated by hand                                | a glance                                                     |
 | a **GitHub Action**                                               | CI, and for the deploy and release actions only the next release | Step 5's SHA rule                                            |
@@ -139,8 +139,10 @@ as likely to be in the middle one. Sources, in the order to try them:
    (`Select-Releases`). A jump across more than five links the latest release alone, so
    its notes are the only ones in the body - fetch the rest yourself.
 3. **The links section** for everything else: a commit comparison for `commits`
-   dependencies (Unattend Generator), a tag comparison for `tags` ones, and the changelog
-   page for `URL` dependencies (O&O ShutUp10, SDI, CPU-Z), which has no notes in the body.
+   dependencies (Unattend Generator), a tag comparison for `tags` ones, and the page a
+   `URL` dependency's version is read from (O&O ShutUp10, SDI, CPU-Z), which has no notes
+   in the body. For O&O ShutUp10 that is its homepage; the changelog is
+   <https://www.oo-software.com/en/shutup10/changelog>.
 
 Read for five things and nothing else. The first four are **removals, changed defaults,
 new deprecations, and renamed parameters or settings the app passes**. The fifth applies
@@ -212,11 +214,15 @@ Generic advice misses all of these. Check each one that applies.
   pinned dependency that has stopped updating is itself a finding** - compare its version
   with the upstream's latest release.
 
-- **A live tool has already changed under the app.** O&O ShutUp10 is fetched from a URL
-  without a version at click time, so a new release is in effect for users the day it is
-  published, and a fix it needs goes to master at once, whatever happens to the PR.
-  `OOShutUp10.cfg` names the version that exported it in its header (`V3.5.1130`), and a
-  new release may need it exported again.
+- **A live tool has already changed under the app.** SDI is fetched from a URL without a
+  version at click time, so a new release is in effect for users the day it is published,
+  and a fix it needs goes to master at once, whatever happens to the PR.
+- **O&O ShutUp10's embedded config follows its version.** `OOShutUp10.cfg` names the
+  version that exported it in its header (`V3.6.1135`). ShutUp10 is a pinned download, so
+  exporting the config again with the new version is a change needed first, and the two
+  reach users together at the next release. Its version is the full build number the
+  homepage prints, because the versioned file's URL needs it, and the file is O&O's own
+  winget package, the same bytes as the unversioned `OOSU10.exe` of that build.
 - **The CI tools are loaded at their exact pinned versions.** `tools\test.ps1` and the
   linter load the versions in `dependencies.json`, so on the PR head run
   `install-dependencies.bat` before the gate, or it fails to load them. A PSScriptAnalyzer
@@ -310,7 +316,7 @@ table, and `changed_files: 1` - `resources/dependencies.json`, four lines each w
 | ------------------ | ----------------------- | ------------------- | --------------------------------------------- |
 | Unattend Generator | `781fde5` → `538f930`   | Version record only | the generator of `templates/autounattend.xml` |
 | Win11Debloat       | 2026.07.11 → 2026.08.24 | Version record only | a live tool at the time (pinned since)        |
-| OOShutUp10         | 3.4 → 3.5               | Version record only | a live tool with an embedded config           |
+| OOShutUp10         | 3.4 → 3.5               | Version record only | live, with an embedded config (pinned since)  |
 | Pester             | 6.1.0 → 6.2.0           | CI tool             | a CI tool                                     |
 
 Pester is the only row that changes what CI checks; the gate is its whole test, and the
