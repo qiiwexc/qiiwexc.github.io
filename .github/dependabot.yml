@@ -1,8 +1,11 @@
 version: 2
 
 updates:
+  # The workflows and every composite action in one entry, so a bump moves every pin of an action in one pull request
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directories:
+      - "/"
+      - "/.github/actions/*"
     schedule:
       interval: "daily"
     cooldown:
@@ -12,47 +15,8 @@ updates:
         update-types:
           - "patch"
           - "minor"
-  - package-ecosystem: "github-actions"
-    directory: "/.github/actions/build"
-    schedule:
-      interval: "daily"
-    cooldown:
-      default-days: 7
-    groups:
-      github-actions-patch-updates:
+      # One pull request per action, across every directory that uses it
+      github-actions-major-updates:
         update-types:
-          - "patch"
-          - "minor"
-  - package-ecosystem: "github-actions"
-    directory: "/.github/actions/deploy"
-    schedule:
-      interval: "daily"
-    cooldown:
-      default-days: 7
-    groups:
-      github-actions-patch-updates:
-        update-types:
-          - "patch"
-          - "minor"
-  - package-ecosystem: "github-actions"
-    directory: "/.github/actions/release"
-    schedule:
-      interval: "daily"
-    cooldown:
-      default-days: 7
-    groups:
-      github-actions-patch-updates:
-        update-types:
-          - "patch"
-          - "minor"
-  - package-ecosystem: "github-actions"
-    directory: "/.github/actions/test"
-    schedule:
-      interval: "daily"
-    cooldown:
-      default-days: 7
-    groups:
-      github-actions-patch-updates:
-        update-types:
-          - "patch"
-          - "minor"
+          - "major"
+        group-by: dependency-name
