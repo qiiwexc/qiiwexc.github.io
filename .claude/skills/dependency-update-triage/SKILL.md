@@ -37,12 +37,12 @@ over it. The PR changes `resources/dependencies.json` and nothing else, and that
 `ci.yml` knows to skip it: the nightly workflow's own `test` and `build` jobs check it and
 report back as commit statuses.
 
-**Dependabot.** `.github/dependabot.yml` watches GitHub Actions only. It has one entry
-per directory: the root, for the workflows, and each composite action under
-`.github/actions/`. It groups patch and minor bumps per directory as
-`github-actions-patch-updates`, leaves majors on their own, and waits out a 7-day cooldown.
-The same action used in two directories arrives as two PRs (#54 and #55 moved
-`actions/cache` in `build` and in `test` on the same day).
+**Dependabot.** `.github/dependabot.yml` watches GitHub Actions only. Its one entry lists
+the root, for the workflows, and every composite action under `.github/actions/`, so a
+bump moves every pin of an action at once. Patch and minor bumps of all the actions arrive
+together in one PR, `github-actions-patch-updates`. A major arrives on its own, one PR per
+action across every directory (`github-actions-major-updates`, grouped by dependency name).
+Both wait out a 7-day cooldown.
 
 Because the nightly PR is force-pushed, **write down `head.sha` when you start and check
 it again before the verdict**. A triage of last night's head is a triage of a different
@@ -251,9 +251,10 @@ Generic advice misses all of these. Check each one that applies.
   $Ref.object.sha
   ```
 
-  Merge the PRs that move the same action in different directories together, so the pins
-  do not drift apart. A change under `.github/` also runs zizmor; its check is part of the
-  CI state.
+  Check that no pin was left behind: on the PR head, `git grep <old sha> -- .github` finds
+  nothing. Dependabot moves every directory it watches in the one PR, so a leftover is a
+  directory `dependabot.yml` does not cover, and the pins have drifted apart. A change
+  under `.github/` also runs zizmor; its check is part of the CI state.
 - **Merging is not releasing.** Pinned URLs and checksums are built into `qiiwexc.ps1`,
   so a merged pin reaches users only at the next `vYY.M.D` tag, and the deploy and release
   actions first run then too. Say in the verdict whether the bump is worth a release of its
@@ -377,7 +378,8 @@ release.
   it. Fixes go to master.
 - **Judging a force-pushed PR by a stale head.** Check `head.sha` again before the
   verdict.
-- **Merging one directory's action bump without its siblings.** The pins drift apart.
+- **Missing a pin the action bump left behind.** An old SHA still under `.github/` is a
+  directory `dependabot.yml` does not watch.
 - **Calling a merged pin shipped.** It ships at the next release; say whether one is
   warranted.
 - **Pinning a CI tool back to silence a new linter rule.** Fix the code, or document the
