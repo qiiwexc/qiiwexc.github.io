@@ -108,19 +108,27 @@ Describe 'Select-Releases' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should not update if new version is empty' {
+    It 'Should fail if new version is empty' {
         Mock Invoke-GitAPI { return @( @{}, @{} ) }
 
-        Select-Releases $TestDependency | Should -BeNullOrEmpty
+        { Select-Releases $TestDependency } | Should -Throw "None of the 2 most recent releases of '$TestRepositoryName' is a stable one with a tag"
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should not update if the response is empty' {
+    It 'Should fail if every release listed is a prerelease' {
+        Mock Invoke-GitAPI { return @( @{ tag_name = $TestLatestVersion; prerelease = $True }, @{ tag_name = $TestNewVersion; prerelease = $True } ) }
+
+        { Select-Releases $TestDependency } | Should -Throw "None of the 2 most recent releases of '$TestRepositoryName' is a stable one with a tag"
+
+        Should -Invoke Set-NewVersion -Exactly 0
+    }
+
+    It 'Should fail if the response is empty' {
         Mock Invoke-GitAPI { return @() }
 
-        Select-Releases $TestDependency | Should -BeNullOrEmpty
+        { Select-Releases $TestDependency } | Should -Throw "No releases found for '$TestRepositoryName'"
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0

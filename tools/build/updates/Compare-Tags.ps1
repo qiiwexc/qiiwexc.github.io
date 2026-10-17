@@ -14,8 +14,10 @@ function Compare-Tags {
         Set-Variable -Option Constant Tags ([GitTag[]](Invoke-GitAPI "https://gitlab.com/api/v4/projects/$($Dependency.projectId)/repository/tags?per_page=100"))
     }
 
+    # Nothing to compare with fails the check: left as it is, the version would read as "nothing newer"
+    # and drop the versions waiting out their quarantine as withdrawn
     if (-not $Tags -or $Tags.Count -eq 0) {
-        return
+        throw "No tags found for '$Repository'"
     }
 
     # Neither API guarantees newest-first order, so pick the highest version explicitly,
@@ -24,14 +26,14 @@ function Compare-Tags {
 
     if ($ReleaseTags.Count -gt 0) {
         Set-Variable -Option Constant LatestVersion ([String]($ReleaseTags | Sort-Object { [Version]($_.name -replace '^v') } -Descending | Select-Object -First 1).name)
-    } elseif ($Tags[0].PSObject.Properties['name']) {
+    } elseif ($Tags[0].PSObject.Properties['name'] -and $Tags[0].name) {
         # No version-like tags at all — fall back to the order the API returned them in
         Set-Variable -Option Constant LatestVersion ([String]$Tags[0].name)
     } else {
-        return
+        throw "None of the $($Tags.Count) tags listed for '$Repository' has a name"
     }
 
-    if ($LatestVersion -ne '' -and $LatestVersion -ne $CurrentVersion) {
+    if ($LatestVersion -ne $CurrentVersion) {
         Set-NewVersion $Dependency $LatestVersion
 
         if ($Source -eq 'GitLab') {

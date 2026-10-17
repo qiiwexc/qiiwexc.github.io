@@ -73,11 +73,22 @@ failures as environmental, not regressions.
   days after the update first saw it (`Get-QuarantineEnd`), and until then the recorded version
   stays. `build/dependency-quarantine.json` keeps, per dependency, the versions seen since the
   recorded one, each with the time it was first seen; `Resolve-QuarantinedVersion` applies the
-  newest one out of quarantine and cuts the changelog links to it. A local run keeps its own
-  copy there, and the nightly restores the previous run's from a workflow artifact. Losing the
-  file only restarts the waits. The pull request's table gains a Pending column when a dependency
-  it updates has a newer version still waiting, and a dependency with only waiting versions is
-  listed under it, each version with the date its quarantine ends.
+  newest one out of quarantine and cuts the changelog links to it. A latest version seen before,
+  the recorded one included, means the versions recorded after it were withdrawn: they are
+  dropped, with a warning, so none can come out of quarantine once a newer one shows up. That is
+  why a check that cannot tell (a page that does not load or no longer matches, an empty list of
+  releases, tags or commits) throws instead of leaving the version as it is: the failure is
+  logged and the waits stand. A local run keeps its own copy there, and the nightly restores the
+  previous run's from a workflow artifact. Losing the file only restarts the waits. The pull
+  request's table gains a Pending column when a dependency it updates has a newer version still
+  waiting, and a dependency with only waiting versions is listed under it, each version with the
+  date its quarantine ends.
+- In the nightly, every warning of the update (a dependency that could not be checked, a version
+  kept back because its checksum could not be computed, a version taken as withdrawn) becomes an
+  annotation of the run (`Write-WorkflowAnnotation`), and so does the reason no quarantine state
+  could be restored: annotations can be read without a token, the job log cannot. A normal night
+  raises none, so the expected skips, such as the `File` dependencies' missing files, log as
+  information.
 - `build-dev.bat`, `build-and-run.bat` and `tools\build.ps1 -Run` start the built app, which
   relaunches itself elevated — don't run them unless asked. `build-ci.bat` and the test scripts
   write only to the git-ignored outputs in `build/` and `vm/`.

@@ -169,6 +169,33 @@ Describe 'Update-Dependencies' {
         Should -Invoke Write-QuarantineState -Exactly 1 -ParameterFilter { $State.Count -eq 0 }
     }
 
+    It 'Should leave the waits of a dependency whose check fails as they are' {
+        Mock Read-JsonFile { return @((New-TestDependency $SourceGitHub 'dep1' -OpensPullRequest), (New-TestDependency $SourceURL 'dep2')) }
+        Mock Read-QuarantineState { return New-TestQuarantineState -Name 'dep1' -Version $TestNewVersion -DaysAgo 3 }
+        Mock Update-GitDependency { throw $TestException } -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath $TestQuarantineFile | Should -BeExactly $TestWebChangelogUrl
+
+        Should -Invoke Write-QuarantineState -Exactly 1 -ParameterFilter {
+            @($State['dep1'].candidates | ForEach-Object { $_.version }) -join ',' -eq $TestNewVersion -and
+            $State['dep1'].candidates[0].firstSeen -lt [DateTime]::UtcNow.AddDays(-2)
+        }
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -match "Failed to check 'dep1' for updates" }
+    }
+
+    It 'Should drop the waits of a dependency whose latest version is the recorded one again' {
+        Mock Read-JsonFile { return @(New-TestDependency $SourceGitHub -OpensPullRequest) }
+        Mock Read-QuarantineState { return New-TestQuarantineState -Name $TestDependencyName -Version $TestNewVersion -DaysAgo 8 }
+        Mock Update-GitDependency {} -ParameterFilter { $Dependency.source -eq $SourceGitHub }
+
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath $TestQuarantineFile | Should -BeNullOrEmpty
+
+        Should -Invoke Update-DependencyChecksum -Exactly 0
+        Should -Invoke Write-JsonFile -Exactly 0
+        Should -Invoke Write-QuarantineState -Exactly 1 -ParameterFilter { @($State[$TestDependencyName].candidates).Count -eq 0 }
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -match "Taking $TestNewVersion of '$TestDependencyName' as withdrawn" }
+    }
+
     It 'Should not save anything when no version changes' {
         Mock Update-GitDependency {} -ParameterFilter { $Dependency.source -eq $SourceGitHub }
 

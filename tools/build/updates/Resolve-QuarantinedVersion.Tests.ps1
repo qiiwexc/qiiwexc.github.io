@@ -39,6 +39,7 @@ BeforeAll {
 Describe 'Resolve-QuarantinedVersion' {
     BeforeAll {
         Mock Write-LogInfo {}
+        Mock Write-LogWarning {}
     }
 
     It 'Should hold a version back the night it is first seen' {
@@ -81,12 +82,36 @@ Describe 'Resolve-QuarantinedVersion' {
         Should -Invoke Write-LogInfo -Exactly 2
     }
 
-    It 'Should apply nothing and keep the candidates when the check found nothing newer' {
-        [Collections.Specialized.OrderedDictionary]$State = New-TestState 'v1.1.17' @(New-TestCandidate 'v1.1.18' 8)
+    It 'Should apply nothing and warn of nothing when nothing is newer and nothing waits' {
+        [Collections.Specialized.OrderedDictionary]$State = New-TestState 'v1.1.17'
 
         Resolve-QuarantinedVersion $State $TestName 'v1.1.17' 'v1.1.17' $TestNow | Should -BeExactly 'v1.1.17'
 
-        Get-TestCandidates $State | Should -BeExactly @('v1.1.18')
+        Get-TestCandidates $State | Should -BeNullOrEmpty
+
+        Should -Invoke Write-LogWarning -Exactly 0
+    }
+
+    It 'Should drop the candidates when the latest version is the recorded one again, as withdrawn' {
+        [Collections.Specialized.OrderedDictionary]$State = New-TestState 'v1.1.17' @((New-TestCandidate 'v1.1.18' 8), (New-TestCandidate 'v1.1.19' 2))
+
+        Resolve-QuarantinedVersion $State $TestName 'v1.1.17' 'v1.1.17' $TestNow | Should -BeExactly 'v1.1.17'
+
+        $State[$TestName].base | Should -BeExactly 'v1.1.17'
+        Get-TestCandidates $State | Should -BeNullOrEmpty
+
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -eq "Taking v1.1.18, v1.1.19 of 'Ventoy' as withdrawn: the latest version is v1.1.17 again" }
+    }
+
+    It 'Should never apply a withdrawn version once a newer one shows up' {
+        [Collections.Specialized.OrderedDictionary]$State = New-TestState 'v1.1.17' @(New-TestCandidate 'v1.1.18' 9)
+
+        Resolve-QuarantinedVersion $State $TestName 'v1.1.17' 'v1.1.17' $TestNow | Should -BeExactly 'v1.1.17'
+        Resolve-QuarantinedVersion $State $TestName 'v1.1.17' 'v1.1.19' $TestNow.AddDays(1) | Should -BeExactly 'v1.1.17'
+
+        Get-TestCandidates $State | Should -BeExactly @('v1.1.19')
+        $State[$TestName].candidates[0].firstSeen | Should -Be $TestNow.AddDays(1)
     }
 
     It 'Should keep only the newer candidates once one is merged' {
@@ -115,6 +140,8 @@ Describe 'Resolve-QuarantinedVersion' {
         Resolve-QuarantinedVersion $State $TestName 'v1.1.17' 'v1.1.18' $TestNow | Should -BeExactly 'v1.1.18'
 
         Get-TestCandidates $State | Should -BeExactly @('v1.1.18')
+
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -eq "Taking v1.1.19 of 'Ventoy' as withdrawn: the latest version is v1.1.18 again" }
     }
 
     It 'Should keep its changes in the state when the entry holds an array' {

@@ -25,7 +25,6 @@ BeforeAll {
 Describe 'Update-WebDependency' {
     BeforeAll {
         Mock Write-LogInfo {}
-        Mock Out-Failure {}
         Mock Set-NewVersion {}
         Mock Invoke-WebRequest {
             return @{
@@ -43,7 +42,6 @@ Describe 'Update-WebDependency' {
             $UseBasicParsing -eq $True -and
             $TimeoutSec -eq 30
         }
-        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
             $Dependency.name -eq $TestDependencyName -and
@@ -64,48 +62,44 @@ Describe 'Update-WebDependency' {
         Update-WebDependency $TestDependency | Should -BeNullOrEmpty
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should not update if new version was not identified' {
+    It 'Should fail if new version was not identified' {
         Mock Invoke-WebRequest { return @{ Content = 'no new version' } }
 
-        Update-WebDependency $TestDependency | Should -BeNullOrEmpty
+        { Update-WebDependency $TestDependency } | Should -Throw "Failed to find version number from URL '$TestDependencyUrl'"
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should handle empty content' {
+    It 'Should fail on empty content' {
         Mock Invoke-WebRequest { return @{} }
 
-        Update-WebDependency $TestDependency | Should -BeNullOrEmpty
+        { Update-WebDependency $TestDependency } | Should -Throw "No data fetched from URL '$TestDependencyUrl'"
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
-    It 'Should handle Invoke-WebRequest failure' {
+
+    It 'Should fail on Invoke-WebRequest failure' {
         Mock Invoke-WebRequest { throw $TestException }
 
-        Update-WebDependency $TestDependency | Should -BeNullOrEmpty
+        { Update-WebDependency $TestDependency } | Should -Throw "Failed to fetch URL '$TestDependencyUrl': $TestException"
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should handle Content property access throwing' {
+    It 'Should fail when the Content property access throws' {
         $ThrowingResponse = [PSCustomObject]@{}
         $ThrowingResponse | Add-Member -MemberType ScriptProperty -Name Content -Value { throw 'Content access failed' }
         Mock Invoke-WebRequest { return $ThrowingResponse }
 
-        Update-WebDependency $TestDependency | Should -BeNullOrEmpty
+        { Update-WebDependency $TestDependency } | Should -Throw "No data fetched from URL '$TestDependencyUrl'"
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -119,11 +113,9 @@ Describe 'Update-WebDependency' {
             }
         )
 
-        Update-WebDependency $HttpDependency | Should -BeNullOrEmpty
+        { Update-WebDependency $HttpDependency } | Should -Throw '*only HTTPS is allowed*'
 
         Should -Invoke Invoke-WebRequest -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -like '*only HTTPS is allowed*' }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -142,11 +134,9 @@ Describe 'Update-WebDependency' {
             }
         )
 
-        Update-WebDependency $LooseDependency | Should -BeNullOrEmpty
+        { Update-WebDependency $LooseDependency } | Should -Throw "Scraped version for '$TestDependencyName' looks unsafe*"
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -like '*looks unsafe*' }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
@@ -157,10 +147,9 @@ Describe 'Update-WebDependency' {
 
         Mock Invoke-WebRequest { throw $MockException }
 
-        Update-WebDependency $TestDependency | Should -BeNullOrEmpty
+        { Update-WebDependency $TestDependency } | Should -Throw "Failed to fetch URL '$TestDependencyUrl': HTTP 404 NotFound"
 
         Should -Invoke Invoke-WebRequest -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 }

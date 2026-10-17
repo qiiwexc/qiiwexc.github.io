@@ -7,9 +7,10 @@ function Update-WebDependency {
 
     Set-Variable -Option Constant Uri ([String]$Dependency.url)
 
+    # Each failure throws rather than leaving the version as it is, which would read as "nothing newer"
+    # and drop the versions waiting out their quarantine as withdrawn
     if (-not $Uri.StartsWith('https://')) {
-        Out-Failure "Refusing to fetch version over insecure URL '$Uri': only HTTPS is allowed" $LogIndentLevel
-        return
+        throw "Refusing to fetch version over insecure URL '$Uri': only HTTPS is allowed"
     }
 
     Write-LogInfo "Fetching URL: $Uri" $LogIndentLevel
@@ -23,14 +24,12 @@ function Update-WebDependency {
         } else {
             $_.Exception.Message
         }
-        Out-Failure "Failed to fetch URL '$Uri': $Message" $LogIndentLevel
-        return
+        throw "Failed to fetch URL '$Uri': $Message"
     }
 
     $ResponseContent = try { $Response.Content } catch { $null }
     if (-not $ResponseContent) {
-        Out-Failure "No data fetched from URL '$Uri'" $LogIndentLevel
-        return
+        throw "No data fetched from URL '$Uri'"
     }
 
     # Named 'VersionMatches' to avoid colliding with the automatic $Matches variable,
@@ -38,8 +37,7 @@ function Update-WebDependency {
     Set-Variable -Option Constant VersionMatches ([regex]::Matches($ResponseContent, $Dependency.regex, @('IgnoreCase', 'Multiline')))
 
     if ($VersionMatches.Count -eq 0) {
-        Out-Failure "Failed to find version number from URL '$Uri'" $LogIndentLevel
-        return
+        throw "Failed to find version number from URL '$Uri'"
     }
 
     Set-Variable -Option Constant LatestVersion ([String]($VersionMatches[0].Groups[1].Value))
@@ -48,8 +46,7 @@ function Update-WebDependency {
     # dependencies, inside the built artifact — reject anything that could break
     # out of a string or markup context, and absurd lengths (scraping gone wrong)
     if ($LatestVersion.Length -gt 100 -or $LatestVersion -match '[''"`$<>{}]' -or $LatestVersion -match '\r|\n') {
-        Out-Failure "Scraped version for '$($Dependency.name)' looks unsafe, ignoring it: $LatestVersion" $LogIndentLevel
-        return
+        throw "Scraped version for '$($Dependency.name)' looks unsafe, ignoring it: $LatestVersion"
     }
 
     if ($LatestVersion -ne '' -and $LatestVersion -ne $Dependency.version) {

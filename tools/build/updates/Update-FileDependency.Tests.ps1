@@ -127,17 +127,19 @@ Describe 'Update-FileDependency' {
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
         Should -Invoke Get-Item -Exactly 2
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -eq "File '$TestFileName.exe' has no version information. Skipping." }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should update version and log warning if 32-bit file is missing' {
+    It 'Should update version if 32-bit file is missing' {
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -match ' x86.exe' }
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
         Should -Invoke Get-Item -Exactly 2
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq "File '$TestFileName x86.exe' not found. Skipping." }
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
             $Dependency.name -eq $TestFileName -and
@@ -146,13 +148,14 @@ Describe 'Update-FileDependency' {
         }
     }
 
-    It 'Should update version and log warning if 64-bit file is missing' {
+    It 'Should update version if 64-bit file is missing' {
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -notmatch ' x86.exe' }
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
         Should -Invoke Get-Item -Exactly 2
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq "File '$TestFileName.exe' not found. Skipping." }
         Should -Invoke Set-NewVersion -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter {
             $Dependency.name -eq $TestFileName -and
@@ -168,18 +171,20 @@ Describe 'Update-FileDependency' {
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
         Should -Invoke Get-Item -Exactly 2
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should handle Get-Item failure' {
+    It 'Should skip without a warning when neither file is there, as on every run without them' {
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -match ' x86.exe' }
         Mock Get-Item { throw $TestException } -ParameterFilter { $Path -notmatch ' x86.exe' }
 
         Update-FileDependency $TestDependency $TestWipPath | Should -BeNullOrEmpty
 
         Should -Invoke Get-Item -Exactly 2
-        Should -Invoke Write-LogWarning -Exactly 3
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogInfo -Exactly 2 -ParameterFilter { $Message -like '*not found. Skipping.' }
+        Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq "No valid files found for dependency '$TestFileName'. Skipping." }
         Should -Invoke Set-NewVersion -Exactly 0
     }
 }

@@ -75,7 +75,9 @@ function Update-Dependencies {
 
         Write-LogInfo "Checking for updates for '$Name' (current version: $($Dependency.version))"
 
-        # One unreachable source must not lose the updates found for all the others
+        # One unreachable source must not lose the updates found for all the others. A check either leaves the
+        # latest version it found or fails, so the quarantine below never reads a failure as "nothing newer",
+        # which would drop the versions waiting as withdrawn: a failed check leaves their waits as they are
         try {
             switch ($Source) {
                 ('GitHub') {

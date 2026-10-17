@@ -9,12 +9,16 @@ function Compare-Commits {
 
     Set-Variable -Option Constant Commits ([GitCommit[]](Invoke-GitAPI "https://api.github.com/repos/$Repository/commits" $GitHubToken))
 
-    if ($Commits -and $Commits.Count -gt 0 -and $Commits[0].PSObject.Properties['sha']) {
-        Set-Variable -Option Constant LatestVersion ([String]($Commits[0].sha))
+    # Nothing to compare with fails the check: left as it is, the version would read as "nothing newer"
+    # and drop the versions waiting out their quarantine as withdrawn
+    if (-not $Commits -or $Commits.Count -eq 0 -or -not $Commits[0].PSObject.Properties['sha'] -or -not $Commits[0].sha) {
+        throw "No commits found for '$Repository'"
+    }
 
-        if ($LatestVersion -ne '' -and $LatestVersion -ne $CurrentVersion) {
-            Set-NewVersion $Dependency $LatestVersion
-            return @("https://github.com/$Repository/compare/$CurrentVersion...$LatestVersion")
-        }
+    Set-Variable -Option Constant LatestVersion ([String]($Commits[0].sha))
+
+    if ($LatestVersion -ne $CurrentVersion) {
+        Set-NewVersion $Dependency $LatestVersion
+        return @("https://github.com/$Repository/compare/$CurrentVersion...$LatestVersion")
     }
 }

@@ -138,19 +138,19 @@ Describe 'Compare-Tags' {
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should not update if new version is empty' {
+    It 'Should fail if new version is empty' {
         Mock Invoke-GitAPI { return @( @{}, @{} ) }
 
-        Compare-Tags $TestDependency | Should -BeNullOrEmpty
+        { Compare-Tags $TestDependency } | Should -Throw "None of the 2 tags listed for '$TestRepositoryName' has a name"
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0
     }
 
-    It 'Should not update if the response is empty' {
+    It 'Should fail if the response is empty' {
         Mock Invoke-GitAPI { return @() }
 
-        Compare-Tags $TestDependency | Should -BeNullOrEmpty
+        { Compare-Tags $TestDependency } | Should -Throw "No tags found for '$TestRepositoryName'"
 
         Should -Invoke Invoke-GitAPI -Exactly 1
         Should -Invoke Set-NewVersion -Exactly 0

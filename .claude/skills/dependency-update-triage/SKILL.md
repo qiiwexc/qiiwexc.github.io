@@ -217,7 +217,7 @@ Generic advice misses all of these. Check each one that applies.
     no longer knows (it skips those silently), is a change needed first.
 
   A pinned file that moves inside its upstream repository fails the checksum download.
-  The nightly then keeps the old version with a warning in the workflow log, so **a
+  The nightly then keeps the old version with a warning annotation (Step 6), so **a
   pinned dependency that has stopped updating is itself a finding** - compare its version
   with the upstream's latest release. Up to 7 days behind is the quarantine, not a finding.
 
@@ -277,6 +277,21 @@ check runs are CodeQL's, as `ci.yml` skips a pull request that changes nothing b
 state of `pending` with an empty `statuses` list means nothing reported, not that something
 is still running. On the nightly PR it is either a run still under way (each job reports as
 it ends) or a head the nightly run did not push, which nothing will check.
+
+**The nightly's own warnings are annotations of its `check-for-updates` job**: a dependency it
+could not check, a version kept back because its checksum could not be computed, a version
+taken as withdrawn, and why no quarantine state could be restored, with `gh`'s error. A normal
+night has none. When a version arrived later than its release and its 7 days explain, or a
+`Pending` date looks wrong, read the nights in between. That costs two requests a night, so
+keep the range short:
+
+```powershell
+$Runs = (Invoke-RestMethod "$Api/actions/workflows/update-dependencies.yml/runs?per_page=10" -Headers $H).workflow_runs
+foreach ($Run in $Runs) {
+    $Job = (Invoke-RestMethod "$Api/actions/runs/$($Run.id)/jobs" -Headers $H).jobs | Where-Object { $_.name -eq 'check-for-updates' }
+    Invoke-RestMethod "$Api/check-runs/$($Job.id)/annotations" -Headers $H | ForEach-Object { "$($Run.created_at) $($_.message)" }
+}
+```
 
 **To run the gate yourself**, the PR has to be in the working tree:
 

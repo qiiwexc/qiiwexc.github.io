@@ -12,12 +12,23 @@ Set-Variable -Option Constant DescriptionFile ([String]"$ProjectRoot\build\depen
 # Written by build.ps1 -Update; the workflow restores it from the previous run and keeps it as an artifact
 Set-Variable -Option Constant QuarantineFile ([String]"$ProjectRoot\build\dependency-quarantine.json")
 
+. "$PSScriptRoot\common\Write-WorkflowAnnotation.ps1"
+
 # Individual dependencies that cannot be checked are skipped with a warning — an error here
-# means nothing could be checked at all, which must fail the workflow rather than look like "no updates"
+# means nothing could be checked at all, which must fail the workflow rather than look like "no updates".
+# Each warning becomes an annotation of the run, which anyone can read, unlike the run's log
 try {
-    & "$PSScriptRoot\build.ps1" -Update -CI
+    & "$PSScriptRoot\build.ps1" -Update -CI 3>&1 | ForEach-Object {
+        if ($_ -is [Management.Automation.WarningRecord]) {
+            # Without the logger's timestamp, indent and warning sign, which the annotation has of its own. The
+            # sign is spelt as its code, as this file has no byte order mark to keep it from being read as ANSI
+            Write-WorkflowAnnotation ($_.Message -replace "^\[[^\]]*\]\s*$([Char]0x26A0)?\s*")
+        } else {
+            $_
+        }
+    }
 } catch {
-    Write-Host "::error::Dependency update failed: $_"
+    Write-WorkflowAnnotation -Level error "Dependency update failed: $_"
     exit 1
 }
 

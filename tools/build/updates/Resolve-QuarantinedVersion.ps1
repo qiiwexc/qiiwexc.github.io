@@ -30,17 +30,17 @@ function Resolve-QuarantinedVersion {
         $Entry.base = $PreviousVersion
     }
 
-    # The check found nothing newer, or could not tell: the candidates stay, but none is applied on its word
-    if ($LatestVersion -eq $PreviousVersion) {
-        return $PreviousVersion
-    }
-
-    # A latest version seen before means the ones recorded after it were withdrawn
-    [Int]$LatestIndex = @($Candidates | ForEach-Object { $_.version }).IndexOf($LatestVersion)
-    if ($LatestIndex -ge 0) {
-        $Candidates.RemoveRange($LatestIndex + 1, $Candidates.Count - $LatestIndex - 1)
-    } else {
+    # A latest version seen before, the recorded one included, means the ones recorded after it were withdrawn: none
+    # of them may come out of quarantine later, once a newer version shows up. A check that cannot tell fails
+    # instead and never gets here, so the waits of a source it could not reach stand
+    [String[]]$SeenVersions = @(@($PreviousVersion) + @($Candidates | ForEach-Object { $_.version }))
+    [Int]$LatestIndex = $SeenVersions.IndexOf($LatestVersion)
+    if ($LatestIndex -lt 0) {
         $Candidates.Add([PSCustomObject]@{ version = $LatestVersion; firstSeen = $Now })
+    } elseif ($LatestIndex -lt $Candidates.Count) {
+        [String[]]$Withdrawn = @($SeenVersions[($LatestIndex + 1)..$Candidates.Count])
+        Write-LogWarning "Taking $($Withdrawn -join ', ') of '$Name' as withdrawn: the latest version is $LatestVersion again" $LogIndentLevel
+        $Candidates.RemoveRange($LatestIndex, $Candidates.Count - $LatestIndex)
     }
 
     # The candidates are in the order they were first seen, so the last one out of quarantine is the newest

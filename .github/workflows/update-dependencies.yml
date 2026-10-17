@@ -36,20 +36,33 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # gh reports a run without the artifact on stderr, which 'Stop' would turn into a terminating error
+          . .\tools\common\Write-WorkflowAnnotation.ps1
+          # gh reports a run without the artifact on stderr, which 'Stop' would turn into a terminating error.
+          # What it reports is kept: the warning is all that a reader without a token sees of why nothing was restored
           $ErrorActionPreference = 'Continue'
-          $runs = gh run list --repo $env:GITHUB_REPOSITORY --workflow update-dependencies.yml --branch master --limit 30 --json databaseId --jq '.[].databaseId'
+          $listed = @(gh run list --repo $env:GITHUB_REPOSITORY --workflow update-dependencies.yml --branch master --limit 30 --json databaseId --jq '.[].databaseId' 2>&1)
+          if ($LASTEXITCODE -ne 0) {
+              Write-WorkflowAnnotation "Could not list the runs of this workflow, so every new version starts its wait now: $($listed -join ' ')"
+              exit 0
+          }
+          $runs = @($listed | ForEach-Object { "$_" } | Where-Object { $_ -match '^\d+$' -and $_ -ne $env:GITHUB_RUN_ID })
+          $failure = ''
           foreach ($run in $runs) {
-              if ($run -eq $env:GITHUB_RUN_ID) {
-                  continue
-              }
-              gh run download $run --repo $env:GITHUB_REPOSITORY --name dependency-quarantine --dir build 2>&1 | Out-Null
+              $output = @(gh run download $run --repo $env:GITHUB_REPOSITORY --name dependency-quarantine --dir build 2>&1)
               if ($LASTEXITCODE -eq 0) {
                   Write-Host "Restored the quarantine state of run $run"
                   exit 0
               }
+              # The most recent run's, as that is the one whose state the check should have had
+              if (-not $failure) {
+                  $failure = "run ${run}: $($output -join ' ')"
+              }
           }
-          Write-Host '::warning::No quarantine state found, so every new version starts its wait now'
+          if ($runs.Count -eq 0) {
+              Write-WorkflowAnnotation 'No earlier run of this workflow on master, so every new version starts its wait now'
+          } else {
+              Write-WorkflowAnnotation "No quarantine state found in the last $($runs.Count) runs, so every new version starts its wait now. The most recent error, from $failure"
+          }
           exit 0
 
       - name: Check for dependency updates

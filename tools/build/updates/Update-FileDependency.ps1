@@ -18,19 +18,22 @@ function Update-FileDependency {
 
         try {
             [IO.FileInfo]$File = Get-Item "$WipPath\$FileName" -ErrorAction Stop
-
-            [Version]$FileVersion = if ($File.VersionInfo) { $File.VersionInfo.FileVersionRaw } else { $null }
-            if ($FileVersion) {
-                $NewVersions.Add($FileVersion)
-            }
         } catch {
-            Write-LogWarning "File '$FileName' not found. Skipping." $LogIndentLevel
+            # The files are put there by hand for a local run, so most runs, the nightly's among them, find none
+            Write-LogInfo "File '$FileName' not found. Skipping." $LogIndentLevel
             continue
+        }
+
+        [Version]$FileVersion = if ($File.VersionInfo) { $File.VersionInfo.FileVersionRaw } else { $null }
+        if ($FileVersion) {
+            $NewVersions.Add($FileVersion)
+        } else {
+            Write-LogWarning "File '$FileName' has no version information. Skipping." $LogIndentLevel
         }
     }
 
     if ($NewVersions.Count -eq 0) {
-        Write-LogWarning "No valid files found for dependency '$Name'. Skipping." $LogIndentLevel
+        Write-LogInfo "No valid files found for dependency '$Name'. Skipping." $LogIndentLevel
         return
     }
 
