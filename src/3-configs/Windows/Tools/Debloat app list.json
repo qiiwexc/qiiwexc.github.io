@@ -44,24 +44,12 @@
     "Description": "HP OEM software for PC hardware diagnostics"
   },
   {
-    "AppId": "AD2F1837.HPPowerManager",
-    "Description": "HP OEM software for managing power settings and battery"
-  },
-  {
-    "AppId": "AD2F1837.HPPrinterControl",
-    "Description": "HP OEM software for managing HP printers"
-  },
-  {
     "AppId": "AD2F1837.HPPrivacySettings",
     "Description": "HP OEM software for managing privacy settings"
   },
   {
     "AppId": "AD2F1837.HPQuickDrop",
     "Description": "HP OEM software for quick file transfer between devices"
-  },
-  {
-    "AppId": "AD2F1837.HPQuickTouch",
-    "Description": "HP OEM software, possibly for touch-specific shortcuts or controls"
   },
   {
     "AppId": "AD2F1837.HPRegistration",
@@ -190,10 +178,6 @@
   {
     "AppId": "king.com.CandyCrushSodaSaga",
     "Description": "Puzzle game from King"
-  },
-  {
-    "AppId": "LGElectronics.LGMonitorApp",
-    "Description": "LG OEM software for controlling your LG monitor, Windows Update may silently reinstall this app if you have an LG monitor connected"
   },
   {
     "AppId": "LinkedInforWindows",

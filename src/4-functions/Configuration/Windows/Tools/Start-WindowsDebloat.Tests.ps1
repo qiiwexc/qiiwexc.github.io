@@ -12,7 +12,7 @@ BeforeAll {
 
     Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_PATH_TEMP_DIR\')
     Set-Variable -Option Constant PATH_SYSTEM_32 ([String]'TEST_PATH_SYSTEM_32')
-    Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST_BASE ([String]'[{"AppId":"TestApp1"},{"AppId":"TestApp2"}]')
+    Set-Variable -Option Constant CONFIG_DEBLOAT_APP_LIST ([String]'[{"AppId":"TestApp1"},{"AppId":"TestApp2"}]')
     Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_BASE ([String]"TEST_CONFIG_DEBLOAT_PRESET_BASE1`nTEST_CONFIG_DEBLOAT_PRESET_BASE2")
     Set-Variable -Option Constant CONFIG_DEBLOAT_PRESET_PERSONALIZATION ([String]"TEST_CONFIG_DEBLOAT_PRESET_PERSONALIZATION1`nTEST_CONFIG_DEBLOAT_PRESET_PERSONALIZATION2")
 
@@ -23,7 +23,8 @@ BeforeAll {
     Set-Variable -Option Constant TestSettingsPath ([String]"$TestConfigPath\LastUsedSettings.json")
     Set-Variable -Option Constant TestPowerShell ([String]'TEST_PATH_SYSTEM_32\WindowsPowerShell\v1.0\powershell.exe')
     Set-Variable -Option Constant TestArguments ([String]"-NoProfile -ExecutionPolicy Bypass -File `"$TestScriptPath`" -SkipExplorerRestart")
-    Set-Variable -Option Constant TestPresetParams ([String]'-RunSavedSettings -RemoveApps -Apps "TestApp1,TestApp2"')
+    Set-Variable -Option Constant TestPresetParams ([String]'-RunSavedSettings')
+    Set-Variable -Option Constant TestAppsParams ([String]'-RemoveApps -Apps "TestApp1,TestApp2"')
 }
 
 Describe 'Start-WindowsDebloat' {
@@ -94,7 +95,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should run with the custom preset' {
+    It 'Should run with the custom preset without removing apps' {
         Start-WindowsDebloat -UsePreset
 
         Should -Invoke Set-Content -Exactly 1
@@ -119,7 +120,7 @@ Describe 'Start-WindowsDebloat' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should run with the personalization configuration' {
+    It 'Should run with the personalization configuration and remove the listed apps' {
         Start-WindowsDebloat -UsePreset -Personalization
 
         Should -Invoke Set-Content -Exactly 1
@@ -129,7 +130,30 @@ Describe 'Start-WindowsDebloat' {
             $NoNewline -eq $True
         }
         Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments -Sysprep $TestPresetParams" }
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments -Sysprep $TestPresetParams $TestAppsParams" }
+        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
+    It 'Should run with the personalization configuration and apply automatically' {
+        Start-WindowsDebloat -UsePreset -Personalization -Silent
+
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments -Sysprep $TestPresetParams $TestAppsParams -Silent" }
+        Should -Invoke Out-Success -Exactly 1
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
+    It 'Should ignore personalization without the custom preset' {
+        Start-WindowsDebloat -Personalization
+
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            $Path -eq $TestSettingsPath -and
+            $Value -eq $CONFIG_DEBLOAT_PRESET_BASE
+        }
+        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq $TestArguments }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }

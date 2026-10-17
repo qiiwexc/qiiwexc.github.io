@@ -467,7 +467,7 @@ Describe 'New-UnattendedFile with the real template' {
         Set-Variable -Option Constant OutputVmPath ([String]"$TestDrive\vm")
 
         Set-Variable -Option Constant ExpectedApps ([String[]]@(
-                (Read-JsonFile "$ProjectRoot\src\3-configs\Windows\Tools\Debloat app list base.json").AppId | ForEach-Object { $_.Split('#')[0].Trim() }
+                (Read-JsonFile "$ProjectRoot\src\3-configs\Windows\Tools\Debloat app list.json").AppId | ForEach-Object { $_.Split('#')[0].Trim() }
                 'Microsoft.OneDrive'
             ))
 

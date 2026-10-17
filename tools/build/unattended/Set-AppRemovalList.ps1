@@ -4,7 +4,7 @@ function Set-AppRemovalList {
         [Parameter(Position = 1, Mandatory)][String]$TemplateContent
     )
 
-    [Collections.Generic.List[String]]$AppList = Read-JsonFile "$ConfigsPath\Windows\Tools\Debloat app list base.json" | ForEach-Object { $_.AppId }
+    [Collections.Generic.List[String]]$AppList = Read-JsonFile "$ConfigsPath\Windows\Tools\Debloat app list.json" | ForEach-Object { $_.AppId }
     $AppList.Add('Microsoft.OneDrive')
 
     [Collections.Generic.List[String]]$FormattedAppList = @("`n")

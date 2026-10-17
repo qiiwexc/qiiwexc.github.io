@@ -38,7 +38,7 @@ Describe 'Set-AppRemovalList' {
 
         Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1 -ParameterFilter {
-            $Path -eq "$ConfigsPath\Windows\Tools\Debloat app list base.json"
+            $Path -eq "$ConfigsPath\Windows\Tools\Debloat app list.json"
         }
     }
 

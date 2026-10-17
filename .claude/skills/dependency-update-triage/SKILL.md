@@ -212,9 +212,11 @@ Generic advice misses all of these. Check each one that applies.
     on WinUtil not relaunching itself when already elevated. `Start-WindowsDebloat.ps1`
     runs `Win11Debloat.ps1` from the archive's single top folder with `-SkipExplorerRestart`,
     `-Sysprep`, `-RunSavedSettings`, `-RemoveApps`, `-Apps` and `-Silent`, and writes its
-    `Config\LastUsedSettings.json` from `src/3-configs/Windows/Tools/Debloat preset *.json`
-    and `Debloat app list base.json`: a renamed parameter, or a setting or app ID the tool
-    no longer knows (it skips those silently), is a change needed first.
+    `Config\LastUsedSettings.json` from `src/3-configs/Windows/Tools/Debloat preset *.json`;
+    with the personalization preset it also passes the app IDs in `Debloat app list.json`,
+    which the answer files' app removal list is built from too. A renamed parameter, or a
+    setting or app ID the tool no longer knows (it skips those silently), is a change needed
+    first.
 
   A pinned file that moves inside its upstream repository fails the checksum download.
   The nightly then keeps the old version with a warning annotation (Step 6), so **a

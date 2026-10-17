@@ -43,7 +43,7 @@ function Start-WindowsDebloat {
         New-Directory $ConfigPath
 
         if ($UsePreset -and $Personalization) {
-            Set-Variable -Option Constant Configuration ([String]($CONFIG_DEBLOAT_PRESET_PERSONALIZATION))
+            Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_PERSONALIZATION)
         } else {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
         }
@@ -58,10 +58,15 @@ function Start-WindowsDebloat {
         [String]$SilentParam = ''
         [String]$SysprepParam = ''
 
-        if ($UsePreset -or $Personalization) {
-            Set-Variable -Option Constant CustomAppsList ([String[]]($CONFIG_DEBLOAT_APP_LIST_BASE | ConvertFrom-Json | ForEach-Object { $_.AppId }))
-            # Double quotes: PowerShell's -File passes single quotes on as part of the value
-            $UsePresetParam = "-RunSavedSettings -RemoveApps -Apps `"$($CustomAppsList -join ',')`""
+        if ($UsePreset) {
+            $UsePresetParam = '-RunSavedSettings'
+
+            # Apps are removed only along with the personalization preset
+            if ($Personalization) {
+                Set-Variable -Option Constant CustomAppsList ([String[]]($CONFIG_DEBLOAT_APP_LIST | ConvertFrom-Json | ForEach-Object { $_.AppId }))
+                # Double quotes: PowerShell's -File passes single quotes on as part of the value
+                $UsePresetParam += " -RemoveApps -Apps `"$($CustomAppsList -join ',')`""
+            }
         }
 
         if ($Silent) {

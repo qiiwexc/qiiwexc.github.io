@@ -87,7 +87,7 @@
     { "Name": "Show20TabsInAltTab", "Value": false },
     { "Name": "ShowDriveLettersFirst", "Value": false },
     { "Name": "ShowDriveLettersLast", "Value": false },
-    { "Name": "ShowHiddenFolders", "Value": true },
+    { "Name": "ShowHiddenFolders", "Value": false },
     { "Name": "ShowKnownFileExt", "Value": false },
     { "Name": "ShowNetworkDriveLettersFirst", "Value": false },
     { "Name": "ShowSearchBoxTb", "Value": false },
