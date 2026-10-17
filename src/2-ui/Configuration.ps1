@@ -64,10 +64,12 @@ Set-Variable -Option Constant TAB_CONFIGURATION ([Hashtable]@{
                         Button             = 'OOShutUp10++ privacy'
                         Action             = {
                             $Execute = $CHECKBOXES.StartOoShutUp10.IsChecked
+                            $Personalization = $CHECKBOXES.OoShutUp10AndPersonalise.IsChecked
                             $Silent = $CHECKBOXES.StartOoShutUp10.IsChecked -and $CHECKBOXES.SilentlyRunOoShutUp10.IsChecked
-                            Start-AsyncOperation -Button $this { Start-OoShutUp10 -Execute:$Execute -Silent:$Silent } -Variables @{
-                                Execute = $Execute
-                                Silent  = $Silent
+                            Start-AsyncOperation -Button $this { Start-OoShutUp10 -Execute:$Execute -Personalization:$Personalization -Silent:$Silent } -Variables @{
+                                Execute         = $Execute
+                                Personalization = $Personalization
+                                Silent          = $Silent
                             }
                         }
                         StartAfterDownload = @{
@@ -75,6 +77,8 @@ Set-Variable -Option Constant TAB_CONFIGURATION ([Hashtable]@{
                             OnClick = { Set-CheckboxState -Control $this -Dependant $CHECKBOXES.SilentlyRunOoShutUp10 }
                         }
                         Options            = @(
+                            # The configuration is written whether or not the tool is started, so this one depends on nothing
+                            @{ CheckBox = '+ Personalization settings'; Name = 'OoShutUp10AndPersonalise' }
                             @{ CheckBox = 'Silently apply tweaks'; Name = 'SilentlyRunOoShutUp10' }
                         )
                     }

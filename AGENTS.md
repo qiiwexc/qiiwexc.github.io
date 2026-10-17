@@ -63,7 +63,7 @@ failures as environmental, not regressions.
 - Every entry in `dependencies.json` sets `opensPullRequest`, and the nightly opens its pull
   request only when a dependency set to `true` moved; other bumps ride along in it. It is `true`
   where a new version can need a change here: a `{VERSION}` download with its `sha256`, a CI
-  tool, the Windows links in `urls.json`, and O&O ShutUp10, whose exported config the app embeds.
+  tool, the Windows links in `urls.json`, and O&O ShutUp10, whose exported configs the app embeds.
   It is `false` for the `File` dependencies, which only a local run with their files in `wip/`
   updates, for what the app only links to or fetches unversioned (SystemRescue, TronScript,
   SDI), and for the Unattend Generator, which `templates/autounattend.xml` is regenerated from
@@ -120,7 +120,7 @@ matching task.** Each of these is the authority on its procedure; this file does
 
 The answer files are built from `templates/autounattend.xml`, which also carries sections for the development VM only (disk 0 partitioning, a local auto-logon account). `tools/build/New-UnattendedFile.ps1` strips them from the published files, and `tools/build/unattended/Assert-UnattendedFile.ps1` fails the build if any remain, a `{KEY}` placeholder is unresolved, or the XML is not well-formed. The template is the output of the [unattend generator](https://schneegans.de/windows/unattend-generator/); the URL in its first comment reproduces it. After regenerating it, run the tests: `New-UnattendedBase` fails if something it rewrites (such as the `RemovePackage.ps1` package list) is gone, and `New-UnattendedFile.Tests.ps1` builds the real template end to end.
 
-Non-PS1 files in `src/3-configs/` (`.reg`, `.json`, `.conf`, `.ini`, `.xml`) are embedded as string constants named `CONFIG_<UPPERCASED_FILENAME>` using `Set-Variable -Option Constant`.
+Every non-PS1 file in `src/3-configs/` (`.reg`, `.json`, `.ini`, `.cfg`, `.conf`) is embedded as string constants named `CONFIG_<UPPERCASED_FILENAME>` using `Set-Variable -Option Constant`.
 
 ### Template Substitution
 

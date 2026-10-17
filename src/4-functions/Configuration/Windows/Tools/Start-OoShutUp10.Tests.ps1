@@ -12,8 +12,10 @@ BeforeAll {
     Set-Variable -Option Constant PATH_OOSHUTUP10 ([String]'TEST_PATH_OOSHUTUP10')
     Set-Variable -Option Constant PATH_WORKING_DIR ([String]'TEST_PATH_WORKING_DIR')
     # LF line endings and a non-ASCII character, as a checkout can embed the file
-    Set-Variable -Option Constant CONFIG_OOSHUTUP10 ([String]"TEST_LINE_1`nTEST_LINE_2 $([Char]0xA9)`n")
+    Set-Variable -Option Constant CONFIG_OOSHUTUP10_BASE ([String]"TEST_LINE_1`nTEST_LINE_2 $([Char]0xA9)`n")
     Set-Variable -Option Constant TestConfigBytes ([Byte[]](0x54, 0x45, 0x53, 0x54, 0x5F, 0x4C, 0x49, 0x4E, 0x45, 0x5F, 0x31, 0x0D, 0x0A, 0x54, 0x45, 0x53, 0x54, 0x5F, 0x4C, 0x49, 0x4E, 0x45, 0x5F, 0x32, 0x20, 0xC2, 0xA9, 0x0D, 0x0A))
+    Set-Variable -Option Constant CONFIG_OOSHUTUP10_PERSONALIZATION ([String]"TEST_PERSONALIZATION_LINE`n")
+    Set-Variable -Option Constant TestPersonalizationConfigBytes ([Byte[]][Text.Encoding]::ASCII.GetBytes("TEST_PERSONALIZATION_LINE`r`n"))
 
     Set-Variable -Option Constant TestDownloadUrl ([String]'{URL_OOSHUTUP10}')
     Set-Variable -Option Constant TestFileName ([String]'OOSU10.exe')
@@ -89,6 +91,41 @@ Describe 'Start-OoShutUp10' {
             $URL -eq $TestDownloadUrl -and
             $FileName -eq $TestFileName -and
             $Sha256 -eq $TestSha256 -and
+            $Execute -eq $True -and
+            $Params -eq "$PATH_OOSHUTUP10\$TestConfigFileName"
+        }
+    }
+
+    It 'Should write the personalization configuration' {
+        Start-OoShutUp10 -Personalization
+
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            $Path -eq "$PATH_WORKING_DIR\$TestConfigFileName" -and
+            $Encoding -eq 'Byte' -and
+            ($Value -join ',') -eq ($TestPersonalizationConfigBytes -join ',')
+        }
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
+        Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
+            $Execute -eq $False -and
+            $Params -eq ''
+        }
+    }
+
+    It 'Should download OoShutUp10 and silently apply the personalization configuration' {
+        Start-OoShutUp10 -Execute -Personalization -Silent
+
+        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $PATH_OOSHUTUP10 }
+        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            $Path -eq "$PATH_OOSHUTUP10\$TestConfigFileName" -and
+            $Encoding -eq 'Byte' -and
+            ($Value -join ',') -eq ($TestPersonalizationConfigBytes -join ',')
+        }
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
+        Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $Execute -eq $True -and
             $Params -eq "$PATH_OOSHUTUP10\$TestConfigFileName"
         }

@@ -226,10 +226,11 @@ Generic advice misses all of these. Check each one that applies.
 - **A live tool has already changed under the app.** SDI is fetched from a URL without a
   version at click time, so a new release is in effect for users the day it is published,
   and a fix it needs goes to master at once, whatever happens to the PR.
-- **O&O ShutUp10's embedded config follows its version.** `OOShutUp10.cfg` names the
-  version that exported it in its header (`V3.6.1135`). ShutUp10 is a pinned download, so
-  exporting the config again with the new version is a change needed first, and the two
-  reach users together at the next release. Its version is the full build number the
+- **O&O ShutUp10's embedded configs follow its version.** `OOShutUp10 base.cfg` and
+  `OOShutUp10 personalization.cfg` (the one the "+ Personalization settings" checkbox
+  picks) name the version that exported them in their headers (`V3.6.1135`). ShutUp10 is a
+  pinned download, so exporting both configs again with the new version is a change needed
+  first, and they reach users together with it at the next release. Its version is the full build number the
   homepage prints, because the versioned file's URL needs it, and the file is O&O's own
   winget package, the same bytes as the unversioned `OOSU10.exe` of that build.
 - **The CI tools are loaded at their exact pinned versions.** `tools\test.ps1` and the
@@ -355,7 +356,7 @@ two of them needed work:
   `01379ab`. Pinned, the same release would arrive as a `Download URL` row, and the rename
   would be a change needed before merging.
 - **O&O ShutUp10 3.5** has no notes in the body (its changelog is on another site, in the
-  links). The embedded `OOShutUp10.cfg` had been exported by V3.4.1124, and was exported
+  links). The embedded ShutUp10 config had been exported by V3.4.1124, and was exported
   again with V3.5.1130 in `e0b4cea`.
 
 The Unattend Generator row changes nothing built until the template is regenerated from

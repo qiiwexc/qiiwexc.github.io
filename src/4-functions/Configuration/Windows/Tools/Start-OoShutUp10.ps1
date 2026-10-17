@@ -1,6 +1,7 @@
 function Start-OoShutUp10 {
     param(
         [Switch]$Execute,
+        [Switch]$Personalization,
         [Switch]$Silent
     )
 
@@ -25,9 +26,15 @@ function Start-OoShutUp10 {
 
         New-Directory $TargetPath
 
+        if ($Personalization) {
+            Set-Variable -Option Constant Configuration ([String]$CONFIG_OOSHUTUP10_PERSONALIZATION)
+        } else {
+            Set-Variable -Option Constant Configuration ([String]$CONFIG_OOSHUTUP10_BASE)
+        }
+
         # O&O ShutUp10++ parses only CRLF line endings, while the embedded copy has whichever git checked
         # the file out with. Written the way the tool exports it: CRLF, UTF-8 without a byte order mark
-        Set-Variable -Option Constant ConfigBytes ([Byte[]][Text.UTF8Encoding]::new($False).GetBytes(($CONFIG_OOSHUTUP10 -replace '\r?\n', "`r`n")))
+        Set-Variable -Option Constant ConfigBytes ([Byte[]][Text.UTF8Encoding]::new($False).GetBytes(($Configuration -replace '\r?\n', "`r`n")))
         Set-Content $ConfigFile $ConfigBytes -Encoding Byte -ErrorAction Stop
 
         if ($Execute -and $Silent) {
