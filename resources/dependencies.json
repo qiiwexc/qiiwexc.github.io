@@ -49,7 +49,7 @@
         "opensPullRequest":  true,
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat",
-        "sha256":  "b8818711d8464a311cf5b3cfc43ac534a8833670b179de09a22e0e50eb8ded65"
+        "sha256":  "6830bf501d2740c3317133ac0ecdc2a3ab80ed7f6c83e7f0f20dc66afbf758a7"
     },
     {
         "name":  "Ventoy",

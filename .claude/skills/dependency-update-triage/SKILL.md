@@ -205,18 +205,22 @@ Generic advice misses all of these. Check each one that applies.
   - An executable was signed by the same publisher as before. Run
     `Get-AuthenticodeSignature` on the new file and on the previous version's, and treat a
     new or missing signer where there was one as a hold until explained.
-  - A script (WinUtil's `winutil.ps1`, MAS's `MAS_AIO.cmd`, Win11Debloat's source archive)
+  - A script (WinUtil's `winutil.ps1`, MAS's `MAS_AIO.cmd`, Win11Debloat's release archive)
     is read in the notes for new downloads, and checked against what the app hands it.
     `Start-Activator.ps1` passes MAS `-el`, `/HWID` and `/Ohook`, and fetches it from
     `MAS/All-In-One-Version-KL/MAS_AIO.cmd` at the release tag. `Start-WinUtil.ps1` relies
     on WinUtil not relaunching itself when already elevated. `Start-WindowsDebloat.ps1`
-    runs `Win11Debloat.ps1` from the archive's single top folder with `-SkipExplorerRestart`,
-    `-Sysprep`, `-RunSavedSettings`, `-RemoveApps`, `-Apps` and `-Silent`, and writes its
-    `Config\LastUsedSettings.json` from `src/3-configs/Windows/Tools/Debloat preset *.json`;
-    with the personalization preset it also passes the app IDs in `Debloat app list.json`,
-    which the answer files' app removal list is built from too. A renamed parameter, or a
-    setting or app ID the tool no longer knows (it skips those silently), is a change needed
-    first.
+    downloads the release's `Win11Debloat.zip` (its `SHA256SUMS` and GitHub's asset `digest`
+    both give the checksum to compare with), runs `Win11Debloat.ps1` from the archive's
+    single top folder with `-SkipExplorerRestart`, `-Sysprep`, `-RunSavedSettings`,
+    `-RemoveApps`, `-Apps` and `-Silent`, and writes `LastUsedSettings.json` into
+    `%LOCALAPPDATA%\Win11Debloat`, where the tool reads it, from
+    `src/3-configs/Windows/Tools/Debloat preset *.json`; with the personalization preset it
+    also passes the app IDs in `Debloat app list.json`, which the answer files' app removal
+    list is built from too. A renamed parameter, a moved settings file, or a setting or app
+    ID the tool no longer knows (it skips those silently) is a change needed first: compare
+    the presets' names with `Config/Features.json` and the app list with `Config/Apps.json`
+    at the new tag.
 
   A pinned file that moves inside its upstream repository fails the checksum download.
   The nightly then keeps the old version with a warning annotation (Step 6), so **a

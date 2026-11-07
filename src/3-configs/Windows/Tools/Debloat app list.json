@@ -132,10 +132,6 @@
     "Description": "Language learning app"
   },
   {
-    "AppId": "EclipseManager",
-    "Description": "Often related to specific OEM software or utilities (e.g. for managing screen settings)"
-  },
-  {
     "AppId": "FACEBOOK.FACEBOOK",
     "Description": "Facebook social media app"
   },
@@ -266,10 +262,6 @@
   {
     "AppId": "Microsoft.NetworkSpeedTest",
     "Description": "Internet connection speed test utility"
-  },
-  {
-    "AppId": "Microsoft.News",
-    "Description": "News aggregator (Replaced Bing News, now part of Microsoft Start)"
   },
   {
     "AppId": "Microsoft.Office.OneNote",
