@@ -1,7 +1,7 @@
 [
     {
         "name":  "SystemRescue",
-        "version":  "13.02",
+        "version":  "13.03",
         "source":  "GitLab",
         "opensPullRequest":  false,
         "mode":  "tags",
@@ -10,7 +10,7 @@
     },
     {
         "name":  "TronScript",
-        "version":  "v12.0.6",
+        "version":  "v13.0.0",
         "source":  "GitHub",
         "opensPullRequest":  false,
         "mode":  "tags",
@@ -27,7 +27,7 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "27237f82e9a8498d9c5bab7d398dc34b7682a1e8",
+        "version":  "8fdf1b99af95977ea38f4922662964dc6324b0df",
         "source":  "GitHub",
         "opensPullRequest":  false,
         "mode":  "commits",
@@ -44,12 +44,12 @@
     },
     {
         "name":  "Win11Debloat",
-        "version":  "2026.08.24",
+        "version":  "2026.10.30",
         "source":  "GitHub",
         "opensPullRequest":  true,
         "mode":  "releases",
         "repository":  "Raphire/Win11Debloat",
-        "sha256":  "00d1487b2e9b9691653774cc781ed3844e4b2fd5b0d91c32f6f78aa8c7892bd4"
+        "sha256":  "6830bf501d2740c3317133ac0ecdc2a3ab80ed7f6c83e7f0f20dc66afbf758a7"
     },
     {
         "name":  "Ventoy",

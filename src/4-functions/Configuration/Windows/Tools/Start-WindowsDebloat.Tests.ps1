@@ -19,8 +19,8 @@ BeforeAll {
     Set-Variable -Option Constant TestZipPath ([String]'TEST_PATH_APP_DIR\Win11Debloat.zip')
     Set-Variable -Option Constant TestToolPath ([String]'TEST_PATH_TEMP_DIR\Win11Debloat')
     Set-Variable -Option Constant TestScriptPath ([String]"$TestToolPath\Win11Debloat.ps1")
-    Set-Variable -Option Constant TestConfigPath ([String]"$TestToolPath\Config")
-    Set-Variable -Option Constant TestSettingsPath ([String]"$TestConfigPath\LastUsedSettings.json")
+    Set-Variable -Option Constant TestUserDataPath ([String]"$env:LocalAppData\Win11Debloat")
+    Set-Variable -Option Constant TestSettingsPath ([String]"$TestUserDataPath\LastUsedSettings.json")
     Set-Variable -Option Constant TestPowerShell ([String]'TEST_PATH_SYSTEM_32\WindowsPowerShell\v1.0\powershell.exe')
     Set-Variable -Option Constant TestArguments ([String]"-NoProfile -ExecutionPolicy Bypass -File `"$TestScriptPath`" -SkipExplorerRestart")
     Set-Variable -Option Constant TestPresetParams ([String]'-RunSavedSettings')
@@ -60,7 +60,7 @@ Describe 'Start-WindowsDebloat' {
             $SaveAs -eq 'Win11Debloat.zip' -and
             $Sha256 -eq '{SHA256_WIN11DEBLOAT}' -and
             $Temp -eq $True -and
-            $NoBits -eq $True
+            -not $PesterBoundParameters.ContainsKey('NoBits')
         }
         Should -Invoke Expand-WindowsDebloat -Exactly 1
         Should -Invoke Expand-WindowsDebloat -Exactly 1 -ParameterFilter {
@@ -68,7 +68,7 @@ Describe 'Start-WindowsDebloat' {
             $ToolPath -eq $TestToolPath
         }
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestConfigPath }
+        Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestUserDataPath }
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and

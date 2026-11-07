@@ -7,7 +7,7 @@ BeforeAll {
 
     Set-Variable -Option Constant PATH_APP_DIR ([String]"$TestDrive\app")
 
-    # A release archive as GitHub builds it: everything inside one folder named after the tag
+    # A release archive as the project builds it: everything inside one folder named after the version
     function New-TestArchive {
         param(
             [Parameter(Position = 0, Mandatory)][String]$Name,
@@ -48,7 +48,7 @@ Describe 'Expand-WindowsDebloat' {
         Test-Path -LiteralPath "$PATH_APP_DIR\Win11Debloat" | Should -BeFalse
     }
 
-    It 'Should keep the backups and logs of earlier runs, and replace everything else' {
+    It 'Should keep the backups and logs of earlier versions, and replace everything else' {
         Set-Variable -Option Constant ZipPath ([String](New-TestArchive 'update' $TestToolFiles))
         Set-Variable -Option Constant ToolPath ([String]"$TestDrive\tool-update")
         foreach ($File in @('Backups\backup.json', 'Logs\Win11Debloat.log', 'Config\LastUsedSettings.json', 'Scripts\Removed.ps1', 'stale.txt')) {

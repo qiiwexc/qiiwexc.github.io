@@ -4,7 +4,7 @@
   "URL_BAT_FILE_UPDATE": "https://bit.ly/qiiwexc_bat_update",
   "URL_BAT_FILE_UNATTEND": "https://bit.ly/qiiwexc_bat_unattend",
   "URL_CHECKSUMS_FILE": "https://github.com/qiiwexc/qiiwexc.github.io/releases/latest/download/SHA256SUMS.txt",
-  "URL_WINDOWS_11": "http://ddgroupclub.win/viewtopic.php?t=132670",
+  "URL_WINDOWS_11": "https://ddgroupclub.win/viewtopic.php?t=139854",
   "URL_WINDOWS_10": "http://rutracker.ru/viewtopic.php?t=180409",
   "URL_WINDOWS_7": "https://pb.wtf/t/398282",
   "URL_RUFUS": "https://github.com/pbatard/rufus/releases/download/v{VERSION}/rufus-{VERSION}p.exe",
@@ -24,6 +24,6 @@
   "URL_OOSHUTUP10": "https://package.oo-software.com/winget/shutup10/{VERSION}/ooshutup10_{VERSION}_x64.exe",
   "URL_MICROSOFT_ACTIVATION_SCRIPTS": "https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/{VERSION}/MAS/All-In-One-Version-KL/MAS_AIO.cmd",
   "URL_WINUTIL": "https://github.com/ChrisTitusTech/winutil/releases/download/{VERSION}/winutil.ps1",
-  "URL_WIN11DEBLOAT": "https://github.com/Raphire/Win11Debloat/archive/refs/tags/{VERSION}.zip",
+  "URL_WIN11DEBLOAT": "https://github.com/Raphire/Win11Debloat/releases/download/{VERSION}/Win11Debloat.zip",
   "URL_STYLESHEET_WEB": "https://bit.ly/stylesheet_web"
 }

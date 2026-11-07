@@ -6,8 +6,10 @@ function Expand-WindowsDebloat {
 
     Write-ActivityProgress 65 "Extracting '$ZipPath'..."
 
-    # Win11Debloat keeps its logs and its registry backups, which its window restores changes from, in
-    # its own folder: they outlive its files, which are replaced with the checked archive every time
+    # MIGRATION: Win11Debloat 2026.08.24 and earlier kept their logs and registry backups in their own
+    # folder rather than in the user data folder, and its window can still restore a backup from there by
+    # browsing to it. So they outlive the tool's files, which are replaced with the checked archive every
+    # time. This can go once the user confirms those backups no longer need keeping
     Set-Variable -Option Constant KeptFolders ([String[]]@('Backups', 'Logs'))
 
     if (Test-Path -LiteralPath $ToolPath) {
@@ -23,7 +25,7 @@ function Expand-WindowsDebloat {
 
     Write-ActivityProgress 75
 
-    # A tag's source archive holds a single folder, named after the repository and the tag
+    # The release archive holds a single folder, named after the tool and its version
     Set-Variable -Option Constant Content ([IO.FileSystemInfo[]]@(Get-ChildItem -LiteralPath $StagingPath -Force -ErrorAction Stop))
     if ($Content.Count -ne 1 -or -not $Content[0].PSIsContainer) {
         throw "Unexpected content in '$ZipPath': expected a single folder"

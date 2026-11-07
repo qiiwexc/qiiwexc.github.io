@@ -22,15 +22,13 @@ function Start-WindowsDebloat {
         return
     }
 
-    # Where the project's own launcher puts it too, so the registry backups of earlier runs stay where
-    # the tool's window looks for them
+    # Where the project's own launcher unpacks it too, so the two never leave separate copies behind
     Set-Variable -Option Constant ToolPath ([String]"$($PATH_TEMP_DIR)Win11Debloat")
 
     try {
-        # The release pinned in dependencies.json, checked against its recorded checksum, rather than
-        # whatever the project's launcher fetches at the moment of the click. GitHub builds the archive
-        # on request and sends no length for it, which BITS needs
-        Set-Variable -Option Constant ZipPath ([String](Start-Download '{URL_WIN11DEBLOAT}' 'Win11Debloat.zip' -Sha256 '{SHA256_WIN11DEBLOAT}' -Temp -NoBits))
+        # The release archive pinned in dependencies.json, checked against its recorded checksum, rather
+        # than whatever the project's launcher fetches at the moment of the click
+        Set-Variable -Option Constant ZipPath ([String](Start-Download '{URL_WIN11DEBLOAT}' 'Win11Debloat.zip' -Sha256 '{SHA256_WIN11DEBLOAT}' -Temp))
         Set-Variable -Option Constant ScriptPath ([String](Expand-WindowsDebloat $ZipPath $ToolPath))
     } catch {
         Out-Failure "Failed to prepare Windows debloat utility: $_"
@@ -38,9 +36,12 @@ function Start-WindowsDebloat {
     }
 
     try {
-        Set-Variable -Option Constant ConfigPath ([String]"$ToolPath\Config")
+        # Win11Debloat keeps its last used settings, which -RunSavedSettings applies and its window offers
+        # as the "Last used" preset, in its user data folder rather than in its own. It runs with this
+        # process's environment, so it reads them from the same folder
+        Set-Variable -Option Constant UserDataPath ([String]"$env:LocalAppData\Win11Debloat")
 
-        New-Directory $ConfigPath
+        New-Directory $UserDataPath
 
         if ($UsePreset -and $Personalization) {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_PERSONALIZATION)
@@ -48,7 +49,7 @@ function Start-WindowsDebloat {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
         }
 
-        Set-Content "$ConfigPath\LastUsedSettings.json" $Configuration -NoNewline -ErrorAction Stop
+        Set-Content "$UserDataPath\LastUsedSettings.json" $Configuration -NoNewline -ErrorAction Stop
     } catch {
         Write-LogWarning "Failed to initialize Windows debloat utility configuration: $_"
     }
