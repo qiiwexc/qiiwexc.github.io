@@ -35,12 +35,12 @@
     },
     {
         "name":  "WinUtil",
-        "version":  "26.10.07",
+        "version":  "26.10.28",
         "source":  "GitHub",
         "opensPullRequest":  true,
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil",
-        "sha256":  "eeae69922fbe6354ea4e2a37f705eaa17bdaf45cc7889618a313178a513b13ee"
+        "sha256":  "d0444cb266953d927e5cee71455f4f1a6da2d5b3cfd7e440dceb4e6b1cbf4f7f"
     },
     {
         "name":  "Win11Debloat",
@@ -96,12 +96,12 @@
     },
     {
         "name":  "CPU-Z",
-        "version":  "3.01",
+        "version":  "3.02",
         "source":  "URL",
         "opensPullRequest":  true,
         "url":  "https://cpuid.com/softwares/cpu-z.html",
         "regex":  "\u003cdiv class=\"version\"[^\u003e]*\u003e\u003cspan[^\u003e]*\u003eCPU-Z (.*?)\u003c/span\u003e\u003c/div\u003e",
-        "sha256":  "8ae3b45d43d97e6ce19535c045cd1e5394c7a3a5334dc01f63edd760ace40827"
+        "sha256":  "faf62f6e883056a40f291bf9f3f348f51a2ab339d0a512f4724fdae964f35d8b"
     },
     {
         "name":  "Office Installer",
