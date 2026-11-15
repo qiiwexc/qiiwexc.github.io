@@ -109,6 +109,11 @@ matching task.** Each of these is the authority on its procedure; this file does
 | [`repository-review`](.claude/skills/repository-review/SKILL.md)               | reviewing the repository, or one of its areas, end to end                         |
 | [`dependency-update-triage`](.claude/skills/dependency-update-triage/SKILL.md) | triaging the nightly dependency update PR or a Dependabot PR, or judging a bump   |
 | [`memory-consolidation`](.claude/skills/memory-consolidation/SKILL.md)         | auditing the agent memory directory (Claude Code only; no other platform has one) |
+| [`agent-review`](.claude/skills/agent-review/SKILL.md)                         | reviewing the agent setup and past sessions for drift, repeated errors and cost   |
+
+A script a skill needs lives in the skill's directory, under `scripts/`, as one self-contained
+file with its tests beside it. The test run and the linter cover `.claude/skills/` as they do
+`tools/`.
 
 ## Build Architecture
 
@@ -172,10 +177,10 @@ Each tab is data: `src/2-ui/<Tab>.ps1` defines a `TAB_<NAME>` hashtable of cards
 - Some `src/0-init` scripts run as soon as they are loaded (`2 Start elevated.ps1` relaunches
   PowerShell elevated), so their tests pull the functions out through the parser instead of
   dot-sourcing the script
-- Pester runs `tools/`, `src/0-init`, `src/1-components`, `src/2-ui`, `src/3-configs` and
-  `src/4-functions`; `src/3-configs/Configs.Tests.ps1` checks every JSON and `.reg` config, and
-  that each `$CONFIG_*` the code uses is embedded. Coverage is measured on `tools/common`,
-  `tools/build`, `src/1-components` and `src/4-functions`
+- Pester runs `tools/`, `.claude/skills/`, `src/0-init`, `src/1-components`, `src/2-ui`,
+  `src/3-configs` and `src/4-functions`; `src/3-configs/Configs.Tests.ps1` checks every JSON and
+  `.reg` config, and that each `$CONFIG_*` the code uses is embedded. Coverage is measured on
+  `tools/common`, `tools/build`, `src/1-components` and `src/4-functions`
 - Tag tests `WIP` to run them in isolation via `.\test-wip.bat`. Tests tagged `Visual` (the
   rendering comparison in `tools/ui`) run only with `-Visual`, via `.\test-visual.bat`, never in
   CI
@@ -192,7 +197,7 @@ Each tab is data: `src/2-ui/<Tab>.ps1` defines a `TAB_<NAME>` hashtable of cards
 
 ## Linting
 
-PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1` and on every script under `tools/` (tests included), with the settings in `PSScriptAnalyzerSettings.psd1`. Any finding fails the build, after all of them are printed; `src/` is covered through the bundle, so its findings point at lines of `build/qiiwexc.ps1`. `tools/build/Invoke-Linter.ps1` runs the analyzer one rule per call: within one call the rules run in parallel, and on Windows PowerShell 5.1 the ones that look commands up race each other and fail with an error of the analyzer's own (`The term 'Get-Command' is not recognized`, or a null reference) that stays cached for the rest of the process, so no retry in that process can pass. Keep it one rule per call until a PSScriptAnalyzer release serialises those lookups. It also fails on a rule name in the settings that the analyzer does not have, which the analyzer itself would silently ignore. Notable rules: single quotes for constant strings, aligned assignment statements (hashtables included), `-not` instead of `!`, no semicolons as line terminators, opening braces on the same line, 4-space indentation, correct casing, and cmdlets and syntax that Windows PowerShell 5.1 supports.
+PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1` and on every script under `tools/` and `.claude/skills/` (tests included), with the settings in `PSScriptAnalyzerSettings.psd1`. Any finding fails the build, after all of them are printed; `src/` is covered through the bundle, so its findings point at lines of `build/qiiwexc.ps1`. `tools/build/Invoke-Linter.ps1` runs the analyzer one rule per call: within one call the rules run in parallel, and on Windows PowerShell 5.1 the ones that look commands up race each other and fail with an error of the analyzer's own (`The term 'Get-Command' is not recognized`, or a null reference) that stays cached for the rest of the process, so no retry in that process can pass. Keep it one rule per call until a PSScriptAnalyzer release serialises those lookups. It also fails on a rule name in the settings that the analyzer does not have, which the analyzer itself would silently ignore. Notable rules: single quotes for constant strings, aligned assignment statements (hashtables included), `-not` instead of `!`, no semicolons as line terminators, opening braces on the same line, 4-space indentation, correct casing, and cmdlets and syntax that Windows PowerShell 5.1 supports.
 
 ## CI/CD Workflows
 
@@ -207,8 +212,8 @@ The workflows in `.github/workflows/` share composite actions from `.github/acti
 
 - **After making code changes, run the tests before handing work off** - the single test files
   that cover the change while iterating, then `.\test.bat` - and `.\build-ci.bat` whenever the
-  change reaches the bundle, the page, the answer files or `tools/`. The task is complete only
-  when both pass. A dependency or CI change is always the full run.
+  change reaches the bundle, the page, the answer files, `tools/` or a skill's script. The task
+  is complete only when both pass. A dependency or CI change is always the full run.
 - After making changes, update any documentation they affect (this `AGENTS.md`, the platform
   entry files, the skills, and inline comments) so the docs stay in sync with the code.
 - **Documentation describes the repository as it is now, never as it was.** Do not write - and

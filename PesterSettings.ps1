@@ -19,6 +19,7 @@ param(
         RepoRoot = $PSScriptRoot
         Path     = @(
             "$PSScriptRoot\tools",
+            "$PSScriptRoot\.claude\skills",
             "$PSScriptRoot\src\0-init",
             "$PSScriptRoot\src\1-components",
             "$PSScriptRoot\src\2-ui",

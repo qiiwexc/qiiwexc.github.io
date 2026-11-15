@@ -50,6 +50,7 @@ Set-Variable -Option Constant SourcePath ([String]"$ProjectRoot\src")
 Set-Variable -Option Constant ResourcesPath ([String]"$ProjectRoot\resources")
 Set-Variable -Option Constant TemplatesPath ([String]"$ProjectRoot\templates")
 Set-Variable -Option Constant ToolsPath ([String]"$ProjectRoot\tools")
+Set-Variable -Option Constant SkillsPath ([String]"$ProjectRoot\.claude\skills")
 Set-Variable -Option Constant VmPath ([String]"$ProjectRoot\vm")
 Set-Variable -Option Constant WipPath ([String]"$ProjectRoot\wip")
 
@@ -156,9 +157,10 @@ if ($Lint) {
         throw "PSScriptAnalyzer $AnalyzerVersion is not installed, run install-dependencies.bat: $_"
     }
 
-    # The bundle, as that is what ships, and the build tooling, whose files stand alone and are linted in place
+    # The bundle, as that is what ships, and the build tooling and the skills' scripts, whose files stand alone
+    # and are linted in place
     . "$BuilderPath\Invoke-Linter.ps1"
-    Set-Variable -Option Constant Findings ([PSObject[]]@(Invoke-Linter @($Ps1File, $ToolsPath) "$ProjectRoot\PSScriptAnalyzerSettings.psd1"))
+    Set-Variable -Option Constant Findings ([PSObject[]]@(Invoke-Linter @($Ps1File, $ToolsPath, $SkillsPath) "$ProjectRoot\PSScriptAnalyzerSettings.psd1"))
 
     if ($Findings.Count -gt 0) {
         $Findings | Format-Table -AutoSize -Wrap ScriptName, Line, RuleName, Message | Out-String -Width 200 | Write-Host
