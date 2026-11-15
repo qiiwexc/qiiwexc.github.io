@@ -106,6 +106,7 @@ matching task.** Each of these is the authority on its procedure; this file does
 
 | procedure                                                                      | read it before                                                                    |
 | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| [`commit`](.claude/skills/commit/SKILL.md)                                     | asking whether to commit a finished change, and committing it in thematic commits |
 | [`repository-review`](.claude/skills/repository-review/SKILL.md)               | reviewing the repository, or one of its areas, end to end                         |
 | [`dependency-update-triage`](.claude/skills/dependency-update-triage/SKILL.md) | triaging the nightly dependency update PR or a Dependabot PR, or judging a bump   |
 | [`memory-consolidation`](.claude/skills/memory-consolidation/SKILL.md)         | auditing the agent memory directory (Claude Code only; no other platform has one) |
@@ -214,6 +215,9 @@ The workflows in `.github/workflows/` share composite actions from `.github/acti
   that cover the change while iterating, then `.\test.bat` - and `.\build-ci.bat` whenever the
   change reaches the bundle, the page, the answer files, `tools/` or a skill's script. The task
   is complete only when both pass. A dependency or CI change is always the full run.
+- **Then ask the user whether to commit**, and commit only on a yes, through the
+  [`commit`](.claude/skills/commit/SKILL.md) skill: thematic Conventional Commits, a file split
+  between commits where its changes belong to more than one.
 - After making changes, update any documentation they affect (this `AGENTS.md`, the platform
   entry files, the skills, and inline comments) so the docs stay in sync with the code.
 - **Documentation describes the repository as it is now, never as it was.** Do not write - and

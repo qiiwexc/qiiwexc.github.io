@@ -192,8 +192,8 @@ What the user wants kept for later stays in the report in `wip/`.
 
 After the changes, the gate in the Workflow Notes of `AGENTS.md`: `.\test.bat`, and
 `.\build-ci.bat` when a change reached `tools/` or a skill's script. Nothing tests the
-Markdown of the agent files, so after a change to them run `<stats> paths` again. Leave the
-changes uncommitted for the user.
+Markdown of the agent files, so after a change to them run `<stats> paths` again. Then the
+[`commit`](../commit/SKILL.md) question.
 
 ## What not to do
 
