@@ -163,11 +163,18 @@ trustworthy (Step 5). Say which, and why.
 
 **Needs a change first** - it works, but something here is now wrong: a deprecated
 parameter still passed, a setting ID the preset still uses, an embedded config exported by
-an older version. Name the file. On the nightly PR that change goes to master as its own
-commit, never onto `chore/update-dependencies`, which the next run force-pushes away. That
-run rebuilds the PR on top of the fix, and starting the workflow by hand does the same at
-once. Updating the branch from the PR page does not: `ci.yml` skips the nightly PR, so the
-new head is left unchecked.
+an older version. Name the file. On the nightly PR that change goes to master by default,
+as its own commit. The next run rebuilds the PR on top of the fix, and starting the
+workflow by hand does the same at once. Updating the branch from the PR page does not:
+`ci.yml` skips the nightly PR, so the new head is left unchecked.
+
+The fix goes onto `chore/update-dependencies` instead only when the user asks for that, so
+that the bump and the change it needs are merged together. Then the PR has to be merged
+before the next nightly run (03:00 UTC), which starts again from master and force-pushes
+the fix away. With the fix on it, the PR changes more than `dependencies.json`, so `ci.yml`
+checks the new head as it does any pull request, and its `test` and `build` are the checks
+to read: the nightly's statuses belong to the head before the fix. The push is the user's
+to approve, as any push is.
 
 **Worth adopting** - the release brought something this repository has an actual use
 for. Two rules keep this honest:
@@ -279,7 +286,7 @@ Invoke-RestMethod "$Api/check-runs/<id>/annotations" -Headers $H | Select-Object
 
 On the nightly PR, the statuses are the nightly workflow's `test` and `build`, and the only
 check runs are CodeQL's, as `ci.yml` skips a pull request that changes nothing but
-`dependencies.json`. On a Dependabot PR, the check runs are `ci.yml` (`deploy` and
+`dependencies.json` (a fix pushed onto it, Step 4, brings `ci.yml`'s check runs back). On a Dependabot PR, the check runs are `ci.yml` (`deploy` and
 `release` are skipped there, as they run for tags only), CodeQL and zizmor. A combined
 state of `pending` with an empty `statuses` list means nothing reported, not that something
 is still running. On the nightly PR it is either a run still under way (each job reports as
@@ -396,8 +403,9 @@ release.
   the upstream's. That is what the URL and signature checks are for.
 - **Recommending an adoption from a changelog sentence.** Read the script or the switch
   first, or say in the report that you did not.
-- **Fixing things on `chore/update-dependencies`.** The next nightly run force-pushes over
-  it. Fixes go to master.
+- **Fixing things on `chore/update-dependencies` unasked, or leaving them there
+  overnight.** The next nightly run force-pushes over the branch. Fixes go to master unless
+  the user asks for the branch, and then the PR is merged before that run.
 - **Judging a force-pushed PR by a stale head.** Check `head.sha` again before the
   verdict.
 - **Missing a pin the action bump left behind.** An old SHA still under `.github/` is a
