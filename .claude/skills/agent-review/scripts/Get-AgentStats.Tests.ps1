@@ -265,7 +265,9 @@ Describe 'Show-Context' {
         New-TestFile (Join-Path $Root 'AGENTS.md') ('a' * 400)
         New-TestFile (Join-Path (Join-Path $Root '.github') 'copilot-instructions.md') ('g' * 20)
         New-TestFile (Join-Path (Join-Path $Root 'sub') 'CLAUDE.md') ('n' * 8)
+        New-TestFile (Join-Path (Join-Path $Root 'docs') 'area.md') ('x' * 16)
         New-TestFile (Join-Path (Join-Path (Join-Path (Join-Path $Root '.claude') 'skills') 'one') 'SKILL.md') ("---`nname: one`ndescription: " + ('d' * 80) + "`n---`n")
+        New-TestFile (Join-Path (Join-Path (Join-Path (Join-Path (Join-Path $Root '.claude') 'skills') 'one') 'references') 'example.md') ('r' * 24)
         New-TestFile (Join-Path (Join-Path $Project 'memory') 'MEMORY.md') ("- [One](one.md) - hook`n- [Two](two.md) - " + ('h' * 202) + "`n")
         New-TestFile (Join-Path (Join-Path $Project 'memory') 'one.md') ('m' * 12)
         New-TestFile (Join-Path $User 'CLAUDE.md') ('u' * 40)
@@ -293,6 +295,15 @@ Describe 'Show-Context' {
         $Lines | Should -Contain '2 tok 8 ch sub/CLAUDE.md'
         $Lines | Should -Contain '3 tok 12 ch memory/one.md'
         @($Lines -match '^\d+ tok \d+ ch \.claude/skills/one/SKILL\.md$').Count | Should -BeExactly 1
+    }
+
+    It 'Should list the docs and the skills'' files as read on demand' {
+        Set-Variable -Option Constant Lines ([String[]](Get-TestLines (Show-Context -RepositoryRoot $Root -ProjectDirectory $Project -UserDirectory $User)))
+        Set-Variable -Option Constant OnDemand ([Int]([Array]::IndexOf($Lines, 'Read on demand (the docs, the skills'' files, then the memories):')))
+
+        $OnDemand | Should -BeGreaterThan 0
+        $Lines[$OnDemand + 1] | Should -BeExactly '4 tok 16 ch docs/area.md'
+        $Lines | Should -Contain '6 tok 24 ch .claude/skills/one/references/example.md'
     }
 
     It 'Should leave out an instruction file that git ignores' {
@@ -380,11 +391,13 @@ Describe 'Show-Paths' {
         Set-Variable -Option Constant Root ([String](Join-Path $TestDrive 'show-paths'))
         New-TestFile (Join-Path $Root 'CLAUDE.md') "@AGENTS.md`n"
         New-TestFile (Join-Path $Root 'AGENTS.md') "# Rules`n`nRun ``.\test.bat`` and read [the page](docs/page.md).`n"
+        New-TestFile (Join-Path (Join-Path $Root 'docs') 'area.md') "See [the rules](../AGENTS.md) and [a page](gone.md).`n"
         New-TestFile (Join-Path $Root 'test.bat')
 
         Show-Paths $Root | Should -BeExactly @(
-            'Paths named in 2 agent files: 2 checked, 1 not found',
-            '  AGENTS.md:3  docs/page.md'
+            'Paths named in 3 agent files: 4 checked, 2 not found',
+            '  AGENTS.md:3  docs/page.md',
+            '  docs/area.md:1  gone.md'
         )
     }
 }

@@ -2,7 +2,8 @@
 
 # Numbers for the agent-review skill: what every session loads, and what past sessions did.
 #
-#     Get-AgentStats.ps1 context           the always-loaded files and the skills' descriptions, by size
+#     Get-AgentStats.ps1 context           the always-loaded files and the skills' descriptions, by size, then
+#                                          what is read on demand: the docs, the skills' files and the memories
 #     Get-AgentStats.ps1 paths             the paths the agent files name that do not exist
 #     Get-AgentStats.ps1 sessions [<n>]    the newest <n> sessions (default 15): tokens, tool calls, errors,
 #                                          corrections, the largest tool results
@@ -298,8 +299,22 @@ function Get-Skills {
         Sort-Object -Property @{ Expression = 'Description'; Descending = $True }, Name
 }
 
-# What every platform's sessions are told to read: the instruction files, the other platforms' entry files and
-# every Markdown file of the skills
+# What the agent files send a session to read when its task needs it: every Markdown file of the docs, then of
+# the skills
+function Get-OnDemandFiles {
+    param(
+        [Parameter(Position = 0, Mandatory)][String]$RepositoryRoot
+    )
+
+    foreach ($Directory in @((Join-Path $RepositoryRoot 'docs'), (Join-Path (Join-Path $RepositoryRoot '.claude') 'skills'))) {
+        if (Test-Path -LiteralPath $Directory) {
+            Get-ChildItem -LiteralPath $Directory -Recurse -File -Filter '*.md' | ForEach-Object { $_.FullName }
+        }
+    }
+}
+
+# What every platform's sessions are told to read: the instruction files, the other platforms' entry files, the
+# docs and every Markdown file of the skills
 function Get-AgentFiles {
     param(
         [Parameter(Position = 0, Mandatory)][String]$RepositoryRoot
@@ -314,10 +329,7 @@ function Get-AgentFiles {
         }
     }
 
-    Set-Variable -Option Constant SkillsPath ([String](Join-Path (Join-Path $RepositoryRoot '.claude') 'skills'))
-    if (Test-Path -LiteralPath $SkillsPath) {
-        Get-ChildItem -LiteralPath $SkillsPath -Recurse -File -Filter '*.md' | ForEach-Object { $Files.Add($_.FullName) }
-    }
+    Get-OnDemandFiles $RepositoryRoot | ForEach-Object { $Files.Add($_) }
 
     return $Files
 }
@@ -411,11 +423,9 @@ function Show-Context {
     }
 
     ''
-    'Read on demand (the skills'' files, then the memories):'
-    if (Test-Path -LiteralPath $SkillsPath) {
-        foreach ($Item in (Get-ChildItem -LiteralPath $SkillsPath -Recurse -File -Filter '*.md')) {
-            Format-SizeRow (Get-FileLength $Item.FullName) (Get-RelativePath $Root $Item.FullName)
-        }
+    'Read on demand (the docs, the skills'' files, then the memories):'
+    foreach ($File in @(Get-OnDemandFiles $Root)) {
+        Format-SizeRow (Get-FileLength $File) (Get-RelativePath $Root $File)
     }
     if (Test-Path -LiteralPath $MemoryPath) {
         foreach ($Item in (Get-ChildItem -LiteralPath $MemoryPath -File -Filter '*.md' | Where-Object { $_.Name -ne 'MEMORY.md' })) {

@@ -52,8 +52,8 @@ What every session loads, and what is read on demand:
 ```
 
 `context` lists the files; read every one - `CLAUDE.md` and the `AGENTS.md` it imports,
-`.github/copilot-instructions.md`, every `SKILL.md` - and check each claim that can be
-checked:
+`.github/copilot-instructions.md`, every doc under `docs/`, every `SKILL.md` and what it keeps
+beside it - and check each claim that can be checked:
 
 - **Paths.** `paths` reports every path the agent files name that does not exist: the target
   of a Markdown link, and a code span that starts with `.\` or with one of the repository's
@@ -67,10 +67,10 @@ checked:
 - **Rules still match the code.** A rule saying "`Tabs.Tests.ps1` fails on X" is worth a
   look at the test; "the linter runs on Y" is worth a look at `tools\build.ps1`; "the only
   place that does Z" is worth a search for a second one.
-- **Contradictions** between `AGENTS.md`, `CLAUDE.md`, the Copilot entry file and a skill.
-  The more specific file is not automatically right.
-- **Duplication.** A rule stated in `AGENTS.md`, in a skill and in a code comment is three
-  copies to keep in step. It belongs in one, with pointers. The entry files only point to
+- **Contradictions** between `AGENTS.md`, `CLAUDE.md`, the Copilot entry file, a doc and a
+  skill. The more specific file is not automatically right.
+- **Duplication.** A rule stated in `AGENTS.md`, in a doc, in a skill and in a code comment is
+  four copies to keep in step. It belongs in one, with pointers. The entry files only point to
   `AGENTS.md`; a rule repeated in one of them is a finding.
 - **History.** `AGENTS.md` forbids lines about a past state ("used to", "renamed from").
   Find them. A `MIGRATION:` comment is the one exception, and each should have a memory
@@ -79,6 +79,9 @@ checked:
   another's; each body is the authority on its procedure and agrees with the code. The
   Skills table in `AGENTS.md` lists every directory under `.claude/skills/`, and nothing
   else: other platforms find the skills only through it.
+- **Docs.** The Docs table in `AGENTS.md` lists every file under `docs/`, and nothing else,
+  each with the changes it is to be read before: no platform loads a doc on its own. A doc
+  that a session changing its area did not read, as the transcripts show, is a row to sharpen.
 
 ## Step 2 - the sessions
 
@@ -151,10 +154,10 @@ From the same numbers:
 
 - **The fixed cost.** Everything `context` lists as loaded at the start of every session is
   paid on every turn of every session (cached, but it still fills the window). Rank it.
-  Candidates to cut: detail that only one kind of task needs (move it to a skill or a file
-  that `AGENTS.md` points at, read on demand), repetition, long examples, history, prose
-  that restates what the code says, and `MEMORY.md` index lines that are paragraphs rather
-  than one-line hooks.
+  Candidates to cut: detail that only one kind of change needs (move it to a doc under
+  `docs/`, or to the skill of the procedure that needs it), repetition, long examples (a
+  skill keeps one under `references/`, read on demand), history, prose that restates what the
+  code says, and `MEMORY.md` index lines that are paragraphs rather than one-line hooks.
 - **What lies outside the repository.** `context` also lists the user's own
   `~/.claude/CLAUDE.md` and the skills under `~/.claude/skills`, which every session on the
   machine is shown as well. Report what they cost. They are the user's to change, not the
@@ -186,6 +189,7 @@ belongs. Step 4 of `memory-consolidation` draws the line and applies here unchan
 | what was found                                              | where it goes                             |
 | ----------------------------------------------------------- | ----------------------------------------- |
 | a rule about the code, the build, the tests, CI or workflow | `AGENTS.md`                               |
+| detail only changes to one area need                        | that area's doc under `docs/`             |
 | something true only while doing one procedure               | that skill's `SKILL.md`                   |
 | a constraint that only makes sense next to the code         | a comment in that code                    |
 | a quirk of this machine, the harness or the sandbox         | a memory, never an always-loaded file     |
@@ -207,6 +211,7 @@ Markdown of the agent files, so after a change to them run `<stats> paths` again
   transcript can also hold a secret a session printed, such as the token in `.env`: report
   that it is there, never its value, in `wip/` as much as anywhere.
 - **Do not move a rule out of the always-loaded files into a file nobody is told to read.**
-  A pointer in `AGENTS.md`, with the moment to read it, goes with every move.
+  A pointer in `AGENTS.md`, with the moment to read it, goes with every move: a row in the
+  Docs table for a doc.
 - **Do not promote a machine or harness quirk into `AGENTS.md`.** Every session on every
   platform would pay for it in full, where a memory costs one index line.
