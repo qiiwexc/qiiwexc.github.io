@@ -1,6 +1,6 @@
 ---
 name: dependency-update-triage
-description: Work out what a dependency update pull request actually changes and whether it can be merged - read the PR, its release notes and its CI through the GitHub API, find the breaking changes, deprecations and upstream changes hiding in every version it crosses, check that each new download is still the upstream project's own file, name what this repository now has to change or could adopt, run the full gate, and write a merge/hold verdict. Use for the nightly "Update dependencies" pull request, any Dependabot GitHub Actions PR, and whenever asked whether an update is safe, what a bump changes, why a dependency PR is failing, or whether a new release of a tool the app runs brings anything worth adopting. Not for adding or removing a dependency by hand.
+description: Work out what a dependency update pull request actually changes and whether it can be merged - read the PR, its release notes and its CI through the GitHub API, find the breaking changes, deprecations and upstream changes hiding in every version it crosses, check that each new download is still the upstream project's own file, name what this repository now has to change or could adopt, run the full gate, and write a merge/hold verdict. Use for the nightly "update dependencies" pull request, any Dependabot GitHub Actions PR, and whenever asked whether an update is safe, what a bump changes, why a dependency PR is failing, or whether a new release of a tool the app runs brings anything worth adopting. Not for adding or removing a dependency by hand.
 ---
 
 # Triaging a dependency update PR
@@ -32,7 +32,7 @@ dependency that opens the PR is applied only 7 days after the nightly first saw 
 column is the newest version out of that quarantine, not necessarily the upstream's latest,
 and its links and notes go only as far as that version. There is one
 standing PR from `chore/update-dependencies`, titled
-`Update dependencies (yyyy.MM.dd)`. Each night's run starts from master and force-pushes
+`chore(deps): update dependencies (yyyy.MM.dd)`. Each night's run starts from master and force-pushes
 over it. The PR changes `resources/dependencies.json` and nothing else, and that is how
 `ci.yml` knows to skip it: the nightly workflow's own `test` and `build` jobs check it and
 report back as commit statuses.
@@ -42,7 +42,7 @@ the root, for the workflows, and every composite action under `.github/actions/`
 bump moves every pin of an action at once. Patch and minor bumps of all the actions arrive
 together in one PR, `github-actions-patch-updates`. A major arrives on its own, one PR per
 action across every directory (`github-actions-major-updates`, grouped by dependency name).
-Both wait out a 7-day cooldown.
+Both wait out a 7-day cooldown, and title themselves `chore(deps): Bump ...`.
 
 Because the nightly PR is force-pushed, **write down `head.sha` when you start and check
 it again before the verdict**. A triage of last night's head is a triage of a different

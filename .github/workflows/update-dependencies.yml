@@ -128,7 +128,8 @@ jobs:
           # so a single open pull request always shows every pending update instead of one per day
           $now = Get-Date
           $branch = 'chore/update-dependencies'
-          $title = "Update dependencies ($($now.ToString('yyyy.MM.dd')))"
+          # A Conventional Commit, as the rest of the history is: a squash merge makes it the commit's summary
+          $title = "chore(deps): update dependencies ($($now.ToString('yyyy.MM.dd')))"
           # Written by tools\Invoke-DependencyUpdate.ps1: the version table, the changelog links and the release notes
           $bodyFile = 'build/dependency-update.md'
 

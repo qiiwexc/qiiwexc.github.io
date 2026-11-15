@@ -10,6 +10,9 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 7
+    # Titles its pull requests as Conventional Commits, as the rest of the history is: "chore(deps): Bump ..."
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       github-actions-patch-updates:
         update-types:
