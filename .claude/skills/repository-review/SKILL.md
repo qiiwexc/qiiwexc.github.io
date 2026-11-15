@@ -35,7 +35,8 @@ rest - not a different standard of evidence, just more of the budget.
 ## Step 2 - read the standard before judging against it
 
 Read `AGENTS.md` in full first - `.github/copilot-instructions.md` only points
-to it. It is what the code is measured against, and it is itself under review: a
+to it, and `CLAUDE.md` imports it and adds Claude Code's branch rule. It is what
+the code is measured against, and it is itself under review: a
 rule nothing follows is either a finding about the code or a finding about the
 rule.
 
@@ -116,11 +117,14 @@ ceiling.
   users download and execute, plus what the deploy action copies next to them.
   `public/Office_Installer.zip` is a binary: say what it would take to verify
   it rather than guessing at its contents.
-- **Documentation** - `AGENTS.md`, `.github/copilot-instructions.md`, and the
-  comments in the source. There is no `README.md`; whether there should be is
-  itself a question for the report.
-- **Agent instructions** - the same two files read as instructions rather than
-  as prose, plus `.claude/` (skills, settings, hooks).
+- **Documentation** - `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`,
+  and the comments in the source. There is no `README.md`; whether there should be
+  is itself a question for the report.
+- **Agent instructions** - the same three files read as instructions rather than
+  as prose, plus the skills under `.claude/skills/`, each a `SKILL.md` and the
+  scripts beside it, which the test run and the linter cover as they do `tools/`
+  (and any settings or hooks committed under `.claude/`). The `agent-review`
+  skill goes deeper on these; here they are one area among the rest.
 - **External dependencies** - the third-party tools the app downloads and runs
   (`resources/dependencies.json`, `resources/urls.json`), the Pester and
   PSScriptAnalyzer versions, and the pinned GitHub Actions: what is pinned,
@@ -145,9 +149,10 @@ Also a floor, not a ceiling:
   of the product - report on how it is fetched and run, not on whether it
   should exist.
 - **Architecture** - module boundaries, the tab definitions and their renderer
-  (`New-Tab`, the `$CHECKBOXES` lookup), the concatenation-by-filename bundle, whether the split between
-  `src/` and `tools/` (and the near-duplicates between them, such as the two
-  `Logger`/`Progressbar` implementations) still earns its keep.
+  (`New-Tab`, the `$CHECKBOXES` lookup), the concatenation-by-filename bundle, whether
+  the split between `src/` and `tools/` still earns its keep, and how the two share
+  code: `tools/common` dot-sources the app's own logger and progress bar with no-op
+  stand-ins for the window, rather than keeping copies.
 - **Reliability** - failure modes on a real user's machine: no network, slow
   network, antivirus quarantining a download, non-English Windows, non-admin
   accounts, older Windows 10 builds, partial failure midway through a
