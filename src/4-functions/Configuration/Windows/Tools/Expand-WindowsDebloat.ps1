@@ -6,16 +6,10 @@ function Expand-WindowsDebloat {
 
     Write-ActivityProgress 65 "Extracting '$ZipPath'..."
 
-    # MIGRATION: Win11Debloat 2026.08.24 and earlier kept their logs and registry backups in their own
-    # folder rather than in the user data folder, and its window can still restore a backup from there by
-    # browsing to it. So they outlive the tool's files, which are replaced with the checked archive every
-    # time. This can go once the user confirms those backups no longer need keeping
-    Set-Variable -Option Constant KeptFolders ([String[]]@('Backups', 'Logs'))
-
+    # The tool's files are replaced with the checked archive every time, so that nothing an earlier version
+    # left in its folder can run
     if (Test-Path -LiteralPath $ToolPath) {
-        Get-ChildItem -LiteralPath $ToolPath -Force -ErrorAction Stop |
-            Where-Object { $_.Name -notin $KeptFolders } |
-            Remove-Item -Recurse -Force -ErrorAction Stop
+        Get-ChildItem -LiteralPath $ToolPath -Force -ErrorAction Stop | Remove-Item -Recurse -Force -ErrorAction Stop
     }
 
     Set-Variable -Option Constant StagingPath ([String]"$PATH_APP_DIR\Win11Debloat")

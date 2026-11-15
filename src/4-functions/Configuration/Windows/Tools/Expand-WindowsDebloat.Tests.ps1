@@ -48,7 +48,7 @@ Describe 'Expand-WindowsDebloat' {
         Test-Path -LiteralPath "$PATH_APP_DIR\Win11Debloat" | Should -BeFalse
     }
 
-    It 'Should keep the backups and logs of earlier versions, and replace everything else' {
+    It 'Should replace everything an earlier version left in the tool folder' {
         Set-Variable -Option Constant ZipPath ([String](New-TestArchive 'update' $TestToolFiles))
         Set-Variable -Option Constant ToolPath ([String]"$TestDrive\tool-update")
         foreach ($File in @('Backups\backup.json', 'Logs\Win11Debloat.log', 'Config\LastUsedSettings.json', 'Scripts\Removed.ps1', 'stale.txt')) {
@@ -57,8 +57,8 @@ Describe 'Expand-WindowsDebloat' {
 
         Expand-WindowsDebloat $ZipPath $ToolPath
 
-        Test-Path -LiteralPath "$ToolPath\Backups\backup.json" | Should -BeTrue
-        Test-Path -LiteralPath "$ToolPath\Logs\Win11Debloat.log" | Should -BeTrue
+        Test-Path -LiteralPath "$ToolPath\Backups" | Should -BeFalse
+        Test-Path -LiteralPath "$ToolPath\Logs" | Should -BeFalse
         Test-Path -LiteralPath "$ToolPath\Config\LastUsedSettings.json" | Should -BeFalse
         Test-Path -LiteralPath "$ToolPath\Scripts\Removed.ps1" | Should -BeFalse
         Test-Path -LiteralPath "$ToolPath\stale.txt" | Should -BeFalse
