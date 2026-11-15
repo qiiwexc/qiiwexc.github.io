@@ -52,43 +52,10 @@ failures as environmental, not regressions.
   Without `-CI` it also runs the tests and the dependency update (`build.bat`,
   `build-and-run.bat`); `-Full -CI` skips both, because CI runs the tests in their own job and
   the update nightly.
-- The dependency update rewrites `resources/dependencies.json`. Without `-CI` it opens each
-  changelog URL in the browser; with `-CI` it writes them to `$env:CHANGELOG_URLS`, from which
-  `tools\Invoke-DependencyUpdate.ps1` writes the nightly pull request's description to
-  `build/dependency-update.md`: a table of the versions that moved, the changelog links grouped
-  as other sites, GitHub commit comparisons and GitHub releases and tags, and the release notes
-  of every release or tag crossed. The notes are third-party text, so `Format-ReleaseNotes`
-  defuses mentions and issue references before quoting them, and the workflow hands the file to
-  `gh` as `--body-file`.
-- Every entry in `dependencies.json` sets `opensPullRequest`, and the nightly opens its pull
-  request only when a dependency set to `true` moved; other bumps ride along in it. It is `true`
-  where a new version can need a change here: a `{VERSION}` download with its `sha256`, a CI
-  tool, the Windows links in `urls.json`, and O&O ShutUp10, whose exported configs the app embeds.
-  It is `false` for the `File` dependencies, which only a local run with their files in `wip/`
-  updates, for what the app only links to or fetches unversioned (SystemRescue, TronScript,
-  SDI), and for the Unattend Generator, which `templates/autounattend.xml` is regenerated from
-  by hand. `Compare-Dependencies` fails on a dependency that moved without a boolean there, and
-  a test checks every entry.
-- A dependency set to `true` also waits out a 7-day quarantine: a new version is applied only 7
-  days after the update first saw it (`Get-QuarantineEnd`), and until then the recorded version
-  stays. `build/dependency-quarantine.json` keeps, per dependency, the versions seen since the
-  recorded one, each with the time it was first seen; `Resolve-QuarantinedVersion` applies the
-  newest one out of quarantine and cuts the changelog links to it. A latest version seen before,
-  the recorded one included, means the versions recorded after it were withdrawn: they are
-  dropped, with a warning, so none can come out of quarantine once a newer one shows up. That is
-  why a check that cannot tell (a page that does not load or no longer matches, an empty list of
-  releases, tags or commits) throws instead of leaving the version as it is: the failure is
-  logged and the waits stand. A local run keeps its own copy there, and the nightly restores the
-  previous run's from a workflow artifact. Losing the file only restarts the waits. The pull
-  request's table gains a Pending column when a dependency it updates has a newer version still
-  waiting, and a dependency with only waiting versions is listed under it, each version with the
-  date its quarantine ends.
-- In the nightly, every warning of the update (a dependency that could not be checked, a version
-  kept back because its checksum could not be computed, a version taken as withdrawn) becomes an
-  annotation of the run (`Write-WorkflowAnnotation`), and so does the reason no quarantine state
-  could be restored: annotations can be read without a token, the job log cannot. A normal night
-  raises none, so the expected skips, such as the `File` dependencies' missing files, log as
-  information.
+- The dependency update rewrites `resources/dependencies.json` by rules of its own: which
+  dependencies open the nightly pull request, a 7-day quarantine before a new version is
+  applied, and warnings raised as annotations of the run
+  ([`dependency-update`](docs/dependency-update.md)).
 - `build-dev.bat`, `build-and-run.bat` and `tools\build.ps1 -Run` start the built app, which
   relaunches itself elevated — don't run them unless asked. `build-ci.bat` and the test scripts
   write only to the git-ignored outputs in `build/` and `vm/`.
@@ -116,27 +83,27 @@ A script a skill needs lives in the skill's directory, under `scripts/`, as one 
 file with its tests beside it. The test run and the linter cover `.claude/skills/` as they do
 `tools/`.
 
+## Docs
+
+`docs/` holds what only one kind of change needs, so that not every session pays for it. No
+platform loads these files on its own: **read the matching one before starting such a change.**
+Each is the authority on its area; this file keeps only what every session needs.
+
+| doc                                              | read it before changing                                                                                                         |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| [`build`](docs/build.md)                         | the build: `tools/build.ps1`, `tools/build/`, `tools/common/`, the templates, the linter, the version                           |
+| [`ui`](docs/ui.md)                               | a tab, a component, `Form.ps1`, or a handler that starts an operation or touches the window                                     |
+| [`ci`](docs/ci.md)                               | anything under `.github/`, the files the site publishes, or how a release is cut                                                |
+| [`dependency-update`](docs/dependency-update.md) | the dependency update (`tools/Invoke-DependencyUpdate.ps1`, `tools/build/updates/`), its workflow, `dependencies.json`'s fields |
+
 ## Build Architecture
 
-`tools/build.ps1` orchestrates the build. `tools/build/` contains individual build step functions. `tools/common/` contains shared utilities (logger, progress bar, file I/O) used by both build and test. The logger and the progress bar there are the app's own (`src/4-functions/App lifecycle`), dot-sourced with no-op stand-ins for the window they would otherwise write to, so the two cannot drift apart.
-
-### Source-to-Script Bundling
-
-`tools/build/New-PowerShellScript.ps1` concatenates all files under `src/` except `*.Tests.ps1` into a single `build/qiiwexc.ps1`, in the order `tools/build/Get-SourceFiles.ps1` spells out: a directory's own files first, then its subdirectories, each level in name order (ordinal, ignoring case, as NTFS lists them). The order matters only where code runs as it loads, so the numeric prefixes that control it are on the top-level directories (`0-init/` … `5-interface/`) and on the files in `0-init/` (`0 Parameters.ps1`, …); everything else defines functions, constants or tab definitions. Leading numeric prefixes on each path segment are stripped from `#region` names in the output. The build fails if any `{KEY}` placeholder is left unresolved or if the bundled script does not parse.
-
-The answer files are built from `templates/autounattend.xml`, which also carries sections for the development VM only (disk 0 partitioning, a local auto-logon account). `tools/build/New-UnattendedFile.ps1` strips them from the published files, and `tools/build/unattended/Assert-UnattendedFile.ps1` fails the build if any remain, a `{KEY}` placeholder is unresolved, or the XML is not well-formed. The template is the output of the [unattend generator](https://schneegans.de/windows/unattend-generator/); the URL in its first comment reproduces it. After regenerating it, run the tests: `New-UnattendedBase` fails if something it rewrites (such as the `RemovePackage.ps1` package list) is gone, and `New-UnattendedFile.Tests.ps1` builds the real template end to end.
-
-Every non-PS1 file in `src/3-configs/` (`.reg`, `.json`, `.ini`, `.cfg`, `.conf`) is embedded as string constants named `CONFIG_<UPPERCASED_FILENAME>` using `Set-Variable -Option Constant`.
-
-### Template Substitution
-
-`resources/urls.json` and `resources/dependencies.json` feed into `tools/build/Get-Config.ps1` to produce a `$Config` PSCustomObject. Templates (`templates/home.html`, `templates/autounattend.xml`) use `{KEY}` placeholders replaced at build time. `src/0-init/1 Version.ps1` uses `{PROJECT_VERSION}` which is injected this way.
-
-Downloads are verified by SHA-256 (`Start-DownloadUnzipAndRun -Sha256`). Fixed-version downloads keep a `SHA256_<NAME>` key in `urls.json`; a dependency whose `URL_<NAME>` contains `{VERSION}` keeps a `sha256` field in `dependencies.json`, exposed as `SHA256_<NAME>` and recomputed by the dependency update whenever the version changes (the version bump is dropped if the checksum cannot be computed). The self-updater verifies `qiiwexc.bat` against the release's `SHA256SUMS.txt`.
-
-### Versioning
-
-Locally: `YY.M.D` (from current date). In CI on a tag: parsed from `$Env:GITHUB_REF_NAME` (e.g., `v26.2.18` → `26.2.18`). For reproducible output, pin it explicitly: `tools\build.ps1 -Version 26.2.18`.
+`tools/build.ps1` runs the build steps in `tools/build/`; `tools/common/` holds what the build
+and the tests share. The build bundles every file under `src/` except the tests into
+`build/qiiwexc.ps1`, embeds every non-PS1 file in `src/3-configs/` as a string constant
+`CONFIG_<UPPERCASED_FILENAME>`, and fills the `{KEY}` placeholders of the source and the
+templates from `resources/urls.json` and `resources/dependencies.json`. Every download the app
+runs is verified by SHA-256 against a `SHA256_<NAME>` key.
 
 ## Source Structure (`src/`)
 
@@ -149,17 +116,9 @@ Locally: `YY.M.D` (from current date). In CI on a tag: parsed from `$Env:GITHUB_
 5-interface/     # Entry point: Show window.ps1 renders the tabs, in order, and shows the window
 ```
 
-## UI Pattern (tab definitions)
-
-Each tab is data: `src/2-ui/<Tab>.ps1` defines a `TAB_<NAME>` hashtable of cards, and each card lists its items — buttons with their `Action`, their options and an optional centred "Start after download" checkbox (`StartAfterDownload`), and standalone checkboxes. `New-Tab` (`src/1-components/Tab.ps1`) renders a definition through the component functions, which add to the panel they are given and return what they made. It rejects unknown keys, a missing `Action` or `Name` and duplicate names, puts every checkbox into `$CHECKBOXES` under its `Name`, and every button given a `Name` into `$BUTTONS`.
-
-- Placement follows from the definition: a button's options join its "Start after download" group when it has one and sit in the card otherwise, and every button after a card's first item is spaced from what comes before it.
-- The window's height follows from the tabs too: once laid out, before it is drawn, `Set-WindowHeight` makes it tall enough for the tallest tab to show without scrolling (as far as the screen allows), so adding, moving or removing cards needs no size change.
-- Handlers read checkboxes at click time (`$CHECKBOXES.StartVentoy.IsChecked`). A checkbox that enables others has `OnClick = { Set-CheckboxState -Control $this -Dependant $CHECKBOXES.<Name> }`.
-- Only one async operation runs at a time. `New-Tab` registers every button whose `Action` calls `Start-AsyncOperation` (`Register-AsyncButton`); while an operation runs, all of them are disabled except the one that started it, which turns into its Cancel button until the cancellation is under way. A handler that enables or disables such a button for a reason of its own, such as nothing being selected to apply, goes through `Set-ButtonEnabled $BUTTONS.<Name>`, never `IsEnabled`, so that the state survives an operation.
-- An operation reaches the window only through `Invoke-OnDispatcher 'Command-Name' @{ Parameter = $Value }`, which runs that function on the UI thread through a delegate the UI thread's runspace created, so only data crosses threads. Never hand a dispatcher a script block from the async runspace: once the operation is being cancelled, running it waits for that runspace while the operation waits for the UI thread, and the window freezes. `Invoke-OnDispatcher.Tests.ps1` fails on any other code that calls into a dispatcher. The functions that touch the window (`Add-FormLogEntry`, `Set-ProgressBarValue`, `Set-FormIcon`) run only that way.
-- `Start-AsyncOperation` copies function bodies into its runspace, not the handler's scope, so an operation gets only what is passed with `-Variables` (and the app-wide variables it injects). The app's enums (`[LogLevel]`, `[IconName]`) resolve there only inside those functions, not in the operation's own script block. `src/2-ui/Tabs.Tests.ps1` fails on a variable that is not passed, on a checkbox or a named button that is read but not defined, or defined but never read, and on a button that starts an operation without being registered.
-- A change to the components, the renderer, the definitions' layout or `Form.ps1` that should not change how the window looks is checked with `.\test-visual.bat`: it renders every tab in the light, dark and high contrast themes from `HEAD` and from the working tree, and compares them pixel for pixel (differences land in `build/ui-snapshots/diff`).
+Each tab is data: `src/2-ui/<Tab>.ps1` defines a `TAB_<NAME>` hashtable of cards that `New-Tab`
+renders. An operation a button starts with `Start-AsyncOperation` runs off the UI thread, one at
+a time, and reaches the window only through `Invoke-OnDispatcher` ([`ui`](docs/ui.md)).
 
 ## Testing Conventions
 
@@ -198,16 +157,13 @@ Each tab is data: `src/2-ui/<Tab>.ps1` defines a `TAB_<NAME>` hashtable of cards
 
 ## Linting
 
-PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1` and on every script under `tools/` and `.claude/skills/` (tests included), with the settings in `PSScriptAnalyzerSettings.psd1`. Any finding fails the build, after all of them are printed; `src/` is covered through the bundle, so its findings point at lines of `build/qiiwexc.ps1`. `tools/build/Invoke-Linter.ps1` runs the analyzer one rule per call: within one call the rules run in parallel, and on Windows PowerShell 5.1 the ones that look commands up race each other and fail with an error of the analyzer's own (`The term 'Get-Command' is not recognized`, or a null reference) that stays cached for the rest of the process, so no retry in that process can pass. Keep it one rule per call until a PSScriptAnalyzer release serialises those lookups. It also fails on a rule name in the settings that the analyzer does not have, which the analyzer itself would silently ignore. Notable rules: single quotes for constant strings, aligned assignment statements (hashtables included), `-not` instead of `!`, no semicolons as line terminators, opening braces on the same line, 4-space indentation, correct casing, and cmdlets and syntax that Windows PowerShell 5.1 supports.
-
-## CI/CD Workflows
-
-The workflows in `.github/workflows/` share composite actions from `.github/actions/` (`test`, `build`, `deploy`, `release`), referenced as `$/.github/actions/<name>`. Permissions follow least privilege: an empty or read-only default at workflow level, specific grants per job.
-
-- `ci.yml` chains `test → build → deploy → release`; `deploy` and `release` run for tags only. `test` runs `test-with-coverage.bat` and `build` runs `build-ci.bat`. `deploy` publishes an explicit file list (assembled in `.github/actions/deploy/action.yml`) to GitHub Pages — add new site files there — and `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, `autounattend-*.xml` and `SHA256SUMS.txt` as assets (via `gh release create`), unless one already exists for the tag.
-- A release is cut by pushing a `vYY.M.D` tag: `release.bat` tags `origin/master` from a local checkout (it refuses if `HEAD` differs), and the manual `tag.yml` workflow tags on GitHub and then dispatches `ci.yml` for the tag, since a tag pushed with `GITHUB_TOKEN` triggers no workflows.
-- `update-dependencies.yml` checks for updates nightly in a read-only job, which first restores the quarantine state from this workflow's previous run on master (the only runs it trusts for it) and afterwards keeps the new one as the `dependency-quarantine` artifact for 30 days, and hands the changed `dependencies.json`, with the pull request description it wrote, to a separate job that force-pushes the `chore/update-dependencies` branch and opens or updates its PR whenever a dependency whose `opensPullRequest` is `true` moved, then runs the `test` and `build` actions on it and reports both as commit statuses, which stand in for `ci.yml`'s checks of those names. `ci.yml` skips any pull request that changes only `dependencies.json`, because GitHub holds the runs that `github-actions[bot]` triggers until someone approves them, and on `pull_request` a branch filter matches the base branch, not the head. Only the nightly workflow checks that PR, so after a fix on master, run it again rather than updating the branch from the PR page, which leaves a head nothing has checked.
-- `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under `.github/` change.
+PSScriptAnalyzer runs on the **built** `build/qiiwexc.ps1` and on every script under `tools/`
+and `.claude/skills/` (tests included), with the settings in `PSScriptAnalyzerSettings.psd1`.
+Any finding fails the build, after all of them are printed; `src/` is covered through the
+bundle, so its findings point at lines of `build/qiiwexc.ps1`. Notable rules: single quotes for
+constant strings, aligned assignment statements (hashtables included), `-not` instead of `!`, no
+semicolons as line terminators, opening braces on the same line, 4-space indentation, correct
+casing, and cmdlets and syntax that Windows PowerShell 5.1 supports.
 
 ## Workflow Notes
 
@@ -218,8 +174,10 @@ The workflows in `.github/workflows/` share composite actions from `.github/acti
 - **Then ask the user whether to commit**, and commit only on a yes, through the
   [`commit`](.claude/skills/commit/SKILL.md) skill: thematic Conventional Commits, a file split
   between commits where its changes belong to more than one.
-- After making changes, update any documentation they affect (this `AGENTS.md`, the platform
-  entry files, the skills, and inline comments) so the docs stay in sync with the code.
+- After making changes, update any documentation they affect (this `AGENTS.md`, the docs under
+  `docs/`, the platform entry files, the skills, and inline comments) so the docs stay in sync
+  with the code. Detail that only one kind of change needs goes into its doc under `docs/`, not
+  here; a new doc gets its row in the Docs table, with the moment to read it.
 - **Documentation describes the repository as it is now, never as it was.** Do not write - and
   remove where you find - lines whose subject is a past state: "this used to live in X",
   "renamed from Y", "the old behaviour was Z". Git holds the history. Where a past decision still
@@ -296,8 +254,6 @@ The workflows in `.github/workflows/` share composite actions from `.github/acti
 - Do not reference external sources in code comments - issue trackers, screenshots, files in
   `wip/`, or other artifacts that live outside the codebase. They go stale and mean nothing to
   readers without access to them; describe the behaviour or constraint in the comment itself.
-- Pin GitHub Actions by full commit SHA with the version in a trailing comment
-  (`uses: owner/action@<sha> # vX.Y.Z`); Dependabot keeps them current.
 - A `.ps1` file with non-ASCII characters outside comments (Cyrillic strings, emoji) must be
   saved as UTF-8 **with** a byte order mark. Windows PowerShell 5.1 reads a file without one as
   ANSI, where a mangled character such as `’` can end a string early and break the whole file.

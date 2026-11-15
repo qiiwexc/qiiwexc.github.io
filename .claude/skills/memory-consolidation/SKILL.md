@@ -23,10 +23,11 @@ The memory directory is named in the system prompt for the session
 holds one `.md` file per memory plus `MEMORY.md`, the index that is loaded into
 every session.
 
-Read the repository's own instruction files first - `AGENTS.md`, `CLAUDE.md` and
-the `SKILL.md` of every skill under `.claude/skills/` - because the promotion
-decision below is entirely about the boundary between those files and memory,
-and you cannot judge it without knowing what they already say.
+Read the repository's own instruction files first - `AGENTS.md`, `CLAUDE.md`, the
+docs under `docs/` and the `SKILL.md` of every skill under `.claude/skills/` -
+because the promotion decision below is entirely about the boundary between
+those files and memory, and you cannot judge it without knowing what they
+already say.
 
 ## Step 1 - read every memory, all of it
 
@@ -112,8 +113,11 @@ costs tokens rather than saving them.
 
 Where a promotion goes:
 
-- `AGENTS.md` - anything about the code, the build, the tests or CI, plus
-  workflow and safety rules;
+- `AGENTS.md` - anything about the code, the build, the tests or CI that every
+  session needs, plus workflow and safety rules;
+- a doc under `docs/` - detail that only changes to its area need (the build, the
+  window, CI, the dependency update), read before such a change and not paid for
+  by every other session;
 - a skill's `SKILL.md` - anything true only while doing that one procedure;
 - a code comment, when the constraint only makes sense next to the code it
   constrains (a regex that must keep matching a legacy form, a bundle order

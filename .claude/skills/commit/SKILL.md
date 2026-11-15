@@ -87,7 +87,7 @@ to be split, with which part goes where.
   | `deps`     | `resources/dependencies.json`, and the pinned URLs and checksums in `urls.json` |
   | `vm`       | the development VM scripts                                                      |
   | `skills`   | `.claude/skills/`                                                               |
-  | `agents`   | `AGENTS.md`, `CLAUDE.md`, the Copilot entry file                                |
+  | `agents`   | `AGENTS.md`, `CLAUDE.md`, the Copilot entry file, `docs/`                       |
 
   A commit spanning two names the one it is for, or leaves the scope out. Leave it out too
   where it would repeat the type: `ci: ...`, not `ci(ci): ...`.

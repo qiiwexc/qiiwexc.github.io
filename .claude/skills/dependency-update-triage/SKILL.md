@@ -21,6 +21,9 @@ that ends without one of those has not finished.
 
 ## Where these PRs come from
 
+How the update decides is in [`docs/dependency-update.md`](../../../docs/dependency-update.md);
+this is what triage needs of it.
+
 **The nightly PR.** `.github/workflows/update-dependencies.yml` runs
 `tools\Invoke-DependencyUpdate.ps1`, which checks every entry in
 `resources/dependencies.json`. It opens or updates a pull request when a dependency whose

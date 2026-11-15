@@ -35,8 +35,9 @@ rest - not a different standard of evidence, just more of the budget.
 ## Step 2 - read the standard before judging against it
 
 Read `AGENTS.md` in full first - `.github/copilot-instructions.md` only points
-to it, and `CLAUDE.md` imports it and adds Claude Code's branch rule. It is what
-the code is measured against, and it is itself under review: a
+to it, and `CLAUDE.md` imports it and adds Claude Code's branch rule - and then
+the docs under `docs/` for the areas being reviewed. They are what the code is
+measured against, and they are themselves under review: a
 rule nothing follows is either a finding about the code or a finding about the
 rule.
 
@@ -118,7 +119,7 @@ ceiling.
   `public/Office_Installer.zip` is a binary: say what it would take to verify
   it rather than guessing at its contents.
 - **Documentation** - `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`,
-  and the comments in the source. There is no `README.md`; whether there should be
+  the docs under `docs/`, and the comments in the source. There is no `README.md`; whether there should be
   is itself a question for the report.
 - **Agent instructions** - the same three files read as instructions rather than
   as prose, plus the skills under `.claude/skills/`, each a `SKILL.md` and the
