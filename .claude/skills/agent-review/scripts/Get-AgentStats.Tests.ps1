@@ -56,8 +56,8 @@ BeforeAll {
         @{ type = 'user'; isMeta = $True; message = @{ content = @(@{ type = 'text'; text = 'Base directory for this skill: C:\skills\one' }) } },
         @{ type = 'user'; origin = @{ kind = 'task-notification' }; message = @{ content = '<task-notification>done</task-notification>' } },
         'not json {',
-        @{ type = 'assistant'; message = @{ id = 'm3'; usage = @{ input_tokens = 2; cache_creation_input_tokens = 0; cache_read_input_tokens = 0; output_tokens = 1 }; content = @(@{ type = 'tool_use'; id = 't4'; name = 'WebFetch'; input = @{ url = 'https://example.com' } }) } },
-        @{ type = 'user'; message = @{ content = @(@{ type = 'tool_result'; tool_use_id = 't4'; is_error = $True; content = 'Request failed with status code 404' }) } }
+        @{ type = 'assistant'; message = @{ id = 'm3'; usage = @{ input_tokens = 2; cache_creation_input_tokens = 0; cache_read_input_tokens = 0; output_tokens = 1 }; content = @(@{ type = 'tool_use'; id = 't4'; name = 'WebFetch'; input = @{ url = 'https://example.com' } }, @{ type = 'tool_use'; id = 't5'; name = 'PowerShell'; input = @{ command = "'--- search'; git grep -n Missing" } }, @{ type = 'tool_use'; id = 't6'; name = 'PowerShell'; input = @{ command = 'git status --short; exit 255' } }) } },
+        @{ type = 'user'; message = @{ content = @(@{ type = 'tool_result'; tool_use_id = 't4'; is_error = $True; content = 'Request failed with status code 404' }, @{ type = 'tool_result'; tool_use_id = 't5'; is_error = $True; content = "Exit code 1`n--- search" }, @{ type = 'tool_result'; tool_use_id = 't6'; is_error = $True; content = "Exit code 255`n M AGENTS.md" }) } }
     )
 
     New-TestTranscript (Join-Path (Join-Path (Join-Path $TestProject 'aaaa1111-0000') 'subagents') 'agent-1.jsonl') @(
@@ -102,17 +102,21 @@ Describe 'Get-EntryProperty' {
     }
 }
 
-Describe 'Get-FirstLine' {
-    It 'Should skip the exit code a shell result starts with' {
-        Get-FirstLine "Exit code 1`n`nOut-File : Could not find a part of the path`nAt line:1" | Should -BeExactly 'Out-File : Could not find a part of the path'
+Describe 'Get-ErrorLabel' {
+    It 'Should give one label to every shell result that opens with its exit code' -ForEach @(
+        @{ Text = "Exit code 1`n`n--- success`n  done" }
+        @{ Text = "Exit code 255`n M AGENTS.md" }
+        @{ Text = 'Exit code 66' }
+    ) {
+        Get-ErrorLabel $Text | Should -BeExactly 'flagged for its exit code alone'
     }
 
-    It 'Should return the exit code when it is all there is' {
-        Get-FirstLine 'Exit code 66' | Should -BeExactly 'Exit code 66'
+    It 'Should return the first line of any other result' {
+        Get-ErrorLabel "`nRequest failed with status code 404`nmore" | Should -BeExactly 'Request failed with status code 404'
     }
 
     It 'Should say so when there is nothing' {
-        Get-FirstLine " `n" | Should -BeExactly '(empty)'
+        Get-ErrorLabel " `n" | Should -BeExactly '(empty)'
     }
 }
 
@@ -461,7 +465,7 @@ Describe 'Read-Session' {
 
     It 'Should count the tool calls by tool' {
         $Stats.Tools.Count | Should -BeExactly 3
-        $Stats.Tools['PowerShell'] | Should -BeExactly 2
+        $Stats.Tools['PowerShell'] | Should -BeExactly 4
         $Stats.Tools['Read'] | Should -BeExactly 1
         $Stats.Tools['WebFetch'] | Should -BeExactly 1
     }
@@ -486,10 +490,17 @@ Describe 'Read-Session' {
     It 'Should label another tool''s failure by what it said' {
         Set-Variable -Option Constant Failure ([PSObject]$Stats.Failures[2])
 
-        $Stats.Failures.Count | Should -BeExactly 3
+        $Stats.Failures.Count | Should -BeExactly 5
         $Failure.Tool | Should -BeExactly 'WebFetch'
         $Failure.Said | Should -BeExactly 'Request failed with status code 404'
         $Failure.Flagged | Should -BeTrue
+    }
+
+    It 'Should give every shell result flagged for its exit code alone the same label' {
+        $Stats.Failures[3].Said | Should -BeExactly 'flagged for its exit code alone'
+        $Stats.Failures[3].Input | Should -BeExactly "'--- search'; git grep -n Missing"
+        $Stats.Failures[4].Said | Should -BeExactly 'flagged for its exit code alone'
+        $Stats.Failures[4].Flagged | Should -BeTrue
     }
 
     It 'Should keep the largest results' {
@@ -509,9 +520,9 @@ Describe 'Show-Sessions' {
 
         $Lines[0] | Should -BeExactly "Sessions in ${TestProject}:"
         $Lines | Should -Contain '== aaaa1111 2026-01-03 10:00 A title'
-        $Lines | Should -Contain 'prompts 2, tool calls 4, errors 2 (+1 unflagged)'
+        $Lines | Should -Contain 'prompts 2, tool calls 6, errors 4 (+1 unflagged)'
         $Lines | Should -Contain 'input 433 tok (cache read 400), output 113, peak context 301'
-        $Lines | Should -Contain 'tools: PowerShell 2, Read 1, WebFetch 1'
+        $Lines | Should -Contain 'tools: PowerShell 4, Read 1, WebFetch 1'
         $Lines | Should -Contain 'large result: 500 tok from Read C:\x.txt'
         $Lines | Should -Contain 'correction?: No, revert that'
         $Lines | Should -Contain '1 lines of the transcript could not be read'
@@ -534,6 +545,7 @@ Describe 'Show-Errors' {
         $Lines | Should -Contain '1 in 1 PowerShell: a command PowerShell does not know (Get-Thing)'
         $Lines | Should -Contain '1 in 1 PowerShell: git refused (1 unflagged)'
         $Lines | Should -Contain '1 in 1 WebFetch: Request failed with status code #'
+        $Lines | Should -Contain '2 in 1 PowerShell: flagged for its exit code alone'
         $Lines | Should -Contain 'e.g. git add x; Get-Date'
     }
 }

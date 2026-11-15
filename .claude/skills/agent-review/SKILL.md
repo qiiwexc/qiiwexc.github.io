@@ -101,7 +101,10 @@ number of sessions it was met in.
   of a chain fails without the result being flagged, so a count of the flagged ones alone is
   too low. The signatures are in `Get-FailureSignature` in the script: add one, with a test,
   for a failure a transcript shows and the list misses. A failing test is not a failed call
-  and is not counted.
+  and is not counted. A flagged shell result that shows none of them is grouped as "flagged
+  for its exit code alone": mostly a chain whose last command exited non-zero without
+  failing (a `git grep` that finds nothing), so open those calls before counting them. One
+  that did fail is a signature missing.
 - **"correction?" is a hint.** The messages are picked by a few words ("no", "instead",
   "revert"). Read each before calling it a correction.
 

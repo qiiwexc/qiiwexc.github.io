@@ -26,6 +26,7 @@
 # A failed call is one the harness flagged as an error, or a shell result it did not flag that still shows a
 # failure: a command in the middle of a chain fails without the result being flagged. Those are found by the
 # signatures in Get-FailureSignature, which label a flagged shell failure too, and are counted as "unflagged".
+# A flagged shell result that shows none of them is labelled "flagged for its exit code alone", whatever it printed.
 
 param(
     [Parameter(Position = 0)][String]$Command,
@@ -76,21 +77,24 @@ function Get-EntryProperty {
     return $Property.Value
 }
 
-# What an error says: past a shell's "Exit code 1", the first line of its output
-function Get-FirstLine {
+# What a flagged result that no signature labels says: its first line. A shell result opening with its exit code
+# was flagged for that code alone, as a chain is whenever its last command exits non-zero without failing (a
+# 'git grep' that finds nothing). All of those share one label: by their first line of output, each would read
+# as a failure of its own
+function Get-ErrorLabel {
     param(
         [Parameter(Position = 0)][String]$Text
     )
 
     [String[]]$Lines = @($Text -split '\r?\n' | Where-Object { $_.Trim() })
-    if ($Lines.Count -gt 1 -and $Lines[0].Trim() -match '^Exit code \d+$') {
-        return $Lines[1]
+    if ($Lines.Count -eq 0) {
+        return '(empty)'
     }
-    if ($Lines.Count -gt 0) {
-        return $Lines[0]
+    if ($Lines[0].Trim() -match '^Exit code \d+$') {
+        return 'flagged for its exit code alone'
     }
 
-    return '(empty)'
+    return $Lines[0]
 }
 
 # The first failure a shell result shows, as a label to group by: its kind and, where the pattern has a group,
@@ -752,7 +756,7 @@ function Read-Session {
                     $Results.Add([PSCustomObject]@{ Characters = $Text.Length; Tool = $Name; Input = $ToolInput })
 
                     if ($Flagged -or $Signature) {
-                        [String]$Said = if ($Signature) { $Signature } else { Get-Excerpt (Get-FirstLine $Text) }
+                        [String]$Said = if ($Signature) { $Signature } else { Get-Excerpt (Get-ErrorLabel $Text) }
                         $Failures.Add([PSCustomObject]@{ Tool = $Name; Said = $Said; Input = $ToolInput; Flagged = $Flagged })
                     }
                 }
