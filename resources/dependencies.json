@@ -88,11 +88,11 @@
     },
     {
         "name":  "SDI",
-        "version":  "2.26.7",
+        "version":  "2.26.10",
         "source":  "URL",
         "opensPullRequest":  false,
-        "url":  "https://driveroff.net/dp/",
-        "regex":  "\u003ctr\u003e\u003ctd\u003eSnappy Driver Installer\u003c/td\u003e\u003ctd\u003e(.*?) \\((?:\\d{2}\\.\\d{2}\\.\\d{4})\\)\u003c/td\u003e"
+        "url":  "https://sdi.com.ru/Changelog.txt",
+        "regex":  "^(\\d+(?:\\.\\d+)+) \\(\\d{2}\\.\\d{2}\\.\\d{4}\\)"
     },
     {
         "name":  "CPU-Z",

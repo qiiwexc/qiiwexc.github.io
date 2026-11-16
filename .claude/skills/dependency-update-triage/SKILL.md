@@ -152,7 +152,8 @@ as likely to be in the middle one. Sources, in the order to try them:
    dependencies (Unattend Generator), a tag comparison for `tags` ones, and the page a
    `URL` dependency's version is read from (O&O ShutUp10, SDI, CPU-Z), which has no notes
    in the body. For O&O ShutUp10 that is its homepage; the changelog is
-   <https://www.oo-software.com/en/shutup10/changelog>.
+   <https://www.oo-software.com/en/shutup10/changelog>. For SDI it is the changelog itself,
+   each version in Russian first, then in English.
 
 Read for five things and nothing else. The first four are **removals, changed defaults,
 new deprecations, and renamed parameters or settings the app passes**. The fifth applies
