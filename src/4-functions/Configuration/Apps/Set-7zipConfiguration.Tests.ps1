@@ -7,41 +7,38 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant CONFIG_7ZIP ([String]'TEST_CONFIG_7ZIP')
+    Set-Variable -Option Constant CONFIG_7ZIP ([String]"[HKEY_CURRENT_USER\TEST_USER_KEY]`n`"TEST_VALUE`"=dword:00000001`n")
 
     Set-Variable -Option Constant TestAppName ([String]'TEST_APP_NAME')
-    Set-Variable -Option Constant TestSysprepConfig ([String]'TEST_SYSPREP_CONFIG')
 }
 
 Describe 'Set-7zipConfiguration' {
     BeforeAll {
-        Mock Add-SysPrepConfig { return $TestSysprepConfig }
         Mock Import-RegistryConfiguration {}
         Mock Out-Success {}
         Mock Out-Failure {}
     }
 
-    It 'Should configure 7zip' {
+    It 'Should import the 7-Zip configuration for the current user and the default user' {
         Set-7zipConfiguration $TestAppName
 
-        Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
+            [String]$Keys = -join $Content
             $AppName -eq $TestAppName -and
-            $Content -eq $TestSysprepConfig
+            $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_USER_KEY]')
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should handle Import-RegistryConfiguration failure' {
+    It 'Should report a failed import' {
         Mock Import-RegistryConfiguration { throw $TestException }
 
         Set-7zipConfiguration $TestAppName
 
-        Should -Invoke Add-SysPrepConfig -Exactly 1
-        Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -match $TestException }
     }
 }

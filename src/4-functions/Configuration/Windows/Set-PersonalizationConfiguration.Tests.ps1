@@ -8,9 +8,8 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant CONFIG_PERSONALIZATION ([String]'TEST_CONFIG_PERSONALIZATION')
+    Set-Variable -Option Constant CONFIG_PERSONALIZATION ([String]"[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]`n`"TEST_VALUE`"=dword:00000001`n`n[HKEY_CURRENT_USER\TEST_USER_KEY]`n`"TEST_VALUE`"=dword:00000001`n")
 
-    Set-Variable -Option Constant TestSysPrepConfig ([String]'TEST_SYSPREP_CONFIG')
     Set-Variable -Option Constant TestUsers ([String[]]@('TEST_USER_1', 'TEST_USER_2'))
     Set-Variable -Option Constant TestNotificationRegistries (
         [PSObject[]]@(
@@ -22,7 +21,6 @@ BeforeAll {
 
 Describe 'Set-PersonalizationConfiguration' {
     BeforeAll {
-        Mock Add-SysPrepConfig { return $TestSysPrepConfig }
         Mock Get-Item { return $TestNotificationRegistries }
         Mock Out-Failure {}
         Mock Get-UsersRegistryKeys { return $TestUsers }
@@ -37,16 +35,17 @@ Describe 'Set-PersonalizationConfiguration' {
     It 'Should apply Windows personalization configuration' {
         Set-PersonalizationConfiguration
 
-        Should -Invoke Add-SysPrepConfig -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_PERSONALIZATION }
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq 'HKCU:\Control Panel\NotifyIconSettings\*' }
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
+            [String]$Keys = -join $Content
             $AppName -eq 'Windows Personalization Config' -and
-            $Content -match $TestSysPrepConfig -and
+            $Keys.Contains('[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]') -and
+            $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_USER_KEY]') -and
             $Content -match "`n\[$($TestNotificationRegistries[0].Name)\]`n" -and
             $Content -match "`n\[$($TestNotificationRegistries[1].Name)\]`n" -and
             $Content -match "`"IsPromoted`"=dword:00000001`n" -and
@@ -62,13 +61,12 @@ Describe 'Set-PersonalizationConfiguration' {
 
         Set-PersonalizationConfiguration
 
-        Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
-            $Content -match $TestSysPrepConfig -and
+            (-join $Content).Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
             $Content -notmatch "`n\[$($TestNotificationRegistries[0].Name)\]`n" -and
             $Content -notmatch "`n\[$($TestNotificationRegistries[1].Name)\]`n" -and
             $Content -notmatch "`"IsPromoted`"=dword:00000001`n"
@@ -81,7 +79,6 @@ Describe 'Set-PersonalizationConfiguration' {
 
         Set-PersonalizationConfiguration
 
-        Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
@@ -94,7 +91,6 @@ Describe 'Set-PersonalizationConfiguration' {
 
         Set-PersonalizationConfiguration
 
-        Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-UsersRegistryKeys -Exactly 1
@@ -107,7 +103,6 @@ Describe 'Set-PersonalizationConfiguration' {
 
         Set-PersonalizationConfiguration
 
-        Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 0
@@ -120,7 +115,6 @@ Describe 'Set-PersonalizationConfiguration' {
 
         Set-PersonalizationConfiguration
 
-        Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-UsersRegistryKeys -Exactly 1

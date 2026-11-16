@@ -133,6 +133,12 @@ a time, and reaches the window only through `Invoke-OnDispatcher` ([`ui`](docs/u
   overrides it for that test only; keep `BeforeEach` for per-test state
 - A mock should behave like the function it replaces: never make a function throw when its whole
   body is a catch-all `try` that doesn't rethrow — `tools/Mocks.Tests.ps1` fails on it
+- Mock only what reaches outside the test - the registry, processes, the network, files outside
+  `TestDrive:`, the window, the logger - or the app's own function that does, such as
+  `Import-RegistryConfiguration`. Run pure helpers (`Add-SysPrepConfig`, `Merge-JsonObject`) for
+  real: mocked, they leave the test checking how the function is built rather than what it does.
+  Assert on what crosses that boundary (the keys an import is given, the file written, a process's
+  arguments) and on what the user is told, rather than on how often a helper ran
 - To check in a `ParameterFilter` that a parameter was not passed, use
   `-not $PesterBoundParameters.ContainsKey('Name')`: `$Name -eq $Null` reads any variable of that
   name in an outer scope instead, and a parallel worker defines `$WorkingDirectory`

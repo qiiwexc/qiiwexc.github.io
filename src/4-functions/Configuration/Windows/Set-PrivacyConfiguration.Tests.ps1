@@ -12,9 +12,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant CONFIG_PRIVACY ([String]'TEST_CONFIG_PRIVACY')
-
-    Set-Variable -Option Constant TestSysPrepConfig ([String]'TEST_SYSPREP_CONFIG')
+    Set-Variable -Option Constant CONFIG_PRIVACY ([String]"[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]`n`"TEST_VALUE`"=dword:00000001`n`n[HKEY_CURRENT_USER\TEST_USER_KEY]`n`"TEST_VALUE`"=dword:00000001`n")
 }
 
 Describe 'Set-PrivacyConfiguration' {
@@ -23,7 +21,6 @@ Describe 'Set-PrivacyConfiguration' {
         Mock Disable-ScheduledTask {}
         Mock Write-LogDebug {}
         Mock Out-Failure {}
-        Mock Add-SysPrepConfig { return $TestSysPrepConfig }
         Mock Import-RegistryConfiguration {}
         Mock Out-Success {}
     }
@@ -53,12 +50,13 @@ Describe 'Set-PrivacyConfiguration' {
             $TaskPath -eq '\Microsoft\Windows\Application Experience\'
         }
         Should -Invoke Out-Failure -Exactly 0
-        Should -Invoke Add-SysPrepConfig -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_PRIVACY }
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
+            [String]$Keys = -join $Content
             $AppName -eq 'Windows Privacy Config' -and
-            $Content -eq $TestSysPrepConfig
+            $Keys.Contains('[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]') -and
+            $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_USER_KEY]')
         }
         Should -Invoke Out-Success -Exactly 1
     }
@@ -102,7 +100,6 @@ Describe 'Set-PrivacyConfiguration' {
 
         Should -Invoke Disable-ScheduledTask -Exactly 5
         Should -Invoke Out-Failure -Exactly 5
-        Should -Invoke Add-SysPrepConfig -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
     }
@@ -114,8 +111,7 @@ Describe 'Set-PrivacyConfiguration' {
 
         Should -Invoke Disable-ScheduledTask -Exactly 5
         Should -Invoke Out-Failure -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 1
-        Should -Invoke Import-RegistryConfiguration -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -match $TestException }
         Should -Invoke Out-Success -Exactly 0
     }
 }

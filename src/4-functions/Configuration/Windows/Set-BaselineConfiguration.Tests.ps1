@@ -14,9 +14,9 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant CONFIG_BASELINE_RUSSIAN ([String]'TEST_CONFIG_BASELINE_RUSSIAN')
-    Set-Variable -Option Constant CONFIG_BASELINE_ENGLISH ([String]'TEST_CONFIG_BASELINE_ENGLISH')
-    Set-Variable -Option Constant CONFIG_BASELINE ([String]'TEST_CONFIG_BASELINE')
+    Set-Variable -Option Constant CONFIG_BASELINE_RUSSIAN ([String]"[HKEY_CURRENT_USER\TEST_RUSSIAN_KEY]`n`"TEST_VALUE`"=dword:00000001`n")
+    Set-Variable -Option Constant CONFIG_BASELINE_ENGLISH ([String]"[HKEY_CURRENT_USER\TEST_ENGLISH_KEY]`n`"TEST_VALUE`"=dword:00000001`n")
+    Set-Variable -Option Constant CONFIG_BASELINE ([String]"[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]`n`"TEST_VALUE`"=dword:00000001`n`n[HKEY_CURRENT_USER\TEST_USER_KEY]`n`"TEST_VALUE`"=dword:00000001`n")
 
     Set-Variable -Option Constant CONFIG_TASK_MANAGER_RUSSIAN ([String]'TEST_CONFIG_TASK_MANAGER_RUSSIAN')
     Set-Variable -Option Constant CONFIG_TASK_MANAGER_ENGLISH ([String]'TEST_CONFIG_TASK_MANAGER_ENGLISH')
@@ -24,7 +24,6 @@ BeforeAll {
     Set-Variable -Option Constant TestUnelevatedExplorerTaskName ([String]'CreateExplorerShellUnelevatedTask')
     Set-Variable -Option Constant TestScheduledTask ([PSObject[]]@(@{ TaskName = $TestUnelevatedExplorerTaskName }))
 
-    Set-Variable -Option Constant TestSysPrepConfig ([String]'TEST_SYSPREP_CONFIG')
     Set-Variable -Option Constant TestVolumes (
         [PSObject[]]@(
             @{Name = 'TEST_VOLUME_1' },
@@ -42,7 +41,6 @@ Describe 'Set-BaselineConfiguration' {
         Mock Out-Failure {}
         Mock Get-ScheduledTask { return $TestScheduledTask }
         Mock Unregister-ScheduledTask {}
-        Mock Add-SysPrepConfig { return $TestSysPrepConfig }
         Mock Get-Item { return $TestVolumes }
         Mock Import-RegistryConfiguration {}
         Mock New-Directory {}
@@ -71,15 +69,18 @@ Describe 'Set-BaselineConfiguration' {
             $Confirm -eq $False
         }
         Should -Invoke Write-Utf8File -Exactly 0
-        Should -Invoke Add-SysPrepConfig -Exactly 2
-        Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE_ENGLISH }
-        Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE }
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Get-Item -Exactly 1 -ParameterFilter { $Path -eq 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\BitBucket\Volume\*' }
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
+            [String]$Keys = -join $Content
             $AppName -eq 'Windows Baseline Config' -and
-            $Content -match $TestSysPrepConfig -and
+            $Keys.Contains('[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]') -and
+            $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_USER_KEY]') -and
+            $Keys.Contains('[HKEY_CURRENT_USER\TEST_ENGLISH_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_ENGLISH_KEY]') -and
+            -not $Keys.Contains('TEST_RUSSIAN_KEY') -and
             $Content -match "`n\[$($TestVolumes[0].Name)\]`n" -and
             $Content -match "`n\[$($TestVolumes[1].Name)\]`n" -and
             $Content -match "`"MaxCapacity`"=dword:000FFFFF`n"
@@ -97,10 +98,15 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke Write-Utf8File -Exactly 0
-        Should -Invoke Add-SysPrepConfig -Exactly 2
-        Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE_RUSSIAN }
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
+        Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
+            [String]$Keys = -join $Content
+            $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
+            $Keys.Contains('[HKEY_CURRENT_USER\TEST_RUSSIAN_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_RUSSIAN_KEY]') -and
+            -not $Keys.Contains('TEST_ENGLISH_KEY')
+        }
         Should -Invoke Out-Success -Exactly 1
     }
 
@@ -120,7 +126,6 @@ Describe 'Set-BaselineConfiguration' {
             $Path -eq $TestTaskManagerConfig -and
             $Content -eq $CONFIG_TASK_MANAGER_ENGLISH
         }
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -141,7 +146,6 @@ Describe 'Set-BaselineConfiguration' {
             $Path -eq $TestTaskManagerConfig -and
             $Content -eq $CONFIG_TASK_MANAGER_RUSSIAN
         }
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -169,7 +173,6 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 0
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -184,11 +187,10 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1 -ParameterFilter {
-            $Content -match $TestSysPrepConfig -and
+            (-join $Content).Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
             $Content -notmatch "`n\[$($TestVolumes[0].Name)\]`n" -and
             $Content -notmatch "`n\[$($TestVolumes[1].Name)\]`n" -and
             $Content -notmatch "`"MaxCapacity`"=dword:000FFFFF`n"
@@ -205,7 +207,6 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -220,7 +221,6 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 0
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -235,7 +235,6 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -250,7 +249,6 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
@@ -265,7 +263,6 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
-        Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 0
