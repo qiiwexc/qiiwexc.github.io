@@ -1,6 +1,7 @@
 BeforeAll {
     # Untyped stubs so Pester can mock Windows-only commands on any host —
     # mocks and ParameterFilters bind against these simple parameters on every platform
+    function Get-ScheduledTask { [CmdletBinding()] param([String]$TaskName, [String]$TaskPath) }
     function Disable-ScheduledTask { [CmdletBinding()] param([String]$TaskName, [String]$TaskPath) }
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
@@ -20,7 +21,9 @@ BeforeAll {
 
 Describe 'Set-PrivacyConfiguration' {
     BeforeAll {
+        Mock Get-ScheduledTask { return [PSCustomObject]@{ TaskName = $TaskName } }
         Mock Disable-ScheduledTask {}
+        Mock Write-LogDebug {}
         Mock Out-Failure {}
         Mock Add-SysPrepConfig { return $TestSysPrepConfig }
         Mock Get-UsersRegistryKeys { return $TestUsers }
@@ -83,6 +86,26 @@ Describe 'Set-PrivacyConfiguration' {
             $Content -notmatch "`n\[HKEY_USERS\\$($TestUsers[1])_Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft\.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main\]`n" -and
             $Content -notmatch "`"DoNotTrack`"=dword:00000001`n"
         }
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should skip a task this system does not have without reporting a failure' {
+        Mock Get-ScheduledTask {} -ParameterFilter { $TaskName -eq 'MareBackup' }
+
+        Set-PrivacyConfiguration
+
+        Should -Invoke Get-ScheduledTask -Exactly 5
+        Should -Invoke Get-ScheduledTask -Exactly 1 -ParameterFilter {
+            $TaskName -eq 'MareBackup' -and
+            $TaskPath -eq '\Microsoft\Windows\Application Experience\' -and
+            $ErrorAction -eq 'SilentlyContinue'
+        }
+        Should -Invoke Disable-ScheduledTask -Exactly 4
+        Should -Invoke Disable-ScheduledTask -Exactly 0 -ParameterFilter { $TaskName -eq 'MareBackup' }
+        Should -Invoke Write-LogDebug -Exactly 1
+        Should -Invoke Write-LogDebug -Exactly 1 -ParameterFilter { $Message -match 'MareBackup' }
+        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
     }
 

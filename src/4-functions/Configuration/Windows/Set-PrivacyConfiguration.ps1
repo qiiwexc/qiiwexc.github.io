@@ -10,8 +10,14 @@ function Set-PrivacyConfiguration {
         )
     )
 
-    # Not every task exists on every Windows build — a missing one must not stop the rest
+    # Not every task exists on every Windows build: a missing one is expected, and skipped as quietly as a power setting
+    # the system does not have. Only a task that exists and cannot be disabled is a failure, which stops none of the rest
     foreach ($Task in $TelemetryTaskList) {
+        if (-not (Get-ScheduledTask -TaskName $Task.Name -TaskPath $Task.Path -ErrorAction SilentlyContinue)) {
+            Write-LogDebug "Skipping telemetry task $($Task.Name), which this system does not have"
+            continue
+        }
+
         try {
             Disable-ScheduledTask -TaskName $Task.Name -TaskPath $Task.Path -ErrorAction Stop
         } catch {
