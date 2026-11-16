@@ -26,7 +26,9 @@ Actions are pinned by full commit SHA with the version in a trailing comment
 - `update-dependencies.yml` runs the dependency update nightly and opens its pull request, which
   `ci.yml` skips: [dependency-update.md](dependency-update.md) describes both.
 - `zizmor.yml` runs [zizmor](https://docs.zizmor.sh/) security analysis whenever files under
-  `.github/` change.
+  `.github/` change. Its findings are annotations on the run and the pull request, and any of
+  them fails the job. A finding accepted on purpose is suppressed where it occurs, with a
+  `# zizmor: ignore[<audit>]` comment saying why.
 
 ## A bad release
 
