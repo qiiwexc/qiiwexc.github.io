@@ -9,6 +9,7 @@
     . "$PSScriptRoot\..\App lifecycle\Initialize-AppDirectory.ps1"
     . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
     . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
+    . "$PSScriptRoot\Get-ChkDskYesKey.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -30,6 +31,8 @@ Describe 'Start-ChkDsk' {
         Mock Start-Process {}
         Mock Out-Success {}
         Mock Out-Failure {}
+        # Not Y, so that only an answer in the display language passes
+        Mock Get-ChkDskYesKey { return 'J' }
     }
 
     BeforeEach {
@@ -116,7 +119,7 @@ Describe 'Start-ChkDsk' {
         Should -Invoke Out-Failure -Exactly 0
     }
 
-    It 'Should schedule full scan via cmd when ScheduleFullScan is specified' {
+    It 'Should schedule full scan via cmd, answering in the display language, when ScheduleFullScan is specified' {
         Start-ChkDsk -ScheduleFullScan
 
         Should -Invoke Initialize-AppDirectory -Exactly 0
@@ -124,7 +127,7 @@ Describe 'Start-ChkDsk' {
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
             $FilePath -eq 'cmd' -and
-            $ArgumentList -eq '/c "echo y | chkdsk %SystemDrive% /f /r"' -and
+            $ArgumentList -eq '/c "echo J| chkdsk %SystemDrive% /f /r"' -and
             $NoNewWindow -eq $True -and
             $Wait -eq $True
         }

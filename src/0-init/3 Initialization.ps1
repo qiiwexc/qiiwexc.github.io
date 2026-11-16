@@ -38,11 +38,21 @@ try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::S
 Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Qiiwexc {
     public static class NativeMethods {
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetConsoleWindow();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern IntPtr LoadLibraryEx(string lpLibFileName, IntPtr hFile, uint dwFlags);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool FreeLibrary(IntPtr hLibModule);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern int FormatMessage(uint dwFlags, IntPtr lpSource, uint dwMessageId, uint dwLanguageId, StringBuilder lpBuffer, int nSize, IntPtr Arguments);
 
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);

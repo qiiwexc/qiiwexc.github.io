@@ -6,8 +6,11 @@ function Start-ChkDsk {
     try {
         if ($ScheduleFullScan) {
             Write-LogInfo 'Scheduling full Check Disk scan...'
+            # chkdsk cannot check the drive Windows runs from, and asks whether to check it at the next restart instead,
+            # in the display language, which the answer has to be in too
+            Set-Variable -Option Constant YesKey ([String](Get-ChkDskYesKey))
             # Name the system drive explicitly — without it chkdsk targets the drive of the current directory
-            Start-Process 'cmd' -ArgumentList '/c "echo y | chkdsk %SystemDrive% /f /r"' -NoNewWindow -Wait -ErrorAction Stop
+            Start-Process 'cmd' -ArgumentList "/c `"echo $YesKey| chkdsk %SystemDrive% /f /r`"" -NoNewWindow -Wait -ErrorAction Stop
             Write-LogWarning 'Full disc scan scheduled. Please restart your computer to allow Check Disk to run before Windows starts.'
             Out-Success
         } else {
