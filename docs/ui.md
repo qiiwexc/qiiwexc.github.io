@@ -41,6 +41,9 @@ and every button given a `Name` into `$BUTTONS`.
   default is a dashed rectangle in the system's control text colour, which the dark theme hides.
   The log hides its caret, so its border shows the focus instead. A focus visual appears only after
   keyboard input, so `.\test-visual.bat` never sees one: check a change to them on the real window.
+- The window has no caption, so Windows opens its window menu neither on Alt+Space nor on a right
+  click on the title bar. `Form.ps1` opens it for both (`ShowWindowMenu`): its Move and Size, then
+  the arrow keys, are how the window is moved and resized without a mouse.
 
 ## Handlers and async operations
 

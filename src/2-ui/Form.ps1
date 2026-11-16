@@ -431,6 +431,30 @@ $TitleBar.Add_MouseLeftButtonDown( {
         try { $FORM.DragMove() } catch { $null = $_ }
     } )
 
+# Windows opens the window menu (Restore, Move, Size, Minimise, Maximise, Close) from a caption, which this window draws
+# itself, so Alt+Space and a right click on the title bar open it here. Move and Size then take the arrow keys, which is
+# how the window is moved and sized from the keyboard. The menu opens at a point of the title bar, which ShowSystemMenu
+# takes on the screen in device-independent pixels, where PointToScreen gives device pixels
+Set-Variable -Option Constant ShowWindowMenu ([ScriptBlock] {
+        param(
+            [Parameter(Position = 0, Mandatory)][Windows.Point]$Position
+        )
+
+        Set-Variable -Option Constant ScreenPosition ([Windows.Point]$TitleBar.PointToScreen($Position))
+        Set-Variable -Option Constant FromDevice ([Windows.Media.Matrix][Windows.PresentationSource]::FromVisual($FORM).CompositionTarget.TransformFromDevice)
+        [Windows.SystemCommands]::ShowSystemMenu($FORM, $FromDevice.Transform($ScreenPosition))
+    })
+
+$FORM.Add_PreviewKeyDown( {
+        [Windows.Input.KeyEventArgs]$KeyEvent = $args[1]
+        if ($KeyEvent.Key -eq [Windows.Input.Key]::System -and $KeyEvent.SystemKey -eq [Windows.Input.Key]::Space -and
+            [Windows.Input.Keyboard]::Modifiers -eq [Windows.Input.ModifierKeys]::Alt) {
+            $KeyEvent.Handled = $True
+            & $ShowWindowMenu ([Windows.Point]::new(0, $TitleBar.ActualHeight))
+        }
+    } )
+$TitleBar.Add_MouseRightButtonUp( { & $ShowWindowMenu $args[1].GetPosition($TitleBar) } )
+
 # A window that cannot be fitted to its tabs stays as tall as the screen, which still shows everything
 $FORM.Add_Loaded( {
         try {
