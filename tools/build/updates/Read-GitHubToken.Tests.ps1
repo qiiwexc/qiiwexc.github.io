@@ -145,6 +145,28 @@ Describe 'Read-GitHubToken' {
         Should -Invoke Read-TextFile -Exactly 0
     }
 
+    It 'Should warn when env file path is in a sibling folder whose name starts with the repository root' {
+        Mock git { return 'C:\fake_repo' }
+        Mock Resolve-Path { return 'C:\fake_repo-other\TEST_ENV_PATH' } -ParameterFilter { $Path -eq $TestEnvPath }
+        Mock Resolve-Path { return 'C:\fake_repo' } -ParameterFilter { $Path -ne $TestEnvPath }
+
+        Read-GitHubToken $TestEnvPath | Should -BeNullOrEmpty
+
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Read-TextFile -Exactly 0
+    }
+
+    It 'Should read env file inside the repository root spelled in another case' {
+        Mock git { return 'C:\fake_repo' }
+        Mock Resolve-Path { return 'c:\FAKE_REPO\TEST_ENV_PATH' } -ParameterFilter { $Path -eq $TestEnvPath }
+        Mock Resolve-Path { return 'C:\fake_repo' } -ParameterFilter { $Path -ne $TestEnvPath }
+        Mock Read-TextFile { return @('GITHUB_TOKEN=TEST_GITHUB_TOKEN_CONTENT') }
+
+        Read-GitHubToken $TestEnvPath | Should -BeExactly 'TEST_GITHUB_TOKEN_CONTENT'
+
+        Should -Invoke Write-LogWarning -Exactly 0
+    }
+
     It 'Should return token from environment variable' {
         $env:GITHUB_TOKEN = 'ENV_TOKEN_VALUE'
         try {

@@ -12,7 +12,8 @@ function Update-Dependencies {
 
     Set-Variable -Option Constant UpdatesPath ([String]"$BuilderPath\updates")
 
-    Set-Variable -Option Constant EnvFile ([String]'.env')
+    # The project's own, whichever directory the build was started from
+    Set-Variable -Option Constant EnvFile ([String]"$(Split-Path -Parent $ResourcesPath)\.env")
     Set-Variable -Option Constant DependenciesFile ([String]"$ResourcesPath\dependencies.json")
     Set-Variable -Option Constant UrlsFile ([String]"$ResourcesPath\urls.json")
 

@@ -14,7 +14,9 @@ function Read-GitHubToken {
     # $ErrorActionPreference = 'Stop' git's error output would otherwise throw here
     Set-Variable -Option Constant GitRoot ([String]$(try { Resolve-Path (git rev-parse --show-toplevel 2>$Null) -ErrorAction SilentlyContinue } catch { $Null }))
 
-    if ($ResolvedPath -and $GitRoot -and -not $ResolvedPath.StartsWith($GitRoot)) {
+    # Ignoring case, as Windows does: the current directory and git can spell the same folder differently. The
+    # separator keeps out a sibling folder whose name starts with the repository's
+    if ($ResolvedPath -and $GitRoot -and -not $ResolvedPath.StartsWith("$($GitRoot.TrimEnd('\'))\", [StringComparison]::OrdinalIgnoreCase)) {
         Write-LogWarning "Environment file path '$EnvPath' is outside the repository root"
         return
     }

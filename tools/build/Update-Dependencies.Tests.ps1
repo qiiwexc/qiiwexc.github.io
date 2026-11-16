@@ -21,7 +21,7 @@ BeforeAll {
 
     Set-Variable -Option Constant BuilderPath ([String]$PSScriptRoot)
 
-    Set-Variable -Option Constant TestResourcesPath ([String]'TEST_RESOURCES_PATH')
+    Set-Variable -Option Constant TestResourcesPath ([String]'TEST_PROJECT_ROOT\resources')
     Set-Variable -Option Constant TestWipPath ([String]'TEST_WIP_PATH')
     Set-Variable -Option Constant TestQuarantineFile ([String]'TEST_QUARANTINE_FILE')
 
@@ -237,7 +237,7 @@ Describe 'Update-Dependencies' {
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Read-GitHubToken -Exactly 1
-        Should -Invoke Read-GitHubToken -Exactly 1 -ParameterFilter { $EnvPath -eq '.env' }
+        Should -Invoke Read-GitHubToken -Exactly 1 -ParameterFilter { $EnvPath -eq 'TEST_PROJECT_ROOT\.env' }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Read-JsonFile -Exactly 1
         Should -Invoke Read-JsonFile -Exactly 1 -ParameterFilter { $Path -eq $TestDependenciesFile }
