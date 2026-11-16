@@ -73,6 +73,24 @@ Describe 'Select-Releases' {
         }
     }
 
+    It 'Should take the highest version rather than the release listed first' {
+        # A patch to an older line, published after the newer release
+        Mock Invoke-GitAPI { return @( @{ tag_name = 'v1.5.1' }, @{ tag_name = $TestNewVersion }, @{ tag_name = $TestCurrentVersion } ) }
+
+        Select-Releases $TestDependency | Should -BeExactly @($TestNewVersionUrl, "https://github.com/$TestRepositoryName/releases/tag/v1.5.1")
+
+        Should -Invoke Set-NewVersion -Exactly 1
+        Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter { $LatestVersion -eq $TestNewVersion }
+    }
+
+    It 'Should take the release listed first when no tag is a version' {
+        Mock Invoke-GitAPI { return @( @{ tag_name = 'nightly-b' }, @{ tag_name = 'nightly-a' } ) }
+
+        Select-Releases $TestDependency | Should -BeExactly @("https://github.com/$TestRepositoryName/releases/tag/nightly-b")
+
+        Should -Invoke Set-NewVersion -Exactly 1 -ParameterFilter { $LatestVersion -eq 'nightly-b' }
+    }
+
     It 'Should link the latest release when the current one is further back than those listed' {
         Mock Invoke-GitAPI { return @( @{ tag_name = $TestLatestVersion }, @{ tag_name = $TestNewVersion } ) }
 

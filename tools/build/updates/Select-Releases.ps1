@@ -23,16 +23,23 @@ function Select-Releases {
         throw "None of the $($Releases.Count) most recent releases of '$Repository' is a stable one with a tag"
     }
 
-    Set-Variable -Option Constant LatestVersion ([String]($FilteredReleases[0].tag_name))
+    Set-Variable -Option Constant AllVersions ([String[]]($FilteredReleases | ForEach-Object { $_.tag_name }))
+    Set-Variable -Option Constant ParseableVersions ([String[]]@($AllVersions | Where-Object {
+                try { [Void][Version]($_ -replace '^v' -replace '-.*$'); $True } catch { $False }
+            }))
+    Set-Variable -Option Constant SortedVersions ([String[]]@($ParseableVersions | Sort-Object { [Version]($_ -replace '^v' -replace '-.*$') } -Descending))
+
+    # The API lists releases in the order they were created, so a patch to an older line published after a newer
+    # release comes first: the highest version is the latest. Without one to compare, the order is all there is
+    if ($SortedVersions.Count -gt 0) {
+        Set-Variable -Option Constant LatestVersion ([String]$SortedVersions[0])
+    } else {
+        Set-Variable -Option Constant LatestVersion ([String]$FilteredReleases[0].tag_name)
+    }
 
     if ($LatestVersion -ne $CurrentVersion) {
         Set-NewVersion $Dependency $LatestVersion
 
-        Set-Variable -Option Constant AllVersions ([String[]]($FilteredReleases | ForEach-Object { $_.tag_name }))
-        Set-Variable -Option Constant ParseableVersions ([String[]]($AllVersions | Where-Object {
-                    try { [Void][Version]($_ -replace '^v' -replace '-.*$'); $True } catch { $False }
-                }))
-        Set-Variable -Option Constant SortedVersions ([String[]]($ParseableVersions | Sort-Object { [Version]($_ -replace '^v' -replace '-.*$') } -Descending))
         Set-Variable -Option Constant NewVersionCount ([Int]$SortedVersions.IndexOf($CurrentVersion))
 
         if ($NewVersionCount -gt 0) {
