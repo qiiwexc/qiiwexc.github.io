@@ -56,6 +56,14 @@ exceptions:
   are unsigned, so there is neither a checksum to pin nor a signature to check. Its version is
   read from its changelog, `https://sdi.com.ru/Changelog.txt`, only to keep a record of it.
 
+Two URLs in `urls.json` look like mistakes and are deliberate:
+
+- `URL_UNCHECKY` points at a download mirror, `fi.softradar.com`, because the publisher's own
+  site is down. The file is pinned by `SHA256_UNCHECKY` and carries the Authenticode signature
+  of its publisher, Reason Software Company Inc.
+- `URL_WINDOWS_10` is plain `http://`, because rutracker.ru serves no HTTPS. It is a page the
+  app opens in the browser, not a download it runs.
+
 ## Versioning
 
 Locally: `YY.M.D` (from current date). In CI on a tag: parsed from `$Env:GITHUB_REF_NAME`
