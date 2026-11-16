@@ -1,3 +1,4 @@
+#pester:no-parallel - runs operations for real, with WPF controls and a dispatcher, which need an STA thread, and parallel workers are MTA
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
@@ -121,6 +122,180 @@ Describe 'Start-AsyncOperation' {
 
         Should -Invoke Stop-AsyncOperation -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
+    }
+}
+
+Describe 'An operation run for real' {
+    BeforeAll {
+        Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase, System.Drawing
+
+        . "$PSScriptRoot\..\App lifecycle\Invoke-OnDispatcher.ps1"
+
+        # The window and what the operations are given of it. This thread stands in for the UI thread: the window is
+        # never shown, so the tests run its dispatcher themselves (Wait-AsyncOperation)
+        Set-Variable -Option Constant FORM ([Windows.Window]::new())
+        Set-Variable -Option Constant PROGRESSBAR ([Windows.Controls.ProgressBar]::new())
+        Set-Variable -Option Constant LOG_BOX ([Windows.Controls.RichTextBox]::new())
+        Set-Variable -Option Constant LOG ([Windows.Documents.Paragraph]$LOG_BOX.Document.Blocks.FirstBlock)
+        Set-Variable -Option Constant ICON_DEFAULT ([Drawing.SystemIcons]::Application)
+        Set-Variable -Option Constant ICON_WORKING ([Drawing.SystemIcons]::Information)
+
+        # What every operation is given besides its own variables
+        Set-Variable -Option Constant SYSTEM_LANGUAGE ([String]'TEST_SYSTEM_LANGUAGE')
+        Set-Variable -Scope Script -Option Constant CONFIG_TEST_ASYNC ([String]'TEST_CONFIG')
+
+        Set-Variable -Option Constant UiThreadId ([Int][Threading.Thread]::CurrentThread.ManagedThreadId)
+
+        # A function of the app, which the operation gets a copy of
+        function Get-TestText {
+            return 'TEST_FUNCTION_OUTPUT'
+        }
+
+        # A command that touches the window, which an operation may only run on the UI thread
+        function Set-TestWindowValue {
+            param(
+                [Parameter(Position = 0, Mandatory)][Int]$CallerThreadId
+            )
+
+            $script:WindowCalls.Add([PSCustomObject]@{ CallerThreadId = $CallerThreadId; ThreadId = [Threading.Thread]::CurrentThread.ManagedThreadId })
+        }
+
+        # Runs the dispatcher, as the window would, until the operation has completed, for 30 seconds at most
+        function Wait-AsyncOperation {
+            $script:WaitFrame = [Windows.Threading.DispatcherFrame]::new()
+            $script:WaitDeadline = [DateTime]::Now.AddSeconds(30)
+            $script:WaitTimer = [Windows.Threading.DispatcherTimer]::new()
+            $script:WaitTimer.Interval = [TimeSpan]::FromMilliseconds(20)
+            $script:WaitTimer.Add_Tick( {
+                    if (-not $script:ASYNC.Running -or [DateTime]::Now -gt $script:WaitDeadline) {
+                        $script:WaitFrame.Continue = $False
+                    }
+                } )
+            $script:WaitTimer.Start()
+            [Windows.Threading.Dispatcher]::PushFrame($script:WaitFrame)
+            $script:WaitTimer.Stop()
+
+            $script:ASYNC.Running | Should -BeFalse -Because 'the operation should have completed within 30 seconds'
+        }
+
+        Mock Write-Host {}
+        Mock Write-FormLog {}
+        Mock Write-LogInfo {}
+        Mock Write-LogWarning {}
+        Mock Write-LogError {}
+    }
+
+    BeforeEach {
+        $script:ASYNC = @{
+            Running         = $False
+            Cancelling      = $False
+            Button          = $Null
+            OriginalContent = $Null
+            OnComplete      = $Null
+            PS              = $Null
+            Handle          = $Null
+            Runspace        = $Null
+            Timer           = $Null
+        }
+        $script:ASYNC_BUTTONS = [Collections.Generic.Dictionary[Object, Bool]]::new()
+        # The functions are copied as they are when the first operation starts: from scratch, so these tests' are among them
+        $script:ASYNC_USER_FUNCTIONS = $Null
+
+        [Collections.Generic.List[Object]]$script:CompletionOutput = @()
+        [Collections.Generic.List[Object]]$script:WindowCalls = @()
+    }
+
+    AfterEach {
+        # The progress bar's reset waits for a dispatcher that no test runs any more
+        if ($script:PROGRESSBAR_RESET_TIMER) {
+            $script:PROGRESSBAR_RESET_TIMER.Stop()
+        }
+    }
+
+    It 'Should run the operation on a thread of its own, with what it is given, and hand its output to the UI thread' {
+        Start-AsyncOperation -Variables @{ TestValue = 'TEST_VALUE' } -OnComplete {
+            param($Output)
+            $script:CompletionOutput.AddRange([Object[]]$Output)
+            $script:CompletionOutput.Add([Threading.Thread]::CurrentThread.ManagedThreadId)
+        } {
+            Write-Warning 'TEST_WARNING'
+            "$TestValue|$SYSTEM_LANGUAGE|$CONFIG_TEST_ASYNC|$(Get-TestText)"
+            [Threading.Thread]::CurrentThread.ManagedThreadId
+        }
+
+        $script:ASYNC.Running | Should -BeTrue
+
+        Wait-AsyncOperation
+
+        $script:CompletionOutput | Should -HaveCount 3
+        $script:CompletionOutput[0] | Should -BeExactly 'TEST_VALUE|TEST_SYSTEM_LANGUAGE|TEST_CONFIG|TEST_FUNCTION_OUTPUT'
+        $script:CompletionOutput[1] | Should -Not -Be $UiThreadId
+        $script:CompletionOutput[2] | Should -Be $UiThreadId
+        Should -Invoke Write-FormLog -Exactly 1
+        Should -Invoke Write-FormLog -Exactly 1 -ParameterFilter { $Level -eq [LogLevel]::WARN -and $Message -match 'TEST_WARNING' }
+        Should -Invoke Write-LogError -Exactly 0
+        $script:ASYNC.PS | Should -BeNullOrEmpty
+        $script:ASYNC.Runspace | Should -BeNullOrEmpty
+    }
+
+    It 'Should let the operation reach the window through the UI thread' {
+        Start-AsyncOperation {
+            Invoke-OnDispatcher 'Set-TestWindowValue' @{ CallerThreadId = [Threading.Thread]::CurrentThread.ManagedThreadId }
+        }
+
+        Wait-AsyncOperation
+
+        $script:WindowCalls | Should -HaveCount 1
+        $script:WindowCalls[0].CallerThreadId | Should -Not -Be $UiThreadId
+        $script:WindowCalls[0].ThreadId | Should -Be $UiThreadId
+        Should -Invoke Write-LogError -Exactly 0
+    }
+
+    It 'Should fail an operation that reads a variable it was not given, under strict mode' {
+        Start-AsyncOperation -OnComplete { $script:CompletionOutput.Add('CALLED') } {
+            $TestVariableNotPassed
+        }
+
+        Wait-AsyncOperation
+
+        $script:CompletionOutput | Should -HaveCount 0
+        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1 -ParameterFilter { $Message -match 'TestVariableNotPassed' }
+    }
+
+    It 'Should report a failed operation once' {
+        Start-AsyncOperation { throw 'TEST_FAILURE' }
+
+        Wait-AsyncOperation
+
+        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1 -ParameterFilter { $Message -eq 'Operation failed: TEST_FAILURE' }
+        Should -Invoke Write-FormLog -Exactly 0
+    }
+
+    It 'Should cancel the operation when its button is clicked again, and give the button back' {
+        Set-Variable -Option Constant Button ([Windows.Controls.Button]::new())
+        $Button.Content = 'TEST_BUTTON'
+        Register-AsyncButton $Button
+        Set-Variable -Option Constant Started ([Diagnostics.Stopwatch]::StartNew())
+
+        Start-AsyncOperation -Button $Button { Start-Sleep -Seconds 60 }
+
+        $Button.Content | Should -Match 'Cancel$'
+        $Button.IsEnabled | Should -BeTrue
+
+        Start-AsyncOperation -Button $Button { }
+
+        $Button.IsEnabled | Should -BeFalse
+
+        Wait-AsyncOperation
+
+        $Started.Elapsed.TotalSeconds | Should -BeLessThan 30
+        $Button.Content | Should -BeExactly 'TEST_BUTTON'
+        $Button.IsEnabled | Should -BeTrue
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -eq 'Cancelling operation...' }
+        Should -Invoke Write-LogInfo -Exactly 1 -ParameterFilter { $Message -eq 'Operation cancelled' }
+        Should -Invoke Write-LogError -Exactly 0
     }
 }
 

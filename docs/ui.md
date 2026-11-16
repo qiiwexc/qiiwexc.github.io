@@ -72,6 +72,9 @@ and every button given a `Name` into `$BUTTONS`.
 - `Start-AsyncOperation` copies function bodies into its runspace, not the handler's scope, so
   an operation gets only what is passed with `-Variables` (and the app-wide variables it
   injects). The app's enums (`[LogLevel]`, `[IconName]`) resolve there only inside those
-  functions, not in the operation's own script block. `src/2-ui/Tabs.Tests.ps1` fails on a
-  variable that is not passed, on a checkbox or a named button that is read but not defined, or
-  defined but never read, and on a button that starts an operation without being registered.
+  functions, not in the operation's own script block. `Start-AsyncOperation.Tests.ps1` runs real
+  operations, pumping the dispatcher as the window would, so a change to what the runspace is
+  given, or to how an operation completes, fails or is cancelled, shows there.
+  `src/2-ui/Tabs.Tests.ps1` fails on a variable that is not passed, on a checkbox or a named
+  button that is read but not defined, or defined but never read, and on a button that starts an
+  operation without being registered.
