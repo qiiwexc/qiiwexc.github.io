@@ -26,7 +26,8 @@ Describe 'Invoke-GitAPI' {
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
             $Uri -eq $TestUrl -and
             $Method -eq 'Get' -and
-            $UseBasicParsing -eq $True
+            $UseBasicParsing -eq $True -and
+            $TimeoutSec -eq 30
         }
         Should -Invoke Out-Failure -Exactly 0
     }
@@ -42,6 +43,7 @@ Describe 'Invoke-GitAPI' {
             $Uri -eq $TestUrl -and
             $Method -eq 'Get' -and
             $UseBasicParsing -eq $True -and
+            $TimeoutSec -eq 30 -and
             $Headers.Authorization -eq "Bearer $TestGitHubToken"
         }
         Should -Invoke Out-Failure -Exactly 0

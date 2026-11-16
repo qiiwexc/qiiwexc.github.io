@@ -8,11 +8,12 @@ function Invoke-GitAPI {
 
     Write-LogInfo "Invoking API: $Uri" $LogIndentLevel
 
+    # A server that stops answering fails the check rather than holding up the whole update
     try {
         if ($GitHubToken) {
-            Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest $Uri -Method Get -UseBasicParsing -Headers @{ Authorization = "Bearer $GitHubToken" }))
+            Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest $Uri -Method Get -UseBasicParsing -TimeoutSec 30 -Headers @{ Authorization = "Bearer $GitHubToken" }))
         } else {
-            Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest $Uri -Method Get -UseBasicParsing))
+            Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest $Uri -Method Get -UseBasicParsing -TimeoutSec 30))
         }
     } catch {
         Out-Failure "Failed to invoke API '$Uri': $_" $LogIndentLevel
