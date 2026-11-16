@@ -20,6 +20,15 @@ runs:
       working-directory: artifacts/build
       run: sha256sum qiiwexc.bat qiiwexc.ps1 autounattend-*.xml > SHA256SUMS.txt
 
+    # The checksums file is written beside the assets, so it shows a download is intact, not that
+    # this workflow made it. A signed provenance attestation of every file it lists does: it binds
+    # each digest to this repository, workflow and commit, and 'gh attestation verify' checks it.
+    # Made before the release, so a failure leaves no release without one
+    - name: Attest build provenance
+      uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+      with:
+        subject-checksums: artifacts/build/SHA256SUMS.txt
+
     - name: Create release
       shell: bash
       working-directory: artifacts/build

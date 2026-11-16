@@ -12,6 +12,12 @@ Actions are pinned by full commit SHA with the version in a trailing comment
   `.github/actions/deploy/action.yml`) to GitHub Pages — add new site files there — and
   `release` creates a GitHub Release with `qiiwexc.bat`, `qiiwexc.ps1`, `autounattend-*.xml` and
   `SHA256SUMS.txt` as assets (via `gh release create`), unless one already exists for the tag.
+- Before creating the release, `release` attests the build provenance of every file
+  `SHA256SUMS.txt` lists (`actions/attest`): a Sigstore-signed statement, in the public
+  transparency log, that this repository's workflow built that digest from that commit. The
+  checksums file only shows that a download is intact, as it is written beside the assets; the
+  attestation shows where it came from. Check a download with
+  `gh attestation verify qiiwexc.bat --repo qiiwexc/qiiwexc.github.io`.
 - A release is cut by pushing a `vYY.M.D` tag: `release.bat` tags `origin/master` from a local
   checkout (it refuses if `HEAD` differs), and the manual `tag.yml` workflow, which refuses to
   run from any branch but master, tags on GitHub and then dispatches `ci.yml` for the tag, since

@@ -93,6 +93,8 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write # Required to create the GitHub release and upload its assets
+      id-token: write # Required by actions/attest to request a Sigstore signing certificate via OIDC
+      attestations: write # Required by actions/attest to store the release assets' provenance
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
