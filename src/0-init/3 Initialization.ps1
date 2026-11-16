@@ -69,4 +69,6 @@ Set-Variable -Option Constant PATH_OOSHUTUP10 ([String]"$env:ProgramData\OOShutU
 
 
 Set-Variable -Option Constant IS_LAPTOP ([Bool]((Get-CimInstance -Class Win32_ComputerSystem -Property PCSystemType).PCSystemType -eq 2))
-Set-Variable -Option Constant SYSTEM_LANGUAGE ([String](Get-SystemLanguage))
+# The language Windows was installed in, from .NET itself: Get-SystemPreferredUILanguage, which reads the same, comes
+# from a module that Windows ships only from 11 22H2 on
+Set-Variable -Option Constant SYSTEM_LANGUAGE ([String][Globalization.CultureInfo]::InstalledUICulture.Name)
