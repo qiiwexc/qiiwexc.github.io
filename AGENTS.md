@@ -152,7 +152,7 @@ a time, and reaches the window only through `Invoke-OnDispatcher` ([`ui`](docs/u
   PowerShell's core modules or on its list of Windows commands - which takes a new one only when
   every supported Windows has it, or the code checks for it first - and that nothing passes
   arguments to a function that takes none. Coverage is measured on `tools/common`, `tools/build`,
-  `src/1-components` and `src/4-functions`
+  `src/1-components` and `src/4-functions`, against the 90% target in `PesterSettings.ps1`
 - Tag tests `WIP` to run them in isolation via `.\test-wip.bat`. Tests tagged `Visual` (the
   rendering comparison in `tools/ui`) run only with `-Visual`, via `.\test-visual.bat`, never in
   CI

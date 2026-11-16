@@ -34,15 +34,18 @@ param(
         ExcludeTag = $(if ($Visual) { $Null } else { 'Visual' })
     }
     CodeCoverage = @{
-        Enabled    = $Coverage.ToBool()
+        Enabled               = $Coverage.ToBool()
         # Start-up scripts (0-init) and data files (3-configs) are checked by tests but not measured
-        Path       = @(
+        Path                  = @(
             "$PSScriptRoot\tools\common",
             "$PSScriptRoot\tools\build",
             "$PSScriptRoot\src\1-components",
             "$PSScriptRoot\src\4-functions"
         )
-        OutputPath = "$PSScriptRoot\build\coverage.xml"
+        OutputPath            = "$PSScriptRoot\build\coverage.xml"
+        # tools\test.ps1 fails a coverage run below it. Close enough under the suite's coverage that losing the
+        # tests of a whole area fails the run, with room left for code only a real window or system can run
+        CoveragePercentTarget = 90
     }
     Output       = @{
         Verbosity = 'Detailed'
