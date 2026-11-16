@@ -1,3 +1,4 @@
+# Fails by throwing, for the caller to report once
 function Write-ConfigurationFile {
     param(
         [Parameter(Position = 0, Mandatory)][String]$AppName,
@@ -7,20 +8,15 @@ function Write-ConfigurationFile {
 
     Set-Variable -Option Constant LogIndentLevel ([Int]1)
 
-    try {
-        Stop-ProcessIfRunning $AppName
+    Stop-ProcessIfRunning $AppName
 
-        Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
+    Write-LogInfo "Writing $AppName configuration to '$Path'..." $LogIndentLevel
 
-        New-Directory (Split-Path -Parent $Path -ErrorAction Stop)
+    New-Directory (Split-Path -Parent $Path -ErrorAction Stop)
 
-        # The apps read UTF-8, which a merged file can hold beyond the ASCII of the app's own configs, such as a
-        # path under a user name in Cyrillic
-        Write-Utf8File $Path $Content
+    # The apps read UTF-8, which a merged file can hold beyond the ASCII of the app's own configs, such as a
+    # path under a user name in Cyrillic
+    Write-Utf8File $Path $Content
 
-        Out-Success $LogIndentLevel
-    } catch {
-        Write-LogWarning "Failed to write configuration file '$Path': $_" $LogIndentLevel
-        throw $_
-    }
+    Out-Success $LogIndentLevel
 }

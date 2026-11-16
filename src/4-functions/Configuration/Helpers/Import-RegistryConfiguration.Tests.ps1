@@ -58,7 +58,7 @@ Describe 'Import-RegistryConfiguration' {
             $Content -eq "TEST_CONTENT1`nTEST_CONTENT2" -and
             $Path -eq $TestKeyFilePath
         }
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -81,7 +81,7 @@ Describe 'Import-RegistryConfiguration' {
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 0
         Should -Invoke Invoke-RegistryImport -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -93,7 +93,7 @@ Describe 'Import-RegistryConfiguration' {
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Invoke-RegistryImport -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -104,7 +104,7 @@ Describe 'Import-RegistryConfiguration' {
 
         Should -Invoke Invoke-RegistryImport -Exactly 1
         Should -Invoke Get-RefusedRegistryKey -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
@@ -114,7 +114,7 @@ Describe 'Import-RegistryConfiguration' {
 
         { Import-RegistryConfiguration $TestAppName $TestContent } | Should -Throw $TestException
 
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 }

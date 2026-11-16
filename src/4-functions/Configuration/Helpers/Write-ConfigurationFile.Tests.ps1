@@ -59,7 +59,7 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
     }
 
     It 'Should handle Split-Path failure' {
@@ -72,7 +72,7 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
     }
 
     It 'Should handle New-Directory failure' {
@@ -85,7 +85,7 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
     }
 
     It 'Should handle Write-Utf8File failure' {
@@ -98,6 +98,6 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Out-Success -Exactly 0
-        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
     }
 }

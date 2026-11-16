@@ -211,8 +211,10 @@ function Complete-AsyncOperation {
         Write-LogError "Operation failed: $($script:ASYNC.PS.InvocationStateInfo.Reason.Message)"
     }
 
+    # Only a completed operation has output to collect: for a failed one, EndInvoke would throw the error already
+    # reported above a second time
     [PSObject[]]$Output = @()
-    if ($State -ne 'Stopped') {
+    if ($State -eq 'Completed') {
         try { $Output = @($script:ASYNC.PS.EndInvoke($script:ASYNC.Handle)) } catch {
             Write-LogError "Async operation error: $($_.Exception.Message)"
         }

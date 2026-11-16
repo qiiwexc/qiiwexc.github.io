@@ -293,6 +293,28 @@ Describe 'Complete-AsyncOperation' {
         Should -Invoke Write-LogError -Exactly 1
     }
 
+    # EndInvoke throws the error that failed the operation again, as a real PowerShell instance does
+    It 'Should report a failed operation once' {
+        $script:ASYNC.PS = New-TestAsyncPS -State 'Failed' -Reason ([Exception]::new('TEST_FAILURE'))
+        $script:ASYNC.PS | Add-Member -MemberType ScriptMethod -Name EndInvoke -Value { param($Handle) throw 'TEST_FAILURE' } -Force
+
+        Complete-AsyncOperation
+
+        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1 -ParameterFilter { $Message -eq 'Operation failed: TEST_FAILURE' }
+    }
+
+    It 'Should report an operation that completed but whose output cannot be collected' {
+        $script:ASYNC.PS | Add-Member -MemberType ScriptMethod -Name EndInvoke -Value { param($Handle) throw 'TEST_FAILURE' } -Force
+        $script:ASYNC.OnComplete = { param($Output) $script:CompletionOutput.Add('CALLED') }
+
+        Complete-AsyncOperation
+
+        Should -Invoke Write-LogError -Exactly 1
+        Should -Invoke Write-LogError -Exactly 1 -ParameterFilter { $Message -like 'Async operation error: *TEST_FAILURE*' }
+        $script:CompletionOutput | Should -BeExactly @('CALLED')
+    }
+
     It 'Should not call the completion handler for a cancelled operation' {
         $script:ASYNC.PS = New-TestAsyncPS -State 'Stopped'
         $script:ASYNC.OnComplete = { param($Output) $script:CompletionOutput.Add('CALLED') }
