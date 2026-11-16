@@ -80,7 +80,8 @@ and afterwards keeps the new one as the `dependency-quarantine` artifact for 30 
 the changed `dependencies.json`, with the pull request description it wrote, to a separate job
 that force-pushes the `chore/update-dependencies` branch and opens or updates its pull request
 whenever a dependency whose `opensPullRequest` is `true` moved, then runs the `test` and `build`
-actions on it and reports both as commit statuses, which stand in for `ci.yml`'s checks of those
+actions on the commit it pushed (by SHA, not the branch, which a later push could move) and
+reports both on that commit as commit statuses, which stand in for `ci.yml`'s checks of those
 names.
 
 `ci.yml` skips any pull request that changes only `dependencies.json`, because GitHub holds the

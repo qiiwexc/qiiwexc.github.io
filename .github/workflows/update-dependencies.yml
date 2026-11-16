@@ -103,7 +103,6 @@ jobs:
       contents: write # Required to push the update branch
       pull-requests: write # Required to create and edit the update pull request
     outputs:
-      branch: ${{ steps.create-pr.outputs.branch }}
       sha: ${{ steps.create-pr.outputs.sha }}
     steps:
       - name: Check out repository
@@ -148,12 +147,13 @@ jobs:
               gh pr edit $existingPr --title $title --body-file $bodyFile
           }
 
-          "branch=$branch" >> $env:GITHUB_OUTPUT
           "sha=$(git rev-parse HEAD)" >> $env:GITHUB_OUTPUT
 
   # ci.yml skips this pull request, as it changes only resources/dependencies.json, because a run
   # it started for the bot's push would wait for approval; these two jobs check it instead, and
-  # their commit statuses stand in for ci.yml's checks of the same names
+  # their commit statuses stand in for ci.yml's checks of the same names. Both check out the commit
+  # pushed above rather than the branch, which a later push could move, so each status is reported
+  # on the commit that was actually tested
   test:
     needs: create-pull-request
     runs-on: windows-latest
@@ -162,10 +162,10 @@ jobs:
       contents: read
       statuses: write # Required to report the commit status on the update pull request
     steps:
-      - name: Check out PR branch
+      - name: Check out PR commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ needs.create-pull-request.outputs.branch }}
+          ref: ${{ needs.create-pull-request.outputs.sha }}
           persist-credentials: false
 
       - name: Test
@@ -191,10 +191,10 @@ jobs:
       contents: read
       statuses: write # Required to report the commit status on the update pull request
     steps:
-      - name: Check out PR branch
+      - name: Check out PR commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ needs.create-pull-request.outputs.branch }}
+          ref: ${{ needs.create-pull-request.outputs.sha }}
           persist-credentials: false
 
       - name: Build
