@@ -250,43 +250,86 @@ Describe 'Start-Download' {
     }
 
     It 'Should retry download on failure' {
-        $script:BitsTransferAttempts = 0
-        Mock Start-BitsTransfer {
-            $script:BitsTransferAttempts++
-            if ($script:BitsTransferAttempts -lt 2) {
+        [Int]$script:WebRequestAttempts = 0
+        Mock Invoke-WebRequest {
+            $script:WebRequestAttempts++
+            if ($script:WebRequestAttempts -lt 2) {
                 throw 'Transient error'
             }
-            return [PSCustomObject]@{ JobState = 'Transferred'; BytesTotal = 0; BytesTransferred = 0; ErrorDescription = '' }
         }
 
         [Int]$FileAppearsAtCall = 2
 
-        Start-Download $TestUrl  | Should -BeExactly $TestSavePath
+        Start-Download $TestUrl -NoBits | Should -BeExactly $TestSavePath
 
-        Should -Invoke Test-Path -Exactly 3
+        Should -Invoke Test-Path -Exactly 2
         Should -Invoke Write-LogWarning -Exactly 2
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Start-BitsTransfer -Exactly 2
-        Should -Invoke Complete-BitsTransfer -Exactly 1
-        Should -Invoke Get-Item -Exactly 2
+        Should -Invoke Invoke-WebRequest -Exactly 2
+        Should -Invoke Get-Item -Exactly 1
         Should -Invoke Start-Sleep -Exactly 1
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 1
     }
 
-    It 'Should handle Start-BitsTransfer failure' {
+    It 'Should download with a web request when BITS cannot start' {
         Mock Start-BitsTransfer { throw $TestException }
+
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
+
+        Should -Invoke Test-Path -Exactly 2
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -like "BITS transfer failed, downloading with a web request instead: *$TestException*" }
+        Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Remove-BitsTransfer -Exactly 0
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
+            $Uri -eq $TestUrl -and
+            $OutFile -eq $TestTempPath
+        }
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Move-Item -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should not go back to BITS once it has failed' {
+        Mock Start-BitsTransfer { throw $TestException }
+        [Int]$script:WebRequestAttempts = 0
+        Mock Invoke-WebRequest {
+            $script:WebRequestAttempts++
+            if ($script:WebRequestAttempts -lt 2) {
+                throw 'Transient error'
+            }
+        }
+
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
+
+        Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 2
+        Should -Invoke Start-Sleep -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should handle a failure of both BITS and the web request' {
+        Mock Start-BitsTransfer { throw $TestException }
+        Mock Invoke-WebRequest { throw $TestException }
 
         [Int]$FileAppearsAtCall = 2
 
         { Start-Download $TestUrl } | Should -Throw 'Download failed after 3 attempts*'
 
         Should -Invoke Test-Path -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 4
+        # The switch to a web request, then each failed attempt but the last and each retry
+        Should -Invoke Write-LogWarning -Exactly 5
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Start-BitsTransfer -Exactly 3
+        Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 3
         Should -Invoke Start-Sleep -Exactly 2
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
@@ -355,18 +398,66 @@ Describe 'Start-Download' {
         Should -Invoke Out-Success -Exactly 1
     }
 
-    It 'Should throw when BITS transfer enters error state' {
-        Mock Start-BitsTransfer { return [PSCustomObject]@{ JobState = 'Error'; BytesTotal = 0; BytesTransferred = 0; ErrorDescription = 'Transfer failed' } }
+    It 'Should remove a BITS job that ends in <State> and download with a web request instead' -ForEach @(
+        @{ State = 'Error' }
+        @{ State = 'TransientError' }
+        @{ State = 'Suspended' }
+    ) {
+        Mock Start-BitsTransfer { return [PSCustomObject]@{ JobState = $State; BytesTotal = 0; BytesTransferred = 0; ErrorDescription = 'Transfer failed' } }
 
         [Int]$FileAppearsAtCall = 2
 
-        { Start-Download $TestUrl } | Should -Throw 'Download failed after 3 attempts*'
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
 
-        Should -Invoke Start-BitsTransfer -Exactly 3
+        Should -Invoke Start-BitsTransfer -Exactly 1
         Should -Invoke Complete-BitsTransfer -Exactly 0
-        Should -Invoke Remove-BitsTransfer -Exactly 3
-        Should -Invoke Move-Item -Exactly 0
-        Should -Invoke Out-Success -Exactly 0
+        Should -Invoke Remove-BitsTransfer -Exactly 1
+        # The partial download, which the job leaves in place of the file
+        Should -Invoke Remove-Item -Exactly 1
+        Should -Invoke Remove-Item -Exactly 1 -ParameterFilter { $Path -eq $TestTempPath }
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -like "*BITS transfer error ($State): Transfer failed*" }
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Move-Item -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should remove the BITS job when completing it fails' {
+        Mock Complete-BitsTransfer { throw $TestException }
+
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
+
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Remove-BitsTransfer -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    # Cancelling the operation stops it wherever it is, which for a download is most likely the wait for the job
+    It 'Should remove the BITS job when the wait for it is interrupted' {
+        Mock Start-BitsTransfer { return [PSCustomObject]@{ JobState = 'Transferring'; BytesTotal = 0; BytesTransferred = 0; ErrorDescription = '' } }
+        Mock Start-Sleep { throw $TestException } -ParameterFilter { $Milliseconds -eq 200 }
+
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
+
+        Should -Invoke Complete-BitsTransfer -Exactly 0
+        Should -Invoke Remove-BitsTransfer -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should not remove a BITS job that completed' {
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
+
+        Should -Invoke Complete-BitsTransfer -Exactly 1
+        Should -Invoke Remove-BitsTransfer -Exactly 0
+        Should -Invoke Remove-Item -Exactly 0
     }
 
     It 'Should track progress during BITS transfer' {

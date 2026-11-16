@@ -35,6 +35,42 @@ function Test-FileSignature {
 }
 
 
+# A job left behind keeps transferring in the background: one that does not complete is removed, whether it failed, BITS
+# gave up on it for now (TransientError, Suspended), or the operation was cancelled while it ran
+function Invoke-BitsDownload {
+    param(
+        [Parameter(Position = 0, Mandatory)][String]$URL,
+        [Parameter(Position = 1, Mandatory)][String]$Destination
+    )
+
+    $BitsJob = Start-BitsTransfer -Source $URL -Destination $Destination -Asynchronous -ErrorAction Stop
+
+    [Bool]$Completed = $False
+    try {
+        while ($BitsJob.JobState -eq 'Transferring' -or $BitsJob.JobState -eq 'Connecting' -or $BitsJob.JobState -eq 'Queued') {
+            if ($BitsJob.BytesTotal -gt 0) {
+                Write-ActivityProgress ([Math]::Round(($BitsJob.BytesTransferred / $BitsJob.BytesTotal) * 45 + 10))
+            }
+            Start-Sleep -Milliseconds 200
+        }
+
+        if ($BitsJob.JobState -ne 'Transferred') {
+            throw "BITS transfer error ($($BitsJob.JobState)): $($BitsJob.ErrorDescription)"
+        }
+
+        Complete-BitsTransfer $BitsJob -ErrorAction Stop
+        $Completed = $True
+    } finally {
+        if (-not $Completed) {
+            Remove-BitsTransfer $BitsJob -ErrorAction SilentlyContinue
+            if (Test-Path $Destination) {
+                Remove-Item $Destination -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+}
+
+
 function Start-Download {
     param(
         [Parameter(Position = 0, Mandatory)][String]$URL,
@@ -97,6 +133,7 @@ function Start-Download {
 
     [Int]$RetryCount = 0
     [Bool]$DownloadSuccess = $False
+    [Bool]$UseBits = -not $NoBits
 
     while (-not $DownloadSuccess -and $RetryCount -lt $MaxRetries) {
         try {
@@ -106,33 +143,24 @@ function Start-Download {
                 Start-Sleep -Seconds 2
             }
 
-            if ($NoBits) {
+            if ($UseBits) {
+                try {
+                    Invoke-BitsDownload $URL $TempPath
+                } catch {
+                    # BITS refuses some accounts outright, such as an administrator's whose credentials a standard user
+                    # elevated the app with, who is not signed in. A web request does not depend on the account, so it
+                    # takes over for this attempt and every one after it
+                    $UseBits = $False
+                    Write-LogWarning "BITS transfer failed, downloading with a web request instead: $_"
+                }
+            }
+
+            if (-not $UseBits) {
                 Invoke-WebRequest -Uri $URL -OutFile $TempPath -UseBasicParsing -ErrorAction Stop
-            } else {
-                $BitsJob = Start-BitsTransfer -Source $URL -Destination $TempPath -Asynchronous -ErrorAction Stop
-
-                while ($BitsJob.JobState -eq 'Transferring' -or $BitsJob.JobState -eq 'Connecting' -or $BitsJob.JobState -eq 'Queued') {
-                    if ($BitsJob.BytesTotal -gt 0) {
-                        $DownloadPercent = [Math]::Round(($BitsJob.BytesTransferred / $BitsJob.BytesTotal) * 45 + 10)
-                        Write-ActivityProgress $DownloadPercent
-                    }
-                    Start-Sleep -Milliseconds 200
-                }
-
-                if ($BitsJob.JobState -eq 'Error') {
-                    $ErrorMessage = $BitsJob.ErrorDescription
-                    Remove-BitsTransfer $BitsJob -ErrorAction SilentlyContinue
-                    if (Test-Path $TempPath) { Remove-Item $TempPath -Force -ErrorAction SilentlyContinue }
-                    throw "BITS transfer error: $ErrorMessage"
-                }
-
-                Complete-BitsTransfer $BitsJob -ErrorAction Stop
-
-                if (-not (Test-Path $TempPath) -or (Get-Item $TempPath).Length -eq 0) {
-                    if (Test-Path $TempPath) { Remove-Item $TempPath -Force -ErrorAction SilentlyContinue }
-                    Write-LogWarning 'BITS transfer returned empty file, retrying with WebRequest'
-                    Invoke-WebRequest -Uri $URL -OutFile $TempPath -UseBasicParsing -ErrorAction Stop
-                }
+            } elseif (-not (Test-Path $TempPath) -or (Get-Item $TempPath).Length -eq 0) {
+                if (Test-Path $TempPath) { Remove-Item $TempPath -Force -ErrorAction SilentlyContinue }
+                Write-LogWarning 'BITS transfer returned empty file, retrying with WebRequest'
+                Invoke-WebRequest -Uri $URL -OutFile $TempPath -UseBasicParsing -ErrorAction Stop
             }
 
             $DownloadSuccess = $True
