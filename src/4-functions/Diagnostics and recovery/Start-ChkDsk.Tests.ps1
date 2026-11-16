@@ -43,7 +43,7 @@ Describe 'Start-ChkDsk' {
         Should -Invoke Initialize-AppDirectory -Exactly 1
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke chkdsk -Exactly 1
-        Should -Invoke chkdsk -Exactly 1 -ParameterFilter { $args -contains '/scan' -and $args -contains '/perf' }
+        Should -Invoke chkdsk -Exactly 1 -ParameterFilter { $args[0] -eq $env:SystemDrive -and $args -contains '/scan' -and $args -contains '/perf' }
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter { $Path -eq $TestLogPath }
         Should -Invoke Write-ActivityCompleted -Exactly 1

@@ -25,7 +25,8 @@ function Start-ChkDsk {
                     Set-Variable -Option Constant CodePage ([Int][System.Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage)
                 }
                 [Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding($CodePage)
-                $Null = & 'chkdsk' '/scan' '/perf' 2>&1 |
+                # The system drive, named for the same reason as for the full scan above
+                $Null = & 'chkdsk' $env:SystemDrive '/scan' '/perf' 2>&1 |
                     ForEach-Object {
                         [String]$Line = $_.TrimEnd()
                         if ($Line -match '\d+\s*%.*?(\d+)\s*%') {
