@@ -22,7 +22,11 @@ function Test-ActivatorIsRunning {
 
 
 function Test-DownloadingWindowsUpdates {
-    return Get-BitsTransfer -AllUsers | Where-Object JobState -EQ 'Transferring'
+    # Windows Update transfers as the system account, while a signed-in user's transfers, this app's own downloads
+    # among them, are not updates. The account is named from its SID, as Windows translates the name
+    Set-Variable -Option Constant SystemAccount ([String]([Security.Principal.SecurityIdentifier]'S-1-5-18').Translate([Security.Principal.NTAccount]).Value)
+
+    return Get-BitsTransfer -AllUsers | Where-Object { $_.JobState -eq 'Transferring' -and $_.OwnerAccount -eq $SystemAccount }
 }
 
 

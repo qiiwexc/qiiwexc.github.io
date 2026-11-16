@@ -11,7 +11,10 @@ BeforeAll {
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
     Set-Variable -Option Constant TestProcess ([PSObject]@{ ProcessName = 'TEST_PROCESS' })
-    Set-Variable -Option Constant TestBitsTransfer ([PSObject]@{ JobState = 'Transferring' })
+
+    # The system account as Windows names it in this language, which is how BITS names a job's owner
+    Set-Variable -Option Constant SystemAccount ([String]([Security.Principal.SecurityIdentifier]'S-1-5-18').Translate([Security.Principal.NTAccount]).Value)
+    Set-Variable -Option Constant TestBitsTransfer ([PSObject]@{ JobState = 'Transferring'; OwnerAccount = $SystemAccount })
 }
 
 Describe 'Test-WindowsDebloatIsRunning' {
@@ -157,11 +160,28 @@ Describe 'Test-DownloadingWindowsUpdates' {
     }
 
     It 'Should return false if no transfers are in transferring state' {
-        Mock Get-BitsTransfer { return @(@{ JobState = 'Suspended' }) }
+        Mock Get-BitsTransfer { return @(@{ JobState = 'Suspended'; OwnerAccount = $SystemAccount }) }
 
         Test-DownloadingWindowsUpdates | Should -BeNullOrEmpty
 
         Should -Invoke Get-BitsTransfer -Exactly 1
+    }
+
+    It "Should return false for a signed-in user's transfers, such as this app's own downloads" {
+        Mock Get-BitsTransfer { return @(@{ JobState = 'Transferring'; OwnerAccount = [Security.Principal.WindowsIdentity]::GetCurrent().Name }) }
+
+        Test-DownloadingWindowsUpdates | Should -BeNullOrEmpty
+
+        Should -Invoke Get-BitsTransfer -Exactly 1
+    }
+
+    It 'Should return only the transfers of the system account' {
+        Mock Get-BitsTransfer { return @(@{ JobState = 'Transferring'; OwnerAccount = 'TEST_DOMAIN\TEST_USER' }, $TestBitsTransfer) }
+
+        Set-Variable -Option Constant Result ([Object[]]@(Test-DownloadingWindowsUpdates))
+
+        $Result.Count | Should -Be 1
+        $Result[0].OwnerAccount | Should -BeExactly $SystemAccount
     }
 
     It 'Should handle Get-BitsTransfer failure' {
