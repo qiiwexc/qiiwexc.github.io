@@ -34,6 +34,14 @@ and every button given a `Name` into `$BUTTONS`.
   one of them cancels the close, so what has to happen only once the window closes for good, such
   as `Reset-State`, is a `Closed` handler.
 
+## Keyboard
+
+- Every style in `Form.ps1` for a control that takes focus sets `FocusVisualStyle`: `FocusVisual`
+  outside the control, the inset ones for the title bar's buttons, where the window ends. WPF's
+  default is a dashed rectangle in the system's control text colour, which the dark theme hides.
+  The log hides its caret, so its border shows the focus instead. A focus visual appears only after
+  keyboard input, so `.\test-visual.bat` never sees one: check a change to them on the real window.
+
 ## Handlers and async operations
 
 - Handlers read checkboxes at click time (`$CHECKBOXES.StartVentoy.IsChecked`). A checkbox that

@@ -10,8 +10,45 @@
 
     <Window.Resources>
 
+        <!-- Keyboard focus: Windows 11's focus rectangle, 2 pixels in the text colour around the control, which stands out
+             on the background in every theme, a high contrast one included. WPF draws it only for focus moved by the
+             keyboard. The title bar's buttons get it inside their edges, where the window ends, rounded with the window's
+             corner for the close button -->
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="-3" RadiusX="7" RadiusY="7" StrokeThickness="2" SnapsToDevicePixels="True"
+                                   Stroke="{DynamicResource FgColor}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FocusVisualInset">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border Margin="1" BorderThickness="2" SnapsToDevicePixels="True" BorderBrush="{DynamicResource FgColor}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FocusVisualCloseButton">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border Margin="1" BorderThickness="2" CornerRadius="0,6,0,0" SnapsToDevicePixels="True"
+                                BorderBrush="{DynamicResource FgColor}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Button: Windows 11's standard, neutral button; the accent colour is left to the checkboxes and the like -->
         <Style x:Key="Win11Button" TargetType="Button">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="Background" Value="{DynamicResource ButtonBgColor}" />
             <Setter Property="Foreground" Value="{DynamicResource ButtonTextColor}" />
             <Setter Property="BorderThickness" Value="1" />
@@ -64,6 +101,7 @@
 
         <!-- Title Bar Button -->
         <Style x:Key="TitleBarButton" TargetType="Button">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisualInset}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{DynamicResource FgColor}" />
             <Setter Property="BorderThickness" Value="0" />
@@ -91,6 +129,7 @@
 
         <!-- Close Button -->
         <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisualCloseButton}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -110,6 +149,7 @@
 
         <!-- CheckBox -->
         <Style x:Key="Win11CheckBox" TargetType="CheckBox">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="Foreground" Value="{DynamicResource FgColor}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontSize" Value="$FONT_SIZE_NORMAL" />
@@ -176,6 +216,7 @@
 
         <!-- TabItem -->
         <Style TargetType="TabItem">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="Foreground" Value="{DynamicResource FgColor}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontSize" Value="$FONT_SIZE_NORMAL" />
@@ -322,12 +363,22 @@
 
                 <ProgressBar x:Name="ProgressBar" Grid.Row="0" Margin="0,0,0,4" />
 
+                <!-- The log hides its caret, so with the focus in it, its border shows it instead -->
                 <Border Grid.Row="1"
                         Background="{DynamicResource LogBgColor}"
                         CornerRadius="4"
-                        BorderBrush="{DynamicResource BorderColor}"
                         BorderThickness="1"
                         Padding="4">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                    <Setter Property="BorderBrush" Value="{DynamicResource FgColor}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
                     <RichTextBox x:Name="LogTextBox"
                                  IsReadOnly="True"
                                  IsReadOnlyCaretVisible="False"
