@@ -1,8 +1,10 @@
 # A worked example - PR #65
 
-The steps of [the triage](../SKILL.md), walked through one nightly pull request. Two of its
+The steps of [the triage](../SKILL.md), walked through one nightly pull request. Three of its
 dependencies have changed kind since: Win11Debloat and O&O ShutUp10 were fetched live then, and
-are pinned downloads now, so the same releases would arrive as `Download URL` rows today.
+are pinned downloads now, so the same releases would arrive as `Download URL` rows today; the
+Unattend Generator is report-only now, so its commits would arrive under *Not applied*, with no
+row and no change to its record.
 
 `Invoke-RestMethod "$Api/pulls/65"` returned a 29,443-character body opening with this
 table, and `changed_files: 1` - `resources/dependencies.json`, four lines each way:

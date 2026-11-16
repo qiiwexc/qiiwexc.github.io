@@ -30,7 +30,10 @@ this is what triage needs of it.
 `opensPullRequest` is `true` moved: one this repository pins by version, links to specific
 builds of or embeds a config for, so the bump may need a change here even when it changes
 nothing built (`Version record only`). Every other bump rides along, so a PR can carry rows that
-did not open it, and a SystemRescue or TronScript bump never arrives on its own. A version of a
+did not open it, and a SystemRescue or TronScript bump never arrives on its own. The Unattend
+Generator never moves at all: it is `reportOnly`, its version the commit
+`templates/autounattend.xml` was generated from, so a newer commit arrives only as a comparison
+link, listed under *Not applied* below the table. A version of a
 dependency that opens the PR is applied only 7 days after the nightly first saw it, so the `To`
 column is the newest version out of that quarantine, not necessarily the upstream's latest,
 and its links and notes go only as far as that version. There is one
@@ -91,7 +94,9 @@ That one call is most of the triage: the body already quotes the release notes.
   in quarantine, a `Pending` column names it with the date the quarantine ends, and a
   dependency with only waiting versions is listed under the table. Those versions are not in
   this PR: triage the `To` column, and read `Pending` as what the next nights will bring.
-  Then comes `## Links`, grouped as other sites,
+  A report-only dependency with a newer upstream version is listed under *Not applied*, with
+  the version in use; nothing in the PR changes it, and its link compares that version with the
+  upstream's latest. Then comes `## Links`, grouped as other sites,
   GitHub commit comparisons and GitHub releases and tags. Last is `## Release notes`: one
   `<details>` block per dependency, newest release first, with mentions and issue
   references defused. It runs to tens of thousands of characters (29,443 for #65), so save

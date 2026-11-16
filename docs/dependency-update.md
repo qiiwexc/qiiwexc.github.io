@@ -32,6 +32,18 @@ the Unattend Generator, which `templates/autounattend.xml` is regenerated from b
 `Compare-Dependencies` fails on a dependency that moved without a boolean there, and a test
 checks every entry.
 
+## Report-only dependencies
+
+A dependency with `reportOnly` set to `true` is checked like any other, and its links are kept,
+but `Update-Dependencies` puts its recorded version back: that version records what a file here
+was made from, so it changes with the file, by hand. The Unattend Generator is one. Its version
+is the commit `templates/autounattend.xml` was generated from, the `<Hash>` in the template's
+`Extensions`, and a test fails when the two differ, so the commit that regenerates the template
+updates the record too. A newer upstream commit therefore never opens a pull request, nor adds a
+row to one; a pull request opened for another dependency lists it under *Not applied*, with a
+comparison from the commit in use to the upstream's latest. A local run opens that comparison
+in the browser every time, until the template is regenerated.
+
 ## The quarantine
 
 A dependency set to `true` also waits out a 7-day quarantine: a new version is applied only 7

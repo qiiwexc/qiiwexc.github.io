@@ -148,6 +148,41 @@ Describe 'New-DependencyUpdateDescription' {
         $Links | Should -MatchExactly ([Regex]::Escape($Expected))
     }
 
+    It 'Should name a report-only dependency beside its links, as not applied' {
+        [PSObject[]]$ReportOnly = @([PSCustomObject]@{
+                Name       = 'Unattend Generator'
+                Dependency = [PSCustomObject]@{ name = 'Unattend Generator'; version = '781fde52797f736de9b0426bb4a5c6048a1ae075'; source = 'GitHub'; repository = 'cschneegans/unattend-generator'; reportOnly = $True }
+            })
+
+        [String]$Description = New-DependencyUpdateDescription @($TestRufus) @($TestChangelogUrls[0]) '' @() $ReportOnly
+
+        [String[]]$Lines = $Description -split "`n"
+        $Lines[5..14] | Should -BeExactly @(
+            ''
+            'Not applied, as each version records what a file here was made from, and changes with it by hand:'
+            ''
+            '- [Unattend Generator](https://github.com/cschneegans/unattend-generator): `781fde5` in use'
+            ''
+            '## Links'
+            ''
+            '### GitHub commits'
+            ''
+            '- Unattend Generator: [`781fde5...538f930`](https://github.com/cschneegans/unattend-generator/compare/781fde52797f736de9b0426bb4a5c6048a1ae075...538f930aeea9c3d51fdd0b4822e2d076fef999e8)'
+        )
+        $Lines.Count | Should -Be 15
+    }
+
+    It 'Should leave out a report-only dependency without links' {
+        [PSObject[]]$ReportOnly = @([PSCustomObject]@{
+                Name       = 'Unattend Generator'
+                Dependency = [PSCustomObject]@{ name = 'Unattend Generator'; version = '781fde52797f736de9b0426bb4a5c6048a1ae075'; source = 'GitHub'; repository = 'cschneegans/unattend-generator'; reportOnly = $True }
+            })
+
+        [String]$Description = New-DependencyUpdateDescription @($TestRufus) @() '' @() $ReportOnly
+
+        $Description | Should -Not -Match 'Unattend Generator'
+    }
+
     It 'Should list a link no dependency claims without a name' {
         [String]$Description = New-DependencyUpdateDescription @($TestShutUp) @('https://example.com/news')
 

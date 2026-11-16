@@ -82,6 +82,11 @@ if ($HasUpdates) {
             }
         })
 
-    [String]$Description = New-DependencyUpdateDescription $Result.Updates $ChangelogUrls $env:GITHUB_TOKEN $Pending
+    # The report-only dependencies keep their version, so the description names them beside the links of theirs
+    [PSObject[]]$ReportOnly = @($NewDeps | Where-Object { $_.PSObject.Properties['reportOnly'] -and $_.reportOnly -eq $True } | ForEach-Object {
+            [PSCustomObject]@{ Name = $_.name; Dependency = $_ }
+        })
+
+    [String]$Description = New-DependencyUpdateDescription $Result.Updates $ChangelogUrls $env:GITHUB_TOKEN $Pending $ReportOnly
     Write-TextFile $DescriptionFile $Description -Normalize
 }

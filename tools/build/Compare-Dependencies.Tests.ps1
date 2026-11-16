@@ -196,12 +196,31 @@ Describe 'Compare-Dependencies' {
 }
 
 Describe 'resources\dependencies.json' {
-    It 'Should set opensPullRequest to true or false for every dependency' {
-        $Dependencies = Get-Content "$PSScriptRoot\..\..\resources\dependencies.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+    BeforeAll {
+        Set-Variable -Option Constant ProjectRoot ([String][IO.Path]::GetFullPath("$PSScriptRoot\..\.."))
+        Set-Variable -Option Constant Dependencies ([PSObject[]](Get-Content "$ProjectRoot\resources\dependencies.json" -Raw -Encoding UTF8 | ConvertFrom-Json))
+    }
 
+    It 'Should set opensPullRequest to true or false for every dependency' {
         $Dependencies |
             Where-Object { -not $_.PSObject.Properties['opensPullRequest'] -or $_.opensPullRequest -isnot [Bool] } |
             ForEach-Object { $_.name } |
             Should -BeNullOrEmpty
+    }
+
+    It 'Should set reportOnly, where it is set, to true or false' {
+        $Dependencies |
+            Where-Object { $_.PSObject.Properties['reportOnly'] -and $_.reportOnly -isnot [Bool] } |
+            ForEach-Object { $_.name } |
+            Should -BeNullOrEmpty
+    }
+
+    # The update only reports a newer commit, so the record moves when the template is regenerated, by hand
+    It 'Should record the Unattend Generator commit that templates\autounattend.xml was generated from' {
+        Set-Variable -Option Constant Generator ([PSObject]($Dependencies | Where-Object { $_.name -eq 'Unattend Generator' }))
+        Set-Variable -Option Constant Template ([String](Get-Content "$ProjectRoot\templates\autounattend.xml" -Raw -Encoding UTF8))
+
+        $Generator.reportOnly | Should -BeTrue
+        [Regex]::Match($Template, '<Hash>([0-9a-f]{40})</Hash>').Groups[1].Value | Should -BeExactly $Generator.version
     }
 }

@@ -94,7 +94,9 @@ function New-DependencyUpdateDescription {
         [Parameter(Position = 1)][AllowEmptyCollection()][String[]]$ChangelogUrls = @(),
         [Parameter(Position = 2)][String]$GitHubToken,
         # Newer versions still in quarantine, by dependency: its Name, Dependency and Versions
-        [Parameter(Position = 3)][AllowEmptyCollection()][PSObject[]]$Pending = @()
+        [Parameter(Position = 3)][AllowEmptyCollection()][PSObject[]]$Pending = @(),
+        # The report-only dependencies, which keep their version: their Name and Dependency
+        [Parameter(Position = 4)][AllowEmptyCollection()][PSObject[]]$ReportOnly = @()
     )
 
     # GitHub rejects a pull request body over 65,536 characters; the rest is headroom for the list
@@ -156,12 +158,25 @@ function New-DependencyUpdateDescription {
             $ChangelogUrls |
                 Where-Object { $_ } |
                 Select-Object -Unique |
-                ForEach-Object { ConvertTo-ChangelogLink $_ $Updates } |
+                ForEach-Object { ConvertTo-ChangelogLink $_ @(@($Updates) + @($ReportOnly)) } |
                 Sort-Object -Descending { Get-VersionSortKey $_.Tag }
         ))
 
-    # In the order of the table, and links no dependency claims last
-    Set-Variable -Option Constant Owners ([String[]]@(@($Updates | ForEach-Object { $_.Name }) + ''))
+    # A report-only dependency keeps its version, so only a link of its own says that there is a newer one
+    Set-Variable -Option Constant LinkOwners ([String[]]@($Links | ForEach-Object { $_.Owner }))
+    Set-Variable -Option Constant Unapplied ([PSObject[]]@($ReportOnly | Where-Object { $_.Name -notin $UpdateNames -and $_.Name -in $LinkOwners }))
+
+    if ($Unapplied.Count -gt 0) {
+        [Void]$Text.Append("`nNot applied, as each version records what a file here was made from, and changes with it by hand:`n`n")
+        foreach ($Entry in $Unapplied) {
+            [String]$DependencyHome = Get-DependencyHome $Entry.Dependency
+            [String]$Name = if ($DependencyHome) { "[$($Entry.Name)]($DependencyHome)" } else { $Entry.Name }
+            [Void]$Text.Append("- ${Name}: ``$((Format-DependencyVersion $Entry.Dependency.version).Replace('|', '\|'))`` in use`n")
+        }
+    }
+
+    # In the order of the table, then the report-only dependencies, and links no dependency claims last
+    Set-Variable -Option Constant Owners ([String[]]@(@($Updates | ForEach-Object { $_.Name }) + @($Unapplied | ForEach-Object { $_.Name }) + ''))
 
     # Grouped by where they point, as the three are read differently: another site's changelog,
     # a list of commits, or release notes, which are quoted in full further down

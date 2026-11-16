@@ -41,9 +41,11 @@ the development VM only (disk 0 partitioning, a local auto-logon account).
 `tools/build/unattended/Assert-UnattendedFile.ps1` fails the build if any remain, a `{KEY}`
 placeholder is unresolved, or the XML is not well-formed. The template is the output of the
 [unattend generator](https://schneegans.de/windows/unattend-generator/); the URL in its first
-comment reproduces it. After regenerating it, run the tests: `New-UnattendedBase` fails if
-something it rewrites (such as the `RemovePackage.ps1` package list) is gone, and
-`New-UnattendedFile.Tests.ps1` builds the real template end to end.
+comment reproduces it. After regenerating it, set the Unattend Generator's `version` in
+`resources/dependencies.json` to the commit in the template's `<Hash>`, which a test checks
+([`dependency-update`](dependency-update.md#report-only-dependencies)), and run the tests:
+`New-UnattendedBase` fails if something it rewrites (such as the `RemovePackage.ps1` package
+list) is gone, and `New-UnattendedFile.Tests.ps1` builds the real template end to end.
 
 ## Template substitution
 

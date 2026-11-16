@@ -100,6 +100,22 @@ Describe 'Update-Dependencies' {
         Mock Write-QuarantineState {}
     }
 
+    It 'Should keep the version of a report-only dependency and return its links' {
+        Mock Read-JsonFile {
+            [Dependency]$Dependency = New-TestDependency $SourceGitHub
+            $Dependency | Add-Member -NotePropertyName reportOnly -NotePropertyValue $True
+            return @($Dependency)
+        }
+
+        Update-Dependencies $TestResourcesPath $BuilderPath $TestWipPath $TestQuarantineFile | Should -BeExactly $TestGitHubChangelogUrl
+
+        Should -Invoke Update-GitDependency -Exactly 1
+        Should -Invoke Update-DependencyChecksum -Exactly 0
+        Should -Invoke Write-JsonFile -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
     It 'Should hold back a new version of a dependency that opens the pull request' {
         Mock Read-JsonFile { return @(New-TestDependency $SourceGitHub -OpensPullRequest) }
 

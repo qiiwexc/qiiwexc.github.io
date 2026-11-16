@@ -27,9 +27,10 @@
     },
     {
         "name":  "Unattend Generator",
-        "version":  "8fdf1b99af95977ea38f4922662964dc6324b0df",
+        "version":  "538f930aeea9c3d51fdd0b4822e2d076fef999e8",
         "source":  "GitHub",
         "opensPullRequest":  false,
+        "reportOnly":  true,
         "mode":  "commits",
         "repository":  "cschneegans/unattend-generator"
     },

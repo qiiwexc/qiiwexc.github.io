@@ -95,6 +95,12 @@ function Update-Dependencies {
                 }
             }
 
+            # A report-only version records what a file here was made from, and changes with that file, by hand: the
+            # check keeps it and leaves only its links, which say there is something newer to make the file from
+            if ($Dependency.PSObject.Properties['reportOnly'] -and $Dependency.reportOnly -eq $True) {
+                $Dependency.version = $PreviousVersion
+            }
+
             # Held back to the newest version out of quarantine, which may be the recorded one: its links then
             # go only as far as that version, or there are none to follow
             if ($Name -in $QuarantinedNames) {
