@@ -19,6 +19,16 @@ jobs:
       # so CI must be dispatched manually for the new tag
       actions: write # Required to dispatch the CI workflow for the new tag
     steps:
+      # The tag is cut from the branch the run was started on, and ci.yml then ships it to every
+      # installed copy through the updater, so only master may be released, as release.bat insists
+      - name: Check branch
+        if: github.ref != 'refs/heads/master'
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          echo "::error::Releases are cut from master only, and this run was started on $REF"
+          exit 1
+
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

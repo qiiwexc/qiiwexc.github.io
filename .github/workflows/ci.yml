@@ -65,6 +65,19 @@ jobs:
       tag: ${{ steps.deploy.outputs.tag }}
       should_release: ${{ steps.deploy.outputs.should_release }}
     steps:
+      # A release reaches every installed copy through the updater, so only a commit on master may
+      # be one. release.bat and tag.yml tag nothing else; this stops a tag pushed by hand elsewhere
+      - name: Check that the tagged commit is on master
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 'ahead' or 'identical': master contains the tagged commit
+          status=$(gh api "repos/$GITHUB_REPOSITORY/compare/$GITHUB_SHA...master" --jq .status)
+          if [ "$status" != "ahead" ] && [ "$status" != "identical" ]; then
+              echo "::error::$GITHUB_REF_NAME points at $GITHUB_SHA, which is not on master (compared with master: $status)"
+              exit 1
+          fi
+
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
