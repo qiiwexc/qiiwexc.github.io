@@ -57,7 +57,8 @@ Describe 'New-PowerShellScript' {
             $Content -match "`n#region configs > ConfigFile`n" -and
             $Content -match "Set-Variable -Option Constant CONFIG_CONFIGFILE \(\[String\]\('TEST_CONFIG_KEY_1=''TEST_CONFIG_VALUE_1''`nTEST_CONFIG_KEY_2=TEST_CONFIG_VALUE_2" -and
             $Content -match "'\)\)" -and
-            $Content -match "`n#endregion configs > ConfigFile"
+            $Content -match "`n#endregion configs > ConfigFile" -and
+            $Normalize -eq $True
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }

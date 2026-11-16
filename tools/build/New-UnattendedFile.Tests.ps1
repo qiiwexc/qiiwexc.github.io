@@ -169,12 +169,12 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildFileNameRussian -and
             $Content -eq $TestSetInlineFilesResult -and
-            $NoNewline -eq $True
+            -not $PesterBoundParameters.ContainsKey('Normalize')
         }
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildFileNameEnglish -and
             $Content -eq $TestSetInlineFilesResult -and
-            $NoNewline -eq $True
+            -not $PesterBoundParameters.ContainsKey('Normalize')
         }
         Should -Invoke New-Item -Exactly 1
         Should -Invoke New-Item -Exactly 1 -ParameterFilter {
@@ -191,12 +191,12 @@ Describe 'New-UnattendedFile' {
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildFileNameEnglish -and
             $Content -eq $TestDistFileContent -and
-            $NoNewline -eq $True
+            -not $PesterBoundParameters.ContainsKey('Normalize')
         }
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestBuildFileNameRussian -and
             $Content -eq $TestDistFileContent -and
-            $NoNewline -eq $True
+            -not $PesterBoundParameters.ContainsKey('Normalize')
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }

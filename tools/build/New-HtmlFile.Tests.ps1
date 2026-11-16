@@ -41,7 +41,7 @@ Describe 'New-HtmlFile' {
         Should -Invoke Write-TextFile -Exactly 1 -ParameterFilter {
             $Path -eq $TestOutFilePath -and
             $Content -eq $TestHtmlContent -and
-            $NoNewline -eq $True
+            -not $PesterBoundParameters.ContainsKey('Normalize')
         }
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }

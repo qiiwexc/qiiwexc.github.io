@@ -72,7 +72,7 @@ function New-UnattendedFile {
 
         $UpdatedTemplateContent = $UpdatedTemplateContent.Replace('{VERSION}', $Version)
 
-        Write-TextFile $OutputFileName $UpdatedTemplateContent -NoNewline
+        Write-TextFile $OutputFileName $UpdatedTemplateContent
         $Percentage += 2
         Write-ActivityProgress $Percentage
 
@@ -114,7 +114,7 @@ function New-UnattendedFile {
 
         Assert-UnattendedFile $LocalizedFileName $FileContent
 
-        Write-TextFile $BuildFileName $FileContent -NoNewline
+        Write-TextFile $BuildFileName $FileContent
     }
 
     Write-ActivityCompleted

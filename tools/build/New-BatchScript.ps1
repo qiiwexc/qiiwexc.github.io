@@ -33,8 +33,9 @@ if `"%~1`"==`"Debug`" (
         )
     )
 
+    # CRLF, the line ending cmd.exe expects: with LF it can miss a label that a goto or a call jumps to
     Write-LogInfo "Writing batch file $BatchFile"
-    Write-TextFile $BatchFile $BatchLines -Normalize
+    Write-TextFile $BatchFile $BatchLines -Normalize -CrLf
     Copy-Item $BatchFile "$VmPath\$ProjectName.bat"
 
     Write-ActivityCompleted

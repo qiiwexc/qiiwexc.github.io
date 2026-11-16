@@ -50,7 +50,9 @@ Describe 'New-BatchScript' {
             $Content -notmatch "'%" -and
             $Content -match '::TEST_PS1_FILE_CONTENT_1' -and
             $Content -match '::TEST_PS1_FILE_CONTENT_2' -and
-            $Content -notmatch 'enabledelayedexpansion'
+            $Content -notmatch 'enabledelayedexpansion' -and
+            $Normalize -eq $True -and
+            $CrLf -eq $True
         }
         Should -Invoke Copy-Item -Exactly 1
         Should -Invoke Copy-Item -Exactly 1 -ParameterFilter {
@@ -129,13 +131,19 @@ Describe 'New-BatchScript launcher' -Skip:([Environment]::OSVersion.Platform -ne
         Set-Variable -Option Constant TempDir ([String]"$TestDrive\temp O'Hara")
         Set-Variable -Option Constant MarkerFile ([String]"$TestDrive\marker.txt")
         Set-Variable -Option Constant PayloadFile ([String]"$TestDrive\payload.ps1")
+        Set-Variable -Option Constant TextFile ([String]"$TestDrive\text.txt")
+
+        # Cyrillic, an em dash and the euro sign, which no single ANSI code page holds. From their codes, so that this
+        # file stays ASCII
+        Set-Variable -Option Constant NonAsciiText ([String]"$([Char]0x041C)$([Char]0x2014)$([Char]0x20AC)")
 
         $Null = New-Item -ItemType Directory $LauncherDir, $TempDir, "$TestDrive\vm"
 
-        # Stands in for the app: records the arguments the launcher started it with
+        # Stands in for the app: records the arguments the launcher started it with, and a string literal it holds
         Set-Content -LiteralPath $PayloadFile -Encoding UTF8 -Value @(
             'param([String]$WorkingDirectory, [Switch]$DevMode)'
             "Add-Content -LiteralPath '$MarkerFile' `"`$WorkingDirectory|`$DevMode`""
+            "Add-Content -LiteralPath '$TextFile' -Encoding UTF8 '$NonAsciiText'"
         )
 
         New-BatchScript 'qiiwexc' $PayloadFile "$LauncherDir\qiiwexc.bat" "$TestDrive\vm"
@@ -156,5 +164,20 @@ Describe 'New-BatchScript launcher' -Skip:([Environment]::OSVersion.Platform -ne
         Start-Process cmd.exe -ArgumentList '/c', "$SetTempDir `"$LauncherDir\qiiwexc.bat`" Debug" -WorkingDirectory $TestDrive -Wait -WindowStyle Hidden
 
         Get-Content -LiteralPath $MarkerFile -Tail 1 | Should -BeExactly "$LauncherDir|True"
+    }
+
+    It 'Should carry non-ASCII characters into the script it starts' {
+        Start-Process cmd.exe -ArgumentList '/c', "$SetTempDir `"$LauncherDir\qiiwexc.bat`"" -WorkingDirectory $TestDrive -Wait -WindowStyle Hidden
+
+        Get-Content -LiteralPath $TextFile -Encoding UTF8 -Tail 1 | Should -BeExactly $NonAsciiText
+    }
+
+    It 'Should be written with CRLF line endings and no byte order mark' {
+        Set-Variable -Option Constant Bytes ([Byte[]][IO.File]::ReadAllBytes("$LauncherDir\qiiwexc.bat"))
+        Set-Variable -Option Constant Text ([String][Text.UTF8Encoding]::new($False, $True).GetString($Bytes))
+
+        $Text | Should -BeLike '@echo off*'
+        $Text | Should -Not -Match '(^|[^\r])\n'
+        $Text | Should -Match '\r\n$'
     }
 }

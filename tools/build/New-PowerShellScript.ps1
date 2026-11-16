@@ -89,8 +89,9 @@ function New-PowerShellScript {
         throw "Bundled script has syntax errors: $_"
     }
 
+    # LF line endings throughout, the embedded configs included, whichever ones the checkout has
     Write-LogInfo "Writing output file $Ps1File"
-    Write-TextFile $Ps1File $OutputLines
+    Write-TextFile $Ps1File $BundledScript -Normalize
 
     Write-ActivityCompleted
 }

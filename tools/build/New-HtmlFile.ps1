@@ -24,7 +24,7 @@ function New-HtmlFile {
         throw "Unresolved placeholders in the web page: $($Placeholders -join ', ')"
     }
 
-    Write-TextFile $OutputFile $TemplateContent -NoNewline
+    Write-TextFile $OutputFile $TemplateContent
 
     Write-ActivityCompleted
 }
