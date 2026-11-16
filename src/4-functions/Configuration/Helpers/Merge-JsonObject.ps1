@@ -24,20 +24,11 @@ function Merge-JsonObject {
         }
 
         return $Merged
-    } elseif ($Source -is [Collections.IList] -and $Extend -is [Collections.IList]) {
-        Set-Variable -Option Constant MaxCount ([Math]::Max($Source.Count, $Extend.Count))
-
-        [Collections.IList]$Merged = for ($i = 0; $i -lt $MaxCount; ++$i) {
-            if ($i -ge $Source.Count) {
-                $Extend[$i]
-            } elseif ($i -ge $Extend.Count) {
-                $Source[$i]
-            } else {
-                Merge-JsonObject $Source[$i] $Extend[$i]
-            }
-        }
-
-        return , $Merged
+    } elseif ($Extend -is [Collections.IList]) {
+        # An array replaces the one it extends rather than being merged with it item by item: the items at the same
+        # position of two lists are rarely the same thing, such as two different settings in a list of recorded
+        # choices. The comma keeps an array of one or of none from being unrolled into a single value or nothing
+        return , $Extend
     } else {
         return $Extend
     }

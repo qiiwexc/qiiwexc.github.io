@@ -245,8 +245,7 @@ BeforeAll {
                 'TEST_ARRAY_ITEM_4_EXTEND'
             )
             TEST_DECREASE_ARRAY         = @(
-                'TEST_ARRAY_ITEM_3_EXTEND',
-                'TEST_ARRAY_ITEM_2_SOURCE'
+                'TEST_ARRAY_ITEM_3_EXTEND'
             )
             TEST_EXTEND_STRING          = 'TEST_EXTEND_STRING_VALUE'
             TEST_EXTEND_EMPTY           = ''
@@ -300,5 +299,24 @@ Describe 'Merge-JsonObject' {
         Set-Variable -Option Constant Expected ([String]($TestUpdatedConfigObject | ConvertTo-Json -Depth 10 -Compress))
 
         $Result | Should -BeExactly $Expected
+    }
+
+    # As the browsers' files arrive: parsed from JSON, where an array of one stays an array
+    It 'Should replace an array with one of <Case>' -ForEach @(
+        @{ Case = 'no items'; Source = '{"a":{"b":[1,2]}}'; Extend = '{"a":{"b":[]}}'; Expected = '{"a":{"b":[]}}' }
+        @{ Case = 'one item'; Source = '{"a":{"b":[1,2]}}'; Extend = '{"a":{"b":[3]}}'; Expected = '{"a":{"b":[3]}}' }
+        @{ Case = 'one item, replacing one'; Source = '{"a":[1]}'; Extend = '{"a":[2]}'; Expected = '{"a":[2]}' }
+        @{ Case = 'no items, replacing none'; Source = '{"a":[]}'; Extend = '{"a":[]}'; Expected = '{"a":[]}' }
+        @{ Case = 'objects, keeping none of the ones it replaces'; Source = '{"a":[{"s":"x","t":1},{"s":"y"}]}'; Extend = '{"a":[{"s":"z"}]}'; Expected = '{"a":[{"s":"z"}]}' }
+    ) {
+        Set-Variable -Option Constant Result ([String](Merge-JsonObject ($Source | ConvertFrom-Json) ($Extend | ConvertFrom-Json) | ConvertTo-Json -Depth 10 -Compress))
+
+        $Result | Should -BeExactly $Expected
+    }
+
+    It 'Should keep an array that the extension does not mention' {
+        Set-Variable -Option Constant Result ([String](Merge-JsonObject ('{"a":[1],"b":1}' | ConvertFrom-Json) ('{"b":2}' | ConvertFrom-Json) | ConvertTo-Json -Depth 10 -Compress))
+
+        $Result | Should -BeExactly '{"a":[1],"b":2}'
     }
 }
