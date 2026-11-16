@@ -10,7 +10,9 @@ function Invoke-SystemRepairTool {
     Write-ActivityProgress $ProgressFrom "Running $Name..."
     try {
         $Null = & $FilePath @Arguments 2>&1 | ForEach-Object {
-            if ("$_" -match '(\d+\.?\d*)%') {
+            # sfc writes UTF-16 to a pipe, which arrives read as single bytes, with a NUL after every character that
+            # keeps the digits apart from the '%'. Dropping the NULs leaves the text whatever the encoding
+            if ("$_".Replace("`0", '') -match '(\d+\.?\d*)%') {
                 Write-ActivityProgress ([Int]($ProgressFrom + [Double]$Matches[1] * $ProgressShare))
             }
         }

@@ -80,6 +80,15 @@ Describe 'Start-WindowsDiagnostics' {
         Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 19 }
     }
 
+    # How sfc's output arrives through a pipe: UTF-16 read as single bytes, with a NUL after every character
+    It 'Should update progress from the percentage sfc prints' {
+        Mock sfc { return @(('Verification 50% complete.'.ToCharArray() | ForEach-Object { "$_`0" }) -join '') }
+
+        Start-WindowsDiagnostics
+
+        Should -Invoke Write-ActivityProgress -Exactly 1 -ParameterFilter { $PercentComplete -eq 75 }
+    }
+
     It 'Should handle DISM CheckHealth failure' {
         Mock DISM { throw $TestException } -ParameterFilter { $args -contains '/CheckHealth' }
 
