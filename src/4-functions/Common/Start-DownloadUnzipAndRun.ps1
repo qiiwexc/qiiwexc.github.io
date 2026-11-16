@@ -6,6 +6,7 @@ function Start-DownloadUnzipAndRun {
         [Parameter(Position = 1)][String]$FileName,
         [Parameter(Position = 2)][String]$Params,
         [String]$Sha256,
+        [String]$Signer,
         [String]$ConfigFile,
         [String]$Configuration,
         [Switch]$Execute,
@@ -28,7 +29,7 @@ function Start-DownloadUnzipAndRun {
     try {
         Set-Variable -Option Constant UrlEnding ([String]$URL.Split('.')[-1].ToLower())
         Set-Variable -Option Constant IsArchive ([Bool]($UrlEnding -eq 'zip'))
-        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Sha256 $Sha256 -Temp:($Execute -or $IsArchive) -NoBits:$NoBits))
+        Set-Variable -Option Constant DownloadedFile ([String](Start-Download $URL $FileName -Sha256 $Sha256 -Signer $Signer -Temp:($Execute -or $IsArchive) -NoBits:$NoBits))
     } catch {
         Out-Failure "Download failed: $_"
         Write-ActivityCompleted $False

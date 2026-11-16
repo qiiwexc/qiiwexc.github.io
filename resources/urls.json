@@ -19,6 +19,7 @@
   "SHA256_UNCHECKY": "25896931db48f0f4c9e3681720fb7c89b531d912ce5f11d596078f8d917126b7",
   "URL_WINDOWS_PE": "https://rutracker.org/forum/viewtopic.php?t=6726501",
   "URL_NINITE": "https://ninite.com",
+  "SIGNER_NINITE": "Secure By Design Inc.",
   "URL_TRONSCRIPT": "https://github.com/bmrf/tron/blob/master/README.md#use",
   "URL_SYSTEM_RESCUE": "https://www.system-rescue.org/",
   "URL_OOSHUTUP10": "https://package.oo-software.com/winget/shutup10/{VERSION}/ooshutup10_{VERSION}_x64.exe",

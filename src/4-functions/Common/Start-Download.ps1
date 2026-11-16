@@ -13,11 +13,34 @@ function Test-FileChecksum {
 }
 
 
+function Test-FileSignature {
+    param(
+        [Parameter(Position = 0, Mandatory)][String]$Path,
+        [Parameter(Position = 1, Mandatory)][String]$Signer
+    )
+
+    Set-Variable -Option Constant Signature ([Object](Get-AuthenticodeSignature -LiteralPath $Path -ErrorAction Stop))
+
+    # The certificate's common name rather than its thumbprint: the name is what the certificate authority
+    # verified, and it stays the same when the publisher renews the certificate
+    [String]$ActualSigner = ''
+    if ($Signature.SignerCertificate) {
+        $ActualSigner = $Signature.SignerCertificate.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $False)
+    }
+
+    if ($Signature.Status -ne 'Valid' -or $ActualSigner -ne $Signer) {
+        Remove-Item $Path -Force -ErrorAction SilentlyContinue
+        throw "Signature check failed for '$Path': expected a valid signature of '$Signer', got status '$($Signature.Status)' from '$ActualSigner'"
+    }
+}
+
+
 function Start-Download {
     param(
         [Parameter(Position = 0, Mandatory)][String]$URL,
         [Parameter(Position = 1)][String]$SaveAs,
         [String]$Sha256,
+        [String]$Signer,
         [Switch]$Temp,
         [Switch]$NoBits
     )
@@ -42,14 +65,19 @@ function Start-Download {
 
     if (Test-Path $SavePath) {
         # A pinned download whose URL does not name the version keeps its file name when the pin moves
-        # on, so a previous copy that no longer matches is replaced (the check deletes it) rather than refused
+        # on, so a previous copy that no longer passes is replaced (the check deletes it) rather than refused
         [Bool]$IsCurrent = $True
-        if ($Sha256) {
+        if ($Sha256 -or $Signer) {
             try {
-                Test-FileChecksum $SavePath $Sha256
+                if ($Sha256) {
+                    Test-FileChecksum $SavePath $Sha256
+                }
+                if ($Signer) {
+                    Test-FileSignature $SavePath $Signer
+                }
             } catch {
                 $IsCurrent = $False
-                Write-LogWarning 'Previous download does not match the expected checksum, downloading it again'
+                Write-LogWarning 'Previous download does not pass verification, downloading it again'
             }
         }
 
@@ -131,6 +159,9 @@ function Start-Download {
         }
         if ($Sha256) {
             Test-FileChecksum $SavePath $Sha256
+        }
+        if ($Signer) {
+            Test-FileSignature $SavePath $Signer
         }
         Out-Success
         return $SavePath

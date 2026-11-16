@@ -12,5 +12,8 @@ function Start-SnappyDriverInstaller {
         return
     }
 
+    # The one download the app runs unverified: SDI publishes only an archive without a version in its URL,
+    # replaced with each release, and its executables are not signed, so there is neither a checksum to pin
+    # nor a signature to check
     Start-DownloadUnzipAndRun '{URL_SDI}' -Execute:$Execute -ConfigFile 'sdi.cfg' -Configuration $CONFIG_SDI
 }

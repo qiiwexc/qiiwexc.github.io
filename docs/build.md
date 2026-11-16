@@ -44,7 +44,17 @@ Downloads are verified by SHA-256 (`Start-DownloadUnzipAndRun -Sha256`). Fixed-v
 downloads keep a `SHA256_<NAME>` key in `urls.json`; a dependency whose `URL_<NAME>` contains
 `{VERSION}` keeps a `sha256` field in `dependencies.json`, exposed as `SHA256_<NAME>` and
 recomputed by the [dependency update](dependency-update.md) whenever the version changes. The
-self-updater verifies `qiiwexc.bat` against the release's `SHA256SUMS.txt`.
+self-updater verifies `qiiwexc.bat` against the release's `SHA256SUMS.txt`. Two downloads are
+exceptions:
+
+- **Ninite** builds its installer for each selection of apps, so there is no checksum to pin.
+  `-Signer` checks its Authenticode signature instead: valid, and from a certificate whose
+  common name is `SIGNER_NINITE` in `urls.json`. It checks the name rather than the thumbprint,
+  so a renewed certificate still passes.
+- **Snappy Driver Installer** runs unverified. `URL_SDI` is the only archive its publisher
+  offers. Its name has no version, it is replaced with each release, and the executables in it
+  are unsigned, so there is neither a checksum to pin nor a signature to check. Its version is
+  read from its changelog, `https://sdi.com.ru/Changelog.txt`, only to keep a record of it.
 
 ## Versioning
 

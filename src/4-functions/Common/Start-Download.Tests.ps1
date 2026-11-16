@@ -27,6 +27,17 @@ BeforeAll {
 
     Set-Variable -Option Constant TestSavePath ([String]"$PATH_WORKING_DIR\$TestUrlLeaf")
     Set-Variable -Option Constant TestSavePathSaveAs ([String]"$PATH_WORKING_DIR\$TestSaveAs")
+
+    Set-Variable -Option Constant TestSigner ([String]'TEST_SIGNER')
+
+    # What Get-AuthenticodeSignature returns, as far as the check reads it: an unsigned file has no certificate
+    function New-TestSignature([String]$Status, [String]$Signer) {
+        $Certificate = $Null
+        if ($Signer) {
+            $Certificate = [PSCustomObject]@{ Name = $Signer } | Add-Member -MemberType ScriptMethod -Name GetNameInfo -Value { $this.Name } -PassThru
+        }
+        return [PSCustomObject]@{ Status = $Status; SignerCertificate = $Certificate }
+    }
 }
 
 Describe 'Start-Download' {
@@ -48,6 +59,7 @@ Describe 'Start-Download' {
         Mock Start-Sleep {}
         Mock Move-Item {}
         Mock Out-Success {}
+        Mock Get-AuthenticodeSignature { return New-TestSignature 'Valid' $TestSigner }
     }
 
     BeforeEach {
@@ -430,7 +442,80 @@ Describe 'Start-Download' {
         Should -Invoke Get-FileHash -Exactly 2
         Should -Invoke Remove-Item -Exactly 1 -ParameterFilter { $Path -eq $TestSavePath }
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -like '*does not match*' }
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -like '*does not pass verification*' }
+        Should -Invoke Start-BitsTransfer -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should not check a signature when no signer is given' {
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl | Should -BeExactly $TestSavePath
+
+        Should -Invoke Get-AuthenticodeSignature -Exactly 0
+    }
+
+    It 'Should verify the signature when Signer is provided' {
+        [Int]$FileAppearsAtCall = 2
+
+        Start-Download $TestUrl -Signer $TestSigner | Should -BeExactly $TestSavePath
+
+        Should -Invoke Get-AuthenticodeSignature -Exactly 1
+        Should -Invoke Get-AuthenticodeSignature -Exactly 1 -ParameterFilter { $LiteralPath -eq $TestSavePath }
+        Should -Invoke Remove-Item -Exactly 0
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should verify both the checksum and the signature when both are given' {
+        [Int]$FileAppearsAtCall = 2
+        Mock Get-FileHash { return [PSCustomObject]@{ Hash = 'ABC123' } }
+
+        Start-Download $TestUrl -Sha256 'abc123' -Signer $TestSigner | Should -BeExactly $TestSavePath
+
+        Should -Invoke Get-FileHash -Exactly 1
+        Should -Invoke Get-AuthenticodeSignature -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    # Named apart from the function's own $Signer, which the mock would otherwise see instead
+    It 'Should throw and delete the file when the signature is <Case>' -ForEach @(
+        @{ Case = 'from another signer'; CaseStatus = 'Valid'; CaseSigner = 'SOMEONE_ELSE' }
+        @{ Case = 'not valid'; CaseStatus = 'HashMismatch'; CaseSigner = 'TEST_SIGNER' }
+        @{ Case = 'missing'; CaseStatus = 'NotSigned'; CaseSigner = '' }
+    ) {
+        [Int]$FileAppearsAtCall = 2
+        Mock Get-AuthenticodeSignature { return New-TestSignature $CaseStatus $CaseSigner }
+
+        { Start-Download $TestUrl -Signer $TestSigner } | Should -Throw "*Signature check failed*got status '$CaseStatus' from '$CaseSigner'*"
+
+        Should -Invoke Get-AuthenticodeSignature -Exactly 1
+        Should -Invoke Remove-Item -Exactly 1
+        Should -Invoke Remove-Item -Exactly 1 -ParameterFilter { $Path -eq $TestSavePath }
+        Should -Invoke Out-Success -Exactly 0
+    }
+
+    It 'Should verify the signature of a previously downloaded file' {
+        Start-Download $TestUrl -Signer $TestSigner | Should -BeExactly $TestSavePath
+
+        Should -Invoke Get-AuthenticodeSignature -Exactly 1
+        Should -Invoke Start-BitsTransfer -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -like '*Previous download found*' }
+    }
+
+    It 'Should download again when a previous download does not pass the signature check' {
+        [Int]$script:SignatureCalls = 0
+        Mock Get-AuthenticodeSignature {
+            $script:SignatureCalls++
+            return New-TestSignature $(if ($script:SignatureCalls -eq 1) { 'NotSigned' } else { 'Valid' }) $TestSigner
+        }
+
+        Start-Download $TestUrl -Signer $TestSigner | Should -BeExactly $TestSavePath
+
+        Should -Invoke Get-AuthenticodeSignature -Exactly 2
+        Should -Invoke Remove-Item -Exactly 1 -ParameterFilter { $Path -eq $TestSavePath }
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -like '*does not pass verification*' }
         Should -Invoke Start-BitsTransfer -Exactly 1
         Should -Invoke Out-Success -Exactly 1
     }

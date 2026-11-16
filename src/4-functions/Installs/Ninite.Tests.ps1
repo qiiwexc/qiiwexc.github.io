@@ -78,7 +78,9 @@ Describe 'Get-NiniteInstaller' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq "{URL_NINITE}/$TestQuery/ninite.exe" -and
             $FileName -eq 'Ninite APP_NAME_1 Install APP_NAME_3 Installer.exe' -and
-            $Execute -eq $True
+            $Signer -eq '{SIGNER_NINITE}' -and
+            $Execute -eq $True -and
+            $NoBits -eq $True
         }
     }
 
@@ -97,6 +99,7 @@ Describe 'Get-NiniteInstaller' {
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1 -ParameterFilter {
             $URL -eq '{URL_NINITE}/TEST_CHECKBOX_2_NAME/ninite.exe' -and
             $FileName -eq 'Ninite APP_NAME_2 Installer.exe' -and
+            $Signer -eq '{SIGNER_NINITE}' -and
             $Execute -eq $False
         }
     }

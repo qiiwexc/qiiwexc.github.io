@@ -103,7 +103,9 @@ and the tests share. The build bundles every file under `src/` except the tests 
 `build/qiiwexc.ps1`, embeds every non-PS1 file in `src/3-configs/` as a string constant
 `CONFIG_<UPPERCASED_FILENAME>`, and fills the `{KEY}` placeholders of the source and the
 templates from `resources/urls.json` and `resources/dependencies.json`. Every download the app
-runs is verified by SHA-256 against a `SHA256_<NAME>` key.
+runs is verified by SHA-256 against a `SHA256_<NAME>` key, except Ninite's installer, built per
+request and checked by its publisher's signature instead, and Snappy Driver Installer, which
+offers neither ([`build`](docs/build.md)).
 
 ## Source Structure (`src/`)
 

@@ -40,6 +40,8 @@ function Get-NiniteInstaller {
         Set-Variable -Option Constant FileName ([String]"Ninite $($AppNames -Join ' ') Installer.exe")
         Set-Variable -Option Constant DownloadUrl ([String]"{URL_NINITE}/$Query/ninite.exe")
 
-        Start-DownloadUnzipAndRun $DownloadUrl $FileName -Execute:$Execute -NoBits
+        # Ninite builds the installer for each selection, so there is no checksum to pin; its publisher's
+        # signature stands in for one
+        Start-DownloadUnzipAndRun $DownloadUrl $FileName -Signer '{SIGNER_NINITE}' -Execute:$Execute -NoBits
     }
 }

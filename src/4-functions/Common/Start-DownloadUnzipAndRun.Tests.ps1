@@ -71,6 +71,18 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke Write-ActivityCompleted -Exactly 1 -ParameterFilter { $Success -eq $Null }
     }
 
+    It 'Should pass the checksum and the signer on to the download' {
+        Start-DownloadUnzipAndRun $TestUrl -Sha256 'TEST_SHA256' -Signer 'TEST_SIGNER' | Should -BeNullOrEmpty
+
+        Should -Invoke Start-Download -Exactly 1
+        Should -Invoke Start-Download -Exactly 1 -ParameterFilter {
+            $URL -eq $TestUrl -and
+            $Sha256 -eq 'TEST_SHA256' -and
+            $Signer -eq 'TEST_SIGNER'
+        }
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
     It 'Should download a file and set configuration' {
         Start-DownloadUnzipAndRun $TestUrl -ConfigFile $TestConfigFile -Configuration $TestConfiguration | Should -BeNullOrEmpty
 
