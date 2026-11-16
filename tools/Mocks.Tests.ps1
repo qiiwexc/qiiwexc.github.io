@@ -83,7 +83,8 @@ Describe 'Mocks' {
         # Guards the detection itself: known non-throwing functions must be recognised,
         # and a function that rethrows must not be
         $NonThrowingFunctions | Should -Contain 'src:Test-UpdateAvailability'
-        $NonThrowingFunctions | Should -Contain 'src:Update-BrowserConfiguration'
+        $NonThrowingFunctions | Should -Contain 'src:Set-GoogleChromeConfiguration'
+        $NonThrowingFunctions | Should -Not -Contain 'src:Update-BrowserConfiguration'
         $NonThrowingFunctions | Should -Not -Contain 'src:Import-RegistryConfiguration'
         $NonThrowingFunctions | Should -Not -Contain 'tools:Set-MalwareProtectionConfiguration'
     }

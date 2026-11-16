@@ -33,7 +33,6 @@ Describe 'Update-BrowserConfiguration' {
         }
         Mock Get-AppExecutablePath { return $TestExecutable }
         Mock Start-FromShell {}
-        Mock Out-Failure {}
         Mock Start-Sleep {}
         Mock Get-Content { return $TestExistingConfig }
         Mock Merge-JsonObject { return $TestUpdatedConfigObject }
@@ -54,7 +53,6 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Test-Path -Exactly 1 -ParameterFilter { $Path -eq $TestPath }
         Should -Invoke Start-FromShell -Exactly 0
-        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
@@ -91,7 +89,6 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Get-AppExecutablePath -Exactly 1 -ParameterFilter { $ExecutableName -eq "$TestProcessName.exe" }
         Should -Invoke Start-FromShell -Exactly 1
         Should -Invoke Start-FromShell -Exactly 1 -ParameterFilter { $Target -eq $TestExecutable }
-        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Start-Sleep -Exactly 2
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Get-Content -Exactly 1 -ParameterFilter {
@@ -117,12 +114,11 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Stop-ProcessIfRunning failure' {
         Mock Stop-ProcessIfRunning { throw $TestException }
 
-        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
+        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 0
         Should -Invoke Start-FromShell -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Merge-JsonObject -Exactly 0
@@ -133,12 +129,11 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Test-Path failure' {
         Mock Test-Path { throw $TestException }
 
-        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
+        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-FromShell -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Merge-JsonObject -Exactly 0
@@ -151,13 +146,11 @@ Describe 'Update-BrowserConfiguration' {
 
         Mock Get-AppExecutablePath { return '' }
 
-        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
+        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Throw "'$TestAppName' is not installed"
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Get-AppExecutablePath -Exactly 1
         Should -Invoke Start-FromShell -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
-        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -like "*'$TestAppName' is not installed*" }
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Set-Content -Exactly 0
@@ -169,12 +162,11 @@ Describe 'Update-BrowserConfiguration' {
 
         Mock Start-FromShell { throw $TestException }
 
-        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
+        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Throw "Couldn't start '$TestAppName': $TestException"
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-FromShell -Exactly 1
-        Should -Invoke Out-Failure -Exactly 2
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
         Should -Invoke Merge-JsonObject -Exactly 0
@@ -185,12 +177,11 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Get-Content failure' {
         Mock Get-Content { throw $TestException }
 
-        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
+        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-FromShell -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Merge-JsonObject -Exactly 0
@@ -201,12 +192,11 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Merge-JsonObject failure' {
         Mock Merge-JsonObject { throw $TestException }
 
-        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
+        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-FromShell -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Merge-JsonObject -Exactly 1
@@ -217,12 +207,11 @@ Describe 'Update-BrowserConfiguration' {
     It 'Should handle Set-Content failure' {
         Mock Set-Content { throw $TestException }
 
-        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
+        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Start-FromShell -Exactly 0
-        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
         Should -Invoke Merge-JsonObject -Exactly 1
