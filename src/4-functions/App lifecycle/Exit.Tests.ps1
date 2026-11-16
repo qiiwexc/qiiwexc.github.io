@@ -5,6 +5,8 @@ BeforeAll {
     Add-Type -AssemblyName PresentationCore
 
     . "$PSScriptRoot\..\Common\Remove-File.ps1"
+    . "$PSScriptRoot\..\Common\Show-MessageBox.ps1"
+    . "$PSScriptRoot\..\Common\Start-AsyncOperation.ps1"
     . "$PSScriptRoot\Logger.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
@@ -51,6 +53,66 @@ Describe 'Reset-State' {
 
         Should -Invoke Remove-File -Exactly 1
         Should -Invoke Write-Host -Exactly 0
+    }
+}
+
+Describe 'Confirm-AppExit' {
+    BeforeAll {
+        Set-Variable -Option Constant FORM ([String]'TEST_FORM')
+
+        Mock Show-MessageBox { return 'Yes' }
+        Mock Stop-AsyncOperation {}
+    }
+
+    BeforeEach {
+        $script:ASYNC.Running = $True
+        $script:ASYNC.Button = [PSCustomObject]@{ Content = 'TEST_BUTTON' }
+    }
+
+    AfterAll {
+        $script:ASYNC.Running = $False
+        $script:ASYNC.Button = $Null
+    }
+
+    It 'Should close without asking when no operation runs' {
+        $script:ASYNC.Running = $False
+        $script:ASYNC.Button = $Null
+
+        Confirm-AppExit | Should -BeTrue
+
+        Should -Invoke Show-MessageBox -Exactly 0
+        Should -Invoke Stop-AsyncOperation -Exactly 0
+    }
+
+    It 'Should close without asking while an operation runs that cannot be cancelled' {
+        $script:ASYNC.Button = $Null
+
+        Confirm-AppExit | Should -BeTrue
+
+        Should -Invoke Show-MessageBox -Exactly 0
+        Should -Invoke Stop-AsyncOperation -Exactly 0
+    }
+
+    It 'Should cancel the operation and close when the user confirms' {
+        Confirm-AppExit | Should -BeTrue
+
+        Should -Invoke Show-MessageBox -Exactly 1
+        Should -Invoke Show-MessageBox -Exactly 1 -ParameterFilter {
+            $Message -like '*operation is still running*' -and
+            $Buttons -eq 'YesNo' -and
+            $Default -eq 'No' -and
+            $Owner -eq $FORM
+        }
+        Should -Invoke Stop-AsyncOperation -Exactly 1
+    }
+
+    It 'Should keep the window open and the operation running when the user declines' {
+        Mock Show-MessageBox { return 'No' }
+
+        Confirm-AppExit | Should -BeFalse
+
+        Should -Invoke Show-MessageBox -Exactly 1
+        Should -Invoke Stop-AsyncOperation -Exactly 0
     }
 }
 

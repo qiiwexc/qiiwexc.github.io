@@ -19,7 +19,20 @@ and every button given a `Name` into `$BUTTONS`.
 - A change to the components, the renderer, the definitions' layout or `Form.ps1` that should
   not change how the window looks is checked with `.\test-visual.bat`: it renders every tab in
   the light, dark and high contrast themes from `HEAD` and from the working tree, and compares
-  them pixel for pixel (differences land in `build/ui-snapshots/diff`).
+  them pixel for pixel (differences land in `build/ui-snapshots/diff`). Close the app first: the
+  renderer runs `Show window.ps1`, which takes the app's single-instance mutex (below), so with the
+  app open it waits a few seconds and shows "already running" before it renders.
+
+## Opening and closing
+
+- One copy runs at a time. Before the window opens, and so before `Initialize-App` empties the
+  app's temp folder, `Show window.ps1` takes the `Local\qiiwexc` mutex (`Enter-AppInstance`) and
+  holds it until the window has closed. It waits a few seconds for a copy that is restarting into
+  a new version; a second copy that started on its own says the app is already running and exits.
+- Closing the window while an operation runs that its button could cancel asks first
+  (`Confirm-AppExit`), and Yes cancels the operation. WPF runs every `Closing` handler even when
+  one of them cancels the close, so what has to happen only once the window closes for good, such
+  as `Reset-State`, is a `Closed` handler.
 
 ## Handlers and async operations
 

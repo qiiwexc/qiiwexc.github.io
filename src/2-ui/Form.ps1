@@ -389,7 +389,14 @@ $FORM.Add_Loaded( {
         }
     } )
 $FORM.Add_ContentRendered( { Initialize-App } )
-$FORM.Add_Closing( { Reset-State } )
+# Every handler of Closing runs, whichever of them cancels it: what has to happen only once the window is closing for
+# good runs on Closed
+$FORM.Add_Closing( {
+        if (-not (Confirm-AppExit)) {
+            $args[1].Cancel = $True
+        }
+    } )
+$FORM.Add_Closed( { Reset-State } )
 
 # Light and dark mode arrive as a General change, a high contrast theme as Accessibility and Color
 Set-Variable -Option Constant ThemeChangeHandler ([Microsoft.Win32.UserPreferenceChangedEventHandler] {
@@ -398,4 +405,4 @@ Set-Variable -Option Constant ThemeChangeHandler ([Microsoft.Win32.UserPreferenc
         }
     })
 [Microsoft.Win32.SystemEvents]::add_UserPreferenceChanged($ThemeChangeHandler)
-$FORM.Add_Closing( { [Microsoft.Win32.SystemEvents]::remove_UserPreferenceChanged($ThemeChangeHandler) } )
+$FORM.Add_Closed( { [Microsoft.Win32.SystemEvents]::remove_UserPreferenceChanged($ThemeChangeHandler) } )

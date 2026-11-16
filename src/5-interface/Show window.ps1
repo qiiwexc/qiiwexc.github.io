@@ -6,4 +6,13 @@ foreach ($Tab in @($TAB_HOME, $TAB_INSTALLS, $TAB_CONFIGURATION, $TAB_DIAGNOSTIC
     New-Tab -TabControl $TAB_CONTROL -Definition $Tab -Checkboxes $CHECKBOXES -Buttons $BUTTONS
 }
 
-[Void]$FORM.ShowDialog()
+# One copy at a time, settled before the window opens and the app empties its temp folder
+if (Enter-AppInstance) {
+    try {
+        [Void]$FORM.ShowDialog()
+    } finally {
+        Exit-AppInstance
+    }
+} else {
+    [Void](Show-MessageBox 'qiiwexc is already running.')
+}
