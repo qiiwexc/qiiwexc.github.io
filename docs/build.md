@@ -57,7 +57,9 @@ to produce a `$Config` PSCustomObject. Templates (`templates/home.html`,
 Downloads are verified by SHA-256 (`Start-DownloadUnzipAndRun -Sha256`). Fixed-version
 downloads keep a `SHA256_<NAME>` key in `urls.json`; a dependency whose `URL_<NAME>` contains
 `{VERSION}` keeps a `sha256` field in `dependencies.json`, exposed as `SHA256_<NAME>` and
-recomputed by the [dependency update](dependency-update.md) whenever the version changes. The
+recomputed by the [dependency update](dependency-update.md) whenever the version changes. A
+file the site publishes from this repository, such as `public/Office_Installer.zip`, is hashed
+by a test (`Get-Config.Tests.ps1`), which fails when it no longer matches its key. The
 self-updater verifies `qiiwexc.bat` against the release's `SHA256SUMS.txt`. Two downloads are
 exceptions:
 

@@ -140,3 +140,23 @@ Describe 'Get-Config' {
         Should -Invoke Write-ActivityCompleted -Exactly 0
     }
 }
+
+# The app checks a download from the site against the hash pinned here, so a file replaced in the repository without
+# its hash would pass every check and then fail the download in the next release
+Describe 'resources\urls.json' {
+    It 'Should pin the hash of each file the site publishes from the repository' {
+        Set-Variable -Option Constant ProjectRoot ([String][IO.Path]::GetFullPath("$PSScriptRoot\..\.."))
+        Set-Variable -Option Constant SiteUrl ([String]'https://qiiwexc.github.io/')
+        Set-Variable -Option Constant Urls ([PSCustomObject](Get-Content "$ProjectRoot\resources\urls.json" -Raw -Encoding UTF8 | ConvertFrom-Json))
+
+        Set-Variable -Option Constant Published ([PSObject[]]@($Urls.PSObject.Properties | Where-Object {
+                    $_.Name -like 'URL_*' -and $_.Value.StartsWith($SiteUrl) -and $Urls.PSObject.Properties["SHA256_$($_.Name.Substring(4))"]
+                }))
+
+        $Published.Count | Should -BeGreaterThan 0
+        foreach ($Url in $Published) {
+            [String]$File = "$ProjectRoot\$($Url.Value.Substring($SiteUrl.Length).Replace('/', '\'))"
+            (Get-FileHash -LiteralPath $File -Algorithm SHA256).Hash | Should -Be $Urls."SHA256_$($Url.Name.Substring(4))" -Because $Url.Name
+        }
+    }
+}
