@@ -17,4 +17,10 @@ Describe 'Set-PowerSchemeConfiguration' {
         $Result | Should -MatchExactly 'powercfg /SetAcValueIndex SCHEME_ALL 9596fb26-9850-41fd-ac3e-f7c3c00afd4b 03680956-93bc-4294-bba6-4e0f09bb717f 1'
         $Result | Should -MatchExactly 'powercfg /SetDcValueIndex SCHEME_ALL 9596fb26-9850-41fd-ac3e-f7c3c00afd4b 03680956-93bc-4294-bba6-4e0f09bb717f 1'
     }
+
+    It 'Should activate the current scheme again once every value is set' {
+        Set-Variable -Option Constant Result ([String](Set-PowerSchemeConfiguration $ConfigsPath $TestTemplateContent))
+
+        $Result | Should -MatchExactly 'SCHEME_ALL [^\n]+\npowercfg /SetActive SCHEME_CURRENT\nTEST_TEMPLATE_CONTENT_2$'
+    }
 }

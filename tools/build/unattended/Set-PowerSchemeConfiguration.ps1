@@ -12,6 +12,8 @@ function Set-PowerSchemeConfiguration {
         $PowerSettings.Add("powercfg /SetAcValueIndex $Config`n")
         $PowerSettings.Add("powercfg /SetDcValueIndex $Config`n")
     }
+    # The active scheme takes a changed value only once it is activated again
+    $PowerSettings.Add("powercfg /SetActive SCHEME_CURRENT`n")
 
     return $TemplateContent.Replace('{POWER_SCHEME_CONFIGURATION}', (-join $PowerSettings).trim())
 }
