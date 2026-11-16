@@ -92,7 +92,7 @@ Each is the authority on its area; this file keeps only what every session needs
 | doc                                              | read it before changing                                                                                                         |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
 | [`build`](docs/build.md)                         | the build: `tools/build.ps1`, `tools/build/`, `tools/common/`, the templates, the linter, the version                           |
-| [`ui`](docs/ui.md)                               | a tab, a component, `Form.ps1`, or a handler that starts an operation or touches the window                                     |
+| [`ui`](docs/ui.md)                               | a tab, a component, `Form.ps1`, or a handler that starts an operation, touches the window or opens a page or a browser          |
 | [`ci`](docs/ci.md)                               | anything under `.github/`, the files the site publishes, or how a release is cut                                                |
 | [`dependency-update`](docs/dependency-update.md) | the dependency update (`tools/Invoke-DependencyUpdate.ps1`, `tools/build/updates/`), its workflow, `dependencies.json`'s fields |
 

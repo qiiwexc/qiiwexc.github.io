@@ -2,6 +2,8 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\..\Common\Start-FromShell.ps1"
+    . "$PSScriptRoot\Get-AppExecutablePath.ps1"
     . "$PSScriptRoot\Merge-JsonObject.ps1"
     . "$PSScriptRoot\Stop-ProcessIfRunning.ps1"
 
@@ -9,6 +11,7 @@ BeforeAll {
 
     Set-Variable -Option Constant TestAppName ([String]'TEST_APP_NAME')
     Set-Variable -Option Constant TestProcessName ([String]'TEST_PROCESS_NAME')
+    Set-Variable -Option Constant TestExecutable ([String]'C:\TEST_DIR\TEST_PROCESS_NAME.exe')
     Set-Variable -Option Constant TestContent ([String]'{"TEST_KEY_NEW":"TEST_VALUE_NEW"}')
     Set-Variable -Option Constant TestPath ([String]'TEST_PATH')
 
@@ -28,7 +31,8 @@ Describe 'Update-BrowserConfiguration' {
             $script:TestPathCounter++
             return $script:TestPathCounter -ge $TestPathSuccessIteration
         }
-        Mock Start-Process {}
+        Mock Get-AppExecutablePath { return $TestExecutable }
+        Mock Start-FromShell {}
         Mock Out-Failure {}
         Mock Start-Sleep {}
         Mock Get-Content { return $TestExistingConfig }
@@ -49,7 +53,7 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1 -ParameterFilter { $ProcessName -eq $TestProcessName }
         Should -Invoke Test-Path -Exactly 1
         Should -Invoke Test-Path -Exactly 1 -ParameterFilter { $Path -eq $TestPath }
-        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-FromShell -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -83,8 +87,10 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 2 -ParameterFilter { $ProcessName -eq $TestProcessName }
         Should -Invoke Test-Path -Exactly 3
         Should -Invoke Test-Path -Exactly 3 -ParameterFilter { $Path -eq $TestPath }
-        Should -Invoke Start-Process -Exactly 1
-        Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $FilePath -eq $TestProcessName }
+        Should -Invoke Get-AppExecutablePath -Exactly 1
+        Should -Invoke Get-AppExecutablePath -Exactly 1 -ParameterFilter { $ExecutableName -eq "$TestProcessName.exe" }
+        Should -Invoke Start-FromShell -Exactly 1
+        Should -Invoke Start-FromShell -Exactly 1 -ParameterFilter { $Target -eq $TestExecutable }
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Start-Sleep -Exactly 2
         Should -Invoke Get-Content -Exactly 1
@@ -115,7 +121,7 @@ Describe 'Update-BrowserConfiguration' {
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 0
-        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-FromShell -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
@@ -131,7 +137,7 @@ Describe 'Update-BrowserConfiguration' {
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
-        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-FromShell -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
@@ -140,16 +146,34 @@ Describe 'Update-BrowserConfiguration' {
         Should -Invoke Out-Success -Exactly 0
     }
 
-    It 'Should handle Start-Process failure' {
+    It 'Should fail without starting anything when the browser is not installed' {
         [Int]$TestPathSuccessIteration = 2
 
-        Mock Start-Process { throw $TestException }
+        Mock Get-AppExecutablePath { return '' }
+
+        Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
+
+        Should -Invoke Stop-ProcessIfRunning -Exactly 1
+        Should -Invoke Get-AppExecutablePath -Exactly 1
+        Should -Invoke Start-FromShell -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -like "*'$TestAppName' is not installed*" }
+        Should -Invoke Start-Sleep -Exactly 0
+        Should -Invoke Get-Content -Exactly 0
+        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
+    }
+
+    It 'Should handle Start-FromShell failure' {
+        [Int]$TestPathSuccessIteration = 2
+
+        Mock Start-FromShell { throw $TestException }
 
         Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
-        Should -Invoke Start-Process -Exactly 1
+        Should -Invoke Start-FromShell -Exactly 1
         Should -Invoke Out-Failure -Exactly 2
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 0
@@ -165,7 +189,7 @@ Describe 'Update-BrowserConfiguration' {
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
-        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-FromShell -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -181,7 +205,7 @@ Describe 'Update-BrowserConfiguration' {
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
-        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-FromShell -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1
@@ -197,7 +221,7 @@ Describe 'Update-BrowserConfiguration' {
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Test-Path -Exactly 1
-        Should -Invoke Start-Process -Exactly 0
+        Should -Invoke Start-FromShell -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Start-Sleep -Exactly 0
         Should -Invoke Get-Content -Exactly 1

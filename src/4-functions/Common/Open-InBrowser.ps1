@@ -5,7 +5,8 @@ function Open-InBrowser {
 
     try {
         Write-LogInfo "Opening in the default browser: $Url"
-        Start-Process $Url -ErrorAction Stop
+        # A browser started by this process would run elevated, whatever site it then goes on to load
+        Start-FromShell $Url
     } catch {
         Out-Failure "Could not open the URL: $_"
     }

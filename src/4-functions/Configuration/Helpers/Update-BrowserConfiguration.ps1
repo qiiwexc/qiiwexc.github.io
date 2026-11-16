@@ -16,8 +16,15 @@ function Update-BrowserConfiguration {
         if (-not (Test-Path $Path)) {
             Write-LogInfo "'$AppName' profile does not exist. Launching '$AppName' to create it" $LogIndentLevel
 
+            Set-Variable -Option Constant Executable ([String](Get-AppExecutablePath "$ProcessName.exe"))
+
+            if (-not $Executable) {
+                throw "'$AppName' is not installed"
+            }
+
             try {
-                Start-Process $ProcessName -ErrorAction Stop
+                # Through the shell, so that the browser does not run elevated
+                Start-FromShell $Executable
             } catch {
                 Out-Failure "Couldn't start '$AppName': $_" $LogIndentLevel
                 throw $_

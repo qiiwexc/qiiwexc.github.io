@@ -25,6 +25,11 @@ and every button given a `Name` into `$BUTTONS`.
 
 - Handlers read checkboxes at click time (`$CHECKBOXES.StartVentoy.IsChecked`). A checkbox that
   enables others has `OnClick = { Set-CheckboxState -Control $this -Dependant $CHECKBOXES.<Name> }`.
+- A web page, or a browser, is never started with `Start-Process`: the app runs elevated, and so
+  would the browser, whatever it goes on to load. `Open-InBrowser` and `Start-FromShell` hand it
+  to the session's shell instead, which starts it as the signed-in user, unelevated. A local file
+  goes that way only when the app runs as that user, because a standard user can elevate it with
+  an administrator's credentials, and the shell's user then cannot read the app's temp folder.
 - Only one async operation runs at a time. `New-Tab` registers every button whose `Action`
   calls `Start-AsyncOperation` (`Register-AsyncButton`); while an operation runs, all of them
   are disabled except the one that started it, which turns into its Cancel button until the
