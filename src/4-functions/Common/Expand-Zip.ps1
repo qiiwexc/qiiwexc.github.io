@@ -43,21 +43,8 @@ function Expand-Zip {
 
     Write-ActivityProgress 75
 
-    if ([IO.Path]::GetExtension($ZipPath).ToLower() -eq '.zip') {
-        Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
-    } elseif ($OS_VERSION -ge 11) {
-        Set-Variable -Option Constant SHELL (New-Object -ComObject Shell.Application)
-
-        Set-Variable -Option Constant ArchiveNamespace ($SHELL.NameSpace($ZipPath))
-        if (-not $ArchiveNamespace) {
-            throw "Unsupported archive format: '$ZipPath'."
-        }
-        foreach ($Item in $ArchiveNamespace.Items()) {
-            $SHELL.NameSpace($ExtractionPath).CopyHere($Item, 4)
-        }
-    } else {
-        throw 'Could not extract archive'
-    }
+    # Only a zip comes here: Start-DownloadUnzipAndRun extracts a download whose URL ends in '.zip'
+    Expand-Archive $ZipPath $ExtractionPath -Force -ErrorAction Stop
 
     Write-ActivityProgress 80
 

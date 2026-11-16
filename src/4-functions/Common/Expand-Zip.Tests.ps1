@@ -39,14 +39,9 @@ Describe 'Expand-Zip' {
         Mock Remove-Directory {}
         Mock New-Directory {}
         Mock Expand-Archive {}
-        Mock New-Object {}
         Mock Move-Item {}
         Mock Out-Success {}
         Mock Write-LogInfo {}
-    }
-
-    BeforeEach {
-        [Int]$OS_VERSION = 11
     }
 
     It 'Should throw when archive does not exist' {
@@ -61,7 +56,6 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 0
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Expand-Archive -Exactly 0
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -91,7 +85,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
             $Path -eq $TestTemporaryExe -and
@@ -118,7 +111,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
             $Path -eq $TestTemporaryExe -and
@@ -151,7 +143,6 @@ Describe 'Expand-Zip' {
             $DestinationPath -eq $TestExtractionPath -and
             $Force -eq $True
         }
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Move-Item -Exactly 1 -ParameterFilter {
             $Path -eq $TestExtractionPath -and
@@ -175,7 +166,6 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 0
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Expand-Archive -Exactly 0
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -192,7 +182,6 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 0
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Expand-Archive -Exactly 0
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -209,7 +198,6 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 0
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Expand-Archive -Exactly 0
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -226,7 +214,6 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 0
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Expand-Archive -Exactly 0
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -243,7 +230,6 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 0
         Should -Invoke Expand-Archive -Exactly 0
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -260,14 +246,11 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Expand-Archive -Exactly 0
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
 
     It 'Should handle Expand-Archive failure' {
-        Mock Test-Path { return $False } -ParameterFilter { $Path -eq $PATH_7ZIP_EXE }
-
         Mock Expand-Archive { throw $TestException }
 
         { Expand-Zip $TestZipFilePath } | Should -Throw $TestException
@@ -279,7 +262,6 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Expand-Archive -Exactly 1
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }
@@ -296,7 +278,6 @@ Describe 'Expand-Zip' {
         Should -Invoke Remove-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke Expand-Archive -Exactly 1
-        Should -Invoke New-Object -Exactly 0
         Should -Invoke Move-Item -Exactly 1
         Should -Invoke Out-Success -Exactly 0
     }
