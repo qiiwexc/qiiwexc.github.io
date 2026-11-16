@@ -41,8 +41,9 @@ jobs:
           version=$(date +'%-y.%-m.%-d')
           tag="v$version"
 
-          if git rev-parse "$tag" >/dev/null 2>&1; then
-              echo "::error::Tag $tag already exists"
+          # The checkout fetches no tags, so the remote is the one to ask
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null; then
+              echo "::error::Tag $tag already exists; to release again today, see 'A bad release' in docs/ci.md"
               exit 1
           fi
 
