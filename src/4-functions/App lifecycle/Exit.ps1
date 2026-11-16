@@ -4,7 +4,7 @@ function Reset-State {
     )
 
     if (-not $Update) {
-        Remove-File "$PATH_TEMP_DIR\qiiwexc.ps1" -Silent
+        Remove-File "$($PATH_TEMP_DIR)qiiwexc.ps1" -Silent
     }
 
     $HOST.UI.RawUI.WindowTitle = $ORIGINAL_WINDOW_TITLE

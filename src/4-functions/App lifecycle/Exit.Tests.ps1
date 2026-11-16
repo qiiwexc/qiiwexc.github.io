@@ -11,7 +11,8 @@ BeforeAll {
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
-    Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_TEMP_DIR')
+    # Ending with a backslash, as the path from GetTempPath() does
+    Set-Variable -Option Constant PATH_TEMP_DIR ([String]'TEST_TEMP_DIR\')
     Set-Variable -Option Constant ORIGINAL_WINDOW_TITLE ([String]'TEST_ORIGINAL_WINDOW_TITLE')
 
     Set-Variable -Option Constant WindowTitle ([String]$HOST.UI.RawUI.WindowTitle)
@@ -33,7 +34,7 @@ Describe 'Reset-State' {
 
         Should -Invoke Remove-File -Exactly 1
         Should -Invoke Remove-File -Exactly 1 -ParameterFilter {
-            $FilePath -eq "$PATH_TEMP_DIR\qiiwexc.ps1" -and
+            $FilePath -eq 'TEST_TEMP_DIR\qiiwexc.ps1' -and
             $Silent -eq $True
         }
         Should -Invoke Write-Host -Exactly 1
