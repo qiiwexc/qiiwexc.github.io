@@ -17,6 +17,14 @@ BeforeAll {
     Set-Variable -Option Constant TestChecksumsFile ([String]"$PATH_APP_DIR\SHA256SUMS.txt")
     Set-Variable -Option Constant TestChecksum ([String]'cdae978a55d34e99dd4385eee0377cf1387549a3b78c5acd2a81c868a57cab45')
     Set-Variable -Option Constant TestChecksums ([String]"0bd3603d7d149672454a983ee3a5f30b26f4587755cb012c88bb3bf73a131b16  qiiwexc.ps1`n$TestChecksum  qiiwexc.bat`n42be0a0451555231ea6bc15ea74ed84069e02335be7229307847ed07c5568703  autounattend-English.xml`n")
+
+    # What Invoke-WebRequest returns once the redirect of 'releases/latest' has been followed to the release's page
+    function New-TestReleaseResponse {
+        param(
+            [Parameter(Position = 0, Mandatory)][String]$Path
+        )
+        return @{ BaseResponse = @{ ResponseUri = [Uri]"https://github.com/qiiwexc/qiiwexc.github.io$Path" } }
+    }
 }
 
 Describe 'Test-UpdateAvailability' {
@@ -24,7 +32,7 @@ Describe 'Test-UpdateAvailability' {
         Mock Write-LogInfo {}
         Mock Out-Status {}
         Mock Test-NetworkConnection { return $True }
-        Mock Invoke-WebRequest { return @{ Content = '[{"tag_name":"v2.0.0","prerelease":false,"draft":false}]' } }
+        Mock Invoke-WebRequest { return New-TestReleaseResponse '/releases/tag/v2.0.0' }
         Mock Out-Failure {}
         Mock Write-LogWarning {}
     }
@@ -40,16 +48,18 @@ Describe 'Test-UpdateAvailability' {
         Should -Invoke Test-NetworkConnection -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
-            $Uri -eq '{URL_VERSION_FILE}' -and
+            $Uri -eq '{URL_LATEST_RELEASE}' -and
+            $Method -eq 'Head' -and
             $UseBasicParsing -eq $True -and
             $TimeoutSec -eq 15
         }
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -eq 'Newer version available: v2.0.0' }
     }
 
     It 'Should detect no available update' {
-        Mock Invoke-WebRequest { return @{ Content = '[{"tag_name":"v1.0.0","prerelease":false,"draft":false}]' } }
+        Mock Invoke-WebRequest { return New-TestReleaseResponse '/releases/tag/v1.0.0' }
 
         Test-UpdateAvailability | Should -BeFalse
 
@@ -60,13 +70,22 @@ Describe 'Test-UpdateAvailability' {
         Should -Invoke Write-LogWarning -Exactly 0
     }
 
-    It 'Should ignore pre-releases and drafts, which the update download cannot deliver' {
-        Mock Invoke-WebRequest { return @{ Content = '[{"tag_name":"v3.0.0","prerelease":true,"draft":false},{"tag_name":"v2.5.0","prerelease":false,"draft":true}]' } }
+    It 'Should take a fourth version part, as a second release on the same day has, as newer' {
+        Mock Invoke-WebRequest { return New-TestReleaseResponse '/releases/tag/v1.0.0.1' }
+
+        Test-UpdateAvailability | Should -BeTrue
+
+        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -eq 'Newer version available: v1.0.0.1' }
+    }
+
+    It 'Should not report an update when the latest release redirects to an unexpected page' {
+        Mock Invoke-WebRequest { return New-TestReleaseResponse '/releases' }
 
         Test-UpdateAvailability | Should -BeFalse
 
-        Should -Invoke Out-Status -Exactly 1
-        Should -Invoke Out-Failure -Exactly 0
+        Should -Invoke Out-Status -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
     }
 

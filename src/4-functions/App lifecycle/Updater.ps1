@@ -40,18 +40,17 @@ function Test-UpdateAvailability {
             return $False
         }
 
-        Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest -UseBasicParsing -Uri '{URL_VERSION_FILE}' -Headers @{ 'User-Agent' = 'qiiwexc-updater' } -TimeoutSec 15))
-        Set-Variable -Option Constant Releases ([PSObject[]]($Response.Content | ConvertFrom-Json))
-
-        # The update is downloaded from 'releases/latest', which never points to a pre-release or a draft —
-        # comparing against one would report an update that the download cannot deliver
-        Set-Variable -Option Constant Release ([PSObject]($Releases | Where-Object { -not $_.prerelease -and -not $_.draft } | Select-Object -First 1))
-        if (-not $Release) {
-            Out-Status 'No updates available'
-            return $False
+        # 'releases/latest' redirects to the page of the release the update is downloaded from, '.../releases/tag/v<version>',
+        # which is never a pre-release or a draft. Reading the version from where the redirect lands costs no call of the
+        # GitHub API, whose unauthenticated limit of 60 an hour is shared by every machine behind one address
+        Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest -UseBasicParsing -Uri '{URL_LATEST_RELEASE}' -Method Head -TimeoutSec 15))
+        Set-Variable -Option Constant ReleasePath ([String]$Response.BaseResponse.ResponseUri.AbsolutePath)
+        Set-Variable -Option Constant TagMatch ([Text.RegularExpressions.Match]([Regex]::Match($ReleasePath, '/releases/tag/v(\d+(?:\.\d+){1,3})$')))
+        if (-not $TagMatch.Success) {
+            throw "The latest release redirected to an unexpected page: $ReleasePath"
         }
 
-        Set-Variable -Option Constant AvailableVersion ([Version]$Release.tag_name.TrimStart('v'))
+        Set-Variable -Option Constant AvailableVersion ([Version]$TagMatch.Groups[1].Value)
 
         if ($AvailableVersion -gt $VERSION) {
             Write-LogWarning "Newer version available: v$AvailableVersion"
