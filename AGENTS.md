@@ -147,8 +147,12 @@ a time, and reaches the window only through `Invoke-OnDispatcher` ([`ui`](docs/u
   dot-sourcing the script
 - Pester runs `tools/`, `.claude/skills/`, `src/0-init`, `src/1-components`, `src/2-ui`,
   `src/3-configs` and `src/4-functions`; `src/3-configs/Configs.Tests.ps1` checks every JSON and
-  `.reg` config, and that each `$CONFIG_*` the code uses is embedded. Coverage is measured on
-  `tools/common`, `tools/build`, `src/1-components` and `src/4-functions`
+  `.reg` config, and that each `$CONFIG_*` the code uses is embedded. `tools/Bundle.Tests.ps1`
+  checks that every command the bundle calls is one of its functions, a cmdlet of Windows
+  PowerShell's core modules or on its list of Windows commands - which takes a new one only when
+  every supported Windows has it, or the code checks for it first - and that nothing passes
+  arguments to a function that takes none. Coverage is measured on `tools/common`, `tools/build`,
+  `src/1-components` and `src/4-functions`
 - Tag tests `WIP` to run them in isolation via `.\test-wip.bat`. Tests tagged `Visual` (the
   rendering comparison in `tools/ui`) run only with `-Visual`, via `.\test-visual.bat`, never in
   CI
