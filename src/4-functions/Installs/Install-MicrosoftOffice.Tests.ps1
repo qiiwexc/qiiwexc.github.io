@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . "$PSScriptRoot\..\Common\Write-Utf8File.ps1"
     . "$PSScriptRoot\..\Common\Start-DownloadUnzipAndRun.ps1"
     . "$PSScriptRoot\..\App lifecycle\Initialize-AppDirectory.ps1"
     . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
@@ -22,7 +23,7 @@ Describe 'Install-MicrosoftOffice' {
     BeforeAll {
         Mock Write-LogInfo {}
         Mock Initialize-AppDirectory {}
-        Mock Set-Content {}
+        Mock Write-Utf8File {}
         Mock Import-RegistryConfiguration {}
         Mock Start-DownloadUnzipAndRun {}
         Mock Write-LogWarning {}
@@ -36,11 +37,10 @@ Describe 'Install-MicrosoftOffice' {
         Install-MicrosoftOffice
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq "$PATH_WORKING_DIR\Office Installer.ini" -and
-            $Value -eq $CONFIG_OFFICE_INSTALLER -and
-            $NoNewline -eq $True
+            $Content -eq $CONFIG_OFFICE_INSTALLER
         }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
@@ -55,11 +55,10 @@ Describe 'Install-MicrosoftOffice' {
         Install-MicrosoftOffice -Execute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestConfigFileExecute -and
-            $Value -eq $CONFIG_OFFICE_INSTALLER -and
-            $NoNewline -eq $True
+            $Content -eq $CONFIG_OFFICE_INSTALLER
         }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 1
@@ -81,24 +80,23 @@ Describe 'Install-MicrosoftOffice' {
         Install-MicrosoftOffice -Execute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestConfigFileExecute -and
-            $Value -eq 'TEST_CONFIG_OFFICE_INSTALLER_1 ru-RU TEST_CONFIG_OFFICE_INSTALLER_2' -and
-            $NoNewline -eq $True
+            $Content -eq 'TEST_CONFIG_OFFICE_INSTALLER_1 ru-RU TEST_CONFIG_OFFICE_INSTALLER_2'
         }
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
     }
 
-    It 'Should handle Set-Content failure' {
-        Mock Set-Content { throw $TestException }
+    It 'Should handle Write-Utf8File failure' {
+        Mock Write-Utf8File { throw $TestException }
 
         Install-MicrosoftOffice -Execute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
@@ -110,7 +108,7 @@ Describe 'Install-MicrosoftOffice' {
         Install-MicrosoftOffice -Execute
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1
@@ -122,7 +120,7 @@ Describe 'Install-MicrosoftOffice' {
         { Install-MicrosoftOffice -Execute } | Should -Throw $TestException
 
         Should -Invoke Initialize-AppDirectory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Start-DownloadUnzipAndRun -Exactly 1

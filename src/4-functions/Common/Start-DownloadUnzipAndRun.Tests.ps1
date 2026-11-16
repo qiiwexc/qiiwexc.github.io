@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . "$PSScriptRoot\Write-Utf8File.ps1"
     . "$PSScriptRoot\types.ps1"
     . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
     . "$PSScriptRoot\..\App lifecycle\Progressbar.ps1"
@@ -31,7 +32,7 @@ Describe 'Start-DownloadUnzipAndRun' {
         Mock Out-Failure {}
         Mock Write-ActivityCompleted {}
         Mock Expand-Zip { return $TestExecutable }
-        Mock Set-Content {}
+        Mock Write-Utf8File {}
         Mock Start-Executable {}
     }
 
@@ -46,7 +47,7 @@ Describe 'Start-DownloadUnzipAndRun' {
             $Temp -eq $False
         }
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 1
@@ -64,7 +65,7 @@ Describe 'Start-DownloadUnzipAndRun' {
             $Temp -eq $False
         }
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 1
@@ -89,11 +90,10 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq "$TestParentPath\$TestConfigFile" -and
-            $Value -eq $TestConfiguration -and
-            $NoNewline -eq $True
+            $Content -eq $TestConfiguration
         }
         Should -Invoke Start-Executable -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
@@ -116,7 +116,7 @@ Describe 'Start-DownloadUnzipAndRun' {
             $ZipPath -eq $TestDownloadedFile -and
             $Temp -eq $False
         }
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 0
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Write-ActivityCompleted -Exactly 1
@@ -129,7 +129,7 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 1
         Should -Invoke Start-Executable -Exactly 1 -ParameterFilter {
             $Executable -eq $TestDownloadedFile -and
@@ -147,7 +147,7 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 1
         Should -Invoke Start-Executable -Exactly 1 -ParameterFilter {
             $Executable -eq $TestDownloadedFile -and
@@ -165,7 +165,7 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 1
         Should -Invoke Start-Executable -Exactly 1 -ParameterFilter {
             $Executable -eq $TestDownloadedFile -and
@@ -187,7 +187,7 @@ Describe 'Start-DownloadUnzipAndRun' {
             $ZipPath -eq $TestDownloadedFile -and
             $Temp -eq $True
         }
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 1
         Should -Invoke Start-Executable -Exactly 1 -ParameterFilter {
             $Executable -eq $TestExecutable -and
@@ -207,25 +207,27 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1 -ParameterFilter { $Success -eq $False }
     }
 
-    It 'Should handle Set-Content failure' {
-        Mock Set-Content { throw $TestException }
+    It 'Should handle Write-Utf8File failure' {
+        Mock Write-Utf8File { throw $TestException }
 
-        { Start-DownloadUnzipAndRun $TestUrl -ConfigFile $TestConfigFile -Configuration $TestConfiguration } | Should -Throw $TestException
+        Start-DownloadUnzipAndRun $TestUrl -ConfigFile $TestConfigFile -Configuration $TestConfiguration -Execute | Should -BeNullOrEmpty
 
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Start-Executable -Exactly 0
-        Should -Invoke Out-Failure -Exactly 0
-        Should -Invoke Write-ActivityCompleted -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -eq "Failed to write '$TestConfigFile': $TestException" }
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1 -ParameterFilter { $Success -eq $False }
     }
 
     It 'Should handle Expand-Zip failure' {
@@ -236,7 +238,7 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1
@@ -251,7 +253,7 @@ Describe 'Start-DownloadUnzipAndRun' {
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-Zip -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Executable -Exactly 1
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Write-ActivityCompleted -Exactly 1

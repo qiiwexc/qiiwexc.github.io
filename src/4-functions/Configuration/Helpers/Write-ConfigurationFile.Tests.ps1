@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . "$PSScriptRoot\..\..\Common\New-Directory.ps1"
+    . "$PSScriptRoot\..\..\Common\Write-Utf8File.ps1"
     . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
     . "$PSScriptRoot\Stop-ProcessIfRunning.ps1"
 
@@ -20,7 +21,7 @@ Describe 'Write-ConfigurationFile' {
         Mock Write-LogInfo {}
         Mock Split-Path { return $TestParentPath }
         Mock New-Directory {}
-        Mock Set-Content {}
+        Mock Write-Utf8File {}
         Mock Out-Success {}
         Mock Write-LogWarning {}
     }
@@ -39,11 +40,10 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter {
             $Path -eq $TestParentPath
         }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestPath -and
-            $Value -eq $TestContent -and
-            $NoNewline -eq $True
+            $Content -eq $TestContent
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
@@ -57,7 +57,7 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Split-Path -Exactly 0
         Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
     }
@@ -70,7 +70,7 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke New-Directory -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
     }
@@ -83,20 +83,20 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
     }
 
-    It 'Should handle Set-Content failure' {
-        Mock Set-Content { throw $TestException }
+    It 'Should handle Write-Utf8File failure' {
+        Mock Write-Utf8File { throw $TestException }
 
         { Write-ConfigurationFile $TestAppName $TestContent $TestPath } | Should -Throw $TestException
 
         Should -Invoke Stop-ProcessIfRunning -Exactly 1
         Should -Invoke Split-Path -Exactly 1
         Should -Invoke New-Directory -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 1
     }

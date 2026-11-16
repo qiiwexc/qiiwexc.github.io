@@ -15,7 +15,8 @@ function Get-RefusedRegistryKey {
         ))
 
     foreach ($Section in $Sections) {
-        "Windows Registry Editor Version 5.00`n`n$Section`n" | Set-Content $Path -NoNewline -ErrorAction Stop
+        # In UTF-16, as Import-RegistryConfiguration writes the whole file
+        "Windows Registry Editor Version 5.00`n`n$Section`n" | Set-Content $Path -NoNewline -Encoding Unicode -ErrorAction Stop
 
         if ((Invoke-RegistryImport $Path) -ne 0) {
             ($Section -split "`n")[0].Trim()

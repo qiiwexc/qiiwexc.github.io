@@ -20,7 +20,7 @@ function Install-MicrosoftOffice {
 
         Initialize-AppDirectory
 
-        Set-Content "$TargetPath\Office Installer.ini" $Config -NoNewline -ErrorAction Stop
+        Write-Utf8File "$TargetPath\Office Installer.ini" $Config
     } catch {
         Write-LogWarning "Failed to initialize Microsoft Office installer configuration: $_"
     }

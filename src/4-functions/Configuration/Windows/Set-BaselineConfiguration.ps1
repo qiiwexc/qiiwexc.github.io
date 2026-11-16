@@ -28,9 +28,9 @@ function Set-BaselineConfiguration {
             New-Directory (Split-Path -Parent $TaskManagerConfig)
 
             if ($SYSTEM_LANGUAGE -match '^ru') {
-                Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_RUSSIAN -NoNewline -ErrorAction Stop
+                Write-Utf8File $TaskManagerConfig $CONFIG_TASK_MANAGER_RUSSIAN
             } else {
-                Set-Content $TaskManagerConfig $CONFIG_TASK_MANAGER_ENGLISH -NoNewline -ErrorAction Stop
+                Write-Utf8File $TaskManagerConfig $CONFIG_TASK_MANAGER_ENGLISH
             }
         } catch {
             Out-Failure "Failed to apply Task Manager settings: $_"

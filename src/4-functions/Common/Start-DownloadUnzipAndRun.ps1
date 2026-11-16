@@ -50,8 +50,14 @@ function Start-DownloadUnzipAndRun {
         }
 
         if ($Configuration) {
-            Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
-            Set-Content "$ParentPath\$ConfigFile" $Configuration -NoNewline
+            try {
+                Set-Variable -Option Constant ParentPath ([String](Split-Path -Parent $Executable))
+                Write-Utf8File "$ParentPath\$ConfigFile" $Configuration
+            } catch {
+                Out-Failure "Failed to write '$ConfigFile': $_"
+                Write-ActivityCompleted $False
+                return
+            }
         }
 
         if ($Execute) {

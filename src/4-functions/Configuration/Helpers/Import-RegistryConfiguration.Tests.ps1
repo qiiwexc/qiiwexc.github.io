@@ -37,6 +37,7 @@ Describe 'Import-RegistryConfiguration' {
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestRegFilePath -and
             $Value -eq "Windows Registry Editor Version 5.00`n`nTEST_CONTENT1`nTEST_CONTENT2" -and
+            $Encoding -eq 'Unicode' -and
             $NoNewline -eq $True
         }
         Should -Invoke Invoke-RegistryImport -Exactly 1

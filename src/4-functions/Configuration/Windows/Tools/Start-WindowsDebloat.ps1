@@ -49,7 +49,7 @@ function Start-WindowsDebloat {
             Set-Variable -Option Constant Configuration ([String]$CONFIG_DEBLOAT_PRESET_BASE)
         }
 
-        Set-Content "$UserDataPath\LastUsedSettings.json" $Configuration -NoNewline -ErrorAction Stop
+        Write-Utf8File "$UserDataPath\LastUsedSettings.json" $Configuration
     } catch {
         Write-LogWarning "Failed to initialize Windows debloat utility configuration: $_"
     }

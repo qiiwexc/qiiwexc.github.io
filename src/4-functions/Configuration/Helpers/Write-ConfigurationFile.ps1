@@ -14,7 +14,9 @@ function Write-ConfigurationFile {
 
         New-Directory (Split-Path -Parent $Path -ErrorAction Stop)
 
-        Set-Content $Path $Content -NoNewline -ErrorAction Stop
+        # The apps read UTF-8, which a merged file can hold beyond the ASCII of the app's own configs, such as a
+        # path under a user name in Cyrillic
+        Write-Utf8File $Path $Content
 
         Out-Success $LogIndentLevel
     } catch {

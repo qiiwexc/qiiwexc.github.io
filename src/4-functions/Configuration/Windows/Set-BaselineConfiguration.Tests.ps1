@@ -6,6 +6,7 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . "$PSScriptRoot\..\..\Common\Write-Utf8File.ps1"
     . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
     . "$PSScriptRoot\..\..\Common\New-Directory.ps1"
     . "$PSScriptRoot\..\Helpers\Add-SysPrepConfig.ps1"
@@ -45,7 +46,7 @@ Describe 'Set-BaselineConfiguration' {
         Mock Get-Item { return $TestVolumes }
         Mock Import-RegistryConfiguration {}
         Mock New-Directory {}
-        Mock Set-Content {}
+        Mock Write-Utf8File {}
     }
 
     BeforeEach {
@@ -69,7 +70,7 @@ Describe 'Set-BaselineConfiguration' {
             $TaskName -eq $TestUnelevatedExplorerTaskName -and
             $Confirm -eq $False
         }
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE_ENGLISH }
         Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE }
@@ -95,7 +96,7 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Add-SysPrepConfig -Exactly 1 -ParameterFilter { $Config -eq $CONFIG_BASELINE_RUSSIAN }
         Should -Invoke Get-Item -Exactly 1
@@ -114,11 +115,10 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq (Split-Path -Parent $TestTaskManagerConfig) }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestTaskManagerConfig -and
-            $Value -eq $CONFIG_TASK_MANAGER_ENGLISH -and
-            $NoNewline -eq $True
+            $Content -eq $CONFIG_TASK_MANAGER_ENGLISH
         }
         Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
@@ -136,11 +136,10 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Get-ScheduledTask -Exactly 1
         Should -Invoke Unregister-ScheduledTask -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestTaskManagerConfig -and
-            $Value -eq $CONFIG_TASK_MANAGER_RUSSIAN -and
-            $NoNewline -eq $True
+            $Content -eq $CONFIG_TASK_MANAGER_RUSSIAN
         }
         Should -Invoke Add-SysPrepConfig -Exactly 2
         Should -Invoke Get-Item -Exactly 1
@@ -151,11 +150,11 @@ Describe 'Set-BaselineConfiguration' {
     It 'Should continue when the Task Manager settings cannot be written' {
         [Int]$OS_VERSION = 11
 
-        Mock Set-Content { throw $TestException }
+        Mock Write-Utf8File { throw $TestException }
 
         Set-BaselineConfiguration
 
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1

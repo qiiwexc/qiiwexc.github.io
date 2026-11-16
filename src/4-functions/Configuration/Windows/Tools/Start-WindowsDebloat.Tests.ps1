@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . "$PSScriptRoot\..\..\..\Common\Write-Utf8File.ps1"
     . "$PSScriptRoot\..\..\..\Common\Network.ps1"
     . "$PSScriptRoot\..\..\..\Common\New-Directory.ps1"
     . "$PSScriptRoot\..\..\..\Common\Start-Download.ps1"
@@ -37,7 +38,7 @@ Describe 'Start-WindowsDebloat' {
         Mock Start-Download { return $TestZipPath }
         Mock Expand-WindowsDebloat { return $TestScriptPath }
         Mock New-Directory {}
-        Mock Set-Content {}
+        Mock Write-Utf8File {}
         Mock Start-Process {}
         Mock Out-Success {}
         Mock Out-Failure {}
@@ -69,11 +70,10 @@ Describe 'Start-WindowsDebloat' {
         }
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq $TestUserDataPath }
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
-            $Value -eq $CONFIG_DEBLOAT_PRESET_BASE -and
-            $NoNewline -eq $True
+            $Content -eq $CONFIG_DEBLOAT_PRESET_BASE
         }
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter {
@@ -98,10 +98,10 @@ Describe 'Start-WindowsDebloat' {
     It 'Should run with the custom preset without removing apps' {
         Start-WindowsDebloat -UsePreset
 
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
-            $Value -eq $CONFIG_DEBLOAT_PRESET_BASE
+            $Content -eq $CONFIG_DEBLOAT_PRESET_BASE
         }
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments -Sysprep $TestPresetParams" }
@@ -123,11 +123,10 @@ Describe 'Start-WindowsDebloat' {
     It 'Should run with the personalization configuration and remove the listed apps' {
         Start-WindowsDebloat -UsePreset -Personalization
 
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
-            $Value -eq $CONFIG_DEBLOAT_PRESET_PERSONALIZATION -and
-            $NoNewline -eq $True
+            $Content -eq $CONFIG_DEBLOAT_PRESET_PERSONALIZATION
         }
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq "$TestArguments -Sysprep $TestPresetParams $TestAppsParams" }
@@ -147,10 +146,10 @@ Describe 'Start-WindowsDebloat' {
     It 'Should ignore personalization without the custom preset' {
         Start-WindowsDebloat -Personalization
 
-        Should -Invoke Set-Content -Exactly 1
-        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+        Should -Invoke Write-Utf8File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestSettingsPath -and
-            $Value -eq $CONFIG_DEBLOAT_PRESET_BASE
+            $Content -eq $CONFIG_DEBLOAT_PRESET_BASE
         }
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Start-Process -Exactly 1 -ParameterFilter { $ArgumentList -eq $TestArguments }
@@ -253,7 +252,7 @@ Describe 'Start-WindowsDebloat' {
 
         Should -Invoke Start-Download -Exactly 1
         Should -Invoke Expand-WindowsDebloat -Exactly 0
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
@@ -265,7 +264,7 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Expand-WindowsDebloat -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Out-Failure -Exactly 1
@@ -277,19 +276,19 @@ Describe 'Start-WindowsDebloat' {
         Start-WindowsDebloat
 
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0
     }
 
     It 'Should still run if the configuration cannot be written' {
-        Mock Set-Content { throw $TestException }
+        Mock Write-Utf8File { throw $TestException }
 
         Start-WindowsDebloat
 
         Should -Invoke Write-LogWarning -Exactly 1
-        Should -Invoke Set-Content -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Start-Process -Exactly 1
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0

@@ -15,7 +15,9 @@ function Import-RegistryConfiguration {
 
         Initialize-AppDirectory
 
-        "Windows Registry Editor Version 5.00`n`n$Keys" | Set-Content $RegFilePath -NoNewline -ErrorAction Stop
+        # UTF-16, the encoding of a "Version 5.00" file, which reg.exe reads whatever the code page. A file in the ANSI
+        # code page reaches the registry intact only as far as it holds ASCII
+        "Windows Registry Editor Version 5.00`n`n$Keys" | Set-Content $RegFilePath -NoNewline -Encoding Unicode -ErrorAction Stop
 
         if ($PSCmdlet.ShouldProcess($AppName, 'Import registry configuration')) {
             Set-Variable -Option Constant ExitCode ([Int](Invoke-RegistryImport $RegFilePath))

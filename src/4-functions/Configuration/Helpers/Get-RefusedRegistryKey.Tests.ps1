@@ -30,7 +30,7 @@ Describe 'Get-RefusedRegistryKey' {
             "$Header[HKEY_B]`n`"REFUSED`"=dword:00000000`n",
             "$Header[-HKEY_C]`n"
         )
-        Should -Invoke Set-Content -Exactly 3 -ParameterFilter { $Path -eq $TestPath -and $NoNewline }
+        Should -Invoke Set-Content -Exactly 3 -ParameterFilter { $Path -eq $TestPath -and $NoNewline -and $Encoding -eq 'Unicode' }
         Should -Invoke Invoke-RegistryImport -Exactly 3 -ParameterFilter { $Path -eq $TestPath }
     }
 
