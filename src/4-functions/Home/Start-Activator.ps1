@@ -7,8 +7,7 @@ function Start-Activator {
     try {
         Write-LogInfo 'Starting MAS activator...'
 
-        # This app and the project's own launcher both run MAS as a copy named MAS_<GUID>.cmd in a temp folder
-        if (Find-RunningScript '\Temp\MAS_') {
+        if (Test-ActivatorIsRunning) {
             Write-LogWarning 'MAS activator is already running'
             return
         }

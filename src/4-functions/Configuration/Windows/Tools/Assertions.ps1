@@ -15,6 +15,12 @@ function Test-SdiIsRunning {
 }
 
 
+function Test-ActivatorIsRunning {
+    # This app and the project's own launcher both run MAS as a copy named MAS_<GUID>.cmd in a temp folder
+    return Find-RunningScript '\Temp\MAS_'
+}
+
+
 function Test-DownloadingWindowsUpdates {
     return Get-BitsTransfer -AllUsers | Where-Object JobState -EQ 'Transferring'
 }

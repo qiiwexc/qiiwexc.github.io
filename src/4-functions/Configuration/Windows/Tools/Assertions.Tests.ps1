@@ -111,6 +111,29 @@ Describe 'Test-SdiIsRunning' {
     }
 }
 
+Describe 'Test-ActivatorIsRunning' {
+    BeforeAll {
+        Mock Find-RunningScript {}
+    }
+
+    It 'Should return true if MAS is running' {
+        Mock Find-RunningScript { return $TestProcess }
+
+        Set-Variable -Option Constant Result ([PSObject](Test-ActivatorIsRunning))
+
+        $Result.ProcessName | Should -BeExactly $TestProcess.ProcessName
+
+        Should -Invoke Find-RunningScript -Exactly 1
+        Should -Invoke Find-RunningScript -Exactly 1 -ParameterFilter { $CommandLinePart -eq '\Temp\MAS_' }
+    }
+
+    It 'Should return false if MAS is not running' {
+        Test-ActivatorIsRunning | Should -BeNullOrEmpty
+
+        Should -Invoke Find-RunningScript -Exactly 1
+    }
+}
+
 Describe 'Test-DownloadingWindowsUpdates' {
     BeforeAll {
         Mock Get-BitsTransfer {}

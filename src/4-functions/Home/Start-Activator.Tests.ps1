@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . "$PSScriptRoot\..\Common\Find-RunningScript.ps1"
+    . "$PSScriptRoot\..\Configuration\Windows\Tools\Assertions.ps1"
     . "$PSScriptRoot\..\Common\Network.ps1"
     . "$PSScriptRoot\..\Common\Start-Download.ps1"
     . "$PSScriptRoot\..\App lifecycle\Logger.ps1"
