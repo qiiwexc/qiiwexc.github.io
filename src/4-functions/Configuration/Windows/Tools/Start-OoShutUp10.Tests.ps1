@@ -11,7 +11,7 @@ BeforeAll {
 
     Set-Variable -Option Constant PATH_OOSHUTUP10 ([String]'TEST_PATH_OOSHUTUP10')
     Set-Variable -Option Constant PATH_WORKING_DIR ([String]'TEST_PATH_WORKING_DIR')
-    # LF line endings and a non-ASCII character, as a checkout can embed the file
+    # LF line endings and a non-ASCII character, as the build embeds the file
     Set-Variable -Option Constant CONFIG_OOSHUTUP10_BASE ([String]"TEST_LINE_1`nTEST_LINE_2 $([Char]0xA9)`n")
     Set-Variable -Option Constant TestConfigBytes ([Byte[]](0x54, 0x45, 0x53, 0x54, 0x5F, 0x4C, 0x49, 0x4E, 0x45, 0x5F, 0x31, 0x0D, 0x0A, 0x54, 0x45, 0x53, 0x54, 0x5F, 0x4C, 0x49, 0x4E, 0x45, 0x5F, 0x32, 0x20, 0xC2, 0xA9, 0x0D, 0x0A))
     Set-Variable -Option Constant CONFIG_OOSHUTUP10_PERSONALIZATION ([String]"TEST_PERSONALIZATION_LINE`n")

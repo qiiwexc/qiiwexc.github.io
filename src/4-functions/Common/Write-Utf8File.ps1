@@ -6,6 +6,8 @@ function Write-Utf8File {
 
     # UTF-8 without a byte order mark, which not every tool these files configure expects. Set-Content writes the ANSI
     # code page unless told otherwise, which turns a character outside it into '?', and its UTF8 encoding adds the mark.
-    # Content in ASCII comes out byte for byte the same either way
-    Set-Content -LiteralPath $Path -Value ([Text.UTF8Encoding]::new($False).GetBytes($Content)) -Encoding Byte -ErrorAction Stop
+    # Content in ASCII comes out byte for byte the same either way.
+    # Every line ends in CRLF, as Windows tools write their own files: the configs are embedded with LF, the line
+    # ending of the repository, and a tool such as O&O ShutUp10++ parses CRLF only
+    Set-Content -LiteralPath $Path -Value ([Text.UTF8Encoding]::new($False).GetBytes(($Content -replace '\r?\n', "`r`n"))) -Encoding Byte -ErrorAction Stop
 }

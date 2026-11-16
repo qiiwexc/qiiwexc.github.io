@@ -1,0 +1,6 @@
+# LF in every checkout, whatever core.autocrlf says (a Windows runner's converts to CRLF), so that the configs the
+# build embeds, and with them the artifacts, are the same bytes on every machine
+* text=auto eol=lf
+
+*.ico binary
+*.zip binary

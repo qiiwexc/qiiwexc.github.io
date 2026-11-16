@@ -21,6 +21,18 @@ unresolved or if the bundled script does not parse.
 Every non-PS1 file in `src/3-configs/` (`.reg`, `.json`, `.ini`, `.cfg`, `.conf`) is embedded
 as string constants named `CONFIG_<UPPERCASED_FILENAME>` using `Set-Variable -Option Constant`.
 
+## Text encoding and line endings
+
+`.gitattributes` checks out every text file with LF line endings, whatever `core.autocrlf`
+says (a Windows runner's converts to CRLF), so the build embeds the same configs, and makes the
+same artifacts, on every machine. `Read-TextFile` reads every input as UTF-8 and fails on a file
+that is not, which would otherwise reach the output with its non-ASCII characters replaced.
+`Write-TextFile` writes UTF-8 whatever the machine's code page: `build/qiiwexc.ps1` with LF line
+endings and a byte order mark, without which Windows PowerShell 5.1 reads it as ANSI, and the
+launcher, `build/qiiwexc.bat`, with CRLF and no byte order mark, as `cmd.exe` expects. The app
+writes an embedded config to disk with CRLF (`Write-Utf8File`), the line ending Windows tools
+write their own files with.
+
 ## The answer files
 
 The answer files are built from `templates/autounattend.xml`, which also carries sections for

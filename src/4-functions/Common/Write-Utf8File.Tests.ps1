@@ -14,7 +14,15 @@ Describe 'Write-Utf8File' {
 
         Set-Variable -Option Constant Bytes ([Byte[]][IO.File]::ReadAllBytes($TestFile))
         $Bytes[0..2] | Should -Not -Be @(0xEF, 0xBB, 0xBF)
-        [Text.UTF8Encoding]::new($False, $True).GetString($Bytes) | Should -BeExactly $TestText
+        [Text.UTF8Encoding]::new($False, $True).GetString($Bytes) | Should -BeExactly $TestText.Replace("`n", "`r`n")
+    }
+
+    It 'Should end every line in CRLF' {
+        Set-Variable -Option Constant TestFile ([String]"$TestDrive\crlf.txt")
+
+        Write-Utf8File $TestFile "LINE1`nLINE2`r`nLINE3`n"
+
+        [IO.File]::ReadAllText($TestFile) | Should -BeExactly "LINE1`r`nLINE2`r`nLINE3`r`n"
     }
 
     It 'Should add no line ending of its own' {
