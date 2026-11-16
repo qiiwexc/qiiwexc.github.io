@@ -24,18 +24,36 @@ function Test-NetworkConnection {
 
     # Probe over HTTP rather than ICMP, which many networks filter: the request goes through the
     # system proxy like the downloads themselves, and a captive portal shows up as unexpected content.
-    # This is the endpoint Windows itself uses for its network connectivity indicator.
-    try {
-        Set-Variable -Option Constant Response ([PSObject](Invoke-WebRequest -Uri 'http://www.msftconnecttest.com/connecttest.txt' -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop))
-    } catch {
-        Out-Failure 'No Internet connectivity'
-        return $False
+    # The first is the endpoint Windows itself uses for its network connectivity indicator. A DNS
+    # blocklist can include it, or answer for it with a page of its own, so a second, of another
+    # company, has to fail as well before the connection counts as down
+    Set-Variable -Option Constant Probes ([Hashtable[]]@(
+            @{ Uri = 'http://www.msftconnecttest.com/connecttest.txt'; StatusCode = 200; Content = 'Microsoft Connect Test' },
+            @{ Uri = 'http://cp.cloudflare.com/generate_204'; StatusCode = 204; Content = '' }
+        )
+    )
+
+    [Bool]$Intercepted = $False
+    foreach ($Probe in $Probes) {
+        try {
+            [PSObject]$Response = Invoke-WebRequest -Uri $Probe.Uri -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+        } catch {
+            Write-LogDebug "Connectivity probe $($Probe.Uri) failed: $_"
+            continue
+        }
+
+        if ($Response.StatusCode -eq $Probe.StatusCode -and "$($Response.Content)" -eq $Probe.Content) {
+            return $True
+        }
+
+        Write-LogDebug "Connectivity probe $($Probe.Uri) answered $($Response.StatusCode) with unexpected content"
+        $Intercepted = $True
     }
 
-    if ($Response.Content -ne 'Microsoft Connect Test') {
+    if ($Intercepted) {
         Out-Failure 'Internet access is restricted, a sign-in page may need to be completed first'
-        return $False
+    } else {
+        Out-Failure 'No Internet connectivity'
     }
-
-    return $True
+    return $False
 }

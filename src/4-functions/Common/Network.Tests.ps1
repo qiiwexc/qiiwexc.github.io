@@ -38,8 +38,19 @@ Describe 'Get-NetworkAdapter' {
 
 Describe 'Test-NetworkConnection' {
     BeforeAll {
+        Set-Variable -Option Constant MicrosoftProbe ([String]'http://www.msftconnecttest.com/connecttest.txt')
+        Set-Variable -Option Constant CloudflareProbe ([String]'http://cp.cloudflare.com/generate_204')
+
+        # What each probe answers when the Internet is reachable: Microsoft's with its text, Cloudflare's with no
+        # content at all, which Invoke-WebRequest gives as an empty byte array
+        Set-Variable -Option Constant MicrosoftAnswer ([PSCustomObject]@{ StatusCode = 200; Content = 'Microsoft Connect Test' })
+        Set-Variable -Option Constant CloudflareAnswer ([PSCustomObject]@{ StatusCode = 204; Content = [Byte[]]@() })
+        Set-Variable -Option Constant SignInPage ([PSCustomObject]@{ StatusCode = 200; Content = '<html>Sign in to continue</html>' })
+
         Mock Get-NetworkAdapter { return $TestNetworkAdapter }
-        Mock Invoke-WebRequest { return @{ Content = 'Microsoft Connect Test' } }
+        Mock Invoke-WebRequest { return $MicrosoftAnswer } -ParameterFilter { $Uri -eq $MicrosoftProbe }
+        Mock Invoke-WebRequest { return $CloudflareAnswer } -ParameterFilter { $Uri -eq $CloudflareProbe }
+        Mock Write-LogDebug {}
         Mock Out-Failure {}
     }
 
@@ -49,7 +60,7 @@ Describe 'Test-NetworkConnection' {
         Should -Invoke Get-NetworkAdapter -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1
         Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
-            $Uri -eq 'http://www.msftconnecttest.com/connecttest.txt' -and
+            $Uri -eq $MicrosoftProbe -and
             $UseBasicParsing -eq $True -and
             $TimeoutSec -eq 10
         }
@@ -66,25 +77,60 @@ Describe 'Test-NetworkConnection' {
         Should -Invoke Out-Failure -Exactly 1
     }
 
+    It 'Should return true when only the second probe answers, as behind a blocklist with the first on it' {
+        Mock Invoke-WebRequest { throw 'Blocked' } -ParameterFilter { $Uri -eq $MicrosoftProbe }
+
+        Test-NetworkConnection | Should -BeTrue
+
+        Should -Invoke Invoke-WebRequest -Exactly 2
+        Should -Invoke Invoke-WebRequest -Exactly 1 -ParameterFilter {
+            $Uri -eq $CloudflareProbe -and
+            $UseBasicParsing -eq $True -and
+            $TimeoutSec -eq 10
+        }
+        Should -Invoke Write-LogDebug -Exactly 1
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
+    It 'Should return true when a blocklist answers the first probe with a page of its own' {
+        Mock Invoke-WebRequest { return $SignInPage } -ParameterFilter { $Uri -eq $MicrosoftProbe }
+
+        Test-NetworkConnection | Should -BeTrue
+
+        Should -Invoke Invoke-WebRequest -Exactly 2
+        Should -Invoke Out-Failure -Exactly 0
+    }
+
     It 'Should return false when no Internet connectivity' {
-        Mock Invoke-WebRequest { throw 'No response' }
+        Mock Invoke-WebRequest { throw 'No response' } -ParameterFilter { $Uri -eq $MicrosoftProbe }
+        Mock Invoke-WebRequest { throw 'No response' } -ParameterFilter { $Uri -eq $CloudflareProbe }
 
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 2
         Should -Invoke Out-Failure -Exactly 1
         Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -eq 'No Internet connectivity' }
     }
 
-    It 'Should return false when the connectivity probe is intercepted' {
-        Mock Invoke-WebRequest { return @{ Content = '<html>Sign in to continue</html>' } }
+    It 'Should return false when the connectivity probes are intercepted' {
+        Mock Invoke-WebRequest { return $SignInPage } -ParameterFilter { $Uri -eq $MicrosoftProbe }
+        Mock Invoke-WebRequest { return $SignInPage } -ParameterFilter { $Uri -eq $CloudflareProbe }
 
         Test-NetworkConnection | Should -BeFalse
 
         Should -Invoke Get-NetworkAdapter -Exactly 1
-        Should -Invoke Invoke-WebRequest -Exactly 1
+        Should -Invoke Invoke-WebRequest -Exactly 2
         Should -Invoke Out-Failure -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -match 'sign-in page' }
+    }
+
+    It 'Should report an interception when one probe is intercepted and the other gets no answer' {
+        Mock Invoke-WebRequest { return $SignInPage } -ParameterFilter { $Uri -eq $MicrosoftProbe }
+        Mock Invoke-WebRequest { throw 'No response' } -ParameterFilter { $Uri -eq $CloudflareProbe }
+
+        Test-NetworkConnection | Should -BeFalse
+
         Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -match 'sign-in page' }
     }
 
