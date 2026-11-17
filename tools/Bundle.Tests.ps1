@@ -33,6 +33,8 @@ BeforeAll {
             'Remove-BitsTransfer'              = 'BitsTransfer'
             'Get-CimInstance'                  = 'CimCmdlets'
             'Invoke-CimMethod'                 = 'CimCmdlets'
+            'Get-DnsClientServerAddress'       = 'DnsClient'
+            'Set-DnsClientServerAddress'       = 'DnsClient'
             'Expand-Archive'                   = 'Microsoft.PowerShell.Archive'
             'Get-ScheduledTask'                = 'ScheduledTasks'
             'Disable-ScheduledTask'            = 'ScheduledTasks'

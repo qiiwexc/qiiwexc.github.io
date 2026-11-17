@@ -59,6 +59,7 @@ Set-Variable -Option Constant TAB_HOME ([Hashtable]@{
                             @{ CheckBox = 'Adult content filtering'; Name = 'CloudFlareFamilyFriendly' }
                         )
                     }
+                    @{ Button = 'Reset to automatic DNS'; Action = { Start-AsyncOperation -Button $this { Reset-CloudFlareDNS } } }
                 )
             }
             @{
