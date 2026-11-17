@@ -77,9 +77,9 @@ Describe 'Set-BaselineConfiguration' {
             $AppName -eq 'Windows Baseline Config' -and
             $Keys.Contains('[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]') -and
             $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
-            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_USER_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\DefaultUser\TEST_USER_KEY]') -and
             $Keys.Contains('[HKEY_CURRENT_USER\TEST_ENGLISH_KEY]') -and
-            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_ENGLISH_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\DefaultUser\TEST_ENGLISH_KEY]') -and
             -not $Keys.Contains('TEST_RUSSIAN_KEY') -and
             $Content -match "`n\[$($TestVolumes[0].Name)\]`n" -and
             $Content -match "`n\[$($TestVolumes[1].Name)\]`n" -and
@@ -104,7 +104,7 @@ Describe 'Set-BaselineConfiguration' {
             [String]$Keys = -join $Content
             $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
             $Keys.Contains('[HKEY_CURRENT_USER\TEST_RUSSIAN_KEY]') -and
-            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_RUSSIAN_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\DefaultUser\TEST_RUSSIAN_KEY]') -and
             -not $Keys.Contains('TEST_ENGLISH_KEY')
         }
         Should -Invoke Out-Success -Exactly 1

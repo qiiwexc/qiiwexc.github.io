@@ -27,7 +27,7 @@ Describe 'Set-7zipConfiguration' {
             [String]$Keys = -join $Content
             $AppName -eq $TestAppName -and
             $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
-            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_USER_KEY]')
+            $Keys.Contains('[HKEY_USERS\DefaultUser\TEST_USER_KEY]')
         }
         Should -Invoke Out-Success -Exactly 1
         Should -Invoke Out-Failure -Exactly 0

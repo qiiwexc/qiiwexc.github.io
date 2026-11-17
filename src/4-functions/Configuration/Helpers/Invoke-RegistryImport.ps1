@@ -10,13 +10,5 @@ function Invoke-RegistryImport {
         $Arguments += '/reg:64'
     }
 
-    # Waited for through the process: Start-Process -Wait takes a second or more even for one as quick as reg.exe. Not
-    # a constant, as Set-Variable turns its value into a string, which an exited process fails
-    [Object]$Process = Start-Process 'reg' $Arguments -PassThru -WindowStyle Hidden -ErrorAction Stop
-    try {
-        $Process.WaitForExit()
-        return [Int]$Process.ExitCode
-    } finally {
-        $Process.Dispose()
-    }
+    return Invoke-RegCommand $Arguments
 }

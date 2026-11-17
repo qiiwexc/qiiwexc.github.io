@@ -45,7 +45,7 @@ Describe 'Set-PersonalizationConfiguration' {
             $AppName -eq 'Windows Personalization Config' -and
             $Keys.Contains('[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]') -and
             $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
-            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_USER_KEY]') -and
+            $Keys.Contains('[HKEY_USERS\DefaultUser\TEST_USER_KEY]') -and
             $Content -match "`n\[$($TestNotificationRegistries[0].Name)\]`n" -and
             $Content -match "`n\[$($TestNotificationRegistries[1].Name)\]`n" -and
             $Content -match "`"IsPromoted`"=dword:00000001`n" -and

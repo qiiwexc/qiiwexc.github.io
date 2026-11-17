@@ -3,8 +3,11 @@ BeforeAll {
 
     . "$PSScriptRoot\..\..\App lifecycle\Initialize-AppDirectory.ps1"
     . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\Add-SysPrepConfig.ps1"
+    . "$PSScriptRoot\Dismount-DefaultUserHive.ps1"
     . "$PSScriptRoot\Get-RefusedRegistryKey.ps1"
     . "$PSScriptRoot\Invoke-RegistryImport.ps1"
+    . "$PSScriptRoot\Mount-DefaultUserHive.ps1"
 
     Set-Variable -Option Constant TestException ([String]'TEST_EXCEPTION')
 
@@ -12,6 +15,10 @@ BeforeAll {
 
     Set-Variable -Option Constant TestAppName ([String]'TEST_APP_NAME')
     Set-Variable -Option Constant TestContent ([String[]]@("TEST_CONTENT1`n", 'TEST_CONTENT2'))
+
+    Set-Variable -Option Constant TestMachineSection ([String]"[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]`n`"TEST_VALUE`"=dword:00000001`n`n")
+    Set-Variable -Option Constant TestUserSection ([String]"[HKEY_CURRENT_USER\TEST_USER_KEY]`n`"TEST_VALUE`"=dword:00000001`n")
+    Set-Variable -Option Constant TestNewUsersContent ([String[]]@((Add-SysPrepConfig "$TestMachineSection$TestUserSection"), "`n[HKEY_CURRENT_USER\TEST_ADDED_KEY]`n"))
 
     Set-Variable -Option Constant TestRegFilePath ([String]"$PATH_APP_DIR\$TestAppName.reg")
     Set-Variable -Option Constant TestKeyFilePath ([String]"$PATH_APP_DIR\$TestAppName (one key).reg")
@@ -27,6 +34,8 @@ Describe 'Import-RegistryConfiguration' {
         Mock Get-RefusedRegistryKey {}
         Mock Write-LogWarning {}
         Mock Out-Success {}
+        Mock Mount-DefaultUserHive { return $True }
+        Mock Dismount-DefaultUserHive {}
     }
 
     It 'Should import registry configuration' {
@@ -43,8 +52,58 @@ Describe 'Import-RegistryConfiguration' {
         Should -Invoke Invoke-RegistryImport -Exactly 1
         Should -Invoke Invoke-RegistryImport -Exactly 1 -ParameterFilter { $Path -eq $TestRegFilePath }
         Should -Invoke Get-RefusedRegistryKey -Exactly 0
+        Should -Invoke Mount-DefaultUserHive -Exactly 0
+        Should -Invoke Dismount-DefaultUserHive -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should load the default user profile for the keys copied for new accounts, and unload it after' {
+        Import-RegistryConfiguration $TestAppName $TestNewUsersContent
+
+        Should -Invoke Mount-DefaultUserHive -Exactly 1
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            [String]$Text = -join $Value
+            $Text.Contains('[HKEY_USERS\DefaultUser\TEST_USER_KEY]') -and
+            $Text.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
+            $Text.Contains('[HKEY_CURRENT_USER\TEST_ADDED_KEY]') -and
+            -not $Text.Contains('[HKEY_USERS\DefaultUser\TEST_ADDED_KEY]')
+        }
+        Should -Invoke Invoke-RegistryImport -Exactly 1
+        Should -Invoke Dismount-DefaultUserHive -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should leave out the keys for new accounts and import the rest when the default user profile cannot be loaded' {
+        Mock Mount-DefaultUserHive { return $False }
+
+        Import-RegistryConfiguration $TestAppName $TestNewUsersContent
+
+        Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
+            (-join $Value) -eq "Windows Registry Editor Version 5.00`n`n$TestMachineSection$TestUserSection`n[HKEY_CURRENT_USER\TEST_ADDED_KEY]`n"
+        }
+        Should -Invoke Invoke-RegistryImport -Exactly 1
+        Should -Invoke Dismount-DefaultUserHive -Exactly 0
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should unload the default user profile when the import fails' {
+        Mock Invoke-RegistryImport { throw $TestException }
+
+        { Import-RegistryConfiguration $TestAppName $TestNewUsersContent } | Should -Throw $TestException
+
+        Should -Invoke Dismount-DefaultUserHive -Exactly 1
+        Should -Invoke Out-Success -Exactly 0
+    }
+
+    It 'Should name refused keys with the default user profile still loaded' {
+        Mock Invoke-RegistryImport { return 1 }
+        Mock Get-RefusedRegistryKey { return @('[HKEY_USERS\DefaultUser\TEST_USER_KEY]') }
+
+        { Import-RegistryConfiguration $TestAppName $TestNewUsersContent } | Should -Throw -ExpectedMessage '*DefaultUser*'
+
+        Should -Invoke Get-RefusedRegistryKey -Exactly 1 -ParameterFilter { $Content.Contains('[HKEY_USERS\DefaultUser\TEST_USER_KEY]') }
+        Should -Invoke Dismount-DefaultUserHive -Exactly 1
     }
 
     It 'Should name the keys that could not be written' {

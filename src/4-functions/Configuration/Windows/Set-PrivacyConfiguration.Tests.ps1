@@ -56,7 +56,7 @@ Describe 'Set-PrivacyConfiguration' {
             $AppName -eq 'Windows Privacy Config' -and
             $Keys.Contains('[HKEY_LOCAL_MACHINE\TEST_MACHINE_KEY]') -and
             $Keys.Contains('[HKEY_CURRENT_USER\TEST_USER_KEY]') -and
-            $Keys.Contains('[HKEY_USERS\.DEFAULT\TEST_USER_KEY]')
+            $Keys.Contains('[HKEY_USERS\DefaultUser\TEST_USER_KEY]')
         }
         Should -Invoke Out-Success -Exactly 1
     }
