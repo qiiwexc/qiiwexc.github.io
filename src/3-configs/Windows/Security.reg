@@ -132,14 +132,13 @@
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control]
 "DisableRemoteSCMEndpoints"=dword:00000001
 
-[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy]
-"VerifiedAndReputablePolicyState"=dword:00000002
-
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA]
 "NoLMHash"=dword:00000001
 "restrictanonymous"=dword:00000001
 "RestrictRemoteSAM"="O:BAG:BAD:(A;;RC;;;BA)"
-"RunAsPPL"=dword:00000001
+; LSA protection without the UEFI variable that 1 also sets, which keeps it on once the value is gone. Only Windows 11
+; 22H2 and later read 2: Set-SecurityConfiguration sets 1 on the Windows before it
+"RunAsPPL"=dword:00000002
 "SCENoApplyLegacyAuditPolicy"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA\MSV1_0]
@@ -189,4 +188,3 @@
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
 "IRPStackSize"=dword:0000001E
-"requiresecuritysignature"=dword:00000001
