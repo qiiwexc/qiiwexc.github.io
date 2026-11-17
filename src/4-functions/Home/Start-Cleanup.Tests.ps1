@@ -55,7 +55,8 @@ Describe 'Start-Cleanup' {
         Should -Invoke Test-InstallingWindowsUpdates -Exactly 1
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-ActivatorIsRunning -Exactly 1
-        Should -Invoke Write-LogWarning -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -match 'Recycle Bin.*previous Windows installation.*can be undone' }
         Should -Invoke New-Activity -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1
         Should -Invoke Delete-DeliveryOptimizationCache -Exactly 1 -ParameterFilter { $Force -eq $True }

@@ -12,7 +12,7 @@ BeforeAll {
 Describe 'Stop-ProcessIfRunning' {
     BeforeAll {
         Mock Find-RunningProcesses { return @(@{ ProcessName = $TestProcessName }) }
-        Mock Write-LogInfo {}
+        Mock Write-LogWarning {}
         Mock Stop-Process {}
         Mock Out-Success {}
     }
@@ -22,6 +22,7 @@ Describe 'Stop-ProcessIfRunning' {
 
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Find-RunningProcesses -Exactly 1 -ParameterFilter { $ProcessNames -eq $TestProcessName }
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -match "'$TestProcessName'.*unsaved" }
         Should -Invoke Stop-Process -Exactly 1
         Should -Invoke Stop-Process -Exactly 1 -ParameterFilter {
             $Name -eq $TestProcessName -and
@@ -36,6 +37,7 @@ Describe 'Stop-ProcessIfRunning' {
         Stop-ProcessIfRunning $TestProcessName
 
         Should -Invoke Find-RunningProcesses -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke Stop-Process -Exactly 0
         Should -Invoke Out-Success -Exactly 0
     }

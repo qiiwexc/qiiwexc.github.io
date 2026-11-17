@@ -45,6 +45,7 @@ function Start-Cleanup {
     Out-Success
 
     Write-ActivityProgress 60 'Running system cleanup...'
+    Write-LogWarning 'Emptying the Recycle Bin and deleting the previous Windows installation, which a Windows upgrade is rolled back to: neither can be undone'
 
     Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' | ForEach-Object -Process {
         Remove-ItemProperty -Path $_.PsPath -Name StateFlags3224 -Force -ErrorAction Ignore
