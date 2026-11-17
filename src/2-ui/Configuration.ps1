@@ -96,17 +96,23 @@ Set-Variable -Option Constant TAB_CONFIGURATION ([Hashtable]@{
                     @{ CheckBox = 'Keyboard layout; location'; Name = 'Config_WindowsLocalization'; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
                     @{ CheckBox = 'Personalization'; Name = 'Config_WindowsPersonalization'; OnClick = $WINDOWS_CONFIGURATION_ON_CLICK }
                     @{
-                        Button = 'Apply configuration'
-                        Name   = 'ApplyWindowsConfiguration'
-                        Action = {
+                        Button  = 'Apply configuration'
+                        Name    = 'ApplyWindowsConfiguration'
+                        Action  = {
                             $CapturedWindowsConfig = @{}
                             foreach ($Entry in $WINDOWS_CONFIGURATION_CHECKBOXES.GetEnumerator()) {
                                 $CapturedWindowsConfig[$Entry.Key] = [PSCustomObject]@{ IsChecked = $CHECKBOXES[$Entry.Value].IsChecked }
                             }
-                            Start-AsyncOperation -Button $this { Set-WindowsConfiguration @CapturedWindowsConfig } -Variables @{
+                            $RestorePoint = $CHECKBOXES.CreateRestorePoint.IsChecked
+                            Start-AsyncOperation -Button $this { Set-WindowsConfiguration @CapturedWindowsConfig -RestorePoint:$RestorePoint } -Variables @{
                                 CapturedWindowsConfig = $CapturedWindowsConfig
+                                RestorePoint          = $RestorePoint
                             }
                         }
+                        # Not one of WINDOWS_CONFIGURATION_CHECKBOXES: it applies nothing, so it leaves the button as it is
+                        Options = @(
+                            @{ CheckBox = 'Create a restore point'; Name = 'CreateRestorePoint'; Checked = $True }
+                        )
                     }
                 )
             }

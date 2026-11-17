@@ -6,7 +6,8 @@ function Set-WindowsConfiguration {
         [Parameter(Position = 3, Mandatory)][Object]$Annoyances,
         [Parameter(Position = 4, Mandatory)][Object]$Privacy,
         [Parameter(Position = 5, Mandatory)][Object]$Localization,
-        [Parameter(Position = 6, Mandatory)][Object]$Personalization
+        [Parameter(Position = 6, Mandatory)][Object]$Personalization,
+        [Switch]$RestorePoint
     )
 
     if (Test-WindowsDebloatIsRunning) {
@@ -22,6 +23,20 @@ function Set-WindowsConfiguration {
     }
 
     New-Activity 'Configuring Windows'
+
+    # Nothing here keeps what it overwrites: the restore point is the way back
+    if ($RestorePoint) {
+        Write-ActivityProgress 5 'Creating a restore point...'
+        try {
+            New-RestorePoint
+        } catch {
+            Out-Failure "Failed to create a restore point, so nothing was changed. Untick 'Create a restore point' to apply the configuration without one: $_"
+            Write-ActivityCompleted $False
+            return
+        }
+    } else {
+        Write-LogWarning 'No restore point was created: these changes can only be undone by hand'
+    }
 
     if ($Security.IsChecked) {
         Write-ActivityProgress 10 'Applying malware protection configuration...'

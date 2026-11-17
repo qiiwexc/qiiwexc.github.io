@@ -6,6 +6,7 @@ BeforeAll {
     . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
     . "$PSScriptRoot\..\..\App lifecycle\Progressbar.ps1"
     . "$PSScriptRoot\Tools\Assertions.ps1"
+    . "$PSScriptRoot\New-RestorePoint.ps1"
     . "$PSScriptRoot\Remove-Annoyances.ps1"
     . "$PSScriptRoot\Set-MalwareProtectionConfiguration.ps1"
     . "$PSScriptRoot\Set-PowerSchemeConfiguration.ps1"
@@ -61,21 +62,26 @@ Describe 'Set-WindowsConfiguration' {
         Mock Set-PrivacyConfiguration {}
         Mock Set-SecurityConfiguration {}
         Mock Write-ActivityCompleted {}
+        Mock New-RestorePoint {}
+        Mock Out-Failure {}
     }
 
-    It 'Should apply checked configurations' {
+    It 'Should create a restore point, then apply checked configurations' {
         Set-WindowsConfiguration $TestCheckboxSecurityChecked `
             $TestCheckboxPerformanceChecked `
             $TestCheckboxBaselineChecked `
             $TestCheckboxAnnoyancesChecked `
             $TestCheckboxPrivacyChecked `
             $TestCheckboxLocalizationChecked `
-            $TestCheckboxPersonalizationChecked
+            $TestCheckboxPersonalizationChecked `
+            -RestorePoint
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
         Should -Invoke Write-LogWarning -Exactly 0
         Should -Invoke New-Activity -Exactly 1
+        Should -Invoke New-RestorePoint -Exactly 1
+        Should -Invoke Out-Failure -Exactly 0
         Should -Invoke Set-MalwareProtectionConfiguration -Exactly 1
         Should -Invoke Set-SecurityConfiguration -Exactly 1
         Should -Invoke Set-PowerSchemeConfiguration -Exactly 1
@@ -88,6 +94,48 @@ Describe 'Set-WindowsConfiguration' {
         Should -Invoke Write-ActivityCompleted -Exactly 1
     }
 
+    It 'Should say that nothing can be undone without a restore point' {
+        Set-WindowsConfiguration $TestCheckboxSecurityChecked `
+            $TestCheckboxPerformanceUnchecked `
+            $TestCheckboxBaselineUnchecked `
+            $TestCheckboxAnnoyancesUnchecked `
+            $TestCheckboxPrivacyUnchecked `
+            $TestCheckboxLocalizationUnchecked `
+            $TestCheckboxPersonalizationUnchecked
+
+        Should -Invoke New-RestorePoint -Exactly 0
+        Should -Invoke Write-LogWarning -Exactly 1
+        Should -Invoke Write-LogWarning -Exactly 1 -ParameterFilter { $Message -match 'undone by hand' }
+        Should -Invoke Set-SecurityConfiguration -Exactly 1
+        Should -Invoke Write-ActivityCompleted -Exactly 1
+    }
+
+    It 'Should change nothing when the restore point cannot be created' {
+        Mock New-RestorePoint { throw $TestException }
+
+        Set-WindowsConfiguration $TestCheckboxSecurityChecked `
+            $TestCheckboxPerformanceChecked `
+            $TestCheckboxBaselineChecked `
+            $TestCheckboxAnnoyancesChecked `
+            $TestCheckboxPrivacyChecked `
+            $TestCheckboxLocalizationChecked `
+            $TestCheckboxPersonalizationChecked `
+            -RestorePoint
+
+        Should -Invoke New-RestorePoint -Exactly 1
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -match "nothing was changed.*$TestException" }
+        Should -Invoke Set-MalwareProtectionConfiguration -Exactly 0
+        Should -Invoke Set-SecurityConfiguration -Exactly 0
+        Should -Invoke Set-PowerSchemeConfiguration -Exactly 0
+        Should -Invoke Set-PerformanceConfiguration -Exactly 0
+        Should -Invoke Set-BaselineConfiguration -Exactly 0
+        Should -Invoke Remove-Annoyances -Exactly 0
+        Should -Invoke Set-PrivacyConfiguration -Exactly 0
+        Should -Invoke Set-LocalizationConfiguration -Exactly 0
+        Should -Invoke Set-PersonalizationConfiguration -Exactly 0
+        Should -Invoke Write-ActivityCompleted -Exactly 1 -ParameterFilter { $Success -eq $False }
+    }
+
     It 'Should not apply unchecked configurations' {
         Set-WindowsConfiguration $TestCheckboxSecurityUnchecked `
             $TestCheckboxPerformanceUnchecked `
@@ -95,7 +143,8 @@ Describe 'Set-WindowsConfiguration' {
             $TestCheckboxAnnoyancesUnchecked `
             $TestCheckboxPrivacyUnchecked `
             $TestCheckboxLocalizationUnchecked `
-            $TestCheckboxPersonalizationUnchecked
+            $TestCheckboxPersonalizationUnchecked `
+            -RestorePoint
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
         Should -Invoke Test-OOShutUp10IsRunning -Exactly 1
@@ -176,7 +225,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
                 $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
+                $TestCheckboxPersonalizationUnchecked `
+                -RestorePoint
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -204,7 +254,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
                 $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
+                $TestCheckboxPersonalizationUnchecked `
+                -RestorePoint
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -232,7 +283,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
                 $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
+                $TestCheckboxPersonalizationUnchecked `
+                -RestorePoint
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -260,7 +312,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyChecked `
                 $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationUnchecked
+                $TestCheckboxPersonalizationUnchecked `
+                -RestorePoint
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -288,7 +341,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
                 $TestCheckboxLocalizationChecked `
-                $TestCheckboxPersonalizationUnchecked
+                $TestCheckboxPersonalizationUnchecked `
+                -RestorePoint
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
@@ -316,7 +370,8 @@ Describe 'Set-WindowsConfiguration' {
                 $TestCheckboxAnnoyancesUnchecked `
                 $TestCheckboxPrivacyUnchecked `
                 $TestCheckboxLocalizationUnchecked `
-                $TestCheckboxPersonalizationChecked
+                $TestCheckboxPersonalizationChecked `
+                -RestorePoint
         } | Should -Throw $TestException
 
         Should -Invoke Test-WindowsDebloatIsRunning -Exactly 1
