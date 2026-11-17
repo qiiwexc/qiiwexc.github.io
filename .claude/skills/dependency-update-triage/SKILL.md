@@ -177,13 +177,12 @@ as its own commit. The next run rebuilds the PR on top of the fix, and starting 
 workflow by hand does the same at once. Updating the branch from the PR page does not:
 `ci.yml` skips the nightly PR, so the new head is left unchecked.
 
-The fix goes onto `chore/update-dependencies` instead only when the user asks for that, so
-that the bump and the change it needs are merged together. Then the PR has to be merged
-before the next nightly run (03:00 UTC), which starts again from master and force-pushes
-the fix away. With the fix on it, the PR changes more than `dependencies.json`, so `ci.yml`
-checks the new head as it does any pull request, and its `test` and `build` are the checks
-to read: the nightly's statuses belong to the head before the fix. The push is the user's
-to approve, as any push is.
+Only when the user asks does the fix go onto `chore/update-dependencies` instead, so that
+the bump and its change merge together. The PR must then be merged before the next nightly
+run (03:00 UTC) starts again from master and force-pushes the fix away. Changing more than
+`dependencies.json` now, the PR is checked by `ci.yml`, whose `test` and `build` are the
+checks to read: the nightly's statuses belong to the head before the fix. The push is the
+user's to approve, as any push is.
 
 **Worth adopting** - the release brought something this repository has an actual use
 for. Two rules keep this honest:
@@ -222,21 +221,8 @@ Generic advice misses all of these. Check each one that applies.
     `Get-AuthenticodeSignature` on the new file and on the previous version's, and treat a
     new or missing signer where there was one as a hold until explained.
   - A script (WinUtil's `winutil.ps1`, MAS's `MAS_AIO.cmd`, Win11Debloat's release archive)
-    is read in the notes for new downloads, and checked against what the app hands it.
-    `Start-Activator.ps1` passes MAS `-el`, `/HWID` and `/Ohook`, and fetches it from
-    `MAS/All-In-One-Version-KL/MAS_AIO.cmd` at the release tag. `Start-WinUtil.ps1` relies
-    on WinUtil not relaunching itself when already elevated. `Start-WindowsDebloat.ps1`
-    downloads the release's `Win11Debloat.zip` (its `SHA256SUMS` and GitHub's asset `digest`
-    both give the checksum to compare with), runs `Win11Debloat.ps1` from the archive's
-    single top folder with `-SkipExplorerRestart`, `-Sysprep`, `-RunSavedSettings`,
-    `-RemoveApps`, `-Apps` and `-Silent`, and writes `LastUsedSettings.json` into
-    `%LOCALAPPDATA%\Win11Debloat`, where the tool reads it, from
-    `src/3-configs/Windows/Tools/Debloat preset *.json`; with the personalization preset it
-    also passes the app IDs in `Debloat app list.json`, which the answer files' app removal
-    list is built from too. A renamed parameter, a moved settings file, or a setting or app
-    ID the tool no longer knows (it skips those silently) is a change needed first: compare
-    the presets' names with `Config/Features.json` and the app list with `Config/Apps.json`
-    at the new tag.
+    is read in the notes for new downloads, and checked against what the app hands it, which
+    [`references/tools.md`](references/tools.md) lists for each.
 
   A pinned file that moves inside its upstream repository fails the checksum download.
   The nightly then keeps the old version with a warning annotation (Step 6), so **a
@@ -246,13 +232,8 @@ Generic advice misses all of these. Check each one that applies.
 - **A live tool has already changed under the app.** SDI is fetched from a URL without a
   version at click time, so a new release is in effect for users the day it is published,
   and a fix it needs goes to master at once, whatever happens to the PR.
-- **O&O ShutUp10's embedded configs follow its version.** `OOShutUp10 base.cfg` and
-  `OOShutUp10 personalization.cfg` (the one the "+ Personalization settings" checkbox
-  picks) name the version that exported them in their headers (`V3.6.1135`). ShutUp10 is a
-  pinned download, so exporting both configs again with the new version is a change needed
-  first, and they reach users together with it at the next release. Its version is the full build number the
-  homepage prints, because the versioned file's URL needs it, and the file is O&O's own
-  winget package, the same bytes as the unversioned `OOSU10.exe` of that build.
+- **O&O ShutUp10's embedded configs follow its version**: a new version needs both exported
+  again first ([`references/tools.md`](references/tools.md)).
 - **The CI tools are loaded at their exact pinned versions.** `tools\test.ps1` and the
   linter load the versions in `dependencies.json`, so on the PR head run
   `install-dependencies.bat` before the gate, or it fails to load them. A PSScriptAnalyzer
@@ -260,11 +241,8 @@ Generic advice misses all of these. Check each one that applies.
   prints every finding before failing. The answer is to fix the code, or to add a
   documented exclusion in `PSScriptAnalyzerSettings.psd1` where the rule is wrong for this
   codebase. Never quietly pin the tool back.
-- **A PSScriptAnalyzer release can end the one-rule-per-call linting.** `Invoke-Linter` runs
-  each rule on its own because concurrent command lookups race on Windows PowerShell 5.1
-  (upstream: PowerShell/PSScriptAnalyzer#2206, open as of 2026-09-26). When a release's notes
-  say the lookups are serialised, name it as something to adopt: one call per path again,
-  verified by linting in ten fresh processes without a single rule error.
+- **A PSScriptAnalyzer release can end the one-rule-per-call linting**, which is worth
+  adopting when it does ([`references/tools.md`](references/tools.md)).
 - **Actions are pinned by full SHA**, as `uses: owner/action@<sha> # vX.Y.Z`. Check that
   the trailing comment moved with the SHA, and that the SHA is the tag's commit:
 
@@ -358,21 +336,6 @@ session was approved.
 [`references/worked-example.md`](references/worked-example.md) walks these steps through
 PR #65, where two of the three "Version record only" rows still needed a commit. Read it on a
 first triage, or when it is unclear how a row's notes decide its bucket.
-
-## Quick reference
-
-| step                       | call                                                                                             |
-| -------------------------- | ------------------------------------------------------------------------------------------------ |
-| request budget             | `(Invoke-RestMethod https://api.github.com/rate_limit -Headers $H).rate.remaining`               |
-| the PR and its notes       | `Invoke-RestMethod "$Api/pulls/<n>"` - save `.body` to `wip\`                                    |
-| what moved                 | `Invoke-RestMethod "$Api/pulls/<n>/files"` - the `patch` of each file                            |
-| an upstream's releases     | `…/repos/<owner>/<repo>/releases?per_page=20`, then `…/releases/tags/<tag>`                      |
-| is a pinned file genuine   | download it, `Get-FileHash -Algorithm SHA256`, `Get-AuthenticodeSignature`                       |
-| is an action's SHA its tag | `…/repos/<owner>/<action>/git/ref/tags/<tag>`                                                    |
-| CI state                   | `"$Api/commits/<sha>/status"` and `"$Api/commits/<sha>/check-runs"`                              |
-| why CI failed              | `"$Api/check-runs/<id>/annotations"`                                                             |
-| the gate                   | on the fetched PR ref: `install-dependencies.bat` if a CI tool moved, `test.bat`, `build-ci.bat` |
-| merge or comment           | the user's - offer, never do                                                                     |
 
 ## Common mistakes
 
