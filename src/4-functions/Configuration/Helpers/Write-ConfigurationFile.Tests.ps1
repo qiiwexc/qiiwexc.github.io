@@ -1,6 +1,7 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . "$PSScriptRoot\..\..\Common\Backup-File.ps1"
     . "$PSScriptRoot\..\..\Common\New-Directory.ps1"
     . "$PSScriptRoot\..\..\Common\Write-Utf8File.ps1"
     . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
@@ -21,6 +22,7 @@ Describe 'Write-ConfigurationFile' {
         Mock Write-LogInfo {}
         Mock Split-Path { return $TestParentPath }
         Mock New-Directory {}
+        Mock Backup-File {}
         Mock Write-Utf8File {}
         Mock Out-Success {}
         Mock Write-LogWarning {}
@@ -40,6 +42,8 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter {
             $Path -eq $TestParentPath
         }
+        Should -Invoke Backup-File -Exactly 1
+        Should -Invoke Backup-File -Exactly 1 -ParameterFilter { $Path -eq $TestPath }
         Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestPath -and
@@ -86,6 +90,16 @@ Describe 'Write-ConfigurationFile' {
         Should -Invoke Write-Utf8File -Exactly 0
         Should -Invoke Out-Success -Exactly 0
         Should -Invoke Write-LogWarning -Exactly 0
+    }
+
+    It 'Should not overwrite a file it could not keep a copy of' {
+        Mock Backup-File { throw $TestException }
+
+        { Write-ConfigurationFile $TestAppName $TestContent $TestPath } | Should -Throw $TestException
+
+        Should -Invoke Backup-File -Exactly 1
+        Should -Invoke Write-Utf8File -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
     }
 
     It 'Should handle Write-Utf8File failure' {

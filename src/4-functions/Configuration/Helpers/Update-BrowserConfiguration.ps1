@@ -45,6 +45,9 @@ function Update-BrowserConfiguration {
 
     Set-Variable -Option Constant UpdatedConfig ([String](Merge-JsonObject $CurrentConfig $ExtendConfig -ErrorAction Stop | ConvertTo-Json -Depth 100 -Compress -ErrorAction Stop))
 
+    # Merged rather than replaced, but rewritten whole: a profile the browser cannot read loses every setting in it
+    Backup-File $Path ($LogIndentLevel + 1)
+
     Set-Content $Path $UpdatedConfig -Encoding UTF8 -NoNewline -ErrorAction Stop
 
     Out-Success $LogIndentLevel

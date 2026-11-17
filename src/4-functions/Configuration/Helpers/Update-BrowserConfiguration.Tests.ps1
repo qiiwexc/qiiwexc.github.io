@@ -2,6 +2,7 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
+    . "$PSScriptRoot\..\..\Common\Backup-File.ps1"
     . "$PSScriptRoot\..\..\Common\Start-FromShell.ps1"
     . "$PSScriptRoot\Get-AppExecutablePath.ps1"
     . "$PSScriptRoot\Merge-JsonObject.ps1"
@@ -36,6 +37,7 @@ Describe 'Update-BrowserConfiguration' {
         Mock Start-Sleep {}
         Mock Get-Content { return $TestExistingConfig }
         Mock Merge-JsonObject { return $TestUpdatedConfigObject }
+        Mock Backup-File {}
         Mock Set-Content {}
         Mock Out-Success {}
     }
@@ -65,6 +67,8 @@ Describe 'Update-BrowserConfiguration' {
             $Source.TEST_KEY_EXISTING -eq 'TEST_VALUE_EXISTING' -and
             $Extend.TEST_KEY_NEW -eq 'TEST_VALUE_NEW'
         }
+        Should -Invoke Backup-File -Exactly 1
+        Should -Invoke Backup-File -Exactly 1 -ParameterFilter { $Path -eq $TestPath }
         Should -Invoke Set-Content -Exactly 1
         Should -Invoke Set-Content -Exactly 1 -ParameterFilter {
             $Path -eq $TestPath -and
@@ -73,6 +77,15 @@ Describe 'Update-BrowserConfiguration' {
             $NoNewline -eq $True
         }
         Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should not rewrite a profile it could not keep a copy of' {
+        Mock Backup-File { throw $TestException }
+
+        { Update-BrowserConfiguration $TestAppName $TestProcessName $TestContent $TestPath } | Should -Throw $TestException
+
+        Should -Invoke Set-Content -Exactly 0
+        Should -Invoke Out-Success -Exactly 0
     }
 
     It 'Should update browser configuration file if profile does not exist' {

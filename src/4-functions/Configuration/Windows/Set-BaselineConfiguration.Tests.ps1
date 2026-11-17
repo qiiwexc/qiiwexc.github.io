@@ -6,6 +6,7 @@ BeforeAll {
 
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
+    . "$PSScriptRoot\..\..\Common\Backup-File.ps1"
     . "$PSScriptRoot\..\..\Common\Write-Utf8File.ps1"
     . "$PSScriptRoot\..\..\App lifecycle\Logger.ps1"
     . "$PSScriptRoot\..\..\Common\New-Directory.ps1"
@@ -44,6 +45,7 @@ Describe 'Set-BaselineConfiguration' {
         Mock Get-Item { return $TestVolumes }
         Mock Import-RegistryConfiguration {}
         Mock New-Directory {}
+        Mock Backup-File {}
         Mock Write-Utf8File {}
     }
 
@@ -121,6 +123,8 @@ Describe 'Set-BaselineConfiguration' {
         Should -Invoke Unregister-ScheduledTask -Exactly 1
         Should -Invoke New-Directory -Exactly 1
         Should -Invoke New-Directory -Exactly 1 -ParameterFilter { $Path -eq (Split-Path -Parent $TestTaskManagerConfig) }
+        Should -Invoke Backup-File -Exactly 1
+        Should -Invoke Backup-File -Exactly 1 -ParameterFilter { $Path -eq $TestTaskManagerConfig }
         Should -Invoke Write-Utf8File -Exactly 1
         Should -Invoke Write-Utf8File -Exactly 1 -ParameterFilter {
             $Path -eq $TestTaskManagerConfig -and
@@ -147,6 +151,19 @@ Describe 'Set-BaselineConfiguration' {
             $Content -eq $CONFIG_TASK_MANAGER_RUSSIAN
         }
         Should -Invoke Get-Item -Exactly 1
+        Should -Invoke Import-RegistryConfiguration -Exactly 1
+        Should -Invoke Out-Success -Exactly 1
+    }
+
+    It 'Should leave the Task Manager settings as they are when it cannot keep a copy of them' {
+        [Int]$OS_VERSION = 11
+
+        Mock Backup-File { throw $TestException }
+
+        Set-BaselineConfiguration
+
+        Should -Invoke Write-Utf8File -Exactly 0
+        Should -Invoke Out-Failure -Exactly 1 -ParameterFilter { $Message -match "Task Manager.*$TestException" }
         Should -Invoke Import-RegistryConfiguration -Exactly 1
         Should -Invoke Out-Success -Exactly 1
     }

@@ -27,6 +27,9 @@ function Set-BaselineConfiguration {
             # The directory only exists once Task Manager has been opened
             New-Directory (Split-Path -Parent $TaskManagerConfig)
 
+            # Replaced as a whole, the user's own settings included
+            Backup-File $TaskManagerConfig
+
             if ($SYSTEM_LANGUAGE -match '^ru') {
                 Write-Utf8File $TaskManagerConfig $CONFIG_TASK_MANAGER_RUSSIAN
             } else {
