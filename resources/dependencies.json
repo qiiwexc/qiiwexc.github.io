@@ -18,12 +18,12 @@
     },
     {
         "name":  "Microsoft Activation Scripts",
-        "version":  "3.12",
+        "version":  "3.14",
         "source":  "GitHub",
         "opensPullRequest":  true,
         "mode":  "releases",
         "repository":  "massgravel/Microsoft-Activation-Scripts",
-        "sha256":  "850f979665fb93999acae93f4790c1ff8ed2041532060b7966a121c2d29a0bfa"
+        "sha256":  "91a42679166fe560343ca50b90ac1a91f9ba01cf5f7da99c4f670969cae81429"
     },
     {
         "name":  "Unattend Generator",
@@ -72,12 +72,12 @@
     },
     {
         "name":  "OOShutUp10",
-        "version":  "3.6.1135",
+        "version":  "3.7.1143",
         "source":  "URL",
         "opensPullRequest":  true,
         "url":  "https://www.oo-software.com/en/shutup10",
         "regex":  "Version:?\\s*(\\d+\\.\\d+\\.\\d+)",
-        "sha256":  "925ccd8164a90f6a1c8d907415f38df353a4ff00db73f07598a29b8f7928bb52"
+        "sha256":  "ea2790422aa81d62f22ae93e995c205d4d7a6ac9825877cf34ad4e65a8253ece"
     },
     {
         "name":  "Windows",
@@ -89,7 +89,7 @@
     },
     {
         "name":  "SDI",
-        "version":  "2.26.10",
+        "version":  "2.26.11",
         "source":  "URL",
         "opensPullRequest":  false,
         "url":  "https://sdi.com.ru/Changelog.txt",

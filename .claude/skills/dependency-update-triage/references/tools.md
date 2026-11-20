@@ -27,11 +27,26 @@ skips those silently) is a change needed first: compare the presets' names with
 ## O&O ShutUp10's embedded configs
 
 `OOShutUp10 base.cfg` and `OOShutUp10 personalization.cfg` (the one the "+ Personalization
-settings" checkbox picks) name the version that exported them in their headers (`V3.6.1135`).
+settings" checkbox picks) name the version that exported them in their headers (`V3.7.1143`).
 ShutUp10 is a pinned download, so exporting both configs again with the new version is a change
 needed first, and they reach users together with it at the next release. Its version is the full
 build number the homepage prints, because the versioned file's URL needs it, and the file is
 O&O's own winget package, the same bytes as the unversioned `OOSU10.exe` of that build.
+
+An export lists every setting the version shows, sorted by ID, as
+`<ID><TAB><+|-><TAB># <title> (Category: <category>)`, and a new setting goes in switched off
+(`-`) in both configs until it is chosen on purpose. Without Windows to export on, the same
+changes can be read from the file itself: it is a .NET single-file bundle, whose manifest at the
+end of the file lists `OOSU10.dll` (the English titles, in its `.resources`) and
+`OOSoftware.ShutUp10.Lib.Engine.dll` (the setting IDs, in its user strings), each stored
+deflate-compressed. Compare both with the previous version's.
+
+## Snappy Driver Installer
+
+A live tool: `sdi.zip` holds `SDI_auto.bat`, which the app runs and which starts
+`SDI_x64_R<release>.exe`, or `SDI_R<release>.exe` on 32-bit Windows - the process names
+`Test-SdiIsRunning` matches. Every switch in `sdi.cfg` must still be listed in the archive's
+`command-line.htm`, and `-theme:` must name a file under `Tools/SDI/themes/`.
 
 ## PSScriptAnalyzer and the one-rule-per-call linting
 

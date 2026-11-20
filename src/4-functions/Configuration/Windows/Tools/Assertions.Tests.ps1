@@ -94,8 +94,8 @@ Describe 'Test-SdiIsRunning' {
         Should -Invoke Find-RunningProcesses -Exactly 1
         Should -Invoke Find-RunningProcesses -Exactly 1 -ParameterFilter {
             $ProcessNames.Count -eq 2 -and
-            $ProcessNames[0] -eq 'SDI64-drv' -and
-            $ProcessNames[1] -eq 'SDI-drv'
+            $ProcessNames[0] -eq 'SDI_x64_R*' -and
+            $ProcessNames[1] -eq 'SDI_R*'
         }
     }
 
