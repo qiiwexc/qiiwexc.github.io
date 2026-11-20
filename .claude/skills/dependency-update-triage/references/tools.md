@@ -27,7 +27,7 @@ skips those silently) is a change needed first: compare the presets' names with
 ## O&O ShutUp10's embedded configs
 
 `OOShutUp10 base.cfg` and `OOShutUp10 personalization.cfg` (the one the "+ Personalization
-settings" checkbox picks) name the version that exported them in their headers (`V3.6.1135`).
+settings" checkbox picks) name the version that exported them in their headers (`V3.7.1143`).
 ShutUp10 is a pinned download, so exporting both configs again with the new version is a change
 needed first, and they reach users together with it at the next release. Its version is the full
 build number the homepage prints, because the versioned file's URL needs it, and the file is
