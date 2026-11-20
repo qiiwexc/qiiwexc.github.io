@@ -39,7 +39,9 @@ column is the newest version out of that quarantine, not necessarily the upstrea
 and its links and notes go only as far as that version. There is one
 standing PR from `chore/update-dependencies`, titled
 `chore(deps): update dependencies (yyyy.MM.dd)`. Each night's run starts from master and force-pushes
-over it. The PR changes `resources/dependencies.json` and nothing else, and that is how
+over it, as long as it holds only the bot's own commit. Once anyone pushes to it, the PR is
+held: the nightly leaves it as it is until it is merged or closed, and what was released
+meanwhile comes in the next PR. The PR changes `resources/dependencies.json` and nothing else, and that is how
 `ci.yml` knows to skip it: the nightly workflow's own `test` and `build` jobs check it and
 report back as commit statuses.
 
@@ -175,11 +177,12 @@ parameter still passed, a setting ID the preset still uses, an embedded config e
 an older version. Name the file. On the nightly PR that change goes to master by default,
 as its own commit. The next run rebuilds the PR on top of the fix, and starting the
 workflow by hand does the same at once. Updating the branch from the PR page does not:
-`ci.yml` skips the nightly PR, so the new head is left unchecked.
+`ci.yml` skips the nightly PR, so the new head is left unchecked, and the merge commit holds
+the PR, so no run rebuilds it until it is merged or closed.
 
 Only when the user asks does the fix go onto `chore/update-dependencies` instead, so that
-the bump and its change merge together. The PR must then be merged before the next nightly
-run (03:00 UTC) starts again from master and force-pushes the fix away. Changing more than
+the bump and its change merge together. The push holds the PR: the nightly stops updating
+it, so the fix stays, and newer versions wait for the PR after it. Changing more than
 `dependencies.json` now, the PR is checked by `ci.yml`, whose `test` and `build` are the
 checks to read: the nightly's statuses belong to the head before the fix. The push is the
 user's to approve, as any push is.
@@ -349,9 +352,9 @@ first triage, or when it is unclear how a row's notes decide its bucket.
   the upstream's. That is what the URL and signature checks are for.
 - **Recommending an adoption from a changelog sentence.** Read the script or the switch
   first, or say in the report that you did not.
-- **Fixing things on `chore/update-dependencies` unasked, or leaving them there
-  overnight.** The next nightly run force-pushes over the branch. Fixes go to master unless
-  the user asks for the branch, and then the PR is merged before that run.
+- **Fixing things on `chore/update-dependencies` unasked.** Any push there holds the PR:
+  the nightly stops updating it until it is merged or closed. Fixes go to master unless the
+  user asks for the branch.
 - **Judging a force-pushed PR by a stale head.** Check `head.sha` again before the
   verdict.
 - **Missing a pin the action bump left behind.** An old SHA still under `.github/` is a

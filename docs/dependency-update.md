@@ -84,8 +84,22 @@ actions on the commit it pushed (by SHA, not the branch, which a later push coul
 reports both on that commit as commit statuses, which stand in for `ci.yml`'s checks of those
 names.
 
+The force-push replaces only what the workflow pushed itself. While the pull request holds
+nothing but the one commit an earlier run made, authored and committed by `github-actions[bot]`,
+the run pushes over it, leased to that commit, so one pushed in between fails the push instead
+of vanishing. Anything else on it - a commit on top, such as a change that adapts the code to a
+new version, a merge from master, an amend or a rebase - holds the pull request: the run leaves
+it as it is, raises a notice saying so and checks nothing. Editing its title or description
+does not hold it. The check job runs every night all the same, so the versions released
+meanwhile keep their place in the quarantine. Once the held pull request is merged,
+`Resolve-QuarantinedVersion` drops the candidates up to the versions it recorded, and the next
+run opens a new pull request with the newer ones that are out of quarantine. Closing it instead
+lets the next run push over the branch.
+
 `ci.yml` skips any pull request that changes only `dependencies.json`, because GitHub holds the
 runs that `github-actions[bot]` triggers until someone approves them, and on `pull_request` a
 branch filter matches the base branch, not the head. Only the nightly workflow checks that pull
 request, so after a fix on master, run it again rather than updating the branch from the pull
-request's page, which leaves a head nothing has checked.
+request's page, which leaves a head nothing has checked and holds the pull request. A held pull
+request that changes more than `dependencies.json` is checked by `ci.yml` on every push; one that
+does not is checked by nothing until `ci.yml` is started on the branch by hand.

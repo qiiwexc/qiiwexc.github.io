@@ -1,7 +1,7 @@
 function Write-WorkflowAnnotation {
     param(
         [Parameter(Position = 0, Mandatory)][String]$Message,
-        [ValidateSet('warning', 'error')][String]$Level = 'warning'
+        [ValidateSet('notice', 'warning', 'error')][String]$Level = 'warning'
     )
 
     # A workflow command ends at the first line break: written as it is, a message would show only its first

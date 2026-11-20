@@ -123,39 +123,82 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          . .\tools\common\Write-WorkflowAnnotation.ps1
+
           # One standing branch: each night's run starts from master and force-pushes over it,
           # so a single open pull request always shows every pending update instead of one per day
           $now = Get-Date
           $branch = 'chore/update-dependencies'
+          $botEmail = 'github-actions[bot]@users.noreply.github.com'
           # A Conventional Commit, as the rest of the history is: a squash merge makes it the commit's summary
           $title = "chore(deps): update dependencies ($($now.ToString('yyyy.MM.dd')))"
           # Written by tools\Invoke-DependencyUpdate.ps1: the version table, the changelog links and the release notes
           $bodyFile = 'build/dependency-update.md'
 
+          # --head matches the branch name alone, so a fork's pull request from a branch of the same name is left out
+          $existingPr = gh pr list --head $branch --json number,isCrossRepository --jq 'map(select(.isCrossRepository == false)) | if length > 0 then .[0].number else empty end'
+          if ($LASTEXITCODE -ne 0) {
+              exit $LASTEXITCODE
+          }
+
+          if ($existingPr) {
+              # Each line a commit's SHA, author email and committer email. The first page is enough to tell one commit from more
+              $commits = @(gh api "repos/$env:GITHUB_REPOSITORY/pulls/$existingPr/commits?per_page=100" --jq '.[] | [.sha, .commit.author.email, .commit.committer.email] | @tsv')
+              if ($LASTEXITCODE -ne 0) {
+                  exit $LASTEXITCODE
+              }
+              # The pull request is this workflow's while it holds only the commit an earlier run pushed. Anything else - a
+              # commit on top, a merge from master, an amend or a rebase - is someone's work, such as a change that adapts the
+              # code to a new version, which a force-push would throw away. It stays as it is until it is merged or closed;
+              # check-for-updates still runs every night, so the versions released meanwhile keep their place in the
+              # quarantine, and the first run after the merge applies them from the versions it recorded
+              $headSha, $author, $committer = "$($commits[0])" -split "`t"
+              if ($commits.Count -ne 1 -or $author -ne $botEmail -or $committer -ne $botEmail) {
+                  Write-WorkflowAnnotation -Level notice "Left pull request #$existingPr as it is: it has commits this workflow did not push. The updates found since come in a new pull request once it is merged or closed"
+                  exit 0
+              }
+          }
+
           git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git config user.email $botEmail
 
           git checkout -b $branch
           git add resources/dependencies.json
           git commit -m $title
-          git push origin $branch --force
+          if ($LASTEXITCODE -ne 0) {
+              exit $LASTEXITCODE
+          }
 
-          $existingPr = gh pr list --head $branch --json number --jq 'if length > 0 then .[0].number else empty end'
+          if ($existingPr) {
+              # Only over the commit checked above, so a commit pushed since fails the push rather than being lost
+              git push origin $branch "--force-with-lease=${branch}:$headSha"
+          } else {
+              git push origin $branch --force
+          }
+          if ($LASTEXITCODE -ne 0) {
+              exit $LASTEXITCODE
+          }
+
           if (-not $existingPr) {
               gh pr create --title $title --body-file $bodyFile --reviewer $env:GITHUB_REPOSITORY_OWNER
           } else {
               gh pr edit $existingPr --title $title --body-file $bodyFile
           }
+          if ($LASTEXITCODE -ne 0) {
+              exit $LASTEXITCODE
+          }
 
+          # Written only when a commit was pushed: the checks below run on it, and on nothing else
           "sha=$(git rev-parse HEAD)" >> $env:GITHUB_OUTPUT
 
   # ci.yml skips this pull request, as it changes only resources/dependencies.json, because a run
   # it started for the bot's push would wait for approval; these two jobs check it instead, and
   # their commit statuses stand in for ci.yml's checks of the same names. Both check out the commit
   # pushed above rather than the branch, which a later push could move, so each status is reported
-  # on the commit that was actually tested
+  # on the commit that was actually tested. A pull request left as it was gets no new commit to check
   test:
     needs: create-pull-request
+    if: needs.create-pull-request.outputs.sha != ''
     runs-on: windows-latest
     timeout-minutes: 15
     permissions:
@@ -185,6 +228,7 @@ jobs:
 
   build:
     needs: [create-pull-request, test]
+    if: needs.create-pull-request.outputs.sha != ''
     runs-on: windows-latest
     timeout-minutes: 15
     permissions:

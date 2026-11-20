@@ -22,6 +22,12 @@ Describe 'Write-WorkflowAnnotation' {
         Should -Invoke Write-Host -Exactly 1 -ParameterFilter { $Object -ceq "::error::$TestMessage" }
     }
 
+    It 'Should write a notice' {
+        Write-WorkflowAnnotation $TestMessage -Level notice
+
+        Should -Invoke Write-Host -Exactly 1 -ParameterFilter { $Object -ceq "::notice::$TestMessage" }
+    }
+
     It 'Should keep a message of several lines in one annotation' {
         Write-WorkflowAnnotation "first`r`nsecond`nthird"
 
