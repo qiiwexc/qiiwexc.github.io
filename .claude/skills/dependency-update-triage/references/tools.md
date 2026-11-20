@@ -33,6 +33,13 @@ needed first, and they reach users together with it at the next release. Its ver
 build number the homepage prints, because the versioned file's URL needs it, and the file is
 O&O's own winget package, the same bytes as the unversioned `OOSU10.exe` of that build.
 
+## Snappy Driver Installer
+
+A live tool: `sdi.zip` holds `SDI_auto.bat`, which the app runs and which starts
+`SDI_x64_R<release>.exe`, or `SDI_R<release>.exe` on 32-bit Windows - the process names
+`Test-SdiIsRunning` matches. Every switch in `sdi.cfg` must still be listed in the archive's
+`command-line.htm`, and `-theme:` must name a file under `Tools/SDI/themes/`.
+
 ## PSScriptAnalyzer and the one-rule-per-call linting
 
 `Invoke-Linter` runs each rule on its own because concurrent command lookups race on Windows

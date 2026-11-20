@@ -11,7 +11,9 @@ function Test-OOShutUp10IsRunning {
 
 
 function Test-SdiIsRunning {
-    return Find-RunningProcesses @('SDI64-drv', 'SDI-drv')
+    # SDI_auto.bat starts SDI_x64_R<release>.exe, or SDI_R<release>.exe on 32-bit Windows, a name that changes
+    # with every release
+    return Find-RunningProcesses @('SDI_x64_R*', 'SDI_R*')
 }
 
 

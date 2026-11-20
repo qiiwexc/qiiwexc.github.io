@@ -44,7 +44,7 @@ Describe 'Start-SnappyDriverInstaller' {
     }
 
     It 'Should not start Snappy Driver Installer again while it is running' {
-        Mock Test-SdiIsRunning { return @(@{ ProcessName = 'SDI64-drv' }) }
+        Mock Test-SdiIsRunning { return @(@{ ProcessName = 'SDI_x64_R2611' }) }
 
         Start-SnappyDriverInstaller -Execute
 
@@ -54,7 +54,7 @@ Describe 'Start-SnappyDriverInstaller' {
     }
 
     It 'Should download it while it is running, when not asked to start it' {
-        Mock Test-SdiIsRunning { return @(@{ ProcessName = 'SDI64-drv' }) }
+        Mock Test-SdiIsRunning { return @(@{ ProcessName = 'SDI_x64_R2611' }) }
 
         Start-SnappyDriverInstaller
 
