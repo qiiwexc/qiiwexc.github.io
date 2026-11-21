@@ -36,12 +36,12 @@
     },
     {
         "name":  "WinUtil",
-        "version":  "26.10.28",
+        "version":  "26.11.13",
         "source":  "GitHub",
         "opensPullRequest":  true,
         "mode":  "releases",
         "repository":  "ChrisTitusTech/winutil",
-        "sha256":  "d0444cb266953d927e5cee71455f4f1a6da2d5b3cfd7e440dceb4e6b1cbf4f7f"
+        "sha256":  "e9d05a59d564b4fbb61fcfa1a594504a0f81e8d27c787119e72a99b57ddbe66d"
     },
     {
         "name":  "Win11Debloat",
